@@ -1,0 +1,106 @@
+VDI_104_OBJS1=escape.o palette.o font6x6.o font8x8.o font8x16.o
+VDI_104_OBJS2=entry.o tables.o line1010.o gsxasm1.o
+VDI_104_OBJS3=allgem.o blitinit.o routines.o jmptbl.o isin.o monobj.o
+VDI_104_OBJS4=opnwk.o monout.o text.o textblt.o hbtxtblt.o
+VDI_104_OBJS5=mono.o hbmono.o gsxasm2.o hbrect.o mouse.o copyrfm.o blastman.o
+VDI_104_OBJS6=hbbitblt.o blaster.o seedfill.o xfrmform.o stcolor.o
+VDI_104_OBJS7=sbblit.o sbfrag.o sbescape.o sbhline.o sbvline.o sbmono.o sbtxtblt.o
+VDI_104_OBJS9=colorep.o cbssdefs.o
+VDI_104_OBJS10=devices.o init.o
+
+VDI_104_OBJS=${VDI_104_OBJS1} ${VDI_104_OBJS2} ${VDI_104_OBJS3} ${VDI_104_OBJS4} ${VDI_104_OBJS5} ${VDI_104_OBJS6} ${VDI_104_OBJS7} ${VDI_104_OBJS8} ${VDI_104_OBJS9} ${VDI_104_OBJS10}
+
+VDI_OBJS=${VDI_${TOSVERSION}_OBJS}
+
+
+VDI_HEADERS=\
+	vdidefs.h \
+	attrdef.h \
+	fontdef.h \
+	gsxdef.h \
+	gsxextrn.h \
+	lineavar.h \
+	vdi.h \
+	scrndev.h \
+	styles.h \
+	${empty}
+
+VDI_INCLUDES=\
+	devequ.inc \
+	lineaequ.inc \
+	blaster.inc \
+	sbframe.inc \
+	hbhline.inc \
+	hbvline.inc \
+	hbescape.inc \
+	${empty}
+
+VDI_ASRCS=\
+	palette.S \
+	allgem.S \
+	blastman.S \
+	blitinit.S \
+	copyrfm.S \
+	entry.S \
+	escape.S \
+	gsxasm1.S \
+	gsxasm2.S \
+	line1010.S \
+	mono.S \
+	mouse.S \
+	sbblit.S \
+	sbescape.S \
+	sbfrag.S \
+	sbhline.S \
+	sbmono.S \
+	sbtxtblt.S \
+	sbvline.S \
+	textblt.S \
+	vdivar.S \
+	xfrmform.S \
+	blaster.S \
+	hbmono.S \
+	hbtxtblt.S \
+	hbrect.S \
+	hbbitblt.S \
+	routines.S \
+	colorep.S \
+	hard.S \
+	stcolor.S \
+	${empty}
+
+VDI_CSRCS=\
+	cbssdefs.c \
+	font6x6.c \
+	font8x16.c \
+	font8x8.c \
+	isin.c \
+	jmptbl.c \
+	monobj.c \
+	monout.c \
+	seedfill.c \
+	tables.c \
+	text.c \
+	devices.c \
+	opnwk.c \
+	init.c \
+	${empty}
+
+VDI_SRCS = $(VDI_HEADERS) $(VDI_INCLUDES) $(VDI_ASRCS) $(VDI_CSRCS)
+
+SRCS:=${VDI_SRCS}
+
+
+EXTRA_DIST1:=\
+	SRCFILES \
+	optimize.mak \
+	vdiext.S \
+	lmul.S \
+	\
+	system08.fnt system09.fnt system10.fnt system20.fnt \
+	\
+	${empty}
+
+EXTRA_DIST2:=\
+	GNUmakefile \
+	${empty}

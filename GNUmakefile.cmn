@@ -1,0 +1,157 @@
+#
+# we can now use the Alcyon compiler as cross-compiler on linux ;)
+#
+ifeq ($(USE_CROSS_ALCYON),)
+EVAL_CROSS := case `uname -s` in *MiNT*|*TOS*) echo no;; *) echo yes; esac
+CROSS := $(shell $(EVAL_CROSS))
+ifeq ($(CROSS),yes)
+USE_CROSS_ALCYON=1
+endif
+endif
+
+ifeq ($(USE_CROSS_ALCYON),1)
+BIN=../bin64/
+else
+BIN=../bin/
+endif
+LIB=../lib/
+INC=../include
+
+DISTDIR1=../tmp/tos306de
+DISTDIR2=../tmp/alcyon
+DOSDIR=/mnt/tos/TOS
+WWWDIR=$(HOME)/webgo24/home/www/download
+LOCAL_WWWDIR=/srv/www/htdocs/tospatch/src
+
+ALNPATH=${LIB}
+CRT0=crt0.o
+LIBC=libc.a
+LIBC_NDX=
+LIBM=libm.a
+LIBM_NDX=
+
+BS=/
+QBS=\${empty}
+
+#
+# target and host compiler
+# 
+ifeq ($(USE_CROSS_ALCYON),1)
+
+EXEEXT=.ttp
+BUILD_EXEEXT=
+
+CROSSPREFIX=m68k-atari-mint-
+
+CC = $(BIN)cc68
+CPP = $(CC) $(CPPFLAGS) -E -P
+CPPOUT = -o
+LD = $(CC)
+AS = $(CC)
+AR = ${BIN}ar68
+LINK68 = ${BIN}link68
+RELMOD = ${BIN}relmod
+ARFLAGS = -r
+RANLIB = :
+STRIP = $(CROSSPREFIX)strip
+FLAGS = $(CROSSPREFIX)flags
+
+else
+
+ifeq ($(CROSS),yes)
+
+CROSSPREFIX=m68k-atari-mint-
+EXEEXT=.ttp
+BUILD_EXEEXT=
+
+else
+
+CROSSPREFIX=
+EXEEXT=
+BUILD_EXEEXT=$(EXEEXT)
+
+endif
+
+BUILD_CC = gcc
+BUILD_CFLAGS = -O -Wall
+
+CC = $(CROSSPREFIX)gcc -g -mshort -Werror -ffreestanding -fno-builtin-memcpy
+CPP = $(CC) -xc $(CPPFLAGS) -E -P
+CPPOUT = -o
+LD = $(CC)
+AS = $(CC) -Wa,--mri
+AR = $(CROSSPREFIX)ar
+ARFLAGS = rcs
+RANLIB = $(CROSSPREFIX)ranlib
+STRIP = $(CROSSPREFIX)strip
+FLAGS = $(CROSSPREFIX)flags
+
+endif
+
+# 
+# some tools
+# 
+MV    = mv
+CP    = cp
+RM    = rm -f
+TOUCH = touch
+MKDIR = mkdir
+MKDIR_P = $(MKDIR) -p
+SED   = sed
+BC    = bc
+DC    = dc
+GREP  = grep
+TR    = tr
+
+CMP      = $(top_srcdir)/tools/cmprom$(BUILD_EXEEXT)
+MKGLUE   = $(top_srcdir)/tools/newglue$(BUILD_EXEEXT)
+MKBININC = $(top_srcdir)/tools/mkbininc$(BUILD_EXEEXT)
+MKROM    = $(top_srcdir)/tools/mkrom$(BUILD_EXEEXT)
+
+# Wether to run the optimizer pass for Alcyon.
+# the default is evaluated by RUN_OPTIMIZE_,
+# which must be either ${RUN_OPTIMIZE_0} or ${RUN_OPTIMIZE_1}.
+# It can be overridden by specifying foo_OPTIMIZE=0
+# for individual files.
+RUN_OPTIMIZE_0 = 
+RUN_OPTIMIZE_1 = --optimize
+RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_1}
+
+#
+# optimizations
+# 
+OPTS = -O2 -fomit-frame-pointer
+
+
+#
+# warning options
+#
+WARN = \
+	-Wall \
+	-Wstrict-prototypes \
+	-Wmissing-prototypes \
+	-Wshadow \
+	-Wpointer-arith \
+	-Wcast-qual \
+	-Waggregate-return \
+	-Wundef
+
+
+.c.o:
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) ${RUN_OPTIMIZE_${$*_OPTIMIZE}} -c -o $@ $<
+
+.s.o:
+	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+.S.o:
+	$(AM_V_AS)$(CC) -Wa,--mri $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+#
+# The final ROM image contains two versions of this compiler
+# support functions. In order to avoid duplicate symbols,
+# and because they are slightly different,
+# we have to rename one of those
+# (we use the ones from bdos since they are referenced less often)
+#
+SUBSTLMUL = $(SED) -e 's/lmul/bdoslmul/' $*.s > $*.i; $(MV) $*.i $*.s
+SUBSTLDIV = $(SED) -e 's/ldiv/bdosldiv/' $*.s > $*.i; $(MV) $*.i $*.s

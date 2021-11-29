@@ -1,0 +1,210 @@
+#!/bin/sh
+
+BIN=${0%/*}
+test "$BIN" = "" && BIN=.
+BIN="$BIN/"
+
+compile=false
+generate_asm=false
+preproc=false
+outfile=
+infile=
+CPPFLAGS=
+CFLAGS=-f
+LDFLAGS=
+ASFLAGS="-u -L"
+AESFLAGS=
+undefined=false
+nolocals=false
+absolute=false
+symbols=true
+textbase=
+database=
+bssbase=
+optimize=false
+
+while test "$1" != ""
+do
+	arg="$1"
+	shift
+	case $arg in
+	-c) compile=true ;;
+	-E) preproc=true ;;
+	-P) ;;
+	-o)
+		outfile=$1
+		shift
+		;;
+	-O2) ;;
+	-fomit-frame-pointer) ;;
+	--optimize) optimize=true ;;
+	-fomit-frame-pointer) ;;
+	-fno-common) ;;
+	-faes) AESFLAGS=-A ;;
+	-A) AESFLAGS=-A ;;
+	-a)
+	     textbase=$1
+	     shift
+	     database=$1
+	     shift
+	     bssbase=$1
+	     shift
+	     ;;
+	-u)
+	     undefined=true
+	     ;;
+        -l)  nolocals=true
+             ;;
+	-s)  symbols=false
+             ;;
+	-n)  ASFLAGS="$ASFLAGS -n"
+             ;;
+	-S)  generate_asm=true
+	     compile=true
+             ;;
+	-W*) ;;
+	-g*) ;;
+	-I)
+	     CPPFLAGS="$CPPFLAGS -I $1"
+	     shift
+	     ;;
+	-I*) CPPFLAGS="$CPPFLAGS $arg" ;;
+	-D*) CPPFLAGS="$CPPFLAGS $arg" ;;
+	-nostdlib|-nostartfiles) ;;
+	-*) echo "unknown option $arg" >&2; exit 1;;
+	*) infile="$infile $arg"
+	esac
+done
+
+if test "$infile" = ""; then
+	echo "no input files" >&2
+	exit 1
+fi
+
+status=1
+if $compile; then
+	case $infile in
+	*.c)
+		base=$(basename $infile .c)
+		result="${base}.o"
+		test "$V" = 1 && echo "${BIN}cp68 ${CPPFLAGS} ${infile} ${base}.i"
+		if ${BIN}cp68 ${CPPFLAGS} ${infile} ${base}.i; then
+			test "$V" = 1 && echo "${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS} ${AESFLAGS}"
+			if ${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS} ${AESFLAGS}; then
+				test "$V" = 1 && echo "${BIN}c168 ${base}.1 ${base}.2 ${base}.s ${AESFLAGS}"
+				if ${BIN}c168 ${base}.1 ${base}.2 ${base}.s ${AESFLAGS}; then
+					status=0
+					if $optimize; then
+						test "$V" = 1 && echo "${BIN}optimize -q ${base}.s"
+						if ! ${BIN}optimize -q ${base}.s; then
+							status=1
+						fi
+					fi
+					if ! $generate_asm; then
+						test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.s"
+						if ! ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.s; then
+							status=1
+						fi
+					else
+						result="${base}.s"
+					fi
+					if test "$outfile" != "" -a "$outfile" != "$result"; then
+						mv "$result" "$outfile" || status=1
+					fi
+				fi
+			fi
+		fi
+		rm -f ${base}.i ${base}.1 ${base}.2 ${base}.3
+		if ! $generate_asm; then
+			rm -f ${base}.s
+		fi
+		;;
+	*.S)
+		base=$(basename $infile .S)
+		result="${base}.o"
+		test "$V" = 1 && echo "${BIN}cp68 ${CPPFLAGS} -P ${infile} ${base}.i"
+		if ${BIN}cp68 ${CPPFLAGS} -P ${infile} ${base}.i; then
+			test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.i"
+			if ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.i; then
+				status=0
+				if test "$outfile" != "" -a "$outfile" != "$result"; then
+					mv "$result" "$outfile" || status=1
+				fi
+			fi
+		fi
+		rm -f ${base}.i
+		;;
+	*.s)
+		base=${infile%.s}
+		base=${base# }
+		result="${base}.o"
+		test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${infile}"
+		if ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${infile}; then
+			status=0
+			if test "$outfile" != "" -a "$outfile" != "$result"; then
+				mv "$result" "$outfile" || status=1
+			fi
+		fi
+		;;
+	esac
+elif $preproc; then
+	if test "$outfile" = ""; then
+		echo "no output file" >&2
+		exit 1
+	fi
+	test "$V" = 1 && echo "${BIN}cp68 ${CPPFLAGS} -P ${infile} ${outfile}"
+	if ${BIN}cp68 ${CPPFLAGS} -P ${infile} ${outfile}; then
+		status=0
+	fi
+else
+	if test "$outfile" = ""; then
+		echo "no output file" >&2
+		exit 1
+	fi
+	if test "$infile" = ""; then
+		echo "no input files" >&2
+		exit 1
+	fi
+	LDFLAGS=
+	if $undefined; then
+		LDFLAGS="${LDFLAGS}un,"
+	fi
+	if $symbols; then
+		LDFLAGS="${LDFLAGS}sy,"
+		if $nolocals; then
+			LDFLAGS="${LDFLAGS}no,"
+		else
+			LDFLAGS="${LDFLAGS}locals,"
+		fi
+	fi
+	if test "$textbase" != ""; then
+		LDFLAGS="${LDFLAGS}text[$textbase],"
+	fi
+	if test "$database" != ""; then
+		LDFLAGS="${LDFLAGS}data[$database],"
+	fi
+	if test "$bssbase" != ""; then
+		LDFLAGS="${LDFLAGS}bss[$bssbase],"
+	fi
+	LDFLAGS=$(echo $LDFLAGS | sed -e 's/,$//')
+	infile=$(echo $infile | tr ' ' ',')
+	relfile="${outfile}"
+	case $outfile in
+	*.rel)
+		;;
+	*)
+		relfile=${outfile%.*}.rel
+		;;
+	esac
+	test "$V" = 1 && echo "${BIN}link68 [${LDFLAGS}] ${relfile}=${infile}"
+	if ${BIN}link68 [${LDFLAGS}] ${relfile}=${infile}; then
+		status=0
+	fi
+	if test "$status" = 0 -a "${outfile}" != "${relfile}"; then
+		test "$V" = 1 && echo ${BIN}relmod "${relfile}" "${outfile}"
+		${BIN}relmod "${relfile}" "${outfile}" || $status=1
+		rm -f "${relfile}"
+	fi
+fi
+
+exit $status

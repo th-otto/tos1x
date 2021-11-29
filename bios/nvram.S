@@ -1,0 +1,214 @@
+#include "config.h"
+#include "asmdefs.h"
+#include "tosvars.inc"
+#include "biosdefs.h"
+
+#if TOSVERSION < 0x200
+#	undef ABSW
+#	undef ABSW2
+#	undef SETBASEREG
+#	define ABSW(x) x(a1)
+#	define ABSW2(x) x
+#   define SETBASEREG suba.l    a1,a1
+#endif
+
+nvram_rtc_year_offset equ 1980-1968
+
+        xdef ngetdt
+        xdef readRTCTime
+        xdef writeRTCTime
+        xdef checkRTC
+
+        text
+
+/* NVRAM_ADDR_REG  equ $ffff8961 */
+/* NVRAM_DATA_REG  equ $ffff8963 */
+
+rtc_sec         equ $fffffc20
+
+
+#if MSTECLK
+
+/* 206de: 00e01a96 */
+/* 104de: 00fc1f4c */
+ngetdt: bsr.s     checkRTC
+        bcs.s     ngetdt2
+        bsr.s     readRTCTime
+        cmp.l     #-1,d0
+        beq.s     ngetdt2
+#if TOSVERSION < 0x200
+		move.w    d0,_time
+		swap      d0
+		move.w    d0,_date
+        moveq     #0,d0
+        rts
+ngetdt2:
+        moveq     #-1,d0
+        rts
+#else
+        moveq     #0,d0
+ngetdt2:
+        rts
+#endif
+
+/* 206de: 00e01aa8 */
+/* 104de: 00fc1f70 */
+checkRTC:
+			SETBASEREG
+			movea.w   #rtc_sec,a0
+            move.l    ABSW(_buserror),d2
+            movea.l   sp,a2
+            move.l    #chkRTC2,ABSW(_buserror)
+            move.b    #9,27(a0)
+
+            move.l    d2,ABSW(_buserror)
+            move.w    #$a05,d0
+            movep.w   d0,5(a0)
+            movep.w   5(a0),d1
+            and.w     #$f0f,d1
+            cmp.w     d0,d1
+            bne.s     chkRTC3
+            move.b    #1,1(a0)
+            move.b    #8,27(a0)
+            move.b    #0,29(a0)
+            rts
+chkRTC2:    movea.l   a2,sp
+            move.l    d2,ABSW(_buserror)
+chkRTC3:    ori       #1,ccr                    /* RTC not available */
+            rts
+
+/* 206de: 00e01af8 */
+readRTCTime:bsr.s     checkRTC
+            bcs       rdRTCErr
+            lea       ABSW2(rtcbufa),a1
+            lea       ABSW2(rtcbufb),a2
+            bsr       rdRTCMask
+rdRTC2:     exg       a1,a2
+            bsr       rdRTCMask
+            moveq     #$c,d0
+rdRTC3:     move.b    (a1,d0.w),d1
+            cmp.b     (a2,d0.w),d1
+            bne.s     rdRTC2
+            dbra      d0,rdRTC3
+            moveq     #0,d0
+            move.b    $b(a1),d0
+            mulu.w    #10,d0
+            add.b     $c(a1),d0
+            asr.w     #1,d0
+            move.w    d0,d1
+            moveq     #0,d0
+            move.b    9(a1),d0
+            mulu.w    #10,d0
+            add.b     $a(a1),d0
+            asl.w     #5,d0
+            add.w     d0,d1
+            moveq     #0,d0
+            move.b    7(a1),d0
+            mulu.w    #10,d0
+            add.b     8(a1),d0
+            asl.w     #8,d0
+            asl.w     #3,d0
+            add.w     d0,d1
+            swap      d1
+            moveq     #0,d0
+            move.b    4(a1),d0
+            mulu.w    #10,d0
+            add.b     5(a1),d0
+            move.w    d0,d1
+            moveq     #0,d0
+            move.b    2(a1),d0
+            mulu.w    #10,d0
+            add.b     3(a1),d0
+            asl.w     #5,d0
+            add.w     d0,d1
+            moveq     #0,d0
+            move.b    0(a1),d0
+            mulu.w    #10,d0
+            add.b     1(a1),d0
+            asl.w     #8,d0
+            asl.w     #1,d0
+            add.w     d0,d1
+            swap      d1
+
+            move.l    d1,d0
+            rts
+
+rdRTCMask:  moveq     #$c,d0
+            moveq     #1,d1
+rdRTCMk2:   move.b    (a0,d1.w),d2
+            and.b     #$f,d2
+            move.b    d2,(a1,d0.w)
+            addq.w    #2,d1
+            dbra      d0,rdRTCMk2
+            rts
+
+rdRTCErr:   moveq  #-1,d0
+            rts
+
+writeRTCTime:bsr      checkRTC
+            bcs       no_RTC_found
+            lea       ABSW2(rtcbufa),a1
+            move.w    6(sp),d1
+            move.w    d1,d0
+            and.l     #$1f,d0
+            add.w     d0,d0
+            divu.w    #10,d0
+            move.b    d0,11(a1)
+            swap      d0
+            move.b    d0,12(a1)
+            move.w    d1,d0
+            lsr.w     #5,d0
+            and.l     #$3f,d0
+            divu.w    #10,d0
+            move.b    d0,9(a1)
+            swap      d0
+            move.b    d0,10(a1)
+            lsr.w     #8,d1
+            lsr.w     #3,d1
+            ext.l     d1
+            divu.w    #10,d1
+            move.b    d1,7(a1)
+            swap      d1
+            move.b    d1,8(a1)
+            move.w    4(sp),d1
+            move.w    d1,d0
+            and.l     #$1f,d0
+            divu.w    #10,d0
+            move.b    d0,4(a1)
+            swap      d0
+            move.b    d0,5(a1)
+            move.w    d1,d0
+            lsr.w     #5,d0
+            and.l     #$f,d0
+            divu.w    #10,d0
+            move.b    d0,2(a1)
+            swap      d0
+            move.b    d0,3(a1)
+            lsr.w     #1,d1
+            lsr.w     #8,d1
+            ext.l     d1
+            move.l    d1,d2
+            divu.w    #10,d1
+            move.b    d1,0(a1)
+            swap      d1
+            move.b    d1,1(a1)
+            divu.w    #4,d2
+            swap      d2
+			clr.b     6(a1)
+			move.b    #$02,31(a0)
+			move.b    #$09,27(a0)
+            move.b    #1,21(a0) /* set 24h mode */
+            move.b    d2,$17(a0) /* set leapyear register */
+			move.b    #$08,27(a0)
+            moveq     #$c,d0
+            moveq     #1,d1
+wrRTC2:     move.b    (a1,d0.w),(a0,d1.w)
+            addq.w    #2,d1
+            dbra      d0,wrRTC2
+            moveq     #0,d0
+            rts
+
+no_RTC_found:moveq    #-1,d0
+            rts
+
+#endif /* MSTECLK */

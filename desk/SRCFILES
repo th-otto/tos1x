@@ -1,0 +1,62 @@
+DESK_OBJS1=deskact.o deskapp.o deskbind.o deskbutt.o deskdir.o
+DESK_OBJS2=deskdisk.o deskfile.o deskinf.o deskins.o deskmem.o
+DESK_OBJS3=deskmenu.o deskmisc.o deskopen.o deskpref.o desksear.o
+DESK_OBJS4=desksele.o deskshel.o deskshow.o deskrsc.o deskstor.o
+DESK_OBJS5=desktop.o deskupda.o deskwin.o deskif.o osbind.o
+
+DESK_OBJS=${DESK_OBJS1} ${DESK_OBJS2} ${DESK_OBJS3} ${DESK_OBJS4} ${DESK_OBJS5} ${DESK_OBJS6} ${DESK_OBJS7}
+
+DESK_HEADERS=\
+	deskdefs.h \
+	desktop.h \
+	deskrsc.h \
+	aesbind.h \
+	mobdefs.h \
+	osbind.h \
+	window.h \
+	${empty}
+
+DESK_ASRCS=\
+	deskif.S \
+	osbind.S \
+	${empty}
+
+DESK_CSRCS=\
+	deskact.c \
+	deskapp.c \
+	deskbind.c \
+	deskbutt.c \
+	deskdir.c \
+	deskdisk.c \
+	deskfile.c \
+	deskinf.c \
+	deskins.c \
+	deskmem.c \
+	deskmenu.c \
+	deskmisc.c \
+	deskopen.c \
+	deskpref.c \
+	desksear.c \
+	desksele.c \
+	deskshel.c \
+	deskshow.c \
+	deskstor.c \
+	desktop.c \
+	deskupda.c \
+	deskwin.c \
+	deskrsc.c \
+	${empty}
+
+DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)
+
+SRCS:=${DESK_SRCS}
+
+EXTRA_DIST1:=\
+	SRCFILES \
+	optimize.mak \
+	deskext.S \
+	${empty}
+
+EXTRA_DIST2:=\
+	GNUmakefile \
+	${empty}

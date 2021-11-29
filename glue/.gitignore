@@ -1,0 +1,6 @@
+*.img
+tosrsc*.c
+glue.*
+rscend.h
+tosimg.tmp
+localrsc.mak

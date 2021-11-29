@@ -1,0 +1,11 @@
+SRCS = compiler.h stdint.h types.h toserrno.h ostruct.h \
+	falcon.h vars.S tosvars.S tosvars.inc sections.inc \
+	asmdefs.h ctrycode.h ws.h rom.ld
+
+EXTRA_DIST1 = \
+	SRCFILES \
+	$(empty)
+
+EXTRA_DIST2 = \
+	GNUmakefile \
+	$(empty)

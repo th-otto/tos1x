@@ -1,0 +1,94 @@
+# nasty workaround to avoid backslash at end-of-line
+BS=\${empty}
+QBS=\\${empty}
+
+BIN=..\bin${BS}
+LIB=..\lib${BS}
+INC=..\common${BS}
+EXEEXT=.ttp
+BUILD_EXEEXT=$(EXEEXT)
+ALNPATH=${LIB}
+export ALNPATH
+
+CC=NYI
+CFLAGS= -f 
+ASFLAGS = -u -L -s ${LIB}
+CPPFLAGS = -I ${INC}
+
+AR = ${BIN}ar68${EXEEXT}
+ARFLAGS = -r
+RANLIB = ${BIN}doindex${EXEEXT}
+
+LD=${BIN}aln${EXEEXT}
+LINK68=${BIN}link68${EXEEXT}
+RELMOD=${BIN}relmod${EXEEXT}
+CPP=${BIN}cp68${EXEEXT} ${CPPFLAGS} -P
+CRT0=crt0.o
+LIBC=libc.a
+LIBC_NDX=libc.ndx
+DEPLIBC=${LIB}${LIBC}
+LIBM=libm.a
+LIBM_NDX=libm.ndx
+DEPLIBM=${LIB}${LIBM}
+GEMLIB=gem.a
+GEMLIB_NDX=gem.ndx
+DEPGEMLIB=${LIB}${GEMLIB}
+NOFLOAT=nofloat.o
+LDFLAGS=
+
+# 
+# some tools
+# 
+MV    = mv
+CP    = cp
+RM    = rm -f
+TOUCH = touch
+MKDIR = mkdir
+MKDIR_P = $(MKDIR) -p
+SED   = ${BIN}sed
+BC    = ${BIN}bc
+DC    = ${BIN}dc
+GREP  = ${BIN}grep
+TR    = ${BIN}tr
+
+CMP      = $(top_srcdir)$(BS)tools$(BS)cmprom$(BUILD_EXEEXT)
+MKGLUE   = $(top_srcdir)$(BS)tools$(BS)newglue$(BUILD_EXEEXT)
+MKBININC = $(top_srcdir)$(BS)tools$(BS)mkbininc$(BUILD_EXEEXT)
+MKROM    = $(top_srcdir)$(BS)tools$(BS)mkrom$(BUILD_EXEEXT)
+
+# Wether to run the optimizer pass.
+# the default is evaluated by RUN_OPTIMIZE_,
+# which must be either ${RUN_OPTIMIZE_0} or ${RUN_OPTIMIZE_1}.
+# It can be overridden by specifying foo_OPTIMIZE=0
+# for individual files.
+RUN_OPTIMIZE_0 = \#
+RUN_OPTIMIZE_1 = ${BIN}optimize${EXEEXT} -q $*.s
+RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_1}
+
+.SUFFIXES: .c .S .s .o .oo
+
+.c.o:
+	$(AM_V_CC)${BIN}cp68${EXEEXT} ${CPPFLAGS} $< $*.i
+	$(AM_V_at)${BIN}c068${EXEEXT} $*.i $*.1 $*.2 $*.3 ${CFLAGS}
+	$(AM_V_at)${BIN}c168${EXEEXT} $*.1 $*.2 $*.s
+	$(AM_V_at)${RUN_OPTIMIZE_${$*_OPTIMIZE}}
+	$(AM_V_at)${BIN}as68${EXEEXT} ${ASFLAGS} ${$*_ASFLAGS} -o $@ $*.s
+	$(AM_V_at)${RM} $*.s $*.i $*.1 $*.2 $*.3
+
+.s.o:
+	$(AM_V_AS)${BIN}as68${EXEEXT} ${ASFLAGS} ${$*_ASFLAGS} -o $@ $*.s
+
+.S.o:
+	$(AM_V_AS)${CPP} $*.S $(CPPOUT) $*.i
+	$(AM_V_at)${BIN}as68${EXEEXT} ${ASFLAGS} ${$*_ASFLAGS} -o $@ $*.i
+	$(AM_V_at)${RM} $*.i
+
+#
+# The final ROM image contains two versions of this compiler
+# support functions. In order to avoid duplicate symbols,
+# and because they are slightly different,
+# we have to rename one of those
+# (we use the ones from bdos since they are referenced less often)
+#
+SUBSTLMUL = $(SED) -e 's/lmul/bdoslmul/' $*.s > $*.i; $(MV) $*.i $*.s
+SUBSTLDIV = $(SED) -e 's/ldiv/bdosldiv/' $*.s > $*.i; $(MV) $*.i $*.s

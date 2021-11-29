@@ -1,0 +1,56 @@
+BIOS_162_OBJS=startup.o floppy.o blkdev.o prt.o zeromem.o nvram.o prtblk.o ikbdclk.o chardev.o keytbl.o sounds.o
+BIOS_106_OBJS=startup.o floppy.o blkdev.o prt.o zeromem.o nvram.o prtblk.o ikbdclk.o chardev.o keytbl.o sounds.o
+BIOS_104_OBJS=startup.o floppy.o blkdev.o prt.o zeromem.o nvram.o prtblk.o ikbdclk.o chardev.o keytbl.o sounds.o
+
+BIOS_OBJS=$(BIOS_$(TOSVERSION)_OBJS)
+
+BIOS_HEADERS=\
+	bios.h \
+	biosdefs.h \
+	blkdev.h \
+	bpb.h \
+	header.h \
+	ide.h \
+	linea.h \
+	pbdef.h \
+	tosvars.h \
+	${empty}
+
+BIOS_INCLUDES=\
+	linea.inc \
+	romcrc.inc \
+	scrdmp.inc \
+	intpriv.inc \
+	zeromem.S \
+	${empty}
+
+BIOS_ASRCS = \
+	startup.S \
+	ikbdclk.S \
+	chardev.S \
+	floppy.S \
+	prt.S \
+	memtest.S \
+	${empty}
+
+BIOS_CSRCS = \
+	keytbl.c \
+	sounds.c \
+	prtblk.c \
+	blkdev.c \
+	${empty}
+
+BIOS_SRCS = $(BIOS_HEADERS) $(BIOS_INCLUDES) $(BIOS_ASRCS) $(BIOS_CSRCS)
+
+EXTRA_DIST1:=\
+	SRCFILES \
+	optimize.mak \
+	biosext.S \
+	prtkeys.c \
+	${empty}
+
+EXTRA_DIST2:=\
+	GNUmakefile \
+	${empty}
+
+SRCS:=${BIOS_SRCS}

@@ -1,0 +1,17 @@
+SRCS:=startup.S cartridg.S rscend.S
+
+EXTRA_DIST1:=\
+	Makefile \
+	SRCFILES \
+	gluer.mak \
+	tos306de.map \
+	tos306us.map \
+	tos206de.map \
+	tos206us.map \
+	tos208de.map \
+	tos208us.map \
+	${empty}
+
+EXTRA_DIST2:=\
+	GNUmakefile \
+	${empty}

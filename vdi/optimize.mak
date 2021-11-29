@@ -1,0 +1,11 @@
+monout_306_OPTIMIZE=0
+monout_206_OPTIMIZE=1
+monout_208_OPTIMIZE=1
+monout_OPTIMIZE=$(monout_$(TOSVERSION)_OPTIMIZE)
+
+text_OPTIMIZE=1
+
+seedfill_306_OPTIMIZE=0
+seedfill_206_OPTIMIZE=1
+seedfill_208_OPTIMIZE=1
+seedfill_OPTIMIZE=$(seedfill_$(TOSVERSION)_OPTIMIZE)

@@ -1,0 +1,134 @@
+AES_104_OBJS = \
+	geminit.o \
+	apgrlib.o \
+	apgsxif.o \
+	../desk/deskinf.o \
+	../desk/deskif.o \
+	gemaints.o \
+	gemaplib.o \
+	gemasync.o \
+	gembase.o \
+	gembind.o \
+	gemcli.o \
+	gemctrl.o \
+	gemdisp.o \
+	gemevlib.o \
+	gemflag.o \
+	gemfmalt.o \
+	gemfmlib.o \
+	gemfslib.o \
+	gemglobe.o \
+	linefhdl.o \
+	geminput.o \
+	gemmnlib.o \
+	gemobed.o \
+	gemobjop.o \
+	gempd.o \
+	gemqueue.o \
+	gemrom.o \
+	gemrslib.o \
+	gemsclib.o \
+	gemshlib.o \
+	gemwmlib.o \
+	gemwrect.o \
+	romcart.o \
+	gemoblib.o \
+	gemgrlib.o \
+	gemgsxif.o \
+	gsx2.o \
+	jbind.o \
+	jdispa.o \
+	jdos.o \
+	large.o \
+	function.o \
+	optimize.o \
+	ratrbp.o \
+	trap14.o \
+	$(DBG_OBJS) \
+	../desk/deskmisc.o \
+	../desk/deskwin.o \
+	../desk/deskstor.o \
+	$(empty)
+
+AES_106_OBJS=${AES_104_OBJS}
+AES_162_OBJS=${AES_104_OBJS}
+
+AES_OBJS=${AES_${TOSVERSION}_OBJS}
+
+AES_HEADERS=\
+	aes.h \
+	aesdefs.h \
+	crysbind.h \
+	dos.h \
+	gemlib.h \
+	gemrsc.h \
+	gsxdefs.h \
+	obdefs.h \
+	struct88.h \
+	taddr.h \
+	${empty}
+
+AES_ASRCS=\
+	apgrlib.S \
+	apgsxif.S \
+	gemgrlib.S \
+	gemgsxif.S \
+	gsx2.S \
+	jbind.S \
+	jdispa.S \
+	jdos.S \
+	large.S \
+	optimize.S \
+	ratrbp.S \
+	trap14.S \
+	gemjstrt.S \
+	linefhdl.S \
+	${empty}
+
+AES_CSRCS=\
+	gemaints.c \
+	gemaplib.c \
+	gemasync.c \
+	gembase.c \
+	gembind.c \
+	gemcli.c \
+	gemctrl.c \
+	gemdisp.c \
+	gemevlib.c \
+	gemflag.c \
+	gemfmalt.c \
+	gemfmlib.c \
+	gemfslib.c \
+	gemglobe.c \
+	geminit.c  \
+	geminput.c \
+	gemmnlib.c \
+	gemobed.c \
+	gemobjop.c \
+	gempd.c \
+	gemqueue.c \
+	gemrom.c \
+	gemrslib.c \
+	gemsclib.c \
+	gemshlib.c \
+	gemwmlib.c \
+	gemwrect.c \
+	romcart.c \
+	gemoblib.c \
+	function.c \
+	$(DBG_OBJS:.o=.c) \
+	${empty}
+
+AES_SRCS = $(AES_HEADERS) $(AES_ASRCS) $(AES_CSRCS)
+
+SRCS:=${AES_SRCS}
+
+EXTRA_DIST1:=\
+	SRCFILES \
+	optimize.mak \
+	aesext.S \
+	${empty}
+
+EXTRA_DIST2:=\
+	GNUmakefile \
+	${empty}
