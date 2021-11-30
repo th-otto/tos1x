@@ -415,9 +415,8 @@ _endvdibss: ds.b 0
 	
 	INT(_gl_recd)
 	INT(_gl_bdesired)
+	INT(_gl_apid)
 
-	ds.b 2
-	
 	PTR(_ad_path)
 	PTR(old_bcode)
 

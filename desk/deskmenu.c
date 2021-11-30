@@ -731,7 +731,7 @@ PP(int16_t *msgbuff;)
  * Handle all the different messages
  */
 /* 306de: 00e2ec12 */
-VOID hd_msg(NOTHIN)
+VOID hd_msg(NOTHING)
 {
 	register int d7;
 	register int d6;

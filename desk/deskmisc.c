@@ -56,6 +56,7 @@ PP(int16_t item;)
 
 
 /* 306de: 00e2fdfc */
+/* 104de: 00fe74a6 */
 int16_t do1_alert(P(int16_t) item)
 PP(int16_t item;)
 {

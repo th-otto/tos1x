@@ -92,6 +92,9 @@ PP(register VOIDPTR *addr_in;)
 	case APPL_TRECORD:
 		ret = ap_trecd((intptr_t)AP_TBUFFER, AP_TLENGTH);
 		break;
+	case APPL_BVSET:
+		ret = ap_bvset(AP_BVDISK, AP_BVHARD);
+		break;
 	case APPL_EXIT:
 		ap_exit();
 		break;

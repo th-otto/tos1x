@@ -50,25 +50,6 @@
 	xref _gl_bvhard
 
 
-#if AESVERSION >= 0x200
-#if CCODE
-WORD appl_bvset(WORD bvdisk, WORD bvhard)
-{
-  gl_bvdisk = bvdisk;
-  gl_bvhard = bvhard;
-  return(TRUE);
-}
-#endif
-/* 306de: 00e35c7e */
-	xdef _appl_bvset
-_appl_bvset:
-	move.w	8-4(sp),_gl_bvdisk
-	move.w	10-4(sp),_gl_bvhard
-	moveq	#1,d0
-	rts
-#endif
-
-
 #if CCODE
 WORD appl_write(WORD rwid, WORD length, int16_t *pbuff)
 {

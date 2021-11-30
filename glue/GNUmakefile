@@ -37,9 +37,10 @@ AESDESK_OBJS = \
 	../aes/apgrlib.o \
 	../aes/apgsxif.o \
 	../desk/deskinf.o \
+	../desk/deskmisc.o \
+	../aes/gemaplib.o \
 	../desk/deskif.o \
 	../aes/gemaints.o \
-	../aes/gemaplib.o \
 	../aes/gemasync.o \
 	../aes/gembase.o \
 	../aes/gembind.o \
@@ -78,11 +79,9 @@ AESDESK_OBJS = \
 	../aes/optimize.o \
 	../aes/ratrbp.o \
 	../aes/trap14.o \
-	../desk/deskmisc.o \
 	../desk/deskwin.o \
 	../desk/deskstor.o \
 	../desk/deskact.o \
-	../desk/deskapp.o \
 	../desk/deskbind.o \
 	../desk/deskbutt.o \
 	../desk/deskdir.o \

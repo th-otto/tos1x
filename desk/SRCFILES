@@ -1,4 +1,4 @@
-DESK_OBJS1=deskact.o deskapp.o deskbind.o deskbutt.o deskdir.o
+DESK_OBJS1=deskact.o deskbind.o deskbutt.o deskdir.o
 DESK_OBJS2=deskdisk.o deskfile.o deskinf.o deskins.o deskmem.o
 DESK_OBJS3=deskmenu.o deskmisc.o deskopen.o deskpref.o desksear.o
 DESK_OBJS4=desksele.o deskshel.o deskshow.o deskrsc.o deskstor.o
@@ -23,7 +23,6 @@ DESK_ASRCS=\
 
 DESK_CSRCS=\
 	deskact.c \
-	deskapp.c \
 	deskbind.c \
 	deskbutt.c \
 	deskdir.c \

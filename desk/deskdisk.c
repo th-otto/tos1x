@@ -44,7 +44,7 @@
 #define RSECTS		2					/* |= 0x02 so mediach state is not checked */
 #define WSECTS		3
 
-#define FSIZE		0x4000L				/* format buffer size (16k)     */
+#define FSIZE		0x2000L				/* format buffer size (8k)     */
 #define	VIRGIN		0xe5e5				/* FORMAT value to write to new sectors */
 #define	MAGIC		0x87654321L
 #define INTERLV		-1					/* neg, so use skew table for format    */
@@ -113,7 +113,7 @@ static int16_t const skew2[MAXSPT] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5,
 BOOLEAN fc_format PROTO((OBJECT *obj));
 VOID fc_copy PROTO((OBJECT *obj));
 int16_t fc_rwsec PROTO((int16_t op, VOIDPTR buf, int16_t nsect, int16_t sect, int16_t dev));
-static VOID clfix PROTO((uint16_t cl, uint16_t *fat));
+LINEF_STATIC VOID fc_clfix PROTO((uint16_t cl, uint16_t *fat));
 VOID fc_bar PROTO((OBJECT *obj, int16_t which));
 VOID fc_draw PROTO((OBJECT *obj, int16_t which));
 
@@ -124,6 +124,7 @@ VOID fc_draw PROTO((OBJECT *obj, int16_t which));
  * format and copy start
  */
 /* 306de: 00e29ea2 */
+/* 104de: 00fe6a5a */
 VOID fc_start(P(const char *)source, P(int16_t) op)
 PP(const char *source;)
 PP(int16_t op;)
@@ -258,6 +259,7 @@ PP(int16_t op;)
  * format disk
  */
 /* 306de: 00e2a1a4 */
+/* 104de: 00fe6d20 */
 BOOLEAN fc_format(P(OBJECT *)obj)
 PP(OBJECT *obj;)
 {
@@ -282,7 +284,7 @@ PP(OBJECT *obj;)
 	UNUSED(dsb);
 	
 	/* format needs 8k buffer   */
-	if (!(bufaddr = (char *)Malloc(FSIZE)))		/* no memory            */
+	if (!(bufaddr = (char *)dos_alloc(FSIZE)))		/* no memory            */
 	{
 	memerr:
 		do1_alert(FCNOMEM);
@@ -292,9 +294,9 @@ PP(OBJECT *obj;)
 	fat = (int16_t *)bufaddr;						/* the bad sector table     */
 
 	/* my bad sector table      */
-	if (!(badtable = (int16_t *)Malloc(FSIZE)))	/* no memory            */
+	if (!(badtable = (int16_t *)dos_alloc(FSIZE)))	/* no memory            */
 	{
-		Mfree(bufaddr);
+		dos_free(bufaddr);
 		goto memerr;
 	}
 
@@ -432,7 +434,7 @@ PP(OBJECT *obj;)
 		for (i = 0; i < badindex; i++)
 		{
 			cl = (badtable[i] - bpbaddr->datrec) / bpbaddr->clsiz + 2;
-			clfix(cl, (uint16_t *)fat);
+			fc_clfix(cl, (uint16_t *)fat);
 		}
 		/* write out fat 0  */
 		if ((ret = fc_rwsec(WSECTS, fat, bpbaddr->fsiz, 1, devno)))
@@ -626,6 +628,7 @@ chksrc:
 
 
 /* 306de: 00e2a982 */
+/* 104de: 00fe73d0 */
 int16_t fc_rwsec(P(int16_t) op, P(VOIDPTR) buf, P(int16_t) nsect, P(int16_t) sect, P(int16_t) dev)
 PP(int16_t op;)
 PP(VOIDPTR buf;)
@@ -647,7 +650,8 @@ PP(int16_t dev;)
  * put in the next cluster number
  */
 /* 306de: 00e2a9d0 */
-static VOID clfix(P(uint16_t) cl, P(uint16_t *)fat)
+/* 104de: 00fe7408 */
+static VOID fc_clfix(P(uint16_t) cl, P(uint16_t *)fat)
 PP(uint16_t cl;)
 PP(uint16_t *fat;)
 {

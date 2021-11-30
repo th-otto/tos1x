@@ -176,19 +176,22 @@ _savestate:
 
 
 /* 306de: 00e25908 */
+/* 104de: 00fdcef6 */
 	xdef	_switchto
 _switchto:
 	move	sr,srsave
 	ori	#$700,sr		; no interrupts while on bogus stack!
-
-	move.l	_rlr,sp
-	move.l	8(sp),sp		; Get the UDA
-	lea	2(sp),sp			; Points the D0 area	
-	move.l	64(sp),a0		; Get the USP from u_spuser
-	move.l	a0,usp
-	movem.l	(sp)+,d0-d7/a0-a6	; Pull regs from uda
-	move.l	(sp),sp				/* restore sp from u_spsuper */
-	clr.b	_indisp				; Can enter dispatcher now
+	addq.l    #4,a7
+	
+	move.l	(a7),sp			; get the UDA
+	addq.l  #2,a7			; Points the D0 area	
+	movem.l	(sp)+,d0-d7/a0-a5	; Pull regs from uda
+	move.l	8(sp),a6		; Get the USP from u_spuser
+	move.l	a6,usp
+	move.l  (a7)+,a6        ; Pull a6 from uda
+	move.l	(sp),sp			; restore sp from u_spsuper
+	clr.b	_indisp			; Can enter dispatcher now
+	move.w  srsave,(a7)
 	rte	
 
 /*****************************************************************
@@ -202,11 +205,7 @@ _gotopgm:
 	ori	#$700,SR		; turn interrupts off
 	movea.l	_rlr,a0			; get pd
 	move.l	24(a0),a0		; pd->ldaddr is base page of program
-	tst.w	(longframe).w		; if not on longframe CPU
-	beq.b	g_1			; don't need a format word
-	clr	-(sp)			; otherwise fake a format word
-
-g_1:	move.l	8(a0),-(sp)		; get beg of text on our sp
+	move.l	8(a0),-(sp)		; get beg of text on our sp
 	move	savsr,-(sp)		; get current irq's.
 	eor	#$2000,(sp)		; run him in user mode (SR = 0, IPL0)
 	rte
@@ -228,11 +227,7 @@ _psetup:
 	move.l	8(sp),d0		; val
 	move.l	8(a0),a1		; a1 = pd->uda
 	move.l	62(a1),a2		; a2 = uda->SUPSTK
-	tst.w	(longframe).w		; if it's not a longframe CPU
-	beq.b	p_1			; don't need a format word
-	clr	-(a2)			; otherwise, fake a format word
-
-p_1:	move.l	d0,-(a2)		; predecrement and store val on stack
+	move.l	d0,-(a2)		; predecrement and store val on stack
 	move.w	#$2000,-(a2)		; predecrement and store status word
 	move.l	a2,62(a1)		; restore stack ptr
 	move	psetsr,sr		; restore interrupts

@@ -64,6 +64,7 @@ int16_t gl_my;					/* 3/12/86  */
  * Application Init
  */
 /* 306de: 00e199fc */
+/* 104de: 00fd7988 */
 int16_t ap_init(P(intptr_t) pglobal)
 PP(intptr_t pglobal;)
 {
@@ -74,6 +75,20 @@ PP(intptr_t pglobal;)
 	LWSET(pglobal + 26, gl_bvdisk);
 	LWSET(pglobal + 28, gl_bvhard);
 	return rlr->p_pid;
+}
+
+
+/*
+ * AES #16 - appl_bvset - Set the available logical drives for the file-selector. 
+ */
+/* 104de: 00fd79cc */
+int16_t ap_bvset(P(int16_t) bvdisk, P(int16_t) bvhard)
+PP(int16_t bvdisk;)
+PP(int16_t bvhard;)
+{
+	gl_bvdisk = bvdisk;
+	gl_bvhard = bvhard;
+	return TRUE;
 }
 
 

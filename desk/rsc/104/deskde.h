@@ -98,8 +98,13 @@
 #define DIOK               7 /* BUTTON in tree ADDISKIN */
 
 #define ADDINFO            3 /* form/dialog */
+#define DEOK               9 /* BUTTON in tree ADDINFO */
 
 #define ADOPENAP           4 /* form/dialog */
+#define APPLNAME           1 /* FTEXT in tree ADOPENAP */
+#define APPLPARM           3 /* FTEXT in tree ADOPENAP */
+#define APPLOK             4 /* BUTTON in tree ADOPENAP */
+#define APPLCNCL           5 /* BUTTON in tree ADOPENAP */
 
 #define ADINSDIS           5 /* form/dialog */
 #define DRID               1 /* FTEXT in tree ADINSDIS */

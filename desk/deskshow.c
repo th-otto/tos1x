@@ -124,8 +124,8 @@
 
 
 long uikey PROTO((NOTHING));
-int doui PROTO((int mode, int *plinecount));
-VOID bconws PROTO((const char *s));
+LINEF_STATIC int doui PROTO((int mode, int *plinecount));
+LINEF_STATIC VOID bconws PROTO((const char *s));
 
 
 /* 306de: 00e331aa */
@@ -309,7 +309,7 @@ alldone:
  * that causes a dispatch, which causes the AES to buffer keystrokes.
  */
 /* 306de: 00e334a2 */
-long uikey(NOTHING)
+LINEF_STATIC long uikey(NOTHING)
 {
 	if (gl_btrue & 1)
 		return SPACE;					/* left mouse button = next page    */
@@ -387,7 +387,7 @@ PP(int *plinecount;)
 
 
 /* 306de: 00e3359e */
-VOID bconws(P(const char *)s)
+LINEF_STATIC VOID bconws(P(const char *)s)
 PP(register const char *s;)
 {
 	while (*s)

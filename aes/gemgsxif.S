@@ -1184,15 +1184,6 @@ vdi_cont:
 	move.l	#_ptsin,pioff		; some routines alter this pointer
 	rts				; so we shall always reset it.
 
-#if !BINEXACT
-	xdef _set_cache
-_set_cache:
-	move.l 4(a7),d1
-	CACR_D0
-	D1_CACR
-	rts
-#endif
-
 
 vdi_list:	
 
