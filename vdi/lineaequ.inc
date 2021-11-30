@@ -84,19 +84,7 @@
 #define loc_mode		-436
 #define num_qc_lines		-434
 
-#if (TOSVERSION >= 0x300) & PLANES8
-/* space to save the return address */
-#define trap14sav		-432
-/* some modes this is ored in VS_COLOR */
-#define col_or_mask		-428
-/* some modes this is anded in VS_COLOR */
-#define col_and_mask		-424
-/* space to sav ret adr (for reentrency) */
-#define trapb14sav		-420
-#define resrvd0			-416
-#else
 #define q_circle                -432
-#endif
 
 #define str_mode		-352
 #define val_mode		-350
@@ -297,72 +285,9 @@
 
 /* pointer to drawing primitives vector list */
 #define LA_ROUTINES		162
-#if TOSVERSION >= 0x400
-/* pointer to current device structure */
-#define LA_CURDEV		166
-#else
 /* drawing primitives done in software   */
 #define LA_SOFTROUTINES		166
-#endif
 #define BLT_MODE		170
-
-#if PLANES8
-
-#define LA_F32			172
-
-/* extended request color array */
-#define REQ_X_COL		174
-
-/* points to the proper save block */
-#define sv_blk_ptr		1614
-/* foreground bit planes flags (bit 0 is plane 0) */
-#define FG_B_PLANES		1618
-
-/* foreground bit_plane #5 value. */
-#define FG_BP_5			1622
-/* foreground bit_plane #6 value. */
-#define FG_BP_6			1624
-/* foreground bit_plane #7 value. */
-#define FG_BP_7			1626
-/* foreground bit_plane #8 value. */
-#define FG_BP_8			1628
-
-#define sav8_block		1630
-#define sav8_len		1630
-/* screen address of 1st word of plane 0 */
-#define sav8_addr		1632
-#define sav8_stat		1636
-/* save up to 8 planes. 16 longwords / plane */
-#define sav8_area	 	1638
-
-#if !VIDEL_SUPPORT
-
-/* space to build circle coordinates (80 words) */
-#define q_circle		2150
-
-#else
-
-/* space to build circle coordinates */
-#define q_circle		2662
-
-/* ******************* NEW EQUATES ******************* */
-
-/* number of bytes per pixel (0 if < 1) */
-#define byt_per_pix		2822
-/* scrn form 2 ST, 1 stndrd, 3 pix */
-#define form_id			2824
-/* escape background color */
-#define vl_col_bg		2826
-/* escape foreground color */
-#define vl_col_fg		2830
-/* either a maping of reg's or true val */
-#define pal_map			2834
-/* all the vectored primitives (40 ptrs) */
-#define V_PRIMITIVES		3858
-
-#endif
-
-#endif
 
 /*
  * Macros for accessing linea variables:
@@ -371,15 +296,9 @@
  * PIXLA: load address register with lineavar variable base if MULTI_LINEA, no-op otherwise
  * PIXLV: access through base register if MULTI_LINEA, absolute otherwise
  */
-#if MULTI_LINEA
-#define LA(r) move.l _lineAVars,r
-#define PIXLA(r) LA(r)
-#define PIXLV(v,r) v(r)
-#else
 #define LA(r) lea lineavars,r
 #define PIXLA(r)
 #define PIXLV(v,r) lineavars+(v)
-#endif
 #define LV(v,r) v(r)
 
 

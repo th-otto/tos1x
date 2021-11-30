@@ -50,11 +50,7 @@ struct font_head const f8x8 = {
     1,					/*   uint16_t ul_size		*/
     0x5555,				/*   uint16_t lighten		*/
     0x5555,				/*   uint16_t skew			*/
-#if TOSVERSION >= 0x400
-    STDFORM | MONOSPACE,/*   uint16_t flags		*/
-#else
     STDFORM | MONOSPACE | DEFAULT,/*   uint16_t flags		*/
-#endif
     0,					/*   uint8_t *hor_table		*/
     (const uint16_t *)off_8x8,			/*   uint16_t *off_table		*/
     (const uint16_t *)dat_8x8,			/*   uint16_t *dat_table		*/

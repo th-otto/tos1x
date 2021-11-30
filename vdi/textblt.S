@@ -30,14 +30,8 @@
 #include "lineaequ.inc"
 
 
-#if MULTI_LINEA
-#define V_FUNC(func,la,r) \
-	move.l	LV(LA_ROUTINES,la),r \
-	move.l	func(r),r
-#else
 #define V_FUNC(func,la,r) \
 	move.l	(lineavars+USERDEVINIT)+func,r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -48,11 +42,7 @@
 
 
 	xdef _scrtsiz
-#if TOSVERSION >= 0x300
-_scrtsiz:	dc.w	666	; WUT THE FUT ??$*&@!??
-#else
 _scrtsiz:	dc.w	204	; WUT THE FUT ??$*&@!??
-#endif
 
 *  entry point for textblt & scaling routine
 *

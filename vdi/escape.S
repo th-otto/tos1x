@@ -93,21 +93,12 @@ F_SVPOS		equ	    5	;				1:true
 
 	text
 
-#if MULTI_LINEA
-#define PIXL6(r) PIXLA(r)
-O6 equ 0
-#define V_STAT_0 v_stat_0
-#define V_FUNC(func,la,r) \
-	move.l	LV((LA_ROUTINES)+O6,la),r \
-	move.l	func(r),r
-#else
 O6 equ 6 ; WTF? why?
 /* v_stat_0+O6 == 0; stupid as68 does not optimize it */
 #define V_STAT_0
 #define V_FUNC(func,la,r) \
 	move.l	LV((USERDEVINIT)+O6+func,la),r
 #define PIXL6(r) lea lineavars-O6,r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -323,11 +314,7 @@ esc_ch1:
 	bmi	exit_conout		; value. Exit if invalid.
 
 	cmp.w	#12,d1			; If in the range A-M go handle
-#if BINEXACT & (TOSVERSION < 0x400) & (TOSVERSION >= 0x300)
-	ble.s	range_A2M
-#else
 	ble		range_A2M
-#endif
 
 	cmp.w	#24,d1			; <esc> Y is direct cursor addressing
 	bne.s	check_low_case		; and takes 2 additional characters
@@ -384,17 +371,8 @@ get_fg_col:	lea	set_fg_col(pc),a0
 		bra	load_state		; Next char is the FG color
 
 set_fg_col:
-#if VIDEL_SUPPORT
-		lea	pal_map(a4),a0		; a0 -> virtual palette
-		sub.w	#'0',d1			; mask out unneeded bits; WTF; old bug reintroduced, see below, it was removed in 2.06/3.06
-		lsl.w	#2,d1			; make d1 long word offset
-		move.l	(a0,d1.w),LV((vl_col_fg)+O6,a4)	; set the foreground color. ; BUG: only sets FG color for >= 16 planes
-#else
-#if TOSVERSION < 0x300
 		sub.w     #$0020,d1
-#endif
 		move.w	d1,LV((v_col_fg)+O6,a4)	; set the foreground color.
-#endif
 		lea	normal_ascii(pc),a0
 		bra	load_state
 
@@ -409,17 +387,8 @@ get_bg_col:	lea	set_bg_col(pc),a0	; Next char is the BG color
 
 
 set_bg_col:
-#if VIDEL_SUPPORT
-		lea	pal_map(a4),a0		; a0 -> virtual palette
-		sub.w	#'0',d1			; mask out unneeded bits; WTF; old bug reintroduced, see below, it was removed in 2.06/3.06
-		lsl.w	#2,d1			; make d1 long word offset
-		move.l	(a0,d1.w),LV((vl_col_bg)+O6,a4)	; set the background color. ; BUG; only sets BG color for >= 16 planes
-#else
-#if TOSVERSION < 0x300
 		sub.w     #$0020,d1
-#endif
 		move.w	d1,LV((v_col_bg)+O6,a4)	; set the foreground color.
-#endif
 		lea	normal_ascii(pc),a0
 		bra	load_state
 
@@ -848,11 +817,7 @@ escI:
 	move.w	LV((v_curcy)+O6,a4),d1		; d1 <- current cursor Y
 	bne	up_cursor		; if not at top, move cursor up 1 line
 
-#if BINEXACT & (TOSVERSION < 0x300)
 	bsr.w	hide_cursor
-#else
-	bsr.s	hide_cursor
-#endif
 	bsr	p_sc_dn			; scroll screen down 1 line and
 	bra	show_cursor		; blank the top line
 
@@ -905,11 +870,7 @@ escd:
 	subq.w	#1,d3			; d3 <- Ymax (line above the cursor)
 
 	bsr	erase_region		; erase screen above cursor
-#if BINEXACT & (TOSVERSION < 0x300)
 	bra.w	esco			; erase from beginning of line. return
-#else
-	bra.s	esco			; erase from beginning of line. return
-#endif
 
 
 *******************************************************************************
@@ -981,11 +942,7 @@ hide_cursor:
 *******************************************************************************
 
 escj:		bset.b	#F_SVPOS,LV(V_STAT_0,a4)	; set "pos saved" status bit.
-#if TOSVERSION >= 0x400
-		move.l	LV((v_curcx)+O6,a4),LV((xydraw)+O6,a4) ; hm, bug? why xydraw?
-#else
 		move.l	LV((v_curcx)+O6,a4),LV((sav_cxy)+O6,a4)
-#endif
 
 escj_exit:	rts
 
@@ -1252,9 +1209,6 @@ ascii_out:
 	bhi	out_of_bounds
 
 
-#if TOSVERSION >= 0x300
-	sub.w	LV((v_fnt_st)+O6,a4),d1		; d1 <- relative character val
-#endif
 	move.l	LV((v_off_ad)+O6,a4),a0		; a0 -> offset table.
 	add.w	d1,d1			; d1 <- word offset into table
 	move.w	(a0,d1.w),d1		; d1 <- pixel offset into font data
@@ -1266,13 +1220,6 @@ ascii_out:
 	move.l	LV((v_cur_ad)+O6,a4),a1		; a1 -> the destination
 	move.w	LV((v_col_fg)+O6,a4),d6		; d6 <- foreground color
 	move.w	LV((v_col_bg)+O6,a4),d7		; d7 <- background color
-
-#if VIDEL_SUPPORT
-	cmp.w	#16,LV((v_planes)+O6,a4)	; see if we should use long val for col
-	ble	col_ok2			; if not the just skip
-	move.l	LV((vl_col_fg)+O6,a4),d6	; d6 <- foreground color
-	move.l	LV((vl_col_bg)+O6,a4),d7	; d7 <- background color
-#endif
 
 col_ok2:
 	btst.b	#F_REVID,LV(V_STAT_0,a4)	; test reverse video flag in v_stat_0
@@ -1299,80 +1246,33 @@ put_char:
 end_o_line:
 
 	btst.b	#F_CEOL,LV(V_STAT_0,a4)	; wrap or overwrite ?
-#if BINEXACT & (TOSVERSION < 0x400)
 	beq.s	show_alpha		; overwrite: stay put
-#else
-	beq		show_alpha		; overwrite: stay put
-#endif
 
 	clr.w	d0			; d0 <- X of first cell in line
-#if TOSVERSION < 0x400
 	move.w	LV((v_cel_wr)+O6,a4),d2
-#endif
 	move.l	_v_bas_ad,a1		; a1 -> base of screen
 
 	cmp.w	LV((v_celmy)+O6,a4),d1		; is it time to scroll ?
 	blt	no_scroll
 
 	move.w	d1,LV((v_curcy)+O6,a4)		; save the cursor Y coordinate
-#if TOSVERSION < 0x400
 	mulu.w	d2,d1
-#else
-	mulu	LV((v_cel_ht)+O6,a4),d1		; d1 <- (cell height) * (cursor Y pos)
-	mulu	LV((v_lin_wr)+O6,a4),d1	; d1 <-  offset to start of last line
-#endif
 	add.l	d1,a1			; a1 -> beginning of last line
 
 	clr.w	d1			; scroll from top of screen.
 
-#if TOSVERSION < 0x400
 	pea	save_it(pc)		 return to "save_it"
 	bra	p_sc_up			 do the scroll.
-#else
-	movem.l d0/a1,-(sp)		; SAVE ME!!!!!
-	bsr	p_sc_up			 ; do the scroll.
-	movem.l (sp)+,d0/a1		; RESTORE ME!
-	bra	save_it
-#endif
 
 no_scroll:
 
 	addq.w	#1,d1			; d1 <- Y of next line
-#if TOSVERSION < 0x400
 	mulu.w	d1,d2
-#else
-	move.w	d1,d2			; d2 <- Y of next line
-	mulu	LV((v_cel_ht)+O6,a4),d2		; d1 <- (cell height) * (cursor Y pos)
-	mulu	LV((v_lin_wr)+O6,a4),d2	; d1 <-  offset to start of last line
-#endif
 	add.l	d2,a1			; a1 -> next line
 	bra	disp_cur
 
 
 next_cell:
-#if TOSVERSION >= 0x300
-	move.l	LV((v_off_ad)+O6,a4),a2		; a2 -> offset table
-#if VIDEL_SUPPORT
-	move.w	LV((byt_per_pix)+O6,a4),d2	; d2 <- # of bytes per pix
-	beq	word_cell		; if zero means not pix packed
-	mulu	2(a2),d2		; d2 <- offset to next cell
-	adda.l	d2,a1			; a1 -> first cell of next word
-	addq.w	#1,d0			; Xcell of next cell to right
-	bra	disp_cur		; display cursor
-#endif
-
-word_cell:
-
-	cmp.w	#16,2(a2)		; see if char cell is word wide
-	bne	byte_cell		; if not inc a1 by one (byte)
-	addq.w	#1,d0			; Xcell of next cell to right
-	move.w	LV((v_planes)+O6,a4),d2
-	add.w	d2,d2
-	lea	(a1,d2.w),a1		; a1 -> first cell of next word
-	bra	disp_cur		; display cursor
-
-byte_cell:
-#endif
 	addq.w	#1,a1			; a1 -> next cell (if X was even)
 	addq.w	#1,d0			; Xcell of next cell to right
 	btst.l	#0,d0			; if X is even, move to next
@@ -1422,64 +1322,6 @@ out_of_bounds:
 
 #include "hbescape.inc"
 
-#if TOSVERSION >= 0x300
-
-*******************************************************************************
-*
-* title:	Scroll
-*
-*		Scroll copies a source region as wide as the screen to an
-*		overlapping destination region on a one cell-height offset
-*		basis.  Two entry points are provided:  Partial-lower
-*		scroll-up, partial-lower scroll-down. Partial-lower screen
-*		operations require cell y # indicating the top line where
-*		scrolling will take place.
-*
-*		After the copy is performed, any non-overlapping area of
-*		the previous source region is "erased" by filling with the
-*		background color.
-*
-*
-*  in:		d1.w	   cell Y of region top
-*		v_celmx   cell Y of region bottom
-*		V_SCRUP	   points to desired version of scroll up routine
-*		V_SCRDN	   points to desired version of scroll down routine
-*
-*  munged:	d0-d7/a2-a3/a5
-*
-*******************************************************************************
-
-p_sc_up:
-	V_JUMP(V_SCRUP,a4,a5)		; a5 -> version of p_sc_up
-
-p_sc_dn:
-	V_JUMP(V_SCRDN,a4,a5)		; a5 -> version of p_sc_dn
-
-*******************************************************************************
-*
-* title:	Blank it
-*
-* purpose:	This routine fills a cell-word aligned region with the
-*		background color. The rectangular region is specified by
-*		a top/left cell x,y and a bottom/right cell x,y, inclusive.
-*
-* in:		d0 	cell Xmin of region
-*		d1	cell Ymin of region
-*		d2	cell Xmax of region
-*		d3	cell Ymax of region
-*
-*		V_BLANK  pointer to blanking routine (hb_blank uses BLASTER)
-*
-* mutated:	d3-d7/a2-a3/a5
-*
-*******************************************************************************
-
-	xdef	blank_it
-blank_it:
-	V_JUMP(V_BLANK,a4,a5)		; a5 -> version of blank_it
-
-#endif /* TOSVERSION >= 0x300 */
-
 *******************************************************************************
 *
 * name:		cell_addr
@@ -1506,54 +1348,22 @@ blank_it:
 
 cell_addr:
 		move.w	LV((v_celmx)+O6,a4),d2
-#if TOSVERSION >= 0x300
-		tst.w	d0			; test for negative x
-		bge	clip_x
-		moveq.l	#0,d0
-		bra	x_clipped
-clip_x:
-#endif
 		cmp.w	d0,d2
 		bpl	x_clipped
 		move.w	d2,d0			; d0 <- clipped x
 
 x_clipped:
 		move.w	LV((v_celmy)+O6,a4),d2
-#if TOSVERSION >= 0x300
-		tst.w	d1			; test for negative y
-		bge	clip_y
-		moveq.l	#0,d1
-		bra	y_clipped
-clip_y:
-#endif
 		cmp.w	d1,d2
 		bpl	y_clipped
 		move.w	d2,d1			; d1 <- clipped Y
 
 y_clipped:
 		move.w	d1,d3			; d3 <- clipped Y
-#if TOSVERSION < 0x400
 		mulu	LV((v_cel_wr)+O6,a4),d3	; d3 <- offset to row Y
-#else
-		mulu	LV((v_cel_ht)+O6,a4),d3
-		mulu	LV((v_lin_wr)+O6,a4),d3	; d3 <- offset to row Y
-#endif
 
 		move.w	d0,d2			; d2 <- clipped X
 
-#if TOSVERSION >= 0x300
-		move.l	LV((v_off_ad)+O6,a4),a2		; a2 -> offset table
-#if VIDEL_SUPPORT
-		move.w	LV((byt_per_pix)+O6,a4),d5	; d5 <- # bytes per each pix
-		bne	claddr_pix		; do pixel packed
-#endif
-
-		cmp.w	#16,2(a2)		; see if char cell is word wide
-		bne	claddr1			; bra if cell is 1 byte
-		add.w	d2,d2			; d2 <- d2 * 2 if cel = 2 bytes
-
-claddr1:
-#endif
 		bclr.l	#0,d2			; d2 <- word boundry X
 		sne	d4			; d4 <- 0 if X even else <- FF
 		mulu	LV((v_planes)+O6,a4),d2	; d2 <- offset in bytes to X
@@ -1564,17 +1374,6 @@ claddr1:
 		add.w	LV((v_cur_off)+O6,a4),a1	; another silly offset
 		add.l	d2,a1			; a1 -> cell (X,Y)
 		rts
-
-
-#if VIDEL_SUPPORT
-claddr_pix:	mulu	2(a2),d2		; d2 <- # of pixels into line
-		mulu	d5,d2			; d2 <- # of bytes into line
-		add.l	d3,d2			; d2 <- (X, Y) offset in bytes
-		move.l	_v_bas_ad,a1
-		add.w	LV((v_cur_off)+O6,a4),a1	; another silly offset
-		add.l	d2,a1			; a1 -> cell (X,Y)
-		rts
-#endif
 
 
 *******************************************************************************
@@ -1589,33 +1388,10 @@ claddr_pix:	mulu	2(a2),d2		; d2 <- # of pixels into line
 *		d1.w	new cell Y coordinate
 *
 *******************************************************************************
-#if TOSVERSION >= 0x400
-move_cursor:
-	V_JUMP(V_MOVEACUR,a4,a1)	; a1 -> proper move routine
-#endif
-
-*******************************************************************************
-*
-* name:		st_move_cursor (also works with pixel packed)
-*
-* purpose:	move the cursor and update global parameters
-*		erase the old cursor (if necessary) and draw new
-*		cursor (if necessary)
-*
-* in:		d0.w	new cell X coordinate
-*		d1.w	new cell Y coordinate
-*
-*******************************************************************************
-
-#if TOSVERSION >= 0x400
-		xdef st_move_cursor
-st_move_cursor:
-#else
 /* 306de: 00e077f6 */
 /* 206de: 00e06826 */
 /* 104de: 00fcaa7e */
 move_cursor:
-#endif
 		addq.w	#1,LV((disab_cnt)+O6,a4)	; << BEGIN CRITICAL SECTION >>
 
 		bclr.b	#F_CSTATE,LV(V_STAT_0,a4)	; is curs currently displayed ?
@@ -1636,17 +1412,6 @@ invisible:	bsr	cell_addr		; get new clipped cursor pos
 *
 * neg_cell:	go to the proper negate alpha cell routine
 *
-*******************************************************************************
-#if TOSVERSION >= 0x400
-		xdef	neg_cell
-neg_cell:
-		V_JUMP(V_NEGCELL,a4,a2)	; a2 ->  ne alpha cursor routine
-#endif
-
-*******************************************************************************
-*
-* name:		st_neg_cell
-*
 * purpose:	This routine negates the contents of an arbitrarily tall
 *		byte/word wide cell composed of an arbitrary number of
 *		(atari styled) bit-planes. cursor display can be
@@ -1662,13 +1427,8 @@ neg_cell:
 *******************************************************************************
 
 
-#if TOSVERSION >= 0x400
-	xdef	st_neg_cell
-st_neg_cell:
-#else
 	xdef	neg_cell
 neg_cell:
-#endif
 		move.w	LV((v_lin_wr)+O6,a4),d4
 		move.w	LV((v_cel_ht)+O6,a4),d5
 		subq.w	#1,d5			; for dbra.
@@ -1677,21 +1437,6 @@ neg_cell:
 
 plane_loop:	move.l	a1,a2			; a2 -> top of curr dest plane
 		move.w	d5,d6			; reset cell length counter
-
-#if TOSVERSION >= 0x300
-		move.l	LV((v_off_ad)+O6,a4),a0		; a2 -> offset table
-		cmp.w	#16,2(a0)		; see if char cell is word wide
-		bne	neg_byte		; if not just neg one byte
-
-neg_word:
-		not.w	(a2)
-		add.w	d4,a2
-		dbra	d6,neg_word
-
-		addq.w	#2,a1			; a1 -> top of block nxt plane
-		dbra	d7,plane_loop
-		rts
-#endif
 
 neg_byte:
 		not.b	(a2)

@@ -50,34 +50,6 @@
 		xdef rout_init
 rout_init:
 _SETBLT:
-#if TOSVERSION >= 0x400
-		PIXLA(a1)
-		move.w	d0,PIXLV(BLT_MODE,a1)	; store present mode selection
-		move.l	PIXLV(LA_CURDEV,a1),a0		; a0 -> current device struct
-
-
-		/*
-		 * Init routines vector list pointer
-		 */
-		move.l	DEVSOFTROUTINES(a0),a2	; a2 -> routine list
-		btst.l	#0,d0
-		beq	setblt0
-		move.l	DEVHARDROUTINES(a0),a2	; a2 -> routine list
-
-
-setblt0:
-		lea	V_PRIMITIVES(a1),a0	; a0 -> space for primitives
-		move.l	a0,PIXLV(LA_ROUTINES,a1)	; pnt to ram based routine list
-		move.w	#21,d0			; setup the loop count
-
-rCopyLoop:
-		move.l	(a2)+,(a0)+		; copy vector
-		dbra	d0,rCopyLoop
-
-		move.l	PIXLV(LA_ROUTINES,a1),a1	; a1 -> vector list
-		move.l	V_INIT(a1),a1		; a1 -> version of init
-		jsr	(a1)
-#else
         move.w    d0,PIXLV(BLT_MODE,a1)
         movea.l   PIXLV(LA_SOFTROUTINES,a1),a0
         btst      #0,d0
@@ -89,7 +61,6 @@ setblt0:
 rCopyLoop:
         move.l    (a0)+,(a1)+
         dbf       d0,rCopyLoop
-#endif
 		rts
 
 
@@ -106,12 +77,5 @@ rCopyLoop:
 /* 104de: 00fcb62c */
 		xdef _GETBLT
 _GETBLT:
-#if TOSVERSION >= 0x400
-		move.l	a0,-(sp)
-		PIXLA(a0)
-		move.w	PIXLV(BLT_MODE,a0),d0
-		move.l	(sp)+,a0
-#else
         move.w    PIXLV(BLT_MODE,a0),d0
-#endif
 		rts

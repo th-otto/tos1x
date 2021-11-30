@@ -39,22 +39,12 @@
 #include "asmdefs.h"
 #include "tosvars.inc"
 
-#if PLANES8
-MAX_PLANES	equ	 8		; maximum planes for pixel fragment
-#else
 MAX_PLANES	equ	 4		; maximum planes for pixel fragment
-#endif
 FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 
 
-#if MULTI_LINEA
-#define V_FUNC(func,la,r) \
-	move.l	LV(LA_ROUTINES,la),r \
-	move.l	func(r),r
-#else
 #define V_FUNC(func,la,r) \
 	move.l	LV((USERDEVINIT)+func,la),r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -64,11 +54,7 @@ FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 		jmp (r)
 
 /* v_planes == 0; stupid as68 does not optimize it */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define V_PLANES
-#else
 #define V_PLANES v_planes
-#endif
 
 	text
 
@@ -187,20 +173,14 @@ vl_out:		rts
 #define _fill_buffer _dskbuf
 
 /* stupid as68 does not optimize it away */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define x1
-#else
 #define x1  0
-#endif
 y1		equ	2
 x2		equ	4
 y2		equ	6
 
 
-#if !PLANES8
 		xdef	M_CLC_FLIT
 M_CLC_FLIT: ds.b 0
-#endif
 
 /* 306de: 00e07a9a */
 /* 104de: 00fcac8a */
@@ -450,12 +430,8 @@ smd_4:		move.l	(sp)+,d3
 /* 306de: 00e07bf0 */
 		xdef	 concat
 concat:
-#if TOSVERSION < 0x400
 	move.w	d2,-(a7)
 	move.w	d3,-(a7)
-#else
-	movem.l	d2-d3/a0,-(sp)
-#endif
 
 	PIXLA(a0)
 	muls	PIXLV(bytes_lin,a0),d1	; d1 <- offset to (0,Y)
@@ -471,12 +447,8 @@ concat:
 
 	and.w	#$000F,d0		; d0 <- X mod 16
 
-#if TOSVERSION < 0x400
 	move.w	(a7)+,d3
 	move.w	(a7)+,d2
-#else
-	movem.l	(sp)+,d2-d3/a0
-#endif
 	rts
 
 shf_tab:   *    1 2   4       8		; number of planes
@@ -544,26 +516,12 @@ shf_tab:   *    1 2   4       8		; number of planes
 *******************************************************************************
 
 
-#if TOSVERSION >= 0x400
-		xdef	_ABLINE
-_ABLINE:
-		PIXLA(a4)
-		V_JUMP(V_ABLINE,a4,a5)		; vec to vert line primitive
-#endif
-
-#if TOSVERSION >= 0x400
-		xdef	ST_ABLINE
-ST_ABLINE:
-#else
 /* 306de: 00e07c22 */
 /* 104de: 00fcae16 */
 		xdef	_ABLINE
 _ABLINE: ds.b 0
-#if !PLANES8
 		xdef	M_ABLINE
 M_ABLINE: ds.b 0
-#endif
-#endif
 		LA(a4)
 		moveq.l	#2,d0		; d0 <- XOR writing mode code
 
@@ -633,11 +591,7 @@ in_order:	move.w	d6,d1		; d1 <-  Xmax
 aline:		lea	-FRAG_LEN(sp),sp  ; sp -> pixel fragment frame
 
 		move.w	LV(V_PLANES,a4),d3  ; d3 <- number of planes
-#if TOSVERSION < 0x300
 		cmp.w	#8,d3	  ; too many planes for the buffer ? BUG: MAX_PLANES is 4
-#else
-		cmp.w	#MAX_PLANES,d3	  ; too many planes for the buffer ?
-#endif
 		bhi	al_quit		  ; if so, end prematurely
 
 		cmp.w	LV(WRT_MODE,a4),d0  ; don't build fragment for XOR mode
@@ -784,41 +738,23 @@ pixfrag: ds.b 0
 #endif
 		subq.w	#1,d3			; d3 <- dbra plane counter
 
-#if PLANES8
-		movem.w	i_tbl(pc),d0-d1/a1	; cache instr data in registers
-		move.l	a2,a0			; a0 <- working PC
-		move.l	LV(FG_B_PLANES,a4),d2	; a1 -> bitplane color array
-
-pf_loop:
-		roxr.l	#1,d2			; get color for this plane
-		bcs	pf_or			; 0 => AND   1 => OR
-#else
 		movem.w	i_tbl(pc),d0-d2	; cache instr data in registers
 		move.l	a2,a0			; a0 <- working PC
 		lea.l     FG_BP_1(a4),a1
 pf_loop:
 		tst.w     (a1)+
 		bne       pf_or
-#endif
 
 pf_and:	move.w	d0,(a0)+		; load: and.w d0,(a5)+ SET BIT
 		dbra	d3,pf_loop
 
-#if PLANES8
-		move.w	a1,(a0)+		; load: jmp (a3) RETURN THREAD
-#else
 		move.w	d2,(a0)+		; load: jmp (a3) RETURN THREAD
-#endif
 		rts
 
 pf_or:	move.w	d1,(a0)+		; load: or.w d1,(a5)+ CLEAR BIT
 		dbra	d3,pf_loop
 
-#if PLANES8
-		move.w	a1,(a0)+		; load: jmp (a3) RETURN THREAD
-#else
 		move.w	d2,(a0)+		; load: jmp (a3) RETURN THREAD
-#endif
 
 		rts
 
@@ -1088,7 +1024,7 @@ wm2x_nc:	add.w	d5,d4		; d4 <- epsilon + e1		      4
 		rts
 
 
-#if BLITTER_SUPPORT & (TOSVERSION < 0x300)
+#if BLITTER_SUPPORT
 		xdef	op_table
 op_table:  *	 color=0   color=1
 
@@ -1140,26 +1076,12 @@ rf_tab:	dc.w	$7FFF,$3FFF,$1FFF,$0FFF	; right fringe list	0:NEW 1:OLD
 	dc.w	$0007,$0003,$0001,$0000
 
 
-#if TOSVERSION >= 0x400
-		xdef	_HABLINE
-_HABLINE:
-	PIXLA(a4)
-	V_JUMP(V_HABLINE,a4,a0)	; vec to vert line primitive
-#endif
-
-#if TOSVERSION >= 0x400
-		xdef	ST_HABLINE
-ST_HABLINE:
-#else
 /* 306de: 00e07ed4 */
 /* 104de: 00fcb1a8 */
 		xdef	_HABLINE
 _HABLINE: ds.b 0
-#if !PLANES8
 		xdef	M_HABLINE
 M_HABLINE: ds.b 0
-#endif
-#endif
 	LA(a4)
 	movem.w	LV(X1,a4),d4-d6		; d4 <- X1   d5 <- Y1   d6 <- X2
 

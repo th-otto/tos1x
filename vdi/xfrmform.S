@@ -76,11 +76,7 @@
 
 
 /* memory form base address (0: physical device) */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define MF_BAS_AD
-#else
 #define MF_BAS_AD 0
-#endif
 MF_WD_PIX	equ	4	; form width in pixels ( form width in words /16)
 MF_HT_PIX	equ	6	; form height in pixels
 MF_WD_WRD	equ	8	; form width in words
@@ -95,16 +91,11 @@ C_MFDB_D	equ	18	; pointer to destination MFDB
 	page
 
 
-#if VIDEL_SUPPORT
-	xdef		_TRAN_FM
-_TRAN_FM:
-#else
 /* 306de: 00e0d25a */
 /* 206de: 00e0da2e */
 /* 104de: 00fd1c8e */
 	xdef _vr_trnfm
 _vr_trnfm:
-#endif
 
 	movem.l	d0-d4/a0-a2,-(sp)
 
@@ -113,13 +104,7 @@ _vr_trnfm:
 	move.l	C_MFDB_S(a2),a0		; a0 -> source MFDB
 	move.l	C_MFDB_D(a2),a1		; a1 -> destination MFDB
 
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	moveq.l	#0,d0			; clear the high word
-#endif
 	move.w	MF_PLANES(a0),d0	; d0 <- # planes
-#if (TOSVERSION >= 0x400) | (!BINEXACT)
-	move.w	d0,d3			; d3 <- # planes
-#endif
 	move.w	MF_HT_PIX(a0),d1	; d1 <- # lines
 	move.w	MF_WD_WRD(a0),d2	; d2 <- planar word wrap
 
@@ -166,14 +151,6 @@ do_it:
 
 xfrm_in_place:
 
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-#if (TOSVERSION >= 0x400) | (!BINEXACT)
-	cmp.w	#1,d3			; see if we have > 1 plane
-#else
-	cmp.w	#1,MF_PLANES(a0)			; see if we have > 1 plane
-#endif
-	beq	quit			; do nothing for one plane
-#endif
 	bsr	in_place
 
 quit:	movem.l	(sp)+,d0-d4/a0-a2
@@ -201,33 +178,19 @@ in_place:
 	rts				; if number was 0, return now
 
 loop02:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	clr.l	d2			; initialize count accumulator
-#else
 	clr.w	d2			; initialize count accumulator
-#endif
 	move	d1,d4			; initialize iteration counter
 	bra	entry01
 
 loop01:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	add.l	d0,a0			; a0 <- a1 + (2*d0) + 2
-	lea	2(a0,d0.l),a0		; a0 -> element to be repositioned
-#else
 	add.w	d0,a0			; a0 <- a1 + (2*d0) + 2
 	lea	2(a0,d0.w),a0		; a0 -> element to be repositioned
-#endif
 	move.w	(a0),d7			; save element in d7
 
 	move.l	a0,a1			; a1 -> source in transfer
 	move.l	a0,a2			; a2 -> destination in transfer
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	add.l	d0,d2			; d2 <- length of transfer
-	move.l	d2,d3			; d3 <- loop counter
-#else
 	add.w	d0,d2			; d2 <- length of transfer
 	move.w	d2,d3			; d3 <- loop counter
-#endif
 	bra	entry00
 
 loop00:
@@ -235,12 +198,7 @@ loop00:
 	move.w	-(a1),(a2)		; move word to the right
 
 entry00:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	subq.l	#1,d3
-	bge	loop00
-#else
 	dbf	d3,loop00
-#endif
 	move.w	d7,(a1)			; store target element to new home
 
 entry01:
@@ -268,46 +226,23 @@ entry02:
 
 
 out_of_place:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	move.l	d1,d4			; d4 <- pass counter
-	add.l	d1,d1			; d0 <- offset to next member word (in bytes)
-#else
 	move.w	d1,d4			; d4 <- pass counter
 	add.w	d1,d1			; d0 <- offset to next member word (in bytes)
-#endif
 	bra	entry11
 
 loop11:
 	move.l	a1,a2			; a2 <- working destination pointer
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	move.l	d0,d3			; d3 <- repeat counter
-#else
 	move.w	d0,d3			; d3 <- repeat counter
-#endif
 	bra	entry10
 
 loop10:
 	move.w	(a0)+,(a2)		; destination <- source. advance source ptr
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	add.l	d1,a2			; advance destination ptr
-#else
 	add.w	d1,a2			; advance destination ptr
-#endif
 
 entry10:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	subq.l	#1,d3
-	bge	loop10
-#else
 	dbf	d3,loop10
-#endif
 	lea	2(a1),a1		; start another pass
 
 entry11:
-#if (TOSVERSION >= 0x300) | (!BINEXACT)
-	subq.l	#1,d4
-	bge	loop11
-#else
 	dbf	d4,loop11
-#endif
 	rts

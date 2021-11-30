@@ -49,11 +49,7 @@
 #define EMPTY   	0xffff
 #define DOWN_FLAG 	0x8000
 #define NOFLAG(v) 	(v & 0x7FFF)
-#if TOSVERSION >= 0x300
-#define QSIZE 		(3 * (1280 + 1)) /* depends on largest possible screen resolution */
-#else
-#define QSIZE 		(3 * (640 + 1))
-#endif
+#define QSIZE 		(3 * (640 + 1)) /* depends on largest possible screen resolution */
 #define QMAX		(QSIZE - 3)
 
 
@@ -77,37 +73,11 @@ VOID d_contourfill(NOTHING)
 
 VOID seedfill(NOTHING)
 {
-#if TOSVERSION >= 0x300
-	register int16_t *q;
-	register BOOLEAN gotseed, leftseed;
-	register int16_t leftoldy;			/* the previous scan line tmp   */
-	register int16_t leftdirection;		/* is next scan line up or down */
-	register int16_t oldy;				/* the previous scan line       */
-	int16_t direction;					/* is next scan line up or down */
-	int16_t qPtr;
-	int16_t oldxleft;					/* left end of line at oldy     */
-	int16_t oldxright;					/* right end                    */
-	int16_t newxleft;					/* ends of line at oldy +       */
-	int16_t newxright;					/*     the current direction    */
-	int16_t xleft;						/* temporary endpoints          */
-	int16_t xright;
-
-	BOOLEAN collision, leftcollision;
-#if !PLANES8
-	register int16_t color;
-#endif
-
-	q = Q;
-
-	Qptr = &qPtr;
-#define Qptr0 *Qptr
-#else
 	/* in TOS prior to 3.x, all those variables are in the "overlay" area */
 #define q Q
 #define Qptr0 qPtr
 #define Qtop qTop
 	register int16_t color;
-#endif
 
 	xleft = LV(PTSIN)[0];
 	oldy = LV(PTSIN)[1];
@@ -133,29 +103,16 @@ VOID seedfill(NOTHING)
 		/* Anding with the mask is only necessary when the driver supports */
 		/* move than one resolution.                       */
 
-#if VIDEL_SUPPORT
-		search_color = MAP_COL[search_color] & tplane_mask[LV(v_planes)];
-		search_color = LV(pal_map)[search_color];
-#else
-		search_color = MAP_COL[search_color] & tplane_mask[LV(INQ_TAB)[4]
-#if TOSVERSION < 0x400
-		- 1
-#endif
-		];
-#endif
+		search_color = MAP_COL[search_color] & tplane_mask[LV(INQ_TAB)[4] - 1];
 		seed_type = 0;
 	}
 
 	/* Initialize the line drawing parameters */
-#if PLANES8
-	LV(FG_B_PLANES) = LV(cur_work)->fill_color;
-#else
 	color = LV(cur_work)->fill_color;
 	LV(FG_BP_1) = color & 0x01;
 	LV(FG_BP_2) = color & 0x02;
 	LV(FG_BP_3) = color & 0x04;
 	LV(FG_BP_4) = color & 0x08;
-#endif
 
 	LV(LSTLIN) = FALSE;
 
@@ -243,11 +200,6 @@ VOID seedfill(NOTHING)
 /* 104de: 00fd1a1e */
 VOID crunch_Q(NOTHING)
 {
-#if TOSVERSION >= 0x300
-	register int16_t *q = Q;
-	register int16_t qTop = Qtop;
-#endif
-
 	while (q[qTop - 3] == EMPTY && qTop > Qbottom)
 		qTop -= 3;
 
@@ -256,10 +208,6 @@ VOID crunch_Q(NOTHING)
 		Qptr0 = Qbottom;
 		done = (*LV(quitfill)) ();			/* quitfill is set via LINE "A"  */
 	}
-
-#if TOSVERSION >= 0x300
-	Qtop = qTop;
-#endif
 }
 
 
@@ -267,26 +215,12 @@ VOID crunch_Q(NOTHING)
 /* 206de: 00e0d818 */
 /* 104de: 00fd1a78 */
 BOOLEAN get_seed(P(int16_t) xin, P(int16_t) yin, P(int16_t *) xleftout, P(int16_t *) xrightout, P(BOOLEAN *) collide)
-#if TOSVERSION >= 0x300
-PP(register int16_t xin;)
-PP(register int16_t yin;)
-PP(register int16_t *xleftout;)
-PP(register int16_t *xrightout;)
-PP(BOOLEAN *collide;)
-#else
 PP(int16_t xin;)
 PP(int16_t yin;)
 PP(int16_t *xleftout;)
 PP(int16_t *xrightout;)
 PP(BOOLEAN *collide;)
-#endif
 {
-#if TOSVERSION >= 0x300
-	register int16_t qTmp;
-	register int16_t qHole;				/* an empty space in the Q      */
-	register int16_t *q = Q;
-#endif
-
 	*collide = FALSE;
 	if (done)
 		return FALSE;
@@ -344,41 +278,22 @@ PP(BOOLEAN *collide;)
 /* 104de: 00fd1c34 */
 VOID v_get_pixel(NOTHING)
 {
-#if VIDEL_SUPPORT
-	register int32_t pel;
-	register int32_t *tmpPtr;
-#else
 	register int16_t pel;
-#endif
 	register int16_t *int_out;
 
 	/* Get the requested pixel */
 
 	pel = get_pix();
 
-#if VIDEL_SUPPORT
-	tmpPtr = (int32_t *)(int_out = LV(INTOUT));
-
-	if (LV(form_id) == PIXPACKED && LV(v_planes) > 8)
-	{
-		*tmpPtr = pel;
-	} else
-#else
 	int_out = LV(INTOUT);
-#endif
 	{
 		*int_out++ = pel;
 
 		/*
 		 * Correct the pel value for the # of planes so it is a standard value
 		 */
-#if PLANES8
-		if ((LV(INQ_TAB)[4] == 1 && pel == 1) || (LV(INQ_TAB)[4] == 2 && pel == 3) || (LV(INQ_TAB)[4] == 4 && pel == 15))
-			pel = 255;
-#else
 		if ((LV(INQ_TAB)[4] == 1 && pel != 0) || (LV(INQ_TAB)[4] == 2 && pel == 3))
 			pel = 15;
-#endif
 
 		*int_out = REV_MAP_COL[pel];
 		NINTOUT = 2;

@@ -23,14 +23,8 @@
 #include "lineaequ.inc"
 
 
-#if MULTI_LINEA
-#define V_FUNC(func,la,r) \
-	move.l	LV(LA_ROUTINES,la),r \
-	move.l	func(r),r
-#else
 #define V_FUNC(func,la,r) \
 	move.l	PIXLV((USERDEVINIT)+func,la),r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -81,6 +75,5 @@ KG_BLT:
     PIXLA(a5)
 	V_JUMP(V_BLAST,a5,a5)		; a5 -> desired version of blast_man
 
-#if TOSVERSION < 0x300
+/* easteregg alert */
 	dc.b 'JIM LOVES JENEANE',0
-#endif

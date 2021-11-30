@@ -71,19 +71,12 @@ VOID d_gtext(NOTHING)
 	int16_t extent[8];
 	int16_t *old_ptr;
 	int16_t justified;
-#if TOSVERSION >= 0x400
-	int16_t oldWrtMode;
-#endif
 	int16_t temp;
 	register const struct font_head *fnt_ptr;
 	register int16_t *pointer;
 
 	if ((count = NINTIN) > 0)
 	{
-#if TOSVERSION >= 0x400
-		oldWrtMode = LV(WRT_MODE);
-#endif
-
 		fnt_ptr = LV(CUR_FONT);				/* Get current font pointer in register */
 
 		if ((justified = (LV(CONTRL)[0] == 11)))
@@ -124,10 +117,10 @@ VOID d_gtext(NOTHING)
 /*  Now checks all fonts, not just system.				*/
 
 		if (
-#if (TOSVERSION < 0x200) & BINEXACT
+#if BINEXACT
 			fnt_ptr->font_id == 1 &&
 #endif
-#if BINEXACT & (TOSVERSION < 0x400)
+#if BINEXACT
 			/*
 			 * strange cast; without it produces
 			 *  clr.w d0
@@ -308,28 +301,6 @@ VOID d_gtext(NOTHING)
 				LV(SOURCEY) = 0;
 				LV(DELY) = fnt_ptr->form_height;
 
-#if VIDEL_SUPPORT
-				/*
-				 * This code was added for pixel packed text blit. In replace
-				 * mode we prebuild the character into a buffer if it has some
-				 * special effect. When they are skewed in order not to
-				 * clobber the previous character we need to blit it in
-				 * transparent mode. So we clear out an area for the word
-				 * with text background and blit in transparent mode instead
-				 * of replace mode.
-				 */
-				if ((LV(STYLE) & SKEW) && LV(WRT_MODE) == 0 &&
-					LV(form_id) == PIXPACKED &&
-					LV(CHUP) == 0)
-				{
-					old_ptr = LV(PTSOUT);
-					LV(PTSOUT) = extent;
-					dqt_extent();
-					LV(PTSOUT) = old_ptr;
-					cheat_blit();		/* clear out an area with txt bg */
-					LV(WRT_MODE) = 1;		/* make writing mode transparent */
-				}
-#endif
 				TEXT_BLT();
 
 				fnt_ptr = LV(CUR_FONT);		/* restore reg var */
@@ -381,15 +352,11 @@ VOID d_gtext(NOTHING)
 				else
 					LV(LN_MASK) = 0xffff;
 
-#if PLANES8
-				LV(FG_B_PLANES) = LV(TEXT_FG);
-#else
 				temp = LV(TEXT_FG);
 				LV(FG_BP_1) = temp & 0x01;
 				LV(FG_BP_2) = temp & 0x02;
 				LV(FG_BP_3) = temp & 0x04;
 				LV(FG_BP_4) = temp & 0x08;
-#endif
 
 				count = LV(CUR_FONT)->ul_size;
 				for (i = 0; i < count; i++)
@@ -425,9 +392,6 @@ VOID d_gtext(NOTHING)
 				}
 			}
 		}
-#if TOSVERSION >= 0x400
-		LV(WRT_MODE) = oldWrtMode;
-#endif
 	}
 }
 

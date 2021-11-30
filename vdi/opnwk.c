@@ -27,9 +27,6 @@
 
 FONT_HEAD ram8x16;
 FONT_HEAD ram8x8;
-#if PLANES8
-FONT_HEAD ram16x32;
-#endif
 
 /* 
  * v_opnwk():	OPEN_WORKSTATION:
@@ -43,36 +40,9 @@ VOID v_opnwk(NOTHING)
 	register int16_t i;
 	register const int16_t *sp;
 	register int16_t *dp;
-#if TOSVERSION >= 0x400
-	register int16_t videoMode;
-
-	if (LV(INTIN)[0] == SETMODEFLAG)
-	{
-		videoMode = SETMODE(-1);		/* get current video mode    */
-		if (videoMode != LV(PTSOUT)[0])		/* see if cur mode != dsred  */
-			SETMODE(LV(PTSOUT)[0]);			/* set the video to new mode */
-	} else
-	{
-		if (FindDevice(LV(INTIN)[0]) == NULL)
-		{
-			LV(CONTRL)[6] = 0;				/* unsuccessfull in opening  */
-			return;
-		}
-	}
-#endif
-#if TOSVERSION < 0x400
-#if TOSVERSION >= 0x300
-	register int j;
-	register int count;
-	register int16_t curRez;
-	register int unused;
-#endif
 	int16_t *old_intin, *old_intout, *old_contrl;
 	int16_t new_contrl[7], new_intin[2], new_intout[4];
-#if TOSVERSION < 0x300
 	int16_t curRez;
-#endif
-#endif
 
 	/* Move ROM copy of DEV_TAB to RAM */
 	sp = ROM_DEV_TAB;
@@ -99,9 +69,6 @@ VOID v_opnwk(NOTHING)
 	 */
 	ram8x8 = f8x8;
 	ram8x16 = f8x16;
-#if PLANES8
-	ram16x32 = f16x32;
-#endif
 	LV(font_ring)[1] = &ram8x8;
 
 	/*
@@ -192,109 +159,3 @@ VOID v_opnwk(NOTHING)
 
 /*----------------------------------------------------------------------------*/
 
-#if TOSVERSION >= 0x400
-/* 
- * This function is here for soft loaded vdi. We init the workType then find
- * a device out of a set of caned devices. And do a SETREZ (setscreen) call.
- */
-/* 404:   00e10e4a */
-const SCREENDEF *FindDevice(P(int16_t) devId)
-PP(int16_t devId;)
-{
-	register const SCREENDEF *dev;
-	register int16_t i, curRez;
-
-	curRez = devId - 2;
-
-	if (devId == DEFAULTDEV)
-	{
-		dev = devices[DEFAULTDEV];
-		LV(LA_CURDEV) = dev;
-		SETREZ(curRez);					/* get into default res      */
-	} else if (devId == STAYINDEV)
-	{
-		dev = LV(LA_CURDEV);
-	} else
-	{
-		for (i = 0, dev = devices[0];; dev = devices[++i])
-		{
-			if (dev == NULL)
-			{
-				dev = devices[DEFAULTDEV];
-				LV(LA_CURDEV) = dev;
-				curRez = dev->devId - 2;	/* set to defaul rez         */
-				SETREZ(curRez);			/* get into default res      */
-				break;
-			} else if (dev->devId == devId)
-			{
-				LV(LA_CURDEV) = dev;
-
-				if (curRez <= 8)		/* test if rez exists        */
-					SETREZ(curRez);		/* get into desired res      */
-				else
-					esc_init();
-
-				break;					/* found the proper dev      */
-			}
-		}
-	}
-	return dev;
-}
-
-/*----------------------------------------------------------------------------*/
-
-/*
- * This function is here for soft loaded vdi. We init the LA_CURDEV if we can.
- */
-VOID SetCurDevice(P(int16_t) curRez)
-PP(int16_t curRez;)
-{
-	register const SCREENDEF *dev;
-	register int16_t i, devId;
-
-	devId = curRez + 2;
-	for (i = 0, dev = devices[0];; dev = devices[++i])
-	{
-		if (dev->devId == devId)
-		{
-			LV(LA_CURDEV) = dev;
-			break;						/* found the proper dev      */
-		}
-	}
-}
-
-/*----------------------------------------------------------------------------*/
-
-VOID InitFonts(NOTHING)
-{
-	/* 
-	 * copy the font headers to ram so they can be altered
-	 */
-	ram8x8 = f8x8;
-	ram8x16 = f8x16;
-#if PLANES8
-	ram16x32 = f16x32;
-#endif
-}
-
-/*----------------------------------------------------------------------------*/
-
-VOID InitDevTabInqTab(NOTHING)
-{
-	register const SCREENDEF *dev;
-
-	dev = LV(LA_CURDEV);						/* init current dev pointer   */
-
-	LV(DEV_TAB)[0] = dev->xRez - 1;			/* X max                      */
-	LV(DEV_TAB)[1] = dev->yRez - 1;			/* Y max                      */
-	LV(DEV_TAB)[3] = dev->xSize;			/* width of pixel in microns  */
-	LV(DEV_TAB)[4] = dev->ySize;			/* height of pixel in microns */
-	LV(DEV_TAB)[13] = dev->maxPen;			/* # of pens available        */
-	LV(DEV_TAB)[35] = dev->colFlag;			/* color capability flag      */
-	LV(DEV_TAB)[39] = dev->palSize;			/* palette size               */
-	LV(INQ_TAB)[1] = dev->palSize;			/* number of background clrs  */
-	LV(INQ_TAB)[4] = dev->planes;			/* number of planes           */
-	LV(INQ_TAB)[5] = dev->lookupTable;		/* video lookup table         */
-}
-
-#endif

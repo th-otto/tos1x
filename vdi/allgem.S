@@ -64,9 +64,7 @@ return:		rts
 /* 104de: 00fcb27c */
 		xdef	_v_clrwk
 _v_clrwk: PIXLA(a0)
-#if TOSVERSION < 0x400
 		move.l    d0,-(a7)
-#endif
         move.w	PIXLV(v_planes,a0),d0	; d0 <- # of planes
 		mulu.w	PIXLV(v_hz_rez,a0),d0		; d0 <- (planes) x (hor rez)
 		mulu.w	PIXLV(v_vt_rez,a0),d0		; d0 <- (plns)x(hrez)x(vrt rz)
@@ -75,78 +73,11 @@ _v_clrwk: PIXLA(a0)
 		move.l	_v_bas_ad,-(sp)
 		add.l	d0,(sp)			; ending addr
 		move.l	_v_bas_ad,-(sp)		; starting address
-#if VIDEL_SUPPORT
-		jsr	clear			; use general clr routine
-#else
 		jsr	_zeromem
-#endif
 		addq.l	#8,sp			; cleanup stack
 
-#if TOSVERSION < 0x400
 		move.l    (a7)+,d0
-#endif
 		rts
-
-#if VIDEL_SUPPORT
-*+
-*
-*  Quickly zero (lots of) memory.
-*  Copyright 1986 Atari Corp.
-*
-*  Synopsis:	clear(start, end)
-*		    LONG start;	    4(sp) -> first location
-*		    LONG end;	    8(sp) -> last location + 1
-*
-*    Uses:	C registers d0-d2/a0-a2
-*
-*-
-clear:		move.l	4(sp),a0	; a0 -> start
-		move.l	8(sp),a1	; a1 -> end+1
-		movem.l	d3-d7/a3,-(sp)	; save registers
-
-		PIXLA(a3)
-		move.l	pal_map(a3),d1	; d1 <- desired background col
-
-		move.l	d1,d2		; store background
-		move.l	d1,d3		;    into d1-d7/a3
-		move.l	d1,d4
-		move.l	d1,d5
-		move.l	d1,d6
-		move.l	d1,d7
-		move.l	d1,a3
-
-		move.l	a0,d0		; word align first location
-		btst	#0,d0
-		beq	clr1		; (not necessary)
-		move.b	d1,(a0)+
-
-clr1:		move.l	a1,d0		; d0 = ((a1 - a0) & ~0xff)
-		sub.l	a0,d0
-		and.l	#$ffffff00,d0	; mask fract bits, d0 = whole part
-		beq	clr3		; if (d0 == 0) do end-fraction;
-		lea	(a0,d0.l),a0	; a0 -> end of huge area
-		move.l	a0,a2		; a2 -> there, too
-		lsr.l	#8,d0		; get 256-byte chunk count
-
-clr2:		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		movem.l	d1-d7/a3,-(a2)	; clear 32 bytes
-		subq.l	#1,d0		; decrement count
-		bne	clr2		; while (d0) clear some more...
-
-clr3:		cmp.l	a0,a1		; while (a0 != a1)
-		beq	clr4		; (done)
-		move.b	d1,(a0)+	; clear a byte
-		bra	clr3
-
-clr4:		movem.l	(sp)+,d3-d7/a3	; restore registers
-		rts
-#endif
 
 /*******************************************************************************
  *
@@ -318,20 +249,12 @@ paltab16: dc.w $0777
 /* 306de: 00e067ee */
 /* 104de: 00fcb3c6 */
 tick_int:
-#if TOSVERSION >= 0x400
-		subq.l  #4,sp			; leave some room on the stack
-#endif
 		movem.l	d0-d7/a0-a6,-(sp)
 		PIXLA(a1)
 		move.l	PIXLV(tim_addr,a1),a0		; Invoke user routine
-#if TOSVERSION >= 0x400
-		move.l	PIXLV(tim_chain,a1),60(sp)	; store chained routine
-#endif
 		jsr	(a0)
 		movem.l	(sp)+,d0-d7/a0-a6
-#if TOSVERSION < 0x400
 		move.l	PIXLV(tim_chain,a1),-(sp)	; store chained routine
-#endif
 		rts				; jump to next routine in chain
 
 
@@ -541,16 +464,6 @@ mouse_init:
 
 		lea	PIXLV(xydraw,a1),a0		; init the draw parameter block
 
-#if TOSVERSION >= 0x400
-		move.w	PIXLV(v_hz_rez,a1),d0		; d0 <- horizontal rez
-		lsr.w	#1,d0			; d0 <- x rez / 2
-		move.w	d0,PIXLV(GCURX,a1)		; init mouse X position
-
-		move.w	PIXLV(v_vt_rez,a1),d0		; d0 <- vrtical rez
-		lsr.w	#1,d0			; d0 <- y rez / 2
-		move.w	d0,PIXLV(GCURY,a1)		; init mouse Y position
-#endif
-
 		move.l	PIXLV(GCURXY,a1),(a0)+	; to the initial position
 		move.b	#1,(a0)			; mark data valid for update
 
@@ -655,19 +568,9 @@ rezinit:
         move.w    (a0)+,PIXLV(bytes_lin,a1)
         move.w    (a0)+,PIXLV(v_vt_rez,a1)
         move.w    (a0),PIXLV(v_hz_rez,a1)
-#if PLANES8
-        lsr.w     #3,d0
-#endif
         rts
 
 reztab:
 		dc.w  4,160,200,320
 		dc.w  2,160,200,640
 		dc.w  1,80,400,640
-#if PLANES8
-		dc.w  0,0,0,0
-		dc.w  4,320,480,640
-		dc.w  0,0,0,0
-		dc.w  1,160,960,1280
-		dc.w  8,320,480,320
-#endif

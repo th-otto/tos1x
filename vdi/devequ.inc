@@ -68,32 +68,6 @@
 #define V_HLINE			32
 /* text blit routines */
 #define V_TEXT			36
-#if TOSVERSION >= 0x400
-/* color inquire routines */
-#define V_VQCOLOR		40
-/* color set routines */
-#define V_VSCOLOR		44
-/* init routine called upon openwk */
-#define V_INIT			48
-/* display cursor */
-#define V_SHOWCUR		52
-/* replace cursor with old background */
-#define V_HIDECUR		56
-/* negate alpha cursor */
-#define V_NEGCELL		60
-/* move alpha cur to new X,Y (D0, D1) */
-#define V_MOVEACUR		64
-/* arbitrary line draw routine */
-#define V_ABLINE		68
-/* horizontal line setup routine */
-#define V_HABLINE		72
-/* rctangle fill routine */
-#define V_RECTFILL		76
-/* output pixel value to the screen */
-#define V_PUTPIX		80
-/* get pixel value at (X,Y) of screen */
-#define V_GETPIX		84
-#endif
 
 
 /* means we're in device dep mode */

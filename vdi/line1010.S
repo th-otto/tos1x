@@ -74,76 +74,6 @@ atab:		dc.l	var_base,_put_pix,_get_pix,M_ABLINE
 		dc.l	_TEXT_BLT,_v_show_c,_HIDE_CUR,_vsc_form
 		dc.l	cur_replace,cur_display,_COPY_RFM,_seedfill
 
-#if PLANES8
-*+
-*  These routines set the color index then go to the primitives.
-*  We are stuck using bit plane flags for backward compatibility.
-*-
-M_ABLINE:
-		bsr	set_index
-		jmp	_ABLINE
-
-M_HABLINE:
-		bsr	set_index
-		jmp	_HABLINE
-
-M_RECTFILL:
-		bsr	set_index
-		jmp	_RECTFILL
-
-M_CLC_FLIT:
-		bsr	set_index
-		jmp	_CLC_FLIT
-
-*+
-* Set the color index by checking the bit plane flags then
-* setting the appropriate bits.
-*-
-/* 306de: 00e079ca */
-set_index:
-		LA(a4)
-		clr.l	d0			; clear color index
-		lea	LV(FG_BP_1,a4),a3		; a3 -> 1st 4 back plane flags
-		lea	LV(FG_BP_5,a4),a5		; a5 -> 2nd 4 back plane flags
-
-		tst.w	(a3)+
-		beq	bp2
-		bset.l	#0,d0
-
-bp2:	tst.w	(a3)+
-		beq	bp3
-		bset.l	#1,d0
-
-bp3:	tst.w	(a3)+
-		beq	bp4
-		bset.l	#2,d0
-
-bp4:	tst.w	(a3)+
-		beq	bp5
-		bset.l	#3,d0
-
-bp5:	tst.w	(a5)+
-		beq	bp6
-		bset.l	#4,d0
-
-bp6:	tst.w	(a5)+
-		beq	bp7
-		bset.l	#5,d0
-
-bp7:	tst.w	(a5)+
-		beq	bp8
-		bset.l	#6,d0
-
-bp8:	tst.w	(a5)+
-		beq	bp9
-		bset.l	#7,d0
-
-bp9:
-		move.l	d0,LV(FG_B_PLANES,a4)	; copy the color index
-		rts
-
-#endif
-
 
 *+
 * pointer to system fonts
@@ -153,9 +83,6 @@ bp9:
 fonts:	dc.l	_f6x6
 		dc.l	_f8x8
 		dc.l	_f8x16
-#if PLANES8
-		dc.l	_f16x32
-#endif
 		dc.l	0
 
 

@@ -81,16 +81,8 @@ SIZE_FONT_HEAD	equ	90	     * size of font_head structure in FONTDEF.H
 
 
 _seed_type	equ	_fill_buffer+00		; indicates the type of fill
-#if !VIDEL_SUPPORT
 _search_color	equ	_fill_buffer+02		; the color of the border
-#endif
 _Qbottom	equ	_fill_buffer+04	 	; the bottom of the Q (zero)
-#if TOSVERSION >= 0x300
-		xdef	_Qtop
-_Qtop		equ	_fill_buffer+06	 	; points top seed +3
-		xdef	_Qptr
-_Qptr		equ	_fill_buffer+08	 	; points to the active point
-#else
 		xdef	_qTop
 _qTop		equ	_fill_buffer+06	 	; points top seed +3
 		xdef	_qPtr
@@ -99,7 +91,6 @@ _qPtr		equ	_fill_buffer+08	 	; points to the active point
 _qTmp		equ	_fill_buffer+10
 		xdef	_qHole
 _qHole		equ	_fill_buffer+12		; an empty space in the Q
-#endif
 _oldy		equ	_fill_buffer+14		; the previous scan line
 _oldxleft	equ	_fill_buffer+16		; left end of line at oldy
 _oldxright	equ	_fill_buffer+18		; right end
@@ -116,21 +107,8 @@ _leftseed	equ	_fill_buffer+38 	; like _gotseed. (new seedfill)
 _h_align	equ	_fill_buffer+40
 _leftcollision	equ	_fill_buffer+40 	; like _collision. (new seedfill)
 _v_align	equ	_fill_buffer+42		; scaler alignments
-#if TOSVERSION >= 0x200
-		xdef	_width
-_width		equ	_fill_buffer+44
-#endif
 _collision	equ	_fill_buffer+42  	; seed was removed from Q (new rtn)
-#if VIDEL_SUPPORT
-_search_color	equ	_fill_buffer+44		; the color of the border
-_Q		equ	_fill_buffer+48	 	; storage for the seed points (1280)
-#else
 _Q		equ	_fill_buffer+44	 	; storage for the seed points (1280)
-#endif
-#if TOSVERSION >= 0x200
-		xdef	_height
-_height		equ	_fill_buffer+46		; extent of string set in dqt_extent
-#endif
 _wordx		equ	_fill_buffer+48
 _wordy		equ	_fill_buffer+50		; add this to each space for interword
 _rmword		equ	_fill_buffer+52		; the number of pixels left over
@@ -143,37 +121,17 @@ _rmcharx	equ	_fill_buffer+64
 _rmchary	equ	_fill_buffer+66		; add this to use up remainder
 _FLIP_Y		equ	_fill_buffer+68		; Non-zero PTSOUT contains magnitudes
 _copytran	equ	_fill_buffer+72		;
-#if TOSVERSION >= 0x300
-ptsin_array	equ	_fill_buffer+250	; copy of ptsin[] (4096 bytes)
-fringe0		equ	_fill_buffer+1000	; area to compile routines in
-innerLoop	equ	_fill_buffer+2000	; area to compile routines in
-fringe1		equ	_fill_buffer+3000	; area to compile routines in
-_deftxbu	equ	_fill_buffer+4500	; scratch buf for 8x16 (276 bytes)
-#else
 ptsin_array	equ	_fill_buffer+768	; copy of ptsin[] (4096 bytes)
 fringe0		equ	_fill_buffer+1000	; area to compile routines in
 innerLoop	equ	_fill_buffer+2000	; area to compile routines in
 fringe1		equ	_fill_buffer+3000	; area to compile routines in
 _deftxbu	equ	_fill_buffer+236	; scratch buf for 8x16 (276 bytes)
-#endif
 
 	xdef _vdivars
 _vdivars: ds.b 910 ; space for negative linea vars
     xdef lineavars
 lineavars:
-#if TOSVERSION >= 0x400
-	ds.b 4018
-#else
-#if TOSVERSION >= 0x300
-	ds.b 2310
-#else
-#if TOSVERSION >= 0x200
 	ds.b 172
-#else
-	ds.b 172
-#endif
-#endif
-#endif
 
 #if LINEA_HACK
 
@@ -273,21 +231,8 @@ _line_cw: equ lineavars+(line_cw)
 _loc_mode: equ lineavars+(loc_mode)
 	xdef _num_qc_lines
 _num_qc_lines: equ lineavars+(num_qc_lines)
-#if TOSVERSION >= 0x300
-	xdef _trap14sav
-_trap14sav: equ lineavars+(trap14sav)
-	xdef _col_or_mask
-_col_or_mask: equ lineavars+(col_or_mask)
-	xdef _col_and_mask
-_col_and_mask: equ lineavars+(col_and_mask)
-	xdef _trapb14sav
-_trapb14sav: equ lineavars+(trapb14sav)
-	xdef _resrvd0
-_resrvd0: equ lineavars+(resrvd0)
-#else
 	xdef _q_circle
 _q_circle: equ lineavars+(q_circle)
-#endif
 	xdef _str_mode
 _str_mode: equ lineavars+(str_mode)
 	xdef _val_mode
@@ -480,63 +425,11 @@ _USERDEVINIT: equ lineavars+(USERDEVINIT)
 _USERESCINIT: equ lineavars+(USERESCINIT)
 	xdef _resrvd2
 _resrvd2: equ lineavars+(resrvd2)
-#if TOSVERSION >= 0x400
-	xdef _LA_ROUTINES
-_LA_ROUTINES: equ lineavars+(LA_ROUTINES)
-	xdef _CUR_DEV
-_CUR_DEV: equ lineavars+(CUR_DEV)
-#else
 	xdef _LA_ROUTINES
 _LA_ROUTINES: equ lineavars+(LA_ROUTINES)
 	xdef _LA_SOFTROUTINES
 _LA_SOFTROUTINES: equ lineavars+(LA_SOFTROUTINES)
-#endif
 	xdef _BLT_MODE
 _BLT_MODE: equ lineavars+(BLT_MODE)
-
-#if PLANES8
-
-	xdef _LA_F32
-_LA_F32: equ lineavars+(LA_F32)
-	xdef _REQ_X_COL
-_REQ_X_COL: equ lineavars+(REQ_X_COL)
-	xdef _sv_blk_ptr
-_sv_blk_ptr: equ lineavars+(sv_blk_ptr)
-	xdef _FG_B_PLANES
-_FG_B_PLANES: equ lineavars+(FG_B_PLANES)
-	xdef _FG_BP_5
-_FG_BP_5: equ lineavars+(FG_BP_5)
-	xdef _FG_BP_6
-_FG_BP_6: equ lineavars+(FG_BP_6)
-	xdef _FG_BP_7
-_FG_BP_7: equ lineavars+(FG_BP_7)
-	xdef _FG_BP_8
-_FG_BP_8: equ lineavars+(FG_BP_8)
-	xdef _sav8_len
-_sav8_len: equ lineavars+(sav8_len)
-	xdef _sav8_addr
-_sav8_addr: equ lineavars+(sav8_addr)
-	xdef _sav8_stat
-_sav8_stat: equ lineavars+(sav8_stat)
-	xdef _sav8_area
-_sav8_area: equ lineavars+(sav8_area)
-	xdef _q_circle
-_q_circle: equ lineavars+(q_circle)
-#if VIDEL_SUPPORT
-	xdef _byt_per_pix
-_byt_per_pix: equ lineavars+(byt_per_pix)
-	xdef _form_id
-_form_id: equ lineavars+(form_id)
-	xdef _vl_col_bg
-_vl_col_bg: equ lineavars+(vl_col_bg)
-	xdef _vl_col_fg
-_vl_col_fg: equ lineavars+(vl_col_fg)
-	xdef _pal_map
-_pal_map: equ lineavars+(pal_map)
-	xdef _V_PRIMITIVES
-_V_primitives: equ lineavars+(V_PRIMITIVES)
-#endif /* VIDEL_SUPPORT */
-
-#endif /* PLANES8 */
 
 #endif /* LINEA_HACK */

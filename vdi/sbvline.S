@@ -27,18 +27,10 @@
 #include "tosvars.inc"
 
 /* v_planes == 0; stupid as68 does not optimize it */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define V_PLANES
-#else
 #define V_PLANES v_planes
-#endif
 
 
-#if PLANES8
-MAX_PLANES	equ	 8		; maximum planes for pixel fragment
-#else
 MAX_PLANES	equ	 4		; maximum planes for pixel fragment
-#endif
 FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 
 
@@ -60,25 +52,8 @@ FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 sb_vline:	lea	-FRAG_LEN(sp),sp  ; sp -> pixel fragment frame
 		move.w	LV(V_PLANES,a4),d3  ; d3 <- number of planes
 
-#if TOSVERSION < 0x300
 		cmp.w	#8,d3	  ; too many planes for the buffer ? BUG: MAX_PLANES is 4
-#else
-		cmp.w	#MAX_PLANES,d3	; too many planes for the buffer ?
-#endif
-#ifdef __GNUC__
-/*
- * stupid as68 fails to optimize this forward branch
- * stupid gnu as does not recognize that the branch
- * will be just in range when converted to short
- */
 		bhi	sv_quit		; if so, end prematurely
-#else
-#if (TOSVERSION >= 0x300) | !BINEXACT
-		bhi.s	sv_quit		; if so, end prematurely
-#else
-		bhi		sv_quit		; if so, end prematurely
-#endif
-#endif
 
 		cmp.w	LV(WRT_MODE,a4),d0  ; don't build fragment for XOR mode
 		beq	sv_nofrag

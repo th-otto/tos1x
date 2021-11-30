@@ -60,10 +60,6 @@ struct font_head const f8x16 ={
     (const uint16_t *)dat_8x16,			/*   uint16_t *dat_table	 	*/
     256,				/*   uint16_t form_width	 	*/
     16,					/*   uint16_t form_height	 	*/
-#if PLANES8
-    &ram16x32,			/*   uint16_t *next_font	 	*/
-#else
 	0,
-#endif
     0					/*   uint16_t next_seg		*/
 };

@@ -149,14 +149,7 @@ VOID vs_color PROTO((NOTHING));          /* VDI #14   */
  * opnwk.c
  */
 VOID v_opnwk PROTO((NOTHING));           /* VDI #1    */
-#if TOSVERSION >= 0x400
-const SCREENDEF *FindDevice PROTO((int16_t devId));
-VOID SetCurDevice PROTO((int16_t curRez));
-VOID InitFonts PROTO((NOTHING));
-VOID InitDevTabInqTab PROTO((NOTHING));
-#else
 int16_t FindDevice PROTO((NOTHING)); /* in allgem.S */
-#endif
 
 
 /*

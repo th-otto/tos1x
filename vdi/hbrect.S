@@ -54,9 +54,6 @@
 	xdef	hb_rect
 hb_rect:
 
-#if TOSVERSION >= 0x300
-	exg	d1,d2			; d2 <- span - 1, d1 becomes scratch
-#endif
 	lea	BLASTER+B_OFF,a5	; a5 -> bit blt reference register
 	clr.w	B_S_NXWD(a5)		; proceed from left to right
 
@@ -97,9 +94,7 @@ hb_rect:
 	add.w	d0,d0			; d0 <- offset to writing mode table
 	add.w	d0,a4			; a4 -> writing mode table
 
-#if !PLANES8
 	lea.l   LV(FG_BP_1,a2),a3
-#endif
 	move.l	LV(patptr,a2),a0		; a0 -> start of pattern
 	move.w	LV(patmsk,a2),d0		; d0 <- pattern index mask
 
@@ -118,10 +113,6 @@ hb_rect:
 
 	tst.w	LV(multifill,a2)		; handle multi-plane fill seperately
 	bne	rf_multi
-
-#if PLANES8
-    move.l  LV(FG_B_PLANES,a2),d5	; d5 <- color index
-#endif
 
 *
 *  CASE I:  Standard monoplane patterns ( mask: 0, 1, 3, 7, 15 )
@@ -146,13 +137,8 @@ s1b_loop:
 	move.l	a1,B_D_ADDR(a5)
 	move.w	d7,B_HEIGHT(a5)
 
-#if PLANES8
-	ror.l	#1,d5			; what color is this plane ?
-	scs	d0
-#else
     tst.w     (a3)+
     sne       d0
-#endif
 	and.w	d1,d0			; d0 <- logic op offset:  0=>0  1=>2
 	move.w	0(a4,d0.w),B_LOGOP(a5)  ; load the logic op
 
@@ -206,13 +192,8 @@ smb_loop:
 	move.l	a1,B_D_ADDR(a5)
 	move.w	d7,B_HEIGHT(a5)
 
-#if PLANES8
-	ror.l	#1,d5			; what color is this plane ?
-	scs	d0
-#else
     tst.w     (a3)+
     sne       d0
-#endif
 	and.w	d1,d0			; d0 <- logic op offset: 0=>0  1=>2
 	move.w	0(a4,d0.w),B_LOGOP(a5)	; load the logic op
 
@@ -251,11 +232,7 @@ rf_dgen:
 	add.w	d0,d0			 ; d0 <- pattern offset mask
 	add.w	d4,d4			 ; d4 <- initial pattern offset
 	subq.w	#1,d7			 ; d7 <- height-1 (dbra counter)
-#if PLANES8
-	move.w	d7,a3			 ; a3 <- copy of line counter
-#else
     move.w  d7,d5            ; d5 <- copy of line counter
-#endif
 	move.w	#BM_GO,d1		 ; d1 <- SKEW template
 
 	tst.w	LV(multifill,a2)
@@ -267,13 +244,8 @@ sd1_loop:
 
 	move.l	a1,B_D_ADDR(a5)		 ; start at top of this plane
 
-#if PLANES8
-	ror.l	#1,d5			; what color is this plane ?
-	scs	d2
-#else
     tst.w     (a3)+
     sne       d2
-#endif
 	and.w	#2,d2			 ; d2 <- logic op offset:  0=>0  1=>2
 	move.w	0(a4,d2.w),B_LOGOP(a5)	 ; load the logic op for this plane
 
@@ -305,12 +277,7 @@ sd2_cont:
 
 	dbra	d7,sd2_loop		 ; do next line in this plane
 
-
-#if PLANES8
-	move.w	a3,d7			 ; d7 <- reset line counter
-#else
 	move.w	d5,d7			 ; d7 <- reset line counter
-#endif
 	add.w	d3,a0			 ; a0 -> start of next pattern plane
 	addq.l	#2,a1			 ; a1 -> next plane
 	dbra	d6,sd1_loop		 ; do next plane

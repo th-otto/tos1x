@@ -166,12 +166,10 @@ chr_op:		dc.w	BM_SRC+00,BM_SRC+12,BM_SRC+03,BM_SRC+15
 *
 *******************************************************************************
 
-#if TOSVERSION < 0x300
 /* 206de: 00e0667c */
 /* 104de: 00fca8d4 */
 p_sc_up:
 	V_JUMP(V_SCRUP,a4,a5)		; a5 -> version of p_sc_up
-#endif
 
 	xdef	hb_scrup
 hb_scrup:
@@ -234,17 +232,11 @@ fu_start:
 	clr.w	d0			; d0 <- Xmin
 	move.w	LV((v_celmx)+O6,a4),d2		; d2 <- Xmax
 	move.w	d3,d1			; d1 <- Ymax  d3 <- Ymax
-#if TOSVERSION < 0x300
 	bra	blank_it		; fill the vacated space
-#else
-	jmp	blank_it		; fill the vacated space
-#endif
 
 
-#if TOSVERSION < 0x300
 p_sc_dn:
 	V_JUMP(V_SCRDN,a4,a5)		; a5 -> version of p_sc_dn
-#endif
 
 	xdef	hb_scrdn
 hb_scrdn:
@@ -305,11 +297,7 @@ fd_start:
 	clr.w	d0			; d0 <- Xmin
 	move.w	LV((v_celmx)+O6,a4),d2		; d2 <- Xmax
 	move.w	d1,d3			; d1 <- Ymin  d3 <- Ymin
-#if TOSVERSION < 0x300
 	bra	blank_it		; fill the vacated space
-#else
-	jmp	blank_it		; fill the vacated space
-#endif
 
 *******************************************************************************
 *
@@ -349,11 +337,9 @@ blank_tab: *    fringe masks		*   odd      odd  multi word
 
 
 
-#if TOSVERSION < 0x300
 	xdef	blank_it
 blank_it:
 	V_JUMP(V_BLANK,a4,a5)		; a5 -> version of blank_it
-#endif
 
 	xdef	hb_blank
 hb_blank:

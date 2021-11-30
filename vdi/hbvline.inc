@@ -131,11 +131,7 @@ vl_newmask:
 	rol.w	d1,d3			; d3 <- pattern aligned for next line
 	move.w	d3,(a3)			; save it back to LN_MASK
 
-#if PLANES8
-        move.l  LV(FG_B_PLANES,a4),d5	; d5 <- color index
-#else
 	lea     FG_BP_1(a4),a3
-#endif
 	moveq.l	#2,d4			; d4 <- mask for op_table offset
 	move.w	#1,B_D_SPAN(a5)		; one word span
 
@@ -144,13 +140,8 @@ vl_loop:
 	move.l	a1,B_D_ADDR(a5)		; next plane
 	move.w	d7,B_HEIGHT(a5)		; line height
 
-#if PLANES8
-	ror.l	#1,d5			; what color is this plane ?
-	scs	d3
-#else
 	tst.w   (a3)+
 	sne     d3
-#endif
 	and.w	d4,d3
 	move.w	0(a2,d3.w),B_LOGOP(a5)
 

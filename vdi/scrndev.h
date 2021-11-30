@@ -45,20 +45,6 @@ typedef struct screendef {
 #define V_VLINE         7           /* vertical line draw routines          */
 #define V_HLINE         8           /* horizontal line draw routines        */
 #define V_TEXT          9           /* text blit routines                   */
-#if TOSVERSION >= 0x400
-#define V_VQCOLOR       10          /* color inquire routines               */
-#define V_VSCOLOR       11          /* color set routines                   */
-#define V_INIT          12          /* init routine called upon openwk      */
-#define V_SHOWCUR       13          /* display cursor                       */
-#define V_HIDECUR       14          /* replace cursor with old background   */
-#define V_NEGCELL       15          /* negate alpha cursor                  */
-#define V_MOVEACUR      16          /* move alpha cur to new X,Y (D0, D1)   */
-#define V_ABLINE        17          /* arbitrary line routine               */
-#define V_HABLINE       18          /* horizontal line routine setup        */
-#define V_RECTFILL      19          /* routine to do rectangle fill         */
-#define V_PUTPIX        20          /* output pixel value to the screen     */
-#define V_GETPIX        21          /* get pixel value at (X,Y) of screen   */
-#endif
 
 #define DEVICEDEP       0           /* means we're in device dep mode       */
 #define STANDARD        1           /* flag for standard format             */

@@ -99,15 +99,7 @@ typedef struct vdiVars {
 	LAEXT int16_t        loc_mode;           /* the mode of the Locator device       */
 	LAEXT int16_t        num_qc_lines;       /* # of line in the quarter circle      */
 
-#if (TOSVERSION >= 0x300) & PLANES8
-	LAEXT int32_t        trap14sav;	         /* space to save the return address     */
-	LAEXT int32_t        col_or_mask;        /* some modes this is ored in VS_COLOR  */
-	LAEXT int32_t        col_and_mask;       /* some modes this is anded in VS_COLOR */
-	LAEXT int32_t	     trapb14sav;	     /* space to sav ret adr (for reentrency)*/
-	LAEXT int16_t	     resrvd0[32];	     /* reserved				    */
-#else
 	LAEXT int16_t	q_circle[40];	         /* space to build circle coordinates    */
-#endif
 
 	LAEXT int16_t        str_mode;           /* the mode of the String device        */
 	LAEXT int16_t        val_mode;           /* the mode of the Valuator device      */
@@ -251,62 +243,9 @@ typedef struct vdiVars {
 	LAEXT int16_t	(*USERESCINIT) PROTO((NOTHING));          /* ptr to user routine before esc_init  */
 	LAEXT int32_t	resrvd2[8];		         /* reserved				    */
 
-#if TOSVERSION >= 0x400
-	LAEXT VOID (**LA_ROUTINES) PROTO((NOTHING));     /* ptr to primitives vector list	    */
-	LAEXT const SCREENDEF   *LA_CURDEV;	     /* ptr to a current device structure    */
-#else
 	LAEXT VOID (**LA_ROUTINES) PROTO((NOTHING)); /* hardware assisted drawing primitives  */
 	LAEXT VOID (**LA_SOFTROUTINES) PROTO((NOTHING)); /* drawing primitives done in software   */
-#endif
 	LAEXT int16_t        BLT_MODE;           /* 0: soft BiT BLiT 1: hard BiT BLiT    */
-
-#if PLANES8
-
-    /*
-     * Stuff for 8 plane VDI
-     */
-	LAEXT int16_t        LA_F32;             /* reserved; if set, TOS 3.0x uses 16x32 as system font in TT-High */
-
-	LAEXT int16_t        REQ_X_COL[240][3];  /* extended request color array         */
-
-	LAEXT int16_t        *sv_blk_ptr;        /* points to the proper save block      */
-	LAEXT int32_t        FG_B_PLANES;        /* fg bit plns flags (bit 0 is plane 0) */
-
-    /*
-     * The following 4 variables are accessed by the line-drawing routines
-     * as an array (to allow post-increment addressing).
-     * THEY MUST BE CONTIGUOUS !!
-     */
-	LAEXT int16_t        FG_BP_5;            /* foreground bitPlane #5 value.        */
-	LAEXT int16_t        FG_BP_6;            /* foreground bitPlane #6 value.        */
-	LAEXT int16_t        FG_BP_7;            /* foreground bitPlane #7 value.        */
-	LAEXT int16_t        FG_BP_8;            /* foreground bitPlane #8 value.        */
-
-    /*
-     * we don't get rid of the old area for compatibility reasons
-     */
-	LAEXT int16_t        sav8_len;           /* height of saved form                 */
-	LAEXT int16_t        *sav8_addr;         /* screen addr of 1st word of plane 0   */
-	LAEXT int16_t        sav8_stat;          /* cursor save status                   */
-#if VIDEL_SUPPORT
-	LAEXT int32_t        sav8_area[256];     /* save up to 8 planes. 16 longs/plane  */
-#else
-	LAEXT int16_t        sav8_area[256];     /* save up to 8 planes. 16 words/plane  */
-#endif
-	LAEXT int16_t	q_circle[80];	         /* space to build circle coordinates    */
-
-/*============================== NEW STUFF =================================*/
-
-#if VIDEL_SUPPORT
-	LAEXT int16_t	byt_per_pix;	           /* number of bytes per pixel (0 if < 1) */
-	LAEXT int16_t	form_id;		           /* scrn form 2 ST, 1 stndrd, 3 pix      */
-	LAEXT int32_t	vl_col_bg;	               /* escape background color (long value) */
-	LAEXT int32_t	vl_col_fg;	               /* escape foreground color (long value) */
-	LAEXT int32_t	pal_map[256];	           /* either a mapping of reg's or true val */
-	LAEXT int16_t	(*V_PRIMITIVES[40]) PROTO((NOTHING));	   /* space to copy vectors into	    */
-#endif
-
-#endif /* PLANES8 */
 
 #if !LINEA_HACK
 } VDIVARS;
@@ -314,22 +253,6 @@ typedef struct vdiVars {
 
 #undef LAEXT
 
-
-#if TOSVERSION >= 0x400
-
-/* line_a variable structure */
-/*
- * That does not make much sense.
- * la is an initialized variable, thus part of the data segment
- * and thus in ROM and can never be changed.
- * These indirect accesses just produce quite some more code
- * and take extra time.
- */
-extern VDIVARS *la;
-
-#define LV(v) la->v
-
-#else
 
 #if LINEA_HACK
 
@@ -341,8 +264,6 @@ extern VDIVARS *la;
 extern VDIVARS vdivars;
 
 #define LV(v) vdivars.v
-
-#endif
 
 #endif
 

@@ -29,18 +29,10 @@
 #include "lineaequ.inc"
 #include "tosvars.inc"
 
-#if MULTI_LINEA
-#define PIXL6(r) PIXLA(r)
-O6 equ 0
-#define V_FUNC(func,la,r) \
-	move.l	LV((LA_ROUTINES)+O6,la),r \
-	move.l	func(r),r
-#else
 O6 equ 6 /* WTF? why? */
 #define V_FUNC(func,la,r) \
 	move.l	LV((USERDEVINIT)+O6+func,la),r
 #define PIXL6(r) lea lineavars-O6,r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -73,9 +65,6 @@ O6 equ 6 /* WTF? why? */
 /* 104de: 00fd25bc */
 		xdef sb_cell
 sb_cell:
-#if TOSVERSION >= 0x300
-		move.l	a4,-(sp)		/* save a4 */
-#endif
 		move.w	LV((v_planes)+O6,a4),d1	/* d1 <- number of planes */
 		subq.w	#1,d1			/* d1 <- dbra plane counter */
 		move.w	LV((v_fnt_wr)+O6,a4),d2		/* d2 <- src width (in bytes) */
@@ -83,13 +72,6 @@ sb_cell:
 		move.w	LV((v_cel_ht)+O6,a4),d4
 		subq.w	#1,d4			/* d4 <- cell height -1 */
 		move.l	a1,a5			/* a5 -> 1st byte of destination */
-#if TOSVERSION >= 0x300
-		move.l	LV((v_off_ad)+O6,a4),a2		/* a2 -> offset table */
-		cmp.w	#16,2(a2)		/* see if char cell is word wide */
-		lea	blk_byte,a4		/* assume 8 bit wide font */
-		bne	blk_next		/* branch if not ? */
-		lea	blk_word,a4		/* it's 16 bit wide font */
-#endif
 blk_next:
 		move.l	a5,a3		/* a3 -> dst plane */
 		move.w	d4,d0		/* d0 <- dbra row counter */
@@ -100,17 +82,10 @@ blk_next:
 		lsr.w	#1,d7		/* extract background color bit */
 		roxl.w	#3,d5		/* d5 <- offset to fragment addr */
 
-#if TOSVERSION >= 0x300
-		move.l	(a4,d5.w),a2	/* a2 -> to fragment */
-#else
 		move.l	blk_byte(pc,d5.w),a2	/* a2 -> to fragment */
-#endif
 		jmp	(a2)
 
 blk_byte:	dc.l	byte_zero,byte_invert,byte_normal,byte_ones
-#if TOSVERSION >= 0x300
-blk_word:	dc.l	word_zero,word_invert,word_normal,word_ones
-#endif
 
 
 /*
@@ -123,9 +98,6 @@ byte_n:		move.b	(a2),(a3)	/* move character byte */
 		dbra	d0,byte_n
 		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
 		dbra	d1,blk_next
-#if TOSVERSION >= 0x300
-		move.l	(sp)+,a4	/* restore a4 */
-#endif
 		rts
 
 
@@ -139,9 +111,6 @@ byte_1:		move.b	d5,(a3)
 		dbra	d0,byte_1
 		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
 		dbra	d1,blk_next
-#if TOSVERSION >= 0x300
-		move.l	(sp)+,a4	/* restore a4 */
-#endif
 		rts
 
 
@@ -154,54 +123,8 @@ byte_i:		move.b	(a2),d5		/* d5 <- character byte */
 		dbra	d0,byte_i
 		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
 		dbra	d1,blk_next
-#if TOSVERSION >= 0x300
-		move.l	(sp)+,a4	/* restore a4 */
-#endif
 		rts
 
-
-#if TOSVERSION >= 0x300
-/*
- * The routine below deal with word wide font
- */
-word_normal:	move.l	a0,a2		/* a2 -> single plane char cell */
-word_n:		move.w	(a2),(a3)	/* move character word */
-		adda.w	d2,a2		/* a2 -> next row of character */
-		adda.w	d3,a3		/* a3 -> next row of destination */
-		dbra	d0,word_n
-		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
-		dbra	d1,blk_next
-		move.l	(sp)+,a4	/* restore a4 */
-		rts
-
-
-word_ones:	moveq.l	#-1,d5		/* fill cell with ones */
-		bra	word_0
-
-word_zero:	moveq.l	#0,d5		/* fill cell with zeros */
-word_0:		move.l	a0,a2		/* a2 -> single plane character cell */
-word_1:		move.w	d5,(a3)
-		adda.w	d3,a3		/* a3 -> next dst row */
-		dbra	d0,word_1
-		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
-		dbra	d1,blk_next
-		move.l	(sp)+,a4	/* restore a4 */
-		rts
-
-
-word_invert:	move.l	a0,a2		/* a2 -> single plane character cell */
-word_i:		move.w	(a2),d5		/* d5 <- character word */
-		not.w	d5		/* d5 <- inverted character word */
-		move.w	d5,(a3)
-		adda.w	d2,a2		/* a2 -> next row of character form */
-		adda.w	d3,a3		/* a3 -> next row of destination */
-		dbra	d0,word_i
-		addq.l	#2,a5		/* a5 -> 1st row of next dst plane */
-		dbra	d1,blk_next
-		move.l	(sp)+,a4	/* restore a4 */
-		rts
-
-#endif
 
 /*******************************************************************************
  *
@@ -242,24 +165,12 @@ sb_scrup:
 
 	mulu	LV((v_cel_ht)+O6,a4),d7		/* d7 <- scroll region height */
 
-#if TOSVERSION >= 0x400
-	move.w	LV((v_cel_ht)+O6,a4),d0		/* d0 <- cell height */
-	mulu.w	d0,d1
-	mulu.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- cell wrap */
-	mulu.w	LV((v_lin_wr)+O6,a4),d1	/* d1 <- offset to (0,Ymin) */
-
-	move.l	_v_bas_ad,a3		/* a3 -> base of screen */
-	add.l	d1,a3			/* a3 -> scroll dst: Ymin */
-	move.l	a3,a2
-	add.l	d0,a2			/* a2 -> scroll src: Ymin+1 */
-#else
 	move.w	LV((v_cel_wr)+O6,a4),d0
 	mulu.w	d0,d1
 	move.l	_v_bas_ad,a3		/* a3 -> base of screen */
 	add.l	d1,a3			/* a3 -> scroll dst: Ymin */
 	move.l	a3,a2
 	adda.w	d0,a2			/* a2 -> scroll src: Ymin+1 */
-#endif
 
 	move.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- bytes per line */
 	lsr.w	#4,d0			/* d0 <- iterations per line */
@@ -294,21 +205,6 @@ sb_scrdn:
 
 	mulu	LV((v_cel_ht)+O6,a4),d7		/* d7 <- scroll region pixel height */
 
-#if TOSVERSION >= 0x400
-	move.w	LV((v_cel_ht)+O6,a4),d0		/* d0 <- cell height */
-	mulu.w	d0,d3
-	mulu.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- cell wrap */
-	mulu.w	LV((v_lin_wr)+O6,a4),d3	/* d3 <- offset to (0,Ymin) */
-
-	move.l	_v_bas_ad,a2		/* a2 -> base of screen */
-	add.l	d3,a2			/* a2 -> scroll src: 1st word of Ymax */
-	move.l	a2,a3
-#if BINEXACT
-	add.w	d0,a3			/* a3 -> scroll dst: 1st word of Ymax+1 BUG: should be add.l */
-#else
-	add.l	d0,a3			/* a3 -> scroll dst: 1st word of Ymax+1 */
-#endif
-#else
 	move.w	LV((v_cel_wr)+O6,a4),d0 /* d0 <- cell wrap */
 	mulu.w	d0,d3
 	move.l	_v_bas_ad,a2		/* a2 -> base of screen */
@@ -316,7 +212,6 @@ sb_scrdn:
 	add.l	d3,a2			/* a2 -> scroll src: 1st word of Ymax */
 	move.l	a2,a3
 	add.w	d0,a3			/* a3 -> scroll dst: 1st word of Ymax+1 */
-#endif
 
 	move.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- bytes per line */
 	lsr.w	#4,d0			/* d0 <- iterations per line */
@@ -384,14 +279,6 @@ sb_blank:
 	move.w	d2,d5			/* d5 <- X max */
 
 	clr.w	d0
-#if TOSVERSION >= 0x300
-	add.w	#1,d0			/* adjust for word wide font (x += 1) */
-	move.l	LV((v_off_ad)+O6,a4),a2		/* a2 -> offset table */
-	cmp.w	#16,2(a2)		/* see if char cell is word wide */
-	beq	blank_words		/* then don't adjust to word offset */
-
-	sub.w	#1,d0			/* adjust for byte wide font (x -= 1) */
-#endif
 	lsr.w	#1,d4			/* d4 <- word offset to Xmin */
 	addx.w	d0,d0
 	lsr.w	#1,d5			/* d5 <- word offset to Xmax */
@@ -407,25 +294,14 @@ blank_words:
 	add.b	d5,d5			/* 1 dst word  =:00  <>:FF */
 	roxl.w	#3,d0			/* d0 <- offset into fringe table */
 
-#if TOSVERSION >= 0x400
-	move.w	LV((v_cel_ht)+O6,a4),d7		/* d7 <- current cell height */
-	mulu.w	d1,d7			/* d7 <- (cell height) * (Y top) */
-	mulu.w	LV((v_lin_wr)+O6,a4),d7	/* d7 <- offset to top of row at Ymin */
-#else
 	move.w	LV((v_cel_wr)+O6,a4),d7 /* d7 <- cell wrap */
 	mulu.w	d1,d7
-#endif
 
 	move.l	_v_bas_ad,a2		/* a2 -> base of screen */
 	add.l	d7,a2			/* a2 -> top of row at Ymin */
 
 	move.w	LV((v_planes)+O6,a4),d6	/* d6 <- number of planes */
-#if PLANES8
-	add.w	d6,d6			/* make d6 word offset */
-	move.w	log2_tab(pc,d6.w),d6	/* d6 <- log2(planes) */
-#else
 	lsr.w     #1,d6     /* d6 <- log2(planes) (works only for planes 1,2,4) */
-#endif
 	add.w	d4,d4			/* d4 <- byte offset to Xmin word */
 	lsl.w	d6,d4			/* d4 <- offset to Xmin (bytes) */
 	add.w	d4,a2			/* a2 -> start of dst */
@@ -465,10 +341,6 @@ blank_words:
 
 
 brtn_tab:	dc.l	blank1,blank2,blank4
-#if PLANES8
-            dc.l    blank8
-log2_tab:	dc.w	0,0,1,0,2,0,0,0,3
-#endif
 
 /*
  * Blank out a 1 plane region in your choice of colors
@@ -659,84 +531,3 @@ en4:	move.w	a5,d6			/* d6 <- word counter */
 
 
 
-/*
- * Blank out an 8 plane region in your choice of colors
- *
- * in:
- *	a2	points to 1st word of destination
- *	a3	offset from last word of one line to first word of next line
- *	a5	span (in words) of destination plane
- *
- *	d4	left mask   0:dst 1:fill
- *	d5	right mask  0:dst 1:fill
- *	d6	color
- *	d7	height
- */
-#if PLANES8
-blank8:		move.w	d6,-(sp)	/* save color on the stack */
-		bset	#31,d6		/* flag for second 4 planes */
-
-bl8loop:	lsr.w	(sp)		/* cy: plane 0 color */
-		subx.l	d0,d0		/* d0[31:16] <- 0000:cy=0 or FFFF:cy=1 */
-		lsr.w	(sp)		/* cy: plane 1 color */
-		subx.w	d0,d0		/* d0[15:00] <- 0000:cy=0 or FFFF:cy=1 */
-		lsr.w	(sp)		/* cy: plane 2 color */
-		subx.l	d1,d1		/* d1[31:16] <- 0000:cy=0 or FFFF:cy=1 */
-		lsr.w	(sp)		/* cy: plane 3 color */
-		subx.w	d1,d1		/* d1[15:00] <- 0000:cy=0 or FFFF:cy=1 */
-
-		move.l	d0,a0		/* a0 <- fill value for planes 0 & 1 */
-		move.l	d0,d2
-		move.l	d1,a1		/* a1 <- fill value for planes 0 & 1 */
-		move.l	d1,d3
-		and.l	d4,d0		/* d0 <- lf fringe fill for planes 0 & 1 */
-		and.l	d4,d1		/* d1 <- rt fringe fill for planes 0 & 1 */
-		and.l	d5,d2		/* d2 <- lf fringe fill for planes 2 & 3 */
-		and.l	d5,d3		/* d3 <- rt fringe fill for planes 2 & 3 */
-		not.l	d4		/* d4 <- lf fringe mask     0:fill 1:dst */
-		not.l	d5		/* d5 <- rt fringe mask     0:fill 1:dst */
-
-		move.l	a2,-(sp)	/* save dest for second round of bl8loop */
-		move.w	d7,-(sp)	/* save height for second round of bl8loop */
-		bra	en8
-
-
-lf8:		and.l	d4,(a2)
-		or.l	d0,(a2)+
-		and.l	d4,(a2)
-		or.l	d1,(a2)+
-		addq.l	#8,a2		/* skip next 4 planes */
-
-		subq.w	#1,d6		/* check single fringe case */
-		bcs	nx8
-
-		subq.w	#1,d6		/* check for null inner loop */
-		bcs	rf8
-
-in8:		move.l	a0,(a2)+
-		move.l	a1,(a2)+
-		addq.l	#8,a2		/* skip next 4 planes */
-		dbra	d6,in8
-
-rf8:		and.l	d5,(a2)
-		or.l	d2,(a2)+
-		and.l	d5,(a2)
-		or.l	d3,(a2)+
-		addq.l	#8,a2		/* skip next 4 planes */
-
-nx8:		add.w	a3,a2		/* a2 -> start of next line */
-
-en8:		move.w	a5,d6		/* d6 <- word counter */
-		dbra	d7,lf8
-
-		move.w	(sp)+,d7	/* restore height */
-		move.l	(sp)+,a2	/* restore dest pointer */
-		addq.l	#8,a2		/* a2 -> next 4 planes */
-		not.l	d4		/* restore original d4 */
-		not.l	d5		/* restore original d5 */
-		bchg	#31,d6		/* test the flag for next 4 planes */
-		bne	bl8loop		/* do the next 4 planes */
-		addq.l	#2,sp		/* clean stack (color was stored on it) */
-		rts
-
-#endif

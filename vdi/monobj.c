@@ -459,14 +459,10 @@ VOID v_string(NOTHING)
 {
 	int16_t i;
 	int16_t j;
-#if TOSVERSION < 0x400
 	int unused;
-#endif
 	int16_t mask;
 
-#if TOSVERSION < 0x400
 	UNUSED(unused);
-#endif
 	mask = 0x00ff;
 	j = LV(INTIN)[0];
 	if (j < 0)
@@ -609,10 +605,8 @@ VOID vsf_perimeter(NOTHING)
 {
 	register int16_t *int_out;
 	register ATTRIBUTE *work_ptr;
-#if TOSVERSION < 0x400
 	register int unused;
 	UNUSED(unused);
-#endif
 
 	work_ptr = LV(cur_work);
 	int_out = LV(INTOUT);
@@ -649,15 +643,11 @@ VOID vsl_udsty(NOTHING)
 VOID vs_clip(NOTHING)
 {
 	register int16_t *xy;
-#if TOSVERSION < 0x400
 	register int unused;
-#endif
 	register int16_t rtemp;
 	register ATTRIBUTE *work_ptr;
 
-#if TOSVERSION < 0x400
 	UNUSED(unused);
-#endif
 
 	work_ptr = LV(cur_work);
 	if ((work_ptr->clip = LV(INTIN)[0]) != 0)
@@ -758,63 +748,6 @@ VOID drt_cpyfm(NOTHING)
 
 /*--------------------------------------------------------------------------*/
 
-#if VIDEL_SUPPORT
-/*
- * VDI #110 - vr_trnfm - Transform form
- */
-VOID vr_trnfm(NOTHING)
-{
-	register FDB *src, *dst;
-	register int16_t sFormat, dFormat;
-	register FDB **cntrlS, **cntrlD;
-
-	cntrlS = (FDB **) (&LV(CONTRL)[7]);
-	cntrlD = (FDB **) (&LV(CONTRL)[9]);
-
-	src = *cntrlS;
-	dst = *cntrlD;
-
-	sFormat = src->formatId;
-	dFormat = dst->formatId;
-
-	switch (sFormat)
-	{
-	case DEVICEDEP:
-		switch (dFormat)
-		{
-		case DEVICEDEP:
-		case STANDARD:
-		default:
-			TRAN_FM();
-			break;
-
-		case INTERLEAVED:
-			break;
-
-		case PIXPACKED:
-			break;
-		}
-		break;
-
-	case STANDARD:
-		switch (dFormat)
-		{
-		case DEVICEDEP:
-		case STANDARD:
-		default:
-			TRAN_FM();
-			break;
-		}
-		break;
-
-	default:
-		break;
-	}
-}
-#endif
-
-/*--------------------------------------------------------------------------*/
-
 /*
  * VDI #114 - vr_recfl - Fill rectangle
  */
@@ -823,22 +756,16 @@ VOID vr_trnfm(NOTHING)
 VOID dr_recfl(NOTHING)
 {
 	register int16_t *pts_in;
-#if !PLANES8
 	register int16_t color;
-#endif
 
 	/* Perform arbitrary corner fix-ups and invoke the rectangle fill routine */
 
 	arb_corner(LV(PTSIN), ULLR);
-#if PLANES8
-	LV(FG_B_PLANES) = LV(cur_work)->fill_color;
-#else
 	color = LV(cur_work)->fill_color;
 	LV(FG_BP_1) = color & 0x01;
 	LV(FG_BP_2) = color & 0x02;
 	LV(FG_BP_3) = color & 0x04;
 	LV(FG_BP_4) = color & 0x08;
-#endif
 
 	pts_in = LV(PTSIN);
 	LV(X1) = *pts_in++;

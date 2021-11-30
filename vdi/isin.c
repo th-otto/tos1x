@@ -48,75 +48,6 @@ static int16_t const sin_tbl[92] = {
  * lookup table sintable^[]. Expects angle in tenths of degree 0 - 3600.
  * Assumes positive angles only.
  */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-int16_t Isin(P(int16_t) ang)
-PP(register int16_t ang;)
-{
-	register int16_t index, remainder, tmpsin;
-	register const int16_t *ptr;
-	register int16_t quadrant;			/* 0-3 = 1st, 2nd, 3rd, 4th. */
-
-	ptr = sin_tbl;
-
-	while (ang > 3600)
-		ang -= 3600;
-
-	quadrant = ang / HALFPI;
-
-	switch (quadrant)
-	{
-	case 0:
-		break;
-
-	case 1:
-		ang = PI - ang;
-		break;
-
-	case 2:
-		ang -= PI;
-		break;
-
-	case 3:
-		ang = TWOPI - ang;
-		break;
-
-	case 4:
-		ang -= TWOPI;
-		break;
-	}
-
-	index = ang / 10;
-	remainder = ang % 10;
-	tmpsin = ptr[index];
-
-	/* add interpolation. */
-	if (remainder != 0)
-		tmpsin += ((ptr[index + 1] - tmpsin) * remainder) / 10;
-
-	if (quadrant > 1)
-		tmpsin = -tmpsin;
-
-	return tmpsin;
-}
-
-
-/*---------------------------------------------------------------------------*/
-/*
- * return integer cos between -32767 and 32767.
- */
-int16_t Icos(P(int16_t) ang)
-PP(int16_t ang;)
-{
-	ang += HALFPI;
-
-	if (ang > TWOPI)
-		ang -= TWOPI;
-
-	return Isin(ang);
-}
-
-#else
-
 int16_t Isin(P(int16_t) ang)
 PP(int16_t ang;)
 {
@@ -182,5 +113,3 @@ PP(int16_t ang;)
 
 	return Isin(ang);
 }
-
-#endif

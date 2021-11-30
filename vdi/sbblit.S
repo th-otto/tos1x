@@ -44,15 +44,6 @@
 #include "lineaequ.inc"
 #include "asmdefs.h"
 
-/*
- * We now use _copytran in the overlay variable space rather than
- * _COPYTRAN a linea structure variable.
- */
-#if TOSVERSION >= 0x400
-# define _COPYTRAN _copytran
-#endif
-
-
 
 *+
 * purpose:	set up parameters for bitblt and thread together the
@@ -104,10 +95,6 @@ sb_bitblt: ds.b 0
 #endif
 
 	PIXLA(a4)
-#if TOSVERSION >= 0x300
-	clr.w	OPAQUE(a6)		; set OPAQUE flag off
-	clr.w	PIXLV(COPYTRAN,a6)		; turn blit transparent flag off
-#endif
 
 	moveq.l	#$0F,d5			; d5 <- mod 16 mask
 
@@ -130,7 +117,6 @@ sb_bitblt: ds.b 0
 
 	sub.w	d3,d1			; d1 <- (Sxmin mod 16) - (Dxmin mod 16)
 
-#if TOSVERSION < 0x300
     bne	std_blt
 	tst.l	FG_COL(a6)		; and fore and back colors are 0 ...
 	bne	std_blt
@@ -142,53 +128,6 @@ sb_bitblt: ds.b 0
 	bcs.s	std_blt
 	tst.l	P_ADDR(a6)		; and no pattern is involved ...
 	beq word_blt			; do the special word aligned blt
-
-#else
-
-	move.w	d4,d7			; and both src and dst occupy
-	add.w	d6,d7			; three or more words apiece ...
-	cmp.w	#4,d7
-	bcs.s	std_blt
-
-	tst.l	P_ADDR(a6)		; and no pattern is involved ...
-	bne	std_blt			; do the special word aligned blt
-
-	move.w	PLANE_CT(a6),d7		; d7 <- # planes
-	lsl.w	#1,d7			; make d7 word offset
-
-	cmp.w	D_NXWD(a6),d7		; see if we are in ST interleved plns
-	bne	sbBl0			; if not, do other more general case
-	cmp.w	#2,D_NXPL(a6)		; see if we are in ST interleaved plns
-	bne	sbBl0			; if not, do other more general case
-
-	cmp.w	S_NXWD(a6),d7		; see if we are in ST intrleaved plns
-	bne	trns_blt		; if not, do other cases
-	cmp.w	#2,S_NXPL(a6)		; see if we are in ST interleaved plns
-	bne	trns_blt		; if not, do other cases
-
-	tst.l	FG_COL(a6)		; and fore and back colors are 0 ...
-	bne	opaque_blt
-	cmp.b	#03,OP_TAB(a6)		/* and D'<- S is the logic operation ... */
-	bne	opaque_blt
-	jmp	scrn_blt		; do fast non tearing blit
-
-opaque_blt:
-	move.w	#1,OPAQUE(a6)		; d2 <- OPAQUE flag on
-	jmp	scrn_blt		; do fast non tearing blit
-
-trns_blt:
-	cmp.w	#2,S_NXWD(a6)		; see if next source word is word away
-	bne	sbBl0			; if not do other more general case
-	tst.w	S_NXPL(a6)		; see if doing transparent blit
-	bne	sbBl0			; if so do fast non tearing blit
-	move.w	#-1,PIXLV(COPYTRAN,a6)		; turn blit transparent flag on
-	jmp	scrn_blt
-
-sbBl0:	tst	d1			; see if S and D are pixel aligned
-	bne	std_blt			; if Xmin src mod16 = Xmin DST mod16 ..
-	bra	word_blt		/* if so do pixel aligned blit D' <- S */
-
-#endif
 
 
 std_blt:

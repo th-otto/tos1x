@@ -30,14 +30,8 @@
  * In TOS 4.x, they are called with a1 pointing to the
  * linea reference base.
  */
-
-#if TOSVERSION >= 0x400
-OF equ 0
-OF4 equ 0
-#else
 OF equ -FBASE
 OF4 equ -FBASE-4
-#endif
 
 
 *  no clipping to worry about
@@ -53,12 +47,7 @@ OF4 equ -FBASE-4
 /* 104de: 00fd2b1a */
 		xdef	 sb_mono
 sb_mono:
-#if TOSVERSION >= 0x400
-	movem.l	a5-a6,-(sp)	; save a5 and a6
-	movea.l	a1,a5		; a5 -. line A variable structure
-#else
 	move.l	a6,-(sp)	; save a6
-#endif
 
 	muls	LV((bytes_lin)+OF,a5),d1	; d1 <- Y offset
 	asr.w	#4,d0			; d0 <- word offset to X
@@ -71,24 +60,15 @@ sb_mono:
 	add.l	d0,a1			; a1 -> screen destination
 	add.l	d1,a1
 
-#if TOSVERSION >= 0x400
-	move.l	LV((FBASE)+OF,a5),a0		; a0 -> source form base address
-	move.w	LV((FWIDTH)+OF4,a5),d0		; d0 <- source form width
-#else
-	move.l  (a5)+,a0
+	move.l  (a5)+,a0					; a0 -> source form base address
 	move.w	(a5),d0						; d0 <- source form width
-#endif
 	move.l	LV((INTIN)+OF4,a5),a2		; a2 -> character string
 	move.w	LV((v_lin_wr)+OF4,a5),d1	; d1 <- screen form width
 	move.w	LV((WRT_MODE)+OF4,a5),d4	; d4 <- writing mode
 	add.w	d4,d4			; d4 <- writing mode index
 
 	dbra	d3,next_char		; d3 <- character height dbra counter
-#if TOSVERSION >= 0x400
-	movem.l	(sp)+,a5-a6		; restore a5 and a6
-#else
-	/* BUG: a5+a6 not restored -> crash */
-#endif
+	/* BUG: a6 not restored -> crash */
 	rts				; quit on null height
 
 
@@ -150,12 +130,8 @@ next_char:
 	dbra	d2,mchar_lp		; do next character
 
 	moveq.l	#1,d0			; exit blit with success code in d0
-#if TOSVERSION >= 0x400
-	movem.l	(sp)+,a5-a6		; restore a5 and a6
-#else
 	move.l	(sp)+,a6		; restore a6
 	move.l	(sp)+,a5		; restore a5 (it was saved by our caller in mono.s)
-#endif
 	rts
 
 

@@ -56,9 +56,7 @@
 #define SPSHIFTMODE	    (* ((int16_t *) 0xff8266L))	/* sparrow shift mode */
 #define PIXMASK		    0x200			/* pix control in XGA */
 
-#if TOSVERSION < 0x400
 const int16_t *const markhead[] = { m_dot, m_plus, m_star, m_square, m_cross, m_dmnd };
-#endif
 
 int16_t code PROTO((int16_t x,int16_t y));
 
@@ -156,15 +154,11 @@ VOID v_pline(NOTHING)
 	l = work_ptr->line_index;
 	LV(LN_MASK) = (l < 6) ? LINE_STYLE[l] : work_ptr->ud_ls;
 
-#if PLANES8
-	LV(FG_B_PLANES) = work_ptr->line_color;
-#else
 	l = work_ptr->line_color;
 	LV(FG_BP_1) = l & 0x01;
 	LV(FG_BP_2) = l & 0x02;
 	LV(FG_BP_3) = l & 0x04;
 	LV(FG_BP_4) = l & 0x08;
-#endif
 
 	if (work_ptr->line_width == 1)
 	{
@@ -189,9 +183,7 @@ VOID v_pmarker(NOTHING)
 {
 	int16_t i, j, num_lines, num_vert, x_center, y_center, sav_points[10];
 	int16_t sav_index, sav_color, sav_width, sav_beg, sav_end;
-#if BINEXACT & (TOSVERSION < 0x400)
 	int unused;
-#endif
 	const int16_t *mrk_ptr;
 	int16_t *old_ptsin;
 	int16_t scale, num_points, *src_ptr;
@@ -199,9 +191,7 @@ VOID v_pmarker(NOTHING)
 	register const int16_t *m_ptr;
 	register ATTRIBUTE *work_ptr;
 
-#if BINEXACT & (TOSVERSION < 0x400)
 	UNUSED(unused);
-#endif
 
 	/* Save the current polyline attributes which will be used. */
 
@@ -504,13 +494,8 @@ VOID pline(NOTHING)
 /* 104de: 00fccb4e */
 BOOLEAN clip_line(NOTHING)
 {
-#if BINEXACT & (TOSVERSION < 0x400) /* only register declaration different */
 	int16_t _deltaX, _deltaY;
 	int16_t x1y1_clip_flag, x2y2_clip_flag, line_clip_flag;
-#else
-	register int16_t _deltaX, _deltaY;
-	register int16_t x1y1_clip_flag, x2y2_clip_flag, line_clip_flag;
-#endif
 	register int16_t *x, *y;
 
 	while ((x1y1_clip_flag = code(LV(X1), LV(Y1))) | (x2y2_clip_flag = code(LV(X2), LV(Y2))))
@@ -586,22 +571,16 @@ PP(int16_t y;)
 VOID plygn(NOTHING)
 {
 	register int16_t *pointer, i, k;
-#if BINEXACT & (TOSVERSION < 0x400)
 	register int unused1;
 	int unused2;
 	UNUSED(unused1);
 	UNUSED(unused2);
-#endif
 
-#if PLANES8
-	LV(FG_B_PLANES) = LV(cur_work)->fill_color;
-#else
 	i = LV(cur_work)->fill_color;
 	LV(FG_BP_1) = i & 0x01;
 	LV(FG_BP_2) = i & 0x02;
 	LV(FG_BP_3) = i & 0x04;
 	LV(FG_BP_4) = i & 0x08;
-#endif
 
 	LV(LSTLIN) = FALSE;
 
@@ -695,21 +674,12 @@ VOID gdp_rbox(NOTHING)
 	*pointer++ = 0;
 	*pointer++ = LV(yrad);
 
-#if TOSVERSION >= 0x300
-	*pointer++ = SMUL_DIV(12539, LV(xrad), 32767);	/* Icos(675) = 12539 */
-	*pointer++ = SMUL_DIV(30271, LV(yrad), 32767);	/* Isin(675) = 30271 */
-	*pointer++ = SMUL_DIV(23170, LV(xrad), 32767);	/* Icos(450) = 23170 */
-	*pointer++ = SMUL_DIV(23170, LV(yrad), 32767);	/* Isin(450) = 23170 */
-	*pointer++ = SMUL_DIV(30271, LV(xrad), 32767);	/* Icos(225) = 30271 */
-	*pointer++ = SMUL_DIV(12539, LV(yrad), 32767);	/* Isin(225) = 12539 */
-#else
 	*pointer++ = SMUL_DIV(Icos(675), LV(xrad), 32767);
 	*pointer++ = SMUL_DIV(Isin(675), LV(yrad), 32767);
 	*pointer++ = SMUL_DIV(Icos(450), LV(xrad), 32767);
 	*pointer++ = SMUL_DIV(Isin(450), LV(yrad), 32767);
 	*pointer++ = SMUL_DIV(Icos(225), LV(xrad), 32767);
 	*pointer++ = SMUL_DIV(Isin(225), LV(yrad), 32767);
-#endif
 
 	*pointer++ = LV(xrad);
 	*pointer = 0;
@@ -757,15 +727,11 @@ VOID gdp_rbox(NOTHING)
 		i = work_ptr->line_index;
 		LV(LN_MASK) = (i < 6) ? LINE_STYLE[i] : work_ptr->ud_ls;
 
-#if PLANES8
-		LV(FG_B_PLANES) = work_ptr->line_color;
-#else
 		i = work_ptr->line_color;
 		LV(FG_BP_1) = i & 0x01;
 		LV(FG_BP_2) = i & 0x02;
 		LV(FG_BP_3) = i & 0x04;
 		LV(FG_BP_4) = i & 0x08;
-#endif
 
 		if (work_ptr->line_width == 1)
 		{
@@ -994,17 +960,10 @@ VOID st_fl_ptr(NOTHING)
 /* Moved the circle DDA code that was in vsl_width() here. */
 VOID cir_dda(NOTHING)
 {
-#if BINEXACT & (TOSVERSION < 0x400)
 	int unused1;
 	int unused2;
-#endif
 	int16_t i, j;
 	register int16_t *xptr, *yptr, x, y, d;
-
-#if BINEXACT & (TOSVERSION < 0x400)
-	UNUSED(unused1);
-	UNUSED(unused2);
-#endif
 
 	/* Calculate the number of vertical pixels required. */
 
@@ -1043,47 +1002,7 @@ VOID cir_dda(NOTHING)
 	if (x == y)
 		LV(q_circle)[x] = x;
 
-#if PLANES8
 	/* Fake a pixel averaging when converting to non-1:1 aspect ratio. */
-	if (xsize > ysize)
-	{
-		d = x = (LV(line_cw) + 1) / 2;
-		i = x * xsize / ysize;
-
-		for (; i > 0; i--)
-		{
-			y = i * ysize / xsize;
-
-			if (y == d)
-			{
-				LV(q_circle)[i] = LV(q_circle)[x];
-			} else
-			{
-				d = y;
-				x -= 1;
-				LV(q_circle)[i] = LV(q_circle)[x];
-			}
-		}
-	} else
-	{
-		x = 1;
-		yptr = LV(q_circle) + 1;
-
-		for (i = 1; i <= LV(num_qc_lines); i++)
-		{
-			y = i * ysize / xsize;
-			d = 0;
-
-			xptr = &LV(q_circle)[x];
-
-			for (j = x; j <= y; j++)
-				d += *xptr++;
-
-			*yptr++ = d / (y - x + 1);
-			x = y + 1;
-		}
-	}
-#else
 	for (x = 0, yptr = LV(q_circle), i = 0; i < LV(num_qc_lines); i++)
 	{
 		y = (i << 1) + 1;
@@ -1099,7 +1018,6 @@ VOID cir_dda(NOTHING)
 		*yptr++ = d / (y - x + 1);
 		x = y + 1;
 	}
-#endif
 }
 
 
@@ -1110,16 +1028,12 @@ VOID wline(NOTHING)
 {
 	int16_t i, k, box[10];							/* box two high to close polygon */
 	int16_t numpts, wx1, wy1, wx2, wy2, vx, vy;
-#if BINEXACT & (TOSVERSION < 0x400)
 	int unused1;
-#endif
 	int16_t *old_ptsin, *src_ptr;
 	register int16_t *pointer, x, y, d, d2;
 	register ATTRIBUTE *work_ptr;
 
-#if BINEXACT & (TOSVERSION < 0x400)
 	UNUSED(unused1);
-#endif
 
 	/* Don't attempt wide lining on a degenerate polyline */
 
@@ -1252,14 +1166,10 @@ PP(int16_t *px;)
 PP(int16_t *py;)
 {
 	register int16_t *vx, *vy, *pcircle, u, v;
-#if BINEXACT & (TOSVERSION < 0x400)
 	int unused1;
-#endif
 	int16_t x, y, quad, magnitude, min_val, x_val, y_val;
 
-#if BINEXACT & (TOSVERSION < 0x400)
 	UNUSED(unused1);
-#endif
 	vx = px;
 	vy = py;
 
@@ -1349,7 +1259,7 @@ PP(int16_t *ty;)
 	case 3:
 		*tx = -x;
 		break;
-#if (TOSVERSION < 0x300) & BINEXACT
+#if BINEXACT
 		asm("ds.b 0"); /* hmpf, optimizer seems to have missed to remove superfluous bra */
 #endif
 	}
@@ -1364,10 +1274,8 @@ PP(int16_t *ty;)
 	case 3:
 	case 4:
 		*ty = -y;
-#if (TOSVERSION < 0x200) | (TOSVERSION >= 0x300) | !BINEXACT /* hmpf */
 		break;
-#endif
-#if (TOSVERSION < 0x200) & BINEXACT
+#if BINEXACT
 		asm("ds.b 0"); /* hmpf, optimizer seems to have missed to remove superfluous bra */
 #endif
 	}
@@ -1394,26 +1302,16 @@ PP(int16_t cy;)
 		LV(X2) = cx + *pointer;
 		LV(Y1) = LV(Y2) = cy;
 
-#if TOSVERSION < 0x300
 		if (clip_line())
 			ABLINE();
-#endif
 		/* Do the upper and lower semi-circles. */
-#if TOSVERSION >= 0x300
-		for (k = 1; k <= LV(num_qc_lines); k++)
-#else
 		for (k = 1; k < LV(num_qc_lines); k++)
-#endif
 		{
 			/* Upper semi-circle. */
 			pointer = &LV(q_circle)[k];
 			LV(X1) = cx - *pointer;
 			LV(X2) = cx + *pointer;
-#if TOSVERSION >= 0x300
-			LV(Y1) = LV(Y2) = cy - k + 1;
-#else
 			LV(Y1) = LV(Y2) = cy - k;
-#endif
 			if (clip_line())
 			{
 				ABLINE();
@@ -1423,11 +1321,7 @@ PP(int16_t cy;)
 			/* Lower semi-circle. */
 			LV(X1) = cx - *pointer;
 			LV(X2) = cx + *pointer;
-#if TOSVERSION >= 0x300
-			LV(Y1) = LV(Y2) = cy + k - 1;
-#else
 			LV(Y1) = LV(Y2) = cy + k;
-#endif
 			if (clip_line())
 				ABLINE();
 		}
@@ -1848,77 +1742,11 @@ VOID d_clsvwk(NOTHING)
 VOID dsf_udpat(NOTHING)
 {
 	register int16_t *sp, *dp, i, count;
-#if VIDEL_SUPPORT
-	register uint16_t red, green, blue;
-#endif
 	register ATTRIBUTE *work_ptr;
 
 	work_ptr = LV(cur_work);
 	count = NINTIN;
 
-#if VIDEL_SUPPORT
-	sp = LV(INTIN);
-	dp = &work_ptr->ud_patrn[0];
-
-	if (count == 16)
-	{
-		work_ptr->multifill = 0;		/* Single Plane Pattern */
-		for (i = 0; i < count; i++)
-			*dp++ = *sp++;
-	} else if (count == (LV(v_planes) * 16) && LV(form_id) != PIXPACKED)
-	{
-		work_ptr->multifill = 1;		/* Valid Multi-plane pattern */
-		for (i = 0; i < count; i++)
-			*dp++ = *sp++;
-	} else if (LV(form_id) == PIXPACKED)
-	{
-		work_ptr->multifill = 0;		/* init to Invalid Multi-plane       */
-
-		switch (LV(v_planes))
-		{
-		case 8:						/* this mode is not implemented yet */
-			break;
-
-		case 16:
-			/*
-			 * Normalize the colors to 16 bit sparrow mode
-			 */
-			if (count == (32 * 16))
-			{
-				work_ptr->multifill = 1;	/* Valid Multi-plane pattern */
-				for (i = 0; i < count; i += 2)
-				{
-					red = *sp++;
-					green = *sp++;
-					blue = green & 255;
-					red = red & 255;
-					green = green >> 8;
-
-					red = ((red * 31) / 255) << 11;
-
-					if (SPSHIFTMODE & PIXMASK)
-						green = ((green * 63) / 255) << 5;
-					else
-						green = ((green * 31) / 255) << 6;
-
-					blue = (blue * 31) / 255;
-
-					*dp++ = red | green | blue;
-				}
-			}
-			break;
-
-		case 32:
-			if (count == (LV(v_planes) * 16))
-			{
-				work_ptr->multifill = 1;	/* Valid Multi-plane pattern */
-				for (i = 0; i < count; i++)
-					*dp++ = *sp++;
-			}
-			break;
-		}
-	}
-#else
 	if (count == 16)
 	{
 		work_ptr->multifill = 0;		/* Single Plane Pattern */
@@ -1937,27 +1765,4 @@ VOID dsf_udpat(NOTHING)
 	dp = &work_ptr->ud_patrn[0];
 	for (i = 0; i < count; i++)
 		*dp++ = *sp++;
-#endif
 }
-
-
-#if TOSVERSION >= 0x400
-
-/*
- * go to the proper inquire color routine
- */
-VOID vq_color(NOTHING)
-{
-	(*LV(LA_ROUTINES)[V_VQCOLOR]) ();
-}
-
-
-/*
- * go to the proper set color routine
- */
-VOID vs_color(NOTHING)
-{
-	(*LV(LA_ROUTINES)[V_VSCOLOR]) ();
-}
-
-#endif

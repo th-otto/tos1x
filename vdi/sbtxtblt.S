@@ -38,11 +38,7 @@
 #include "tosvars.inc"
 
 /* v_planes == 0; stupid as68 does not optimize it */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define V_PLANES
-#else
 #define V_PLANES 0
-#endif
 
 *    conditional assembly switches..
 *
@@ -740,9 +736,6 @@ xmx_fine:	bra	scrn_blt
 *  Offset to next word in same plane
 *-
 nxtword:	dc.b	2,4,0,8
-#if PLANES8
-            dc.b    0,0,0,16
-#endif
 
 **************************************************
 *
@@ -1052,22 +1045,17 @@ blt_adj:	move.l	-(a0),d0
 		moveq.l	#$61,d2
 		subq.w	#2,-(a7)
 #if BINEXACT
-#if TOSVERSION >= 0x300 /* the assembler messed it up... */
-		dc.w $6100,$0073,$206c,$6f76,$6500,$0071,$2042,$6500
-		dc.w $005d,$2048,$6100,$005c,$6c00,$0061,$6700,$0016
-#else
 		dc.w $6173,$206c,$6f76,$6573,$2042,$6561,$2048,$6162,$6c69,$6720
-#endif
 #else
-		bsr	blt_adj+$81
+		bsr.s	blt_adj+$81
 		movea.l	$6F76(a4),a0
-		bcs	blt_adj+$87
+		bcs.s	blt_adj+$87
 		movea.l	d2,a0
-		bcs	blt_adj+$79
+		bcs.s	blt_adj+$79
 		movea.l	a0,a0
-		bsr	blt_adj+$7E
-		bge	blt_adj+$87
-		beq	blt_adj+$40
+		bsr.s	blt_adj+$7E
+		bge.s	blt_adj+$87
+		beq.s	blt_adj+$40
 #endif
 		rts
 

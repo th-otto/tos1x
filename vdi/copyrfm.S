@@ -30,14 +30,8 @@
 #include "tosvars.inc"
 
 
-#if MULTI_LINEA
-#define V_FUNC(func,la,r) \
-	move.l	LV(LA_ROUTINES,la),r \
-	move.l	func(r),r
-#else
 #define V_FUNC(func,la,r) \
 	move.l	PIXLV((USERDEVINIT)+func,la),r
-#endif
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \
@@ -59,11 +53,7 @@
 *	MEMORY FORM DEFINITION BLOCK (MFDB) OFFSETS
 
 /* memory form base address (0: physical device) */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define MF_BAS_AD
-#else
 #define MF_BAS_AD 0
-#endif
 MF_WD_PIX	equ	 4	/* form width in pixels (form width in wrds /16) */
 MF_HT_PIX	equ	 6	/* form height in pixels */
 MF_WD_WRD	equ	 8	/* form width in words */
@@ -77,22 +67,14 @@ C_MFDB_D	equ	18	/* pointer to destination MFDB */
 
 *	INTIN ARRAY OFFSETS
 
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define I_LOG_OP
-#else
 #define I_LOG_OP 0
-#endif
 I_COL_1		equ	 2
 I_COL_0		equ	 4
 
 *	PTSIN ARRAY OFFSET
 
 /* x-coordinate of upper left of src rectangle */
-#if (TOSVERSION >= 0x300) | !BINEXACT
-#define P_XMIN_S
-#else
 #define P_XMIN_S 0
-#endif
 P_YMIN_S	equ	2	/* y-coordinate of upper left of src rectangle */
 P_XMAX_S	equ	4	/* x-coordinate of lower right of src rectangle */
 P_YMAX_S	equ	6	/* y-coordinate of lower right of src rectangle */
@@ -126,11 +108,7 @@ _COPY_RFM:
 *   pattern ?
 
 
-#if TOSVERSION >= 0x300
-	movea.w	#0,a3               /* hm, not really an improvement to below... */
-#else
 	suba.l  a3,a3
-#endif
 	bclr	#PAT_FLAG,d2		/* check pat flag and revert to log op # */
 	beq	no_pattern
 
@@ -195,15 +173,9 @@ dst_calc:
 
 
 compare:
-#if TOSVERSION < 0x400
-#if PLANES8
-	move.l    #$116,d3
-#else
-	moveq.l   #$16,d3
-#endif
+	moveq.l   #$16,d3               /* allow only 1,2,4 planes */
 	btst      d1,d3
 	beq       bad_parameter
-#endif
 
 	move.w	d1,PLANE_CT(a6)			/* save the total plane count */
 	add.w	d0,d0					/* for dev dependent forms NXWD=2*planes */

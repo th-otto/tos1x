@@ -34,21 +34,11 @@
 
 /* overlay variables */
 extern  int16_t    seed_type;      /* indicates the type of fill               */
-#if VIDEL_SUPPORT
-extern  int32_t    search_color;   /* the color of the border                  */
-#else
 extern  int16_t    search_color;   /* the color of the border                  */
-#endif
 extern  int16_t    Qbottom;        /* the bottom of the Q (zero)               */
-#if TOSVERSION >= 0x300
-extern  int16_t    Qtop;           /* points top seed + 3                      */
-extern  int16_t    *Qptr;	 	   /* points to the active point               */
-#else
 extern  int16_t    qPtr;	 	   /* points to the active point               */
 extern  int16_t    qTmp;
 extern  int16_t    qTop;           /* points top seed + 3                      */
-#endif
-#if TOSVERSION < 0x300
 extern  int16_t    qHole;		   /* an empty space in the Q                  */
 extern  int16_t    oldy;           /* the previous scan line                   */
 extern  int16_t    oldxleft;       /* left end of line at oldy                 */
@@ -58,23 +48,16 @@ extern  int16_t    newxright;      /* the current direction                    *
 extern  int16_t    xleft;          /* temporary endpoints                      */
 extern  int16_t    xright;
 extern  int16_t    direction;      /* is next scan line up or down?            */
-#endif
 extern  int16_t    done;           /* is the seed queue full?                  */
-#if TOSVERSION < 0x300
 extern  int16_t    gotseed;        /* a seed was put in the Q                  */
 extern  int16_t    leftoldy;       /* like _oldy. (new seedfill)               */
 extern  int16_t    leftdirection;  /* like _direction. (new seedfill)          */
 extern  int16_t    leftseed;       /* like _gotseed. (new seedfill)            */
-#endif
 extern  int16_t    h_align;
-#if TOSVERSION < 0x300
 extern  int16_t    leftcollision;  /* like _collision. (new seedfill)          */
-#endif
 extern  int16_t    v_align;        /* scaler alignments                        */
 extern  int16_t    width;
-#if TOSVERSION < 0x300
 extern  int16_t    collision;      /* seed was removed from Q (new rtn)        */
-#endif
 extern  int16_t    Q[];            /* storage for the seed points (1280)       */
 extern  int16_t    height;         /* extent of string set in dqt_extent       */
 extern  int16_t    wordx;
@@ -90,24 +73,14 @@ extern  int16_t    rmchary;        /* add this to use up remainder             *
 extern  int16_t    FLIP_Y;         /* Non-zero PTSOUT contains magnitudes      */
 extern  int16_t    deftxbu[];      /* scratch buf for 8x16 (276 bytes)         */
 
-#if TOSVERSION >= 0x400
-extern const SCREENDEF *const devices[];
-#endif
-
 extern FONT_HEAD const f6x6;      /* The small system font                    */
 extern FONT_HEAD const f8x16;
 extern FONT_HEAD const f8x8;
-#if PLANES8
-extern FONT_HEAD const f16x32;
-#endif
 #define first f6x6
 
 
 extern	FONT_HEAD ram8x16;
 extern	FONT_HEAD ram8x8;
-#if PLANES8
-extern	FONT_HEAD ram16x32;
-#endif
 
 extern int16_t scrtsiz;
 extern int16_t const ROM_DEV_TAB[];  /* initial intout array for open work       */
@@ -135,13 +108,6 @@ extern int16_t const m_cross[];
 extern int16_t const m_dmnd[];
 extern int16_t const tplane_mask[];
 extern const int16_t *const markhead[];
-#if VIDEL_SUPPORT
-extern int32_t const colors[];
-#else
-#if PLANES8
-extern int16_t const colors[];
-#endif
-#endif
 
 /*
  * gsxasm1.S
@@ -159,11 +125,7 @@ int32_t	vtrap14 PROTO((int16_t, ...));
 int32_t	vtrap14b PROTO((int16_t, ...));
 int16_t	end_pts PROTO((int16_t xstart, int16_t ystart, int16_t *lptr, int16_t *rptr));
 VOID fill_line PROTO((int16_t, int16_t, int16_t));
-#if VIDEL_SUPPORT
-int32_t	get_pix PROTO((NOTHING));
-#else
 int16_t	get_pix PROTO((NOTHING));
-#endif
 VOID TRNSFONT PROTO((NOTHING));
 
 
@@ -253,11 +215,5 @@ int16_t VEC_LEN PROTO((NOTHING));
 /* device specific drawing primitives */
 extern VOID (*STHardList[]) PROTO((NOTHING));	    /* orig ST routines blitter		    */
 extern VOID (*STSoftList[]) PROTO((NOTHING));	    /* orig ST routines no blitter	    */
-#if VIDEL_SUPPORT
-extern VOID (*PixHardList[]) PROTO((NOTHING));	    /* pixel packed routines		    */
-extern VOID (*PixSoftList[]) PROTO((NOTHING));	    /* pixel packed routines		    */
-extern VOID (*SPPixSoftList[]) PROTO((NOTHING));    /* pixel packed routines		    */
-extern VOID (*SPPixHardList[]) PROTO((NOTHING));    /* SPARROW routines (hard blit)	    */
-#endif
 
 #endif

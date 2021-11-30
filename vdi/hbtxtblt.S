@@ -908,9 +908,6 @@ no_rota:
 	bra	scrn_blt		;do blit to screen (last one)
 *
 nxtword:	dc.b	2,4,0,8
-#if PLANES8
-            dc.b    0,0,0,16
-#endif
 
 *
 *  Destination is screen, this must be our last blit

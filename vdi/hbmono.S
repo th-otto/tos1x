@@ -27,12 +27,7 @@
  * In TOS 4.x, they are called with a1 pointing to the
  * linea reference base.
  */
-
-#if TOSVERSION >= 0x400
-OF equ 0
-#else
 OF equ FBASE
-#endif
 
 #include "blaster.inc"
 
@@ -51,10 +46,6 @@ OF equ FBASE
 /* 104de: 00fd0596 */
 	xdef	 hb_mono
 hb_mono:
-#if TOSVERSION >= 0x400
-	move.l	a1,a5		    ;a5 -> line A variable structure
-	add.l	#FBASE,a5		;a5 -> FBASE
-#endif
 	lea	BLASTER+B_OFF,a4    ;12	 a4 -> base of bitblt regs
 
 	move.l	(a5)+,a0	    ;12	 a0 -> source form
@@ -206,9 +197,7 @@ char1st:
 #endif
 
 	moveq.l	#1,d0		;4	exit blit with success code in d0
-#if TOSVERSION < 0x400
 	movea.l   (a7)+,a5
-#endif
 	rts			;16
 
 #endif /* BLITTER_SUPPORT */

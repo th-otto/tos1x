@@ -72,11 +72,7 @@ hb_hline:
 	add.l	d1,a1			; a1 -> 1st word of line
 
 	lea	B_PATTERN(a5),a2	; a2 -> 1st pattern register
-#if PLANES8
-        move.l  LV(FG_B_PLANES,a4),d5	; d5 <- color index
-#else
 	lea     FG_BP_1(a4),a3
-#endif
 
 	move.w	LV(WRT_MODE,a4),d2	; d2 <- writing mode (0-3)
 	add.w	d2,d2
@@ -97,13 +93,8 @@ hl_loop:
 	move.l	a1,B_D_ADDR(a5)		; new dst plane
 	move.w	d6,B_HEIGHT(a5)		; height of 1
 
-#if PLANES8
-	ror.l	#1,d5			; what color is this plane ?
-	scs	d2
-#else
 	tst.w   (a3)+
 	sne     d2
-#endif
 	and.w	d3,d2			; d2 <- logic op offset: 0=>0  1=>2
 	move.w	0(a4,d2.w),B_LOGOP(a5)	; load the logic op
 
@@ -129,15 +120,5 @@ hl_cont:
 #endif
 	rts
 
-
-#if BLITTER_SUPPORT & (TOSVERSION >= 0x300)
-		xdef	op_table
-op_table:  *	 color=0   color=1
-
-	dc.w	BM_PAT+00,BM_PAT+03	; replace
-	dc.w	BM_PAT+04,BM_PAT+07	; transparent
-	dc.w	BM_PAT+06,BM_PAT+06	; xor
-	dc.w	BM_PAT+01,BM_PAT+13	; reverse transparent
-#endif
 
 #endif /* BLITTER_SUPPORT */

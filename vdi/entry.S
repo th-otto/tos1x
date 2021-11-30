@@ -136,9 +136,7 @@ no_ptsin:
 
 	rts
 
-#if (TOSVERSION < 0x300) & BINEXACT
 	data
-#endif
 	xdef _MAX_VERT
 _MAX_VERT:
 	dc.w	max_vert
