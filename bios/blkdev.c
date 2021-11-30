@@ -32,10 +32,8 @@ static int16_t getiword PROTO((const uint8_t *addr));
 static int16_t sectsum PROTO((const int16_t *buf, int count));
 static ERROR dorwabs PROTO((int16_t rw, char *buf, RECNO recnr, int16_t dev, int16_t cnt));
 
-#if TOSVERSION < 0x200
 #define dskbufp dskbuf
 extern char dskbuf[];
-#endif
 
 
 
@@ -326,10 +324,6 @@ PP(int16_t cnt;)
 	register int numsect;
 	int odd;
 	char *bufp;
-#if TOSVERSION >= 0x200
-	char *p;
-	int i;
-#endif
 	
 	bdev = &blkdev[dev];
 	odd = !(((intptr_t) buf) & 1) ? 0 : 1;
@@ -502,11 +496,7 @@ PP(int16_t execflag;)
 		/* BUG: serial2 checked by floppy mediach detection, but not set here */
 	}
 	
-	if (disktype >= 0
-#if TOSVERSION >= 0x200
-		&& disktype < NUM_PROTOBT_ENTRIES
-#endif
-		)
+	if (disktype >= 0)
 	{
 		idx = disktype * 19;
 		for (i = 0; i < 19; idx++, i++)
@@ -528,20 +518,6 @@ PP(int16_t execflag;)
 
 /* 306de: 00e05ef8 */
 /* 104de: 00fc1e2e */
-#if (TOSVERSION >= 0x200) | !BINEXACT
-static int16_t sectsum(P(const int16_t *) buf, P(int) count)
-PP(const int16_t *buf;)
-PP(int count;)
-{
-	register int16_t sum;
-	register int16_t i;
-	register const int16_t *p;
-	
-	for (i = count, p = buf, sum = 0; i-- != 0; )
-		sum += *p++;
-	return sum;
-}
-#else
 static int16_t sectsum(P(const int16_t *) buf, P(int) count)
 PP(const int16_t *buf;)
 PP(int count;)
@@ -552,7 +528,6 @@ PP(int count;)
 		sum += *buf++;
 	return sum;
 }
-#endif
 
 
 /* 306de: 00e05f22 */

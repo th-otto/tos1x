@@ -3,14 +3,12 @@
 #include "tosvars.inc"
 #include "biosdefs.h"
 
-#if TOSVERSION < 0x200
 #	undef ABSW
 #	undef ABSW2
 #	undef SETBASEREG
 #	define ABSW(x) x(a1)
 #	define ABSW2(x) x
 #   define SETBASEREG suba.l    a1,a1
-#endif
 
 nvram_rtc_year_offset equ 1980-1968
 
@@ -36,7 +34,6 @@ ngetdt: bsr.s     checkRTC
         bsr.s     readRTCTime
         cmp.l     #-1,d0
         beq.s     ngetdt2
-#if TOSVERSION < 0x200
 		move.w    d0,_time
 		swap      d0
 		move.w    d0,_date
@@ -45,11 +42,6 @@ ngetdt: bsr.s     checkRTC
 ngetdt2:
         moveq     #-1,d0
         rts
-#else
-        moveq     #0,d0
-ngetdt2:
-        rts
-#endif
 
 /* 206de: 00e01aa8 */
 /* 104de: 00fc1f70 */

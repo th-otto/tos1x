@@ -271,45 +271,6 @@ LA_CURDEV:     ds.l 1      (lineavars+$0a6)	/* long */
 LA_BLTMODE:    ds.w 1      (lineavars+$0aa)	/* word */
                xdef LA_RSRD3
 LA_RSRD3:      ds.w 1      (lineavars+$0ac)	/* word */
-#if TOSVERSION >= 0x404
-/* TOS 4.04 only: */
-               xdef LA_REGQXCOL
-LA_REGQXCOL:   ds.w 240*3  (lineavars+$0ae)	/* 240*3 words */
-               xdef LA_SVBLKPTR
-LA_SVBLKPTR:   ds.l 1      (lineavars+$64e)	/* long */
-               xdef LA_FG_B_PLANES
-LA_FG_B_PLANES: ds.l 1     (lineavars+$652)	/* long */
-               xdef LA_FG_5
-LA_FG_5:       ds.w 1      (lineavars+$656)	/* word */
-               xdef LA_FG_6
-LA_FG_6:       ds.w 1      (lineavars+$658)	/* word */
-               xdef LA_FG_7
-LA_FG_7:       ds.w 1      (lineavars+$65a)	/* word */
-               xdef LA_FGP_8
-LA_FG_8:       ds.w 1      (lineavars+$65c)	/* word */
-               xdef LA_SAVLEN
-LA_SAVLEN:     ds.w 1      (lineavars+$65e)	/* word */
-               xdef LA_SAVADDR
-LA_SAVADDR:    ds.l 1      (lineavars+$660)	/* long */
-               xdef LA_SAVSTAT
-LA_SAVSTAT:    ds.w 1      (lineavars+$664)	/* word */
-               xdef LA_SAVAREA
-LA_SAVAREA:    ds.l 256    (lineavars+$666)	/* 256 longs */
-               xdef LA_QCIRCLE
-LA_QCIRCLE:    ds.w 80     (lineavars+$a66)	/* 80 words */
-               xdef LA_BYTPERPIX
-LA_BYTPERPIX:  ds.w 1      (lineavars+$b06)	/* word */
-               xdef LA_FORMID
-LA_FORMID:     ds.w 1      (lineavars+$b08)	/* word */
-               xdef LA_VCOLBG
-LA_VCOLBG:     ds.l 1      (lineavars+$b0a)	/* long */
-               xdef LA_VCOLFG
-LA_VCOLFG:     ds.l 1      (lineavars+$b0e)	/* long */
-               xdef LA_PALMAP
-LA_PALMAP:     ds.l 256    (lineavars+$b12)	/* 256 longs */
-               xdef LA_PRIMITIVES
-LA_PRIMITIVES: ds.l 40     (lineavars+$f12)	/* 40 longs */
-#endif
 
                xdef LA_END
 LA_END:        ds.b 0      (lineavars+$fb2)

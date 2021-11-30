@@ -32,11 +32,7 @@ _bscr_dump:
         move.w    6(a0,d0.w),ABSW(_pbdef+8)       /* pbdef.pb_height */
         clr.w     ABSW(_pbdef+10)                 /* pbdef.pb_left */
         clr.w     ABSW(_pbdef+12)                 /* pbdef.pb_right */
-#if (TOSVERSION < 0x200) & BINEXACT
         move.l    #$00FF8240,ABSW(_pbdef+18)        /* pbdef.pb_colptr */
-#else
-        move.l    #palette,ABSW(_pbdef+18)        /* pbdef.pb_colptr */
-#endif
         clr.w     ABSW(_pbdef+26)                 /* pbdef.pb_mask; BUG: pb_mask is long (pointer) */
 /* draft or final mode */
         move.w    ABSW(_prtconfig),d1
@@ -62,7 +58,6 @@ _bscr_dump:
         rts
 
 /* ---- screen resolution table (pixel) for printScreen */
-/* BUG: bogus screen resolution table which is too short */
 pbdeftab:
         dc.w 320,640,640
         dc.w 200,200,400

@@ -19,9 +19,6 @@ BLKDEV {
 	BPB bpb;
     GEOMETRY geometry;
     uint8_t serial[3];
-#if TOSVERSION >= 0x200
-    uint8_t serial2[4];
-#endif
 };
 
 /* Extended FAT12/FAT16 bootsector */

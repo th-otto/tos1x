@@ -18,9 +18,7 @@ BIOS_HEADERS=\
 
 BIOS_INCLUDES=\
 	linea.inc \
-	romcrc.inc \
 	scrdmp.inc \
-	intpriv.inc \
 	zeromem.S \
 	${empty}
 

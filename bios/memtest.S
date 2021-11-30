@@ -175,13 +175,6 @@ memtes16:
         sub.l     memtaddr,d0
         cmp.l     #$00100000,d0
         bhi.s     memtes17
-#if TOSVERSION >= 0x300
-        move.l    d0,-(a7)
-        movea.l   #memtsp,a0
-        bsr       mempstr
-        move.l    (a7)+,d0
-memtes17:
-#else
         movea.l   #memtsp,a0
         bsr       mempstr
 memtes17:
@@ -189,7 +182,6 @@ memtes17:
         bsr       mempstr
         move.l    memttop,d0
         sub.l     memtaddr,d0
-#endif
         cmp.l     #$00400000,d0
         ble.s     memtes18
         move.l    d0,d2

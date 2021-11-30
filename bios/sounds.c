@@ -68,10 +68,6 @@ uint8_t const clicksnd[] = {
   4, 0,
   5, 0,
   6, 0,
-#if (TOSVERSION >= 0x200) | !BINEXACT
-  9, 0,
-  10, 0,
-#endif
   7, 0xFE,
   8, 16,
   13, 3,

@@ -16,9 +16,7 @@
 /* 104de: 00fc315e */
 	xdef _clockvec
 _clockvec:
-#if TOSVERSION < 0x200
-		lea.l     0,a5
-#endif
+		lea.l     0,a5                          /* set base register */
         lea.l     ABSW(clockbuf),a0
         bsr       bcdget
 #if BINEXACT /* Year 2k fix */

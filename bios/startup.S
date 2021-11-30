@@ -55,11 +55,6 @@ save_siz equ nlevels*46+8
 
 scu_gp1   equ $FFFF8E09
 memconf   equ $FFFF8001
-#if STBOOK
-tt_mcu    equ $00D00000
-#else
-tt_mcu    equ $FFD00000
-#endif
 v_syncmod equ $FFFF820A
 sndmactl  equ $FFFF8900
 mwmask    equ $FFFF8924
@@ -119,11 +114,7 @@ TTLOW     equ 7
 _os_entry:
     bra.s   _main       /* os_entry, branch to _main */
 os_version:
-#if STBOOK
-    dc.w    $0206       /* wtf? why 2.06? */
-#else
     dc.w    ATOSVERSION  /* os_version, TOS version */
-#endif
 reseth:
     dc.l    _main       /* reseth, pointer to reset handler */
 _os_beg:
@@ -636,9 +627,6 @@ clockdone:
 nocmd:
 /* --- bring up GEM: */
         bsr       autoexec
-#if STBOOK
-            bsr       autoerom
-#endif
         move.l    #_os_entry,_sysbase
 /* --- kludge up an enviroment string */
         lea.l     default_env(pc),a0
@@ -1560,13 +1548,8 @@ _logbase:
 /* 104de: 00fc0a72 */
 _getrez:
         moveq.l   #0,d0
-#if STBOOK
-        move.b    ABSW(_sshiftmod),d0         /* get screen rezolution */
-        and.b     #3,d0                     /* strip garbage bits */
-#else
 		move.b    ABSW(v_shf_mod),d0          /* get screen rezolution */
         and.b     #3,d0                     /* strip garbage bits */
-#endif
         rts
 
 /*
@@ -1862,19 +1845,6 @@ autoexe1:
         move.l    savepc,-(a7)
 autoexe2:
         rts
-
-/*
- * ST Book has another ROMDISK in the 2nd 256kb of the ROM
- * which is mapped as drive 'P'.
- */
-#if STBOOK
-autoerom:   lea       autopROM(pc),a0        /* -> path */
-            lea       autopROM+8(pc),a1      /* -> filename */
-            bra.s     _auto1
-
-autopROM:   dc.b      'P:\AUTO\*.PRG',0
-            dc.l      $12345678,$9abcdef0
-#endif
 
 /*
  * fauto - exec'd by _auto to do autostartup

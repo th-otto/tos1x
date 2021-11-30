@@ -299,37 +299,8 @@ ctrl_tbl:
 
 
 do_bell: ds.b 0
-
-/*
- * for some unknown reason, "bra.w ringbell" gives a
- * 16-bit PC-relative overflow.
- */
-
-#if BINEXACT
-
-#if TOSVERSION == 0x306
-ringbell  equ $2CB6+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
-#endif
-
-#if TOSVERSION == 0x206
-ringbell  equ $3684+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
-#endif
-
-#if TOSVERSION == 0x208
-ringbell  equ $359E+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
-#endif
-
-#if TOSVERSION == 0x104
-ringbell  equ $33C4+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
-#endif
-
-	dc.w $6000,ringbell
-	
-#else
-
-	jmp	ringbell			; need local variable in ctrl_tbl
-
-#endif
+	xref ringbell
+	bra.w ringbell
 
 do_tab:
 
