@@ -193,11 +193,7 @@ _swp68l:
 _xsetjmp:
     link    a6,#0
     move.l  8(a6),a0      				/* a0 -> context block */
-#if (TOSVERSION >= 0x200) | !BINEXACT
-    move.l  (a6),(a0)+    				/* save a6 */
-#else
     move.l  0(a6),(a0)+    				/* save a6 */
-#endif
     lea 	8(a6),a1
     move.l  a1,(a0)+      				/* save sp */
     move.l  4(a6),(a0)    				/* save return pc */
@@ -218,11 +214,7 @@ _xlongjmp:
     tst.l   d0
     bne okrc
 
-#if (TOSVERSION < 0x200) | !BINEXACT
     moveq   #1,d0
-#else
-    move.w  #1,d0
-#endif
 okrc:
     move.l  8(a6),a0      /* get jmp_buf */
     move.l  (a0)+,a6      /* restore a6 */

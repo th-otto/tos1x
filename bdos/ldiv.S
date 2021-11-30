@@ -72,11 +72,7 @@ L16:
 	move.l d7,_ldivr
 	move.l d5,d0
 L1:
-#if (TOSVERSION >= 0x200) | !BINEXACT
-	addq.l    #4,a7
-#else
 	tst.l     (a7)+
-#endif
 	movem.l (sp)+,d3-d7
 	unlk a6
 	rts
