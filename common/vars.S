@@ -637,7 +637,6 @@ _endvdibss: ds.b 0
 	PTR(trp14aret)
 	INT(_w_inc)
 	INT(_bar_max)
-	PTR(saveret)
 	GRECT(_fobj)
 	V(_intout,w,10)
 	INT(_xprint)

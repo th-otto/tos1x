@@ -573,6 +573,7 @@ PP(GRECT *rec2;)
 
 
 /* 306de: 00e2fe54 */
+/* 104de: 00fd7d6e */
 VOID my_itoa(P(uint16_t) number, P(char *)pnumstr)
 PP(uint16_t number;)
 PP(register char *pnumstr;)
@@ -602,6 +603,7 @@ PP(register char *pnumstr;)
 /* 206de: 00e2c440 */
 /* 306de: 00e2fea6 */
 /* 306us: 00e2fe4c */
+/* 104de: 00fd7db6 */
 VOID fmt_time(P(uint16_t) time, P(char *)ptime)
 PP(register uint16_t time;)
 PP(register char *ptime;)
@@ -652,6 +654,7 @@ PP(register char *ptime;)
 /* 206de: 00e2c49c */
 /* 306de: 00e2ff02 */
 /* 306us: 00e2fed2 */
+/* 104de: 00fd7e02 */
 VOID fmt_date(P(uint16_t) date, P(char *)pdate)
 PP(uint16_t date;)
 PP(register char *pdate;)

@@ -2,8 +2,6 @@ AES_104_OBJS = \
 	geminit.o \
 	apgrlib.o \
 	apgsxif.o \
-	../desk/deskinf.o \
-	../desk/deskif.o \
 	gemaints.o \
 	gemaplib.o \
 	gemasync.o \
@@ -45,9 +43,6 @@ AES_104_OBJS = \
 	ratrbp.o \
 	trap14.o \
 	$(DBG_OBJS) \
-	../desk/deskmisc.o \
-	../desk/deskwin.o \
-	../desk/deskstor.o \
 	$(empty)
 
 AES_106_OBJS=${AES_104_OBJS}

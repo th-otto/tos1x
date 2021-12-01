@@ -1008,7 +1008,8 @@ BOOLEAN rc_fequal PROTO((const GRECT *p1, const GRECT *p2));
 int16_t inf_fgindex PROTO((LPTREE tree, int16_t baseobj, int16_t numobj));
 VOID feveryobj PROTO((LPTREE tree, int16_t this, int16_t last, EVERYOBJ_CALLBACK routine, int16_t startx, int16_t starty, int16_t maxdep));
 int32_t trp13int PROTO((short code, ...));
-int32_t trp143int PROTO((short code, ...));
+int32_t trp13int PROTO((short code, ...));
+VOID gsx_fgclip PROTO((GRECT *pt));
 #else
 #define ob_fformat ob_format
 #define ob_foffset ob_offset
@@ -1023,4 +1024,5 @@ int32_t trp143int PROTO((short code, ...));
 #define feveryobj everyobj
 #define trp13int trp13
 #define trp14int trp14
+#define gsx_fgclip gsx_gclip
 #endif

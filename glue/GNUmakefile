@@ -37,69 +37,57 @@ AESDESK_OBJS = \
 	../aes/apgrlib.o \
 	../aes/apgsxif.o \
 	../desk/deskinf.o \
-	../desk/deskmisc.o \
-	../aes/gemaplib.o \
+	../desk/desk1.o \
 	../desk/deskif.o \
+	../desk/desk2.o \
+	../desk/desk3.o \
+	../aes/jdispa.o \
+	../aes/jdos.o \
+	../aes/jbind.o \
 	../aes/gemaints.o \
 	../aes/gemasync.o \
-	../aes/gembase.o \
-	../aes/gembind.o \
 	../aes/gemcli.o \
 	../aes/gemctrl.o \
 	../aes/gemdisp.o \
-	../aes/gemevlib.o \
 	../aes/gemflag.o \
+	../aes/geminput.o \
+	../aes/gempd.o \
+	../aes/gemqueue.o \
+	../aes/gemwrect.o \
+	../aes/gembind.o \
+	../aes/gemaplib.o \
+	../aes/gemevlib.o \
 	../aes/gemfmalt.o \
 	../aes/gemfmlib.o \
 	../aes/gemfslib.o \
-	../aes/gemglobe.o \
-	../aes/linefhdl.o \
-	../aes/geminput.o \
+	../aes/gemgrlib.o \
+	../aes/gemgsxif.o \
 	../aes/gemmnlib.o \
 	../aes/gemobed.o \
-	../aes/gemobjop.o \
-	../aes/gempd.o \
-	../aes/gemqueue.o \
-	../aes/gemrom.o \
+	../aes/gemoblib.o \
 	../aes/gemrslib.o \
 	../aes/gemsclib.o \
 	../aes/gemshlib.o \
 	../aes/gemwmlib.o \
-	../aes/gemwrect.o \
-	../aes/romcart.o \
-	../aes/gemoblib.o \
-	../aes/gemgrlib.o \
-	../aes/gemgsxif.o \
 	../aes/gsx2.o \
-	../aes/jbind.o \
-	../aes/jdispa.o \
-	../aes/jdos.o \
 	../aes/large.o \
-	../aes/function.o \
 	../aes/optimize.o \
+	../aes/function.o \
+	../aes/gemobjop.o \
 	../aes/ratrbp.o \
-	../aes/trap14.o \
-	../desk/deskwin.o \
-	../desk/deskstor.o \
-	../desk/deskact.o \
-	../desk/deskbind.o \
-	../desk/deskbutt.o \
-	../desk/deskdir.o \
-	../desk/deskdisk.o \
-	../desk/deskfile.o \
-	../desk/deskins.o \
-	../desk/deskmem.o \
-	../desk/deskmenu.o \
-	../desk/deskopen.o \
-	../desk/deskpref.o \
-	../desk/desksear.o \
-	../desk/desksele.o \
-	../desk/deskshel.o \
+	../aes/romcart.o \
 	../desk/deskshow.o \
-	../desk/deskrsc.o \
-	../desk/desktop.o \
-	../desk/deskupda.o \
+	../desk/deskdisk.o \
+	../desk/deskmisc.o \
+	../aes/trap14.o \
+	../aes/gemrom.o \
+	../aes/gemglobe.o \
+	../aes/linefhdl.o \
+	../aes/gembase.o \
 	../desk/osbind.o \
+	../desk/deskrsc.o \
+	../desk/deskstor.o \
+	\
 	$(empty)
 
 all:: $(IMG)

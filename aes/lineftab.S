@@ -142,7 +142,7 @@
 [00fe7af4] dc.l $00fe5bce            ; F234 ; mul_div AES
 [00fe7af8] dc.l $00fd47ac            ; F238 ; gsx_fix AES
 [00fe7afc] dc.l $00fdd11c            ; F23C ; dos_alloc; duplicate; unused AES
-[00fe7b00] dc.l $00fdd188            ; F240
+[00fe7b00] dc.l $00fdd188            ; F240 ; dos_free; duplicate AES
 [00fe7b04] dc.l $00fd48ca            ; F244 ; gsx_start AES
 [00fe7b08] dc.l $00fd47ac            ; F248 ; gsx_fix; duplicate; unused AES
 [00fe7b0c] dc.l $00fe5e82            ; F24C ; strlen AES
@@ -321,10 +321,10 @@
 [00fe7dc0] dc.l $00fd99e0            ; F500
 [00fe7dc4] dc.l $00fd9b3c            ; F504
 [00fe7dc8] dc.l $00fd9be0            ; F508
-[00fe7dcc] dc.l $00fd7d6e            ; F50C
-[00fe7dd0] dc.l $00fd7e02            ; F510
-[00fe7dd4] dc.l $00fd7db6            ; F514
-[00fe7dd8] dc.l $00fd4660            ; F518 ; gs_gclip AES
+[00fe7dcc] dc.l $00fd7d6e            ; F50C ; my_itoa DESKTOP
+[00fe7dd0] dc.l $00fd7e02            ; F510 ; fmt_date DESKTOP
+[00fe7dd4] dc.l $00fd7db6            ; F514 ; fmt_time DESKTOP
+[00fe7dd8] dc.l $00fd4660            ; F518 ; gsx_gclip AES
 [00fe7ddc] dc.l $00fd7e58            ; F51C
 [00fe7de0] dc.l $00fd4b24            ; F520 ; gsx_tblt; duplicate AES
 [00fe7de4] dc.l $00fdb85a            ; F524 ; hd_msg DESKTOP

@@ -137,7 +137,7 @@ STATIC PATHSTRUCT *pxpath;
 #define Drvmap() trp13(0xa)
 
 
-static int16_t r_dir PROTO((char *path, char *select, uint16_t *count));
+LINEF_STATIC int16_t r_dir PROTO((char *path, char *select, uint16_t *count));
 int16_t r_files PROTO((char *path, char *select, uint16_t *count, char *filename));
 VOID r_sort PROTO((FSTRUCT *buffer, int16_t count));
 VOID r_sfiles PROTO((int16_t index));
@@ -155,7 +155,7 @@ static VOID FXDeselect PROTO((OBJECT *tree, int16_t obj));
  *	Routine to back off the end of a file string.
  */
 /* 306de: 00e1ce92 */
-static char *fs_back(P(char *) pstr)
+LINEF_STATIC char *fs_back(P(char *) pstr)
 PP(register char *pstr;)
 {
 	register char *pend;
@@ -580,7 +580,7 @@ bye2:
  * read in a directory
  */
 /* 306de: 00e1d7d0 */
-static int16_t r_dir(P(char *) path, P(char *) select, P(uint16_t *) count)
+LINEF_STATIC int16_t r_dir(P(char *) path, P(char *) select, P(uint16_t *) count)
 PP(char *path;)
 PP(char *select;)
 PP(register uint16_t *count;)

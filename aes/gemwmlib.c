@@ -1345,7 +1345,7 @@ PP(GRECT *rect;)						/* x, y, width and height of full size window */
  *	Opens or closes a window
  */
 /* 306de: 00e227c6 */
-static VOID wm_opcl(P(int16_t) wh, P(GRECT *) pt, P(BOOLEAN) isadd)
+LINEF_STATIC VOID wm_opcl(P(int16_t) wh, P(GRECT *) pt, P(BOOLEAN) isadd)
 PP(register int16_t wh;)
 PP(register GRECT *pt;)
 PP(BOOLEAN isadd;)

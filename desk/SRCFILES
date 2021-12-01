@@ -22,29 +22,42 @@ DESK_ASRCS=\
 	${empty}
 
 DESK_CSRCS=\
-	deskact.c \
-	deskbind.c \
-	deskbutt.c \
-	deskdir.c \
-	deskdisk.c \
-	deskfile.c \
-	deskinf.c \
-	deskins.c \
-	deskmem.c \
-	deskmenu.c \
-	deskmisc.c \
-	deskopen.c \
-	deskpref.c \
-	desksear.c \
-	desksele.c \
-	deskshel.c \
-	deskshow.c \
-	deskstor.c \
-	desktop.c \
-	deskupda.c \
-	deskwin.c \
-	deskrsc.c \
+	deskinf.o \
+	desk1.o \
+	deskif.o \
+	desk2.o \
+	desk3.o \
+	deskshow.o \
+	deskdisk.o \
+	deskmisc.o \
+	osbind.o \
+	deskrsc.o \
+	deskstor.o \
 	${empty}
+
+#	deskact.c \
+#	deskbind.c \
+#	deskbutt.c \
+#	deskdir.c \
+#	deskdisk.c \
+#	deskfile.c \
+#	deskinf.c \
+#	deskins.c \
+#	deskmem.c \
+#	deskmenu.c \
+#	deskmisc.c \
+#	deskopen.c \
+#	deskpref.c \
+#	desksear.c \
+#	desksele.c \
+#	deskshel.c \
+#	deskshow.c \
+#	deskstor.c \
+#	desktop.c \
+#	deskupda.c \
+#	deskwin.c \
+#	deskrsc.c \
+#
 
 DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)
 

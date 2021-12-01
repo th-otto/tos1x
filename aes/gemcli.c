@@ -125,7 +125,7 @@ VOID all_run(NOTHING)
  *	accessory is too big to fit it will be not be loaded.
  */
 /* 306de: 00e1aea6 */
-static int16_t sndcli(P(char *) pfilespec, P(int16_t) acc)
+LINEF_STATIC int16_t sndcli(P(char *) pfilespec, P(int16_t) acc)
 PP(register char *pfilespec;)
 PP(int16_t acc;)
 {

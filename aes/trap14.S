@@ -64,17 +64,21 @@
 	text
 
 /* 404: 00e3576c */
+	xdef _bios
 	xdef _trp13
 _trp13:
+_bios:
 	move.l	(sp)+,trp13aret
 	trap	#13
 	move.l	trp13aret,-(sp)
 	rts
 
 
+	xdef _xbios
 	xdef _trp14
-_trp14: ds.b 0
 	xdef _trp14int
+_xbios: ds.b 0
+_trp14: ds.b 0
 _trp14int: ds.b 0
 	move.l	(sp)+,trp14aret
 	trap	#14
