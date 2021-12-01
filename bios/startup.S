@@ -132,9 +132,15 @@ _os_conf:               /* Flag for PAL version + country */
     dc.w   OS_CONF_MULTILANG
 #else
 #if OS_COUNTRY == CTRY_PL
+	/* hack for polish version: apparently language code not patched */
     dc.w   (CTRY_UK<<1)+OS_PAL
 #else
+#if (OS_COUNTRY == CTRY_NL) & (TOSVERSION == 0x104)
+	/* hack for dutch version: apparently wrong language code used */
+    dc.w   (CTRY_SA<<1)+OS_PAL
+#else
     dc.w   (OS_COUNTRY<<1)+OS_PAL
+#endif
 #endif
 #endif
 _os_dosdate:

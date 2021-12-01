@@ -171,6 +171,9 @@ typedef struct idtype
 	char i_name[NAMELEN];
 } IDTYPE;
 
+#ifndef NUM_IB
+#  define NUM_IB 5
+#endif
 
 typedef struct {
 	/*     0 */ char unused1[13350];

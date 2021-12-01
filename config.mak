@@ -66,7 +66,7 @@ $(top_srcdir)/common/sections.mak: $(top_srcdir)/common/sections.inc $(top_srcdi
 all:: tosversion_$(TOSVERSION) country_$(COUNTRY)
 	@:
 
-country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz:
+country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz country_nl:
 tosversion_104:
 
 VARS_162_OBJS=vars.o
