@@ -160,7 +160,7 @@ _showfile: ds.b 0
 [00fe689a] 6646                      bne.s     $00FE68E2
 [00fe689c] 4247                      clr.w     d7
 [00fe689e] 526e fffe                 addq.w    #1,-2(a6)
-[00fe68a2] 0c6e 0018 fffe            cmpi.w    #$0018,-2(a6)
+[00fe68a2] 0c6e 0018 fffe            cmpi.w    #24,-2(a6)
 [00fe68a8] 6d36                      blt.s     $00FE68E0
 [00fe68aa] 486e ffee                 pea.l     -18(a6)
 [00fe68ae] 2f3c 0005 0001            move.l    #$00050001,-(a7)
@@ -253,7 +253,7 @@ _doui: ds.b 0
 [00fe69a4] c07c 00ff                 and.w     #$00FF,d0
 [00fe69a8] 6050                      bra.s     $00FE69FA
 [00fe69aa] 206e 000a                 movea.l   10(a6),a0
-[00fe69ae] 30bc 000c                 move.w    #$000C,(a0)
+[00fe69ae] 30bc 000c                 move.w    #12,(a0)
 [00fe69b2] 4240                      clr.w     d0
 [00fe69b4] 6000 007e                 bra.w     $00FE6A34
 [00fe69b8] 206e 000a                 movea.l   10(a6),a0

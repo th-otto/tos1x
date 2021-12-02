@@ -52,6 +52,7 @@ typedef	struct deskwin
 	/* 136 */ int16_t w_vvicons;		/* number of invisible icon per col */
 	/* 138 */ int16_t w_xcol;			/* number of visible column of icon */
 	/* 140 */ int16_t w_xrow;			/* number of visible row of icon */
+	/* 142 */ 
 } DESKWIN;	
 
 

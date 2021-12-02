@@ -24,18 +24,6 @@ PP(BOOLEAN state;)
 }
 
 
-/*
- * Perform an alert box message
- */
-/* 306de: 00e2fdde */
-int16_t do_alert(P(int16_t) button, P(int16_t) item)
-PP(int16_t button;)
-PP(int16_t item;)
-{
-	return form_alert(button, get_string(item));
-}
-
-
 BOOLEAN dos_error(P(int16_t) button, P(int16_t) item)
 PP(int16_t button;)
 PP(int16_t item;)
@@ -60,7 +48,7 @@ PP(int16_t item;)
 int16_t do1_alert(P(int16_t) item)
 PP(int16_t item;)
 {
-	return do_alert(1, item);
+	return fill_string(1, item, NULL);
 }
 
 
@@ -85,6 +73,9 @@ PP(const char *path;)
 }
 
 
+/*
+ * Perform an alert box message
+ */
 /* 306de: 00e301dc */
 /* 104de: 00fd947e */
 int16_t fill_string(P(int16_t) button, P(int16_t) item, P(const char *) arg)
@@ -270,40 +261,26 @@ PP(int16_t state;)
  */
 /* 306de: 00e2f890 */
 VOID drawfld(P(OBJECT *)obj, P(int16_t) which)
-PP(register OBJECT *obj;)
+PP(OBJECT *obj;)
 PP(int16_t which;)
 {
 	GRECT t;
-	rc_copy((GRECT *)&obj[which].ob_x, &t);
+	RC_COPY((GRECT *)&obj[which].ob_x, &t);
 	objc_offset(obj, which, &t.g_x, &t.g_y);
 	objc_draw(obj, which, 0, t.g_x, t.g_y, t.g_w, t.g_h);
 }
 
 
-/* 306de: 00e2f904 */
-BOOLEAN getcookie(P(int32_t) cookie, P(int32_t *)p_value)
-PP(int32_t cookie;)
-PP(int32_t *p_value;)
+/* 104de: 00fd6a0a */
+VOID drawclip(P(OBJECT *)obj, P(int16_t) which)
+PP(OBJECT *obj;)
+PP(int16_t which;)
 {
-	int32_t *cookjar;
-
-	cookjar = *((int32_t **) (0x5a0));
-
-	if (!cookjar)
-		return FALSE;
-
-	while (*cookjar)
-	{
-		if (*cookjar == cookie)
-		{
-			*p_value = *(cookjar + 1);
-			return TRUE;
-		}
-
-		cookjar += 2;
-	}
-
-	return FALSE;
+	GRECT t;
+	RC_COPY((GRECT *)&obj[which].ob_x, &t);
+	ob_offset(obj, which, &t.g_x, &t.g_y);
+	gsx_sclip(&t);
+	ob_draw(obj, which, 0);
 }
 
 
@@ -543,7 +520,7 @@ PP(register char *path;)
  * Replace path
  * A:\aaa\*.* -> A:\aaa\bbb
  */
-/* 306de: 00e2fdb6 */
+/* 104de: 00e2fdb6 */
 VOID rep_path(P(const char *) name, P(char *) path)
 PP(const char *name;)
 PP(char *path;)
@@ -551,6 +528,17 @@ PP(char *path;)
 	path = r_slash(path);
 	path++;
 	strcpy(path, name);
+}
+
+
+/* 104de: 00fd6a5a */
+VOID xtr_mask(P(const char *) name, P(char *) mask)
+PP(register const char *name;)
+PP(char *mask;)
+{
+	while (*name != '*')
+		name++;
+	strcpy(mask, name);
 }
 
 

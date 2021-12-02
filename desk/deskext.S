@@ -115,6 +115,10 @@
 	xdef _avro_cpyfm
 	xdef _gsx_ncode
 	xdef _av_hardcopy
+
+	xdef _gsx_moff
+	xdef _gsx_mfset
+	xdef _gsx_mon
 	
 	xdef lmul
 	xdef ldiv
@@ -212,6 +216,10 @@ _av_hardcopy    equ AESTBASE+$B98E
 
 lmul            equ AESTBASE+$BF78
 ldiv            equ AESTBASE+$BFCC
+
+_gsx_moff       equ AESTBASE+0
+_gsx_mon        equ AESTBASE+0
+_gsx_mfset      equ AESTBASE+0
 
 
 #if !BINEXACT

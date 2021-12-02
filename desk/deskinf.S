@@ -95,7 +95,7 @@ _uhex_dig: ds.b 0
 [00fd4d8c] 3007                      move.w    d7,d0
 [00fd4d8e] d07c 0030                 add.w     #$0030,d0
 [00fd4d92] 6016                      bra.s     $00FD4DAA
-[00fd4d94] be7c 000a                 cmp.w     #$000A,d7
+[00fd4d94] be7c 000a                 cmp.w     #10,d7
 [00fd4d98] 6d0e                      blt.s     $00FD4DA8
 [00fd4d9a] be7c 000f                 cmp.w     #$000F,d7
 [00fd4d9e] 6e08                      bgt.s     $00FD4DA8
@@ -295,7 +295,7 @@ _inf_xdesk: ds.b 0
 	xdef _app_mtoi
 _app_mtoi: ds.b 0
 #if 0
-[00fd4f6e] 4e56 fffc                 link      a6,#$FFFC
+[00fd4f6e] 4e56 fffc                 link      a6,#-4
 [00fd4f72] 48e7 1f1c                 movem.l   d3-d7/a3-a5,-(a7)
 [00fd4f76] 2a6e 000c                 movea.l   12(a6),a5
 [00fd4f7a] 286e 0010                 movea.l   16(a6),a4
@@ -537,7 +537,7 @@ _read_inf: ds.b 0
 [00fd5210] 81fc 0002                 divs.w    #$0002,d0
 [00fd5214] 3a80                      move.w    d0,(a5)
 [00fd5216] 3015                      move.w    (a5),d0
-[00fd5218] c1f9 0000 6dce            muls.w    $00006DCE,d0
+[00fd5218] c1f9 0000 6dce            muls.w    _gl_wchar,d0
 [00fd521e] 3a80                      move.w    d0,(a5)
 [00fd5220] 486d 0002                 pea.l     2(a5)
 [00fd5224] 2f0c                      move.l    a4,-(a7)
@@ -545,7 +545,7 @@ _read_inf: ds.b 0
 [00fd5228] 508f                      addq.l    #8,a7
 [00fd522a] 2840                      movea.l   d0,a4
 [00fd522c] 302d 0002                 move.w    2(a5),d0
-[00fd5230] c1f9 0000 6ce2            muls.w    $00006CE2,d0
+[00fd5230] c1f9 0000 6ce2            muls.w    _gl_hchar,d0
 [00fd5236] 3b40 0002                 move.w    d0,2(a5)
 [00fd523a] 486d 0004                 pea.l     4(a5)
 [00fd523e] 2f0c                      move.l    a4,-(a7)
@@ -560,7 +560,7 @@ _read_inf: ds.b 0
 [00fd5258] 81fc 0002                 divs.w    #$0002,d0
 [00fd525c] 3b40 0004                 move.w    d0,4(a5)
 [00fd5260] 302d 0004                 move.w    4(a5),d0
-[00fd5264] c1f9 0000 6dce            muls.w    $00006DCE,d0
+[00fd5264] c1f9 0000 6dce            muls.w    _gl_wchar,d0
 [00fd526a] 3b40 0004                 move.w    d0,4(a5)
 [00fd526e] 3039 0000 705a            move.w    $0000705A,d0
 [00fd5274] c1fc 0007                 muls.w    #$0007,d0
@@ -575,7 +575,7 @@ _read_inf: ds.b 0
 [00fd5294] 508f                      addq.l    #8,a7
 [00fd5296] 2840                      movea.l   d0,a4
 [00fd5298] 302d 0006                 move.w    6(a5),d0
-[00fd529c] c1f9 0000 6ce2            muls.w    $00006CE2,d0
+[00fd529c] c1f9 0000 6ce2            muls.w    _gl_hchar,d0
 [00fd52a2] 3b40 0006                 move.w    d0,6(a5)
 [00fd52a6] 3039 0000 6f18            move.w    $00006F18,d0
 [00fd52ac] c1fc 0007                 muls.w    #$0007,d0
@@ -773,15 +773,15 @@ _read_inf: ds.b 0
 [00fd555a] 376b 35b4 35d4            move.w    13748(a3),13780(a3)
 [00fd5560] 486b 35d8                 pea.l     13784(a3)
 [00fd5564] 4267                      clr.w     -(a7)
-[00fd5566] 3f3c 000a                 move.w    #$000A,-(a7)
+[00fd5566] 3f3c 000a                 move.w    #10,-(a7)
 [00fd556a] f358                      dc.w      $F358 ; bfill
 [00fd556c] 508f                      addq.l    #8,a7
-[00fd556e] 3039 0000 6dce            move.w    $00006DCE,d0
-[00fd5574] c1fc 000c                 muls.w    #$000C,d0
+[00fd556e] 3039 0000 6dce            move.w    _gl_wchar,d0
+[00fd5574] c1fc 000c                 muls.w    #12,d0
 [00fd5578] 3740 35dc                 move.w    d0,13788(a3)
 [00fd557c] 376b 35dc 35e0            move.w    13788(a3),13792(a3)
-[00fd5582] 3779 0000 6ce2 35e2       move.w    $00006CE2,13794(a3)
-[00fd558a] 3779 0000 6ce2 35e6       move.w    $00006CE2,13798(a3)
+[00fd5582] 3779 0000 6ce2 35e2       move.w    _gl_hchar,13794(a3)
+[00fd558a] 3779 0000 6ce2 35e6       move.w    _gl_hchar,13798(a3)
 [00fd5592] 7001                      moveq.l   #1,d0
 [00fd5594] fe31                      dc.w      $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 #endif
@@ -789,7 +789,7 @@ _read_inf: ds.b 0
 	xdef _app_reschange
 _app_reschange: ds.b 0
 #if 0
-[00fd5596] 4e56 fffc                 link      a6,#$FFFC
+[00fd5596] 4e56 fffc                 link      a6,#-4
 [00fd559a] 302e 0008                 move.w    8(a6),d0
 [00fd559e] b079 0000 6122            cmp.w     $00006122,d0
 [00fd55a4] 6604                      bne.s     $00FD55AA
@@ -911,7 +911,7 @@ _save_inf: ds.b 0
 [00fd56f2] 2a40                      movea.l   d0,a5
 [00fd56f4] 3014                      move.w    (a4),d0
 [00fd56f6] 48c0                      ext.l     d0
-[00fd56f8] 81f9 0000 6dce            divs.w    $00006DCE,d0
+[00fd56f8] 81f9 0000 6dce            divs.w    _gl_wchar,d0
 [00fd56fe] 3e80                      move.w    d0,(a7)
 [00fd5700] 2f0d                      move.l    a5,-(a7)
 [00fd5702] f360                      dc.w      $F360 ; save_2
@@ -919,7 +919,7 @@ _save_inf: ds.b 0
 [00fd5706] 2a40                      movea.l   d0,a5
 [00fd5708] 302c 0002                 move.w    2(a4),d0
 [00fd570c] 48c0                      ext.l     d0
-[00fd570e] 81f9 0000 6ce2            divs.w    $00006CE2,d0
+[00fd570e] 81f9 0000 6ce2            divs.w    _gl_hchar,d0
 [00fd5714] 3e80                      move.w    d0,(a7)
 [00fd5716] 2f0d                      move.l    a5,-(a7)
 [00fd5718] f360                      dc.w      $F360 ; save_2
@@ -927,7 +927,7 @@ _save_inf: ds.b 0
 [00fd571c] 2a40                      movea.l   d0,a5
 [00fd571e] 302c 0004                 move.w    4(a4),d0
 [00fd5722] 48c0                      ext.l     d0
-[00fd5724] 81f9 0000 6dce            divs.w    $00006DCE,d0
+[00fd5724] 81f9 0000 6dce            divs.w    _gl_wchar,d0
 [00fd572a] 3e80                      move.w    d0,(a7)
 [00fd572c] 2f0d                      move.l    a5,-(a7)
 [00fd572e] f360                      dc.w      $F360 ; save_2
@@ -935,7 +935,7 @@ _save_inf: ds.b 0
 [00fd5732] 2a40                      movea.l   d0,a5
 [00fd5734] 302c 0006                 move.w    6(a4),d0
 [00fd5738] 48c0                      ext.l     d0
-[00fd573a] 81f9 0000 6ce2            divs.w    $00006CE2,d0
+[00fd573a] 81f9 0000 6ce2            divs.w    _gl_hchar,d0
 [00fd5740] 3e80                      move.w    d0,(a7)
 [00fd5742] 2f0d                      move.l    a5,-(a7)
 [00fd5744] f360                      dc.w      $F360 ; save_2
@@ -1136,7 +1136,7 @@ _save_inf: ds.b 0
 	xdef _set_defdrv
 _set_defdrv: ds.b 0
 #if 0
-[00fd598e] 4e56 fffc                 link      a6,#$FFFC
+[00fd598e] 4e56 fffc                 link      a6,#-4
 [00fd5992] f338                      dc.w      $F338 ; isdrive
 [00fd5994] c07c 0004                 and.w     #$0004,d0
 [00fd5998] e240                      asr.w     #1,d0

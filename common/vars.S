@@ -39,7 +39,7 @@ name: ds.t size
 
 	ds.b 2048       /* the system variables go here */
 
-	ds.b 64         /* used by ST-Book TOS by the cartridge ROM */
+	ds.b 64         /* some variables stored here for rainbow effect */
 
 	V(gem_env,b,12)
 
@@ -361,8 +361,10 @@ _endvdibss: ds.b 0
 	LONG(_TICKS)
 	V(gstack,l,24)
 	V(tstack,l,24)
-
-	ds.b 30
+	INT(_w_inc)
+	INT(_bar_max)
+	
+	ds.b 26
 	
 	PTR(_maddr)
 	V(mform,w,37)
@@ -635,8 +637,6 @@ _endvdibss: ds.b 0
 	ds.l 1 /* unused */
 	PTR(trp13aret)
 	PTR(trp14aret)
-	INT(_w_inc)
-	INT(_bar_max)
 	GRECT(_fobj)
 	V(_intout,w,10)
 	INT(_xprint)

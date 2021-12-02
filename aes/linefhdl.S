@@ -298,7 +298,7 @@ lineftab: ds.b 0
 		dc.l _dos_alloc           ; F3C0
 		dc.l xfd81e8              ; F3C4
 		dc.l _inf_sset            ; F3C8
-		dc.l xfd695a              ; F3CC
+		dc.l _fm_draw             ; F3CC
 		dc.l _form_do             ; F3D0
 		dc.l _inf_what            ; F3D4
 		dc.l xfd6b16              ; F3D8
@@ -309,7 +309,7 @@ lineftab: ds.b 0
 		dc.l _do_finish           ; F3EC
 		dc.l _dos_free            ; F3F0
 		dc.l _dos_sdta            ; F3F4
-		dc.l xfd6a5a              ; F3F8
+		dc.l _xtr_mask            ; F3F8
 		dc.l _dos_sfirst          ; F3FC
 		dc.l xfd7620              ; F400
 		dc.l _xstrpcat            ; F404
@@ -325,18 +325,18 @@ lineftab: ds.b 0
 		dc.l _fs_sget             ; F42C
 		dc.l _unfmt_str           ; F430
 		dc.l xfd791e              ; F434
-		dc.l xfd6a0a              ; F438
-		dc.l xfd69b6              ; F43C
-		dc.l xfe752a              ; F440
+		dc.l _drawclip            ; F438
+		dc.l _drawfld             ; F43C
+		dc.l _fc_draw             ; F440
 		dc.l xfda0e0              ; F444
 		dc.l _fc_format           ; F448
 		dc.l _fc_copy             ; F44C
 		dc.l _trp14int            ; F450
-		dc.l xfe74ba              ; F454
+		dc.l _fc_bar              ; F454
 		dc.l _fc_rwsec            ; F458
 		dc.l _max                 ; F45C
 		dc.l _fc_clfix            ; F460
-		dc.l xfd8780              ; F464
+		dc.l _desk_dfree          ; F464
 		dc.l xfd8d76              ; F468
 		dc.l _dos_gdrv            ; F46C
 		dc.l xfd8fae              ; F470
@@ -368,29 +368,29 @@ lineftab: ds.b 0
 		dc.l xfd9768              ; F4D8
 		dc.l xfd5b36              ; F4DC
 		dc.l xfd9848              ; F4E0
-		dc.l $00fdadb6            ; F4E4
-		dc.l $00fd8fe6            ; F4E8
-		dc.l $00fd9922            ; F4EC
-		dc.l $00fd9022            ; F4F0
-		dc.l $00fd9a6c            ; F4F4
-		dc.l $00fdcd06            ; F4F8
+		dc.l xfdadb6              ; F4E4
+		dc.l xfd8fe6              ; F4E8
+		dc.l xfd9922              ; F4EC
+		dc.l xfd9022              ; F4F0
+		dc.l xfd9a6c              ; F4F4
+		dc.l xfdcd06              ; F4F8
 		dc.l _fc_start            ; F4FC
-		dc.l $00fd99e0            ; F500
-		dc.l $00fd9b3c            ; F504
-		dc.l $00fd9be0            ; F508
+		dc.l xfd99e0              ; F500
+		dc.l xfd9b3c              ; F504
+		dc.l xfd9be0              ; F508
 		dc.l _my_itoa             ; F50C
 		dc.l _fmt_date            ; F510
 		dc.l _fmt_time            ; F514
 		dc.l _gsx_gclip           ; F518
-		dc.l $00fd7e58            ; F51C
+		dc.l xfd7e58              ; F51C
 		dc.l _gsx_tblt            ; F520
 		dc.l _hd_msg              ; F524
 		dc.l _inf_fldset          ; F528
-		dc.l $00fd8164            ; F52C
-		dc.l $00fd8284            ; F530
+		dc.l xfd8164              ; F52C
+		dc.l xfd8284              ; F530
 		dc.l _dos_chmod           ; F534
 		dc.l _dos_label           ; F538
-		dc.l $00fd813e            ; F53C
+		dc.l xfd813e              ; F53C
 		dc.l _inf_gindex          ; F540
 		dc.l _app_reschange       ; F544
 		dc.l _toupper             ; F548
@@ -399,91 +399,91 @@ lineftab: ds.b 0
 		dc.l _objc_add            ; F554
 		dc.l _do_cdir             ; F558
 		dc.l _shel_write          ; F55C
-		dc.l $00fda2fa            ; F560
-		dc.l $00fdc652            ; F564
-		dc.l $00fda2a0            ; F568
-		dc.l $00fda22c            ; F56C
+		dc.l xfda2fa              ; F560
+		dc.l xfdc652              ; F564
+		dc.l xfda2a0              ; F568
+		dc.l xfda22c              ; F56C
 		dc.l _graf_growbox        ; F570
 		dc.l _wind_open           ; F574
 		dc.l _wind_close          ; F578
 		dc.l _graf_shrinkbox      ; F57C
 		dc.l _rc_equal            ; F580
-		dc.l $00fdc47a            ; F584
-		dc.l $00fdcdec            ; F588
-		dc.l $00fdc430            ; F58C
+		dc.l xfdc47a              ; F584
+		dc.l xfdcdec              ; F588
+		dc.l xfdc430              ; F58C
 		dc.l _gsx_escapes         ; F590
 		dc.l _showfile            ; F594
-		dc.l $00fda066            ; F598
-		dc.l $00fdc2a6            ; F59C
-		dc.l $00fd9fde            ; F5A0
-		dc.l $00fda4b6            ; F5A4
-		dc.l $00fdc376            ; F5A8
-		dc.l $00fd8e6c            ; F5AC
-		dc.l $00fda5d2            ; F5B0
-		dc.l $00fda900            ; F5B4
-		dc.l $00fda85e            ; F5B8
-		dc.l $00fd82e8            ; F5BC
-		dc.l $00fd8538            ; F5C0
-		dc.l $00fdcd6a            ; F5C4
+		dc.l xfda066              ; F598
+		dc.l xfdc2a6              ; F59C
+		dc.l xfd9fde              ; F5A0
+		dc.l xfda4b6              ; F5A4
+		dc.l xfdc376              ; F5A8
+		dc.l xfd8e6c              ; F5AC
+		dc.l xfda5d2              ; F5B0
+		dc.l xfda900              ; F5B4
+		dc.l xfda85e              ; F5B8
+		dc.l xfd82e8              ; F5BC
+		dc.l xfd8538              ; F5C0
+		dc.l xfdcd6a              ; F5C4
 		dc.l _wind_get            ; F5C8
-		dc.l $00fda3de            ; F5CC
-		dc.l $00fdac02            ; F5D0
-		dc.l $00fdac8c            ; F5D4
+		dc.l xfda3de              ; F5CC
+		dc.l xfdac02              ; F5D0
+		dc.l xfdac8c              ; F5D4
 		dc.l _trp13               ; F5D8
 		dc.l _sh_name             ; F5DC
 		dc.l _menu_ienable        ; F5E0
-		dc.l $00fdb152            ; F5E4
-		dc.l $00fda984            ; F5E8
-		dc.l $00fdaaa8            ; F5EC
-		dc.l $00fd9624            ; F5F0
-		dc.l $00fdad22            ; F5F4
-		dc.l $00fdab74            ; F5F8
+		dc.l xfdb152              ; F5E4
+		dc.l xfda984              ; F5E8
+		dc.l xfdaaa8              ; F5EC
+		dc.l xfd9624              ; F5F0
+		dc.l xfdad22              ; F5F4
+		dc.l xfdab74              ; F5F8
 		dc.l _menu_icheck         ; F5FC
-		dc.l $00fdc09c            ; F600
-		dc.l $00fd87dc            ; F604
-		dc.l $00fd59a0            ; F608
-		dc.l $00fd8a16            ; F60C
+		dc.l xfdc09c              ; F600
+		dc.l xfd87dc              ; F604
+		dc.l xfd59a0              ; F608
+		dc.l xfd8a16              ; F60C
 		dc.l _hd_keybd            ; F610
-		dc.l $00fd8622            ; F614
-		dc.l $00fdba7e            ; F618
+		dc.l xfd8622              ; F614
+		dc.l xfdba7e              ; F618
 		dc.l _save_inf            ; F61C
 		dc.l _av_hardcopy         ; F620
-		dc.l $00fd65ba            ; F624
-		dc.l $00fd66ba            ; F628
-		dc.l $00fd9d76            ; F62C
-		dc.l $00fdb318            ; F630
-		dc.l $00fdb17c            ; F634
+		dc.l xfd65ba              ; F624
+		dc.l xfd66ba              ; F628
+		dc.l xfd9d76              ; F62C
+		dc.l xfdb318              ; F630
+		dc.l xfdb17c              ; F634
 		dc.l _mediach             ; F638
-		dc.l $00fdae56            ; F63C
-		dc.l $00fdaeae            ; F640
-		dc.l $00fdb3bc            ; F644
-		dc.l $00fdcc68            ; F648
-		dc.l $00fdb470            ; F64C
+		dc.l _rb_start            ; F63C
+		dc.l _rb_stop             ; F640
+		dc.l xfdb3bc              ; F644
+		dc.l xfdcc68              ; F648
+		dc.l xfdb470              ; F64C
 		dc.l _menu_tnormal        ; F650
-		dc.l $00fdb774            ; F654
-		dc.l $00fda422            ; F658
-		dc.l $00fdcbe0            ; F65C
-		dc.l $00fdcb5c            ; F660
+		dc.l xfdb774              ; F654
+		dc.l xfda422              ; F658
+		dc.l xfdcbe0              ; F65C
+		dc.l xfdcb5c              ; F660
 		dc.l _evnt_dclick         ; F664
 		dc.l _ap_init             ; F668
 		dc.l _wind_update         ; F66C
 		dc.l _wind_calc           ; F670
 		dc.l _read_inf            ; F674
 		dc.l _ap_exit             ; F678
-		dc.l $00fdc184            ; F67C
-		dc.l $00fd8d90            ; F680
+		dc.l xfdc184              ; F67C
+		dc.l xfd8d90              ; F680
 		dc.l _menu_bar            ; F684
-		dc.l $00fdbb94            ; F688
+		dc.l xfdbb94              ; F688
 		dc.l _hd_button           ; F68C
 		dc.l _set_defdrv          ; F690
-		dc.l $00fd9e58            ; F694
+		dc.l xfd9e58              ; F694
 		dc.l _wind_create         ; F698
 		dc.l _wind_delete         ; F69C
 		dc.l _objc_order          ; F6A0
-		dc.l $00fdc524            ; F6A4
-		dc.l $00fdc61c            ; F6A8
+		dc.l xfdc524              ; F6A4
+		dc.l xfdc61c              ; F6A8
 		dc.l _bb_screen           ; F6AC
-		dc.l $00fdc988            ; F6B0
+		dc.l xfdc988              ; F6B0
 		dc.l _signal              ; F6B4
 		dc.l _ev_block            ; F6B8
 		dc.l _fpdnm               ; F6BC

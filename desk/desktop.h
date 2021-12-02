@@ -56,8 +56,11 @@
  */
 typedef intptr_t LPTREE;
 
-#define CMD_FORMAT  0
-#define CMD_COPY    1
+#define CMD_BAT    0xFA
+#define CMD_COPY   0xFB
+#define CMD_FORMAT 0xFC
+#define CMD_PRINT  0xFD
+#define CMD_TYPE   0xFE
 
 /* Set Write Allocate mode, clear both caches,
  * and enable them with burst fill.
@@ -147,10 +150,10 @@ typedef intptr_t LPTREE;
 
 typedef struct	app
 {
-	/*  0 */ struct app *a_next;     /* app pointer */
+	/*  0 */ struct app *a_next;    /* app pointer */
 	/*  4 */ int16_t a_apptype;
 	/*  6 */ int16_t a_type; 		/* file type */
-	/*  8 */ char a_unused2[2];
+	/*  8 */ int16_t a_obj;			/* object # in desktop tree */
 #define a_doc a_unused2  /* tmp hack until desktop source has been completed */
 	/* 10 */ char *a_path;
 	/* 14 */ char *a_name; 			/* app name */
@@ -472,10 +475,11 @@ VOID xinf_sset PROTO((OBJECT *obj, int16_t item, const char *buf1));
 VOID mice_state PROTO((int16_t state));
 VOID desk_wait PROTO((BOOLEAN state));
 VOID drawfld PROTO((OBJECT *obj, int16_t which));
+VOID drawclip PROTO((OBJECT *obj, int16_t which));
 BOOLEAN getcookie PROTO((int32_t cookie, int32_t *p_value)); /* also referenced by AES */
 VOID f_str PROTO((OBJECT *obj, int16_t item, int32_t value));
 int16_t ch_level PROTO((const char *path));
-OBJECT *fm_draw PROTO((int16_t item));
+OBJECT *fm_draw PROTO((LPTREE tree));
 VOID do_finish PROTO((OBJECT *obj));
 int16_t xform_do PROTO((OBJECT *obj, int16_t which));
 int16_t fmdodraw PROTO((int16_t item, int16_t which));
@@ -486,7 +490,6 @@ BOOLEAN cut_path PROTO((char *path));
 VOID cat_path PROTO((char *name, char *path));
 VOID rep_path PROTO((const char *name, char *path));
 VOID rep_all PROTO((char *path));
-int16_t do_alert PROTO((int16_t button, int16_t item));
 BOOLEAN dos_error PROTO((int16_t button, int16_t item));
 int16_t do1_alert PROTO((int16_t item));
 VOID rc_center PROTO((GRECT *rec1, GRECT *rec2));
@@ -678,6 +681,7 @@ VOID bfill PROTO((int16_t num, char bval, VOIDPTR addr));
 int16_t min PROTO((int16_t a, int16_t b));
 int16_t max PROTO((int16_t a, int16_t b));
 VOID rc_copy PROTO((const GRECT *src, GRECT *dst));
+#define RC_COPY(src, dst) LWCOPY(dst, src, 4)
 BOOLEAN rc_equal PROTO((const GRECT *p1, const GRECT *p2));
 BOOLEAN rc_intersect PROTO((const GRECT *p1, GRECT *p2));
 VOID rc_union PROTO((const GRECT *p1, GRECT *p2));

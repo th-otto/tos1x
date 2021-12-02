@@ -454,7 +454,7 @@ PP(char *buffer;)
 		f_str(obj, DINFILES, nfile);
 		f_str(obj, DIUSED, nsize);
 		desk_wait(TRUE);
-		Dfree(sizes, buffer[0] - 'A' + 1);
+		desk_dfree(sizes, buffer[0] - 'A' + 1);
 		sizes[1] = sizes[0] * sizes[2] * sizes[3];
 		f_str(obj, DIAVAIL, sizes[1]);
 		Fsetdta(&dtabuf);

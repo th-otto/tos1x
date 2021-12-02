@@ -38,7 +38,7 @@ PP(const char *ptr;)
 	pr_1:
 		if (!Bconout(where, *ptr++))	/* device not present? */
 		{
-			if (do_alert(2, STNOMEM) == 1)
+			if (fill_string(2, STNOMEM) == 1)
 				goto pr_1;
 			else
 				return FALSE;
@@ -74,7 +74,7 @@ PP(register DESKWIN *win;)
 	
 	if (win->w_path[0] == CHAR_FOR_CARTRIDGE)
 	{
-		do_alert(1, STNOMEM);
+		fill_string(1, STNOMEM);
 		return;
 	}
 

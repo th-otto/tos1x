@@ -38,7 +38,7 @@
 
 #define MAXTRACK	80					/* maximum number of track      */
 #define FC_NUMOBJS	26
-#define MAXSPT		18					/* Maximum sector / track       */
+#define MAXSPT		9					/* Maximum sector / track       */
 #define	SECSIZE		512
 #define	TRKSIZE		0x1200				/* (bytesPerSector) * (sectorsPerTrack) */
 #define RSECTS		2					/* |= 0x02 so mediach state is not checked */
@@ -94,7 +94,7 @@ static int16_t const skew1[MAXSPT * 2] = {
 	12, 13, 14, 15, 16, 17, 18
 };
 
-static int16_t const skew2[MAXSPT] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+static int16_t const skew2[MAXSPT] = { 3, 4, 5, 6, 7, 8, 9, 1, 2 };
 
 
 /*
@@ -134,9 +134,11 @@ PP(int16_t op;)
 	int16_t i, field, operation;
 	register char *destdr;
 	register OBJECT *obj;
+	register LPTREE tree;
 	int32_t value;
 
-	obj = get_tree(ADFORMAT);
+	tree = thedesk->rtree[ADFORMAT];
+	obj = (OBJECT *)tree;
 
 	/* check for switch in cookie jar   */
 
@@ -179,7 +181,7 @@ PP(int16_t op;)
 		ret = FCFORMAT;
 	}
 
-	fm_draw(ADFORMAT);
+	fm_draw(tree);
 
 	operation = FALSE;
 
@@ -214,7 +216,7 @@ PP(int16_t op;)
 			break;
 
 		case FCCNCL:					/* cancel       */
-			do_finish(ADFORMAT);
+			do_finish(tree);
 			if (operation)
 			{
 				up_allwin("A", FALSE);
@@ -230,11 +232,10 @@ PP(int16_t op;)
 
 			if (obj[FCFORMAT].ob_state & SELECTED)
 			{
-				ret = fc_format(obj);
+				fc_format(obj);
 			} else
 			{
 				fc_copy(obj);
-				ret = TRUE;
 			}
 			obj[FCBARA].ob_width = width;
 			obj[FCBARB].ob_width = width;
@@ -243,11 +244,6 @@ PP(int16_t op;)
 			drawfld(obj, FCBARB);
 			drawfld(obj, FCOK);
 			desk_wait(FALSE);
-			if (!ret)
-			{
-				ret = FCCNCL;
-				goto fc_1;
-			}
 		}
 
 		ret = form_do(obj, field) & 0x7FFF;
@@ -310,8 +306,6 @@ PP(OBJECT *obj;)
 	{
 		numside = 1;					/* it is single sided   */
 		disktype = 2;
-	} else
-	{
 	}
 
 	devno = (obj[ADRIVE].ob_state & SELECTED) ? 0 : 1;
@@ -450,7 +444,7 @@ PP(OBJECT *obj;)
 
 	if (!ret)
 	{
-		Dfree(lbuf, devno + 1);
+		desk_dfree(lbuf, devno + 1);
 		lbuf[0] = lbuf[0] * lbuf[2] * lbuf[3];
 		merge_str(g_buffer, get_string(FCSIZE), lbuf);
 		if (form_alert(1, g_buffer) == 1)
@@ -686,34 +680,39 @@ PP(uint16_t *fat;)
  * Inc and redraw slider bar
  */
 /* 306de: 00e2aa84 */
+/* 104de: 00fe74ba */
 VOID fc_bar(P(OBJECT *)obj, P(int16_t) which)
-PP(register OBJECT *obj;)
+PP(OBJECT *tree;)
 PP(register int16_t which;)
 {
+	register int16_t *width;
+	register intptr_t *obspec;
 	register int16_t wid;
 
 	which = which ? FCBARB : FCBARA;
+	width = &tree[which].ob_width;
+	obspec = &tree[which].ob_spec;
 
-	wid = obj[which].ob_width + w_inc;
+	wid = *width + w_inc;
 
 	wid = wid < bar_max ? wid : bar_max;	/* don't overflow box */
 
-	obj[which].ob_width = wid;
-	obj[which].ob_spec = 0xFF1121L;
-	fc_draw(obj, which);
-	obj[which].ob_spec = 0xFF1101L;
-
+	*width = wid;
+	*obspec = 0xFF1121L;
+	fc_draw(tree, which);
+	*obspec = 0xFF1101L;
 }
 
 
 /* 306de: 00e2ab0c */
+/* 104de: 00fe752a */
 VOID fc_draw(P(OBJECT *)obj, P(int16_t) which)
 PP(OBJECT *obj;)
 PP(int16_t which;)
 {
 	GRECT size;
 
-	rc_copy((GRECT *)&obj[which].ob_x, &size);
+	RC_COPY((GRECT *)&obj[which].ob_x, &size);
 	objc_offset(obj, which, &size.g_x, &size.g_y);
 	objc_draw(obj, which, MAX_DEPTH, size.g_x, size.g_y, size.g_w + 2, size.g_h);
 }

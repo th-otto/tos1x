@@ -241,7 +241,7 @@
 [00fe7c80] dc.l $00fdd11c            ; F3C0 ; dos_alloc AES
 [00fe7c84] dc.l $00fd81e8            ; F3C4
 [00fe7c88] dc.l $00fe5fac            ; F3C8 ; inf_sset AES
-[00fe7c8c] dc.l $00fd695a            ; F3CC
+[00fe7c8c] dc.l $00fd695a            ; F3CC ; fm_draw DESKTOP
 [00fe7c90] dc.l $00fd7abc            ; F3D0 ; form_do DESKTOP
 [00fe7c94] dc.l $00fe6034            ; F3D4 ; inf_what AES
 [00fe7c98] dc.l $00fd6b16            ; F3D8
@@ -252,7 +252,7 @@
 [00fe7cac] dc.l $00fd691c            ; F3EC ; do_finish DESKTOP
 [00fe7cb0] dc.l $00fdd188            ; F3F0 ; dos_free AES
 [00fe7cb4] dc.l $00fdd168            ; F3F4 ; dos_sdta AES
-[00fe7cb8] dc.l $00fd6a5a            ; F3F8
+[00fe7cb8] dc.l $00fd6a5a            ; F3F8 ; xtr_mask DESKTOP
 [00fe7cbc] dc.l $00fdcfb4            ; F3FC ; dos_sfirst AES
 [00fe7cc0] dc.l $00fd7620            ; F400
 [00fe7cc4] dc.l $00fe5ed0            ; F404 ; xstrpcat AES
@@ -268,18 +268,18 @@
 [00fe7cec] dc.l $00fe5fd0            ; F42C ; fs_sget AES
 [00fe7cf0] dc.l $00fe5f4e            ; F430 ; unfmt_str AES
 [00fe7cf4] dc.l $00fd791e            ; F434
-[00fe7cf8] dc.l $00fd6a0a            ; F438
-[00fe7cfc] dc.l $00fd69b6            ; F43C
-[00fe7d00] dc.l $00fe752a            ; F440
+[00fe7cf8] dc.l $00fd6a0a            ; F438 ; drawclip DESKTOP
+[00fe7cfc] dc.l $00fd69b6            ; F43C ; drawfld DESKTOP
+[00fe7d00] dc.l $00fe752a            ; F440 ; fc_draw DESKTOP
 [00fe7d04] dc.l $00fda0e0            ; F444
 [00fe7d08] dc.l $00fe6d20            ; F448 ; fc_format DESKTOP
 [00fe7d0c] dc.l $00fe7126            ; F44C ; fc_copy DESKTOP
 [00fe7d10] dc.l $00fe7592            ; F450 ; trp14int; duplicate AES
-[00fe7d14] dc.l $00fe74ba            ; F454
+[00fe7d14] dc.l $00fe74ba            ; F454 ; fc_bar DESKTOP
 [00fe7d18] dc.l $00fe73d0            ; F458 ; fc_rwsec DESKTOP
 [00fe7d1c] dc.l $00fe5e44            ; F45C ; max AES
 [00fe7d20] dc.l $00fe7408            ; F460 ; fc_clfix DESKTOP
-[00fe7d24] dc.l $00fd8780            ; F464
+[00fe7d24] dc.l $00fd8780            ; F464 ; desk_dfree DESKTOP
 [00fe7d28] dc.l $00fd8d76            ; F468
 [00fe7d2c] dc.l $00fdd164            ; F46C ; dos_gdrv AES
 [00fe7d30] dc.l $00fd8fae            ; F470
@@ -397,8 +397,8 @@
 [00fe7ef0] dc.l $00fdb318            ; F630
 [00fe7ef4] dc.l $00fdb17c            ; F634
 [00fe7ef8] dc.l $00fe75e0            ; F638 ; mediach AES
-[00fe7efc] dc.l $00fdae56            ; F63C
-[00fe7f00] dc.l $00fdaeae            ; F640
+[00fe7efc] dc.l $00fdae56            ; F63C ; rb_start DESKTOP
+[00fe7f00] dc.l $00fdaeae            ; F640 ; rb_stop DESKTOP
 [00fe7f04] dc.l $00fdb3bc            ; F644
 [00fe7f08] dc.l $00fdcc68            ; F648
 [00fe7f0c] dc.l $00fdb470            ; F64C

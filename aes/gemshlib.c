@@ -115,12 +115,6 @@
 #include "gemrsc.h"
 
 
-#define CMD_BAT    0xFA
-#define CMD_COPY   0xFB
-#define CMD_FORMAT 0xFC
-#define CMD_PRINT  0xFD
-#define CMD_TYPE   0xFE
-
 /* if TRUE then do an an exec on the current command else exit and return to DOS  */
 int16_t sh_doexec;
 
