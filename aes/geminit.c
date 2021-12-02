@@ -289,7 +289,7 @@ VOID gem_main(NOTHING)
 	/****************************************/
 
 	/*
-	 * no check for allocation faiure here...
+	 * no check for allocation failure here...
 	 * why not allocate that static? its never changed
 	 */
 	drawstk = (intptr_t)dos_alloc(0x00000400L);	/* draw stack is 1K */
@@ -626,6 +626,8 @@ int16_t pred_dinf(NOTHING)
 					temp = escan_str(temp, &g_autoboot[0]);
 				} else if (*temp == 'E')
 				{
+					temp += 5;
+					scan_2(temp, &res);
 					{					/* turn on the bit ?        */
 #if BINEXACT /* sigh... */
 						trp14(((res & 0xF0) >> 4) ? 0x00400001L : 0x00400000L);

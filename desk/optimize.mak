@@ -5,7 +5,7 @@ deskbutt_OPTIMIZE=0
 deskdir_OPTIMIZE=0
 deskdisk_OPTIMIZE=0
 deskfile_OPTIMIZE=0
-deskinf_OPTIMIZE=0
+deskinf_OPTIMIZE=1
 deskins_OPTIMIZE=0
 deskmem_OPTIMIZE=0
 deskmenu_OPTIMIZE=0
@@ -22,3 +22,5 @@ deskupda_OPTIMIZE=0
 deskwin_OPTIMIZE=0
 deskmn_OPTIMIZE=0
 deskif_OPTIMIZE=0
+
+desk1_ASFLAGS=-n

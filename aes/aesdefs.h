@@ -55,7 +55,11 @@
 #define STACK2_SIZE 300
 #define STACK3_SIZE 350
 #define NFORKS      32
+#if AESVERSION >= 0x200
 #define QUEUE_SIZE 108
+#else
+#define QUEUE_SIZE 128
+#endif
 
 #define CMDLEN 128
 

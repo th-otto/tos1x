@@ -55876,7 +55876,7 @@ sin_tbl:
 [00feb06c] 544f                      addq.w    #2,a7
 [00feb06e] 502e 494e                 addq.b    #8,18766(a6)
 [00feb072] 4600                      not.b     d0
-; switch table from inf_parse
+; switch table from inf_xdesk
 [00feb074] 00fd4eb4                 chk2.b    ???,d4 ; 68020+ only
 [00feb078] 00fd4ee4                 chk2.b    ???,d4 ; 68020+ only
 [00feb07c] 00fd4f04                 chk2.b    ???,d4 ; 68020+ only
@@ -55922,6 +55922,7 @@ sin_tbl:
 [00feb114] 00fd 5392                 cmp2.b    ???,d5 ; 68020+ only
 [00feb118] 00fd 5176                 cmp2.b    ???,d5 ; 68020+ only
 
+; switch table from save_inf
 [00feb11c] 00fd 57ca                 cmp2.b    ???,d5 ; 68020+ only
 [00feb120] 00fd 57fe                 cmp2.b    ???,d5 ; 68020+ only
 [00feb124] 00fd 57be                 cmp2.b    ???,d5 ; 68020+ only
@@ -62883,6 +62884,7 @@ gem.rsc:
 6124: gl_rschange
 6126: ustak
 61AA: diskin
+61AC: aautopath
 63C8: savsr
 63CC: psetsr
 664E: dspstk

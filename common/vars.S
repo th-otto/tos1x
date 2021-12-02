@@ -328,7 +328,8 @@ _endvdibss: ds.b 0
 	INT(_gl_rschange)
 	V(ustak,l,33)
 	INT(_diskin)
-	ds.b 1198
+	V(_aautopath,b,CMDLEN)
+	ds.b 1070
 	
 	LONG(_crit_err)
 	LONG(savestk)
@@ -421,9 +422,6 @@ _endvdibss: ds.b 0
 
 	PTR(_ad_path)
 	PTR(old_bcode)
-
-	ds.b 2
-	
 	INT(_gl_hclip)
 	INT(_gl_bvhard)
 	PTR(_ad_shtail)
@@ -447,9 +445,6 @@ _endvdibss: ds.b 0
 	INT(_gl_graphic)
 	INT(_gl_lcolor)
 	PTR(old_mcode)
-
-	ds.b 2
-	
 	INT(_gl_ticktime)
 	INT(_gl_nplanes)
 	LONG(_gl_mlen)
@@ -611,7 +606,7 @@ _endvdibss: ds.b 0
 
 /* XXX */
 
-	ds.b 10
+	ds.b 14
 
 #if 0
 	INT(_d_dir)
@@ -622,7 +617,6 @@ _endvdibss: ds.b 0
 	V(_fcopy,b,40)
 	PTR(_pathcopy)
 	INT(_defdrv)
-	V(_aautopath,b,CMDLEN)
 	
 	INT(_pr_yrat)
 

@@ -85,7 +85,7 @@ PP(register APP *app;)
  */
 /* 306de: 00e2c064 */
 /* 104de: 00fd4d3a */
-static int16_t hex_dig(P(char) achar)
+LINEF_STATIC int16_t hex_dig(P(char) achar)
 PP(register char achar;)
 {
 	if (achar >= '0' && achar <= '9')
@@ -103,7 +103,7 @@ PP(register char achar;)
  */
 /* 306de: 00e2b5b4 */
 /* 104de: 00fd4d76 */
-static char uhex_dig(P(int16_t) wd)
+LINEF_STATIC char uhex_dig(P(int16_t) wd)
 PP(register int16_t wd;)
 {
 	if (wd >= 0 && wd <= 9)
@@ -143,7 +143,7 @@ PP(register int16_t *pwd;)
  * Reverse of scan_2()
  */
 /* 306de: 00e2b66e */
-/* 104de: 00fd4d76 */
+/* 104de: 00fd4de4 */
 char *save_2(P(char *) pcurr, P(uint16_t) wd)
 PP(register char *pcurr;)
 PP(uint16_t wd;)
@@ -174,7 +174,7 @@ PP(register char *ppstr;)
 
 
 /* 104de: 00fd4e40 */
-static char *escani_str(P(const char *)pcurr, P(char **)ppstr)
+LINEF_STATIC char *escani_str(P(const char *)pcurr, P(char **)ppstr)
 PP(register const char *pcurr;)
 PP(char **ppstr;)
 {
@@ -186,6 +186,7 @@ PP(char **ppstr;)
  * Reverse of scan_str
  */
 /* 306de: 00e2b6ac */
+/* 104de: 00fd4e5a */
 char *save_sstr(P(char *)pcurr, P(const char *)pstr)
 PP(register char *pcurr;)
 PP(register const char *pstr;)
@@ -203,7 +204,7 @@ PP(register const char *pstr;)
  */
 /* 306de: 00e2b6dc */
 /* 104de: 00fd4e82 */
-static const char *inf_xdesk(P(const char *)pcurr, P(APP *) app)
+LINEF_STATIC const char *inf_xdesk(P(const char *)pcurr, P(APP *) app)
 PP(register const char *pcurr;)
 PP(register APP *app;)
 {
@@ -755,26 +756,4 @@ VOID set_defdrv(NOTHING)
 	 *  or to C (2) if it does exist.  Don't ask.  It had to be shrunk.
 	 */
 	dos_sdrv((isdrive() & 0x04) >> 1);
-}
-
-
-/*
- * Position the desktop icon
- */
-/* 306de: 00e2c86c */
-VOID app_posicon(P(int16_t) colx, P(int16_t) coly, P(int16_t *)px, P(int16_t *)py)
-PP(int16_t colx;)
-PP(int16_t coly;)
-PP(register int16_t *px;)
-PP(register int16_t *py;)
-{
-#if 0
-	register int16_t x, y, w, h;
-
-	w = r_dicon.g_w;
-	h = r_dicon.g_h;
-	x = colx * w + full.g_x;
-	y = coly * h + full.g_y;
-	app_mtoi(x, y, px, py);
-#endif
 }

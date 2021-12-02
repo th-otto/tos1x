@@ -21,6 +21,12 @@ all:: desk.a
 include $(top_srcdir)/config.mak
 -include $(top_srcdir)/common/sections.mak
 
+ifeq ($(USE_CROSS_ALCYON),1)
+ifeq ($(TOSVERSION),104)
+CPPFLAGS += -A
+endif
+endif
+
 include SRCFILES
 
 desk.a: $(DESK_OBJS) ${MAKEFILE}

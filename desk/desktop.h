@@ -180,7 +180,7 @@ typedef struct idtype
 
 typedef struct {
 	/*     0 */ char unused1[13350];
-	/* 13350 */ int16_t *msgbuf[8];		
+	/* 13350 */ int16_t msgbuf[8];		
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13370 */ GRECT full;				/* full window size value */
 	/*     0 */ char unused2[272];

@@ -144,7 +144,7 @@ WARN = \
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 .S.o:
-	$(AM_V_AS)$(CC) -Wa,--mri $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(AM_V_AS)$(CC) -Wa,--mri $(ASFLAGS) ${$*_ASFLAGS} $(CPPFLAGS) -c -o $@ $<
 
 #
 # The final ROM image contains two versions of this compiler
