@@ -186,7 +186,10 @@ typedef struct {
 	/*     0 */ char unused2[272];
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
 	/* 13654 */ OBJECT *rtree[16];		/* resource trees */
-	/* 13718 */ char unused6[18];
+	/* 13718 */ int16_t o13718;
+	/* 13720 */ int16_t o13720;
+	/* 13722 */ int16_t o13722;
+	/* 13724 */ char unused6[12];
 	/* 13736 */ GRECT r_dicon;			/* real time desktop icon size */
 	/* 13744 */ int16_t o13744;
 	/* 13746 */ int16_t o13746;
@@ -256,6 +259,7 @@ VOID clr_allwin PROTO((NOTHING));
 VOID clr_xwin PROTO((DESKWIN *win, BOOLEAN infoupdate));
 VOID srl_verbar PROTO((DESKWIN *win, uint16_t pos));
 VOID srl_hzbar PROTO((DESKWIN *win, uint16_t pos));
+VOID srl_bar PROTO((int16_t handle, uint16_t pos, BOOLEAN vertical));
 VOID srl_row PROTO((DESKWIN *win, int16_t row, int16_t dir));
 VOID srl_col PROTO((DESKWIN *win, int16_t col, int16_t dir));
 VOID blt_window PROTO((DESKWIN *win, int16_t mode, int16_t size));

@@ -231,7 +231,7 @@ lineftab: ds.b 0
 		dc.l _objc_find           ; F2B4
 		dc.l xfd6228              ; F2B8
 		dc.l _app_mtoi            ; F2BC
-		dc.l xfda192              ; F2C0
+		dc.l _do_redraw           ; F2C0
 		dc.l _graf_mouse          ; F2C4
 		dc.l _gsx_pline           ; F2C8
 		dc.l xfd5e3a              ; F2CC
@@ -328,7 +328,7 @@ lineftab: ds.b 0
 		dc.l _drawclip            ; F438
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440
-		dc.l xfda0e0              ; F444
+		dc.l _hd_win              ; F444
 		dc.l _fc_format           ; F448
 		dc.l _fc_copy             ; F44C
 		dc.l _trp14int            ; F450
@@ -390,7 +390,7 @@ lineftab: ds.b 0
 		dc.l xfd8284              ; F530
 		dc.l _dos_chmod           ; F534
 		dc.l _dos_label           ; F538
-		dc.l xfd813e              ; F53C
+		dc.l _fmdodraw            ; F53C
 		dc.l _inf_gindex          ; F540
 		dc.l _app_reschange       ; F544
 		dc.l _toupper             ; F548
@@ -451,19 +451,19 @@ lineftab: ds.b 0
 		dc.l xfd65ba              ; F624
 		dc.l xfd66ba              ; F628
 		dc.l xfd9d76              ; F62C
-		dc.l xfdb318              ; F630
+		dc.l _do_file             ; F630
 		dc.l xfdb17c              ; F634
 		dc.l _mediach             ; F638
 		dc.l _rb_start            ; F63C
 		dc.l _rb_stop             ; F640
 		dc.l xfdb3bc              ; F644
 		dc.l xfdcc68              ; F648
-		dc.l xfdb470              ; F64C
+		dc.l _do_opt              ; F64C
 		dc.l _menu_tnormal        ; F650
-		dc.l xfdb774              ; F654
+		dc.l _hd_menu             ; F654
 		dc.l xfda422              ; F658
 		dc.l xfdcbe0              ; F65C
-		dc.l xfdcb5c              ; F660
+		dc.l _srl_bar             ; F660
 		dc.l _evnt_dclick         ; F664
 		dc.l _ap_init             ; F668
 		dc.l _wind_update         ; F66C

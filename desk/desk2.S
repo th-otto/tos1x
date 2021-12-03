@@ -95,7 +95,7 @@ _fmt_date: ds.b 0
 	xdef xfd7e58
 xfd7e58: ds.b 0
 #if 0
-[00fd7e58] 4e56 ffcc                 link      a6,#$FFCC
+[00fd7e58] 4e56 ffcc                 link      a6,#-52
 [00fd7e5c] 48e7 071c                 movem.l   d5-d7/a3-a5,-(a7)
 [00fd7e60] 2e2e 0008                 move.l    8(a6),d7
 [00fd7e64] 2a6e 000c                 movea.l   12(a6),a5
@@ -237,7 +237,7 @@ xfd7e58: ds.b 0
 	xdef _dr_code
 _dr_code: ds.b 0
 #if 0
-[00fd7fe6] 4e56 ffd8                 link      a6,#$FFD8
+[00fd7fe6] 4e56 ffd8                 link      a6,#-40
 [00fd7fea] 48e7 0304                 movem.l   d6-d7/a5,-(a7)
 [00fd7fee] 2e2e 0008                 move.l    8(a6),d7
 [00fd7ff2] 4bee ffe2                 lea.l     -30(a6),a5
@@ -299,7 +299,7 @@ _dr_code: ds.b 0
 	xdef xfd80aa
 xfd80aa: ds.b 0
 #if 0
-[00fd80aa] 4e56 ffee                 link      a6,#$FFEE
+[00fd80aa] 4e56 ffee                 link      a6,#-18
 [00fd80ae] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd80b2] 2d79 0000 a788 ffee       move.l    _thedesk,-18(a6)
 [00fd80ba] 2eae 0008                 move.l    8(a6),(a7)
@@ -348,8 +348,8 @@ xfd80aa: ds.b 0
 [00fd813c] f801                      dc.w      $F801 ; movem.l (a7)+,a5
 #endif
 
-	xdef xfd813e
-xfd813e: ds.b 0
+	xdef _fmdodraw
+_fmdodraw: ds.b 0
 #if 0
 [00fd813e] 4e56 fffc                 link      a6,#-4
 [00fd8142] 4257                      clr.w     (a7)
@@ -359,7 +359,7 @@ xfd813e: ds.b 0
 [00fd814c] 302e 000c                 move.w    12(a6),d0
 [00fd8150] c1fc 0018                 muls.w    #24,d0
 [00fd8154] d0ae 0008                 add.l     8(a6),d0
-[00fd8158] d0bc 0000 000a            add.l     #$0000000A,d0
+[00fd8158] d0bc 0000 000a            add.l     #10,d0
 [00fd815e] 2040                      movea.l   d0,a0
 [00fd8160] 4250                      clr.w     (a0)
 [00fd8162] f001                      dc.w      $F001 ; movem.l (a7)+,#0
@@ -368,7 +368,7 @@ xfd813e: ds.b 0
 	xdef xfd8164
 xfd8164: ds.b 0
 #if 0
-[00fd8164] 4e56 fff0                 link      a6,#$FFF0
+[00fd8164] 4e56 fff0                 link      a6,#-16
 [00fd8168] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd816c] 2a79 0000 a788            movea.l   _thedesk,a5
 [00fd8172] 42ad 32aa                 clr.l     12970(a5)
@@ -413,7 +413,7 @@ xfd8164: ds.b 0
 	xdef xfd81e8
 xfd81e8: ds.b 0
 #if 0
-[00fd81e8] 4e56 fff0                 link      a6,#$FFF0
+[00fd81e8] 4e56 fff0                 link      a6,#-16
 [00fd81ec] 4a6e 0016                 tst.w     22(a6)
 [00fd81f0] 671e                      beq.s     $00FD8210
 [00fd81f2] 2eae 000c                 move.l    12(a6),(a7)
@@ -465,7 +465,7 @@ xfd81e8: ds.b 0
 	xdef xfd8284
 xfd8284: ds.b 0
 #if 0
-[00fd8284] 4e56 ffe6                 link      a6,#$FFE6
+[00fd8284] 4e56 ffe6                 link      a6,#-26
 [00fd8288] 48e7 010c                 movem.l   d7/a4-a5,-(a7)
 [00fd828c] 2a6e 000c                 movea.l   12(a6),a5
 [00fd8290] 286e 0016                 movea.l   22(a6),a4
@@ -500,7 +500,7 @@ xfd8284: ds.b 0
 	xdef xfd82e8
 xfd82e8: ds.b 0
 #if 0
-[00fd82e8] 4e56 ffdc                 link      a6,#$FFDC
+[00fd82e8] 4e56 ffdc                 link      a6,#-36
 [00fd82ec] 48e7 1f1c                 movem.l   d3-d7/a3-a5,-(a7)
 [00fd82f0] 2a6e 000c                 movea.l   12(a6),a5
 [00fd82f4] 2679 0000 a788            movea.l   _thedesk,a3
@@ -614,7 +614,7 @@ xfd82e8: ds.b 0
 [00fd8454] 48c1                      ext.l     d1
 [00fd8456] d081                      add.l     d1,d0
 [00fd8458] 2e80                      move.l    d0,(a7)
-[00fd845a] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd845a] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd8460] 486e fff2                 pea.l     -14(a6)
 [00fd8464] f430                      dc.w      $F430 ; unfmt_str
 [00fd8466] 588f                      addq.l    #4,a7
@@ -623,7 +623,7 @@ xfd82e8: ds.b 0
 [00fd846c] 48c1                      ext.l     d1
 [00fd846e] d081                      add.l     d1,d0
 [00fd8470] 2e80                      move.l    d0,(a7)
-[00fd8472] 0697 0000 3096            addi.l    #$00003096,(a7)
+[00fd8472] 0697 0000 3096            addi.l    #12438,(a7)
 [00fd8478] 486e ffe4                 pea.l     -28(a6)
 [00fd847c] f430                      dc.w      $F430 ; unfmt_str
 [00fd847e] 588f                      addq.l    #4,a7
@@ -632,13 +632,13 @@ xfd82e8: ds.b 0
 [00fd8484] 48c1                      ext.l     d1
 [00fd8486] d081                      add.l     d1,d0
 [00fd8488] 2e80                      move.l    d0,(a7)
-[00fd848a] 0697 0000 3096            addi.l    #$00003096,(a7)
+[00fd848a] 0697 0000 3096            addi.l    #12438,(a7)
 [00fd8490] 200b                      move.l    a3,d0
 [00fd8492] 3204                      move.w    d4,d1
 [00fd8494] 48c1                      ext.l     d1
 [00fd8496] d081                      add.l     d1,d0
 [00fd8498] 2f00                      move.l    d0,-(a7)
-[00fd849a] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd849a] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd84a0] f39c                      dc.w      $F39C ; streq
 [00fd84a2] 588f                      addq.l    #4,a7
 [00fd84a4] 4a40                      tst.w     d0
@@ -661,7 +661,7 @@ xfd82e8: ds.b 0
 [00fd84d4] 48c1                      ext.l     d1
 [00fd84d6] d081                      add.l     d1,d0
 [00fd84d8] 2f00                      move.l    d0,-(a7)
-[00fd84da] 0697 0000 3096            addi.l    #$00003096,(a7)
+[00fd84da] 0697 0000 3096            addi.l    #12438,(a7)
 [00fd84e0] f36c                      dc.w      $F36C ; xstrpcpy
 [00fd84e2] 508f                      addq.l    #8,a7
 [00fd84e4] 1c2d 0009                 move.b    9(a5),d6
@@ -700,7 +700,7 @@ xfd82e8: ds.b 0
 	xdef xfd8538
 xfd8538: ds.b 0
 #if 0
-[00fd8538] 4e56 ffc6                 link      a6,#$FFC6
+[00fd8538] 4e56 ffc6                 link      a6,#-58
 [00fd853c] 48e7 0304                 movem.l   d6-d7/a5,-(a7)
 [00fd8540] 2a79 0000 a788            movea.l   _thedesk,a5
 [00fd8546] 2e2d 355e                 move.l    13662(a5),d7
@@ -777,7 +777,7 @@ xfd8538: ds.b 0
 	xdef xfd8622
 xfd8622: ds.b 0
 #if 0
-[00fd8622] 4e56 fffe                 link      a6,#$FFFE
+[00fd8622] 4e56 fffe                 link      a6,#-2
 [00fd8626] 48e7 1f04                 movem.l   d3-d7/a5,-(a7)
 [00fd862a] 2a79 0000 a788            movea.l   _thedesk,a5
 [00fd8630] 2e2d 357e                 move.l    13694(a5),d7
@@ -902,7 +902,7 @@ xfd8622: ds.b 0
 	xdef _desk_dfree
 _desk_dfree: ds.b 0
 #if 0
-[00fd8780] 4e56 ffe8                 link      a6,#$FFE8
+[00fd8780] 4e56 ffe8                 link      a6,#-24
 [00fd8784] 3eae 0008                 move.w    8(a6),(a7)
 [00fd8788] 486e fff0                 pea.l     -16(a6)
 [00fd878c] 3f3c 0036                 move.w    #$0036,-(a7)
@@ -934,7 +934,7 @@ _desk_dfree: ds.b 0
 	xdef xfd87dc
 xfd87dc: ds.b 0
 #if 0
-[00fd87dc] 4e56 ffde                 link      a6,#$FFDE
+[00fd87dc] 4e56 ffde                 link      a6,#-34
 [00fd87e0] 48e7 0f1c                 movem.l   d4-d7/a3-a5,-(a7)
 [00fd87e4] 2a6e 0008                 movea.l   8(a6),a5
 [00fd87e8] 2079 0000 a788            movea.l   _thedesk,a0
@@ -1114,7 +1114,7 @@ xfd87dc: ds.b 0
 	xdef xfd8a16
 xfd8a16: ds.b 0
 #if 0
-[00fd8a16] 4e56 ff44                 link      a6,#$FF44
+[00fd8a16] 4e56 ff44                 link      a6,#-188
 [00fd8a1a] 48e7 031c                 movem.l   d6-d7/a3-a5,-(a7)
 [00fd8a1e] 2a6e 000c                 movea.l   12(a6),a5
 [00fd8a22] 2d79 0000 a788 ff48       move.l    _thedesk,-184(a6)
@@ -1472,7 +1472,7 @@ xfd8df2: ds.b 0
 	xdef xfd8e6c
 xfd8e6c: ds.b 0
 #if 0
-[00fd8e6c] 4e56 fff8                 link      a6,#$FFF8
+[00fd8e6c] 4e56 fff8                 link      a6,#-8
 [00fd8e70] 48e7 011c                 movem.l   d7/a3-a5,-(a7)
 [00fd8e74] 2a6e 0008                 movea.l   8(a6),a5
 [00fd8e78] 2d4d fffc                 move.l    a5,-4(a6)
@@ -1740,7 +1740,7 @@ xfd9056: ds.b 0
 	xdef xfd9118
 xfd9118: ds.b 0
 #if 0
-[00fd9118] 4e56 ffd2                 link      a6,#$FFD2
+[00fd9118] 4e56 ffd2                 link      a6,#-46
 [00fd911c] 48e7 1f04                 movem.l   d3-d7/a5,-(a7)
 [00fd9120] 3e2e 0008                 move.w    8(a6),d7
 [00fd9124] be7c ffff                 cmp.w     #$FFFF,d7
@@ -2053,7 +2053,7 @@ _fill_string: ds.b 0
 	xdef _send_msg
 _send_msg: ds.b 0
 #if 0
-[00fd94c8] 4e56 ffec                 link      a6,#$FFEC
+[00fd94c8] 4e56 ffec                 link      a6,#-20
 [00fd94cc] 3d6e 0008 fff0            move.w    8(a6),-16(a6)
 [00fd94d2] 3d79 0000 6db4 fff2       move.w    _gl_apid,-14(a6)
 [00fd94da] 426e fff4                 clr.w     -12(a6)
@@ -2152,7 +2152,7 @@ xfd9572: ds.b 0
 	xdef xfd95c0
 xfd95c0: ds.b 0
 #if 0
-[00fd95c0] 4e56 fff8                 link      a6,#$FFF8
+[00fd95c0] 4e56 fff8                 link      a6,#-8
 [00fd95c4] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd95c8] 2a6e 0008                 movea.l   8(a6),a5
 [00fd95cc] 2ead 0018                 move.l    24(a5),(a7)
@@ -2187,14 +2187,14 @@ xfd95c0: ds.b 0
 	xdef xfd9624
 xfd9624: ds.b 0
 #if 0
-[00fd9624] 4e56 ffb2                 link      a6,#$FFB2
+[00fd9624] 4e56 ffb2                 link      a6,#-78
 [00fd9628] 48e7 0f1c                 movem.l   d4-d7/a3-a5,-(a7)
 [00fd962c] 2a6e 0008                 movea.l   8(a6),a5
 [00fd9630] 2079 0000 a788            movea.l   _thedesk,a0
 [00fd9636] 2e28 357a                 move.l    13690(a0),d7
 [00fd963a] 286d 0018                 movea.l   24(a5),a4
 [00fd963e] 2679 0000 a788            movea.l   _thedesk,a3
-[00fd9644] d7fc 0000 3016            adda.l    #$00003016,a3
+[00fd9644] d7fc 0000 3016            adda.l    #12310,a3
 [00fd964a] 2e8b                      move.l    a3,(a7)
 [00fd964c] 486c 0008                 pea.l     8(a4)
 [00fd9650] f36c                      dc.w      $F36C ; xstrpcpy
@@ -2242,7 +2242,7 @@ xfd9624: ds.b 0
 [00fd96c8] 6700 0090                 beq       $00FD975A
 [00fd96cc] 486e ffe6                 pea.l     -26(a6)
 [00fd96d0] 2f39 0000 a788            move.l    _thedesk,-(a7)
-[00fd96d6] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd96d6] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd96dc] f3f8                      dc.w      $F3F8
 [00fd96de] 508f                      addq.l    #8,a7
 [00fd96e0] 2e8e                      move.l    a6,(a7)
@@ -2250,7 +2250,7 @@ xfd9624: ds.b 0
 [00fd96e8] f3f4                      dc.w      $F3F4 ; dos_sdta
 [00fd96ea] 3ebc 0016                 move.w    #$0016,(a7)
 [00fd96ee] 2f39 0000 a788            move.l    _thedesk,-(a7)
-[00fd96f4] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd96f4] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd96fa] f3fc                      dc.w      $F3FC ; dos_sfirst
 [00fd96fc] 588f                      addq.l    #4,a7
 [00fd96fe] 4a40                      tst.w     d0
@@ -2267,7 +2267,7 @@ xfd9624: ds.b 0
 [00fd9718] 3c00                      move.w    d0,d6
 [00fd971a] 6030                      bra.s     $00FD974C
 [00fd971c] 2eb9 0000 a788            move.l    _thedesk,(a7)
-[00fd9722] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd9722] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd9728] f410                      dc.w      $F410 ; dos_mkdir
 [00fd972a] 0c79 0005 0000 6e20       cmpi.w    #$0005,_DOS_AX
 [00fd9732] 660e                      bne.s     $00FD9742
@@ -2282,7 +2282,7 @@ xfd9624: ds.b 0
 [00fd9748] 2e8d                      move.l    a5,(a7)
 [00fd974a] f4c8                      dc.w      $F4C8
 [00fd974c] 2eb9 0000 a788            move.l    _thedesk,(a7)
-[00fd9752] 0697 0000 3016            addi.l    #$00003016,(a7)
+[00fd9752] 0697 0000 3016            addi.l    #12310,(a7)
 [00fd9758] f424                      dc.w      $F424 ; rep_all
 [00fd975a] 4a46                      tst.w     d6
 [00fd975c] 6600 ff1e                 bne       $00FD967C
@@ -2295,7 +2295,7 @@ xfd9624: ds.b 0
 	xdef xfd9768
 xfd9768: ds.b 0
 #if 0
-[00fd9768] 4e56 fff8                 link      a6,#$FFF8
+[00fd9768] 4e56 fff8                 link      a6,#-8
 [00fd976c] 48e7 070c                 movem.l   d5-d7/a4-a5,-(a7)
 [00fd9770] 3e2e 0008                 move.w    8(a6),d7
 [00fd9774] 2a6e 000a                 movea.l   10(a6),a5
@@ -2327,7 +2327,7 @@ xfd9768: ds.b 0
 [00fd97d4] 508f                      addq.l    #8,a7
 [00fd97d6] 4a40                      tst.w     d0
 [00fd97d8] 673a                      beq.s     $00FD9814
-[00fd97da] 3c39 0000 a786            move.w    $0000A786,d6
+[00fd97da] 3c39 0000 a786            move.w    x00a786,d6
 [00fd97e0] 5546                      subq.w    #2,d6
 [00fd97e2] 2879 0000 a788            movea.l   _thedesk,a4
 [00fd97e8] d9fc 0000 32b6            adda.l    #$000032B6,a4
@@ -2367,7 +2367,7 @@ xfd9768: ds.b 0
 	xdef xfd9848
 xfd9848: ds.b 0
 #if 0
-[00fd9848] 4e56 fffa                 link      a6,#$FFFA
+[00fd9848] 4e56 fffa                 link      a6,#-6
 [00fd984c] 48e7 0304                 movem.l   d6-d7/a5,-(a7)
 [00fd9850] 2a6e 000c                 movea.l   12(a6),a5
 [00fd9854] 7eff                      moveq.l   #-1,d7
@@ -2437,7 +2437,7 @@ xfd9848: ds.b 0
 	xdef xfd9922
 xfd9922: ds.b 0
 #if 0
-[00fd9922] 4e56 fffe                 link      a6,#$FFFE
+[00fd9922] 4e56 fffe                 link      a6,#-2
 [00fd9926] 48e7 011c                 movem.l   d7/a3-a5,-(a7)
 [00fd992a] 2a6e 0010                 movea.l   16(a6),a5
 [00fd992e] 286e 0014                 movea.l   20(a6),a4
@@ -2499,7 +2499,7 @@ xfd9922: ds.b 0
 	xdef xfd99e0
 xfd99e0: ds.b 0
 #if 0
-[00fd99e0] 4e56 fff4                 link      a6,#$FFF4
+[00fd99e0] 4e56 fff4                 link      a6,#-12
 [00fd99e4] 4297                      clr.l     (a7)
 [00fd99e6] 42a7                      clr.l     -(a7)
 [00fd99e8] 3f2e 000a                 move.w    10(a6),-(a7)
@@ -2611,7 +2611,7 @@ xfd9a6c: ds.b 0
 [00fd9b30] 2e8c                      move.l    a4,(a7)
 [00fd9b32] f4f0                      dc.w      $F4F0
 [00fd9b34] 4257                      clr.w     (a7)
-[00fd9b36] f444                      dc.w      $F444
+[00fd9b36] f444                      dc.w      $F444 ; hd_win
 [00fd9b38] 3007                      move.w    d7,d0
 [00fd9b3a] fc21                      dc.w      $FC21 ; movem.l (a7)+,d7/a4-a5
 #endif
@@ -2619,7 +2619,7 @@ xfd9a6c: ds.b 0
 	xdef xfd9b3c
 xfd9b3c: ds.b 0
 #if 0
-[00fd9b3c] 4e56 fff6                 link      a6,#$FFF6
+[00fd9b3c] 4e56 fff6                 link      a6,#-10
 [00fd9b40] 48e7 071c                 movem.l   d5-d7/a3-a5,-(a7)
 [00fd9b44] 3e2e 000a                 move.w    10(a6),d7
 [00fd9b48] 3eae 0008                 move.w    8(a6),(a7)
@@ -2680,7 +2680,7 @@ xfd9b3c: ds.b 0
 	xdef xfd9be0
 xfd9be0: ds.b 0
 #if 0
-[00fd9be0] 4e56 ffcc                 link      a6,#$FFCC
+[00fd9be0] 4e56 ffcc                 link      a6,#-52
 [00fd9be4] 48e7 011c                 movem.l   d7/a3-a5,-(a7)
 [00fd9be8] 2679 0000 a788            movea.l   _thedesk,a3
 [00fd9bee] 426e ffd0                 clr.w     -48(a6)
@@ -2802,7 +2802,7 @@ xfd9be0: ds.b 0
 	xdef xfd9d76
 xfd9d76: ds.b 0
 #if 0
-[00fd9d76] 4e56 fff8                 link      a6,#$FFF8
+[00fd9d76] 4e56 fff8                 link      a6,#-8
 [00fd9d7a] 48e7 1f1c                 movem.l   d3-d7/a3-a5,-(a7)
 [00fd9d7e] 3e2e 0008                 move.w    8(a6),d7
 [00fd9d82] 3c2e 000a                 move.w    10(a6),d6
@@ -2857,7 +2857,7 @@ xfd9d76: ds.b 0
 [00fd9e12] be46                      cmp.w     d6,d7
 [00fd9e14] 6704                      beq.s     $00FD9E1A
 [00fd9e16] 3e87                      move.w    d7,(a7)
-[00fd9e18] f444                      dc.w      $F444
+[00fd9e18] f444                      dc.w      $F444 ; hd_win
 [00fd9e1a] 601a                      bra.s     $00FD9E36
 [00fd9e1c] b845                      cmp.w     d5,d4
 [00fd9e1e] 660e                      bne.s     $00FD9E2E
@@ -3124,10 +3124,10 @@ xfda066: ds.b 0
 [00fda0de] f801                      dc.w      $F801 ; movem.l (a7)+,a5
 #endif
 
-	xdef xfda0e0
-xfda0e0: ds.b 0
+	xdef _hd_win
+_hd_win: ds.b 0
 #if 0
-[00fda0e0] 4e56 fff8                 link      a6,#$FFF8
+[00fda0e0] 4e56 fff8                 link      a6,#-8
 [00fda0e4] 48e7 0704                 movem.l   d5-d7/a5,-(a7)
 [00fda0e8] 3e2e 0008                 move.w    8(a6),d7
 [00fda0ec] 486e fff8                 pea.l     -8(a6)
@@ -3148,7 +3148,7 @@ xfda0e0: ds.b 0
 [00fda114] 4267                      clr.w     -(a7)
 [00fda116] 3f3c 0001                 move.w    #1,-(a7)
 [00fda11a] 486e fff8                 pea.l     -8(a6)
-[00fda11e] 2f3c 0000 700e            move.l    #$0000700E,-(a7)
+[00fda11e] 2f3c 0000 700e            move.l    #_gl_rfull,-(a7)
 [00fda124] 4267                      clr.w     -(a7)
 [00fda126] 3f06                      move.w    d6,-(a7)
 [00fda128] 2079 0000 a788            movea.l   _thedesk,a0
@@ -3162,7 +3162,7 @@ xfda0e0: ds.b 0
 	xdef xfda13c
 xfda13c: ds.b 0
 #if 0
-[00fda13c] 4e56 fff8                 link      a6,#$FFF8
+[00fda13c] 4e56 fff8                 link      a6,#-8
 [00fda140] 48e7 070c                 movem.l   d5-d7/a4-a5,-(a7)
 [00fda144] 3e2e 0008                 move.w    8(a6),d7
 [00fda148] 3c2e 000a                 move.w    10(a6),d6
@@ -3191,10 +3191,10 @@ xfda13c: ds.b 0
 [00fda190] fc31                      dc.w      $FC31 ; movem.l (a7)+,d6-d7/a4-a5
 #endif
 
-	xdef xfda192
-xfda192: ds.b 0
+	xdef _do_redraw
+_do_redraw: ds.b 0
 #if 0
-[00fda192] 4e56 fff8                 link      a6,#$FFF8
+[00fda192] 4e56 fff8                 link      a6,#-8
 [00fda196] 48e7 0f0c                 movem.l   d4-d7/a4-a5,-(a7)
 [00fda19a] 3e2e 0008                 move.w    8(a6),d7
 [00fda19e] 49ee fff8                 lea.l     -8(a6),a4
@@ -3300,7 +3300,7 @@ xfda28a: ds.b 0
 	xdef xfda2a0
 xfda2a0: ds.b 0
 #if 0
-[00fda2a0] 4e56 fff8                 link      a6,#$FFF8
+[00fda2a0] 4e56 fff8                 link      a6,#-8
 [00fda2a4] 48e7 010c                 movem.l   d7/a4-a5,-(a7)
 [00fda2a8] 2a6e 0008                 movea.l   8(a6),a5
 [00fda2ac] 286e 000c                 movea.l   12(a6),a4
@@ -3334,7 +3334,7 @@ xfda2a0: ds.b 0
 	xdef xfda2fa
 xfda2fa: ds.b 0
 #if 0
-[00fda2fa] 4e56 fff0                 link      a6,#$FFF0
+[00fda2fa] 4e56 fff0                 link      a6,#-16
 [00fda2fe] 48e7 0f1c                 movem.l   d4-d7/a3-a5,-(a7)
 [00fda302] 3e2e 0008                 move.w    8(a6),d7
 [00fda306] 3c2e 000a                 move.w    10(a6),d6
@@ -3405,7 +3405,7 @@ xfda2fa: ds.b 0
 	xdef xfda3de
 xfda3de: ds.b 0
 #if 0
-[00fda3de] 4e56 fff8                 link      a6,#$FFF8
+[00fda3de] 4e56 fff8                 link      a6,#-8
 [00fda3e2] 48e7 0704                 movem.l   d5-d7/a5,-(a7)
 [00fda3e6] 3e2e 0008                 move.w    8(a6),d7
 [00fda3ea] 3c2e 000a                 move.w    10(a6),d6
@@ -3431,7 +3431,7 @@ xfda3de: ds.b 0
 	xdef xfda422
 xfda422: ds.b 0
 #if 0
-[00fda422] 4e56 ffe8                 link      a6,#$FFE8
+[00fda422] 4e56 ffe8                 link      a6,#-24
 [00fda426] 48e7 031c                 movem.l   d6-d7/a3-a5,-(a7)
 [00fda42a] 3e2e 0008                 move.w    8(a6),d7
 [00fda42e] 4bee fff8                 lea.l     -8(a6),a5
@@ -3588,7 +3588,7 @@ xfda4b6: ds.b 0
 	xdef xfda5d2
 xfda5d2: ds.b 0
 #if 0
-[00fda5d2] 4e56 ffc8                 link      a6,#$FFC8
+[00fda5d2] 4e56 ffc8                 link      a6,#-56
 [00fda5d6] 48e7 071c                 movem.l   d5-d7/a3-a5,-(a7)
 [00fda5da] 2a6e 000c                 movea.l   12(a6),a5
 [00fda5de] 2879 0000 a788            movea.l   _thedesk,a4
@@ -3864,7 +3864,7 @@ xfda85e: ds.b 0
 	xdef xfda900
 xfda900: ds.b 0
 #if 0
-[00fda900] 4e56 fff6                 link      a6,#$FFF6
+[00fda900] 4e56 fff6                 link      a6,#-10
 [00fda904] 48e7 010c                 movem.l   d7/a4-a5,-(a7)
 [00fda908] 2a6e 0008                 movea.l   8(a6),a5
 [00fda90c] 49ee fff6                 lea.l     -10(a6),a4
@@ -3908,7 +3908,7 @@ xfda900: ds.b 0
 	xdef xfda984
 xfda984: ds.b 0
 #if 0
-[00fda984] 4e56 ff6e                 link      a6,#$FF6E
+[00fda984] 4e56 ff6e                 link      a6,#-146
 [00fda988] 48e7 031c                 movem.l   d6-d7/a3-a5,-(a7)
 [00fda98c] 3e2e 0008                 move.w    8(a6),d7
 [00fda990] 2679 0000 a788            movea.l   _thedesk,a3
@@ -4005,7 +4005,7 @@ xfda984: ds.b 0
 	xdef xfdaaa8
 xfdaaa8: ds.b 0
 #if 0
-[00fdaaa8] 4e56 fff6                 link      a6,#$FFF6
+[00fdaaa8] 4e56 fff6                 link      a6,#-10
 [00fdaaac] 48e7 071c                 movem.l   d5-d7/a3-a5,-(a7)
 [00fdaab0] 3e2e 0008                 move.w    8(a6),d7
 [00fdaab4] 2679 0000 a788            movea.l   _thedesk,a3
@@ -4079,7 +4079,7 @@ xfdaaa8: ds.b 0
 	xdef xfdab74
 xfdab74: ds.b 0
 #if 0
-[00fdab74] 4e56 fff0                 link      a6,#$FFF0
+[00fdab74] 4e56 fff0                 link      a6,#-16
 [00fdab78] 48e7 031c                 movem.l   d6-d7/a3-a5,-(a7)
 [00fdab7c] 3e2e 0008                 move.w    8(a6),d7
 [00fdab80] 2679 0000 a788            movea.l   _thedesk,a3
@@ -4128,7 +4128,7 @@ xfdab74: ds.b 0
 	xdef xfdac02
 xfdac02: ds.b 0
 #if 0
-[00fdac02] 4e56 fff8                 link      a6,#$FFF8
+[00fdac02] 4e56 fff8                 link      a6,#-8
 [00fdac06] 48e7 030c                 movem.l   d6-d7/a4-a5,-(a7)
 [00fdac0a] 2a6e 0008                 movea.l   8(a6),a5
 [00fdac0e] 2879 0000 a788            movea.l   _thedesk,a4
@@ -4177,7 +4177,7 @@ xfdac02: ds.b 0
 	xdef xfdac8c
 xfdac8c: ds.b 0
 #if 0
-[00fdac8c] 4e56 fff2                 link      a6,#$FFF2
+[00fdac8c] 4e56 fff2                 link      a6,#-14
 [00fdac90] 48e7 011c                 movem.l   d7/a3-a5,-(a7)
 [00fdac94] 2a6e 0008                 movea.l   8(a6),a5
 [00fdac98] 47ee fff6                 lea.l     -10(a6),a3
@@ -4228,7 +4228,7 @@ xfdac8c: ds.b 0
 	xdef xfdad22
 xfdad22: ds.b 0
 #if 0
-[00fdad22] 4e56 ff76                 link      a6,#$FF76
+[00fdad22] 4e56 ff76                 link      a6,#-138
 [00fdad26] 48e7 071c                 movem.l   d5-d7/a3-a5,-(a7)
 [00fdad2a] 2a6e 0008                 movea.l   8(a6),a5
 [00fdad2e] 3e2e 000c                 move.w    12(a6),d7
@@ -4285,7 +4285,7 @@ xfdad22: ds.b 0
 	xdef xfdadb6
 xfdadb6: ds.b 0
 #if 0
-[00fdadb6] 4e56 fff4                 link      a6,#$FFF4
+[00fdadb6] 4e56 fff4                 link      a6,#-12
 [00fdadba] 48e7 0700                 movem.l   d5-d7,-(a7)
 [00fdadbe] 302e 0008                 move.w    8(a6),d0
 [00fdadc2] 4880                      ext.w     d0

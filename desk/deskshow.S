@@ -1,7 +1,7 @@
 	xdef _showfile
 _showfile: ds.b 0
 #if 0
-[00fe66b2] 4e56 ffee                 link      a6,#$FFEE
+[00fe66b2] 4e56 ffee                 link      a6,#-18
 [00fe66b6] 48e7 1f04                 movem.l   d3-d7/a5,-(a7)
 [00fe66ba] 4247                      clr.w     d7
 [00fe66bc] 3d47 fffe                 move.w    d7,-2(a6)
@@ -242,7 +242,7 @@ _showfile: ds.b 0
 	xdef _doui
 _doui: ds.b 0
 #if 0
-[00fe6988] 4e56 fff6                 link      a6,#$FFF6
+[00fe6988] 4e56 fff6                 link      a6,#-10
 [00fe698c] 426e fffa                 clr.w     -6(a6)
 [00fe6990] 6000 007e                 bra.w     $00FE6A10
 [00fe6994] 3ebc 0002                 move.w    #$0002,(a7)

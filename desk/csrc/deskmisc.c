@@ -374,17 +374,12 @@ PP(int16_t which;)
  * Form_do and draw
  */
 /* 306de: 00e2fb90 */
-int16_t fmdodraw(P(int16_t) item, P(int16_t) which)
+VOID fmdodraw(P(OBJECT *) tree, P(int16_t) item)
+PP(OBJECT *tree;)
 PP(int16_t item;)
-PP(int16_t which;)
 {
-	OBJECT *obj;
-	int16_t ret;
-
-	obj = fm_draw(item);
-	ret = xform_do(obj, which);
-	do_finish(item);
-	return ret;
+	ret = xform_do(tree, 0);
+	tree[item].ob_state = NORMAL;
 }
 
 

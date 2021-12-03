@@ -329,7 +329,12 @@ _endvdibss: ds.b 0
 	V(ustak,l,33)
 	INT(_diskin)
 	V(_aautopath,b,CMDLEN)
-	ds.b 1070
+	V(x00622c,b,CMDLEN) /* g_dir maybe */
+	V(x0062ac,b,CMDLEN) /* g_path maybe */
+
+	V(x00632c,b,16)
+	V(x00633c,b,CMDLEN)
+	ds.b 670
 	
 	LONG(_crit_err)
 	LONG(savestk)
@@ -542,7 +547,11 @@ _endvdibss: ds.b 0
 	INT(_gl_wptschar)
 	PTR(_drawstk)
 
-	ds.b 40
+	ds.b 2
+	
+	INT(_gl_kstate)
+	
+	ds.b 36
 	
 	INT(_fpcnt)
 	V(_gl_ws,w,57)   /* workout */
@@ -563,7 +572,7 @@ _endvdibss: ds.b 0
 	V(_D,b,13092) /* sizeof(THEGLO) */
 
 	PTR(_eul)
-	INT(_mtrans)
+	INT(x00a786)
 	PTR(_thedesk)
 	INT(_fpt)
 	PTR(_nrl)
@@ -599,14 +608,22 @@ _endvdibss: ds.b 0
 	even
 	BYTE(_infork)
 	even
+	INT(_kstate)
 
-	ds.b 6
+	ds.b 4
 	
 	V(_contrl,w,12)
 
 /* XXX */
 
-	ds.b 14
+	ds.b 8
+
+	INT(_mtrans)
+
+	ds.b 2
+
+	INT(_button)
+
 
 #if 0
 	INT(_d_dir)
@@ -738,7 +755,6 @@ _endvdibss: ds.b 0
 	PTR(_fixsrc)
 	PTR(_gemptr)
 	INT(_apsize)
-	INT(_kstate)
 
 	INT(_x_status)
 	LONG(_tolsize)
@@ -779,7 +795,6 @@ _endvdibss: ds.b 0
 	V(_f_xywh,w,18)
 	INT(_x_type)
 	INT(_tmpmon)
-	INT(_button)
 #endif
 	
 /* end AES+DESKTOP */

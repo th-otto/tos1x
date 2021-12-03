@@ -79,6 +79,7 @@
 /************************************************************************/
 
 #include "desktop.h"
+#include "toserror.h"
 
 /* trap() is GEMDOS trap #1; trp13() is (obviously) trap 13. */
 
@@ -178,7 +179,7 @@ PP(int mode;)
 		if (mode)						/* printer mode no file */
 		{
 #endif
-			form_error(2);
+			form_error(~E_FILNF - 30);
 			goto allout;
 #ifdef SILLY_ERROR_HANDLING
 		} else							/* aplha mode */

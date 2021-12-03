@@ -1,7 +1,7 @@
 	xdef _deskmain
 _deskmain: ds.b 0
 #if 0
-[00fdbc88] 4e56 ffb2                 link      a6,#$FFB2
+[00fdbc88] 4e56 ffb2                 link      a6,#-78
 [00fdbc8c] 48e7 3f04                 movem.l   d2-d7/a5,-(a7)
 [00fdbc90] 2ebc 0000 776c            move.l    #$0000776C,(a7)
 [00fdbc96] f3c0                      dc.w      $F3C0 ; dos_alloc
@@ -620,7 +620,7 @@ xfdc3f4: ds.b 0
 	xdef xfdc430
 xfdc430: ds.b 0
 #if 0
-[00fdc430] 4e56 fffe                 link      a6,#$FFFE
+[00fdc430] 4e56 fffe                 link      a6,#-2
 [00fdc434] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fdc438] 2a6e 0008                 movea.l   8(a6),a5
 [00fdc43c] 3ebc ffff                 move.w    #$FFFF,(a7)
@@ -824,7 +824,7 @@ xfdc61c: ds.b 0
 	xdef xfdc652
 xfdc652: ds.b 0
 #if 0
-[00fdc652] 4e56 ffea                 link      a6,#$FFEA
+[00fdc652] 4e56 ffea                 link      a6,#-22
 [00fdc656] 48e7 3f1c                 movem.l   d2-d7/a3-a5,-(a7)
 [00fdc65a] 2a6e 0008                 movea.l   8(a6),a5
 [00fdc65e] 2679 0000 a788            movea.l   _thedesk,a3
@@ -1096,7 +1096,7 @@ xfdc652: ds.b 0
 	xdef xfdc988
 xfdc988: ds.b 0
 #if 0
-[00fdc988] 4e56 ffe2                 link      a6,#$FFE2
+[00fdc988] 4e56 ffe2                 link      a6,#-30
 [00fdc98c] 48e7 1f0c                 movem.l   d3-d7/a4-a5,-(a7)
 [00fdc990] 2a6e 0008                 movea.l   8(a6),a5
 [00fdc994] 3e2e 000e                 move.w    14(a6),d7
@@ -1151,7 +1151,7 @@ xfdc988: ds.b 0
 [00fdca20] f250                      dc.w      $F250 ; rc_copy
 [00fdca22] 508f                      addq.l    #8,a7
 [00fdca24] 486e ffe2                 pea.l     -30(a6)
-[00fdca28] 2f3c 0000 700e            move.l    #$0000700E,-(a7)
+[00fdca28] 2f3c 0000 700e            move.l    #_gl_rfull,-(a7)
 [00fdca2e] f2fc                      dc.w      $F2FC ; rc_intersect
 [00fdca30] 508f                      addq.l    #8,a7
 [00fdca32] 486e ffe2                 pea.l     -30(a6)
@@ -1251,10 +1251,10 @@ xfdc988: ds.b 0
 [00fdcb5a] fc3d                      dc.w      $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 #endif
 
-	xdef xfdcb5c
-xfdcb5c: ds.b 0
+	xdef _srl_bar
+_srl_bar: ds.b 0
 #if 0
-[00fdcb5c] 4e56 fff0                 link      a6,#$FFF0
+[00fdcb5c] 4e56 fff0                 link      a6,#-16
 [00fdcb60] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fdcb64] 3eae 0008                 move.w    8(a6),(a7)
 [00fdcb68] f2ec                      dc.w      $F2EC
@@ -1349,7 +1349,7 @@ xfdcbe0: ds.b 0
 	xdef xfdcc68
 xfdcc68: ds.b 0
 #if 0
-[00fdcc68] 4e56 fff8                 link      a6,#$FFF8
+[00fdcc68] 4e56 fff8                 link      a6,#-8
 [00fdcc6c] 48e7 070c                 movem.l   d5-d7/a4-a5,-(a7)
 [00fdcc70] 2a79 0000 a788            movea.l   _thedesk,a5
 [00fdcc76] 4247                      clr.w     d7
@@ -1445,7 +1445,7 @@ xfdcd06: ds.b 0
 	xdef xfdcd6a
 xfdcd6a: ds.b 0
 #if 0
-[00fdcd6a] 4e56 fff4                 link      a6,#$FFF4
+[00fdcd6a] 4e56 fff4                 link      a6,#-12
 [00fdcd6e] 302e 0008                 move.w    8(a6),d0
 [00fdcd72] c1fc 0018                 muls.w    #24,d0
 [00fdcd76] d0b9 0000 a788            add.l     _thedesk,d0
@@ -1460,7 +1460,7 @@ xfdcd6a: ds.b 0
 	xdef xfdcd94
 xfdcd94: ds.b 0
 #if 0
-[00fdcd94] 4e56 fffa                 link      a6,#$FFFA
+[00fdcd94] 4e56 fffa                 link      a6,#-6
 [00fdcd98] 48e7 010c                 movem.l   d7/a4-a5,-(a7)
 [00fdcd9c] 2a6e 0008                 movea.l   8(a6),a5
 [00fdcda0] 2879 0000 a788            movea.l   _thedesk,a4

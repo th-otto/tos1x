@@ -56055,6 +56055,8 @@ jmptable in hd_msg
 [00feb28e] 00fd b872                 chk2.b    ???,a3 ; 68020+ only
 [00feb292] 00fd b872                 chk2.b    ???,a3 ; 68020+ only
 [00feb296] 00fd b872                 chk2.b    ???,a3 ; 68020+ only
+
+jmptable in hd_msg
 [00feb29a] 00fd b89a                 chk2.b    ???,a3 ; 68020+ only
 [00feb29e] 00fd ba2c                 chk2.b    ???,a3 ; 68020+ only
 [00feb2a2] 00fd ba2c                 chk2.b    ???,a3 ; 68020+ only
@@ -56074,6 +56076,7 @@ jmptable in hd_msg
 [00feb2da] 00fd b958                 chk2.b    ???,a3 ; 68020+ only
 [00feb2de] 00fd b968                 chk2.b    ???,a3 ; 68020+ only
 [00feb2e2] 00fd b968                 chk2.b    ???,a3 ; 68020+ only
+
 [00feb2e6] 00fd cbf8                 chk2.b    ???,a4 ; 68020+ only
 [00feb2ea] 00fd cc02                 chk2.b    ???,a4 ; 68020+ only
 [00feb2ee] 00fd cc0c                 chk2.b    ???,a4 ; 68020+ only
@@ -62998,9 +63001,12 @@ gem.rsc:
 707C: gl_mouse
 7080: gl_nrows
 708A: autoexec
+7094: pr_xrat
 70B8: gl_wsptschar
 70BA: gl_wptschar
 70BC: drawstk
+70C0: pr_yrat
+70C2: gl_kstate
 70E8: fpcnt
 70EA: gl_ws
 715E: intin
@@ -63012,6 +63018,7 @@ gem.rsc:
 745A: drl
 745E: D
 A782: eul
+A786: 
 A788: thedesk
 A78C: fpt
 A78E: nrl
@@ -63034,4 +63041,5 @@ A81E: indisp
 A820: infork
 A822: kstate
 A828: contrl
+A848: mtrans
 A84C: button

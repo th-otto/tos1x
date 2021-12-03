@@ -699,31 +699,35 @@ PP(int16_t msgbuff;)
  * Handle Menu
  */
 /* 306de: 00e2eb92 */
-VOID hd_menu(P(int16_t *)msgbuff)
-PP(int16_t *msgbuff;)
+VOID hd_menu(P(int16_t) title, P(int16_t) item)
+PP(register int16_t title;)
+PP(register int16_t item;)
 {
-	switch (msgbuff[3])
+	switch (title)
 	{
 	case DESKMENU:
-		/* roton(); */
-		fmdodraw(ADDINFO, 0);
-		/* rotoff(); */
+		if (item == ABOUTITEM)
+		{
+			rb_start();
+			fmdodraw(thedesk->rtrees[ADDINFO], DEOK);
+			rb_stop();
+		}
 		break;
 
 	case FILEMENU:
-		do_file(msgbuff[4]);
+		do_file(item);
 		break;
 
 	case VIEWMENU:
-		do_view(msgbuff[4]);
+		do_view(item);
 		break;
 
 	case OPTNMENU:
-		do_opt(msgbuff[4]);
+		do_opt(item);
 		break;
 	}
 
-	menu_tnormal(thedesk->rtree[ADMENU], msgbuff[3], 1);
+	menu_tnormal(thedesk->rtree[ADMENU], title, 1);
 }
 
 
@@ -751,7 +755,7 @@ VOID hd_msg(NOTHING)
 	UNUSED(h);
 	UNUSED(y);
 	
-	switch (d->p_msgbuf[0])
+	switch (d->msgbuf[0])
 	{
 	case WM_REDRAW:
 	case WM_TOPPED:
@@ -762,11 +766,12 @@ VOID hd_msg(NOTHING)
 	case WM_MOVED:
 	case WM_FULLED:
 	case WM_SIZED:
+		hd_win(d->o13720);
 		break;
 	}
 	if (d->p_msgbuf[0] == MN_SELECTED)
 	{
-		hd_menu(d->p_msgbuf);
+		hd_menu(d->msgbuf[3], d->msgbuf[4]);
 	} else
 	{
 		pc = (GRECT *)&d->p_msgbuf[4];				/* pc == msgbuff[4,5,6,7]   */
@@ -780,8 +785,8 @@ VOID hd_msg(NOTHING)
 		switch (d->p_msgbuf[0])
 		{
 		case WM_REDRAW:
-		case WM_USER:
-			do_redraw(handle, pc, 0);
+			if (d->msgbuf[3] != 0)
+				do_redraw(d->msgbuf[3], d->msgbuf[4], d->msgbuf[5], d->msgbuf[6], d->msgbuf[7];
 			return;
 
 		case WM_TOPPED:
@@ -798,7 +803,7 @@ VOID hd_msg(NOTHING)
 		switch (d->p_msgbuf[0])
 		{
 		case WM_CLOSED:				/* close one path   */
-			close_path(win);
+			do_file(CLSFITEM);
 			break;
 
 		case WM_ARROWED:
@@ -806,11 +811,11 @@ VOID hd_msg(NOTHING)
 			break;
 
 		case WM_HSLID:
-			srl_hzbar(win, d->p_msgbuf[4]);
+			srl_bar(d->msgbuf[3], d->msgbuf[4], FALSE);
 			break;
 
 		case WM_VSLID:
-			srl_verbar(win, d->p_msgbuf[4]);
+			srl_bar(d->msgbuf[3], d->msgbuf[4], TRUE);
 			break;
 
 		case WM_MOVED:					/* set the current x,y,w,h  */
