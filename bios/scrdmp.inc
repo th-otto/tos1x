@@ -5,6 +5,7 @@
 /* 306de: 00e01450 */
 /* 206de: 00e0130c */
 /* 104de: 00fc0cfa */
+/* 106de: 00e00e96 */
         xdef _scrdmp
 _scrdmp:
         movea.l   _scr_dmp,a0

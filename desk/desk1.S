@@ -1524,7 +1524,7 @@ _rep_all: ds.b 0
 		dc.w      0xF3B0 ; r_slash
 		movea.l   d0,a5
 		move.l    a5,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF36C ; xstrpcpy
 		addq.l    #4,a7
 		dc.w      0xF801 ; movem.l (a7)+,a5
@@ -1997,7 +1997,7 @@ xfd6e_14:
 		beq.s     xfd6e_15
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF404 ; xstrpcat
 		addq.l    #4,a7
 		move.l    -24(a6),(a7)
@@ -2035,7 +2035,7 @@ xfd6e_15:
 xfd6e_16:
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF404 ; xstrpcat
 		addq.l    #4,a7
 		bra       xfd6e_29
@@ -2046,7 +2046,7 @@ xfd6e_17:
 		addq.l    #1,12974(a1)
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF404 ; xstrpcat
 		addq.l    #4,a7
 		clr.w     (a7)
@@ -2071,7 +2071,7 @@ xfd6e_17:
 xfd6e_18:
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF404 ; xstrpcat
 		addq.l    #4,a7
 		bra.s     xfd6e_20
@@ -2558,7 +2558,7 @@ xfd75_2:
 		dc.w      0xF36C ; xstrpcpy
 		addq.l    #4,a7
 		move.l    a5,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF404 ; xstrpcat
 		addq.l    #4,a7
 		dc.w      0xF801 ; movem.l (a7)+,a5
@@ -2895,12 +2895,21 @@ xfd795_2:
 		cmpi.b    #0x5C,(a5)
 		bne.s     xfd795_1
 		move.l    a5,(a7)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF36C ; xstrpcpy
 		addq.l    #4,a7
 		dc.w      0xF801 ; movem.l (a7)+,a5
 
 	.data
+
+	xdef _wilds
+_wilds:
+	.ascii "\*.*"
+	dc.b 0
+	xdef _getall
+_getall:
+	.ascii "\*.*"
+	dc.b 0
 
 xfeb13a: dc.b 0
 xfeb13b: dc.b 0

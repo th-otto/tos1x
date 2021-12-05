@@ -1724,6 +1724,7 @@ any_vec1:
  *
  */
 /* 104de: 00fc0b56 */
+/* 106de: 00e00cee */
 drawbombs:
         move.b    ABSW(v_shf_mod),d7
         and.w     #3,d7
@@ -1773,7 +1774,7 @@ dwidthtab:        /* number of bytes per screen line, indexed by resolution */
 _cpy512:
         movea.l   4(a7),a0
         movea.l   8(a7),a1
-        move.w    #$003F,d0
+        move.w    #(512/8)-1,d0
 cpy512l:
         move.b    (a0)+,(a1)+
         move.b    (a0)+,(a1)+
@@ -1819,6 +1820,7 @@ autoname:                      dc.b '*.PRG',0
 /* 306de: 00e0133c */
 /* 206de: 00e011f6 */
 /* 104de: 00fc0bf4 */
+/* 106de: 00e00d94 */
 autoexec:
         lea.l     autopath(pc),a0
         lea.l     autoname(pc),a1
@@ -1934,6 +1936,7 @@ autosca4:
 /* 306de: 00e014f6 */
 /* 206de: 00e013b2 */
 /* 104de: 00fc0da2 */
+/* 106de: 00e00f3e */
 bombimage:
         dc.b $06,$00,$29,$00,$00,$80,$48,$40,$11,$f0,$01,$f0,$07,$fc,$0f,$fe
         dc.b $0d,$fe,$1f,$ff,$1f,$ef,$0f,$ee,$0f,$de,$07,$fc,$03,$f8,$00,$e0
@@ -1943,6 +1946,7 @@ bombimage:
  */
 /* 206de: 00e013d2 */
 /* 104de: 00fc0dc2 */
+/* 106de: 00e00f5e */
 waitvbl:    lea       MFP_TBDR,a0           /* a0 -> timer B data register */
             lea       MFP_TBCR,a1           /* a1 -> timer B control register */
             move.b    #$10,(a1)             /* reset timer B */
@@ -1976,6 +1980,7 @@ waitvbl4:   cmp.b     (a0),d4
 /* 306de: 00e01530 */
 /* 206de: 00e01408 */
 /* 104de: 00fc0dfe */
+/* 106de: 00e00f9a */
 run_reset_resident:
         movea.l   _phystop,a0                   /* start at the top of the address space */
 run_res1:
@@ -2041,6 +2046,7 @@ gsettim1:
 /* 306de: 00e015a2 */
 /* 206de: 00e0147a */
 /* 104de: 00fc0e62 */
+/* 106de: 00e00ffe */
 instoshdr:
         lea.l     _os_entry(pc),a0
         lea.l     oshdr+6,a1
@@ -2049,7 +2055,7 @@ instos1:
         move.b    0(a0,d0.w),0(a1,d0.w)
         dbf       d0,instos1
         move.w    jmpop(pc),-6(a1)              /* copy JMP instruction just before */
-        move.l    4(a1),-4(a1)                  /* copy ROM reseth into this JMP; BUG: the jmpop before is a short abs jump */
+        move.l    4(a1),-4(a1)                  /* copy ROM reseth into this JMP */
         move.w    braop(pc),(a1)                /* patch BRA at the beginning of sysbase copy to hit the JMP */
         move.w    30(a1),28(a1)                 /* copy os_date into os_conf WTF? */
         move.l    a1,_sysbase                   /* set new sysbase pointer */
@@ -2069,6 +2075,7 @@ braop:
 /* 306de: 00e015dc */
 /* 206de: 00e014b4 */
 /* 104de: 00fc0e9e */
+/* 106de: 00e0103a */
 _blitmode:
         bsr.s     blittest                      /* test if blitter is installed */
         move.w    d0,d4                         /* d4 = blitter status */

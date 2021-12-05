@@ -35,6 +35,7 @@ BCB *bufl[2];
 /* 306de: 00e18a6c */
 /* 306us: 00e18a12 */
 /* 104de: 00fc95c8 */
+/* 106de: 00e097f4 */
 VOID osinit(NOTHING)
 {
 	/* set up sector buffers */

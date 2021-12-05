@@ -333,8 +333,9 @@ _endvdibss: ds.b 0
 	V(x0062ac,b,CMDLEN) /* g_path maybe */
 
 	V(x00632c,b,16)
-	V(x00633c,b,CMDLEN)
-	ds.b 670
+	V(x00633c,b,16)
+	V(x00634c,b,128)
+	ds.b 654
 	
 	LONG(_crit_err)
 	LONG(savestk)

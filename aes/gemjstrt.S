@@ -78,6 +78,7 @@ fsize		equ	100		* size of linef handler in bytes+ a little fat
  *	Do setblock call to free up memory
  */
 /* 104de: 00fd3b8e */
+/* 106de: 00e13dee */
 	xdef	gemstart
 gemstart:
 	move.l	a7,a5		/* save stack */

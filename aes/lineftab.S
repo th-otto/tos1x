@@ -303,7 +303,7 @@
 [00fe7d78] dc.l $00fd7d48            ; F4B8 ; wind_set DESKTOP
 [00fe7d7c] dc.l $00fdce1c            ; F4BC
 [00fe7d80] dc.l $00fd94c8            ; F4C0 ; send_msg DESKTOP
-[00fe7d84] dc.l $00fd80aa            ; F4C4
+[00fe7d84] dc.l $00fd80aa            ; F4C4 ; xform_do DESKTOP
 [00fe7d88] dc.l $00fd9572            ; F4C8
 [00fe7d8c] dc.l $00fd6cce            ; F4CC
 [00fe7d90] dc.l $00fd7774            ; F4D0
@@ -325,7 +325,7 @@
 [00fe7dd0] dc.l $00fd7e02            ; F510 ; fmt_date DESKTOP
 [00fe7dd4] dc.l $00fd7db6            ; F514 ; fmt_time DESKTOP
 [00fe7dd8] dc.l $00fd4660            ; F518 ; gsx_gclip AES
-[00fe7ddc] dc.l $00fd7e58            ; F51C
+[00fe7ddc] dc.l $00fd7e58            ; F51C ; bldstring DESKTOP
 [00fe7de0] dc.l $00fd4b24            ; F520 ; gsx_tblt; duplicate AES
 [00fe7de4] dc.l $00fdb85a            ; F524 ; hd_msg DESKTOP
 [00fe7de8] dc.l $00fe5fe8            ; F528 ; inf_fldset AES

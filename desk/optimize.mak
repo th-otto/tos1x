@@ -24,3 +24,4 @@ deskmn_OPTIMIZE=0
 deskif_OPTIMIZE=0
 
 desk1_ASFLAGS=-n
+desk2_ASFLAGS=-n

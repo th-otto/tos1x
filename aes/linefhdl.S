@@ -360,7 +360,7 @@ lineftab: ds.b 0
 		dc.l _wind_set            ; F4B8
 		dc.l xfdce1c              ; F4BC
 		dc.l _send_msg            ; F4C0
-		dc.l xfd80aa              ; F4C4
+		dc.l _xform_do            ; F4C4
 		dc.l xfd9572              ; F4C8
 		dc.l xfd6cce              ; F4CC
 		dc.l xfd7774              ; F4D0
@@ -382,7 +382,7 @@ lineftab: ds.b 0
 		dc.l _fmt_date            ; F510
 		dc.l _fmt_time            ; F514
 		dc.l _gsx_gclip           ; F518
-		dc.l xfd7e58              ; F51C
+		dc.l _bldstring           ; F51C
 		dc.l _gsx_tblt            ; F520
 		dc.l _hd_msg              ; F524
 		dc.l _inf_fldset          ; F528

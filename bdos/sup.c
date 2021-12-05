@@ -403,6 +403,7 @@ PP(int16_t *pw;)
 /* 306de: 00e18cc6 */
 /* 306us: 00e18c6c */
 /* 104de: 00fc9822 */
+/* 106de: 00e09a4e */
 /* 404: 00e1dc30 */
 int32_t osif2(P(int16_t *) pw)
 PP(int16_t *pw;)

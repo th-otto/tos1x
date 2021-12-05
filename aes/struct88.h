@@ -115,8 +115,8 @@ UDA
 	/*   62 */	uint32_t	*u_spsuper;		/* supervisor stack 	*/
 	/*   66 */	uint32_t	*u_spuser;		/* user stack 			*/
 	/*   70 */	uint32_t u_super[STACK_SIZE];
-	/* 1862/2070 */	uint32_t	u_supstk;
-	/* 1866/2074 */
+	/* 1862 */	uint32_t	u_supstk;
+	/* 1866 */
 };
 
 UDA2
@@ -127,6 +127,7 @@ UDA2
 	uint32_t	*u_spuser;		/* user stack 			*/
 	uint32_t	u_super[STACK2_SIZE];
 	uint32_t	u_supstk;
+	/* 1274 */
 };
 
 UDA3
@@ -137,6 +138,7 @@ UDA3
 	uint32_t	*u_spuser;		/* user stack 			*/
 	uint32_t	u_super[STACK3_SIZE];
 	uint32_t	u_supstk;
+	/* 1474 */
 };
 
 #endif
@@ -191,20 +193,13 @@ PD
 	/* 32 */	EVSPEC	p_evbits;		/* event bits in use 8 max EVB	*/
 	/* 34 */	EVSPEC	p_evwait;		/* event wait mask 		*/
 	/* 36 */	EVSPEC	p_evflg;		/* EVB that satisfied		*/
-#if AESVERSION >= 0x200
-	/* 38 */	BOOLEAN	p_msgtosend;
-	/* 40 */	int16_t	p_message[9];
-#endif
-#if AESVERSION >= 0x320
-	/* 58 */	MFORM	p_mouse;		/* saved mouseform for M_SAVE/M_RESTORE */
-#endif
-	/*58/132 */	EVB	*p_evlist;			/* link to EVB			*/
-	/*62/136 */	EVB	*p_qdq;
-	/*66/140 */	EVB	*p_qnq;
-	/*70/144 */	char *p_qaddr;			/* message queue pointer	*/
-	/*64/148 */	int16_t	p_qindex;		/* message queue index		*/
-	/*76/150 */	char p_queue[QUEUE_SIZE];
-	/*<320=204/320=278/>=330=406 */
+	/* 38 */	EVB	*p_evlist;			/* link to EVB			*/
+	/* 42 */	EVB	*p_qdq;
+	/* 46 */	EVB	*p_qnq;
+	/* 50 */	char *p_qaddr;			/* message queue pointer	*/
+	/* 54 */	int16_t	p_qindex;		/* message queue index		*/
+	/* 56 */	char p_queue[QUEUE_SIZE];
+	/*184 */
 };
 
 

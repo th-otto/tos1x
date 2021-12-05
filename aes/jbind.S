@@ -244,8 +244,10 @@ exok:
 #ifndef __GNUC__
         xdef    lmul
         xdef    _lmul
+        xdef    aeslmul
 lmul:
 _lmul:
+aeslmul:
         link    a6,#-4
         clr.w   d2
         tst.l   8(a6)           /*is first arg negative? */
@@ -371,6 +373,7 @@ La1:
  */
 /* 306de: 00e257f8 */
 /* 104de: 00fdd43c */
+/* 106de: 00e1ea34 */
 _grptrp:
         tst.w   d0                      /* Is function number system reset ? */
         beq     _back

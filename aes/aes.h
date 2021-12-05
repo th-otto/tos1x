@@ -827,7 +827,7 @@ VOID w_update PROTO((int16_t bottom, GRECT *pt, int16_t top, BOOLEAN moved));
 BOOLEAN wm_start PROTO((NOTHING));
 VOID wm_get PROTO((int16_t handle, int16_t field, int16_t *ow));
 VOID wm_update PROTO((int code));
-VOID wm_new PROTO((NOTHING));
+int16_t wm_new PROTO((NOTHING));
 VOID w_setactive PROTO((NOTHING));
 VOID ap_sendmsg PROTO((int16_t *ap_msg, int16_t type, int16_t towhom, int16_t w3, int16_t w4, int16_t w5, int16_t w6, int16_t w7));
 

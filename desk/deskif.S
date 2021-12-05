@@ -36,6 +36,9 @@
 #  endif
 #endif
 
+#if !LINEF_HACK
+#define _gsx_fmoff _gsx_moff
+#endif
 
 
 #define CCODE 0
@@ -51,14 +54,72 @@
 
 
 #if CCODE
+WORD ap_init(WORD *pglobal)
+{
+	pglobal[0] = AESVERSION;
+	pglobal[1] = MULTITOS ? 0 : 1;
+	pglobal[2] = rlr->p_pid;
+	pglobal[10] = gl_nplanes;
+	LLSET(pglobal + 22, &D);
+	LWSET(pglobal + 26, gl_bvdisk);
+	LWSET(pglobal + 28, gl_bvhard);
+	return rlr->p_pid;
+}
+#endif
+/* 104de: 00fd7988 */
+	xdef _ap_init
+_ap_init:
+		lea.l      _pglobal,a1
+		move.l     #(1<<16)+0x120,(a1) ; BUG: words swapped, wrong version
+		movea.l    _rlr,a0
+		move.w     28(a0),4(a1) ; rlr->p_pid
+		move.w     _gl_nplanes,20(a1)
+		move.l     #_D,22(a1)
+		move.w     _gl_bvdisk,26(a1)
+		move.w     _gl_bvhard,28(a1)
+		move.w     28(a0),_gl_apid ; rlr->p_pid
+		moveq.l    #1,d0
+		rts
+
+
+/* 104de: 00fd79cc (in deskif.S) */
+	xdef _ap_bvset
+_ap_bvset:
+		move.w    4(a7),_gl_bvdisk
+		move.w    6(a7),_gl_bvhard
+		moveq.l   #1,d0
+		rts
+
+
+/* 104de: 00fd79e0 */
+	xdef _ap_exit
+_ap_exit:
+		jsr       _mn_clsda
+		movea.l   _rlr,a0
+		tst.w     54(a0)
+		beq.s     ap_exit1
+		move.l    #_D+7072,-(a7) ; D.g_valstr
+		move.w    54(a0),-(a7)
+		move.w    28(a0),-(a7)
+		move.w    #1,-(a7)
+		jsr       _ap_rdwr
+		adda.w    #10,a7
+ap_exit1:
+		jsr       _all_run
+		moveq.l   #1,d0
+		rts
+
+
+#if CCODE
 WORD appl_write(WORD rwid, WORD length, int16_t *pbuff)
 {
   WORD		ret;
   ret = ap_rdwr( AQWRT, rwid, length, pbuff);
   dsptch();
-  return(ret);
+  return ret;
 }
 #endif
+/* 104de: 00fd7a0c */
 	xdef _appl_write
 _appl_write:
 	link	a6,#0
@@ -74,6 +135,7 @@ disp1:	move.l	d0,-(sp)		; save return value
 
 
 #if AESVERSION < 0x200
+/* 104de: 00fd7a28 */
 	xdef _far_call
 _far_call:
 	move.l    8(a7),-(a7)
@@ -112,6 +174,7 @@ WORD evnt_multi(UWORD flags, UWORD bclk, UWORD bmsk, UWORD bst,
   return( which);
 }
 #endif
+/* 104de: 00fd7a36 */
 	xdef _evnt_multi
 _evnt_multi:
 	link	a6,#-26
@@ -165,6 +228,7 @@ WORD evnt_button(WORD clicks, UWORD mask, UWORD state, WORD *pmx, WORD *pmy, WOR
   return(ret);
 }
 #endif
+/* 104de: 00fd7a8e */
 	xdef _evnt_button
 _evnt_button:
 	link	a6,#-8
@@ -188,6 +252,7 @@ WORD evnt_dclick(WORD rate, WORD setit)
   return(ret);
 }
 #endif
+/* 104de: 00fd7ab0 */
 	xdef _evnt_dclick
 _evnt_dclick:
 	move.l	4(sp),-(sp)
@@ -207,6 +272,7 @@ WORD form_do(OBJECT *form, WORD start)
   return(ret);
 }
 #endif
+/* 104de: 00fd7abc */
 	xdef _form_do
 _form_do:
 	clr	-(sp)
@@ -227,6 +293,7 @@ WORD form_dial(WORD dtype, WORD ix, WORD iy, WORD iw, WORD ih, WORD x, WORD y, W
   return(ret);
 }
 #endif
+/* 104de: 00fd7ad0 */
 	xdef _form_dial
 _form_dial:
 	pea	14(sp)			; &x
@@ -246,6 +313,7 @@ WORD form_alert(WORD defbut, const char *astring)
   return(ret);
 }
 #endif
+/* 104de: 00fd7ae6 */
 	xdef _form_alert
 _form_alert:
 	move.l	6(sp),-(sp)
@@ -264,6 +332,7 @@ WORD form_error(WORD errnum)
   return(ret);
 }
 #endif
+/* 104de: 00fd7af6 */
 	xdef _form_error
 _form_error:
 	move.w	4(sp),-(sp)
@@ -286,6 +355,7 @@ WORD form_center(OBJECT *tree, WORD *pcx, WORD *pcy, WORD *pcw, WORD *pch)
   return(ret);
 }
 #endif
+/* 104de: 00fd7b02 */
 	xdef _form_center
 _form_center:
 	link	a6,#-8			; space for GRECT
@@ -298,6 +368,7 @@ _form_center:
 
 #if AESVERSION < 0x200
 /* WTF: that code is just duplicated from AES */
+/* 104de: 00fd7b1a */
 	xdef _graf_mouse
 _graf_mouse:
 	link      a6,#-4
@@ -307,7 +378,7 @@ _graf_mouse:
 	ble.s     grmo3
 	cmp.w     #256,d7
 	bne.s     grmo1
-	jsr _gsx_moff
+	jsr       _gsx_fmoff
 grmo1:
 	cmp.w     #257,d7
 	bne.s     grmo2
@@ -354,6 +425,7 @@ WORD graf_handle(WORD *gwchar, WORD *ghchar, WORD *gwbox, WORD *ghbox)
 #endif
 /* actually unused */
 #if BINEXACT
+/* 104de: 00fd7b7c */
 	xdef _graf_handle
 _graf_handle:
 	lea	4(sp),a1
@@ -377,6 +449,7 @@ VOID graf_rubbox(WORD xorigin, WORD yorigin, WORD wmin, WORD hmin, WORD *pwend, 
   dsptch();
 }
 #endif
+/* 104de: 00fd7ba8 */
 	xdef _graf_rubbox
 _graf_rubbox:
 	lea	_gr_rubbox,a0		; a0 -> routine to call
@@ -392,6 +465,7 @@ WORD graf_mkstate(WORD *pmx, WORD *pmy, WORD *pmstate, WORD *pkstate)
   return(ret);
 }
 #endif
+/* 104de: 00fd7bb0 */
 	xdef _graf_mkstate
 _graf_mkstate:
 	lea	_gr_mkstate,a0		; a0 -> routine to call
@@ -411,6 +485,7 @@ VOID graf_growbox(WORD orgx, WORD orgy, WORD orgw, WORD orgh, WORD x, WORD y, WO
   dsptch();
 }
 #endif
+/* 104de: 00fd7bca */
 	xdef _graf_growbox
 _graf_growbox:
 	lea	_gr_growbox,a0
@@ -428,6 +503,7 @@ VOID graf_shrinkbox(WORD orgx, WORD orgy, WORD orgw, WORD orgh, WORD x, WORD y, 
   dsptch();
 }
 #endif
+/* 104de: 00fd7be0 */
 	xdef _graf_shrinkbox
 _graf_shrinkbox:
 	lea	_gr_shrinkbox,a0
@@ -443,6 +519,7 @@ WORD menu_tnormal(OBJECT *mlist, WORD dlist, WORD normal)
   return(ret);
 }
 #endif
+/* 104de: 00fd7be8 */
 	xdef _menu_tnormal
 _menu_tnormal:
 	move.l	#$00010001,-(sp)	; TRUE, TRUE
@@ -468,6 +545,7 @@ WORD menu_bar(OBJECT *tree, WORD showit)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c0e */
 	xdef _menu_bar
 _menu_bar:
 	move.w	8(sp),-(sp)		; showit
@@ -486,6 +564,7 @@ WORD menu_icheck(OBJECT *mlist, WORD dlist, WORD check)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c1e */
 	xdef _menu_icheck
 _menu_icheck:
 	clr.l	-(sp)			; FALSE FALSE		0
@@ -504,6 +583,7 @@ WORD menu_ienable(OBJECT *mlist, WORD dlist, WORD enable)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c2a */
 	xdef _menu_ienable
 _menu_ienable:
 	moveq	#1,d2			; (mask for bools)
@@ -532,6 +612,7 @@ WORD objc_offset(OBJECT *tree, WORD obj, WORD *poffx, WORD *poffy)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c52 */
 	xdef _objc_offset
 _objc_offset:
 	lea	_ob_offset,a0
@@ -547,6 +628,7 @@ WORD objc_order(OBJECT *tree, WORD mov_obj, WORD newpos)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c5c */
 	xdef _objc_order
 _objc_order:
 	lea	_ob_order,a0
@@ -562,6 +644,7 @@ WORD objc_find(OBJECT *tree, WORD startob, WORD depth, WORD mx, WORD my)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c66 */
 	xdef _objc_find
 _objc_find:
 	lea	_ob_find,a0
@@ -577,6 +660,7 @@ WORD objc_add(OBJECT *tree, WORD parent, WORD child)
   return(ret);
 }
 #endif
+/* 104de: 00fd7c70 */
 	xdef _objc_add
 _objc_add:
 	lea	_ob_add,a0
@@ -593,6 +677,7 @@ WORD objc_draw(OBJECT *tree, WORD drawob, WORD depth, WORD xc, WORD yc, WORD wc,
   return(ret);
 }
 #endif
+/* 104de: 00fd7c7a */
 	xdef _objc_draw
 _objc_draw:
 	pea	12(sp)
@@ -612,6 +697,7 @@ WORD objc_change(OBJECT *tree, WORD drawob, WORD depth, WORD xc, WORD yc, WORD w
   return(ret);
 }
 #endif
+/* 104de: 00fd7c8c */
 	xdef _objc_change
 _objc_change:
 	pea	12(sp)			;				+4
@@ -633,6 +719,7 @@ WORD rsrc_free(NOTHIN)
   return(ret);
 }
 #endif
+/* 104de: 00fd7ca8 */
 	xdef _rsrc_free
 _rsrc_free:
 	pea	_pglobal
@@ -650,6 +737,7 @@ WORD rsrc_gaddr(WORD rstype, WORD rsid, VOIDPTR *paddr)
   return(ret);
 }
 #endif
+/* 104de: 00fd7cb6 */
 	xdef _rsrc_gaddr
 _rsrc_gaddr:
 	move.l	8(sp),-(sp)		; paddr				+4
@@ -669,6 +757,7 @@ WORD shel_write(WORD doex, WORD isgr, WORD iscr, char *pcmd, char *ptail)
   return(ret);
 }
 #endif
+/* 104de: 00fd7cce */
 	xdef _shel_write
 _shel_write:
 	lea	_sh_write,a0
@@ -684,6 +773,7 @@ WORD shel_get(char *pbuffer, WORD len)
   return(ret);
 }
 #endif
+/* 104de: 00fd7cd8 */
 	xdef _shel_get
 _shel_get:
 	lea	_sh_get,a0
@@ -699,6 +789,7 @@ WORD shel_put(const char *pdata, WORD len)
   return(ret);
 }
 #endif
+/* 104de: 00fd7ce */
 	xdef _shel_put
 _shel_put:
 	lea	_sh_put,a0
@@ -715,6 +806,7 @@ WORD wind_close(WORD handle)
   return(ret);
 }
 #endif
+/* 104de: 00fd7cec */
 	xdef _wind_close
 _wind_close:
 	lea	_wm_close,a0
@@ -730,6 +822,7 @@ WORD wind_delete(WORD handle)
   return(ret);
 }
 #endif
+/* 104de: 00fd7cf6 */
 	xdef _wind_delete
 _wind_delete:
 	lea	_wm_delete,a0
@@ -745,6 +838,7 @@ WORD wind_find(WORD mx, WORD my)
   return(ret);
 }
 #endif
+/* 104de: 00fd7d00 */
 	xdef _wind_find
 _wind_find:
 	lea	_wm_find,a0
@@ -760,6 +854,7 @@ WORD wind_update(WORD beg_update)
   return(ret);
 }
 #endif
+/* 104de: 00fd7d0a */
 	xdef _wind_update
 _wind_update:
 	lea	_wm_update,a0
@@ -775,6 +870,7 @@ WORD wind_create(UWORD kind, WORD wx, WORD wy, WORD ww, WORD wh)
   return(ret);
 }
 #endif
+/* 104de: 00fd7d14 */
 	xdef _wind_create
 _wind_create:
 	lea	_wm_create,a0
@@ -794,6 +890,7 @@ WORD wind_open(WORD handle, WORD wx, WORD wy, WORD ww, WORD wh)
   return(ret);
 }
 #endif
+/* 104de: 00fd7d2a */
 	xdef _wind_open
 _wind_open:
 	lea	_wm_open,a0
@@ -815,6 +912,7 @@ WORD wind_get(WORD w_handle, WORD w_field, WORD *pw1, WORD *pw2, WORD *pw3, WORD
   return(ret);
 }
 #endif
+/* 104de: 00fd7d32 */
 	xdef _wind_get
 _wind_get:
 	link	a6,#-8
@@ -834,6 +932,7 @@ WORD wind_set(WORD w_handle, WORD w_field, WORD w2, WORD w3, WORD w4, WORD w5)
   return(ret);
 }
 #endif
+/* 104de: 00fd7d48 */
 	xdef _wind_set
 _wind_set:
 	pea	8(sp)			; &w2
@@ -852,13 +951,18 @@ WORD wind_calc(WORD wctype, UWORD kind, WORD x, WORD y, WORD w, WORD h, WORD px,
   return(ret);
 }
 #endif
+/* 104de: 00fd7d58 */
 	xdef _wind_calc
 _wind_calc:
 	moveq	#7-1,d0			; copy 7 longs of args
 wndcp:	move.l	28(sp),-(sp)
 	dbra	d0,wndcp
 	jsr	_wm_calc
+#if AESVERSION < 0x200
+	adda.l	#28,sp
+#else
 	adda.w	#28,sp
+#endif
 	bra	disp1
 
 

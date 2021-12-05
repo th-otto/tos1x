@@ -96,7 +96,15 @@ PP(register VOIDPTR *addr_in;)
 		ret = ap_bvset(AP_BVDISK, AP_BVHARD);
 		break;
 	case APPL_EXIT:
+#if (TOSVERSION >= 0x106) & (TOSVERSION < 0x200)
+		mn_clsda();
+		if (rlr->p_qindex)
+			ap_rdwr(AQRD, rlr->p_pid, rlr->p_qindex, (int16_t *) D.g_valstr);
+	
+		all_run();
+#else
 		ap_exit();
+#endif
 		break;
 
 	/* Event Manager */
@@ -279,7 +287,7 @@ PP(register VOIDPTR *addr_in;)
 		break;
 	case GRAF_MKSTATE:
 		ret = gr_mkstate(&GR_MX, &GR_MY, &GR_MSTATE, &GR_KSTATE);
-		/* BUG: the asm version of gr_mkstate returns garbage,
+		/* BUG: the asm version of gr_mkstate returns -1,
 		   and the call should always return TRUE */
 		break;
 	
@@ -331,8 +339,7 @@ PP(register VOIDPTR *addr_in;)
 		wm_calc(WM_WCTYPE, WM_WCKIND, WM_WCIX, WM_WCIY, WM_WCIW, WM_WCIH, &WM_WCOX, &WM_WCOY, &WM_WCOW, &WM_WCOH);
 		break;
 	case WIND_NEW:
-		/* BUG: ignores return value */
-		wm_new();
+		ret = wm_new();
 		break;
 
 	/* Resource Manager */
@@ -387,7 +394,7 @@ PP(register VOIDPTR *addr_in;)
  *	return parameters from local buffers, and returns to the
  *	routine.
  */
-
+/* 106de: 00e2133a */
 VOID xif(P(intptr_t) pcrys_blk)
 PP(intptr_t pcrys_blk;)
 {

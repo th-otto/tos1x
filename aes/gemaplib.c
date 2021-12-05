@@ -64,7 +64,8 @@ int16_t gl_my;					/* 3/12/86  */
  * Application Init
  */
 /* 306de: 00e199fc */
-/* 104de: 00fd7988 */
+/* 104de: 00fd7988 (in deskif.S) */
+#if AESVERSION >= 0x200
 int16_t ap_init(P(intptr_t) pglobal)
 PP(intptr_t pglobal;)
 {
@@ -76,12 +77,14 @@ PP(intptr_t pglobal;)
 	LWSET(pglobal + 28, gl_bvhard);
 	return rlr->p_pid;
 }
+#endif
 
 
 /*
  * AES #16 - appl_bvset - Set the available logical drives for the file-selector. 
  */
-/* 104de: 00fd79cc */
+/* 104de: 00fd79cc (in deskif.S) */
+#if AESVERSION >= 0x200
 int16_t ap_bvset(P(int16_t) bvdisk, P(int16_t) bvhard)
 PP(int16_t bvdisk;)
 PP(int16_t bvhard;)
@@ -90,6 +93,7 @@ PP(int16_t bvhard;)
 	gl_bvhard = bvhard;
 	return TRUE;
 }
+#endif
 
 
 /*
@@ -98,7 +102,9 @@ PP(int16_t bvhard;)
  * Application Exit
  */
 /* 306de: 00e19a72 */
-/* 104de: 00fd79e0 */
+/* 104de: 00fd79e0 (in deskif.S) */
+/* 106de: inlined in gembind */
+#if AESVERSION >= 0x200
 int16_t ap_exit(NOTHING)
 {
 	mn_clsda();
@@ -108,6 +114,7 @@ int16_t ap_exit(NOTHING)
 	all_run();
 	return TRUE;
 }
+#endif
 
 
 /*

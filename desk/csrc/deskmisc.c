@@ -358,6 +358,7 @@ PP(OBJECT *obj;)
 
 
 /* 306de: 00e2fb5a */
+/* 104de: 00fd80aa */
 int16_t xform_do(P(OBJECT *)obj, P(int16_t) which)
 PP(OBJECT *obj;)
 PP(int16_t which;)

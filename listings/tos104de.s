@@ -32702,7 +32702,7 @@ up_allwin:
 [00fd9988] 2f3c 00fe b136            move.l    #$00FEB136,-(a7)
 [00fd998e] f404                      dc.w      $F404 ; xstrpcat
 [00fd9990] 588f                      addq.l    #4,a7
-[00fd9992] 2ebc 0000 634c            move.l    #$0000634C,(a7)
+[00fd9992] 2ebc 0000 634c            move.l    #x00634C,(a7)
 [00fd9998] 2f39 0000 a788            move.l    _thedesk,-(a7)
 [00fd999e] 0697 0000 32b6            addi.l    #$000032B6,(a7)
 [00fd99a4] f36c                      dc.w      $F36C ; xstrpcpy
@@ -32715,7 +32715,7 @@ up_allwin:
 [00fd99b8] 4a6e fffe                 tst.w     -2(a6)
 [00fd99bc] 671c                      beq.s     $00FD99DA
 [00fd99be] 3ebc 0001                 move.w    #1,(a7)
-[00fd99c2] 2f3c 0000 634c            move.l    #$0000634C,-(a7)
+[00fd99c2] 2f3c 0000 634c            move.l    #x00634C,-(a7)
 [00fd99c8] f380                      dc.w      $F380 ; up_allwin
 [00fd99ca] 588f                      addq.l    #4,a7
 [00fd99cc] 3ebc 0001                 move.w    #1,(a7)
@@ -36047,7 +36047,7 @@ deskmain:
 [00fdc216] d081                      add.l     d1,d0
 [00fdc218] 2e80                      move.l    d0,(a7)
 [00fdc21a] 0697 0000 5e88            addi.l    #$00005E88,(a7)
-[00fdc220] 2f3c 00fe b180            move.l    #$00FEB180,-(a7)
+[00fdc220] 2f3c 00fe b180            move.l    #xfeb180,-(a7)
 [00fdc226] 3f3c 0018                 move.w    #$0018,-(a7)
 [00fdc22a] f390                      dc.w      $F390 ; movs
 [00fdc22c] 5c8f                      addq.l    #6,a7
@@ -55971,6 +55971,7 @@ _getall:
 [00feb192] 0000                      dc.w      $0000
 [00feb194] 0000                      dc.w      $0000
 [00feb196] 0000                      dc.w      $0000
+jmptable in xfda984
 [00feb198] 00fd aa10                 chk2.b    ???,a2 ; 68020+ only
 [00feb19c] 00fd aa38                 chk2.b    ???,a2 ; 68020+ only
 [00feb1a0] 00fd aa7a                 chk2.b    ???,a2 ; 68020+ only

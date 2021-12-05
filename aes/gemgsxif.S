@@ -783,7 +783,14 @@ VOID gsx_moff(NOTHING)
 	xdef _ratexit
 _ratexit:
 _gsx_moff:
-ig_moff:
+ig_moff: ds.b 0
+
+#if LINEF_HACK
+	xdef _gsx_fmoff
+	xdef _gsx_ffmoff
+_gsx_fmoff: ds.b 0
+_gsx_ffmoff: ds.b 0
+#endif
 
 	tst.w	_gl_moff
 	bne	L35
