@@ -189,7 +189,10 @@ typedef struct {
 	/* 13718 */ int16_t o13718;
 	/* 13720 */ int16_t o13720;
 	/* 13722 */ int16_t o13722;
-	/* 13724 */ char unused6[12];
+	/* 13724 */ char unused6[6];
+	/* 13730 */ int16_t ddele_save;
+	/* 13732 */ int16_t s_bitblt;
+	/* 13734 */ int16_t dwrite_save;
 	/* 13736 */ GRECT r_dicon;			/* real time desktop icon size */
 	/* 13744 */ int16_t o13744;
 	/* 13746 */ int16_t o13746;

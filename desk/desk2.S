@@ -805,8 +805,8 @@ xfd85_1:
 		moveq.l   #1,d0
 		dc.w      0xF821 ; movem.l (a7)+,d7/a5
 
-	xdef xfd8622
-xfd8622: ds.b 0
+	xdef _desk_pref
+_desk_pref: ds.b 0
 		link      a6,#-2
 		movem.l   d3-d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -4640,6 +4640,34 @@ xfeb165:
 	ascii "*"
 	dc.b 0
 	even
+
+	xdef xfeb168
+xfeb168:
+	dc.w -1
+	dc.w -1
+	dc.w -1
+	dc.w 25 ; G_IBOX
+	dc.w 0
+	dc.w 0
+	dc.l 0
+	dc.w 0
+	dc.w 0
+	dc.w 0
+	dc.w 0
+	xdef xfeb180
+xfeb180:
+	dc.w -1
+	dc.w -1
+	dc.w -1
+	dc.w 20 ; G_BOX
+	dc.w 0
+	dc.w 0
+	dc.l 0x1100
+	dc.w 0
+	dc.w 0
+	dc.w 0
+	dc.w 0
+
 
 xfeb198:
 	dc.l xfda9_5

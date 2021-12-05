@@ -542,14 +542,18 @@ _endvdibss: ds.b 0
 	
 	INT(_autoexec)
 
-	ds.b 44
+	ds.b 8
+	
+	INT(_pr_xrat)
+	
+	ds.b 2
+	
+	V(x007098,w,4*4)
 	
 	INT(_gl_wsptschar)
 	INT(_gl_wptschar)
 	PTR(_drawstk)
-
-	ds.b 2
-	
+	INT(_pr_yrat)
 	INT(_gl_kstate)
 	
 	ds.b 36
@@ -636,8 +640,6 @@ _endvdibss: ds.b 0
 	PTR(_pathcopy)
 	INT(_defdrv)
 	
-	INT(_pr_yrat)
-
 	V(savea0,b,654) /* savea0,srsave,savsr,psetsr,dspstk */
 	LONG(retaddr)
 	LONG(tr_retsave)
@@ -743,7 +745,6 @@ _endvdibss: ds.b 0
 	INT(_desksiz)
 	PTR(_deskptr)
 	INT(_o_status)
-	INT(_pr_xrat)
 	INT(_pr_button)
 	TEDINFO(_edblk)
 	GRECT(_gl_rfs)

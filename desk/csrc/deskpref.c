@@ -21,16 +21,19 @@ VOID desk_pref(NOTHING)
 	register OBJECT *obj;
 	register int16_t cyes, i, flag;
 	int16_t overwrite, font;
-
+	THEDSK *d;
+	
 	UNUSED(font);
 	UNUSED(overwrite);
 	
-	obj = get_tree(ADSETPREF);
-	cyes = thedesk->cdele_save;
+	d = thedesk;
+	
+	obj = d->rtree[ADSETPREF];
+	cyes = thedesk->ddele_save;
 	obj[SPCDYES].ob_state = cyes;
 	obj[SPCDNO].ob_state = !cyes;
 
-	cyes = thedesk->write_save;
+	cyes = thedesk->dwrite_save;
 	obj[YWRITE].ob_state = !cyes;
 	obj[NWRITE].ob_state = cyes;
 

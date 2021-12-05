@@ -444,7 +444,7 @@ lineftab: ds.b 0
 		dc.l xfd59a0              ; F608
 		dc.l xfd8a16              ; F60C
 		dc.l _hd_keybd            ; F610
-		dc.l xfd8622              ; F614
+		dc.l _desk_pref           ; F614
 		dc.l xfdba7e              ; F618
 		dc.l _save_inf            ; F61C
 		dc.l _av_hardcopy         ; F620

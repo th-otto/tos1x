@@ -25,3 +25,5 @@ deskif_OPTIMIZE=0
 
 desk1_ASFLAGS=-n
 desk2_ASFLAGS=-n
+desk3_ASFLAGS=-n
+desk4_ASFLAGS=-n

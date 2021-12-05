@@ -387,7 +387,7 @@
 [00fe7ec8] dc.l $00fd59a0            ; F608
 [00fe7ecc] dc.l $00fd8a16            ; F60C
 [00fe7ed0] dc.l $00fdb6f6            ; F610 ; hd_keybd DESKTOP
-[00fe7ed4] dc.l $00fd8622            ; F614
+[00fe7ed4] dc.l $00fd8622            ; F614 ; desk_pref DESKTOP
 [00fe7ed8] dc.l $00fdba7e            ; F618
 [00fe7edc] dc.l $00fd55e8            ; F61C ; save_inf DESKTOP
 [00fe7ee0] dc.l $00fe1bae            ; F620 ; av_hardcopy AES

@@ -26,7 +26,7 @@ _rb_start: ds.b 0
 		cmpi.b    #2,(_sshiftmod).w ; skip for high-res
 		bge.s     rb_sta1
 		moveq.l   #0,d0
-		move.l    d0,(colidx).w
+		move.l    d0,(hblcount).w ; also clears wrapcount
 		moveq.l   #16,d0
 		move.w    d0,(nxtidx).w
 		move.w    d0,(colidx).w

@@ -56017,11 +56017,15 @@ jmptable in xfda984
 [00feb1fc] 0009 0012                 ori.b     #$12,a1 ; apollo only
 [00feb200] 001b 0023                 ori.b     #$23,(a3)+
 [00feb204] 0000                      dc.w      $0000
+
+jmptable in xfdb17c
 [00feb206] 00fd b1d8                 cmp2.b    ???,a3 ; 68020+ only
 [00feb20a] 00fd b1f2                 cmp2.b    ???,a3 ; 68020+ only
 [00feb20e] 00fd b206                 cmp2.b    ???,a3 ; 68020+ only
 [00feb212] 00fd b226                 cmp2.b    ???,a3 ; 68020+ only
 [00feb216] 00fd b1fc                 cmp2.b    ???,a3 ; 68020+ only
+
+jmptable in do_file
 [00feb21a] 00fd b342                 cmp2.b    ???,a3 ; 68020+ only
 [00feb21e] 00fd b350                 cmp2.b    ???,a3 ; 68020+ only
 [00feb222] 00fd b3b8                 cmp2.b    ???,a3 ; 68020+ only
@@ -56030,6 +56034,7 @@ jmptable in xfda984
 [00feb22e] 00fd b37e                 cmp2.b    ???,a3 ; 68020+ only
 [00feb232] 00fd b3b8                 cmp2.b    ???,a3 ; 68020+ only
 [00feb236] 00fd b394                 cmp2.b    ???,a3 ; 68020+ only
+
 [00feb23a] 00fd b3dc                 cmp2.b    ???,a3 ; 68020+ only
 [00feb23e] 00fd b3e0                 cmp2.b    ???,a3 ; 68020+ only
 [00feb242] 00fd b40c                 cmp2.b    ???,a3 ; 68020+ only
