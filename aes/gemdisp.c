@@ -89,9 +89,13 @@ PP(register PD *p;)
 	register PD *pq, *q;
 
 	/* process is ready, so put him on RLR */
+#if AESVERSION >= 0x200
 	p->p_stat &= ~PS_MWAIT;
 	p->p_stat |= PS_RUN;
-	/* find the end     */
+#else
+	p->p_stat = 0;
+#endif
+	/* find the end */
 	for (pq = (q = (PD *) & rlr)->p_link; pq; pq = (q = pq)->p_link)
 		;
 	/* link him in */

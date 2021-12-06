@@ -83,6 +83,7 @@ int16_t appl_msg[8];
 int16_t rets[6];							/* added 2/4/87 ... and now unused */
 #endif
 int16_t ml_ocnt;
+int16_t gl_fakemsg;
 
 
 
@@ -104,6 +105,7 @@ STATIC int16_t const gl_wa[] = {
  *	Send message and wait for the mouse button to come up
  */
 /* 306de: 00e1b1b4 */
+/* 106de: 00e1f38a */
 VOID ct_msgup(P(int16_t) message, P(int16_t) owner, P(int16_t) wh, P(int16_t) m1, P(int16_t) m2, P(int16_t) m3, P(int16_t) m4)
 PP(int16_t message;)
 PP(int16_t owner;)
@@ -124,6 +126,7 @@ PP(int16_t m4;)
 /* 104de: 00fddcc4 */
 /* 206de: 00e1778e */
 /* 306de: 00e1b1f4 */
+/* 106de: 00e1f3ca */
 VOID hctl_window(P(int16_t) w_handle, P(int16_t) mx, P(int16_t) my)
 PP(register int16_t w_handle;)
 PP(int16_t mx;)
@@ -141,7 +144,6 @@ PP(int16_t my;)
 	register int16_t cpt;
 	int16_t selst, nrmst, dummy;
 	int16_t unused[3];
-	PD *p;
 	
 	UNUSED(unused);
 	UNUSED(dummy);
@@ -254,14 +256,12 @@ PP(int16_t my;)
 			wm_update(END_UPDATE);			/* give up the screen */
 
 			cpt = TRUE;
-			p = pwin->w_owner;
 			do
 			{
-				if (p->p_stat == PS_MWAIT)
+				if (g_wsend == FALSE)
 				{
 					ap_sendmsg(appl_msg, message, pwin->w_owner->p_pid, w_handle, x, y, w, h);
-				} else
-				{
+					g_wsend = TRUE;
 				}
 
 				dsptch();
@@ -299,6 +299,7 @@ PP(int16_t my;)
 
 
 /* 306de: 00e1b580 */
+/* 106de: 00e1f6ea */
 VOID hctl_button(P(int16_t) mx, P(int16_t) my)
 PP(register int16_t mx;)
 PP(register int16_t my;)
@@ -307,8 +308,15 @@ PP(register int16_t my;)
 
 	/* find out which wind. the mouse clicked over and handle it */
 
-	if ((wh = wm_find(mx, my)) > 0)
-		hctl_window(wh, mx, my);
+	if (gl_fakemsg != 0)
+	{
+		gl_fakemsg--;
+	} else
+	{
+		wh = wm_find(mx, my);
+		if (wh > 0)
+			hctl_window(wh, mx, my);
+	}
 }
 
 
@@ -356,6 +364,7 @@ PP(int16_t my;)
  *	Doing the control rectangle first is important.
  */
 /* 306de: 00e1b67a */
+/* 106de: 00e1f7f6 */
 VOID ct_chgown(P(PD *) ppd, P(GRECT *) pr)
 PP(PD *ppd;)
 PP(GRECT *pr;)
@@ -383,6 +392,7 @@ PP(GRECT *pr;)
  *	the system.
  */
 /* 306de: 00e1b6de */
+/* 106de: 00e1f85a */
 VOID ctlmgr(NOTHING)
 {
 	register int16_t ev_which;
@@ -430,6 +440,7 @@ VOID ctlmgr(NOTHING)
  *	Also zero out the desk accessory count.
  */
 /* 306de: 00e1b770 */
+/* 106de: 00e1f8ec */
 PD *ictlmgr(P(int16_t) pid)
 PP(int16_t pid;)
 {
@@ -451,6 +462,8 @@ PP(int16_t pid;)
  * the menu bar or there is an alert box	3/05/86
  */
 /* 306de: 00e1b7aa */
+/* 104de: 00fde172 */
+/* 106de: 00e1f926 */
 VOID ctlmouse(P(BOOLEAN) mon)
 PP(BOOLEAN mon;)
 {
@@ -499,7 +512,8 @@ PP(BOOLEAN mon;)
 /*	0 = end mouse control	*/
 /*	1 = mouse control	*/
 
-/* 3066de: 00e1b846 */
+/* 306de: 00e1b846 */
+/* 106de: 00e1f9c2 */
 VOID take_ownership(P(BOOLEAN) beg_ownit)
 PP(BOOLEAN beg_ownit;)
 {

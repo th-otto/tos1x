@@ -21,6 +21,7 @@ colidx    equ $814
  * Start the rainbow effect for the desktops about dialog
  */
 /* 104de: 00fdae56 */
+/* 106de: 00e1bfc6 */
 	xdef _rb_start
 _rb_start: ds.b 0
 		cmpi.b    #2,(_sshiftmod).w ; skip for high-res
@@ -48,6 +49,7 @@ rb_sta1:
  * Stop the rainbow effect for the desktops about dialog
  */
 /* 104de: 00fdaeae */
+/* 106de: 00e1c01e */
 	xdef _rb_stop
 _rb_stop: ds.b 0
 		cmpi.b    #2,(_sshiftmod).w

@@ -1620,8 +1620,8 @@ xfdcde_3:
 		clr.b     (a3)
 		dc.w      0xFE01 ; movem.l (a7)+,a3-a5
 
-	xdef xfdce1c
-xfdce1c: ds.b 0
+	xdef _wind_grget
+_wind_grget: ds.b 0
 		link      a6,#-4
 		move.l    12(a6),(a7)
 		addq.l    #6,(a7)

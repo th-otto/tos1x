@@ -41,7 +41,9 @@ do
 	-fomit-frame-pointer) ;;
 	-fno-common) ;;
 	-faes) AESFLAGS=-A ;;
+	-fno-aes) AESFLAGS= ;;
 	-A) AESFLAGS=-A ;;
+	-A0) AESFLAGS= ;;
 	-a)
 	     textbase=$1
 	     shift

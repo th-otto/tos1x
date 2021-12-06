@@ -253,10 +253,10 @@ int16_t o_item;
 
 
 int16_t loop_find PROTO((int16_t input, const int16_t *table, int16_t *index));
-VOID hd_keybd PROTO((uint16_t key));
+BOOLEAN hd_keybd PROTO((uint16_t key));
 VOID do_scroll PROTO((int16_t *msgbuff));
 VOID do_opt PROTO((int16_t msgbuff));
-VOID hd_menu PROTO((int16_t *msgbuff));
+VOID hd_menu PROTO((int16_t title, int16_t item));
 
 
 
@@ -347,7 +347,7 @@ VOID menu_verify(NOTHING)
  */
 /* 206de: 00e2a5be */
 /* 306de: 00e2e024 */
-VOID hd_keybd(P(uint16_t) key)
+BOOLEAN hd_keybd(P(uint16_t) key)
 PP(uint16_t key;)
 {
 	OBJECT *obj;

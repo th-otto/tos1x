@@ -458,7 +458,7 @@ extern int16_t o_item;
 
 VOID menu_verify PROTO((NOTHING));
 VOID do_view PROTO((int16_t msgbuff));
-VOID do_file PROTO((int16_t msgbuff));
+VOID do_file PROTO((int16_t item));
 VOID hd_msg PROTO((int16_t *msgbuff));
 VOID actions PROTO((NOTHING));
 int32_t av_mem PROTO((NOTHING));
@@ -718,3 +718,4 @@ VOID gsx_attr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));
 VOID av_hardcopy PROTO((NOTHING));
+VOID wind_grget PROTO((short handle, short field, GRECT *gr));

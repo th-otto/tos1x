@@ -98,11 +98,13 @@ X_GSDTOF	equ $57
  *  know why it's supposed to do it.
  */
 /* 306de: 00e25994 */
+/* 104de: 00fdcf4e */
+/* 106de: 00e1e546 */
 	xdef	_isdrive
 _isdrive:
-	bsr	_dos_gdrv		; get current drive number
+	bsr	dos_gdrv		; get current drive number
 	move.w	d0,-(sp)		; and make it the current
-	bsr	_dos_sdrv		;    drive again...
+	bsr	dos_sdrv		;    drive again...
 	addq	#2,sp
 	rts
 
@@ -143,6 +145,7 @@ jtrap:	jmp	_trap			; jump to _trap
  *	.cargs .handle .pname.l .ldaddr.l
  */
 /* 306de: 00e259aa */
+/* 106de: 00e1e55c */
 	xdef	_pgmld
 _pgmld:
 	clr.l	-(sp)			; null env string (inherit parent's)
@@ -227,6 +230,7 @@ _bellout:
  *	 .cargs .pspec.l .attr.w	; ->name, =searchAttributes
  */
 /* 306de: 00e259fa */
+/* 106de: 00e1e5ac */
 	xdef	_dos_sfirst
 _dos_sfirst:
 	move.w	8(sp),-(sp)		; push attributes
@@ -264,6 +268,7 @@ sf_2:	bra	retfalse			; return FALSE
   }
 #endif
 /* 306de: 00e25a24 */
+/* 106de: 00e1e5d6 */
 	xdef	_dos_snext
 _dos_snext:
 	move.w	#X_SNEXT,-(sp)		; Fsnext()
@@ -291,6 +296,7 @@ _dos_snext:
  *	 .cargs .pname.l .access.w
  */
 /* 306de: 00e25a30 */
+/* 106de: 00e1e5e2 */
 	xdef	_dos_open
 _dos_open:
 	move.w	8(sp),-(sp)
@@ -310,14 +316,14 @@ open_1:	tst.w	d1
 
 
 #if CCODE
-  WORD dos_read(int handle, size_tcnt, void *pbuffer)
+  WORD dos_read(int handle, size_t cnt, void *pbuffer)
   {
   	LONG		ret;
   	ret = trap(X_READ,handle,(ULONG)cnt,pbuffer);
   	return((UWORD)ret);
   }
 
-  WORD dos_write(int handle, size_tcnt, const void *pbuffer)
+  WORD dos_write(int handle, size_t cnt, const void *pbuffer)
   {
   	LONG		ret;
   	ret = trap(X_WRITE,handle,(ULONG)cnt,pbuffer);
@@ -595,6 +601,7 @@ _dos_rename:
 
 
 /* 306de: 00e25b62 */
+/* 106de: 00e1e714 */
 #if CCODE
   LONG dos_alloc(long nbytes)
   {
@@ -667,11 +674,14 @@ _rawcon:	moveq	#X_RAWCON,d1
 		bra.b	generic
 
 	xdef	_prt_chr
-_prt_chr:	moveq	#X_PRTOUT,d1
+_prt_chr:
+		moveq	#X_PRTOUT,d1
 		bra.b	generic
 
 	xdef	_dos_gdrv
-_dos_gdrv:	moveq	#X_GETDRV,d1
+_dos_gdrv:
+dos_gdrv:
+		moveq	#X_GETDRV,d1
 		bra.b	generic
 
 	xdef	_dos_sdta
@@ -687,7 +697,9 @@ _dos_chdir:	moveq	#X_CHDIR,d1
 		bra.b	generic
 
 	xdef	_dos_sdrv
-_dos_sdrv:	moveq	#X_SETDRV,d1
+_dos_sdrv:
+dos_sdrv:
+		moveq	#X_SETDRV,d1
 		bra.b	generic
 
 	xdef	_dos_chmod

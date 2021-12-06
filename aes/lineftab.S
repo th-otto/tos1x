@@ -301,7 +301,7 @@
 [00fe7d70] dc.l $00fda13c            ; F4B0
 [00fe7d74] dc.l $00fdcd94            ; F4B4
 [00fe7d78] dc.l $00fd7d48            ; F4B8 ; wind_set DESKTOP
-[00fe7d7c] dc.l $00fdce1c            ; F4BC
+[00fe7d7c] dc.l $00fdce1c            ; F4BC ; wind_grget DESKTOP
 [00fe7d80] dc.l $00fd94c8            ; F4C0 ; send_msg DESKTOP
 [00fe7d84] dc.l $00fd80aa            ; F4C4 ; xform_do DESKTOP
 [00fe7d88] dc.l $00fd9572            ; F4C8
@@ -448,7 +448,7 @@
 [00fe7fbc] dc.l $00fdec42            ; F6FC ; pstart AES
 [00fe7fc0] dc.l $00fe65f4            ; F700 ; ld_cartacc AES
 [00fe7fc4] dc.l $00fdd170            ; F704 ; dos_chdir AES
-[00fe7fc8] dc.l $00fdda30            ; F708 ; sndclI AES
+[00fe7fc8] dc.l $00fdda30            ; F708 ; sndcli AES
 [00fe7fcc] dc.l $00fd413a            ; F70C ; pinit AES
 [00fe7fd0] dc.l $00fe4e6c            ; F710 ; ap_sendmsg AES
 [00fe7fd4] dc.l $00fe4bac            ; F714 ; w_bldactive AES

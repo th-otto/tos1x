@@ -358,7 +358,7 @@ lineftab: ds.b 0
 		dc.l xfda13c              ; F4B0
 		dc.l xfdcd94              ; F4B4
 		dc.l _wind_set            ; F4B8
-		dc.l xfdce1c              ; F4BC
+		dc.l _wind_grget          ; F4BC
 		dc.l _send_msg            ; F4C0
 		dc.l _xform_do            ; F4C4
 		dc.l xfd9572              ; F4C8

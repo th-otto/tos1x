@@ -952,19 +952,19 @@ _desk_dfree: ds.b 0
 		addq.l    #6,a7
 		move.l    -8(a6),-(a7)
 		move.l    -4(a6),-(a7)
-		jsr       aeslmul
+		jsr       _lmul
 		addq.l    #8,a7
 		move.l    d0,-20(a6)
 		move.l    -20(a6),-(a7)
 		move.l    -12(a6),-(a7)
-		jsr       aeslmul
+		jsr       _lmul
 		addq.l    #8,a7
 		move.l    d0,-(a7)
 		movea.l   10(a6),a0
 		move.l    (a7)+,(a0)
 		move.l    -20(a6),-(a7)
 		move.l    -16(a6),-(a7)
-		jsr       aeslmul
+		jsr       _lmul
 		addq.l    #8,a7
 		move.l    d0,-(a7)
 		movea.l   14(a6),a0
@@ -2149,7 +2149,7 @@ xfd93_12:
 		move.w    30568(a3),d6
 		move.l    #40,-(a7)
 		move.l    d6,-(a7)
-		jsr       aeslmul
+		jsr       _lmul
 		addq.l    #8,a7
 		move.l    d0,d6
 		add.l     -4(a6),d6

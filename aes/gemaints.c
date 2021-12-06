@@ -36,6 +36,7 @@
 
 /* 306de: 00e19944 */
 /* 104de: 00fdd4ee */
+/* 106de: 00e1eae6 */
 VOID signal(P(EVB *) e)
 PP(EVB *e;)
 {
@@ -52,7 +53,11 @@ PP(EVB *e;)
 		{
 			if (p1)
 			{
+#if AESVERSION >= 0x200
 				p1->p_stat |= PS_RUN;
+#else
+				p1->p_stat = 0;
+#endif
 				/* onto the drl */
 				q1->p_link = p1->p_link;
 				p1->p_link = drl;
@@ -64,6 +69,7 @@ PP(EVB *e;)
 
 
 /* 306de: 00e199aa */
+/* 106de: 00e199aa */
 VOID zombie(P(EVB *) e)
 PP(register EVB *e;)
 {

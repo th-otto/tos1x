@@ -42,6 +42,7 @@ int16_t wwait;
 
 
 /* 306de: 00e19db6 */
+/* 106de: 00e1ebcc */
 VOID evinsert(P(EVB *) e, P(EVB **) root)
 PP(register EVB *e;)
 PP(EVB **root;)
@@ -60,6 +61,7 @@ PP(EVB **root;)
 
 
 /* 306de: 00e19df0 */
+/* 106de: 00e1ebd6 */
 VOID takeoff(P(EVB *) p)
 PP(register EVB *p;)
 {
@@ -85,15 +87,20 @@ PP(register EVB *p;)
 
 
 /* 306de: */
+/* 106de: 00e1ec2e */
 EVSPEC mwait(P(EVSPEC) mask)
 PP(EVSPEC mask;)
 {
 	rlr->p_evwait = mask;
 	if (!(mask & rlr->p_evflg))
 	{
+#if AESVERSION >= 0x200
 		rlr->p_stat &= ~PS_RUN;
 		rlr->p_stat |= PS_MWAIT;
 		wwait = TRUE;
+#else
+		rlr->p_stat = PS_MWAIT;
+#endif
 		dsptch();
 	}
 	return rlr->p_evflg;
@@ -102,6 +109,7 @@ PP(EVSPEC mask;)
 
 /* 306de: 00e19e9c */
 /* 206de: 00e16436 */
+/* 106de: 00e1ec6e */
 EVSPEC iasync(P(int16_t) afunc, P(intptr_t) aparm)
 PP(int16_t afunc;)
 PP(register intptr_t aparm;)
@@ -201,7 +209,7 @@ PP(register intptr_t aparm;)
 		if (cda->c_q.c_cnt)
 		{
 			/* another satisfied customer */
-			e->e_return = (uint16_t) dq(&cda->c_q);
+			e->e_return = dq(&cda->c_q);
 			zombie(e);
 		} else							/* time to zzzzz... */
 		{
@@ -259,6 +267,7 @@ PP(register intptr_t aparm;)
 
 
 /* 306de: 00e1a14a */
+/* 106de: 00e1ef1c */
 uint16_t aret(P(EVSPEC) mask)
 PP(register EVSPEC mask;)
 {
@@ -298,6 +307,7 @@ PP(register EVSPEC mask;)
 
 
 /* 306de: 00e1a210 */
+/* 106de: 00e1efe2 */
 EVSPEC acancel(P(EVSPEC) m)
 PP(EVSPEC m;)
 {

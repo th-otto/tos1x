@@ -418,6 +418,10 @@ extern int16_t appl_msg[8];
 extern int16_t rets[6];							/* added 2/4/87     */
 #endif
 extern int16_t ml_ocnt;
+#if AESVERSION < 0x200
+extern BOOLEAN g_wsend;
+extern int16_t gl_fakemsg;
+#endif
 
 VOID ct_msgup PROTO((int16_t message, int16_t owner, int16_t wh, int16_t m1, int16_t m2, int16_t m3, int16_t m4));
 VOID hctl_window PROTO((int16_t w_handle, int16_t mx, int16_t my));
@@ -538,7 +542,7 @@ VOID kchange PROTO((int16_t ch, int16_t kstat));
 VOID post_keybd PROTO((PD *p, uint16_t ch));
 VOID bchange PROTO((int16_t new, int16_t clicks));
 int16_t downorup PROTO((int16_t new, intptr_t buparm));
-VOID post_button PROTO((PD * p, int16_t new, int16_t clks));
+VOID post_button PROTO((PD *p, int16_t new, int16_t clks));
 VOID mchange PROTO((int16_t rx1, int16_t ry1));
 VOID post_mouse PROTO((PD *p, int16_t grx, int16_t gry));
 int16_t inorout PROTO((EVB *e, int16_t rx, int16_t ry));
@@ -921,7 +925,7 @@ VOID hcli PROTO((NOTHING));
 VOID sti PROTO((NOTHING));
 VOID hsti PROTO((NOTHING));
 VOID dsptch PROTO((NOTHING));
-VOID savestate PROTO((NOTHING));
+VOID savestate PROTO((AESPD *pd));
 VOID switchto PROTO((UDA *pd));
 VOID gotopgm PROTO((NOTHING));
 VOID psetup PROTO((PD *pd, VOIDPTR pcode));

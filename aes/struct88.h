@@ -169,11 +169,20 @@ EVB		/* event block structure */
 /* p_name */
 #define AP_NAMELEN  8           /* architectural */
 
+#if AESVERSION >= 0x200
 #define		PS_RUN			1	/* p_stat */
 #define		PS_MWAIT		2
 #define		PS_TRYSUSPEND	4
 #define		PS_TOSUSPEND	8
 #define		PS_SUSPENDED	16
+#else
+#define		PS_RUN			1	/* p_stat */
+#define		PS_MWAIT		1
+#define		PS_TRYSUSPEND	4
+#define		PS_TOSUSPEND	8
+#define		PS_SUSPENDED	16
+#endif
+
 
 PD 
 {
