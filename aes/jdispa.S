@@ -63,6 +63,27 @@ longframe	equ $59e			; BIOS system variable...
  * Utility routines						 *
  *****************************************************************/
 
+/*****************************************************************
+ *                                                               *
+ * _dsptch, called from lots of places to do context switching.  *
+ * We want to return to super from switchto (see below) by using *
+ * an rte.  Return is already on stack, just push current sr...  *
+ * OR fix stack frame then push the sr if CPU uses long frames.  *
+ *                                                               *
+ *****************************************************************/
+/* 306de: 00e258aa */
+	xdef	_dsptch
+_dsptch:
+	tst.b	_indisp			; be atomic
+	beq.b	dsp1			; if clear, enter with _indisp set
+	rts				; else just forget the whole thing
+ 
+dsp1:
+dsp2:
+	move	sr,-(sp)		; and finish the stack frame with sr
+		move.l    a0,-(a7)
+		jmp       _disp
+
 /*
  * disable interrupts and save state
  */
@@ -104,30 +125,6 @@ _hsti:
 
 
  
-/*****************************************************************
- *                                                               *
- * _dsptch, called from lots of places to do context switching.  *
- * We want to return to super from switchto (see below) by using *
- * an rte.  Return is already on stack, just push current sr...  *
- * OR fix stack frame then push the sr if CPU uses long frames.  *
- *                                                               *
- *****************************************************************/
-/* 306de: 00e258aa */
-	xdef	_dsptch
-_dsptch:
-	tas	_indisp			; be atomic
-	beq.b	dsp1			; if clear, enter with _indisp set
-	rts				; else just forget the whole thing
- 
-dsp1:	tst.w	(longframe).w		; check what mode what are in
-	beq.b	dsp2			; 68000 mode !
-
-	subq	#2,sp			; bump up the stack pointer
-	move.l	2(sp),(sp)		; move up the return address
-	clr	4(sp)			; fake a stack frame format word
-
-dsp2:	move	sr,-(sp)		; and finish the stack frame with sr
-	
 /*
  * Now save the context of the machine
  */

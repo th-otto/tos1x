@@ -189,7 +189,9 @@ typedef struct {
 	/* 13718 */ int16_t o13718;
 	/* 13720 */ int16_t o13720;
 	/* 13722 */ int16_t o13722;
-	/* 13724 */ char unused6[6];
+	/* 13724 */ int16_t o13724;
+	/* 13726 */ int16_t o13726;
+	/* 13728 */ int16_t dcopy_save;
 	/* 13730 */ int16_t ddele_save;
 	/* 13732 */ int16_t s_bitblt;
 	/* 13734 */ int16_t dwrite_save;
@@ -224,7 +226,7 @@ typedef struct {
 	/* 23564 */ DESKWIN winpd[MAXWIN];	/* window process structure */
 	/* 24652 */ char unused5[6332];
 	/* 30440 */ char autofile[PATHLEN];
-	/* 30568 */
+	/* 30572 */
 	
 } THEDSK;
 

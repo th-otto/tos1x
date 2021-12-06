@@ -62894,6 +62894,8 @@ gem.rsc:
 6126: ustak
 61AA: diskin
 61AC: aautopath
+63C2: 
+63C6: 
 63C8: savsr
 63CC: psetsr
 664E: dspstk

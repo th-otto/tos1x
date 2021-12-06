@@ -334,8 +334,11 @@ _endvdibss: ds.b 0
 
 	V(x00632c,b,16)
 	V(x00633c,b,16)
-	V(x00634c,b,128)
-	ds.b 654
+	V(x00634c,b,122)
+
+	INT(x0063c6)
+
+	ds.b 658
 	
 	LONG(_crit_err)
 	LONG(savestk)
