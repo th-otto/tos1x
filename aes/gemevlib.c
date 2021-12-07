@@ -254,8 +254,10 @@ PP(int16_t *prets;)
 				}
 			}
 
+#if AESVERSION >= 0x200
 			if (mowner(tbutton) != rlr)
 				what &= ~MU_BUTTON;
+#endif
 		}
 	}
 	/* quick check mouse rec */

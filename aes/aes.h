@@ -925,7 +925,7 @@ VOID hcli PROTO((NOTHING));
 VOID sti PROTO((NOTHING));
 VOID hsti PROTO((NOTHING));
 VOID dsptch PROTO((NOTHING));
-VOID savestate PROTO((AESPD *pd));
+VOID savestate PROTO((UDA *pd));
 VOID switchto PROTO((UDA *pd));
 VOID gotopgm PROTO((NOTHING));
 VOID psetup PROTO((PD *pd, VOIDPTR pcode));

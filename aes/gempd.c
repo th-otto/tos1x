@@ -38,6 +38,8 @@ PD *getpd PROTO((NOTHING));
 
 
 /* 306de: 00e1fe68 */
+/* 104de: 00fdeaba */
+/* 106de: 00e20380 */
 BOOLEAN fapd(P(const char *) pname, P(int16_t) pid, P(PD *) ppd)
 PP(const char *pname;)
 PP(int16_t pid;)
@@ -61,6 +63,8 @@ PP(register PD *ppd;)
 
 
 /* 306de: 00e1fec8 */
+/* 104de: 00fdeb0a */
+/* 106de: 00e203e0 */
 PD *fpdnm(P(const char *) pname, P(uint16_t) pid)
 PP(const char *pname;)
 PP(uint16_t pid;)
@@ -84,6 +88,8 @@ PP(uint16_t pid;)
 
 
 /* 306de: 00e1ff64 */
+/* 104de: 00fdeb9a */
+/* 106de: 00e2047c */
 PD *getpd(NOTHING)
 {
 	PD *p;
@@ -115,6 +121,8 @@ PD *getpd(NOTHING)
 
 
 /* 306de: 00e1ffde */
+/* 104de: 00fdec12 */
+/* 106de: 00e204f6 */
 VOID p_nameit(P(PD *) p, P(const char *) pname)
 PP(PD *p;)
 PP(const char *pname;)
@@ -125,6 +133,8 @@ PP(const char *pname;)
 
 
 /* 306de: 00e20018 */
+/* 104de: 00fdec42 */
+/* 106de: 00e20530 */
 PD *pstart(P(VOIDPTR) pcode, P(const char *) pfilespec, P(intptr_t) ldaddr)
 PP(VOIDPTR pcode;)
 PP(const char *pfilespec;)
@@ -140,7 +150,11 @@ PP(intptr_t ldaddr;)
 	/* cs, ip, use 0 flags  */
 	psetup(px, pcode);
 	/* link him up */
+#if AESVERSION >= 0x200
 	px->p_stat = PS_RUN;
+#else
+	px->p_stat = 0;
+#endif
 	px->p_link = drl;
 	drl = px;
 

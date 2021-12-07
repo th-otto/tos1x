@@ -256,6 +256,7 @@ VOID all_run(NOTHING)
 
 /* 306de: 00e1dca8 */
 /* 104de: 00fd3d0a */
+/* 106de: 00e13f48 */
 /* 404: 00e24a90 */
 VOID gem_main(NOTHING)
 {

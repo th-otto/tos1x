@@ -2,7 +2,7 @@
  ***************************   GEMDISP.C    ******************************
  *
  * =======================================================================
- * $Author: mui $ 	$Date: 89/04/26 18:21:59 $
+ * $Author: mui $       $Date: 89/04/26 18:21:59 $
  * =======================================================================
  *
  * Revision 2.3  89/04/26  18:21:59  mui
@@ -22,25 +22,25 @@
  * 
  *************************************************************************
  */
-/*	GEMDISP.C	1/27/84 - 02/03/85	Lee Jay Lorenzen	*/
-/*	Reg Opt		03/09/85		Derek Mui		*/
-/*	1.1		03/21/85		Lowell Webster		*/
-/*	Change chkbd	07/22/85		Derek Mui		*/
-/*	Change disp_act	07/12/85		Derek Mui		*/
-/*	Reorganize the chkkbd	08/14/85	Derek Mui		*/
-/*	Trying 1.2	10/16/85		Derek Mui		*/
-/*	Fix the forker  3/10/86			Derek Mui		*/
-/*	Fix the KEYSTOP	3/21/86			Derek Mui		*/
-/*	Inlined code of schedule and mwait_act	4/9/88			*/
-/*	Fix the accessory wait problem	7/13/90	D.Mui			*/
-/*	Block process when in critical error	8/1/90	D.Mui		*/
+/*      GEMDISP.C       1/27/84 - 02/03/85      Lee Jay Lorenzen        */
+/*      Reg Opt         03/09/85                Derek Mui               */
+/*      1.1             03/21/85                Lowell Webster          */
+/*      Change chkbd    07/22/85                Derek Mui               */
+/*      Change disp_act 07/12/85                Derek Mui               */
+/*      Reorganize the chkkbd   08/14/85        Derek Mui               */
+/*      Trying 1.2      10/16/85                Derek Mui               */
+/*      Fix the forker  3/10/86                 Derek Mui               */
+/*      Fix the KEYSTOP 3/21/86                 Derek Mui               */
+/*      Inlined code of schedule and mwait_act  4/9/88                  */
+/*      Fix the accessory wait problem  7/13/90 D.Mui                   */
+/*      Block process when in critical error    8/1/90  D.Mui           */
 
 /*
- *	-------------------------------------------------------------
- *	GEM Application Environment Services		  Version 1.1
- *	Serial No.  XXXX-0000-654321		  All Rights Reserved
- *	Copyright (C) 1985			Digital Research Inc.
- *	-------------------------------------------------------------
+ *      -------------------------------------------------------------
+ *      GEM Application Environment Services              Version 1.1
+ *      Serial No.  XXXX-0000-654321              All Rights Reserved
+ *      Copyright (C) 1985                      Digital Research Inc.
+ *      -------------------------------------------------------------
  */
 
 #include "aes.h"
@@ -57,6 +57,7 @@ PD *slr;
 
 /* 306de: 00e1b8ea */
 /* 104de: 00fde286 */
+/* 106de: 00e1fa66 */
 BOOLEAN forkq(P(FCODE) fcode, P(int32_t) fdata)
 PP(FCODE fcode;)
 PP(int32_t fdata;)
@@ -83,6 +84,7 @@ PP(int32_t fdata;)
 
 /* 306de: 00e1b94a */
 /* 104de: 00fde2de */
+/* 106de: 00e1fac6 */
 VOID disp_act(P(PD *) p)
 PP(register PD *p;)
 {
@@ -104,6 +106,7 @@ PP(register PD *p;)
 }
 
 
+#if AESVERSION >= 0x200
 /*
  * Suspend the process
  */
@@ -118,9 +121,12 @@ PP(register PD *p;)
 	p->p_link = slr;
 	slr = p;
 }
+#endif
 
 
 /* 306de: 00e1b9aa */
+/* 104de: 00fde306 */
+/* 106de: 00e1faf6 */
 VOID forker(NOTHING)
 {
 	register FPD *f;
@@ -176,6 +182,8 @@ VOID forker(NOTHING)
 
 
 /* 306de: 00e1bac6 */
+/* 104de: 00fde416 */
+/* 106de: 00e1fc12 */
 VOID chkkbd(NOTHING)
 {
 	register int16_t achar, kstat;
@@ -235,26 +243,25 @@ VOID chkkbd(NOTHING)
  ****************************************************************/
 
 /* 306de: 00e1bb66 */
+/* 104de: 00fde4a0 */
+/* 106de: 00e1fcb2 */
 VOID disp(NOTHING)
 {
 	register PD *p;
-	register PD *p1;
 
+	savestate(rlr->p_uda);
 	rlr = (p = rlr)->p_link;
 	/* based on the state of the process p do something */
-	if (p->p_stat & PS_RUN)
+	if (p->p_stat == 0)
 	{
 		disp_act(p);
-	} else if (p->p_stat & PS_MWAIT)		/* mwait_act( p );  */
+	} else if (p->p_stat == PS_MWAIT)		/* mwait_act( p );  */
 	{
 		if (p->p_evwait & p->p_evflg)
 		{
 			disp_act(p);
 		} else
 		{
-			if ((p->p_stat & PS_TOSUSPEND) && (!wwait))
-				suspend_act(p);			/* suspend the process  */
-			else
 			{
 				p->p_link = nrl;		/* good night, Mrs. */
 				nrl = p;				/* Calabash, wherever   */
@@ -262,7 +269,6 @@ VOID disp(NOTHING)
 		}
 	}
 
-	wwait = FALSE;
 	/* run through and execute all the fork processes */
 	do
 	{
@@ -293,17 +299,11 @@ VOID disp(NOTHING)
 
 	} while (fpcnt);
 
-	/* This process is to be suspended when it return to here   */
-	if (rlr->p_stat & PS_TRYSUSPEND)
-	{
-		rlr->p_stat &= ~PS_TRYSUSPEND;
-		rlr->p_stat |= PS_TOSUSPEND;
-	}
-
 	/*
 	 * switch to the context of the appropriate process
 	 */
 	cda = rlr->p_cda;
+	switchto(rlr->p_uda);
 }
 
 /****************************************************************

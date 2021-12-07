@@ -23,7 +23,8 @@ include $(top_srcdir)/config.mak
 
 ifeq ($(USE_CROSS_ALCYON),1)
 ifeq ($(TOSVERSION),104)
-CPPFLAGS += -A
+LINEF_FLAGS = -A
+CPPFLAGS += $(LINEF_FLAGS)
 endif
 endif
 
@@ -38,6 +39,15 @@ ifeq ($(USE_CROSS_ALCYON),1)
 # sections.mak might have just been generated, make sure it is reread
 aes.o: $(VARS_OBJS) $(STARTUP) $(AES_OBJS) aesext.o $(top_srcdir)/common/sections.mak ${MAKEFILE}
 	$(MAKE) TOSVERSION=$(TOSVERSION) COUNTRY=$(COUNTRY) single
+
+#
+# ugly hack for even more ugly assembly in gembind.c
+#
+gembind.o: gembind.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) ${RUN_OPTIMIZE_${$*_OPTIMIZE}} -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+	$(AM_V_at)$(AS) $(ASFLAGS) -c $(LINEF_FLAGS) $*.s
+	$(AM_V_at)$(RM) $*.s
 
 single::
 

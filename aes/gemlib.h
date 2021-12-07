@@ -273,6 +273,8 @@ THEGLO
 	char	s_tail[CMDLEN];
 
 	WINDOW	w_win[NUM_WIN];
+	
+	/* 13092 */
 };
 
 #endif /* GEMLIB_H */

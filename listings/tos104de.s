@@ -62932,6 +62932,7 @@ gem.rsc:
 6BE4: bar_max
 6C00: maddr
 6C04: mform
+6C56: intout
 6C6A: ptsout
 6C7E: ctrl
 6CB8: gl_dabase
@@ -62986,6 +62987,7 @@ gem.rsc:
 6E3E: gl_rmnactv
 6E4A: gl_awind
 6E52: gl_rbuf
+6E56: gl_mkrect
 6E62: gl_ctwait
 6E6C: pglobal
 6E8A: gl_wclip
@@ -62999,9 +63001,11 @@ gem.rsc:
 6F1E: gl_rmenu
 6F26: gl_tcolor
 6FE8: gl_mnpid
+6FEC: pr_mclick
 6FEE: g_wsend
 6FF0: gl_wschar
 6FF2: rs_global
+6FF6: gl_play
 6FF8: elinkoff
 6FFC: gl_cowner
 7000: gl_font
@@ -63029,6 +63033,7 @@ gem.rsc:
 708A: autoexec
 708C: gl_wtop
 7094: pr_xrat
+7096: pr_button
 70B8: gl_wsptschar
 70BA: gl_wptschar
 70BC: drawstk
@@ -63057,6 +63062,7 @@ A7B6: g_buffer
 A7BE: zlr
 A7C2: g_flag
 A7C4: sh_gem
+A7C6: mclick
 A7C8: gl_fis
 A7CA: no_aes
 A7CC: ctl_pd

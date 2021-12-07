@@ -385,8 +385,9 @@ _endvdibss: ds.b 0
 	PTR(_maddr)
 	V(mform,w,37)
 	
-	ds.b 28
+	ds.b 8
 	
+	V(_intout,w,10)
 	V(_ptsout,w,10)
 	GRECT(_ctrl)
 	
@@ -487,9 +488,7 @@ _endvdibss: ds.b 0
 	ds.b 4
 	
 	PTR(_gl_rbuf)
-
-	ds.b 12
-
+	V(_gl_mkrect,b,12)  /* ORECT */
 	V(_gl_ctwait,w,5) /* MOBLK */
 	V(_pglobal,w,15)
 	INT(_gl_wclip)
@@ -509,16 +508,12 @@ _endvdibss: ds.b 0
 	ds.b 192
 	
 	LONG(_gl_mnpid) /* BUG: should be int */
-
-	ds.b 2
-
+	INT(_pr_mclick)
 	INT(_g_wsend)
 
 	INT(_gl_wschar)
 	PTR(_rs_global)
-
-	ds.b 2
-	
+	INT(_gl_play)
 	LONG(_elinkoff)
 	PTR(_gl_cowner)
 	INT(_gl_font)
@@ -567,8 +562,7 @@ _endvdibss: ds.b 0
 	ds.b 6
 	
 	INT(_pr_xrat)
-	
-	ds.b 2
+	INT(_pr_button)
 	
 	V(x007098,w,4*4)
 	
@@ -615,9 +609,7 @@ _endvdibss: ds.b 0
 	PTR(_zlr)
 	INT(_g_flag)
 	INT(_sh_gem)
-
-	ds.b 2
-	
+	INT(_mclick)
 	INT(_gl_fis)
 	INT(_no_aes)
 	PTR(_ctl_pd)
@@ -674,7 +666,6 @@ _endvdibss: ds.b 0
 	PTR(trp13aret)
 	PTR(trp14aret)
 	GRECT(_fobj)
-	V(_intout,w,10)
 	INT(_xprint)
 	INT(_m_st)
 	V(_temp,b,50) /* unused */
@@ -712,7 +703,6 @@ _endvdibss: ds.b 0
 	INT(_wasclr)
 	V(_inf_path,b,PATHLEN)
 	PTR(_cart_dta)
-	V(_gl_mkrect,b,12)  /* ORECT */
 	PTR(_ad_title)
 	INT(_p_timedate)
 	V(_mentable,b,MAXMENU)
@@ -720,9 +710,7 @@ _endvdibss: ds.b 0
 	PTR(_ad_fstree)
 	V(_gl_omform,w,37) /* MFORM */
  	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
-	INT(_pr_mclick)
 	PTR(_iconmem)
-	INT(_gl_play)
 	V(_comtail,b,PATHLEN)
 	INT(_font_save)
 	INT(_fs_first)
@@ -751,7 +739,6 @@ _endvdibss: ds.b 0
 	INT(_desksiz)
 	PTR(_deskptr)
 	INT(_o_status)
-	INT(_pr_button)
 	TEDINFO(_edblk)
 	GRECT(_gl_rfs)
 	PTR(_rs_hdr)
@@ -774,7 +761,6 @@ _endvdibss: ds.b 0
 	INT(_i_status) /* unused */
 	INT(_x_cur)
 	PTR(_x_win)
-	INT(_wwait)
 	PTR(_dpd)
  	V(_W_ACTIVE,b,24*MAXOBJ)  /* OBJECT[MAXOBJ] */
 	V(_dtabuf,b,44+4)
@@ -784,7 +770,6 @@ _endvdibss: ds.b 0
 	LONG(_numdirs)
 	PTR(_q_addr)
 	PTR(_d_path)
-	INT(_mclick)
 	INT(_rename)
 	INT(_opcode)
 	INT(_o_item)

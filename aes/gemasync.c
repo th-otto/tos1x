@@ -38,7 +38,9 @@
 #include "gemlib.h"
 
 int16_t tbutton;
+#if AESVERSION >= 0x200
 int16_t wwait;
+#endif
 
 
 /* 306de: 00e19db6 */

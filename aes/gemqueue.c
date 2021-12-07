@@ -37,6 +37,8 @@ VOID doq PROTO((int16_t donq, PD *p, QPB *m));
 
 
 /* 306de: 00e20062 */
+/* 104de: 00fdec7c */
+/* 106de: 00e20578 */
 VOID doq(P(int16_t) donq, P(PD *) p, P(QPB *) m)
 PP(int16_t donq;)
 PP(register PD *p;)
@@ -52,15 +54,17 @@ PP(QPB *m;)
 		/* if its a redraw msg try to find a matching msg and union the redraw rects together */
 		nm = (int16_t *) &p->p_queue[p->p_qindex];
 
+#if AESVERSION >= 0x200
 		if (nm[0] == AC_CLOSE)
 			p->p_stat |= PS_TRYSUSPEND;
+#endif
 
 		if (nm[0] == WM_REDRAW)
 		{
 			index = 0;
 			while ((index < p->p_qindex) && n)
 			{
-				om = (int16_t *) & p->p_queue[index];
+				om = (int16_t *) &p->p_queue[index];
 				if (om[0] == WM_REDRAW && nm[3] == om[3])
 				{
 					rc_union((GRECT *)&nm[4], (GRECT *)&om[4]);
@@ -83,6 +87,8 @@ PP(QPB *m;)
 
 
 /* 306de: 00e2014e */
+/* 104de: 00fded44 */
+/* 106de: 00e20658 */
 VOID aqueue(P(BOOLEAN) isqwrite, P(EVB *) e, P(intptr_t) lm)
 PP(BOOLEAN isqwrite;)
 PP(register EVB *e;)

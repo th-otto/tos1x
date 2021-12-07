@@ -35,6 +35,8 @@
 
 
 /* 306de: 00e1c1f4 */
+/* 104de: 00fde542 */
+/* 106de: 00e1fd4e */
 #if BINEXACT
 VOID tchange(P(int32_t) c)
 PP(register int32_t c;)	/* number of ticks that have gone by  */
@@ -75,7 +77,7 @@ PP(int16_t p2;)
 	if (d)								/*    6/19/85       */
 	{
 		CMP_TICK = d->e_parm;
-		NUM_TICK = 0x0L;
+		NUM_TICK = 0;
 	}
 	sti();
 }
@@ -83,6 +85,8 @@ PP(int16_t p2;)
 
 
 /* 306de: 00e1c260 */
+/* 104de: 00fde59a */
+/* 106de: 00e1fdba */
 int16_t tak_flag(P(SPB *) sy)
 PP(register SPB *sy;)
 {
@@ -116,6 +120,8 @@ PP(register SPB *sy;)
 /*	right to access	the controlled area. 	*/
 
 /* 306de: 00e1c29c */
+/* 104de: 00fde5ce */
+/* 106de: 00e1fdf6 */
 VOID amutex(P(EVB *) e, P(SPB *) sy)
 PP(register EVB *e;)
 PP(SPB *sy;)
@@ -131,6 +137,8 @@ PP(SPB *sy;)
 
 
 /* 306de: 00e1c2d6 */
+/* 104de: 00fde5f8 */
+/* 106de: 00e1fe30 */
 VOID unsync(P(SPB *) sy)
 PP(register SPB *sy;)
 {

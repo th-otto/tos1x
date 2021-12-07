@@ -51,6 +51,8 @@ static VOID mkrect PROTO((LPTREE tree, int16_t wh, int16_t junkx, int16_t junky)
 
 
 /* 306de: 00e22d7a */
+/* 104de: 00fdee1e */
+/* 106de: 00e2074e */
 ORECT *get_orect(NOTHING)
 {
 	ORECT *po;
@@ -62,6 +64,8 @@ ORECT *get_orect(NOTHING)
 
 
 /* 306de: 00e22d9c */
+/* 104de: 00fdee3e */
+/* 106de: 00e20770 */
 ORECT *mkpiece(P(int16_t) tlrb, P(ORECT *) new, P(ORECT *) old)
 PP(int16_t tlrb;)
 PP(register ORECT *new;)
@@ -100,6 +104,8 @@ PP(register ORECT *old;)
 
 
 /* 306de: 00e22e88 */
+/* 104de: 00fdef1a */
+/* 106de: 00e2085c */
 ORECT *brkrct(P(ORECT *) new, P(ORECT *) r, P(ORECT *) p)
 PP(register ORECT *new;)
 PP(register ORECT *r;)
@@ -136,6 +142,8 @@ PP(register ORECT *p;)
 
 
 /* 306de: 00e22f84 */
+/* 104de: 00fdf00c */
+/* 106de: 00e20958 */
 static VOID mkrect(P(LPTREE) tree, P(int16_t) wh, P(int16_t) junkx, P(int16_t) junky)
 PP(LPTREE tree;)
 PP(int16_t wh;)
@@ -168,6 +176,8 @@ PP(int16_t junky;)
 
 
 /* 306de: 00e22fe2 */
+/* 104de: 00fdf060 */
+/* 106de: 00e209b6 */
 VOID newrect(P(LPTREE) tree, P(int16_t) wh, P(int16_t) junkx, P(int16_t) junky)
 PP(LPTREE tree;)
 PP(int16_t wh;)
@@ -199,7 +209,7 @@ PP(int16_t junky;)
 	/* init. a global orect for use during mkrect calls */
 	gl_mkrect.o_link = NULL;
 	/* break other window's rects with our current rect */
-	everyobj(tree, ROOT, wh, mkrect, 0, 0, MAX_DEPTH);
+	feveryobj(tree, ROOT, wh, mkrect, 0, 0, MAX_DEPTH);
 	/* get an orect in this windows list */
 	new = get_orect();
 	new->o_link = NULL;

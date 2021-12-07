@@ -89,6 +89,7 @@ int16_t gl_bdelay;
 
 
 
+#if AESVERSION >= 0x200
 /*
  * Check if the current click will transfer mouse ownership
  */
@@ -125,12 +126,15 @@ PP(int16_t new;)
 
 	return m;
 }
+#endif
 
 
 /*
  *	DeQueue a a character from a circular keyboard buffer.
  */
 /* 306de: 00e1e7a4 */
+/* 104de: 00fde634 */
+/* 106de: 00e1fe7c */
 uint16_t dq(P(CQUEUE *) qptr)
 PP(register CQUEUE *qptr;)
 {
@@ -148,6 +152,8 @@ PP(register CQUEUE *qptr;)
  *	Flush the characters from a circular keyboard buffer.
  */
 /* 306de: 00e1e7da */
+/* 104de: 00fde662 */
+/* 106de: 00e1feb2 */
 VOID fq(NOTHING)
 {
 	while (cda->c_q.c_cnt)
@@ -162,6 +168,8 @@ VOID fq(NOTHING)
  * evinsert is in the gemasync.c
  */
 /* 306de: 00e1e7fe */
+/* 104de: 00fde684 */
+/* 106de: 00e1fed6 */
 VOID evremove(P(EVB *) e, P(uint16_t) ret)
 PP(register EVB *e;)
 PP(uint16_t ret;)
@@ -176,6 +184,8 @@ PP(uint16_t ret;)
 
 
 /* 306de: 00e1e840 */
+/* 104de: 00fde6ba */
+/* 106de: 00e1ff18 */
 VOID kchange(P(int16_t) ch, P(int16_t) kstat)
 PP(int16_t ch;)
 PP(int16_t kstat;)
@@ -187,6 +197,8 @@ PP(int16_t kstat;)
 
 
 /* 306de: 00e1e864 */
+/* 104de: 00fde6dc */
+/* 106de: 00e1ff3c */
 VOID post_keybd(P(PD *) p, P(uint16_t) ch)
 PP(PD *p;)
 PP(uint16_t ch;)
@@ -223,15 +235,47 @@ PP(uint16_t ch;)
  * forker will come here
  */
 /* 306de: 00e1e8c2 */
+/* 104de: 00fde730 */
+/* 106de: 00e1ff9a */
 VOID bchange(P(int16_t) new, P(int16_t) clicks)
 PP(int16_t new;)
 PP(int16_t clicks;)
 {
+#if AESVERSION >= 0x200
 	/* if control mgr. does not own the mouse */
 #if AESVERSION < 0x330
 	if (gl_mowner != ctl_pd)
 #endif
 		gl_mowner = mowner(new);
+#else
+	/* inline version of mowner() above */
+	if (gl_mowner != ctl_pd)
+	{
+		int16_t wh;
+		register int16_t mx, my;
+	
+		if (new == MB_DOWN && button == 0)
+		{
+			mx = xrat;
+			my = yrat;
+			/* if inside ctrl rect then owned by active process */
+			if (inside(mx, my, &ctrl))
+			{
+				gl_mowner = gl_cowner;
+			} else							/* if in menu bar then  */
+			{								/* owned by ctrl mgr    */
+				if (inside(mx, my, &gl_rmenu))
+				{							/* Hit any window? */
+					wh = NIL;
+				} else
+				{
+					wh = wm_find(mx, my) ? NIL : 0;
+				}
+				gl_mowner = wh == NIL ? ctl_pd : srchwp(0)->w_owner;
+			}
+		}
+	}
+#endif
 	/* see if this button event causes an ownership change */
 
 	/* if the button went down check to see if ownership should go to the control mgr. */
@@ -248,6 +292,8 @@ PP(int16_t clicks;)
 
 
 /* 206de: 00e1aed2 */
+/* 104de: 00fde826 */
+/* 106de: 00e200a0 */
 int16_t downorup(P(int16_t) new, P(intptr_t) buparm)
 PP(int16_t new;)
 PP(register intptr_t buparm;)
@@ -263,6 +309,8 @@ PP(register intptr_t buparm;)
 
 
 
+/* 104de: 00fde876 */
+/* 106de: 00e200fc */
 VOID post_button(P(PD *) p, P(int16_t) new, P(int16_t) clks)
 PP(PD *p;)
 PP(int16_t new;)
@@ -294,6 +342,8 @@ PP(register int16_t clks;)
  * forker of mouse change
  */
 /* 306de: 00e1ea10 */
+/* 104de: 00fde8ec */
+/* 106de: 00e2017c */
 VOID mchange(P(int16_t) rx1, P(int16_t) ry1)
 PP(register int16_t rx1;)
 PP(register int16_t ry1;)
@@ -350,6 +400,8 @@ PP(register int16_t ry1;)
 
 
 /* 306de: 00e1eb5e */
+/* 104de: 00fdea1a */
+/* 106de: 00e202ca */
 VOID post_mouse(P(PD *) p, P(int16_t) grx, P(int16_t) gry)
 PP(register PD *p;)
 PP(int16_t grx;)
@@ -369,6 +421,8 @@ PP(int16_t gry;)
 
 
 /* 306de: 00e1eba0 */
+/* 104de: 00fdea52 */
+/* 106de: 00e2030c */
 int16_t inorout(P(EVB *) e, P(int16_t) rx, P(int16_t) ry)
 PP(register EVB *e;)
 PP(register int16_t rx;)

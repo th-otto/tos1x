@@ -122,6 +122,10 @@ PP(int16_t *pth;)
 
 
 /* 306de: 00e1fd18 */
+#if LINEF_HACK
+asm("  .globl _feveryobj")
+asm("_feveryobj: ds.b 0")
+#endif
 VOID everyobj(P(LPTREE) tree, P(int16_t) this, P(int16_t) last, P(EVERYOBJ_CALLBACK) routine, P(int16_t) startx, P(int16_t) starty, P(int16_t) maxdep)
 PP(register LPTREE tree;)
 PP(register int16_t this;)

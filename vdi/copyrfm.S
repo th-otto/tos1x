@@ -244,12 +244,6 @@ inverse_transparent_mode:
 	clr.w	FG_COL(a6)				/* were only interested in one color */
 	move.w	d6,BG_COL(a6)			/* save the color of interest */
 
-#if VIDEL_SUPPPORT
-	cmp.w	#PIXPACKED,form_id(a1)	/* see if we're in px packed */
-	bne	the_clipper
-	move.b	#13,OP_TAB+00(a6)		/* (NOT S) OR D */
-	move.w	d7,FG_COL(a6)
-#endif
 	bra	the_clipper
 
 transparent_mode:
@@ -259,12 +253,6 @@ transparent_mode:
 	clr.w	BG_COL(a6)				/* were only interested in one color */
 	move.w	d7,FG_COL(a6)			/* save the color of interest */
 
-#if VIDEL_SUPPPORT
-	cmp.w	#PIXPACKED,form_id(a1)	/* see if we're in px packed */
-	bne	the_clipper
-	move.b	#7,OP_TAB+00(a6)		/* S OR D */
-	move.w	d6,BG_COL(a6)
-#endif
 	bra	the_clipper
 
 
@@ -278,11 +266,6 @@ replace_mode:
 	move.b	#03,OP_TAB+02(a6)		/* fg:1 bg:0  D' <- S */
 	move.b	#15,OP_TAB+03(a6)		/* fg:1 bg:1  D' <- 1 */
 
-#if VIDEL_SUPPPORT
-	cmp.w	#PIXPACKED,form_id(a1)	/* see if we're in px packed */
-	bne	the_clipper
-	move.b	#3,OP_TAB+00(a6)		/* S */
-#endif
 	bra	the_clipper
 
 
