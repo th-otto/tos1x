@@ -149,7 +149,7 @@ PP(int16_t new_state;)
  *	Routine to draw an object from an object tree.
  */
 /* 306de: 00e233f2 */
-LINEF_STACK VOID just_draw(P(LPTREE) tree, P(int16_t) obj, P(int16_t) sx, P(int16_t) sy)
+LINEF_STATIC VOID just_draw(P(LPTREE) tree, P(int16_t) obj, P(int16_t) sx, P(int16_t) sy)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
 PP(register int16_t sx;)

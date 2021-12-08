@@ -487,7 +487,7 @@ lineftab: ds.b 0
 		dc.l _signal              ; F6B4
 		dc.l _ev_block            ; F6B8
 		dc.l _fpdnm               ; F6BC
-		dc.l _i_ptr               ; F6C0
+		dc.l _i_lptr1             ; F6C0
 		dc.l _gsx_ncode           ; F6C4
 		dc.l _m_lptr2             ; F6C8
 		dc.l _forkq               ; F6CC

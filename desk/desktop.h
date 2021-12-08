@@ -506,7 +506,7 @@ VOID my_itoa PROTO((uint16_t number, char *pnumstr));
 VOID fmt_time PROTO((uint16_t time, char *ptime));
 VOID fmt_date PROTO((uint16_t date, char *pdate));
 char * bldstring PROTO((DIR *dir, char *dst));
-const char *g_name PROTO((const char *file)); /* also referenced by AES */
+char *g_name PROTO((const char *file)); /* also referenced by AES */
 VOID save_ext PROTO((const char *path, char *buffer));
 VOID save_mid PROTO((char *path, char *buffer));
 BOOLEAN chk_par PROTO((const char *srcptr, const char *dstptr));

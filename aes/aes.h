@@ -953,7 +953,6 @@ VOID i_ptsin PROTO((int16_t *));
 VOID i_intin PROTO((int16_t *));
 VOID i_ptsout PROTO((int16_t *));
 VOID i_intout PROTO((int16_t *));
-VOID i_ptr PROTO((VOIDPTR));
 VOID i_lptr1 PROTO((VOIDPTR, ...));
 VOID i_ptr2 PROTO((VOIDPTR));
 VOID m_lptr2 PROTO((VOIDPTR *));
@@ -993,7 +992,7 @@ char *scan_2 PROTO((const char *pcurr, int16_t *pwd));
 char *escan_str PROTO((const char *pcurr, char *ppstr));
 char *save_2 PROTO((char *pcurr, uint16_t wd));
 BOOLEAN app_reschange PROTO((int16_t res));
-const char *g_name PROTO((const char *file));
+char *g_name PROTO((const char *file));
 BOOLEAN deskmain PROTO((NOTHING));
 
 

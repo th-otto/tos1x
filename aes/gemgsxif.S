@@ -1009,7 +1009,7 @@ _avst_height:
 #if CCODE
 VOID avr_recfl(WORD *pxyarray, FDB *pdesMFDB) /* ??? why MFDB ??? */
 {
-	i_ptr(pdesMFDB);
+	i_lptr1(pdesMFDB);
 	i_ptsin(pxyarray);
 	gsx_ncode(FILL_RECTANGLE, 2, 1);
 	i_ptsin(ptsin);
@@ -1034,7 +1034,7 @@ _avr_recfl:
 VOID avro_cpyfm(WORD wr_mode, WORD *pxyarray, WORD *psrcMFDB, WORD *pdesMFDB)
 {
 	intin[0] = wr_mode;
-	i_ptr(psrcMFDB);
+	i_lptr1(psrcMFDB);
 	i_ptr2(pdesMFDB);
 	i_ptsin(pxyarray);
 	gsx_ncode(COPY_RASTER_FORM, 4, 1);
@@ -1067,7 +1067,7 @@ VOID avrt_cpyfm(WORD wr_mode, WORD *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB, WORD
 	pintin[0] = wr_mode;
 	pintin[1] = fgcolor;
 	pintin[2] = bgcolor;
-	i_ptr(psrcMFDB);
+	i_lptr1(psrcMFDB);
 	i_ptr2(pdesMFDB);
 	i_ptsin(pxyarray);
 	gsx_ncode(TRAN_RASTER_FORM, 4, 3);
@@ -1095,7 +1095,7 @@ _avrt_cpyfm:
 #if CCODE
 VOID avr_trnfm(FDB *psrcMFDB, FDB *pdesMFDB)
 {
-	i_ptr(psrcMFDB);
+	i_lptr1(psrcMFDB);
 	i_ptr2(pdesMFDB);
 	gsx_ncode(TRANSFORM_FORM, 0, 0);
 }

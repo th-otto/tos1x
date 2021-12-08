@@ -75,6 +75,7 @@ PP(intptr_t pglobal;)
 	LLSET(pglobal + 22, &D);
 	LWSET(pglobal + 26, gl_bvdisk);
 	LWSET(pglobal + 28, gl_bvhard);
+	rlr->p_msgtosend = FALSE;
 	return rlr->p_pid;
 }
 #endif
@@ -84,7 +85,7 @@ PP(intptr_t pglobal;)
  * AES #16 - appl_bvset - Set the available logical drives for the file-selector. 
  */
 /* 104de: 00fd79cc (in deskif.S) */
-#if AESVERSION >= 0x200
+#if 0
 int16_t ap_bvset(P(int16_t) bvdisk, P(int16_t) bvhard)
 PP(int16_t bvdisk;)
 PP(int16_t bvhard;)
@@ -117,6 +118,7 @@ int16_t ap_exit(NOTHING)
 #endif
 
 
+#if AESVERSION >= 0x200
 /*
  * Read the internal process message
  */
@@ -124,8 +126,15 @@ int16_t ap_exit(NOTHING)
 int16_t rd_mymsg(P(VOIDPTR) buffer)
 PP(VOIDPTR buffer;)
 {
-	return FALSE;
+	if (rlr->p_msgtosend)				/* there is a message   */
+	{
+		LBCOPY(buffer, rlr->p_message, 16);
+		rlr->p_msgtosend = FALSE;		/* message is sent  */
+		return TRUE;
+	} else
+		return FALSE;
 }
+#endif
 
 
 /*
@@ -136,6 +145,7 @@ PP(VOIDPTR buffer;)
  */
 /* 306de: 00e19afe */
 /* 104de: 00fdf958 */
+/* 106de: 00e2140e */
 int16_t ap_rdwr(P(int16_t) code, P(int16_t) id, P(int16_t) length, P(int16_t *) pbuff)
 PP(int16_t code;)
 PP(int16_t id;)
@@ -167,6 +177,7 @@ PP(int16_t *pbuff;)
  */
 /* 306de: 00e19b16 */
 /* 104de: 00fdf96a */
+/* 106de: 00e2142a */
 int16_t ap_find(P(const char *) pname)
 PP(const char *pname;)
 {
@@ -190,6 +201,7 @@ PP(const char *pname;)
  */
 /* 306de: 00e19b54 */
 /* 104de: 00fdf998 */
+/* 106de: 00e21486 */
 VOID ap_tplay(P(intptr_t) pbuff, P(int16_t) length, P(int16_t) scale)
 PP(register intptr_t pbuff;)
 PP(int16_t length;)
@@ -280,6 +292,7 @@ PP(int16_t scale;)
  */
 /* 306de: 00e19cf0 */
 /* 104de: 00fdfaee */
+/* 106de: 00e21604 */
 int16_t ap_trecd(P(intptr_t) pbuff, P(int16_t) length)
 PP(register intptr_t pbuff;)
 PP(register int16_t length;)
@@ -300,10 +313,14 @@ PP(register int16_t length;)
 	/* done recording so figure out length  */
 	cli();
 	gl_recd = FALSE;
+#if AESVERSION >= 0x200
 	length = length - gl_rlen;			/* Fixed 4/5/90     */
+#endif
 	gl_rlen = 0;
-	/*	length = ((int16_t)(gl_rbuf - pbuff)) / sizeof(FPD);	*/
-	gl_rbuf = 0x0L;
+#if AESVERSION < 0x200
+	length = ((int16_t)(gl_rbuf - pbuff)) / sizeof(FPD);
+#endif
+	gl_rbuf = 0;
 	sti();
 	/* convert to machine independent recording */
 	for (i = 0; i < length; i++)

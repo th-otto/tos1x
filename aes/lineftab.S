@@ -430,7 +430,7 @@
 [00fe7f74] dc.l $00fdd4ee            ; F6B4 ; signal AES
 [00fe7f78] dc.l $00fdfbfc            ; F6B8 ; ev_block AES
 [00fe7f7c] dc.l $00fdeb0a            ; F6BC ; fpdnm AES
-[00fe7f80] dc.l $00fe5c12            ; F6C0 ; i_ptr AES
+[00fe7f80] dc.l $00fe5c12            ; F6C0 ; i_lptr1 AES
 [00fe7f84] dc.l $00fe1b1e            ; F6C4 ; gsx_ncode; duplicate AES
 [00fe7f88] dc.l $00fe5c26            ; F6C8 ; m_lptr2 AES
 [00fe7f8c] dc.l $00fde286            ; F6CC ; forkq AES

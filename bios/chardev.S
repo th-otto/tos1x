@@ -259,11 +259,11 @@ bcon0o3:
         moveq.l   #7,d1                         /* get current io enable register contents */
         bsr       gientry
         ori.b     #$80,d0                       /* set port b for output */
-        moveq     #$87,d1                       /* set to write to io enable */
+        moveq     #-121,d1                      /* set to write to io enable */
         bsr       gientry
         move.w    d3,sr                         /* restore status register */
         move.w    6(a7),d0                      /* retrieve byte to be sent and... */
-        moveq     #$8F,d1                       /* write out byte to parallel port */
+        moveq     #-113,d1                      /* write out byte to parallel port */
         bsr       gientry
         move.w    sr,-(a7)
         ori.w     #$0700,sr
@@ -279,7 +279,7 @@ strobeoff:
         bra       onbit
 
 strobeon:
-        moveq     #$DF,d2
+        moveq     #-33,d2
         bra       offbit
 
 
@@ -294,7 +294,7 @@ _bcon0in:
         moveq.l   #7,d1                         /* get current io enable register contents */
         bsr       gientry
         andi.b    #$7F,d0                       /* set port b for input */
-        moveq     #$87,d1                       /* set to write to io enable */
+        moveq     #-121,d1                      /* set to write to io enable */
         bsr       gientry
         bsr.s     strobeoff                     /* busy off! */
 bcon0in1:
@@ -1313,7 +1313,7 @@ iorectab:
 /* 306de: 00e02a60 */
 /* 206de: 00e0272a */
 /* 104de: 00fc3a16 */
-	xdef _rsconf:
+	xdef _rsconf
 _rsconf:
 /*
  * Rsconf function for device 6 (rs232 driven by MFP)
@@ -2332,7 +2332,7 @@ giacces1:
  *       routine to turn on the dtr signal                           *
  *********************************************************************/
 dtron:
-        moveq     #$EF,d2
+        moveq     #-17,d2
         bra.s     offbit
 
 /*********************************************************************
@@ -2365,7 +2365,7 @@ onbit:
         bsr.s     gientry                       /* go get it... */
         move.l    (a7)+,d2
         or.b      d2,d0                         /* set bit(s) on */
-        moveq     #$8E,d1                       /* setup to write to port a */
+        moveq     #-114,d1                      /* setup to write to port a */
         bsr.s     gientry                       /* go set it and return */
         move.w    (a7)+,sr
         movem.l   (a7)+,d0-d2
@@ -2402,7 +2402,7 @@ offbit:
         bsr.s     gientry                       /* go get it... */
         move.l    (a7)+,d2
         and.b     d2,d0                         /* turn bit(s) off */
-        moveq     #$8E,d1                       /* setup to write to port a */
+        moveq     #-114,d1                      /* setup to write to port a */
         bsr.s     gientry                       /* go set it and return */
         move.w    (a7)+,sr
         movem.l   (a7)+,d0-d2

@@ -212,8 +212,11 @@ VOID gsx_gclip(GRECT *pt)
 /* 306de: 00e24452 */
 /* 104de: 00fd4660 */
 	xdef _gsx_gclip
-_gsx_gclip:
-
+_gsx_gclip: ds.b 0
+#if LINEF_HACK
+	xdef _gsx_fgclip
+_gsx_fgclip: ds.b 0
+#endif
 	move.l	4(sp),a0		; a0 -> pt
 	move.w	_gl_xclip,(a0)+		; pt->g_x <- gl_xclip
 	move.w	_gl_yclip,(a0)+

@@ -138,10 +138,10 @@ STATIC PATHSTRUCT *pxpath;
 
 
 LINEF_STATIC int16_t r_dir PROTO((char *path, char *select, uint16_t *count));
-int16_t r_files PROTO((char *path, char *select, uint16_t *count, char *filename));
-VOID r_sort PROTO((FSTRUCT *buffer, int16_t count));
-VOID r_sfiles PROTO((int16_t index));
-VOID fs_draw PROTO((int16_t index, char *path, char **addr1, int16_t *ptxtlen));
+LINEF_STATIC int16_t r_files PROTO((char *path, char *select, uint16_t *count, char *filename));
+LINEF_STATIC VOID r_sort PROTO((FSTRUCT *buffer, int16_t count));
+LINEF_STATIC VOID r_sfiles PROTO((int16_t index));
+LINEF_STATIC VOID fs_draw PROTO((int16_t index, char *path, char **addr1, int16_t *ptxtlen));
 #if (AESVERSION >= 0x330)
 static VOID FXWait PROTO((NOTHING));
 static VOID FXSelect PROTO((OBJECT *tree, int16_t obj));
@@ -155,6 +155,8 @@ static VOID FXDeselect PROTO((OBJECT *tree, int16_t obj));
  *	Routine to back off the end of a file string.
  */
 /* 306de: 00e1ce92 */
+/* 104de: 00fe0a3a */
+/* 106de: 00e22754 */
 LINEF_STATIC char *fs_back(P(char *) pstr)
 PP(register char *pstr;)
 {
@@ -195,6 +197,8 @@ PP(register char *pstr;)
  *	Add the label parameter
  */
 /* 306de: 00e1cef2 */
+/* 104de: 00fe0a8a */
+/* 106de: 00e227b4 */
 int16_t fs_input(P(char *) pipath, P(char *) pisel, P(int16_t *) pbutton, P(char *) lstring)
 PP(char *pipath;)
 PP(char *pisel;)
@@ -314,7 +318,7 @@ bye2:
 	/* save the current dta   */
 	savedta = trap(0x2F);
 
-	gsx_gclip(&clip);					/* get the clipping rect  */
+	gsx_fgclip(&clip);					/* get the clipping rect  */
 	/* set the new one    */
 	gsx_sclip(&gl_rfs);
 	/* reset the height */
@@ -324,7 +328,9 @@ bye2:
 #if AESVERSION >= 0x320
 	gr_mouse(M_SAVE, NULL);
 #endif
+#if AESVERSION >= 0x200
 	gsx_mfset(ad_armice);				/* arrow pointer    */
+#endif
 
 	ob_draw(tree, 0, MAX_DEPTH);		/* draw the box     */
 
@@ -402,7 +408,11 @@ bye2:
 		case FCLSBOX:					/* close box        */
 
 			*(fs_back(ad_fpath)) = 0;	/* back to last path    */
+#if AESVERSION <= 0x200
+			unfmt_str(ad_title, fs_back(ad_fpath) + 1);
+#else
 			strcpy(fs_back(ad_fpath) + 1, ad_title);
+#endif
 
 			/* fall through     */
 		case FDIRECTORY:
@@ -412,7 +422,7 @@ bye2:
 
 			strcpy(fcopy, fs_back(ad_fpath));
 			/* extension OK ?   */
-			if ((fcopy[0] == '\\') && (fcopy[1]))
+			if (fcopy[0] == '\\' && fcopy[1])
 				strcpy(fsname, fcopy);	/* yes          */
 
 			if (fcopy[0] != '\\')		/* any slash ?      */
@@ -533,8 +543,10 @@ bye2:
 
 		ret = bret & 0x7FFF;
 
+#if AESVERSION >= 0x200
 		if (ret == CANCEL)
 			break;
+#endif
 
 		if (!streq(ad_fpath, pathcopy))	/*  is dir changed ?  */
 		{
@@ -580,6 +592,8 @@ bye2:
  * read in a directory
  */
 /* 306de: 00e1d7d0 */
+/* 104de: 00fe1224 */
+/* 106de: 00e23062 */
 LINEF_STATIC int16_t r_dir(P(char *) path, P(char *) select, P(uint16_t *) count)
 PP(char *path;)
 PP(char *select;)
@@ -624,6 +638,8 @@ PP(register uint16_t *count;)
   r_exit:
 #if AESVERSION >= 0x320
 	gr_mouse(M_PREV, NULL);
+#else
+	gsx_mfset(ad_armice);
 #endif
 	return status;
 }
@@ -635,7 +651,9 @@ PP(register uint16_t *count;)
  * for easy coding and redraw the count will return
  * the actual number of files
  */
-int16_t r_files(P(char *) path, P(char *) select, P(uint16_t *) count, P(char *) filename)
+/* 104de: 00fe12f8 */
+/* 106de: 00e23154 */
+LINEF_STATIC int16_t r_files(P(char *) path, P(char *) select, P(uint16_t *) count, P(char *) filename)
 PP(register char *path;)
 PP(char *select;)
 PP(uint16_t *count;)
@@ -679,8 +697,10 @@ PP(register char *filename;)
 	if (*chrptr == '\\')				/* path exists, point at filename */
 		chrptr++;
 
+#if AESVERSION >= 0x200
 	if ((int)strlen(chrptr) > 12)			/* 9/5/90       */
 		chrptr[12] = 0;
+#endif
 
 	strcpy(filename, chrptr);			/* save the file name   */
 	strcpy(chrptr, wildstr);			/* this is the dir  */
@@ -741,7 +761,9 @@ PP(register char *filename;)
 }
 
 
-VOID r_sort(P(FSTRUCT *) buffer, P(int16_t) count)
+/* 104de: 00fe14b8 */
+/* 106de: 00e23352 */
+LINEF_STATIC VOID r_sort(P(FSTRUCT *) buffer, P(int16_t) count)
 PP(register FSTRUCT *buffer;)
 PP(int16_t count;)
 {
@@ -767,10 +789,12 @@ PP(int16_t count;)
 }
 
 
+/* 104de: 00fe1562 */
+/* 106de: 00e2341a */
 /*
  * show files and update the scroll bar
  */
-VOID r_sfiles(P(int16_t) index)
+LINEF_STATIC VOID r_sfiles(P(int16_t) index)
 PP(int16_t index;)
 {
 	register int16_t label, i;
@@ -804,7 +828,9 @@ PP(int16_t index;)
 /*
  * do the fs_sset and ob_draw
  */
-VOID fs_draw(P(int16_t) index, P(char *) path, P(char **) addr1, P(int16_t *) ptxtlen)
+/* 104de: 00fe160e */
+/* 106de: 00e234d6 */
+LINEF_STATIC VOID fs_draw(P(int16_t) index, P(char *) path, P(char **) addr1, P(int16_t *) ptxtlen)
 PP(int16_t index;)
 PP(char *path;)
 PP(char **addr1;)

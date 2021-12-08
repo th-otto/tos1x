@@ -55,7 +55,7 @@
 #define INTER_WSPACE 2
 #define INTER_HSPACE 0
 
-char const gl_nils[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+static int16_t const gl_nils[3] = { -1, -1, -1 };
 
 
 
@@ -64,6 +64,8 @@ char const gl_nils[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
  *	whenever an | or a ] is encountered.
  */
 /* 306de: 00e1c322 */
+/* 104de: 00fe0020 */
+/* 106de: 00e21be4 */
 VOID fm_strbrk(P(LPTREE) tree, P(const char *) palstr, P(int16_t) stroff, P(int16_t *) pcurr_id, P(int16_t *) pnitem, P(int16_t *) pmaxlen)
 PP(LPTREE tree;)
 PP(intptr_t palstr;) /* should be const char * */
@@ -154,6 +156,8 @@ PP(int16_t *pmaxlen;)
  *		2nd button = Cancel
  */
 /* 306de: 00e1c41a */
+/* 104de: 00fe010c */
+/* 104de: 00e21cdc */
 VOID fm_parse(P(LPTREE) tree, P(const char *) palstr, P(int16_t *) picnum, P(int16_t *) pnummsg, P(int16_t *) plenmsg, P(int16_t *) pnumbut, P(int16_t *) plenbut)
 PP(LPTREE tree;)
 PP(register intptr_t palstr;) /* should be const char */
@@ -175,6 +179,8 @@ PP(int16_t *plenbut;)
 
 
 /* 306de: 00e1c492 */
+/* 104de: 00fe0178 */
+/* 106de: 00e21d54 */
 VOID fm_build(P(LPTREE) tree, P(int16_t) haveicon, P(int16_t) nummsg, P(int16_t) mlenmsg, P(int16_t) numbut, P(int16_t) mlenbut)
 PP(register LPTREE tree;)
 PP(int16_t haveicon;)
@@ -261,6 +267,8 @@ PP(int16_t mlenbut;)
  * AES #52 - form_alert - Display an alert box.
  */
 /* 306de: 00e1c6c8 */
+/* 104de: 00fe036a */
+/* 106de: 00e21f8a */
 int16_t fm_alert(P(int16_t) defbut, P(const char *) palstr)
 PP(int16_t defbut;)
 PP(const char *palstr;)
@@ -315,7 +323,7 @@ PP(const char *palstr;)
 	
 	/* save screen underneath the alert */
 	wm_update(BEG_UPDATE);
-	gsx_gclip(&t);
+	gsx_fgclip(&t);
 	bb_save(&d);
 
 	/* draw the alert   */

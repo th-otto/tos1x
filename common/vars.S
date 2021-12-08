@@ -363,9 +363,10 @@ _endvdibss: ds.b 0
 	ds.b 2
 	
 	PTR(_ad_rso)
-
-	ds.b 86
-	
+	V(_fsname,b,40)
+	V(_fcopy,b,40)
+	PTR(_pathcopy)
+	INT(_defdrv)
 	V(pblock,l,5)
 	PTR(_drwaddr)
 	PTR(_tikaddr)
@@ -414,13 +415,9 @@ _endvdibss: ds.b 0
 	ds.b 58
 	
 	V(_bi,b,14)      /* BITBLK */
-
-	ds.b 4
-	
+	PTR(_ad_fsnames)
 	INT(_gl_bclick)
-
-	ds.b 4
-	
+	PTR(_ad_select)
 	INT(_gl_handle)
 	PTR(_ad_armice)
 	INT(_gl_dclick)
@@ -429,13 +426,12 @@ _endvdibss: ds.b 0
 	ds.b 32
 	
 	PTR(_ad_shcmd)
-
-	ds.b 4
-	
+	PTR(_ad_fpath)
 	INT(_gl_height)
 
-	ds.b 30
+	ds.b 28
 	
+	INT(_gl_dcindex)
 	INT(_gl_recd)
 	INT(_gl_bdesired)
 	INT(_gl_apid)
@@ -446,9 +442,7 @@ _endvdibss: ds.b 0
 	INT(_gl_bvhard)
 	PTR(_ad_shtail)
 	PTR(_ad_stdesk)
-
-	ds.b 4
-	
+	PTR(_ad_fsdta)
 	INT(_gl_wchar)
 	PTR(_ad_windspb)
 	INT(_gl_bvdisk)
@@ -484,9 +478,7 @@ _endvdibss: ds.b 0
 	ds.b 4
 
 	PTR(_gl_awind)
-
-	ds.b 4
-	
+	PTR(_ad_title)
 	PTR(_gl_rbuf)
 	V(_gl_mkrect,b,12)  /* ORECT */
 	V(_gl_ctwait,w,5) /* MOBLK */
@@ -495,9 +487,7 @@ _endvdibss: ds.b 0
 	V(_g_autoboot,b,CMDLEN)
 	INT(_sh_isgem)
 	INT(_gl_xclip)
-
-	ds.b 4
-	
+	PTR(_ad_fstree)
 	INT(_gl_rlen)
 	INT(_gl_yclip)
 	INT(_gl_hbox)
@@ -523,15 +513,18 @@ _endvdibss: ds.b 0
 	PTR(_ad_sysglo)
 	GRECT(_gl_rfull)
 	INT(_gl_patt)
-
-	ds.b 2
-	
+	INT(_fs_first)
 	V(_appl_msg,w,8)
 	INT(_ml_ocnt)
 	GRECT(_gl_rscreen)
 
-	ds.b 12
+	ds.b 4
+
+	INT(_fs_count)
+
+	ds.b 2
 	
+	LONG(_fs_fnum)
 	INT(_gl_btrue)
 
 	ds.b 16
@@ -553,9 +546,8 @@ _endvdibss: ds.b 0
 	
 	INT(_gl_nrows)
 	INT(_tmpmoff)
-
-	ds.b 6
-	
+	PTR(_gl_store)
+	INT(_fs_topptr)
 	INT(_autoexec)
 	INT(_gl_wtop)
 
@@ -576,8 +568,10 @@ _endvdibss: ds.b 0
 
 	INT(_tbutton)
 	
-	ds.b 6
+	ds.b 2
 	
+	INT(_gl_mx)
+	INT(_gl_my)
 	INT(_fpcnt)
 	V(_gl_ws,w,57)   /* workout */
 
@@ -614,9 +608,7 @@ _endvdibss: ds.b 0
 	INT(_no_aes)
 	PTR(_ctl_pd)
 	MFDB(_gl_src)
-
-	ds.b 8
-	
+	GRECT(_gl_rfs)
 	MFDB(_gl_dst)
 
 	ds.b 4
@@ -639,12 +631,12 @@ _endvdibss: ds.b 0
 
 /* XXX */
 
-	ds.b 8
+	ds.b 4
 
+	PTR(_pxpath)
 	INT(_mtrans)
 	INT(_tmpmon)
 	INT(_button)
-
 
 #if 0
 	INT(_d_dir)
@@ -652,11 +644,6 @@ _endvdibss: ds.b 0
 	PTR(_lp_end)
 	INT(_gl_dabox)
 
-	V(_fsname,b,40)
-	V(_fcopy,b,40)
-	PTR(_pathcopy)
-	INT(_defdrv)
-	
 	V(fspec,b,8)
 	INT(mydev)
 	PTR(oldgetbpb)
@@ -672,18 +659,13 @@ _endvdibss: ds.b 0
 	V(_rets,w,6) /* unused */
 	V(_desk_acc,l,MAX_ACCS)
 	V(_ib,b,34)      /* ICONBLK */
-	PTR(_ad_fsnames)
-	PTR(_ad_select)
 	TEDINFO(_gl_aname)
 	PTR(_ad_pfile) /* unused */
-	PTR(_ad_fpath)
 	INT(_gl_apid)
 	TEDINFO(_gl_ainfo)
-	INT(_gl_dcindex)
 	INT(_q_change)
 	PTR(_gh_buffer)
 	INT(_back_up)
-	PTR(_ad_fsdta)
 	V(_dr,b,32)
 	V(_gl_cmform,w,37) /* MFORM */
 	INT(_f_rename)
@@ -703,23 +685,18 @@ _endvdibss: ds.b 0
 	INT(_wasclr)
 	V(_inf_path,b,PATHLEN)
 	PTR(_cart_dta)
-	PTR(_ad_title)
 	INT(_p_timedate)
 	V(_mentable,b,MAXMENU)
 	even
-	PTR(_ad_fstree)
 	V(_gl_omform,w,37) /* MFORM */
  	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
 	PTR(_iconmem)
 	V(_comtail,b,PATHLEN)
 	INT(_font_save)
-	INT(_fs_first)
 	PTR(_newbuff)
 	V(_restable,b,6)
 	PTR(_cart_ptr)
-	INT(_fs_count)
 	INT(_gl_newroot)
-	LONG(_fs_fnum)
 	INT(_maxicon)
 	INT(_x_index)
 	LONG(_numfiles)
@@ -733,20 +710,16 @@ _endvdibss: ds.b 0
 	INT(_sh_up) /* unused */
 	V(_filestr,b,NAMELEN)
 	INT(_windspec)
-	PTR(_gl_store)
-	INT(_fs_topptr)
 	INT(_d_nrows)
 	INT(_desksiz)
 	PTR(_deskptr)
 	INT(_o_status)
 	TEDINFO(_edblk)
-	GRECT(_gl_rfs)
 	PTR(_rs_hdr)
 	PTR(_o_win)
 	PTR(_backid)
 	PTR(_fixdst)
 	PTR(_infptr)
-	PTR(_pxpath)
 	PTR(_fixsrc)
 	PTR(_gemptr)
 	INT(_apsize)
@@ -755,8 +728,6 @@ _endvdibss: ds.b 0
 	LONG(_tolsize)
 	INT(_m_cpu)
 	INT(_nogem)
-	INT(_gl_mx)
-	INT(_gl_my)
 	PTR(_cpbox)
 	INT(_i_status) /* unused */
 	INT(_x_cur)

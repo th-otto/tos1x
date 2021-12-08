@@ -127,8 +127,6 @@ _i_intout: ds.b 0
 	rts
 
 
-	xdef	_i_ptr
-_i_ptr: ds.b 0
 	xdef	_i_lptr1
 _i_lptr1: ds.b 0
 

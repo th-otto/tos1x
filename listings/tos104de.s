@@ -62917,6 +62917,10 @@ gem.rsc:
 6A8A: ml_pmown
 6A8E: ml_pkown
 6A94: ad_rso
+6A98: fsname
+6AC0: fcopy
+6AE8: pathcopy
+6AEC: defdrv
 6AEE: pblock
 6B02: drwaddr
 6B06: tikaddr
@@ -62947,13 +62951,17 @@ gem.rsc:
 6CEE: gl_pacc
 6D06: ad_hgmice
 6D44: bi
+6D52: ad_fsnames
 6D56: gl_blick
+6D58: ad_select
 6D5C: gl_handle
 6D5E: ad_armice
 6D62: gl_dclick
 6D64: ad_fsel
 6D88: ad_shcmd
+6D8C: ad_fpath
 6D90: gl_height
+6DAE: gl_dcindex
 6DB0: gl_recd
 6DB2: gl_bdesired
 6DB4: gl_apid
@@ -62963,6 +62971,7 @@ gem.rsc:
 6DC0: gl_bvhard
 6DC2: ad_shtail
 6DC6: ad_stdesk
+6DCA: ad_fsdta
 6DCE: gl_wchar
 6DD0: ad_windspb
 6DD4: gl_bvdisk
@@ -62986,6 +62995,7 @@ gem.rsc:
 6E2C: desk_pid
 6E3E: gl_rmnactv
 6E4A: gl_awind
+6E4E: ad_title
 6E52: gl_rbuf
 6E56: gl_mkrect
 6E62: gl_ctwait
@@ -62994,6 +63004,7 @@ gem.rsc:
 6E8C: g_autoboot
 6F0C: sh_isgem
 6F0E: gl_xclip
+6F10: ad_fstree
 6F14: gl_rlen
 6F16: gl_yclip
 6F18: gl_hbox
@@ -63015,9 +63026,12 @@ gem.rsc:
 700A: ad_sysglo
 700E: gl_rfull
 7016: gl_patt
+7018: fs_first
 701A: appl_msg
 702A: ml_ocnt
 702C: gl_rscreen
+7038: fs_count
+703C: fs_fnum
 7040: gl_btrue
 7052: gl_kowner
 7056: gl_hsptschar
@@ -63030,6 +63044,8 @@ gem.rsc:
 707C: gl_mouse
 7080: gl_nrows
 7082: tmpmoff
+7084: gl_store
+7088: fs_topptr
 708A: autoexec
 708C: gl_wtop
 7094: pr_xrat
@@ -63040,6 +63056,8 @@ gem.rsc:
 70C0: pr_yrat
 70C2: gl_kstate
 70E0: tbutton
+70E4: gl_mx
+70E6: gl_my
 70E8: fpcnt
 70EA: gl_ws
 715E: intin
@@ -63067,6 +63085,7 @@ A7C8: gl_fis
 A7CA: no_aes
 A7CC: ctl_pd
 A7D0: gl_src
+A7E4: gl_rfs
 A7EC: gl_dst
 A804: gl_tmp
 A81A: er_num
@@ -63075,6 +63094,7 @@ A81E: indisp
 A820: infork
 A822: kstate
 A828: contrl
+A844: pxpath
 A848: mtrans
 A84A: tmpmon
 A84C: button
