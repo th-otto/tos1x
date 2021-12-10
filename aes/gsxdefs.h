@@ -173,13 +173,11 @@ VOID gsx_1acode PROTO((int16_t code, int16_t value));
 VOID gsx_acode PROTO((int16_t code, int16_t nptsin, int16_t nintin));
 VOID gsx_fmxmy PROTO((int16_t *pmx, int16_t *pmy));
 VOID gsx_fmoff PROTO((NOTHING));
-VOID gsx_ffmoff PROTO((NOTHING));
 #else
 #define gsx_acode gsx_ncode
 #define gsx_1acode gsx_1code
 #define gsx_fmxmy gsx_mxmy
 #define gsx_fmoff gsx_moff
-#define gsx_ffmoff gsx_moff
 #endif
 VOID gsx_init PROTO((NOTHING));
 VOID gsx_graphic PROTO((BOOLEAN tographic));

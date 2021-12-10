@@ -167,7 +167,7 @@
 [00fe7b58] dc.l $00fe5cb4            ; F298 ; r_set AES
 [00fe7b5c] dc.l $00fe5ccc            ; F29C ; inside AES
 [00fe7b60] dc.l $00fe391a            ; F2A0 ; get_prev AES
-[00fe7b64] dc.l $00fe355c            ; F2A4 ; ob_delete; duplicate; unused AES
+[00fe7b64] dc.l $00fe355c            ; F2A4 ; ob_delete; duplicate AES
 [00fe7b68] dc.l $00fe2dc6            ; F2A8 ; just_draw AES
 [00fe7b6c] dc.l $00fe5f7e            ; F2AC ; fs_sset AES
 [00fe7b70] dc.l $00fe600a            ; F2B0 ; inf_gindex; duplicate AES
@@ -180,7 +180,7 @@
 [00fe7b8c] dc.l $00fd5e3a            ; F2CC
 [00fe7b90] dc.l $00fd7a36            ; F2D0 ; evnt_multi DESKTOP
 [00fe7b94] dc.l $00fd5d7c            ; F2D4
-[00fe7b98] dc.l $00fd4700            ; F2D8 ; gsx_attr; duplicate; unused AES
+[00fe7b98] dc.l $00fd4700            ; F2D8 ; gsx_attr; duplicate AES
 [00fe7b9c] dc.l $00fd7bb0            ; F2DC ; graf_mkstate DESKTOP
 [00fe7ba0] dc.l $00fe5dda            ; F2E0 ; rc_constrain AES
 [00fe7ba4] dc.l $00fd5e9a            ; F2E4
@@ -568,7 +568,7 @@
 [00fe819c] dc.l $00fe1b74            ; F8DC ; gsx_graphic AES
 [00fe81a0] dc.l $00fd430c            ; F8E0 ; gsx_malloc AES
 [00fe81a4] dc.l $00fe1c30            ; F8E4 ; ratinit AES
-[00fe81a8] dc.l $00fe1dbe            ; F8E8 ; gsx_moff; duplicate AES
+[00fe81a8] dc.l $00fe1dbe            ; F8E8 ; ratexit; duplicate AES
 [00fe81ac] dc.l $00fe40b2            ; F8EC ; sh_draw AES
 [00fe81b0] dc.l $00fe4254            ; F8F0 ; sh_search AES
 [00fe81b4] dc.l $00fe4186            ; F8F4 ; sh_path AES

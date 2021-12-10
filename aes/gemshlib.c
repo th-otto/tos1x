@@ -155,6 +155,8 @@ int16_t sh_search PROTO((SHFIND_PROC routine));
  * Application reads in the command that invokes it
  */
 /* 306de: 00e20b62 */
+/* 104de: 00fe3fc6 */
+/* 106de: 00e26330 */
 int16_t sh_read(P(char *) pcmd, P(char *) ptail)
 PP(char *pcmd;)
 PP(char *ptail;)
@@ -182,6 +184,8 @@ PP(char *ptail;)
  *   isover = 2  then run over AES and DESKTOP
  */
 /* 306de: 00e20b98 */
+/* 104de: 00fe3ff2 */
+/* 106de: 00e26366 */
 int16_t sh_write(P(int16_t) doex, P(int16_t) isgem, P(int16_t) isover, P(const char *) pcmd, P(const char *) ptail)
 PP(int16_t doex;)
 PP(int16_t isgem;)
@@ -212,6 +216,8 @@ PP(const char *ptail;)
  */
 /* 206de: 00e1d182 */
 /* 306de: 00e20be8 */
+/* 104de: 00fe4038 */
+/* 106de: 00e263b6 */
 int16_t sh_get(P(char *) pbuffer, P(uint16_t) len)
 PP(char *pbuffer;)
 PP(uint16_t len;)
@@ -229,6 +235,8 @@ PP(uint16_t len;)
  */
 /* 206de: 00e1d1a2 */
 /* 306de: 00e20c08 */
+/* 104de: 00fe4052 */
+/* 106de: 00e263d6 */
 int16_t sh_put(P(const char *) pdata, P(int16_t) len)
 PP(char *pdata;)
 PP(int16_t len;)
@@ -243,6 +251,8 @@ PP(int16_t len;)
  *	running of a GEM-based graphic application.
  */
 /* 306de: 00e20c28 */
+/* 104de: 00fe406c */
+/* 106de: 00e263f6 */
 BOOLEAN sh_tographic(NOTHING)
 {
 	cli();
@@ -264,6 +274,8 @@ BOOLEAN sh_tographic(NOTHING)
  *	for the running of a DOS-based character application.
  */
 /* 306de: 00e20c72 */
+/* 104de: 00fe4094 */
+/* 106de: 00e26440 */
 BOOLEAN sh_toalpha(NOTHING)
 {
 	gsx_mfset(ad_armice);				/* put mouse to arrow   */
@@ -284,6 +296,8 @@ BOOLEAN sh_toalpha(NOTHING)
  *	Routine called everytime dos_find has another path to search
  */
 /* 306de: 00e20cae */
+/* 104de: 00fe40b2 */
+/* 106de: 00e2647c */
 VOID sh_draw(P(char *) lcmd, P(int16_t) start, P(int16_t) depth)
 PP(char *lcmd;)
 PP(int16_t start;)
@@ -312,6 +326,8 @@ PP(int16_t depth;)
  * Routine called everytime dos_find has another path to search
  */
 /* 306de: 00e20d0c */
+/* 104de: 00fe40fc */
+/* 106de: 00e264da */
 VOID sh_show(P(char *) lcmd)
 PP(char *lcmd;)
 {
@@ -327,6 +343,8 @@ PP(char *lcmd;)
  *	find the starting byte of the particular filename
  */
 /* 306de: 00e20d36 */
+/* 104de: 00fe411e */
+/* 106de: 00e26504 */
 char *sh_name(P(char *) ppath)
 PP(char *ppath;)
 {
@@ -336,10 +354,15 @@ PP(char *ppath;)
 	while (*pname++)
 		;
 
+#if AESVERSION < 0x200
+	while (pname >= ppath && *pname != '\\' && *pname != ':')
+		--pname;
+#else
 	do
 	{
 		--pname;
-	} while ((pname >= ppath) && (*pname != '\\') && (*pname != ':'));
+	} while (pname >= ppath && *pname != '\\' && *pname != ':');
+#endif
 
 	return ++pname;
 }
@@ -354,6 +377,8 @@ PP(char *ppath;)
  *	Otherwise, return a NULL in ppath.
  */
 /* 306de: 00e20d68 */
+/* 104de: 00fe414a */
+/* 106de: 00e26536 */
 int16_t sh_envrn(P(char **) ppath, P(const char *) psrch)
 PP(register char **ppath;)						/* output pointer   */
 PP(const char *psrch;)
@@ -404,6 +429,8 @@ PP(const char *psrch;)
  *	(unless munged by HINSTALL or an auto folder program)
  */
 /* 306de: 00e20dac */
+/* 104de: 00fe4186 */
+/* 106de: 00e2657a */
 BOOLEAN sh_path(P(int16_t) whichone, P(char *) dp, P(char *) pname)
 PP(int16_t whichone;)
 PP(register char *dp;)
@@ -483,6 +510,8 @@ PP(register char *pname;)
 
 
 /* 306de: 00e20e86 */
+/* 104de: 00fe4254 */
+/* 106de: 00e26654 */
 int16_t sh_search(P(SHFIND_PROC) routine)
 PP(register SHFIND_PROC routine;)
 {
@@ -502,6 +531,8 @@ PP(register SHFIND_PROC routine;)
  *	the filespec that is looking for.
  */
 /* 306de: 00e20eba */
+/* 104de: 00fe427c */
+/* 106de: 00e26688 */
 int16_t sh_find(P(char *) pspec, P(SHFIND_PROC) routine)
 PP(register intptr_t pspec;) /* should be char * */
 PP(register SHFIND_PROC routine;)
@@ -551,6 +582,8 @@ PP(register SHFIND_PROC routine;)
  * AES's Shell
  */
 /* 306de: 00e20fb4 */
+/* 104de: 00fe4344 */
+/* 106de: 00e26782 */
 VOID sh_main(NOTHING)
 {
 	register int16_t ret;
@@ -611,10 +644,15 @@ VOID sh_main(NOTHING)
 			ret = deskmain();
 #if AESVERSION < 0x330
 			i = Getrez();
+#if AESVERSION < 0x200
+			if (i != 2 && i != 4)
+				LLSET(ad_stdesk + 12, 0x00001173L);
+#else
 			if (i != 2 && i != 6)
 				LLSET(ad_stdesk + 12, 0x00001173L);
 			else
 				LLSET(ad_stdesk + 12, 0x00001143L);
+#endif
 #else
 			/*
 			 * ++ ERS 1/14/93: use gl_nplanes to determine resolution, and set
@@ -666,7 +704,9 @@ VOID sh_main(NOTHING)
 					fm_error((~DOS_AX) - 30);
 			}
 
+#if AESVERSION >= 0x200
 			gl_kowner = gl_cowner = gl_mowner = temprlr;
+#endif
 		}
 	} while (!reschange);				/* resolution change    */
 }

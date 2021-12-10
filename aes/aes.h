@@ -1013,6 +1013,7 @@ VOID feveryobj PROTO((LPTREE tree, int16_t this, int16_t last, EVERYOBJ_CALLBACK
 int32_t trp13int PROTO((short code, ...));
 int32_t trp13int PROTO((short code, ...));
 VOID gsx_fgclip PROTO((GRECT *pt));
+VOID gsx_fattr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 #else
 #define ob_fformat ob_format
 #define ob_foffset ob_offset
@@ -1028,4 +1029,5 @@ VOID gsx_fgclip PROTO((GRECT *pt));
 #define trp13int trp13
 #define trp14int trp14
 #define gsx_fgclip gsx_gclip
+#define gsx_fattr gsx_attr
 #endif

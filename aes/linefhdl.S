@@ -23,6 +23,8 @@
  */
 #if LINEF_HACK
 
+/* 104de: 00fe7882 */
+
 	xdef linefhandler
 linefhandler:
 		move.w    (a7)+,d2	/* fetch sr */
@@ -625,7 +627,7 @@ lineftab: ds.b 0
 		dc.l _gsx_graphic         ; F8DC
 		dc.l _gsx_malloc          ; F8E0
 		dc.l _ratinit             ; F8E4
-		dc.l _gsx_moff            ; F8E8
+		dc.l _ratexit             ; F8E8
 		dc.l _sh_draw             ; F8EC
 		dc.l _sh_search           ; F8F0
 		dc.l _sh_path             ; F8F4

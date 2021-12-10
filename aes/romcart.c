@@ -60,6 +60,8 @@ CARTNODE *cart_find PROTO((BOOLEAN fill));
 
 
 /* 306de: 00e230a4 */
+/* 104de: 00fe652a */
+/* 106de: 00e28c5c */
 BOOLEAN cart_init(NOTHING)
 {
 	cart_ptr = ((CARTNODE *) CART_BASE);
@@ -76,6 +78,8 @@ BOOLEAN cart_init(NOTHING)
 
 
 /* 306de: 00e230de */
+/* 104de: 00fe6562 */
+/* 106de: 00e28c96 */
 CARTNODE *cart_find(P(BOOLEAN) fill)
 PP(BOOLEAN fill;)
 {
@@ -100,6 +104,8 @@ PP(BOOLEAN fill;)
 
 
 /* 306de: 00e2314e */
+/* 104de: 00fe65c2 */
+/* 106de: 00e28d06 */
 BOOLEAN cart_sfirst(P(char *) pdta, P(int16_t) attr)
 PP(char *pdta;)
 PP(int16_t attr;)
@@ -112,6 +118,8 @@ PP(int16_t attr;)
 
 
 /* 306de: 00e23164 */
+/* 104de: 00fe65d4 */
+/* 106de: 00e28d1c */
 BOOLEAN cart_snext(NOTHING)
 {
 	if (cart_find(TRUE))
@@ -125,6 +133,8 @@ BOOLEAN cart_snext(NOTHING)
 
 
 /* 306de: 00e23188 */
+/* 104de: 00fe65f4 */
+/* 106de: 00e28d40 */
 int16_t ld_cartacc(NOTHING)
 {
 	register char *psp;
@@ -152,6 +162,8 @@ int16_t ld_cartacc(NOTHING)
 
 
 /* 306de: 00e2320a */
+/* 104de: 00fe665a */
+/* 106de: 00e28dc2 */
 BOOLEAN cart_exec(P(const char *) pcmd, P(const char *) ptail)
 PP(const char *pcmd;)
 PP(const char *ptail;)
@@ -169,12 +181,16 @@ PP(const char *ptail;)
 	psp = (char *)dos_exec("", 5, ptail);
 	LLSET(&psp[TEXTBASE], pcart->c_code);
 	dos_exec("", 4, psp);
+#if AESVERSION >= 0x200
+	/* free the env */
 	dos_free(*(char **) (&psp[0x2c]));
+#endif
 	dos_free(psp);
 	return TRUE;
 }
 
 
+#if AESVERSION >= 0x200
 /* 306de: 00e23288 */
 BOOLEAN c_sfirst(P(const char *) path)
 PP(const char *path;)
@@ -192,3 +208,4 @@ PP(const char *path;)
 
 	return FALSE;
 }
+#endif

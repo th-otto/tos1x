@@ -77,6 +77,8 @@ static TEDINFO edblk;
  * AES #54 - form_center - Centre an object on the screen.
  */
 /* 306de: 00e1f40e */
+/* 104de: 00fe2584 */
+/* 106de: 00e245b2 */
 VOID ob_center(P(LPTREE) tree, P(GRECT *)pt)
 PP(LPTREE tree;)
 PP(GRECT *pt;)
@@ -125,6 +127,8 @@ PP(GRECT *pt;)
  *	during field entry the cursor will jump to the first 
  *	raw string underscore after that character.
  */
+/* 104de: 00fe2674 */
+/* 106de: 00e246b2 */
 LINEF_STATIC int16_t scan_to_end(P(char *) pstr, P(int16_t) idx, P(char) chr)
 PP(register char *pstr;)
 PP(register int16_t idx;)
@@ -142,6 +146,8 @@ PP(char chr;)
 /*
  *	Routine to insert a character in a string by
  */
+/* 104de: 00fe26a0 */
+/* 106de: 00e246e6 */
 LINEF_STATIC VOID ins_char(P(char *) str, P(int16_t) pos, P(char) chr, P(int16_t) tot_len)
 PP(register char *str;)
 PP(int16_t pos;)
@@ -167,6 +173,8 @@ PP(register int16_t tot_len;)
  *       for the position that was input (in raw string relative numbers).
  *       The returned position will always be right before an '_'.
  */
+/* 104de: 00fe26fc */
+/* 106de: 00e2474e */
 LINEF_STATIC int16_t find_pos(P(char *) str, P(int16_t) pos)
 PP(register char *str;)
 PP(register int16_t pos;)
@@ -196,6 +204,8 @@ PP(register int16_t pos;)
 }
 
 
+/* 104de: 00fe2764 */
+/* 106de: 00e247be */
 LINEF_STATIC VOID pxl_rect(P(LPTREE) tree, P(int16_t) obj, P(int16_t) ch_pos, P(GRECT *) pt)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -218,6 +228,8 @@ PP(register GRECT *pt;)
 /*
  *	Routine to redraw the cursor or the field being editted.
  */
+/* 104de: 00fe27d2 */
+/* 106de: 00e2483c */
 LINEF_STATIC VOID curfld(P(LPTREE) tree, P(int16_t) obj, P(int16_t) new_pos, P(int16_t) dist)
 PP(LPTREE tree;)
 PP(int16_t obj;)
@@ -237,12 +249,12 @@ PP(int16_t dist;)
 		 ;
 	} else
 	{
-		gsx_attr(FALSE, MD_XOR, BLACK);
+		gsx_fattr(FALSE, MD_XOR, BLACK);
 		t.g_y -= 3;
 		t.g_h += 6;
 	}
 	/* set the new clip rect */
-	gsx_gclip(&oc);
+	gsx_fgclip(&oc);
 	gsx_sclip(&t);
 	/* redraw the field */
 	if (dist)
@@ -259,6 +271,8 @@ PP(int16_t dist;)
  *	range.  The character ranges are
  *	stored as enumerated characters (xyz) or ranges (x..z)
  */
+/* 104de: 00fe285c */
+/* 106de: 00e248e2 */
 LINEF_STATIC int16_t instr(P(char) chr, P(const char *) str)
 PP(register char chr;)
 PP(register char *str;)
@@ -284,6 +298,8 @@ PP(register char *str;)
  *	Routine to verify that the character matches the validation
  *	string.  If necessary, upshift it.
  */
+/* 104de: 00fe289c */
+/* 106de: 00e2492a */
 LINEF_STATIC BOOLEAN check(P(char *) in_char, P(char) valchar)
 PP(register char *in_char;)
 PP(char valchar;)
@@ -349,6 +365,8 @@ PP(char valchar;)
  *	Find STart and FiNish of a raw string relative to the template
  *	string.  The start is determined by the InDeX position given.
  */
+/* 104de: 00fe2938 */
+/* 106de: 00e249dc */
 LINEF_STATIC VOID ob_stfn(P(int16_t) idx, P(int16_t *) Pstart, P(int16_t *) pfinish)
 PP(int16_t idx;)
 PP(int16_t *Pstart;)
@@ -362,6 +380,8 @@ PP(int16_t *pfinish;)
 }
 
 
+/* 104de: 00fe2978 */
+/* 106de: 00e24a2c */
 LINEF_STATIC int16_t ob_delit(P(int16_t) idx)
 PP(int16_t idx;)
 {
@@ -381,6 +401,8 @@ PP(int16_t idx;)
  * AES #46 - objc_edit - Edit text in an editable text object.
  */
 /* 306de: 00e1f8e0 */
+/* 104de: 00fe29c4 */
+/* 106de: 00e24a84 */
 int16_t ob_edit(P(LPTREE) tree, P(int16_t) obj, P(int16_t) in_char, P(int16_t *) idx, P(int16_t) kind)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)

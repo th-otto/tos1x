@@ -142,6 +142,7 @@ VOID gsx_mfree(NOTHING)
 #endif
 /* 306de: 00e25064 */
 /* 104de: 00fe1afc */
+/* 106de: 00e23a54 */
 /* 404: 00e33f06 */
 	xdef _gsx_mfree
 _gsx_mfree:
@@ -150,7 +151,7 @@ _gsx_mfree:
 	beq	g1
 #endif
 	move.l	_gl_tmp,-(sp)		; Fix 1/20/87
-	jsr	_dos_free
+	jsr	_dos_ffree
 	addq.l	#4,sp
 g1:
 	rts
@@ -166,6 +167,7 @@ VOID gsx_mret(VOIDPTR *pmaddr, int32_t *pmlen)
 #endif
 /* 306de: 00e25074 */
 /* 104de: 00fe1b08 */
+/* 106de: 00e23a64 */
 	xdef _gsx_mret
 _gsx_mret:
 
@@ -193,9 +195,11 @@ VOID gsx_ncode(WORD code, WORD n, WORD m)
 #endif
 /* 306de: 00e2508a */
 /* 104de: 00fe1b1e */
+/* 106de: 00e23a7a */
 /* 404: 00e33f34 */
 	xdef _gsx_ncode
 _gsx_ncode: ds.b 0
+gsx_ncode: ds.b 0
 #if LINEF_HACK
 	xdef _gsx_acode
 _gsx_acode: ds.b 0
@@ -223,18 +227,20 @@ VOID gsx_1code(WORD code, WORD value)
 #endif
 /* 306de: 00e250a8 */
 /* 104de: 00fe1b3c */
+/* 106de: 00e23a98 */
 	xdef _gsx_1code
 _gsx_1code: ds.b 0
 #if LINEF_HACK
 	xdef _gsx_1acode
 _gsx_1acode: ds.b 0
 #endif
+gsx_1code: ds.b 0
 
 	move.w  6(sp),_intin
 
 	move.l	#$00000001,-(sp)	; Fix 1/20/87
 	move.w	4+4(sp),-(sp)
-	bsr	_gsx_ncode
+	bsr	gsx_ncode
 
 	addq.l	#6,sp
 	rts
@@ -254,6 +260,7 @@ VOID gsx_init(NOTHING)
 #endif
 /* 306de: 00e250c0 */
 /* 104de: 00fe1b54 */
+/* 106de: 00e23ab0 */
 	xdef _gsx_init
 _gsx_init:
 
@@ -331,6 +338,7 @@ VOID av_hardcopy(NOTHING)
 #endif
 /* 306de: 00e2511e */
 /* 104de: 00fe1bae */
+/* 106de: 00e23b0e */
 	xdef _av_hardcopy
 _av_hardcopy:
 	moveq.l	#17,d0
@@ -360,6 +368,7 @@ escape:	move.w	d0,_contrl+10
 *****	 Open physical work station for 6 resolutions	*****
 /* 306de: 00e25132 */
 /* 104de: 00fe1bc2 */
+/* 106de: 00e23b22 */
 /* 404: 00e33fdc */
 	xdef _gsx_wsopen
 _gsx_wsopen:
@@ -374,6 +383,7 @@ L15:	move.w	#1,(a1)+
 
 	move.w	#2,(a1)			; intin[10] <- 2
 
+#if AESVERSION >= 0x200
 	lea	restable,a0		; look for the driver handle 
 	lea	restype,a1		; load in res table
 L209:
@@ -383,6 +393,9 @@ L209:
 	bne	L209
 
 	move.w	-(a0),(a2)		; intin[0] <- screen handle
+#else
+	move.w	_gl_restype,(a2)
+#endif
 
 	pea	_gl_ws
 	pea	_gl_handle
@@ -401,8 +414,10 @@ L209:
 	lea	_gl_restype,a2
 
 L20:	
-	move.w	#5,(a2)		; default to 1280 x 960 
 	
+#if AESVERSION >= 0x200
+	move.w	#5,(a2)		; default to 1280 x 960 
+
 	cmp.w	#639,(a1)	; check for x = 640 ?
 	bne	L18
 	tst.w	(a1)+
@@ -411,7 +426,8 @@ L20:
 	move.w	#2,(a2)
 	bra	L22
 	
-L20_1:	cmp.w	#399,(a1)	; 640 x 400
+L20_1:
+	cmp.w	#399,(a1)	; 640 x 400
 	bne	L20_2
 	move.w	#3,(a2)
 	bra	L22
@@ -419,16 +435,33 @@ L20_1:	cmp.w	#399,(a1)	; 640 x 400
 L20_2:	move.w	#4,(a2)		; 640 x 480
 	bra	L22	
 
-L18:	cmp.w	#319,(a1)+	; check for x = 320 ?
+L18:
+	cmp.w	#319,(a1)+	; check for x = 320 ?
 	bne	L22	
 	cmp.w	#199,(a1)	; check for y = 200 ?
 	bne	L18_1
 	move.w	#1,(a2)		; Yes		 
 	bra	L22
 
-L18_1:	move.w	#6,(a2)		; No it is 320 x 480
+L18_1:
+	move.w	#6,(a2)		; No it is 320 x 480
 
-L22:	clr.w	_gl_rschange	; gl_rschange  <- FALSE
+#else
+	move.w	#3,(a2)		; default to 640x400x2
+
+	cmp.w	#319,(a1)+	; check for x = 320 ?
+	bne	L18
+	move.w	#2,(a2)
+	bra	L22
+L18:
+	cmp.w	#399,(a1)	; 640 x 400
+	bne	L22
+	move.w	#4,(a2)
+
+#endif
+
+L22:
+	clr.w	_gl_rschange	; gl_rschange  <- FALSE
 	move.w	#1,_gl_graphic	; gl_graphic   <- TRUE
 	rts
 
@@ -442,6 +475,7 @@ VOID gsx_wsclose(NOTHING)
 #endif
 /* 306de: 00e251d4 */
 /* 104de: 00fe1c2a */
+/* 106de: 00e23b8a */
 	xdef _gsx_wsclose
 _gsx_wsclose:
 
@@ -458,12 +492,13 @@ VOID ratinit(NOTHING)
 }
 #endif
 /* 104de: 00fe1c30 */
+/* 106de: 00e23b90 */
 	xdef _ratinit
 _ratinit:
 
 	clr.w	     -(sp)
 	move.w	#122,-(sp)		; show cursor: force show
-	bsr	_gsx_1code
+	bsr	gsx_1code
 	addq.l	#4,sp
 
 	clr.w	_gl_moff
@@ -501,6 +536,7 @@ VOID bb_set(WORD sx, WORD sy, WORD sw, WORD sh, WORD *pts1, WORD *pts2, FDB *pfd
 }
 #endif
 /* 104de: 00fe1c44 */
+/* 106de: 00e23ba4 */
 	xdef _bb_set
 _bb_set:
 
@@ -551,14 +587,14 @@ _bb_set:
 	move.l	(a0)+,-(sp)		; pfd -> space for MFDB
 	jsr	_gsx_fix		; build MFDB
 
-	bsr	_gsx_moff		; hide mouse cursor
+	bsr	gsx_moff		; hide mouse cursor
 
 	lea	12+28(sp),a0		; a0 -> pdst pointer
 	move.l	 (a0),-(sp)		; push *pdst
 	move.l	-(a0),-(sp)		; push *psrc
 	pea	_ptsin			; push *ptsin
 	move.w	#3,-(sp)		; replace mode (S_ONLY)
-	bsr	_avro_cpyfm
+	bsr	vro_cpyfm
 
 	lea	26(sp),sp		; clean the stack up from earlier calls
 
@@ -575,6 +611,7 @@ VOID bb_save(GRECT *ps)
 #endif
 /* 306de: 00e25260 */
 /* 104de: 00fe1cb2 */
+/* 106de: 00e23c16 */
 	xdef _bb_save
 _bb_save:
 
@@ -597,6 +634,7 @@ _bb_save:
 
 /* 306de: 00e25290 */
 /* 104de: 00fe1ce2 */
+/* 106de: 00e23c46 */
 	xdef _bb_restore
 _bb_restore:
 
@@ -667,6 +705,7 @@ VOID gsx_resetmb(NOTHING)
 }
 #endif
 /* 104de: 00fe1d44 */
+/* 106de: 00e23ca8 */
 	xdef _gsx_resetmb
 _gsx_resetmb:
 
@@ -690,6 +729,7 @@ WORD gsx_tick(intptr_t tcode, intptr_t *ptsave)
 #endif
 /* 306de: 00e25312 */
 /* 104de: 00fe1d64 */
+/* 106de: 00e23cc8 */
 	xdef _gsx_tick
 _gsx_tick:
 
@@ -707,6 +747,7 @@ _gsx_tick:
 
 #if AESVERSION < 0x200
 /* 104de: 00fe1d84 */
+/* 106de: 00e23ce8 */
 	xdef _gsx_mfset
 _gsx_mfset:
 	bsr.s     ig_moff
@@ -731,6 +772,7 @@ VOID gsx_mxmy(WORD *pmx, WORD *pmy)
 #endif
 /* 306de: 00e25332 */
 /* 104de: 00fe1da0 */
+/* 106de: 00e23d04 */
 	xdef _gsx_mxmy
 _gsx_mxmy: ds.b 0
 #if LINEF_HACK
@@ -779,17 +821,17 @@ VOID gsx_moff(NOTHING)
 #endif
 /* 306de: 00e25350 */
 /* 104de: 00fe1dbe */
+/* 106de: 00e23d22 */
 	xdef _gsx_moff
 	xdef _ratexit
 _ratexit:
 _gsx_moff:
+gsx_moff:
 ig_moff: ds.b 0
 
 #if LINEF_HACK
 	xdef _gsx_fmoff
-	xdef _gsx_ffmoff
 _gsx_fmoff: ds.b 0
-_gsx_ffmoff: ds.b 0
 #endif
 
 	tst.w	_gl_moff
@@ -818,6 +860,7 @@ VOID gsx_mon(NOTHING)
 #endif
 /* 306de: 00e2536c */
 /* 104de: 00fe1dda */
+/* 106de: 00e23d3e */
 	xdef _gsx_mon
 _gsx_mon:
 
@@ -827,7 +870,7 @@ _gsx_mon:
 
 	move.w	  d0,-(sp)
 	move.w	#122,-(sp)		; show cursor: don't force it
-	bsr	_gsx_1code
+	bsr	gsx_1code
 	addq.l	#4,sp
 
 	move.w	#1,_gl_mouse
@@ -890,6 +933,7 @@ WORD av_opnwk(WORD *pwork_in, WORD *phandle, WORD *pwork_out)
 #endif
 /* 306de: 00e2538c */
 /* 104de: 00fe1dfa */
+/* 106de: 00e23d5e */
 /* 404: 00e3423c */
 	xdef _av_opnwk
 _av_opnwk:
@@ -923,6 +967,7 @@ VOID av_pline(WORD count, WORD *pxyarray)
 #endif
 /* 306de: 00e253d8 */
 /* 104de: 00fe1e46 */
+/* 106de: 00e23daa */
 /* 404: 00e34288 */
 	xdef _av_pline
 _av_pline:
@@ -952,6 +997,7 @@ VOID avst_clip(WORD clip_flag, WORD pxyarray)
 #endif
 /* 306de: 00e253ec */
 /* 104de: 00fe1e5a */
+/* 106de: 00e23dbe */
 	xdef _avst_clip
 _avst_clip:
 
@@ -981,6 +1027,7 @@ VOID avst_height(WORD height, WORD *pchr_width, WORD *pchr_height, WORD *pcell_w
 #endif
 /* 306de: 00e25400 */
 /* 104de: 00fe1e6e */
+/* 106de: 00e2edd2 */
 	xdef _avst_height
 _avst_height:
 
@@ -1017,6 +1064,7 @@ VOID avr_recfl(WORD *pxyarray, FDB *pdesMFDB) /* ??? why MFDB ??? */
 #endif
 /* 306de: 00e2542e */
 /* 104de: 00fe1e9c */
+/* 106de: 00e23e00 */
 	xdef _avr_recfl
 _avr_recfl:
 
@@ -1043,8 +1091,10 @@ VOID avro_cpyfm(WORD wr_mode, WORD *pxyarray, WORD *psrcMFDB, WORD *pdesMFDB)
 #endif
 /* 306de: 00e2543e */
 /* 104de: 00fe1eac */
+/* 106de: 00e23e10 */
 	xdef _avro_cpyfm
 _avro_cpyfm:
+vro_cpyfm:
 
 	lea	4(sp),a0		; a0 -> parameters on stack
 	move.w	(a0)+,_intin		; intin[0] <- writing mode	  4(sp)
@@ -1076,6 +1126,7 @@ VOID avrt_cpyfm(WORD wr_mode, WORD *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB, WORD
 #endif
 /* 306de: 00e25450 */
 /* 104de: 00fe1ebe */
+/* 106de: 00e23e22 */
 	xdef _avrt_cpyfm
 _avrt_cpyfm:
 
@@ -1102,6 +1153,7 @@ VOID avr_trnfm(FDB *psrcMFDB, FDB *pdesMFDB)
 #endif
 /* 306de: 00e25466 */
 /* 104de: 00fe1ed4 */
+/* 106de: 00e23e38 */
 	xdef _avr_trnfm
 _avr_trnfm:
 
@@ -1123,6 +1175,7 @@ VOID avsl_width(WORD width)
 #endif
 /* 306de: 00e25470 */
 /* 104de: 00fe1ede */
+/* 106de: 00e23e42 */
 	xdef _avsl_width
 _avsl_width:
 	lea	_ptsin,a1
@@ -1167,6 +1220,7 @@ vdi_short:
 *	d0	offset into vdi_list
 /* 306de: 00e25498 */
 /* 104de: 00fe1f06 */
+/* 106de: 00e23e6a */
 /* 404: 00e34348 */
 vdi_call:
 
@@ -1191,6 +1245,15 @@ vdi_cont:
 	move.l	#_ptsin,pioff		; some routines alter this pointer
 	rts				; so we shall always reset it.
 
+#if (AESVERSION >= 0x200) & !BINEXACT
+	xdef _set_cache
+_set_cache:
+	move.l 4(a7),d1
+	CACR_D0
+	D1_CACR
+	rts
+#endif
+
 
 vdi_list:	
 
@@ -1204,6 +1267,7 @@ vdi_list:
 	dc.b	000,001,016		; VSL_WID	vsl_width
 
 
+#if AESVERSION >= 0x200
 /* driver id to use in v_opnwk() call */
 restable:
 	dc.w	0
@@ -1226,3 +1290,4 @@ restype:
 	dc.w	4 /* TT-MED 640x480x16 */
 	dc.w	5 /* TT-HIGH 1280x960x2 */
 	dc.w	6 /* TT-LOW 320x480x256 */
+#endif

@@ -66,6 +66,7 @@ int16_t menu_down PROTO((LPTREE tree, int16_t ititle));
  */
 /* 306de: 00e1ec14 */
 /* 104de: 00fe8110 */
+/* 106de: 00e23ea6 */
 VOID rect_change(P(LPTREE) tree, P(MOBLK *) prmob, P(int16_t) iob, P(int16_t) x)
 PP(LPTREE tree;)
 PP(MOBLK *prmob;)
@@ -89,6 +90,8 @@ PP(int16_t x;)
  *	is set.
  */
 /* 306de: 00e1ec3a */
+/* 104de: 00fe1f60 */
+/* 106de: 00e23ecc */
 uint16_t do_chg(P(LPTREE) tree, P(int16_t) iitem, P(uint16_t) chgvalue, P(int16_t) dochg, P(int16_t) dodraw, P(int16_t) chkdisabled)
 PP(register LPTREE tree;)						/* tree that holds item */
 PP(int16_t iitem;)								/* item to affect   */
@@ -121,6 +124,8 @@ PP(int16_t chkdisabled;)						/* only if item enabled */
  *	are not the current item
  */
 /* 306de: 00e1ecb0 */
+/* 104de: 00fe1fc6 */
+/* 106de: 00e23f42 */
 int16_t menu_set(P(LPTREE) tree, P(int16_t) last_item, P(int16_t) cur_item, P(int16_t) setit)
 PP(LPTREE tree;)
 PP(register int16_t last_item;)
@@ -142,6 +147,8 @@ PP(int16_t setit;)
  *	down.
  */
 /* 306de: 00e1ecf4 */
+/* 104de: 00fe2000 */
+/* 106de: 00e23f86 */
 VOID menu_sr(P(int16_t) saveit, P(LPTREE) tree, P(int16_t) imenu)
 PP(int16_t saveit;)
 PP(LPTREE tree;)
@@ -166,6 +173,8 @@ PP(int16_t imenu;)
  *	underneath the menu and drawing in the proper menu sub-tree.
  */
 /* 306de: 00e1ed46 */
+/* 104de: 00fe2040 */
+/* 106de: 00e23fd8 */
 int16_t menu_down(P(LPTREE) tree, P(int16_t) ititle)
 PP(register LPTREE tree;)
 PP(register int16_t ititle;)
@@ -189,6 +198,8 @@ PP(register int16_t ititle;)
 
 
 /* 306de: 00e1edce */
+/* 104de: 00fe20b8 */
+/* 106de: 00e24060 */
 int16_t mn_do(P(int16_t *) ptitle, P(int16_t *) pitem)
 PP(int16_t *ptitle;)
 PP(int16_t *pitem;)
@@ -328,7 +339,9 @@ PP(int16_t *pitem;)
  *	global variable gl_mntree which is used in CTLMGR88.C is also
  *	set or reset.
  */
-/* 306de: 00E1F098 */
+/* 306de: 00e1f098 */
+/* 104de: 00fe2348 */
+/* 106de: 00e2432a */ 
 VOID mn_bar(P(LPTREE) tree, P(int16_t) showit)
 PP(register LPTREE tree;)
 PP(int16_t showit;)
@@ -342,9 +355,10 @@ PP(int16_t showit;)
 		gl_mntree = tree;
 		ob_actxywh(tree, THEACTIVE, &gl_rmnactv);
 
+#if AESVERSION >= 0x200
 		/* change the waiting rectangle   */
-
 		ch_wrect((GRECT *)&gl_ctwait.m_x, &gl_rmnactv);
+#endif
 
 		rc_copy(&gl_rmnactv, (GRECT *)&gl_ctwait.m_x);
 		/*
@@ -381,26 +395,35 @@ PP(int16_t showit;)
 		LWSET(OB_HEIGHT(gl_dabox), h);
 		gsx_sclip(&gl_rzero);
 		ob_draw(tree, THEBAR, MAX_DEPTH);
-		gsx_attr(FALSE, MD_REPLACE, BLACK);	/* not xor mode! */
+		gsx_fattr(FALSE, MD_REPLACE, BLACK);	/* not xor mode! */
 		gsx_fcline(0, gl_hbox - 1, gl_width - 1, gl_hbox - 1);
 	} else
 	{
 		gl_mntree = 0;
+#if AESVERSION >= 0x200
 		/* change the waiting rect */
 		ch_wrect((GRECT *)&gl_ctwait.m_x, &gl_rmenu);
+#endif
 
 		rc_copy(&gl_rmenu, (GRECT *)&gl_ctwait.m_x);
 	}
 	/* make ctlmgr fix up the size of rect its waiting for */
-/*	gl_fakemsg++;			*/
-	post_button(ctl_pd, 0x0000, 1);
+#if AESVERSION < 0x200
+	gl_fakemsg++;
+	post_button(ctl_pd, 1, 1);
+#else
+	post_button(ctl_pd, 0, 1);
+#endif
 	dsptch();
 }
+
 
 /*
  *	Routine to tell desk accessories that the currently running
  *	application is about to terminate.
  */
+/* 104de: 00fe24d2 */
+/* 106de: 00e244e4 */
 VOID mn_clsda(NOTHING)
 {
 	register int16_t i;
@@ -422,6 +445,8 @@ VOID mn_clsda(NOTHING)
  *	was added.
  */
 /* 306de: 00e1f2b6 */
+/* 104de: 00fe250e */
+/* 106de: 00e2452c */
 int16_t mn_register(P(int16_t) pid, P(char *) pstr)
 PP(register int16_t pid;)
 PP(register intptr_t pstr;)
@@ -449,6 +474,7 @@ PP(register intptr_t pstr;)
 }
 
 
+#if AESVERSION >= 0x200
 /*
  * Change the waiting rectangle for new menu bar
  */
@@ -475,3 +501,4 @@ PP(GRECT *n;)								/* new rect */
 		}
 	}
 }
+#endif

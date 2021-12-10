@@ -49,6 +49,8 @@
  *
  */
 /* 306de: 00e1fc4c */
+/* 104de: 00fe6198 */
+/* 106de: 00e288b2 */
 char ob_sst(P(LPTREE) tree, P(int16_t) obj, P(intptr_t *) pspec, P(int16_t *) pstate, P(int16_t *) ptype, P(int16_t *) pflags, P(GRECT *) pt, P(int16_t *) pth)
 PP(LPTREE tree;)
 PP(int16_t obj;)
@@ -122,10 +124,10 @@ PP(int16_t *pth;)
 
 
 /* 306de: 00e1fd18 */
-#if LINEF_HACK
+/* 104de: 00fe625c */
+/* 106de: 00e2897e */
 asm("  .globl _feveryobj")
 asm("_feveryobj: ds.b 0")
-#endif
 VOID everyobj(P(LPTREE) tree, P(int16_t) this, P(int16_t) last, P(EVERYOBJ_CALLBACK) routine, P(int16_t) startx, P(int16_t) starty, P(int16_t) maxdep)
 PP(register LPTREE tree;)
 PP(register int16_t this;)
@@ -196,6 +198,8 @@ PP(int16_t maxdep;)
  * our parent.  If object is the root then return NIL as parent.
  */
 /* 306de: 00e1fe24 */
+/* 104de: 00fe6360 */
+/* 106de: 00e28a8a */
 int16_t get_par(P(LPTREE) tree, P(int16_t) obj)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)

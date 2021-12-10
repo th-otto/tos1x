@@ -81,6 +81,8 @@ extern uint16_t const tosrsc[];
  */
 /* 206de: 00e1c7de */
 /* 306de: 00e20244 */
+/* 104de: 00fe76de */
+/* 106de: 00e29fd0 */
 int16_t rom_ram(P(int) which, P(intptr_t) pointer)
 PP(int which;)
 PP(register intptr_t pointer;)
@@ -136,6 +138,8 @@ PP(register intptr_t pointer;)
 
 
 /* 306de: 00e20316 */
+/* 104de: 00fe779c */
+/* 106de: 00e2a0a2 */
 VOID rsc_free(NOTHING)
 {
 	dos_free(gl_pglue);
@@ -150,6 +154,8 @@ VOID rsc_free(NOTHING)
  */
 /* 206de: 00e1c8d0 */
 /* 306de: 00e20336 */
+/* 104de: 00fe77b6 */
+/* 106de: 00e2a0c2 */
 BOOLEAN rsc_read(NOTHING)
 {
 	register const uint16_t *intptr;

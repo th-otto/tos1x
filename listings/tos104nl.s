@@ -44799,7 +44799,7 @@ J3:
 [00fe406a] f6d0                      dc.w       $F6D0 ; cli
 [00fe406c] f828                      dc.w       $F828 ; giveerr
 [00fe406e] f6d4                      dc.w       $F6D4 ; sti
-[00fe4070] f8e8                      dc.w       $F8E8 ; gsx_ffmoff
+[00fe4070] f8e8                      dc.w       $F8E8 ; ratexit
 [00fe4072] f824                      dc.w       $F824 ; gsx_mfree
 [00fe4074] 4257                      clr.w      (a7)
 [00fe4076] f8dc                      dc.w       $F8DC ; gsx_graphic

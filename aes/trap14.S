@@ -64,6 +64,8 @@
 	text
 
 /* 404: 00e3576c */
+/* 104de: 00fe7582 */
+/* 106de: 00e29e74 */
 	xdef _bios
 	xdef _trp13
 _trp13:
@@ -86,10 +88,12 @@ _trp14int: ds.b 0
 	rts
 
 
+/* 104de: 00fe75a2 */
+/* 106de: 00e29e96 */
 	xdef _getmouse
 _getmouse:
 	dc.w	$A000
-	suba.w	#$358,a0        ; M_POS_HX; WTF; will fail with Falcon VDI where mouse shape is stored somewhere else
+	suba.l	#$358,a0        ; M_POS_HX; WTF; will fail with Falcon VDI where mouse shape is stored somewhere else
 	move.l	a0,_maddr		; save the mouse block address
 	lea	mform,a1		; destination
 	move.w	#36,d0			; size ( - 1 for dbra )
@@ -144,7 +148,7 @@ putmcp:
 	even
 	
 	xdef fspec		/* file to look for (doesn't matter) */
-	comm fspec,112
+	comm fspec,8
 	xdef mydev
 	comm mydev,2
 	xdef oldgetbpb
@@ -157,6 +161,8 @@ putmcp:
 	text
 
 /* 404: 00e357c8 */
+/* 104de: 00fe75e0 */
+/* 106de: 00e29ed2 */
 	xdef _mediach
 _mediach:
 	move.w	4(sp),d0
@@ -164,7 +170,7 @@ _mediach:
 	add.b	#'A',d0
 	move.b	d0,fspec		; set drive spec for search first
 	move.b	#$3a,fspec+1
-	move.l	#$5c580000,fspec+2	; make sure it is on word boundary
+	move.l	#$5c5c5800,fspec+2	; make sure it is on word boundary; BUG: double backslash
 
 
 #if 0
@@ -178,13 +184,14 @@ loop:
 	move.w	#$20,-(sp)
 #endif
 
-	move.l	(_hdv_bpb).w,oldgetbpb
-	move.l	(_hdv_mediach).w,oldmediach
-	move.l	(_hdv_rw).w,oldrwabs
+	suba.l  a0,a0
+	move.l	_hdv_bpb(a0),oldgetbpb
+	move.l	_hdv_mediach(a0),oldmediach
+	move.l	_hdv_rw(a0),oldrwabs
 
-	move.l	#newgetbpb,(_hdv_bpb).w
-	move.l	#newmediach,(_hdv_mediach).w
-	move.l	#newrwabs,(_hdv_rw).w
+	move.l	#newgetbpb,_hdv_bpb(a0)
+	move.l	#newmediach,_hdv_mediach(a0)
+	move.l	#newrwabs,_hdv_rw(a0)
 
 	/* Fopen a file on that drive */
 
@@ -206,13 +213,13 @@ loop:
 
 noclose:
 	moveq	#0,d0
-	cmp.l	#newgetbpb,$472.w	; still installed?
+	cmp.l	#newgetbpb,_hdv_bpb(a0)	; still installed?
 	bne.b	done			; nope
 
 	moveq	#1,d0			; yup! remove & return TRUE
-	move.l	oldgetbpb,$472.w
-	move.l	oldmediach,$47e.w
-	move.l	oldrwabs,$476.w
+	move.l	oldgetbpb,_hdv_bpb(a0)
+	move.l	oldmediach,_hdv_mediach(a0)
+	move.l	oldrwabs,_hdv_rw(a0)
 
 done:
 #if 0
@@ -232,14 +239,17 @@ done:
  *                                                                       *
  *************************************************************************/
 /* 306de: 00e2640a */
+/* 104de: 00fe7680 */
+/* 106de: 00e29f72 */
 /* 404: 00e35866 */
 newgetbpb:
 	move.w	mydev,d0
 	cmp.w	4(sp),d0
 	bne.b	dooldg
-	move.l	oldgetbpb,$472.w ; it's mine: un-install new vectors
-	move.l	oldmediach,$47e.w
-	move.l	oldrwabs,$476.w
+	suba.l  a0,a0
+	move.l	oldgetbpb,_hdv_bpb(a0) ; it's mine: un-install new vectors
+	move.l	oldmediach,_hdv_mediach(a0)
+	move.l	oldrwabs,_hdv_rw(a0)
 dooldg:	move.l	oldgetbpb,a0	; continue here whether mine or not: call old.
 	jmp	(a0)
 
@@ -249,6 +259,8 @@ dooldg:	move.l	oldgetbpb,a0	; continue here whether mine or not: call old.
  *                                                                       *
  *************************************************************************/
 /* 306de: 00e26436 */
+/* 104de: 00fe76ae */
+/* 106de: 00e29fa0 */
 /* 404: 00e35892 */
 newmediach:
 	move.w	mydev,d0
@@ -267,6 +279,8 @@ dooldm:	move.l	oldmediach,a0	; not mine: call old vector.
  *                                                                       *
  *************************************************************************/
 /* 306de: 00e2644e */
+/* 104de: 00fe76c6 */
+/* 106de: 00e29fb8 */
 /* 404: 00e358aa */
 newrwabs:
 	move.w	mydev,d0
@@ -275,7 +289,7 @@ newrwabs:
 	moveq.l	#-14,d0
 	rts
 
-dooldr:	move.l	oldrwabs,a0	; changed from oldmediach to oldrwabs
+dooldr:	move.l	oldmediach,a0	; BUG should be oldrwabs
 	jmp	(a0)
 
 

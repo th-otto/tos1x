@@ -84,16 +84,8 @@ intptr_t rs_global;
 uint16_t hdr_buff[HDR_LENGTH / 2];
 
 
-VOID fix_chpos PROTO((intptr_t pfix, int16_t ifx));
-intptr_t get_sub PROTO((int16_t rsindex, int16_t rtype, int16_t rsize));
-intptr_t get_addr PROTO((uint16_t rstype, uint16_t rsindex));
-VOID fix_trindex PROTO((NOTHING));
-VOID fix_objects PROTO((NOTHING));
-VOID fix_tedinfo PROTO((NOTHING));
-VOID fix_nptrs PROTO((int16_t cnt, int16_t type));
-int16_t fix_ptr PROTO((int16_t type, int16_t index));
-int16_t fix_long PROTO((intptr_t plong));
-int16_t rs_readit PROTO((intptr_t pglobal, const char *rsfname));
+LINEF_STATIC int16_t fix_ptr PROTO((int16_t type, int16_t index));
+LINEF_STATIC int16_t fix_long PROTO((intptr_t plong));
 
 
 
@@ -104,7 +96,9 @@ int16_t rs_readit PROTO((intptr_t pglobal, const char *rsfname));
  *	full screen width. 
  */
 /* 306de: 00e20412 */
-VOID fix_chpos(P(intptr_t) pfix, P(int16_t) ifx)
+/* 104de: 00fe3960 */
+/* 106de: 00e25be0 */
+LINEF_STATIC VOID fix_chpos(P(intptr_t) pfix, P(int16_t) ifx)
 PP(intptr_t pfix;)
 PP(int16_t ifx;)
 {
@@ -113,7 +107,7 @@ PP(int16_t ifx;)
 	cpos = LWGET(pfix);
 	coffset = (cpos >> 8) & 0x00ff;
 	cpos &= 0x00ff;
-	if ((ifx) && (cpos == 80))
+	if (ifx && cpos == 80)
 		cpos = gl_width;
 	else
 		cpos *= (ifx) ? gl_wchar : gl_hchar;
@@ -128,6 +122,8 @@ PP(int16_t ifx;)
  * rs_obfix
  ************************************************************************/
 /* 306de: 00e2047c */
+/* 104de: 00fe39c2 */
+/* 106de: 00e25c4a */
 int16_t rs_obfix(P(LPTREE) tree, P(int16_t) curob)
 PP(LPTREE tree;)
 PP(int16_t curob;)
@@ -152,6 +148,8 @@ PP(int16_t curob;)
 
 
 /* 306de: 00e204d0 */
+/* 104de: 00fe3a0c */
+/* 106de: 00e25c9e */
 char *rs_str(P(int16_t) stnum)
 PP(int16_t stnum;)
 {
@@ -164,7 +162,9 @@ PP(int16_t stnum;)
 
 
 /* 306de: 00e2050a */
-intptr_t get_sub(P(int16_t) rsindex, P(int16_t) rtype, P(int16_t) rsize)
+/* 104de: 00fe3a3e */
+/* 106de: 00e25cd8 */
+LINEF_STATIC intptr_t get_sub(P(int16_t) rsindex, P(int16_t) rtype, P(int16_t) rsize)
 PP(int16_t rsindex;)
 PP(int16_t rtype;)
 PP(int16_t rsize;)
@@ -181,7 +181,8 @@ PP(int16_t rsize;)
  *	return address of given type and index, INTERNAL ROUTINE
  */
 /* 306de: 00e20538 */
-intptr_t get_addr(P(uint16_t) rstype, P(uint16_t) rsindex)
+/* 104de: 00fe3a6a */
+LINEF_STATIC intptr_t get_addr(P(uint16_t) rstype, P(uint16_t) rsindex)
 PP(register uint16_t rstype;)
 PP(register uint16_t rsindex;)
 {
@@ -263,7 +264,9 @@ PP(register uint16_t rsindex;)
 
 
 /* 306de: 00e2066e */
-VOID fix_trindex(NOTHING)
+/* 104de: 00fe3b8e */
+/* 106de: 00e25e3c */
+LINEF_STATIC VOID fix_trindex(NOTHING)
 {
 	register int16_t ii;
 	register int32_t ptreebase;
@@ -280,7 +283,9 @@ VOID fix_trindex(NOTHING)
  * Fix up the objects including color icons
  */
 /* 306de: 00e206cc */
-VOID fix_objects(NOTHING)
+/* 104de: 00fe3be0 */
+/* 106de: 00e25e9a */
+LINEF_STATIC VOID fix_objects(NOTHING)
 {
 	register int16_t ii;
 	register int16_t obtype;
@@ -300,7 +305,9 @@ VOID fix_objects(NOTHING)
 
 
 /* 306de: 00e20736 */
-VOID fix_tedinfo(NOTHING)
+/* 104de: 00fe3c3c */
+/* 106de: 00e25f04 */
+LINEF_STATIC VOID fix_tedinfo(NOTHING)
 {
 	register int16_t ii, i;
 	register int32_t psubstruct;
@@ -331,7 +338,9 @@ VOID fix_tedinfo(NOTHING)
 
 
 /* 306de: 00e20804 */
-VOID fix_nptrs(P(int16_t) cnt, P(int16_t) type)
+/* 104de: 00fe3cf8 */
+/* 106de: 00e25fd2 */
+LINEF_STATIC VOID fix_nptrs(P(int16_t) cnt, P(int16_t) type)
 PP(int16_t cnt;)
 PP(int16_t type;)
 {
@@ -343,6 +352,8 @@ PP(int16_t type;)
 
 
 /* 306de: 00e20832 */
+/* 104de: 00fe3d1c */
+/* 106de: 00e26000 */
 int16_t fix_ptr(P(int16_t) type, P(int16_t) index)
 PP(int16_t type;)
 PP(int16_t index;)
@@ -352,7 +363,9 @@ PP(int16_t index;)
 
 
 /* 306de: 00e20848 */
-int16_t fix_long(P(intptr_t) plong)
+/* 104de: 00fe3d2e */
+/* 106de: 00e26016 */
+LINEF_STATIC int16_t fix_long(P(intptr_t) plong)
 PP(register intptr_t plong;)
 {
 	register intptr_t lngval;
@@ -385,6 +398,8 @@ PP(intptr_t pglobal;)
  *	Free the memory associated with a particular resource load.
  */
 /* 306de: 00e208a0 */
+/* 104de: 00fe3d7c */
+/* 106de: 00e2606e */
 int16_t rs_free(P(intptr_t) pglobal)
 PP(intptr_t pglobal;)
 {
@@ -402,6 +417,8 @@ PP(intptr_t pglobal;)
  *	loaded into memory.
  */
 /* 306de: 00e208d4 */
+/* 104de: 00fe3daa */
+/* 106de: 00e260a2 */
 int16_t rs_gaddr(P(intptr_t) pglobal, P(uint16_t) rtype, P(uint16_t) rindex, P(VOIDPTR *) rsaddr)
 PP(intptr_t pglobal;)
 PP(uint16_t rtype;)
@@ -422,6 +439,8 @@ PP(register VOIDPTR *rsaddr;)
  *	loaded into memory.
  */
 /* 306de: 00e2090a */
+/* 104de: 00fe3dd6 */
+/* 106de: 00e260d8 */
 int16_t rs_saddr(P(intptr_t) pglobal, P(uint16_t) rtype, P(uint16_t) rindex, P(VOIDPTR ) rsaddr)
 PP(intptr_t pglobal;)
 PP(uint16_t rtype;)
@@ -449,7 +468,9 @@ PP(VOIDPTR rsaddr;)
  *	been loaded into memory yet.
  */
 /* 306de: 00e20946 */
-int16_t rs_readit(P(intptr_t) pglobal, P(const char *) rsfname)
+/* 104de: 00fe3e06 */
+/* 106de: 00e26114 */
+LINEF_STATIC int16_t rs_readit(P(intptr_t) pglobal, P(const char *) rsfname)
 PP(intptr_t pglobal;)
 PP(const char *rsfname;)
 {
@@ -498,6 +519,8 @@ PP(const char *rsfname;)
  * do all the fixups. rs_hdr must be initialized
  */
 /* 306de: 00e20a2a */
+/* 104de: 00fe3ec2 */
+/* 106de: 00e261f8 */
 VOID do_rsfix(P(intptr_t) hdr, P(int16_t) size)
 PP(intptr_t hdr;)
 PP(int16_t size;)
@@ -539,6 +562,8 @@ PP(intptr_t pglobal;)
  *	RS_LOAD		mega resource load
  */
 /* 306de: 00e20b00 */
+/* 104de: 00fe3f7a */
+/* 106de: 00e262ce */
 int16_t rs_load(P(intptr_t) pglobal, P(const char *) rsfname)
 PP(register intptr_t pglobal;)
 PP(const char *rsfname;)

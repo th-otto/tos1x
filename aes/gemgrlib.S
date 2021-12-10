@@ -97,6 +97,8 @@ VOID gr_stepcalc(WORD orgw, WORD orgh, GRECT *pt, WORD *pcx, WORD *pcy, WORD *pc
 }
 #endif
 /* 306de: 00e24b36 */
+/* 104de: 00fe1652 */
+/* 106de: 00e23524 */
 	xdef _gr_stepcalc
 _gr_stepcalc:
 	movem.l	a3-a5,-(sp)		;+12
@@ -202,6 +204,8 @@ VOID gr_growbox(GRECT *po, GRECT *pt)
 }
 #endif
 /* 306de: 00e24b92 */
+/* 104de: 00fe16ac */
+/* 106de: 00e23580 */
 	xdef _gr_growbox
 _gr_growbox:
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 12 bytes & d5-d7/a4-a6
@@ -211,7 +215,7 @@ _gr_growbox:
 	move.l	(a4)+,-(sp)		;+44 po->g_x, po->g_y
 	move.l	(a4),-(sp)		;+48 po->g_w, po->g_h
 
-	jsr	_gr_movebox
+	jsr	_gr_fmovebox
 
 	jsr	_gsx_moff
 
@@ -225,7 +229,7 @@ lab41:
 	move.w	4(a6),-(sp)		;+64 parm 2 cnt
 	move.w	d0,-(sp)		;+66 parm 1 TRUE
 
-	bsr	_gr_xor
+	bsr	gr_xor
 	adda.w	#18,sp			;+48
 	dbra	d7,lab41
 
@@ -282,6 +286,8 @@ VOID gr_shrinkbox(GRECT *po, GRECT *pt)
 #endif
 /* 206de: 00e21170 */
 /* 306de: 00e24bd6 */
+/* 104de: 00fe16e6 */
+/* 106de: 00e235c4 */
 	xdef _gr_shrinkbox
 _gr_shrinkbox:
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 12 bytes & d5-d7/a4-a6
@@ -306,7 +312,7 @@ lab46:
 	move.w	4(a6),-(sp)		;+52 parm 2 cnt
 	move.w	d0,-(sp)		;+54 parm 1 TRUE
 
-	bsr	_gr_xor
+	bsr	gr_xor
 	adda.w	#18,sp			;+36
 	dbra	d7,lab46
 
@@ -316,7 +322,7 @@ lab46:
 	move.l	(a6),-(sp)		;+44 cx , cy
 	move.l	(a4),-(sp)		;+48 po->g_w, po->g_h
 
-	bsr	_gr_movebox
+	bsr	gr_movebox
 
 	adda.w	#24,sp			;+24
 	movem.l	(sp)+,d5-d7/a4-a6	;+0
@@ -361,8 +367,11 @@ VOID gr_xor(WORD clipped, WORD cnt, WORD cx, WORD cy, WORD cw, WORD ch, WORD xst
 }
 #endif
 /* 306de: 00e24c22 */
+/* 104de: 00fe172a */
+/* 106de: 00e23610 */
 	xdef _gr_xor
 _gr_xor:
+gr_xor:
 	movem.l	d4-d7,-(sp)		;+16
 	lea	16+4(sp),a0		;a0 -> clipped
 	move.w	(a0)+,d4		;d4 = clipped
@@ -453,8 +462,13 @@ VOID gr_movebox(WORD w, WORD h, WORD srcx, WORD srcy, WORD dstx, WORD dsty)
 }
 #endif
 /* 306de: 00e24c6e */
+/* 104de: 00fe176e */
+/* 106de: 00e2365c */
 	xdef _gr_movebox
-_gr_movebox:
+_gr_movebox: ds.b 0
+	xdef _gr_fmovebox
+_gr_fmovebox: ds.b 0
+gr_movebox: ds.b 0
 	movem.l	d1-d7/a5,-(sp)		;+32 8 bytes local space & d3-d7/a5
 	move.l	sp,a5			;a5 ->DUMMY
 	movem.l	32+4(sp),d5-d7		;d5[31:16]=w;    d5[15:00]=h
@@ -485,7 +499,7 @@ absxok:
 absyok:	
 	move.l	d0,-(sp)		;+48 parm 2 parm 1 
 
-	bsr	_gr_scale
+	bsr	gr_scale
 
 	move.l	(a5)+,d0		;d0[15:00] = cnt
 
@@ -566,8 +580,11 @@ VOID gr_scale(WORD xdist, WORD ydist, WORD *pcnt, WORD *pxstep, WORD *pystep)
 }
 #endif
 /* 306de: 00e24ce8 */
+/* 104de: 00fe17de */
+/* 106de: 00e236d6 */
 	xdef _gr_scale
 _gr_scale:
+gr_scale:
 	movem.l d4-d7/a4-a6,-(sp)	;+28 we need regs!
 
 	movem.l	28+4(sp),d7/a4-a6	;d7[31:16] = xdist; d7[15:00] = ydist
@@ -688,6 +705,8 @@ WORD gr_watchbox(OBJECT *tree, WORD obj, WORD instate, WORD outstate)
 }
 #endif
 /* 306de: 00e24d32 */
+/* 104de: 00fe1826 */
+/* 106de: 00e23720 */
 	xdef _gr_watchbox
 _gr_watchbox:
 	movem.l	d2-d7/a5-a6,-(sp)	;+32 reserve 8 bytes & d4-d7/a5-a6
@@ -704,7 +723,7 @@ _gr_watchbox:
 	move.w	d5,-(sp)		;+42 parm 2 obj
 	move.l	a5,-(sp)		;+46 parm 1 tree
 
-	jsr	_ob_actxywh		;ob_actxywh(tree,obj,&t)
+	jsr	_ob_factxywh		;ob_actxywh(tree,obj,&t)
 
 	moveq	#0,d7			;out = FALSE
 	moveq	#1,d4			;d4  = TRUE (constant)
@@ -727,7 +746,7 @@ lab50:
 	move.l	-(a6),-(sp)		;+64 parms 2 3  t.g_x, t.g_y
 	move.w	d7,-(sp)		;+66 parm 1 out
 
-	jsr	_gr_stilldn		;gr_stilldn(out,t.g_x,t.g_y,t.g_w,t.g_h)
+	jsr	gr_stilldn		;gr_stilldn(out,t.g_x,t.g_y,t.g_w,t.g_h)
 	adda.w	#20,sp			;+46
 	tst.w	d0
 	bne	lab50			;while(gr_stilldn());
@@ -780,8 +799,11 @@ BOOLEAN gr_stilldn(int16_t out, int16_t x, int16_t y, int16_t w, int16_t h)
 
 #if AESVERSION < 0x330
 /* 306de: 00e24d8c */
+/* 104de: 00fe1874 */
+/* 106de: 00e2377a */
 	xdef	_gr_stilldn
 _gr_stilldn:
+gr_stilldn:
 	suba.w	#12,sp		;+12 make room on stack for 6 words: &rets[6]
 	move.l	sp,-(sp)	;+16 parm 7 &rets[0]
 	clr.l	-(sp)		;+20 parm 6 0x0L
@@ -840,6 +862,8 @@ VOID gr_draw(WORD have2box, GRECT *po, GRECT *poff)
 }
 #endif
 /* 306de: 00e24dba */
+/* 104de: 00fe189e */
+/* 106de: 00e237a8 */
 	xdef _gr_draw
 _gr_draw:
 	movem.l	d0-d1/d7/a4-a5,-(sp)	;+20 save d7/a4-a5 & reserve 8 bytes
@@ -924,6 +948,8 @@ WORD gr_wait(GRECT *po, GRECT *poff, WORD mx, WORD my)
 }
 #endif
 /* 306de: 00e24e0a */
+/* 104de: 00fe18e2 */
+/* 106de: 00e237f8 */
 	xdef _gr_wait
 _gr_wait:
 	movem.l	d5-d7/a4-a5,-(sp)	;+20
@@ -935,7 +961,7 @@ _gr_wait:
 ez_glr0:
 *		;note: immed "gl_rzero" ref'd elsewhere via ez_glr0+2(pc)
 	move.l	#_gl_rzero,-(sp)	;+28 parm 1 &gl_rzero
-	jsr	_rc_equal		;
+	jsr	_rc_fequal		;
 
 	bchg.l	#0,d0			;invert boolean result
 	move.w	d0,d7			;have2box = !rc_equal(&gl_zero, poff)
@@ -974,8 +1000,11 @@ VOID gr_setup(WORD color)
 }
 #endif
 /* 306de: 00e24e4a */
+/* 104de: 00fe191c */
+/* 106de: 00e23838 */
 	xdef _gr_setup
 _gr_setup:
+gr_setup:
 ez_glrsr:                     /* note: immed "gl_rscreen" ref'd elsewhere via ez_glrsr+2(pc) */
 	move.l	#_gl_rscreen,-(sp)	;+4  parm 1 &gl_rscreen
 	jsr	_gsx_sclip		;    gsx_sclip(&gl_rscreen);
@@ -1020,6 +1049,8 @@ VOID gr_rubbox(WORD xorigin, WORD yorigin, WORD wmin, WORD hmin, WORD *pwend, WO
 }
 #endif
 /* 306de: 00e24e68 */
+/* 104de: 00fe1932 */
+/* 106de: 00e23856 */
 	xdef _gr_rubbox
 _gr_rubbox:
 	lea	16(sp),a0	;a0 -> phend
@@ -1028,7 +1059,7 @@ _gr_rubbox:
 	move.l	ez_glr0+2(pc),-(sp) ;+12 parm 5 &_gl_rzero
 	move.l	-(a0),-(sp)	;+16 parms 4 3 hmin    wmin
 	move.l	-(a0),-(sp)	;+20 parms 2 1 yorigin xorigin
-	bsr	_gr_rubwind	;gr_rubwind
+	bsr	gr_rubwind	;gr_rubwind
 	adda.w	#20,sp
 	rts
 
@@ -1089,13 +1120,16 @@ VOID gr_rubwind(WORD xorigin, WORD yorigin, WORD wmin, WORD hmin, GRECT *poff, W
 }
 #endif
 /* 306de: 00e24e80 */
+/* 104de: 00fe194a */
+/* 106de: 00e2386e */
 	xdef _gr_rubwind
 _gr_rubwind:
+gr_rubwind:
 	movem.l	d3-d6/a3-a6,-(sp) ;+32 reserve 8 bytes of local & d5-d6/a3-a6
 	move.w	#1,-(sp)	;+34 parm 1 TRUE
 	jsr	_wm_update	;wm_update(BEG_UPDATE)
 
-	bsr	_gr_setup	;gr_setup(BLACK)  black is true!
+	bsr	gr_setup	;gr_setup(BLACK)  black is true!
 
 	movem.l	34+4(sp),d5-d6/a4-a6 ;d5[31:16] = xorigin; d5[15:00] = yorigin
 *				  ;d6[31:16] = wmin; d6[15:00] = hmin
@@ -1227,8 +1261,12 @@ VOID gr_dragbox(WORD w, WORD h, WORD sx, WORD sy, GRECT *pc, WORD *pdx, WORD *pd
 }
 #endif
 /* 306de: 00e24eee */
+/* 104de: 00fe19ac */
+/* 106de: 00e238dc */
 	xdef _gr_dragbox
-_gr_dragbox:
+_gr_dragbox: ds.b 0
+	xdef _gr_fdragbox
+_gr_fdragbox: ds.b 0
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 20 bytes & d6-d7/a4-a6 
 	movem.l	36+4(sp),d6-d7/a4-a6	;d6[31:16] = w; d6[15:00] = h
 *					;d7[31:16] = sx; d7[15:00] = sy
@@ -1297,7 +1335,7 @@ lab31:
 	move.l	a0,-(sp)	;+62 parm 2 &o
 
 	move.l	a4,-(sp)	;+66 parm 1 &pc
-	jsr	_rc_constrain	;rc_constrain(pc, &o)
+	jsr	_rc_fconstrain	;rc_constrain(pc, &o)
 
 	lea	66-36(sp),a0	;a0 => mx
 	move.l	(a0)+,-(sp)	;+70 parm 3 mx  parm 4 my
@@ -1421,6 +1459,8 @@ int16_t gr_slidebox(LPTREE tree, int16_t parent, int16_t obj, int16_t isvert)
 #endif
 
 /* 306de: 00e24fc0 */
+/* 104de: 00fe1a66 */
+/* 106de: 00e239b0 */
 /* ridicolous attempt of hand-optimizing compiler generated code... */
 
 	xdef _gr_slidebox
@@ -1435,7 +1475,7 @@ _gr_slidebox:
         move.l    a6,-(a7)
         move.w    d4,-(a7)
         move.l    a4,-(a7)
-        jsr       _ob_actxywh
+        jsr       _ob_factxywh
         move.l    a5,-(a7)
         move.w    d5,-(a7)
         move.l    a4,-(a7)
@@ -1450,7 +1490,7 @@ _gr_slidebox:
         add.w     (a6)+,d0
         move.l    d0,-(a7)
         move.l    (a5),-(a7)
-        bsr       _gr_dragbox
+        bsr       _gr_fdragbox
         moveq.l   #0,d0
         moveq.l   #0,d1
         tst.w     d6
@@ -1496,6 +1536,8 @@ VOID gr_mkstate(WORD *pmx, WORD *pmy, WORD *pmstat, WORD *pkstat)
 }
 #endif
 /* 306de: 00e2503c */
+/* 104de: 00fe1ad4 */
+/* 106de: 00e23a2c */
 	xdef _gr_mkstate
 _gr_mkstate:
 	lea	mklist(pc),a0

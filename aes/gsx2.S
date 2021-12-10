@@ -54,6 +54,8 @@
 
 /* 306de: 00e254f8 */
 /* 404: 00e343a8 */
+/* 104de: 00fe5bba */
+/* 106de: 00e282cc */
 	xdef	_gsx2
 _gsx2:
 	lea	pblock,a0	; a0 -> pblock

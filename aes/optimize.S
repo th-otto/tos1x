@@ -68,6 +68,7 @@ STAR		equ	$2a
  *				const GRECT *gr;
  *				int	*xptr,*yptr,*wptr,*hptr;
  */
+/* 104de: 00fe5c9c */
 	xdef	_r_get
 _r_get:
 	movem.l	a3-a4,-(sp)	; save a3,a4
@@ -142,7 +143,9 @@ _inside:
  *				int	*ptr1,ptr2*
  */
 	xdef _rc_equal
-_rc_equal:
+_rc_equal: ds.b 0
+	xdef _rc_fequal
+_rc_fequal: ds.b 0
 	movem.l	4(sp),a0-a1	; a0 -> grect 1, a1 -> grect 2
 	cmpm.l	(a0)+,(a1)+	; are the x and y equal
 	bne	retfalse
@@ -258,7 +261,9 @@ uni4:
  *				GRECT	*const_ptr,*xywhptr;
  */
 	xdef _rc_constrain
-_rc_constrain:
+_rc_constrain: ds.b 0
+	xdef _rc_fconstrain
+_rc_fconstrain: ds.b 0
 	movem.l	4(sp),a0-a1	; a0 -> x of constrain rect, a1 -> grect
 	move.w	(a0),d0		; d0 = const_x
 	cmp.w	(a1),d0		; If ( x < const_x )
@@ -598,7 +603,7 @@ unfout:
 _fs_sset:
 	move.l	14(sp),a1	; a1 -> ptext
 
-	movea.w	#OB_SPEC,a0	; a0 = ob_spec offset
+	movea.l	#OB_SPEC,a0	; a0 = ob_spec offset
 	bsr	get_addr
 	move.l	(a0),a0		; a0 -> tedinfo block
 
@@ -612,14 +617,14 @@ _fs_sset:
 	move.l	(sp)+,a0	; get pointer to tedinfo structure
 
 	move.l	18(sp),a1	; ptxtlen
-	adda.w	#TEDTXTLEN,a0	; now points to tedinfo text length
+	adda.l	#TEDTXTLEN,a0	; now points to tedinfo text length
 	move.w	(a0),(a1)	; store it
 	rts
 
 /*
  *
  * inf_sset
- *		C binding:	inf_sset(tree,obj,pstr,&text,&txtlen);
+ *		C binding:	inf_sset(tree,obj,pstr);
  *
  */
 	xdef _inf_sset
@@ -631,7 +636,7 @@ _inf_sset:
 	move.w	12(a6),-(sp)	; obj
 	move.l	8(a6),-(sp)	; tree
 	jsr	_fs_sset
-	adda.w	#18,sp
+	adda.l	#18,sp
 	unlk	a6
 	rts
 
@@ -644,7 +649,7 @@ _inf_sset:
  */
 	xdef _fs_sget
 _fs_sget: ds.b 0
-	movea.w	#OB_SPEC,a0	; a0 = offset to ob_spec
+	movea.l	#OB_SPEC,a0	; a0 = offset to ob_spec
 	bsr	get_addr
 	move.l	(a0),a0		; a0 = ob_spec pointer
 
@@ -657,7 +662,7 @@ _fs_sget: ds.b 0
 
 
 /*
- * inff_fldset	This routine is used to set an objects flags based on 
+ * inf_fldset	This routine is used to set an objects flags based on 
  *		the outcome of a 'and' operation.  The word is set to
  *		the 'truestate' if the operation is true else set to
  *		'falsestate'
@@ -666,7 +671,7 @@ _fs_sget: ds.b 0
  */
 	xdef _inf_fldset
 _inf_fldset:
-	movea.w	#OB_STATE,a0	; a0 = offset to ob_state
+	movea.l	#OB_STATE,a0	; a0 = offset to ob_state
 	bsr	get_addr
 
 	clr	d0
@@ -690,8 +695,10 @@ inf1:
  *					long	tree;
  */
 	xdef _inf_gindex
-_inf_gindex:
-	movea.w	#OB_STATE+1,a0	; a0 = offset to byte to test
+_inf_gindex: ds.b 0
+	xdef _inf_fgindex
+_inf_fgindex: ds.b 0
+	movea.l	#OB_STATE+1,a0	; a0 = offset to byte to test
 	bsr	get_addr
 
 	move.w	10(sp),d0	; d0 = n
@@ -703,7 +710,7 @@ nxtstat:
 	sub.w	d1,d0		; get object number
 	bra	gindout
 gind1:
-	adda.w	#OB_SIZE,a0	; next object state to test
+	adda.l	#OB_SIZE,a0	; next object state to test
 	dbra	d1,nxtstat
 	move.w	d1,d0		; d0 = -1
 gindout:
@@ -724,7 +731,7 @@ _inf_what:
 	move.w	#2,-(sp)	; sp = 2
 	move.w	10(sp),-(sp)	; sp = ok
 	move.l	8(sp),-(sp)	; sp = tree
-	jsr	_inf_gindex	; find selected object
+	jsr	_inf_fgindex	; find selected object
 	addq.l	#8,sp
 
 	cmp.w	#-1,d0		; if (ret == -1)
@@ -733,7 +740,7 @@ _inf_what:
 	move.w	d0,d1		; save return value
 
 	add.w	d0,8(sp)	; 8(sp) = object# + ret
-	movea.w	#OB_STATE,a0	; a0 = offset to ob_state
+	movea.l	#OB_STATE,a0	; a0 = offset to ob_state
 	bsr	get_addr
 
 	clr.w	(a0)		; set ob_state to NORMAL
@@ -815,7 +822,7 @@ s1:
 
 dovalue:
 	clr.l	d5		; d5 is index
-	suba.w	#16,sp		; get room on stack
+	suba.l	#16,sp		; get room on stack
 
 nxtdigit:
 	tst.l	d4		; more digits (lvalue)
@@ -851,7 +858,7 @@ ascdig:
 	move.b	(sp,d5.w),(a3)+	; copy digit
 	dbra	d5,ascdig
 stclean:
-	adda.w	#16,sp		; clean up stack
+	adda.l	#16,sp		; clean up stack
 	bra	mernxt
 merout:
 	clr.b	(a3)		; null terminate string

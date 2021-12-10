@@ -380,14 +380,16 @@ _endvdibss: ds.b 0
 	V(tstack,l,24)
 	INT(_w_inc)
 	INT(_bar_max)
-	
-	ds.b 26
-	
+	V(fspec,b,8)
+	INT(mydev)
+	PTR(oldgetbpb)
+	PTR(oldmediach)
+	PTR(oldrwabs)
+	ds.l 1 /* unused */
 	PTR(_maddr)
 	V(mform,w,37)
-	
-	ds.b 8
-	
+	PTR(trp13aret)
+	PTR(trp14aret)
 	V(_intout,w,10)
 	V(_ptsout,w,10)
 	GRECT(_ctrl)
@@ -403,17 +405,14 @@ _endvdibss: ds.b 0
 	INT(_yrat)
 	INT(_gl_hchar)
 	INT(_gl_naccs)
-
-	ds.b 2
-	
+	INT(_gl_dabox)
 	INT(_gl_dacnt)
 	INT(_gl_fakemsg)
 	INT(_gl_bdelay)
 	V(_gl_pacc,l,MAX_ACCS)
 	PTR(_ad_hgmice)
-
-	ds.b 58
-	
+	V(_desk_acc,l,MAX_ACCS)
+	V(_ib,b,34)      /* ICONBLK */
 	V(_bi,b,14)      /* BITBLK */
 	PTR(_ad_fsnames)
 	INT(_gl_bclick)
@@ -422,15 +421,14 @@ _endvdibss: ds.b 0
 	PTR(_ad_armice)
 	INT(_gl_dclick)
 	PTR(_ad_fsel)
+	TEDINFO(_gl_aname)
 
-	ds.b 32
+	ds.b 4
 	
 	PTR(_ad_shcmd)
 	PTR(_ad_fpath)
 	INT(_gl_height)
-
-	ds.b 28
-	
+	TEDINFO(_gl_ainfo)
 	INT(_gl_dcindex)
 	INT(_gl_recd)
 	INT(_gl_bdesired)
@@ -451,9 +449,7 @@ _endvdibss: ds.b 0
 	PTR(_ad_intin)
 	INT(_gl_hschar)
 	INT(_sh_iscart)
-
-	ds.b 36
-	
+	V(_hdr_buff,w,18)   /* RSHDR */
 	INT(_gl_moff)
 	GRECT(_gl_rcenter)
 	INT(_gl_graphic)
@@ -465,18 +461,13 @@ _endvdibss: ds.b 0
 	INT(_DOS_AX)
 	INT(_gl_mask)
 	INT(_gl_ncols)
-
-	ds.b 2
-	
+	INT(_w_walkflag)
 	PTR(_ad_envrn)
 	V(_desk_pid,w,MAX_ACCS)
-
-	ds.b 6
-
+	PTR(_gl_newdesk)
+	INT(_wasclr)
 	GRECT(_gl_rmnactv)
-
-	ds.b 4
-
+	PTR(_cart_dta)
 	PTR(_gl_awind)
 	PTR(_ad_title)
 	PTR(_gl_rbuf)
@@ -494,9 +485,7 @@ _endvdibss: ds.b 0
 	PTR(_sys_adacc)
 	GRECT(_gl_rmenu)
 	INT(_gl_tcolor)
-
-	ds.b 192
-	
+ 	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
 	LONG(_gl_mnpid) /* BUG: should be int */
 	INT(_pr_mclick)
 	INT(_g_wsend)
@@ -517,42 +506,32 @@ _endvdibss: ds.b 0
 	V(_appl_msg,w,8)
 	INT(_ml_ocnt)
 	GRECT(_gl_rscreen)
-
-	ds.b 4
-
+	PTR(_cart_ptr)
 	INT(_fs_count)
-
-	ds.b 2
-	
+	INT(_gl_newroot)
 	LONG(_fs_fnum)
 	INT(_gl_btrue)
-
-	ds.b 16
-	
+	V(_wind_msg,w,8)
 	PTR(_gl_kowner)
 	INT(_gl_hsptschar)
 	INT(_gl_hptschar)
 	INT(_gl_wbox)
 	PTR(_gl_mntree)
 	PTR(_gl_mowner)
-
-	ds.b 6
-	
+	INT(_gemsize)
+	PTR(_gl_wtree)
 	V(_wind_spb,b,10)    /* sizeof(SPB) */
 	GRECT(_gl_rzero)
 	INT(_gl_mouse)
-
-	ds.b 2
-	
+	INT(_infsize)
 	INT(_gl_nrows)
 	INT(_tmpmoff)
 	PTR(_gl_store)
 	INT(_fs_topptr)
 	INT(_autoexec)
 	INT(_gl_wtop)
-
-	ds.b 6
-	
+	INT(_desksize)
+	PTR(_deskptr)
 	INT(_pr_xrat)
 	INT(_pr_button)
 	
@@ -563,13 +542,9 @@ _endvdibss: ds.b 0
 	PTR(_drawstk)
 	INT(_pr_yrat)
 	INT(_gl_kstate)
-	
-	ds.b 28
-
+	TEDINFO(_edblk)
 	INT(_tbutton)
-	
-	ds.b 2
-	
+	INT(_nogem)
 	INT(_gl_mx)
 	INT(_gl_my)
 	INT(_fpcnt)
@@ -579,9 +554,7 @@ _endvdibss: ds.b 0
 	
 	V(_intin,w,128)
 	PTR(_cda)
-
-	ds.b 456
-	
+ 	V(_W_ACTIVE,b,24*MAXOBJ)  /* OBJECT[MAXOBJ] */
 	INT(_DOS_ERR)
 	V(_ptsin,w,20)
 	INT(_fph)
@@ -610,13 +583,9 @@ _endvdibss: ds.b 0
 	MFDB(_gl_src)
 	GRECT(_gl_rfs)
 	MFDB(_gl_dst)
-
-	ds.b 4
-	
+	PTR(_rs_hdr)
 	MFDB(_gl_tmp)
-
-	ds.b 2
-	
+	INT(_nodesk)
 	INT(_er_num)
 	INT(_curpid)
 	BYTE(_indisp)
@@ -624,45 +593,30 @@ _endvdibss: ds.b 0
 	BYTE(_infork)
 	even
 	INT(_kstate)
-
-	ds.b 4
-	
+	PTR(_gemptr)
 	V(_contrl,w,12)
-
-/* XXX */
-
-	ds.b 4
-
+	PTR(_infptr)
 	PTR(_pxpath)
 	INT(_mtrans)
 	INT(_tmpmon)
 	INT(_button)
 
+
+/*
+ * variables below are left-over from TOS 2.x source,
+ * and are not assigned yet
+ */
 #if 0
 	INT(_d_dir)
 	PTR(_slr)
 	PTR(_lp_end)
-	INT(_gl_dabox)
 
-	V(fspec,b,8)
-	INT(mydev)
-	PTR(oldgetbpb)
-	PTR(oldmediach)
-	PTR(oldrwabs)
-	ds.l 1 /* unused */
-	PTR(trp13aret)
-	PTR(trp14aret)
 	GRECT(_fobj)
 	INT(_xprint)
 	INT(_m_st)
 	V(_temp,b,50) /* unused */
 	V(_rets,w,6) /* unused */
-	V(_desk_acc,l,MAX_ACCS)
-	V(_ib,b,34)      /* ICONBLK */
-	TEDINFO(_gl_aname)
 	PTR(_ad_pfile) /* unused */
-	INT(_gl_apid)
-	TEDINFO(_gl_ainfo)
 	INT(_q_change)
 	PTR(_gh_buffer)
 	INT(_back_up)
@@ -670,7 +624,6 @@ _endvdibss: ds.b 0
 	V(_gl_cmform,w,37) /* MFORM */
 	INT(_f_rename)
 	PTR(_background)
-	V(_hdr_buff,w,18)   /* RSHDR */
 	INT(_d_maxcolor)
 	INT(_d_level)
 	INT(_f_abort)
@@ -678,62 +631,43 @@ _endvdibss: ds.b 0
 	V(_path1,b,PATHLEN)
 	V(_path2,b,PATHLEN)
 	INT(_d_display)
-	INT(_w_walkflag)
 	PTR(_winhead)
 	PTR(_path3)
-	PTR(_gl_newdesk)
-	INT(_wasclr)
 	V(_inf_path,b,PATHLEN)
-	PTR(_cart_dta)
 	INT(_p_timedate)
 	V(_mentable,b,MAXMENU)
 	even
 	V(_gl_omform,w,37) /* MFORM */
- 	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
 	PTR(_iconmem)
 	V(_comtail,b,PATHLEN)
 	INT(_font_save)
 	PTR(_newbuff)
 	V(_restable,b,6)
-	PTR(_cart_ptr)
-	INT(_gl_newroot)
 	INT(_maxicon)
 	INT(_x_index)
 	LONG(_numfiles)
-	V(_wind_msg,w,8)
-	PTR(_gl_wtree)
-	INT(_gemsize)
 	PTR(_lp_start)
 	INT(_s_stofit)
-	INT(_infsize)
 	INT(_numicon)
 	INT(_sh_up) /* unused */
 	V(_filestr,b,NAMELEN)
 	INT(_windspec)
 	INT(_d_nrows)
-	INT(_desksiz)
-	PTR(_deskptr)
 	INT(_o_status)
-	TEDINFO(_edblk)
-	PTR(_rs_hdr)
 	PTR(_o_win)
 	PTR(_backid)
 	PTR(_fixdst)
-	PTR(_infptr)
 	PTR(_fixsrc)
-	PTR(_gemptr)
 	INT(_apsize)
 
 	INT(_x_status)
 	LONG(_tolsize)
 	INT(_m_cpu)
-	INT(_nogem)
 	PTR(_cpbox)
 	INT(_i_status) /* unused */
 	INT(_x_cur)
 	PTR(_x_win)
 	PTR(_dpd)
- 	V(_W_ACTIVE,b,24*MAXOBJ)  /* OBJECT[MAXOBJ] */
 	V(_dtabuf,b,44+4)
 	V(_pxyarray,w,10) /* unused */
 	V(_q_path,b,40) /* unused */
@@ -748,7 +682,6 @@ _endvdibss: ds.b 0
 	
 	ds.b 16 /* unused? */
 	
-	INT(_nodesk)
 	INT(_srcbuf)
 	INT(_srclen)
 	INT(_dstbuf)

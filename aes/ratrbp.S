@@ -52,6 +52,7 @@
 /* 206de: 00e2271c */
 /* 306de: 00e26182 */
 /* 104de: 00fe639c */
+/* 106de: 00e28ace */
 	xdef	_far_bchange
 _far_bchange:
 	move.l	a7,gstksave		; save stack, paranoid code
@@ -97,7 +98,7 @@ bout4:
 	move.w	#1,-(sp)
 	move.w	d0,-(sp)
 	pea	_bchange
-	jsr	_forkq
+	jsr	forkq
 	add.l	#8,sp
 	move.w	(sp)+,d0		; restore d0
 
@@ -118,6 +119,7 @@ bout1:
  */
 /* 306de: 00e26208 */
 /* 104de: 00fe6422 */
+/* 106de: 00e28b54 */
 	xdef	_far_mchange
 _far_mchange:
 	move.l	a7,gstksave		; save stack
@@ -127,7 +129,7 @@ _far_mchange:
 	move.w	d1,-(sp)		; delta y
 	move.w	d0,-(sp)		; delta x
 	move.l	#_mchange,-(sp)
-	jsr	_forkq			; call forkq
+	jsr	forkq			; call forkq
 	addq.l	#8,sp
 
 	movem.l (sp)+,d0-d2/a0-a2
@@ -176,7 +178,7 @@ _tikcod:
  */
 	move.l	_NUM_TICK,-(a7)
 	move.l	#_tchange,-(a7)
-	jsr	_forkq
+	jsr	forkq
 	addq.l	#8,a7
 	tst.w	d0		; event recorded ?
 	bne	tpollmb		; Yes
@@ -184,7 +186,7 @@ _tikcod:
 
 tpollmb:
 	move.w	#1,-(a7)
-	jsr	_b_delay
+	bsr	b_delay
 	addq.l	#2,a7
 /*
  * --- Interrupt processed, restore everything and return -----
@@ -203,6 +205,7 @@ tpollmb:
 /* 104de: 00fe64be */
 	xdef	_b_delay
 _b_delay:
+b_delay:
 	move.w	4(sp),d0		; get the amnt
 	tst.w	_gl_bdelay
 	beq	bdout1
@@ -212,7 +215,7 @@ _b_delay:
 	move.w	_gl_bclick,-(sp)
 	move.w	_gl_bdesired,-(sp)
 	pea	_bchange
-	jsr	_forkq
+	jsr	forkq
 	add.l	#8,sp
 	move.w	_gl_btrue,d0
 	cmp.w	_gl_bdesired,d0
@@ -220,7 +223,7 @@ _b_delay:
 	move.w	#1,-(sp)
 	move.w	_gl_btrue,-(sp)
 	pea	_bchange
-	jsr	_forkq
+	jsr	forkq
 	add.l	#8,sp
 
 bdout1:
@@ -235,6 +238,7 @@ bdout1:
 /* 206de: 00e22894 */
 /* 306de: 00e262fa */
 /* 104de: 00fe6514 */
+/* 106de: 00e28c46 */
 	xdef	_delay
 _delay:
 	move.l	4(sp),d0

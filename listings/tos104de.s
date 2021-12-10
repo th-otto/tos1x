@@ -46776,7 +46776,7 @@ sh_toalpha:
 [00fe40a0] f6d0                      dc.w      $F6D0 ; cli
 [00fe40a2] f828                      dc.w      $F828 ; giveerr
 [00fe40a4] f6d4                      dc.w      $F6D4 ; sti
-[00fe40a6] f8e8                      dc.w      $F8E8 ; gsx_ffmoff
+[00fe40a6] f8e8                      dc.w      $F8E8 ; ratexit
 [00fe40a8] f824                      dc.w      $F824 ; gsx_mfree
 [00fe40aa] 4257                      clr.w     (a7)
 [00fe40ac] f8dc                      dc.w      $F8DC ; gsx_graphic
@@ -50363,19 +50363,19 @@ doui:
 [00fe6a34] f001                      dc.w      $F001 ; movem.l (a7)+,#0
 
 bconws:
-[00fe6a36] 4e56 0000                 link      a6,#0
-[00fe6a3a] 48e7 0104                 movem.l   d7/a5,-(a7)
-[00fe6a3e] 2a6e 0008                 movea.l   8(a6),a5
-[00fe6a42] 6010                      bra.s     $00FE6A54
-[00fe6a44] 101d                      move.b    (a5)+,d0
-[00fe6a46] 4880                      ext.w     d0
-[00fe6a48] 3e80                      move.w    d0,(a7)
-[00fe6a4a] 2f3c 0003 0002            move.l    #$00030002,-(a7)
-[00fe6a50] f0f0                      dc.w      $F0F0 ; trp13
-[00fe6a52] 588f                      addq.l    #4,a7
-[00fe6a54] 4a15                      tst.b     (a5)
-[00fe6a56] 66ec                      bne.s     $00FE6A44
-[00fe6a58] f801                      dc.w      $F801 ; movem.l (a7)+,a5
+[00fe6a36] 4e56 0000                 link       a6,#0
+[00fe6a3a] 48e7 0104                 movem.l    d7/a5,-(a7)
+[00fe6a3e] 2a6e 0008                 movea.l    8(a6),a5
+[00fe6a42] 6010                      bra.s      $00FE6A54
+[00fe6a44] 101d                      move.b     (a5)+,d0
+[00fe6a46] 4880                      ext.w      d0
+[00fe6a48] 3e80                      move.w     d0,(a7)
+[00fe6a4a] 2f3c 0003 0002            move.l     #$00030002,-(a7)
+[00fe6a50] f0f0                      dc.w       $F0F0 ; trp13
+[00fe6a52] 588f                      addq.l     #4,a7
+[00fe6a54] 4a15                      tst.b      (a5)
+[00fe6a56] 66ec                      bne.s      $00FE6A44
+[00fe6a58] f801                      dc.w       $F801 ; movem.l (a7)+,a5
 
 /* start deskdisk.c (DESKTOP) */
 
@@ -62934,8 +62934,15 @@ gem.rsc:
 6B82: tstack
 6BE2: w_inc
 6BE4: bar_max
+6BE6: fspec
+6BEE: mydev
+6BF0: oldgetbpb
+6BF4: oldmediach
+6BF8: oldrwabs
 6C00: maddr
 6C04: mform
+6C4E: trp13aret
+6C52: trp14aret
 6C56: intout
 6C6A: ptsout
 6C7E: ctrl
@@ -62945,11 +62952,14 @@ gem.rsc:
 6CE0: yrat
 6CE2: gl_hchar
 6CE4: gl_naccs
+6CE6: gl_dabox
 6CE8: gl_dacnt
 6CEA: gl_fakemsg
 6CEC: gl_bdelay
 6CEE: gl_pacc
 6D06: ad_hgmice
+6D0A: desk_acc
+6D22: ib
 6D44: bi
 6D52: ad_fsnames
 6D56: gl_blick
@@ -62958,9 +62968,11 @@ gem.rsc:
 6D5E: ad_armice
 6D62: gl_dclick
 6D64: ad_fsel
+6D68: gl_aname
 6D88: ad_shcmd
 6D8C: ad_fpath
 6D90: gl_height
+6D92: gl_ainfo
 6DAE: gl_dcindex
 6DB0: gl_recd
 6DB2: gl_bdesired
@@ -62980,6 +62992,7 @@ gem.rsc:
 6DDA: ad_intin
 6DDE: gl_hschar
 6DE0: sh_iscart
+6DE2: hdr_buff
 6E06: gl_moff
 6E08: gl_rcenter
 6E10: gl_graphic
@@ -62991,9 +63004,13 @@ gem.rsc:
 6E20: DOS_AX
 6E22: gl_mask
 6E24: gl_ncols
+6E26: w_walkflag
 6E28: ad_envrn
 6E2C: desk_pid
+6E38: gl_newdesk
+6E3C: wasclr
 6E3E: gl_rmnactv
+6E46: cart_dta
 6E4A: gl_awind
 6E4E: ad_title
 6E52: gl_rbuf
@@ -63011,6 +63028,7 @@ gem.rsc:
 6F1A: sys_adacc
 6F1E: gl_rmenu
 6F26: gl_tcolor
+6F28: W_TREE
 6FE8: gl_mnpid
 6FEC: pr_mclick
 6FEE: g_wsend
@@ -63030,24 +63048,32 @@ gem.rsc:
 701A: appl_msg
 702A: ml_ocnt
 702C: gl_rscreen
+7034: cart_ptr
 7038: fs_count
+703A: gl_newroot
 703C: fs_fnum
 7040: gl_btrue
+7042: wind_msg
 7052: gl_kowner
 7056: gl_hsptschar
 7058: gl_hptschar
 705A: gl_wbox
 705C: gl_mntree
 7060: gl_mowner
+7064: gemsize
+7066: gl_wtree
 706A: wind_spb
 7074: gl_rzero
 707C: gl_mouse
+707E: infsize
 7080: gl_nrows
 7082: tmpmoff
 7084: gl_store
 7088: fs_topptr
 708A: autoexec
 708C: gl_wtop
+708E: desksize
+7090: deskptr
 7094: pr_xrat
 7096: pr_button
 70B8: gl_wsptschar
@@ -63055,13 +63081,16 @@ gem.rsc:
 70BC: drawstk
 70C0: pr_yrat
 70C2: gl_kstate
+70C4: edblk
 70E0: tbutton
+70E2: nogem
 70E4: gl_mx
 70E6: gl_my
 70E8: fpcnt
 70EA: gl_ws
 715E: intin
 725E: cda
+7262: W_ACTIVE
 742A: DOS_ERR
 742C: ptsin
 7454: fph
@@ -63087,13 +63116,17 @@ A7CC: ctl_pd
 A7D0: gl_src
 A7E4: gl_rfs
 A7EC: gl_dst
+A800: rs_hdr
 A804: gl_tmp
+A818: nodesk
 A81A: er_num
 A81C: curpid
 A81E: indisp
 A820: infork
 A822: kstate
+A824: gemptr
 A828: contrl
+A840: infptr
 A844: pxpath
 A848: mtrans
 A84A: tmpmon

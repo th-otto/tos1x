@@ -719,7 +719,10 @@ _dos_create:	moveq	#X_CREAT,d1
 		bra.b	generic
 
 	xdef	_dos_free
-_dos_free:	moveq	#X_MFREE,d1
+_dos_free: ds.b 0
+	xdef	_dos_ffree
+_dos_ffree: ds.b 0
+	moveq	#X_MFREE,d1
 
 generic:
 	move.l	(sp)+,retaddr		; save return address
