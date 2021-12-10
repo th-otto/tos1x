@@ -1,5 +1,6 @@
 /* strde.h		4/12/90 - 6/28/90	Derek Mui	*/
 
+#if 0
 char const More[] = "-WEITER-";
 char const Endfile[] = "-ENDE DER DATEI-";
 char const Cart[] = "ROM-Modul";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L Bytes benutzt durch %W Objekte.";
 char const Device[] = "GERŽT";
 char const Sinf[] = ".INF-Datei ausw„hlen";
 char const Litem[] = "Objekt suchen";
+#endif

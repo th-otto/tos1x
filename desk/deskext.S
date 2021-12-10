@@ -75,8 +75,6 @@
 	xdef _wm_get
 	xdef _wm_set
 	xdef _wm_calc
-	xdef _ap_init
-	xdef _ap_exit
 	xdef _ap_rdwr
 	xdef _fs_input
 	xdef _rs_sglobe
@@ -122,7 +120,15 @@
 	
 	xdef lmul
 	xdef ldiv
-	
+
+/*
+ * For reference only.
+ * Addresses/offsets below are from TOS 2.x,
+ * and are wrong for 1.4.
+ * Note that this only means you cannot
+ * do a check on the aes or desktop part alone,
+ * but have to check the final rom instead.
+ */
 _trap           equ AESTBASE+$0186
 _rom_ram        equ AESTBASE+$6AB4
 _cart_init      equ AESTBASE+$9914

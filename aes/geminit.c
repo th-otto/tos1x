@@ -162,7 +162,6 @@ BOOLEAN dowarn;
 
 #define Kbshift(a) bios(11, a)
 
-
 #ifdef ACC_DELAY
 
 VOID accs_init PROTO((NOTHING));

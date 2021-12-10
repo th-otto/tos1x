@@ -17,6 +17,8 @@
 #include "desktop.h"
 
 
+char const infdata[] = "DESKTOP.INF";
+
 
 
 

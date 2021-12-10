@@ -2905,10 +2905,10 @@ xfd795_2:
 	xdef _wilds
 _wilds:
 	.ascii "\*.*"
-	dc.b 0
+	dc.b 0,0
 	xdef _getall
 _getall:
-	.ascii "\*.*"
+	.ascii "*.*"
 	dc.b 0
 
 xfeb13a: dc.b 0

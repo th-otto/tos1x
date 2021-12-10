@@ -1103,7 +1103,7 @@ xfeb9e2:
 	dc.l fc_st19
 	dc.l fc_st23
 	dc.l fc_st33
-	dc.l fc_st29
+	dc.l fc_st28
 
 nostr: dc.b 0
 

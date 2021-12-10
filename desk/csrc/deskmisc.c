@@ -588,6 +588,7 @@ PP(register char *pnumstr;)
 /* 306de: 00e2fea6 */
 /* 306us: 00e2fe4c */
 /* 104de: 00fd7db6 */
+/* 104us: 00fd7d5c */
 VOID fmt_time(P(uint16_t) time, P(char *)ptime)
 PP(register uint16_t time;)
 PP(register char *ptime;)
@@ -639,6 +640,7 @@ PP(register char *ptime;)
 /* 306de: 00e2ff02 */
 /* 306us: 00e2fed2 */
 /* 104de: 00fd7e02 */
+/* 104us: 00fd7dd0 */
 VOID fmt_date(P(uint16_t) date, P(char *)pdate)
 PP(uint16_t date;)
 PP(register char *pdate;)

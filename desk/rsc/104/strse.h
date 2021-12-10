@@ -1,6 +1,7 @@
 /* strsv.h		4/23/90		D.Mui			*/
 /*	Update			7/5/90		D.Mui			*/
 
+#if 0
 char const More[] = "-Mer-";
 char const Endfile[] = "-Slut p† filen-";
 char const Cart[] = "PROGRAMMODUL";
@@ -25,3 +26,4 @@ char const Istrs[] = " %L byte anv„nda i %W objekt.";
 char const Device[] = "ENHET";
 char const Sinf[] = "V„lj en .INF-fil";
 char const Litem[] = "V„lj objekt";
+#endif

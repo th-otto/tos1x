@@ -601,17 +601,7 @@ extern char *g_buffer;					/* merge string buffer  */
 extern char comtail[PATHLEN];			/* comtail tail buffer */
 extern DESKWIN *winhead;				/* head of window list      */
 extern GRECT fobj;						/* file object  */
-extern char const getall[];
-extern char const bckslsh[];
-extern char const curall[];
-extern char const baklvl[];
-extern char const wildext[];
-extern char const wilds[];
-extern char const noext[];
-extern char const Nostr[];
 extern char const infdata[];
-extern char const infpath[];
-extern char const Nextline[];
 
 
 /*

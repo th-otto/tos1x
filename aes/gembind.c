@@ -1132,12 +1132,14 @@ PP(register VOIDPTR *addr_in;)
 
 	default:
 #if (AESVERSION < 0x200) & BINEXACT
+		asm("Ldefault:");
 		asm("move.l     #1,-(a7)");
 		asm("move.w     #0,-(a7)");
 		asm("move.w     _no_aes,-(a7)");
 		asm("jsr        _fm_show");
 		asm("addq.w     #8,a7");
 		ret = -1;
+		break;
 #else
 		fm_show(ALRTNOFUNC, NULL, 1); /* why not use no_aes here? */
 		ret = -1;
@@ -1165,6 +1167,12 @@ PP(register VOIDPTR *addr_in;)
 #endif
 	return ret;
 }
+
+#if (AESVERSION < 0x200) & BINEXACT
+asm("data");
+asm("dc.l Ldefault");
+asm("text");
+#endif
 
 
 /*

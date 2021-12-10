@@ -1,5 +1,6 @@
 /* strfr.h			4/19/90		Derek Mui	*/
 
+#if 0
 char const More[] = "-Encore-";
 char const Endfile[] = "-Fin de fichier-";
 char const Cart[] = "Cartouche";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L octets utilis‚s par %W objets.";
 char const Device[] = "PERIPHERIQUE";
 char const Sinf[] = "Choisir un fichier INF";
 char const Litem[] = "Red‚finir l'objet";
+#endif

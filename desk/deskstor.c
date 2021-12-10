@@ -39,12 +39,3 @@ char inf_path[PATHLEN];					/* store the inf path   */
 char comtail[PATHLEN];					/* comtail tail buffer */
 DESKWIN *winhead;						/* head of window list      */
 GRECT fobj;								/* file object  */
-char const bckslsh[] = "\\";
-char const curall[] = ".\\*.*";
-char const baklvl[] = ".\\..";
-char const wildext[] = "A:\\*.*";
-char const noext[] = "*.";
-char const Nostr[] = "";
-char const infdata[] = "DESKTOP.INF";
-char const infpath[] = "C:\\DESKTOP.INF";
-char const Nextline[] = "\012\015";

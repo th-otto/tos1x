@@ -6,7 +6,7 @@
  * =============================================================================
  *
  * Revision 3.3  91/07/30  15:49:16  lozben
- * Chaged the typecasting of control in loadfont.
+ * Changed the typecasting of control in loadfont.
  * 
  * Revision 3.2  91/01/22  16:33:12  lozben
  * Made changes so the file can work with the latest include files.

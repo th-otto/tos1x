@@ -1,5 +1,6 @@
 /* strpl.h */
 
+#if 0
 char const More[] = "-DALEJ--";
 char const Endfile[] = "- KONIEC PLIKU -";
 char const Cart[] = "ROM-Modu‘";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L bajt÷w w %W obiektach w oknie. ";
 char const Device[] = "NAP√D";
 char const Sinf[] = "  Wybierz plik .INF ";
 char const Litem[] = " Wyszukiwanie";
+#endif

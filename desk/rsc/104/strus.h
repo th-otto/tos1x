@@ -1,5 +1,6 @@
 /* strus.h			4/12/90		Derek Mui	*/
 
+#if 0
 char const More[] = "-More-";
 char const Endfile[] = "-End of file-";
 char const Cart[] = "Cartridge";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L bytes used in %W items.";
 char const Device[] = "DEVICE";
 char const Sinf[] = "Select an INF File";
 char const Litem[] = "Locate item";
+#endif

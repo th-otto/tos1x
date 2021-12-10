@@ -1,5 +1,6 @@
 /* strcz.h */
 
+#if 0
 #ifdef NEED_STRINGS
 
 /* 206cz: e367c2-e36a02 (576 bytes) */
@@ -59,4 +60,5 @@ extern char const czstr[];
 #define Sinf czstr+508
 #define Litem czstr+526
 
+#endif
 #endif

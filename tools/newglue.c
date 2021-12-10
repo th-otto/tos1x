@@ -527,19 +527,32 @@ PP(char **argv;)
 		 */
 		if (country && strcmp(country, "de") == 0)
 		{
-			if (i == 0 && size == 0x1390)
+			if (i == 0 && size == 0x1390) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x0e4c);
-			} else if (i == 1 && size == 0x5ebe)
+			} else if (i == 0 && size == 0x139c) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0054);
+				putbeshort(address - 2, 0x0017);
+			} else if (i == 1 && size == 0x5ebe) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x5820);
 				putbeshort(address - 2, 0x0000);
-			} else if (i == 2 && size == 0x02aa)
+			} else if (i == 1 && size == 0x2c5a) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0000);
+				putbeshort(address - 2, 0x2bda);
+			} else if (i == 2 && size == 0x02aa) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x000d);
 				putbeshort(address - 2, 0x0008);
 				putbeshort(address - 0, 0x0001);
+			} else if (i == 2 && size == 0x0224) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0002);
+				putbeshort(address - 2, 0x0014);
+				putbeshort(address - 0, 0x0000);
 			}
 		}
 

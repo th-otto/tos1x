@@ -1272,8 +1272,36 @@ xfdbb_4:
 		dc.w      0xF618
 		dc.w      0xFE21 ; movem.l (a7)+,d7/a3-a5
 
-
 	data
+
+xfeb1c0: dc.b 25,36,0,0
+
+xfeb1c4: dc.b 20,24,29,37,0,0
+
+xfeb1ca: dc.b 25,35,0,0
+
+xfeb1ce: dc.b 25,35,36,0
+
+xfeb1d2: dc.b 36,0
+
+xfeb1d4: dc.b 18,25,35,36,35,0
+
+xfeb1da: dc.b 18,19,25,35,36,0
+
+xfeb1e0: dc.b 21,22,23,0
+
+xfeb1e4: dc.b 21,22,23,27,28,30,31,32,33,0
+
+xfeb1ee: dc.b 18,35,25,19,0,0
+
+xfeb1f4: dc.b 19,21,25,36,0,0
+
+xfeb1fa: dc.b 21,0
+
+	xdef xfeb1fc
+xfeb1fc:
+	dc.w 9,18,27,35,0
+
 
 xfeb206:
 		dc.l xfdb1_5

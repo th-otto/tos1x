@@ -1,5 +1,6 @@
 /* strit.h		5/29/90 - 11/30/90	Derek Mui	*/
 
+#if 0
 char const More[] = "-Continua-";
 char const Endfile[] = "-Fine del file-";
 char const Cart[] = "Cartridge";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L byte usati in %W oggetti.";
 char const Device[] = "DISPOSITIVO";
 char const Sinf[] = "Seleziona un file INF";
 char const Litem[] = "Seleziona Oggetto";
+#endif

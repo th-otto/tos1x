@@ -402,7 +402,7 @@ xfeb956:
 	dc.l doui7
 	dc.l doui2
 	dc.l doui7
-	dc.l doui2
+	dc.l doui8
 
 xfeb9ae: dc.b 13,10,0
 xfeb9b1: dc.b 13,10,0

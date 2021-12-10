@@ -29167,6 +29167,7 @@ J3:
 [00fd7d54] f498                      dc.w      $F498
 [00fd7d56] defc 000c                 adda.w    #$000C,a7
 [00fd7d5a] f821                      dc.w      $F821; movem.l (a7)+,d7/a5
+fmt_time:
 [00fd7d5c] 4e56 0000                 link      a6,#$0000
 [00fd7d60] 48e7 0f04                 movem.l   d4-d7/a5,-(a7)
 [00fd7d64] 3e2e 0008                 move.w    8(a6),d7
@@ -29208,6 +29209,7 @@ J3:
 [00fd7dca] f36c                      dc.w      $F36C
 [00fd7dcc] 508f                      addq.l    #8,a7
 [00fd7dce] f839                      dc.w      $F839; movem.l (a7)+,d5-d7/a5
+fmt_date:
 [00fd7dd0] 4e56 0000                 link      a6,#$0000
 [00fd7dd4] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd7dd8] 2a6e 000a                 movea.l   10(a6),a5

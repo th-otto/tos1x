@@ -2636,7 +2636,7 @@ xfd99_2:
 		addq.l    #4,a7
 		movea.l   d0,a3
 		pea.l     -1(a3)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF36C ; xstrpcpy
 		addq.l    #8,a7
 		bra.s     xfd99_4
@@ -4584,7 +4584,7 @@ xfdadb_2:
 		move.b    d0,-12(a6)
 		move.b    #':',-11(a6)
 		pea.l     -10(a6)
-		move.l    #_getall,-(a7)
+		move.l    #_wilds,-(a7)
 		dc.w      0xF36C ; xstrpcpy
 		addq.l    #8,a7
 		move.l    _thedesk,(a7)
@@ -4614,10 +4614,10 @@ xfeb141:
 	ascii "  "
 	dc.b 0
 xfeb144:
-	ascii "%l"
+	ascii "%L"
 	dc.b 0
 xfeb147:
-	ascii "%l"
+	ascii "%L"
 	dc.b 0
 xfeb14a:
 	ascii "     "
@@ -4675,3 +4675,38 @@ xfeb198:
 	dc.l xfda9_8
 	dc.l xfda9_9
 	dc.l xfda9_8
+
+	xdef xfeb1ac
+xfeb1ac:
+	dc.b 0,0
+
+xfeb1ae:
+	dc.b ':',0x5c,0
+
+xfeb1b1:
+	dc.b 0x5c,0
+
+xfeb1b3:
+	dc.b 0
+
+xfeb1b4:
+	dc.b 0
+
+xfeb1b5:
+	dc.b '*',0
+
+xfeb1b7:
+	dc.b '*',0
+
+xfeb1b9:
+	dc.b 0
+
+xfeb1ba:
+	dc.b '*',0
+
+xfeb1bc:
+	dc.b '*',0
+
+xfeb1be:
+	dc.b 0x5c,0
+

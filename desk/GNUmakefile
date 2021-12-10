@@ -37,8 +37,8 @@ ifeq ($(USE_CROSS_ALCYON),1)
 desk.o: $(VARS_OBJS) $(DESK_OBJS) deskext.o $(top_srcdir)/common/sections.mak ${MAKEFILE}
 	$(MAKE) TOSVERSION=$(TOSVERSION) COUNTRY=$(COUNTRY) single
 
-single: $(VARS_OBJS) $(DESK_OBJS) deskext.o
-	$(LD) -u -s -l -o desk.o -a $(desk_tbase) $(desk_dbase) 0 $(VARS_OBJS) $(DESK_OBJS) deskext.o
+single::
+
 endif
 
 
@@ -48,9 +48,8 @@ tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 vars.o: $(top_srcdir)/common/vars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-check:: desk.o $(top_srcdir)/common/sections.mak
-	$(AM_V_at)$(CMP) $(CMPL) -x --ignore-initial=0x$(desk_toff):0x24 --offsets=0x$(desk_tbase):0 --bytes=0x$(desk_tlen) $(top_srcdir)/roms/tos$(TOSVERSION)$(COUNTRY).img desk.o
-	$(AM_V_at)$(CMP) $(CMPL) -x --ignore-initial=0x$(desk_doff):0x$(desk_tleno) --offsets=0x$(desk_dbase):0x$(desk_tlen) --bytes=0x$(desk_dlen) $(top_srcdir)/roms/tos$(TOSVERSION)$(COUNTRY).img desk.o
+# no check here; to much hassle to get all the external dependencies
+check::
 
 dist::
 	$(CP) -a $(SRCS) $(EXTRA_DIST1) $(EXTRA_DIST2) $(top_srcdir)/$(DISTDIR1)/$(subdir)

@@ -1,5 +1,6 @@
 /* stres.h		4/25/90		D.Mui		*/
 
+#if 0
 char const More[] = "-M s-";
 char const Endfile[] = "-Fin de fichero-";
 char const Cart[] = "Cartucho";
@@ -24,3 +25,4 @@ char const Istrs[] = " %L bytes usados en %W items.";
 char const Device[] = "DISPOSITIVO";
 char const Sinf[] = "Seleccione un Fichero INF";
 char const Litem[] = "Ubicar item.";
+#endif
