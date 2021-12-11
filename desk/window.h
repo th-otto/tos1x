@@ -22,6 +22,13 @@ typedef struct dir
 	char	 d_name[14]; /* name */
 } DIR;
 
+typedef struct
+{
+	char o0[10];
+	uint16_t i_time;	/* time */
+	uint16_t i_date;	/* date */
+} FILEINFO;
+
 typedef	struct dta
 {
 	char	reserved[20];	/* reserved area */

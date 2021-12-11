@@ -405,3 +405,23 @@ PP(BOOLEAN flag;)
 		strcpy(str + (len - buflen), buf);
 	}
 }
+
+
+VOID xfd8284(P(OBJECT *) tree, P(FILEINFO *) info, P(int16_t) dateidx, P(int16_t) timeidx, P(int16_t) sizeidx, P(int32_t *) size)
+PP(OBJECT *tree;)
+PP(register FILEINFO *info;)
+PP(int16_t dateidx;)
+PP(int16_t timeidx;)
+PP(int16_t sizeidx;)
+PP(register int32_t *size;)
+{
+	char sizestr[10];
+	char timestr[8];
+	char datestr[8];
+	
+	fmt_date(info->i_date, datestr);
+	inf_sset(tree, dateidx, datestr);
+	fmt_time(info->i_time, timestr);
+	inf_sset(tree, timeidx, timestr);
+	xfd81e8(size, sizestr, tree, sizeidx, FALSE);
+}

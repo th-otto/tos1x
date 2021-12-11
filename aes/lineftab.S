@@ -119,7 +119,7 @@
 [00fe7a98] dc.l $00fe36cc            ; F1D8 ; ob_change; duplicate; unused AES
 [00fe7a9c] dc.l $00fdfd20            ; F1DC ; ev_multi; duplicate; unused AES
 [00fe7aa0] dc.l $00fd4bbe            ; F1E0 ; gsx_xbox; duplicate; unused AES
-[00fe7aa4] dc.l $00fd4bbe            ; F1E4 ; gsx_xbox; duplicate; unused AES
+[00fe7aa4] dc.l $00fd4bbe            ; F1E4 ; gsx_xbox; duplicate AES
 [00fe7aa8] dc.l $00fe1dbe            ; F1E8 ; gsx_moff; duplicate; unused AES
 [00fe7aac] dc.l $00fe5d02            ; F1EC ; rc_equal; duplicate AES
 [00fe7ab0] dc.l $00fe1874            ; F1F0 ; gr_stilldn AES

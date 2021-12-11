@@ -1,5 +1,5 @@
-	xdef xfd59a0
-xfd59a0: ds.b 0
+	xdef _xfd59a0
+_xfd59a0: ds.b 0
 		link      a6,#-10
 		movem.l   d6-d7/a4-a5,-(a7)
 		movea.l   _thedesk,a4
@@ -7,7 +7,7 @@ xfd59a0: ds.b 0
 		move.w    _gl_width,-(a7)
 		clr.l     -(a7)
 		move.w    #1,-(a7)
-		dc.w      0xF388
+		jsr       _xfd9eca
 		addq.l    #8,a7
 		move.w    #4,(a7) ; Getrez
 		dc.w      0xF0EC ; trp14
@@ -34,7 +34,7 @@ xfd59_8:
 		move.l    13820(a4),-(a7)
 		move.l    24(a5),-(a7)
 		move.w    #1,-(a7)
-		dc.w      0xF38C
+		jsr       _xfd9f56
 		adda.w    #10,a7
 		move.w    d0,d7
 		tst.w     d7
@@ -133,8 +133,8 @@ xfd59_7:
 		addq.l    #2,a7
 		dc.w      0xFC21 ; movem.l (a7)+,d7/a4-a5
 
-	xdef xfd5b36
-xfd5b36: ds.b 0
+	xdef _xfd5b36
+_xfd5b36: ds.b 0
 		link      a6,#0
 		movem.l   d6-d7/a3-a5,-(a7)
 		movea.l   14(a6),a5
@@ -223,8 +223,8 @@ xfd5b_13:
 xfd5b_14:
 		dc.w      0xFE21 ; movem.l (a7)+,d7/a3-a5
 
-	xdef xfd5bfe
-xfd5bfe: ds.b 0
+	xdef _xfd5bfe
+_xfd5bfe: ds.b 0
 		link      a6,#0
 		movem.l   d3-d7,-(a7)
 		move.w    12(a6),d7
@@ -248,15 +248,15 @@ xfd5bfe: ds.b 0
 		move.w    d4,-(a7)
 		move.w    d7,-(a7)
 		move.l    8(a6),-(a7)
-		dc.w      0xF2B8
+		jsr       _xfd6228
 		adda.w    #12,a7
 		move.w    d0,d4
 xfd5bf_1:
 		move.w    d4,d0
 		dc.w      0xF03D ; movem.l (a7)+,d4-d7
 
-	xdef xfd5c50
-xfd5c50: ds.b 0
+	xdef _xfd5c50
+_xfd5c50: ds.b 0
 		link      a6,#-4
 		movem.l   d5-d7/a3-a5,-(a7)
 		movea.l   _thedesk,a3
@@ -362,8 +362,8 @@ xfd5c_6:
 		bgt       xfd5c_1
 		dc.w      0xFE31 ; movem.l (a7)+,d6-d7/a3-a5
 
-	xdef xfd5d7c
-xfd5d7c: ds.b 0
+	xdef _xfd5d7c
+_xfd5d7c: ds.b 0
 		link      a6,#-2
 		movem.l   d2-d7/a4-a5,-(a7)
 		movea.l   10(a6),a5
@@ -449,8 +449,8 @@ xfd5d_6:
 		adda.w    #10,a7
 		dc.w      0xFC3F ; movem.l (a7)+,d3-d7/a4-a5
 
-	xdef xfd5e3a
-xfd5e3a: ds.b 0
+	xdef _xfd5e3a
+_xfd5e3a: ds.b 0
 		link      a6,#0
 		movem.l   d4-d7/a4-a5,-(a7)
 		movea.l   14(a6),a5
@@ -490,8 +490,8 @@ xfd5e3_2:
 		addq.l    #2,a7
 		dc.w      0xFC39 ; movem.l (a7)+,d5-d7/a4-a5
 
-	xdef xfd5e9a
-xfd5e9a: ds.b 0
+	xdef _xfd5e9a
+_xfd5e9a: ds.b 0
 		link      a6,#-16
 		movem.l   d7/a3-a5,-(a7)
 		movea.l   8(a6),a5
@@ -502,7 +502,7 @@ xfd5e9a: ds.b 0
 		move.l    a4,-(a7)
 		move.w    16(a6),-(a7)
 		move.l    (a5),-(a7)
-		dc.w      0xF2CC ; xfd5e3a
+		jsr       _xfd5e3a
 		adda.w    #12,a7
 		pea.l     -14(a6)
 		pea.l     -12(a6)
@@ -536,13 +536,13 @@ xfd5e9_2:
 		move.l    a4,-(a7)
 		move.w    16(a6),-(a7)
 		move.l    (a5),-(a7)
-		dc.w      0xF2CC ; xfd5e3a
+		jsr       _xfd5e3a
 		adda.w    #12,a7
 		move.w    -2(a6),d0
 		dc.w      0xFE01 ; movem.l (a7)+,a3-a5
 
-	xdef xfd5f34
-xfd5f34: ds.b 0
+	xdef _xfd5f34
+_xfd5f34: ds.b 0
 		link      a6,#-60
 		movem.l   d5-d7/a3-a5,-(a7)
 		move.w    16(a6),d7
@@ -552,12 +552,12 @@ xfd5f34: ds.b 0
 		pea.l     -60(a6)
 		move.l    18(a6),-(a7)
 		move.w    d7,-(a7)
-		dc.w      0xF2D4
+		jsr       _xfd5d7c
 		adda.w    #10,a7
 		pea.l     -52(a6)
 		move.l    24(a6),-(a7)
 		move.w    d6,-(a7)
-		dc.w      0xF2D4
+		jsr       _xfd5d7c
 		adda.w    #10,a7
 		move.w    -56(a6),d0
 		add.w     d0,-48(a6)
@@ -624,7 +624,7 @@ xfd5f_3:
 		move.w    d7,-(a7)
 		move.l    8(a6),-(a7)
 		pea.l     -52(a6)
-		dc.w      0xF2E4
+		jsr       _xfd5e9a
 		adda.w    #16,a7
 		move.w    d0,-34(a6)
 		move.l    8(a6),-(a7)
@@ -672,7 +672,7 @@ xfd5f_6:
 		move.w    -24(a6),-(a7)
 		move.l    -8(a6),-(a7)
 		move.w    -22(a6),-(a7)
-		dc.w      0xF2F4 ; xfd637e
+		jsr       _xfd637e
 		adda.w    #20,a7
 		clr.w     -22(a6)
 		clr.l     -8(a6)
@@ -695,7 +695,7 @@ xfd5f_8:
 		move.w    -24(a6),-(a7)
 		move.l    -8(a6),-(a7)
 		move.w    -22(a6),-(a7)
-		dc.w      0xF2F4 ; xfd637e
+		jsr       _xfd637e
 		adda.w    #20,a7
 		clr.w     -22(a6)
 		clr.l     -8(a6)
@@ -714,7 +714,7 @@ xfd5f_9:
 		pea.l     -44(a6)
 		move.w    (a4),-(a7)
 		move.w    -28(a6),-(a7)
-		dc.w      0xF2F8
+		jsr       _xfdb04c
 		adda.w    #12,a7
 		movea.l   d0,a3
 		cmpi.w    #1,6(a3)
@@ -738,7 +738,7 @@ xfd5f_10:
 		move.w    -24(a6),-(a7)
 		move.l    -8(a6),-(a7)
 		move.w    -22(a6),-(a7)
-		dc.w      0xF2F4 ; xfd637e
+		jsr       _xfd637e
 		adda.w    #20,a7
 xfd5f_11:
 		tst.w     -34(a6)
@@ -754,7 +754,7 @@ xfd5f_11:
 		move.w    -24(a6),-(a7)
 		move.l    -8(a6),-(a7)
 		move.w    -22(a6),-(a7)
-		dc.w      0xF2F4 ; xfd637e
+		jsr       _xfd637e
 		adda.w    #20,a7
 xfd5f_12:
 		movea.l   28(a6),a0
@@ -764,8 +764,8 @@ xfd5f_12:
 		move.w    -28(a6),(a5)
 		dc.w      0xFE31 ; movem.l (a7)+,d6-d7/a3-a5
 
-	xdef xfd6228
-xfd6228: ds.b 0
+	xdef _xfd6228
+_xfd6228: ds.b 0
 		link      a6,#-18
 		movem.l   d5-d7/a3-a5,-(a7)
 		lea.l     -18(a6),a3
@@ -883,8 +883,8 @@ xfd62_8:
 xfd62_9:
 		dc.w      0xFE31 ; movem.l (a7)+,d6-d7/a3-a5
 
-	xdef xfd637e
-xfd637e: ds.b 0
+	xdef _xfd637e
+_xfd637e: ds.b 0
 		link      a6,#-10
 		movem.l   d5-d7/a3-a5,-(a7)
 		movea.l   18(a6),a5
@@ -963,8 +963,8 @@ xfd63_4:
 xfd63_5:
 		dc.w      0xFE31 ; movem.l (a7)+,d6-d7/a3-a5
 
-	xdef xfd6452
-xfd6452: ds.b 0
+	xdef _xfd6452
+_xfd6452: ds.b 0
 		link      a6,#-20
 		movem.l   d5-d7/a3-a5,-(a7)
 		lea.l     -12(a6),a4
@@ -1015,7 +1015,7 @@ xfd64_1:
 		move.w    d7,-(a7)
 		move.w    14(a6),-(a7)
 		move.l    10(a6),-(a7)
-		dc.w      0xF2B8
+		jsr       _xfd6228
 		adda.w    #16,a7
 		cmp.w     14(a6),d0
 		beq       xfd64_5
@@ -1094,8 +1094,8 @@ xfd64_6:
 xfd64_8:
 		dc.w      0xFE31 ; movem.l (a7)+,d6-d7/a3-a5
 
-	xdef xfd65ba
-xfd65ba: ds.b 0
+	xdef _xfd65ba
+_xfd65ba: ds.b 0
 		link      a6,#-4
 		movem.l   d3-d7/a4-a5,-(a7)
 		move.w    8(a6),d7
@@ -1131,7 +1131,7 @@ xfd65_2:
 		move.w    d5,-(a7)
 		move.l    d6,-(a7)
 		move.w    d7,-(a7)
-		dc.w      0xF308 ; xfd6452
+		jsr       _xfd6452
 		adda.w    #24,a7
 xfd65_3:
 		bra       xfd65_10
@@ -1159,7 +1159,7 @@ xfd65_5:
 		move.w    d5,-(a7)
 		move.l    d6,-(a7)
 		move.w    d7,-(a7)
-		dc.w      0xF308 ; xfd6452
+		jsr       _xfd6452
 		adda.w    #24,a7
 		ori.w     #1,-4(a6)
 xfd65_6:
@@ -1182,13 +1182,13 @@ xfd65_9:
 		move.w    d5,-(a7)
 		move.l    d6,-(a7)
 		move.w    d7,-(a7)
-		dc.w      0xF2F4 ; xfd637e
+		jsr       _xfd637e
 		adda.w    #20,a7
 xfd65_10:
 		dc.w      0xFC3D ; movem.l (a7)+,d4-d7/a4-a5
 
-	xdef xfd66ba
-xfd66ba: ds.b 0
+	xdef _xfd66ba
+_xfd66ba: ds.b 0
 		link      a6,#-36
 		movem.l   d3-d7/a3-a5,-(a7)
 		move.w    8(a6),d7
@@ -1230,7 +1230,7 @@ xfd66_1:
 		move.w    d5,-(a7)
 		move.l    d6,-(a7)
 		move.w    d7,-(a7)
-		dc.w      0xF308 ; xfd6452
+		jsr       _xfd6452
 		adda.w    #24,a7
 		bra       xfd66_13
 xfd66_2:
@@ -1333,7 +1333,7 @@ xfd66_10:
 		move.w    -24(a6),-(a7)
 		move.l    #_gl_rfull,-(a7)
 		move.l    16(a6),-(a7)
-		dc.w      0xF310
+		jsr       _xfd5f34
 		adda.w    #32,a7
 		tst.w     -12(a6)
 		beq.s     xfd66_12
@@ -1357,7 +1357,7 @@ xfd66_12:
 		move.w    -14(a6),-(a7)
 		move.w    d5,-(a7)
 		move.l    d6,-(a7)
-		dc.w      0xF314
+		jsr       _xfd5c50
 		adda.w    #14,a7
 		move.w    #-1,-12(a6)
 xfd66_13:
@@ -1529,8 +1529,8 @@ _rep_all: ds.b 0
 		addq.l    #4,a7
 		dc.w      0xF801 ; movem.l (a7)+,a5
 
-	xdef xfd6a9c
-xfd6a9c: ds.b 0
+	xdef _xfd6a9c
+_xfd6a9c: ds.b 0
 		link      a6,#0
 		movem.l   d7/a3-a5,-(a7)
 		movea.l   8(a6),a5
@@ -1578,8 +1578,8 @@ dos_er2:
 dos_er3:
 		dc.w      0xF001 ; movem.l (a7)+,#0
 
-	xdef xfd6b16
-xfd6b16: ds.b 0
+	xdef _xfd6b16
+_xfd6b16: ds.b 0
 		link      a6,#-14
 		movem.l   d6-d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -1731,8 +1731,8 @@ xfd6b_12:
 xfd6b_13:
 		dc.w      0xF821 ; movem.l (a7)+,d7/a5
 
-	xdef xfd6cce
-xfd6cce: ds.b 0
+	xdef _xfd6cce
+_xfd6cce: ds.b 0
 		link      a6,#0
 		movem.l   d5-d7/a4-a5,-(a7)
 		movea.l   14(a6),a5
@@ -1760,7 +1760,7 @@ xfd6c_2:
 		move.l    #x0062ac,-(a7)
 		move.l    #x00622c,-(a7)
 		move.w    8(a6),-(a7)
-		dc.w      0xF3D8
+		jsr       _xfd6b16
 		adda.w    #14,a7
 		tst.w     d0
 		beq       xfd6c_8
@@ -1780,7 +1780,7 @@ xfd6c_3:
 		bne.s     xfd6c_4
 		pea.l     18(a5)
 		move.l    #x00622c,-(a7)
-		dc.w      0xF3DC
+		jsr       _xfd75f2
 		addq.l    #8,a7
 		move.l    26(a6),(a7)
 		move.l    22(a6),-(a7)
@@ -1792,7 +1792,7 @@ xfd6c_3:
 		adda.w    #18,a7
 		move.w    d0,d6
 		move.l    #x00622c,(a7)
-		dc.w      0xF3E4
+		jsr       _xfd795c
 		bra.s     xfd6c_5
 xfd6c_4:
 		move.l    10(a5),-(a7)
@@ -1803,7 +1803,7 @@ xfd6c_4:
 		move.l    #x0062ac,-(a7)
 		move.l    #x00622c,-(a7)
 		move.w    8(a6),-(a7)
-		dc.w      0xF3E8
+		jsr       _xfd7316
 		adda.w    #20,a7
 		move.w    d0,d6
 xfd6c_5:
@@ -1961,7 +1961,7 @@ xfd6e_12:
 		move.l    #x00632c,(a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF3F8
+		jsr       _xtr_mask
 		addq.l    #4,a7
 xfd6e_13:
 		move.w    #22,(a7)
@@ -1980,7 +1980,7 @@ xfd6e_14:
 		pea.l     -16(a6)
 		move.l    -24(a6),-(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF400
+		jsr       _xfd7620
 		addq.l    #8,a7
 		move.w    d0,d7
 		tst.w     d7
@@ -2004,7 +2004,7 @@ xfd6e_14:
 		addi.l    #12438,(a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12310,(a7)
-		dc.w      0xF408
+		jsr       _xfd7730
 		addq.l    #4,a7
 		move.w    d0,d7
 		move.l    -24(a6),(a7)
@@ -2028,7 +2028,7 @@ xfd6e_15:
 		move.l    #x00632c,(a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF3F8
+		jsr       _xtr_mask
 		addq.l    #4,a7
 		bra       xfd6e_13
 		bra.s     xfd6e_17
@@ -2052,7 +2052,7 @@ xfd6e_17:
 		clr.w     (a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
@@ -2123,7 +2123,7 @@ xfd6e_22:
 		move.l    #x00633c,(a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12310,(a7)
-		dc.w      0xF3DC
+		jsr       _xfd75f2
 		addq.l    #4,a7
 		bra       xfd6e_9
 xfd6e_23:
@@ -2156,7 +2156,7 @@ xfd6e_24:
 		move.l    -24(a6),-(a7)
 		addi.l    #12310,(a7)
 		move.w    8(a6),-(a7)
-		dc.w      0xF3E8
+		jsr       _xfd7316
 		adda.w    #18,a7
 		tst.w     d0
 		beq       xfd6e_37
@@ -2195,7 +2195,7 @@ xfd6e_30:
 		clr.w     (a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq       xfd6e_37
@@ -2204,7 +2204,7 @@ xfd6e_31:
 		clr.w     (a7)
 		move.l    -24(a6),-(a7)
 		addi.l    #12310,(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq.s     xfd6e_37
@@ -2226,11 +2226,11 @@ xfd6e_33:
 xfd6e_34:
 		move.l    -24(a6),(a7)
 		addi.l    #12438,(a7)
-		dc.w      0xF3E4
+		jsr       _xfd795c
 xfd6e_35:
 		move.l    -24(a6),(a7)
 		addi.l    #12310,(a7)
-		dc.w      0xF3E4
+		jsr       _xfd795c
 		subq.w    #1,d6
 		subq.w    #1,x00a786
 		move.w    x00a786,d0
@@ -2247,8 +2247,8 @@ xfd6e_37:
 		move.w    d5,d0
 		dc.w      0xFE39 ; movem.l (a7)+,d5-d7/a3-a5
 
-	xdef xfd7316
-xfd7316: ds.b 0
+	xdef _xfd7316
+_xfd7316: ds.b 0
 		link      a6,#-40
 		movem.l   d2-d7/a3-a5,-(a7)
 		moveq.l   #1,d7
@@ -2269,13 +2269,13 @@ xfd7316: ds.b 0
 xfd73_1:
 		move.l    18(a6),(a7)
 		move.l    a5,-(a7)
-		dc.w      0xF3F8
+		jsr       _xtr_mask
 		addq.l    #4,a7
 		cmpi.w    #1,8(a6)
 		beq.s     xfd73_2
 		move.l    18(a6),(a7)
 		move.l    a4,-(a7)
-		dc.w      0xF3F8
+		jsr       _xtr_mask
 		addq.l    #4,a7
 		pea.l     -20(a6)
 		move.l    18(a6),-(a7)
@@ -2288,7 +2288,7 @@ xfd73_2:
 xfd73_3:
 		move.w    #1,(a7)
 		move.l    a5,-(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq       xfd73_25
@@ -2314,7 +2314,7 @@ xfd73_6:
 		bne.s     xfd73_8
 		move.w    #1,(a7)
 		move.l    a4,-(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq       xfd73_25
@@ -2334,7 +2334,7 @@ xfd73_7:
 xfd73_8:
 		move.w    #1,(a7)
 		move.l    a4,-(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq       xfd73_25
@@ -2378,7 +2378,7 @@ xfd73_12:
 		bne.s     xfd73_14
 		pea.l     -36(a6)
 		move.l    a4,-(a7)
-		dc.w      0xF400
+		jsr       _xfd7620
 		addq.l    #8,a7
 		move.w    d0,d7
 		beq       xfd73_23
@@ -2427,7 +2427,7 @@ xfd73_16:
 xfd73_17:
 		move.w    #1,(a7)
 		move.l    a4,-(a7)
-		dc.w      0xF40C
+		jsr       _xfd7814
 		addq.l    #4,a7
 		tst.w     d0
 		beq       xfd73_23
@@ -2542,8 +2542,8 @@ xfd73_29:
 xfd73_30:
 		dc.w      0xFE3F ; movem.l (a7)+,d3-d7/a3-a5
 
-	xdef xfd75f2
-xfd75f2: ds.b 0
+	xdef _xfd75f2
+_xfd75f2: ds.b 0
 		link      a6,#0
 		movem.l   d7/a5,-(a7)
 		movea.l   8(a6),a5
@@ -2563,8 +2563,8 @@ xfd75_2:
 		addq.l    #4,a7
 		dc.w      0xF801 ; movem.l (a7)+,a5
 
-	xdef xfd7620
-xfd7620: ds.b 0
+	xdef _xfd7620
+_xfd7620: ds.b 0
 		link      a6,#-24
 		movem.l   d5-d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -2573,7 +2573,7 @@ xfd7620: ds.b 0
 		move.l    13686(a5),d7
 		pea.l     -24(a6)
 		move.l    8(a6),-(a7)
-		dc.w      0xF428
+		jsr       _xfd6a9c
 		addq.l    #8,a7
 		pea.l     -24(a6)
 		move.w    #1,-(a7)
@@ -2660,8 +2660,8 @@ xfd76_6:
 		move.w    d6,d0
 		dc.w      0xF831 ; movem.l (a7)+,d6-d7/a5
 
-	xdef xfd7730
-xfd7730: ds.b 0
+	xdef _xfd7730
+_xfd7730: ds.b 0
 		link      a6,#0
 		movem.l   d7/a4-a5,-(a7)
 		movea.l   8(a6),a5
@@ -2698,8 +2698,8 @@ xfd773_5:
 xfd773_6:
 		dc.w      0xFC01 ; movem.l (a7)+,a4-a5
 
-	xdef xfd7774
-xfd7774: ds.b 0
+	xdef _xfd7774
+_xfd7774: ds.b 0
 		link      a6,#0
 		movem.l   d7/a4-a5,-(a7)
 		movea.l   12(a6),a5
@@ -2733,7 +2733,7 @@ xfd777_2:
 		addq.l    #8,a7
 		pea.l     18(a5)
 		pea.l     12310(a4)
-		dc.w      0xF3DC
+		jsr       _xfd75f2
 		addq.l    #8,a7
 		pea.l     12438(a4)
 		move.l    16(a6),-(a7)
@@ -2741,7 +2741,7 @@ xfd777_2:
 		addq.l    #8,a7
 		pea.l     12438(a4)
 		pea.l     12310(a4)
-		dc.w      0xF408
+		jsr       _xfd7730
 		addq.l    #8,a7
 		tst.w     d0
 		bne.s     xfd777_3
@@ -2760,8 +2760,8 @@ xfd777_4:
 xfd777_5:
 		dc.w      0xFC01 ; movem.l (a7)+,a4-a5
 
-	xdef xfd7814
-xfd7814: ds.b 0
+	xdef _xfd7814
+_xfd7814: ds.b 0
 		link      a6,#-40
 		movem.l   d6-d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -2788,7 +2788,7 @@ xfd78_1:
 		pea.l     -40(a6)
 		pea.l     -24(a6)
 		move.l    8(a6),-(a7)
-		dc.w      0xF434
+		jsr       _xfd791e
 		adda.w    #12,a7
 		pea.l     -24(a6)
 		move.w    #4,-(a7)
@@ -2812,7 +2812,7 @@ xfd78_1:
 		adda.w    #14,a7
 		move.w    #2,(a7)
 		move.l    d7,-(a7)
-		dc.w      0xF438 ; drawclip
+		jsr       _drawclip
 		addq.l    #4,a7
 		subq.l    #1,12970(a5)
 		bra.s     xfd78_4
@@ -2836,30 +2836,30 @@ xfd78_3:
 		adda.w    #14,a7
 		move.w    #1,(a7)
 		move.l    d7,-(a7)
-		dc.w      0xF438 ; drawclip
+		jsr       _drawclip
 		addq.l    #4,a7
 xfd78_4:
 		move.w    #4,(a7)
 		move.l    d7,-(a7)
-		dc.w      0xF438 ; drawclip
+		jsr       _drawclip
 		addq.l    #4,a7
 		move.w    #3,(a7)
 		move.l    d7,-(a7)
-		dc.w      0xF438 ; drawclip
+		jsr       _drawclip
 		addq.l    #4,a7
 xfd78_5:
 		moveq.l   #1,d0
 xfd78_6:
 		dc.w      0xF821 ; movem.l (a7)+,d7/a5
 
-	xdef xfd791e
-xfd791e: ds.b 0
+	xdef _xfd791e
+_xfd791e: ds.b 0
 		link      a6,#0
 		movem.l   d7/a5,-(a7)
 		movea.l   8(a6),a5
 		move.l    12(a6),(a7)
 		move.l    a5,-(a7)
-		dc.w      0xF428
+		jsr       _xfd6a9c
 		addq.l    #4,a7
 		move.l    a5,(a7)
 		dc.w      0xF3B0 ; r_slash
@@ -2873,14 +2873,14 @@ xfd791_1:
 		clr.b     (a5)
 		move.l    16(a6),(a7)
 		move.l    a5,-(a7)
-		dc.w      0xF428
+		jsr       _xfd6a9c
 		addq.l    #4,a7
 		move.b    #0x5C,(a5)
 xfd791_2:
 		dc.w      0xF801 ; movem.l (a7)+,a5
 
-	xdef xfd795c
-xfd795c: ds.b 0
+	xdef _xfd795c
+_xfd795c: ds.b 0
 		link      a6,#0
 		movem.l   d7/a5,-(a7)
 		movea.l   8(a6),a5
