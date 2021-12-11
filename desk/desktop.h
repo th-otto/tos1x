@@ -62,6 +62,13 @@ typedef intptr_t LPTREE;
 #define CMD_PRINT  0xFD
 #define CMD_TYPE   0xFE
 
+/* file operation definitions   */
+#define OP_COUNT      0
+#define OP_DELETE     1
+#define OP_COPY       2
+#define OP_MOVE       3
+
+
 /* Set Write Allocate mode, clear both caches,
  * and enable them with burst fill.
  */
@@ -112,11 +119,6 @@ typedef intptr_t LPTREE;
 #define APP_DESK 48     /* number of desktop icon should equal to number of */
                         /* icons in background dialogue         */
         
-#define OP_DELETE       0       /* file operation definitions   */
-#define OP_COPY         1
-#define OP_MOVE         2
-#define OP_COUNT        3
-
 #define COPYMAXDEPTH 12
 
 #define L_NOEXIT        0       /* desk loop exit code          */
@@ -179,10 +181,13 @@ typedef struct idtype
 #endif
 
 typedef struct {
-	/*     0 */ char o0[12970];
-	/* 12970 */ int32_t o12970;
-	/* 12974 */ int32_t o12974;
-	/* 12978 */ int32_t o12978;
+	/*     0 */ char o0[12310];
+	/* 12310 */ char g_srcpth[PATHLEN];
+	/* 12438 */ char g_dstpth[PATHLEN];
+	/* 12566 */ char o12566[404];
+	/* 12970 */ int32_t g_nfiles;
+	/* 12974 */ int32_t g_ndirs;
+	/* 12978 */ int32_t g_size;
 	/* 12982 */ char strbuf[128];
 	/* 13310 */ char o13110[240];
 	/* 13350 */ int16_t msgbuf[8];		

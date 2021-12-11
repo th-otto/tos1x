@@ -350,36 +350,44 @@ PP(int16_t item;)
 
 
 
-BOOLEAN xfd8164(P(OBJECT *) tree, P(int16_t) foldersidx, P(int16_t) filesidx, P(char *) buf)
+/*
+ *	Routine to get number of files and folders and stuff them in
+ *	a dialog box.
+ */
+/* 104de: 00fd8164 */
+/* 106de: 00e18bd0 */
+BOOLEAN inf_fifo(P(OBJECT *) tree, P(int16_t) foldersidx, P(int16_t) filesidx, P(char *) ppath)
 PP(OBJECT *tree;)
 PP(int16_t foldersidx;)
 PP(int16_t filesidx;)
-PP(char *buf;)
+PP(char *ppath;)
 {
 	register THEDSK *d;
 	int16_t dummy;
 	char folderstr[6];
 	char filesstr[6];
-	BOOLEAN o16;
+	BOOLEAN more;
 	
 	d = thedesk;
-	d->o12970 = 0;
-	d->o12974 = 0;
-	d->o12978 = 0;
+	d->g_nfiles = 0;
+	d->g_ndirs = 0;
+	d->g_size = 0;
 	desk_wait(TRUE);
-	o16 = xfd6e40(0, 0L, buf, buf, &dummy, &dummy);
+	more = d_doop(OP_COUNT, NULL, ppath, ppath, &dummy, &dummy);
 	desk_wait(FALSE);
-	if (o16 == FALSE)
+	if (more == FALSE)
 		return FALSE;
-	d->o12974--;
-	xfd81e8(&d->o12970, folderstr, tree, foldersidx, FALSE);
-	xfd81e8(&d->o12974, filesstr, tree, filesidx, FALSE);
+	d->g_ndirs--;
+	inf_setsize(&d->g_nfiles, folderstr, tree, foldersidx, FALSE);
+	inf_setsize(&d->g_ndirs, filesstr, tree, filesidx, FALSE);
 	return TRUE;
 }
 
 
-VOID xfd81e8(P(int32_t *) p1, P(char *) buf, P(OBJECT *) tree, P(int16_t) obj, P(BOOLEAN) flag)
-PP(int32_t *p1;)
+/* 104de: 00fd81e8 */
+/* 106de: 00e18c68 */
+VOID inf_setsize(P(VOIDPTR) p1, P(char *) buf, P(OBJECT *) tree, P(int16_t) obj, P(BOOLEAN) flag)
+PP(VOIDPTR p1;)
 PP(char *buf;)
 PP(OBJECT *tree;)
 PP(int16_t obj;)
@@ -392,7 +400,7 @@ PP(BOOLEAN flag;)
 
 	if (flag)
 	{
-		fmt_str((char *) p1, buf);
+		fmt_str(p1, buf);
 		inf_sset(tree, obj, buf);
 	} else
 	{
@@ -407,9 +415,11 @@ PP(BOOLEAN flag;)
 }
 
 
-VOID xfd8284(P(OBJECT *) tree, P(FILEINFO *) info, P(int16_t) dateidx, P(int16_t) timeidx, P(int16_t) sizeidx, P(int32_t *) size)
+/* 104de: 00fd8284 */
+/* 106de: 00e18d20 */
+VOID inf_dttmsz(P(OBJECT *) tree, P(FNODE *) info, P(int16_t) dateidx, P(int16_t) timeidx, P(int16_t) sizeidx, P(int32_t *) size)
 PP(OBJECT *tree;)
-PP(register FILEINFO *info;)
+PP(register FNODE *info;)
 PP(int16_t dateidx;)
 PP(int16_t timeidx;)
 PP(int16_t sizeidx;)
@@ -419,9 +429,111 @@ PP(register int32_t *size;)
 	char timestr[8];
 	char datestr[8];
 	
-	fmt_date(info->i_date, datestr);
+	fmt_date(info->f_date, datestr);
 	inf_sset(tree, dateidx, datestr);
-	fmt_time(info->i_time, timestr);
+	fmt_time(info->f_time, timestr);
 	inf_sset(tree, timeidx, timestr);
-	xfd81e8(size, sizestr, tree, sizeidx, FALSE);
+	inf_setsize(size, sizestr, tree, sizeidx, FALSE);
 }
+
+
+#if 1
+/************************************************************************/
+/* i n f _ f i l e                                                      */
+/************************************************************************/
+/* 104de: 00fd82e8 */
+/* 106de: 00e18d9a */
+BOOLEAN inf_file(P(char *) ppath, P(FNODE *) info, P(BOOLEAN) isdir)
+PP(char *ppath;)
+PP(register FNODE *info;)
+PP(BOOLEAN isdir;)
+{
+	register char *a4;
+	register THEDSK *d;
+	register LPTREE tree;
+	register int attr;
+	register BOOLEAN more;
+	register int nmidx;
+	char poname[LEN_ZFNAME + 1];
+	char pnname[LEN_ZFNAME + 1];
+	char *title;
+	short unused;
+	int16_t strid;
+	
+	UNUSED(a4);
+	UNUSED(unused);
+	d = thedesk;
+	tree = (LPTREE)d->rtree[ADFILEIN];
+	strcpy(d->g_srcpth, ppath);
+	strcpy(d->g_dstpth, ppath);
+	for (nmidx = 0; d->g_srcpth[nmidx] != '*'; nmidx++)
+		;
+	if (isdir == FALSE)
+	{
+		inf_fldset(tree, FIRONLY, info->f_attr, FA_RDONLY, SELECTED, NORMAL);
+		inf_fldset(tree, FIRWRITE, info->f_attr, FA_RDONLY, NORMAL, SELECTED);
+		inf_sset(tree, FINFILES, "     ");
+		inf_sset(tree, FINFOLDS, "     ");
+		strid = STFILEINFO;
+		d->g_size = info->f_size;
+	} else
+	{
+		LWSET(OB_STATE(FIRONLY), DISABLED);
+		LWSET(OB_STATE(FIRWRITE), DISABLED);
+		xfd75f2(d->g_srcpth, info->f_name);
+		strid = STFOLDINFO;
+		if (inf_fifo(tree, FINFILES, FINFOLDS, d->g_srcpth) == FALSE)
+#if BINEXACT
+			return; /* hmpf */
+#else
+			return FALSE;
+#endif
+	}
+	
+	rsrc_gaddr(R_STRING, strid, &title);
+	((TEDINFO *)LLGET(OB_SPEC(INFTITLE)))->te_ptext = title;
+	
+	inf_dttmsz(tree, info, FIDATE, FITIME, FISIZE, &d->g_size);
+	inf_setsize(info->f_name, poname, tree, FINAME, TRUE);
+	
+	more = FALSE;
+	if (xform_do(tree, ROOT) == FIOK)
+	{
+		desk_wait(TRUE);
+		fs_sget(tree, FINAME, pnname);
+		/* unformat the strings     */
+		unfmt_str(poname, &d->g_srcpth[nmidx]);
+		unfmt_str(pnname, &d->g_dstpth[nmidx]);
+		if (!streq(&d->g_srcpth[nmidx], &d->g_dstpth[nmidx]))
+		{
+			dos_rename(d->g_srcpth, d->g_dstpth);
+			if (DOS_AX == E_ACCDN)
+			{
+				form_error(~E_ACCDN - 30);
+			} else
+			{
+				if ((more = dos_error()))
+					strcpy(info->f_name, &d->g_dstpth[nmidx]);
+			}
+		}
+		
+		/* update the attributes */
+		attr = info->f_attr;
+		if (LWGET(OB_STATE(FIRONLY)) & SELECTED)
+			attr |= FA_RDONLY;
+		else
+			attr &= ~FA_RDONLY;
+		if (!isdir && (char) attr != info->f_attr)
+		{
+			dos_chmod(d->g_dstpth, TRUE, attr);
+			if ((more = dos_error()))
+				info->f_attr = attr;
+		}
+		desk_wait(FALSE);
+		return more;
+	} else
+	{
+		return FALSE;
+	}
+}
+#endif

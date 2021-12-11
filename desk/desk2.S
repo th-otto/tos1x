@@ -1,212 +1,3 @@
-	xdef _xfd82e8
-_xfd82e8: ds.b 0
-		link      a6,#-36
-		movem.l   d3-d7/a3-a5,-(a7)
-		movea.l   12(a6),a5
-		movea.l   _thedesk,a3
-		move.l    13658(a3),d7
-		pea.l     12310(a3)
-		move.l    8(a6),-(a7)
-		jsr       _xstrpcpy
-		addq.l    #8,a7
-		pea.l     12438(a3)
-		move.l    8(a6),-(a7)
-		jsr       _xstrpcpy
-		addq.l    #8,a7
-		clr.w     d4
-		bra.s     xfd82_2
-xfd82_1:
-		addq.w    #1,d4
-xfd82_2:
-		movea.l   a3,a0
-		movea.w   d4,a1
-		adda.l    a1,a0
-		cmpi.b    #'*',12310(a0)
-		bne.s     xfd82_1
-		tst.w     16(a6)
-		bne.s     xfd82_3
-		clr.w     (a7)
-		move.l    #0x00010001,-(a7)
-		move.b    9(a5),d0
-		ext.w     d0
-		move.w    d0,-(a7)
-		move.w    #8,-(a7)
-		move.l    d7,-(a7)
-		jsr       _inf_fldset
-		adda.w    #12,a7
-		move.w    #1,(a7)
-		clr.w     -(a7)
-		move.w    #1,-(a7)
-		move.b    9(a5),d0
-		ext.w     d0
-		move.w    d0,-(a7)
-		move.w    #9,-(a7)
-		move.l    d7,-(a7)
-		jsr       _inf_fldset
-		adda.w    #12,a7
-		move.l    #xfeb14a,(a7)
-		move.w    #7,-(a7)
-		move.l    d7,-(a7)
-		jsr       _inf_sset
-		addq.l    #6,a7
-		move.l    #xfeb150,(a7)
-		move.w    #6,-(a7)
-		move.l    d7,-(a7)
-		jsr       _inf_sset
-		addq.l    #6,a7
-		move.w    #6,-36(a6)
-		move.l    14(a5),12978(a3)
-		bra.s     xfd82_4
-xfd82_3:
-		movea.l   d7,a0
-		adda.l    #202,a0
-		move.w    #8,(a0)
-		movea.l   d7,a0
-		adda.l    #226,a0
-		move.w    #8,(a0)
-		pea.l     18(a5)
-		pea.l     12310(a3)
-		jsr       _xfd75f2
-		addq.l    #8,a7
-		move.w    #7,-36(a6)
-		pea.l     12310(a3)
-		move.l    #0x00070006,-(a7)
-		move.l    d7,-(a7)
-		jsr       _xfd8164
-		adda.w    #12,a7
-		tst.w     d0
-		beq       xfd82_11
-xfd82_4:
-		pea.l     -32(a6)
-		move.w    -36(a6),-(a7)
-		move.w    #5,-(a7)
-		jsr       _rsrc_gaddr
-		addq.l    #8,a7
-		movea.l   #36,a0
-		movea.l   0(a0,d7.l),a0
-		move.l    -32(a6),(a0)
-		pea.l     12978(a3)
-		move.l    #0x00050003,-(a7)
-		move.w    #4,-(a7)
-		move.l    a5,-(a7)
-		move.l    d7,-(a7)
-		jsr       _xfd8284
-		adda.w    #18,a7
-		move.w    #1,(a7)
-		move.w    #2,-(a7)
-		move.l    d7,-(a7)
-		pea.l     -14(a6)
-		pea.l     18(a5)
-		jsr       _xfd81e8
-		adda.w    #14,a7
-		clr.w     d5
-		clr.w     (a7)
-		move.l    d7,-(a7)
-		jsr       _xform_do
-		addq.l    #4,a7
-		cmp.w     #11,d0
-		bne       xfd82_10
-		move.w    #1,(a7)
-		jsr       _desk_wait
-		pea.l     -28(a6)
-		move.w    #2,-(a7)
-		move.l    d7,-(a7)
-		jsr       _fs_sget
-		adda.w    #10,a7
-		move.l    a3,d0
-		move.w    d4,d1
-		ext.l     d1
-		add.l     d1,d0
-		move.l    d0,(a7)
-		addi.l    #12310,(a7)
-		pea.l     -14(a6)
-		jsr       _unfmt_str
-		addq.l    #4,a7
-		move.l    a3,d0
-		move.w    d4,d1
-		ext.l     d1
-		add.l     d1,d0
-		move.l    d0,(a7)
-		addi.l    #12438,(a7)
-		pea.l     -28(a6)
-		jsr       _unfmt_str
-		addq.l    #4,a7
-		move.l    a3,d0
-		move.w    d4,d1
-		ext.l     d1
-		add.l     d1,d0
-		move.l    d0,(a7)
-		addi.l    #12438,(a7)
-		move.l    a3,d0
-		move.w    d4,d1
-		ext.l     d1
-		add.l     d1,d0
-		move.l    d0,-(a7)
-		addi.l    #12310,(a7)
-		jsr       _streq
-		addq.l    #4,a7
-		tst.w     d0
-		bne.s     xfd82_6
-		pea.l     12438(a3)
-		pea.l     12310(a3)
-		jsr       _dos_rename
-		addq.l    #8,a7
-		cmpi.w    #-36,_DOS_AX
-		bne.s     xfd82_5
-		move.w    #05,(a7)
-		jsr       _form_error
-		bra.s     xfd82_6
-xfd82_5:
-		jsr       _dos_error
-		move.w    d0,d5
-		beq.s     xfd82_6
-		pea.l     18(a5)
-		move.l    a3,d0
-		move.w    d4,d1
-		ext.l     d1
-		add.l     d1,d0
-		move.l    d0,-(a7)
-		addi.l    #12438,(a7)
-		jsr       _xstrpcpy
-		addq.l    #8,a7
-xfd82_6:
-		move.b    9(a5),d6
-		ext.w     d6
-		movea.l   d7,a0
-		adda.l    #203,a0
-		btst      #0,(a0)
-		beq.s     xfd82_7
-		or.w      #1,d6
-		bra.s     xfd82_8
-xfd82_7:
-		and.w     #-2,d6
-xfd82_8:
-		tst.w     16(a6)
-		bne.s     xfd82_9
-		move.w    d6,d0
-		ext.w     d0
-		cmp.b     9(a5),d0
-		beq.s     xfd82_9
-		move.w    d6,(a7)
-		move.w    #1,-(a7)
-		pea.l     12438(a3)
-		jsr       _dos_chmod
-		addq.l    #6,a7
-		jsr       _dos_error
-		move.w    d0,d5
-		beq.s     xfd82_9
-		move.b    d6,9(a5)
-xfd82_9:
-		clr.w     (a7)
-		jsr       _desk_wait
-		move.w    d5,d0
-		bra.s     xfd82_11
-		bra.s     xfd82_11
-xfd82_10:
-		clr.w     d0
-xfd82_11:
-		dc.w      0xFE3D ; movem.l (a7)+,d4-d7/a3-a5
-
 	xdef _xfd8538
 _xfd8538: ds.b 0
 		link      a6,#-58
@@ -223,7 +14,7 @@ _xfd8538: ds.b 0
 		pea.l     12310(a5)
 		move.l    #0x00040003,-(a7)
 		move.l    d7,-(a7)
-		jsr       _xfd8164
+		jsr       _inf_fifo
 		adda.w    #12,a7
 		tst.w     d0
 		beq       xfd85_1
@@ -264,14 +55,14 @@ _xfd8538: ds.b 0
 		move.l    d7,-(a7)
 		pea.l     -22(a6)
 		pea.l     12978(a5)
-		jsr       _xfd81e8
+		jsr       _inf_setsize
 		adda.w    #14,a7
 		clr.w     (a7)
 		move.w    #6,-(a7)
 		move.l    d7,-(a7)
 		pea.l     -32(a6)
 		pea.l     -8(a6)
-		jsr       _xfd81e8
+		jsr       _inf_setsize
 		adda.w    #14,a7
 		clr.w     (a7)
 		jsr       _desk_wait
@@ -3375,7 +3166,7 @@ xfda5_3:
 		move.l    d6,-(a7)
 		pea.l     -54(a6)
 		move.l    26(a6),-(a7)
-		jsr       _xfd81e8
+		jsr       _inf_setsize
 		adda.w    #14,a7
 		move.l    #xfeb1ac,(a7)
 		move.w    #3,-(a7)
@@ -3781,7 +3572,7 @@ xfdaa_3:
 		move.l    -6(a6),-(a7)
 		move.l    24(a4),-(a7)
 		addq.l    #8,(a7)
-		jsr       _xfd82e8
+		jsr       _inf_file
 		addq.l    #8,a7
 		tst.w     d0
 		beq.s     xfdaa_4
@@ -4085,12 +3876,7 @@ xfdadb_4:
 		dc.w      0xF031 ; movem.l (a7)+,d6-d7
 
 	data
-xfeb14a:
-	ascii "     "
-	dc.b 0
-xfeb150:
-	ascii "     "
-	dc.b 0
+
 xfeb156:
 	ascii ":\*.*"
 	dc.b 0

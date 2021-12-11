@@ -1858,8 +1858,8 @@ xfd6c_15:
 		move.w    d6,d0
 		dc.w      0xFC31 ; movem.l (a7)+,d6-d7/a4-a5
 
-	xdef _xfd6e40
-_xfd6e40: ds.b 0
+	xdef _d_doop
+_d_doop: ds.b 0
 		link      a6,#-24
 		movem.l   d4-d7/a3-a5,-(a7)
 		movea.l   14(a6),a5

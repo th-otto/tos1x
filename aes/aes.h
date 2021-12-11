@@ -879,7 +879,7 @@ int dos_gdrv PROTO((NOTHING));
 int dos_close PROTO((int fd));
 int dos_chdir PROTO((const char *path));
 int dos_sdrv PROTO((int drv));
-int dos_chmod PROTO((const char *path, int attr));
+int dos_chmod PROTO((const char *path, BOOLEAN setit, int attr));
 int dos_delete PROTO((const char *path));
 int dos_free PROTO((VOIDPTR ptr));
 int do_cdir PROTO((int drv, const char *path));

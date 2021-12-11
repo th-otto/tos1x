@@ -239,14 +239,14 @@
 [00fe7c78] dc.l $00fdd14a            ; F3B8 ; dos_avail AES
 [00fe7c7c] dc.l $00fe74a6            ; F3BC ; do1_alert DESKTOP
 [00fe7c80] dc.l $00fdd11c            ; F3C0 ; dos_alloc AES
-[00fe7c84] dc.l $00fd81e8            ; F3C4
+[00fe7c84] dc.l $00fd81e8            ; F3C4 ; inf_setsize DESKTOP
 [00fe7c88] dc.l $00fe5fac            ; F3C8 ; inf_sset AES
 [00fe7c8c] dc.l $00fd695a            ; F3CC ; fm_draw DESKTOP
 [00fe7c90] dc.l $00fd7abc            ; F3D0 ; form_do DESKTOP
 [00fe7c94] dc.l $00fe6034            ; F3D4 ; inf_what AES
 [00fe7c98] dc.l $00fd6b16            ; F3D8
 [00fe7c9c] dc.l $00fd75f2            ; F3DC
-[00fe7ca0] dc.l $00fd6e40            ; F3E0
+[00fe7ca0] dc.l $00fd6e40            ; F3E0 ; d_doop DESKTOP
 [00fe7ca4] dc.l $00fd795c            ; F3E4
 [00fe7ca8] dc.l $00fd7316            ; F3E8
 [00fe7cac] dc.l $00fd691c            ; F3EC ; do_finish DESKTOP
@@ -329,8 +329,8 @@
 [00fe7de0] dc.l $00fd4b24            ; F520 ; gsx_tblt; duplicate AES
 [00fe7de4] dc.l $00fdb85a            ; F524 ; hd_msg DESKTOP
 [00fe7de8] dc.l $00fe5fe8            ; F528 ; inf_fldset AES
-[00fe7dec] dc.l $00fd8164            ; F52C
-[00fe7df0] dc.l $00fd8284            ; F530
+[00fe7dec] dc.l $00fd8164            ; F52C ; inf_fifo DESKTOP
+[00fe7df0] dc.l $00fd8284            ; F530 ; inf_dttmsz DESKTOP
 [00fe7df4] dc.l $00fdd178            ; F534 ; dos_chmod AES
 [00fe7df8] dc.l $00fdd09a            ; F538 ; dos_label AES
 [00fe7dfc] dc.l $00fd813e            ; F53C ; fmdodraw DESKTOP
@@ -365,7 +365,7 @@
 [00fe7e70] dc.l $00fda5d2            ; F5B0
 [00fe7e74] dc.l $00fda900            ; F5B4
 [00fe7e78] dc.l $00fda85e            ; F5B8
-[00fe7e7c] dc.l $00fd82e8            ; F5BC
+[00fe7e7c] dc.l $00fd82e8            ; F5BC ; inf_file DESKTOP
 [00fe7e80] dc.l $00fd8538            ; F5C0
 [00fe7e84] dc.l $00fdcd6a            ; F5C4
 [00fe7e88] dc.l $00fd7d32            ; F5C8 ; wind_get DESKTOP

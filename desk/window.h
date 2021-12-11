@@ -13,21 +13,28 @@
 
 #define ALLITEMS (NAME|CLOSER|FULLER|MOVER|INFO|SIZER|UPARROW|DNARROW|VSLIDE|LFARROW|RTARROW|HSLIDE)
 
+#define LEN_ZFNAME 13
+
 typedef struct dir
 {
 	int16_t	 d_att;		/* attribute */
 	uint16_t d_time;	/* time */
 	uint16_t d_date;	/* date */
 	int32_t	 d_size;	/* size */
-	char	 d_name[14]; /* name */
+	char	 d_name[LEN_ZFNAME + 1]; /* name */
 } DIR;
 
-typedef struct
-{
-	char o0[10];
-	uint16_t i_time;	/* time */
-	uint16_t i_date;	/* date */
-} FILEINFO;
+typedef struct _fnode FNODE;
+
+struct _fnode {
+	FNODE *f_next;
+	char o4[5];
+	char f_attr;
+	uint16_t f_time;	/* time */
+	uint16_t f_date;	/* date */
+	int32_t f_size;
+	char f_name[LEN_ZFNAME];
+};
 
 typedef	struct dta
 {
