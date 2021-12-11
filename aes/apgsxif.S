@@ -1265,7 +1265,9 @@ VOID gsx_tblt(WORD tb_f, WORD x, WORD y, WORD tb_nc)
 /* 306de: 00e24988 */
 /* 104de: 00fd4b24 */
 	xdef	_gsx_tblt
-_gsx_tblt:
+_gsx_tblt: ds.b 0
+	xdef	_gsx_ftblt
+_gsx_ftblt: ds.b 0
 
 	lea	4(sp),a0		; a0 -> parameter list
 	movem.l d3-d5/a3-a4,-(sp)
@@ -1410,6 +1412,7 @@ VOID gsx_xcbox(GRECT *pt)
 #endif
 /* 306de: 00e24a52 */
 /* 104de: 00fd4be8 */
+/* 106de: 00e1500e */
 	xdef _gsx_xcbox
 _gsx_xcbox:
 
@@ -1467,7 +1470,7 @@ _gsx_xcbox:
 
 
 #if CCODE
-VOID gsx_xline(WORD ptscount, WORD ppoints)
+VOID gsx_xline(WORD ptscount, WORD *ppoints)
 {
 	static WORD const hztltbl[2] = { 0x5555, 0xaaaa };
 	static WORD const verttbl[4] = { 0x5555, 0xaaaa, 0xaaaa, 0x5555 };

@@ -600,7 +600,7 @@ xfd5f_3:
 		move.w    #1,(a7)
 		move.w    #3,-(a7)
 		clr.w     -(a7)
-		dc.w      0xF2D8
+		jsr       _gsx_fattr
 		addq.l    #4,a7
 		pea.l     -38(a6)
 		pea.l     -36(a6)
@@ -1706,7 +1706,7 @@ xfd6b_11:
 		adda.l    #80,a0
 		move.w    #0x0080,(a0)
 		move.l    d7,(a7)
-		dc.w      0xF3CC
+		dc.w      0xF3CC ; fm_draw
 		movea.l   d7,a0
 		adda.l    #104,a0
 		clr.w     (a0)
@@ -1858,8 +1858,8 @@ xfd6c_15:
 		move.w    d6,d0
 		dc.w      0xFC31 ; movem.l (a7)+,d6-d7/a4-a5
 
-	xdef xfd6e40
-xfd6e40: ds.b 0
+	xdef _xfd6e40
+_xfd6e40: ds.b 0
 		link      a6,#-24
 		movem.l   d4-d7/a3-a5,-(a7)
 		movea.l   14(a6),a5
@@ -2586,7 +2586,7 @@ xfd7620: ds.b 0
 		dc.w      0xF3C8 ; inf_sset
 		adda.w    #10,a7
 		move.l    d7,(a7)
-		dc.w      0xF3CC
+		dc.w      0xF3CC ; fm_draw
 		move.w    #1,24128(a5)
 		clr.w     (a7)
 		move.l    d7,-(a7)

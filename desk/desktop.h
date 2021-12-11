@@ -179,7 +179,12 @@ typedef struct idtype
 #endif
 
 typedef struct {
-	/*     0 */ char unused1[13350];
+	/*     0 */ char o0[12970];
+	/* 12970 */ int32_t o12970;
+	/* 12974 */ int32_t o12974;
+	/* 12978 */ int32_t o12978;
+	/* 12982 */ char strbuf[128];
+	/* 13310 */ char o13110[240];
 	/* 13350 */ int16_t msgbuf[8];		
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13370 */ GRECT full;				/* full window size value */
@@ -224,8 +229,9 @@ typedef struct {
 	/* 23560 */ int16_t pref_save;		/* screen pref */
 	/* 23562 */ BOOLEAN write_save;		/* write ? */
 	/* 23564 */ DESKWIN winpd[MAXWIN];	/* window process structure */
-	/* 24652 */ char unused5[6332];
+	/* 24132 */ char unused5[6332];
 	/* 30440 */ char autofile[PATHLEN];
+	/* 30568 */ char o30568[4];
 	/* 30572 */
 	
 } THEDSK;
@@ -505,7 +511,7 @@ VOID rc_center PROTO((GRECT *rec1, GRECT *rec2));
 VOID my_itoa PROTO((uint16_t number, char *pnumstr));
 VOID fmt_time PROTO((uint16_t time, char *ptime));
 VOID fmt_date PROTO((uint16_t date, char *pdate));
-char * bldstring PROTO((DIR *dir, char *dst));
+long bldstring PROTO((DIR *dir, char *dst));
 char *g_name PROTO((const char *file)); /* also referenced by AES */
 VOID save_ext PROTO((const char *path, char *buffer));
 VOID save_mid PROTO((char *path, char *buffer));
@@ -644,6 +650,7 @@ extern BOOLEAN sh_iscart;
 extern int16_t gl_bvdisk;
 extern int16_t gl_bvhard;
 extern int16_t gl_width;
+extern VOIDPTR ad_intin;
 
 #if TOSVERSION >= 0x400
 extern uint16_t d_rezword;

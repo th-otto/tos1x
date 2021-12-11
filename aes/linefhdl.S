@@ -298,14 +298,14 @@ lineftab: ds.b 0
 		dc.l _dos_avail           ; F3B8
 		dc.l _do1_alert           ; F3BC
 		dc.l _dos_alloc           ; F3C0
-		dc.l xfd81e8              ; F3C4
+		dc.l _xfd81e8             ; F3C4
 		dc.l _inf_sset            ; F3C8
 		dc.l _fm_draw             ; F3CC
 		dc.l _form_do             ; F3D0
 		dc.l _inf_what            ; F3D4
 		dc.l xfd6b16              ; F3D8
 		dc.l xfd75f2              ; F3DC
-		dc.l xfd6e40              ; F3E0
+		dc.l _xfd6e40             ; F3E0
 		dc.l xfd795c              ; F3E4
 		dc.l xfd7316              ; F3E8
 		dc.l _do_finish           ; F3EC
@@ -388,8 +388,8 @@ lineftab: ds.b 0
 		dc.l _gsx_tblt            ; F520
 		dc.l _hd_msg              ; F524
 		dc.l _inf_fldset          ; F528
-		dc.l xfd8164              ; F52C
-		dc.l xfd8284              ; F530
+		dc.l _xfd8164             ; F52C
+		dc.l _xfd8284             ; F530
 		dc.l _dos_chmod           ; F534
 		dc.l _dos_label           ; F538
 		dc.l _fmdodraw            ; F53C

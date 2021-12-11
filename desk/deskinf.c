@@ -23,6 +23,7 @@ char const infdata[] = "DESKTOP.INF";
 
 
 /* 104de: 00fd4cb0 */
+/* 106de: 00e150e2 */
 APP *app_alloc(P(BOOLEAN) atend)
 PP(register BOOLEAN atend;)
 {

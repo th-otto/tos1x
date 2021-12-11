@@ -13,7 +13,7 @@ include optimize.mak
 
 LIBS =
 
-CPPFLAGS = -I$(top_srcdir)/common -I$(INC)
+CPPFLAGS = -I$(top_srcdir)/common -I$(top_srcdir)/aes -I$(INC)
 CFLAGS = $(OPTS) $(WARN)
 
 all:: desk.a

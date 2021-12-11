@@ -39,6 +39,7 @@ AESDESK_OBJS = \
 	../desk/deskinf.o \
 	../desk/desk1.o \
 	../desk/deskif.o \
+	../desk/deskmisc.o \
 	../desk/desk2.o \
 	../desk/rainbow.o \
 	../desk/desk4.o \
@@ -80,7 +81,6 @@ AESDESK_OBJS = \
 	../aes/romcart.o \
 	../desk/deskshow.o \
 	../desk/deskdisk.o \
-	../desk/deskmisc.o \
 	../aes/trap14.o \
 	../aes/gemrom.o \
 	../aes/gemglobe.o \

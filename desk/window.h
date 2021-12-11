@@ -20,8 +20,6 @@ typedef struct dir
 	uint16_t d_date;	/* date */
 	int32_t	 d_size;	/* size */
 	char	 d_name[14]; /* name */
-	int16_t	 d_state;	/* selected */
-	int16_t	 d_order;	/* file's order */
 } DIR;
 
 typedef	struct dta
@@ -40,19 +38,18 @@ typedef	struct deskwin
 #define w_buf w_path /* tmp hack until desktop source has been completed */
 	/*  96 */ int16_t w_id;				/* window handle */
 #define w_srtitem w_id /* tmp hack until desktop source has been completed */
-	/*  98 */ char w_info[14];			/* info line */
-	/* 110 */ int16_t w_items;			/* max number of file items */
-	/* 112 */ int16_t w_maxicons;		/* max # of icons allocated in window */
-	/* 118 */ TEDINFO *w_ted;
-	/* 122 */ ICONBLK *w_iblk;			/* starting address of iconblk */
-	/* 126 */ char *w_text;				/* starting address of text */
-#define w_memory w_text /* tmp hack until desktop source has been completed */
-#define w_obj w_text /* tmp hack until desktop source has been completed */
-	/* 132 */ int16_t w_hvicons;		/* number of invisible icon per row */
-	/* 136 */ int16_t w_vvicons;		/* number of invisible icon per col */
-	/* 138 */ int16_t w_xcol;			/* number of visible column of icon */
-	/* 140 */ int16_t w_xrow;			/* number of visible row of icon */
-	/* 142 */ 
+	/*     */ char w_info[12];			/* info line */
+	/*     */ int16_t w_items;			/* max number of file items */
+	/*     */ int16_t w_maxicons;		/* max # of icons allocated in window */
+	/*     */ TEDINFO *w_ted;
+	/*     */ ICONBLK *w_iblk;			/* starting address of iconblk */
+	/*     */ char *w_text;				/* starting address of text */
+	          int16_t w_obj;
+	/*     */ int16_t w_hvicons;		/* number of invisible icon per row */
+	/*     */ int16_t w_vvicons;		/* number of invisible icon per col */
+	/*     */ int16_t w_xcol;			/* number of visible column of icon */
+	/*     */ int16_t w_xrow;			/* number of visible row of icon */
+	/* 136 */ 
 } DESKWIN;	
 
 

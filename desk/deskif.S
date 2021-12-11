@@ -711,7 +711,7 @@ _objc_change:
 
 
 #if CCODE
-WORD rsrc_free(NOTHIN)
+WORD rsrc_free(NOTHING)
 {
   WORD		ret;
   ret = rs_free( pglobal);
@@ -798,7 +798,6 @@ _shel_put:
 
 #if CCODE
 WORD wind_close(WORD handle)
-     WORD		handle;
 {
   WORD		ret;
   ret = wm_close(handle);
@@ -943,7 +942,7 @@ _wind_set:
 
 
 #if CCODE
-WORD wind_calc(WORD wctype, UWORD kind, WORD x, WORD y, WORD w, WORD h, WORD px, WORD py, WORD pw, WORD ph)
+WORD wind_calc(WORD wctype, UWORD kind, WORD x, WORD y, WORD w, WORD h, WORD *px, WORD *py, WORD *pw, WORD *ph)
 {
   WORD		ret;
   ret = wm_calc(wctype, kind, x, y, w, h, px, py, pw, ph);
