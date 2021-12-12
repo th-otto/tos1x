@@ -579,4 +579,3 @@ PP(char drv_id;)
 	}
 	return TRUE;
 }
-

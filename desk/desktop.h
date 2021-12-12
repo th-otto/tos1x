@@ -201,10 +201,10 @@ typedef struct {
 	/* 13722 */ int16_t o13722;
 	/* 13724 */ int16_t o13724;
 	/* 13726 */ int16_t o13726;
-	/* 13728 */ int16_t dcopy_save;
-	/* 13730 */ int16_t ddele_save;
+	/* 13728 */ int16_t g_ccopypref;	/* curr. copy pref.	*/
+	/* 13730 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
 	/* 13732 */ int16_t s_bitblt;
-	/* 13734 */ int16_t dwrite_save;
+	/* 13734 */ int16_t g_covwrpref;	/* curr. overwrite pref.*/
 	/* 13736 */ GRECT r_dicon;			/* real time desktop icon size */
 	/* 13744 */ int16_t o13744;
 	/* 13746 */ int16_t o13746;
@@ -529,7 +529,7 @@ VOID wait_msg PROTO((NOTHING));
 /*
  * deskpref.c
  */
-VOID desk_pref PROTO((NOTHING));
+BOOLEAN desk_pref PROTO((NOTHING));
 
 
 /*
