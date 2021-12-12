@@ -1435,7 +1435,14 @@ wrmtab:
 /* easteregg alert... */
 
 blt_adj:
-#if OS_COUNTRY == CTRY_UK
+#if (OS_COUNTRY == CTRY_CZ)
+	dc.b "  Petr a Lea se maj"
+	dc.b $a1
+	dc.b " moc r"
+	dc.b $a0
+	dc.b "di   "
+#else
+#if (OS_COUNTRY == CTRY_UK) | (OS_COUNTRY == CTRY_SE)
 	dc.w 0
 #else
 	move.l	-(a0),d0
@@ -1454,7 +1461,10 @@ blt_adj:
 	bsr	blt_adj+$7E
 	bge	blt_adj+$87
 	beq	blt_adj+$40
+	/* should assemble to "Dave StaUgas loves Bea Hablig " */
+#endif
 	rts
+
 *
 *
 do_skew:

@@ -345,6 +345,33 @@ PP(char *lcmd;)
 /* 306de: 00e20d36 */
 /* 104de: 00fe411e */
 /* 106de: 00e26504 */
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+	/* swedish/czech versions have the TOSFIX patch applied (from tos14fix.prg) */
+	asm("xdef _sh_name");
+	asm("_sh_name:");
+	asm("   movea.l    4(a7),a1");
+	asm("	movea.l    a1,a2");
+	asm("sh_name1:");
+	asm("	tst.b      (a1)+");
+	asm("	bne.s      sh_name1");
+	asm("sh_name2:");
+	asm("	move.b     -(a1),d0");
+	asm("	cmpa.l     a2,a1");
+	asm("	bcs.s      sh_name3");
+	asm("	cmp.b      #0x5C,d0");
+	asm("	beq.s      sh_name3");
+	asm("	cmp.b      #':',d0");
+	asm("	bne.s      sh_name2");
+	asm("sh_name3:");
+	asm("	addq.l     #1,a1");
+	asm("	move.l     a1,d0");
+	asm("	rts");
+	asm("	nop");
+	asm("	nop");
+	asm("	nop");
+	asm("	nop");
+	asm("	nop");
+#else
 char *sh_name(P(char *) ppath)
 PP(char *ppath;)
 {
@@ -366,6 +393,7 @@ PP(char *ppath;)
 
 	return ++pname;
 }
+#endif
 
 
 /*

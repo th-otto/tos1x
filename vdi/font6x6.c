@@ -24,8 +24,8 @@
 #include "gsxextrn.h"
 
 
-extern int16_t const off_first[];
-extern int16_t const dat_first[];
+extern int16_t const off_6x6[];
+extern int16_t const dat_6x6[];
 
 
 struct font_head const f6x6 = {
@@ -49,8 +49,8 @@ struct font_head const f6x6 = {
     0xAAAA,				/*   uint16_t skew			*/
     STDFORM | MONOSPACE,		/*   uint16_t flags		*/
     0,					/*   uint8_t *hor_table		*/
-    (const uint16_t *)off_first,			/*   uint16_t *off_table		*/
-    (const uint16_t *)dat_first,			/*   uint16_t *dat_table		*/
+    (const uint16_t *)off_6x6,			/*   uint16_t *off_table		*/
+    (const uint16_t *)dat_6x6,			/*   uint16_t *dat_table		*/
     192,				/*   uint16_t form_width		*/
     6,					/*   uint16_t form_height		*/
     0,					/*   uint16_t *next_font		*/
@@ -59,7 +59,7 @@ struct font_head const f6x6 = {
 
 
 
-int16_t const off_first[257] =
+int16_t const off_6x6[257] =
 {
 	0x0000,0x0006,0x000C,0x0012,0x0018,0x001E,0x0024,0x002A,
 	0x0030,0x0036,0x003C,0x0042,0x0048,0x004E,0x0054,0x005A,
@@ -100,7 +100,11 @@ int16_t const off_first[257] =
 /* 206de: 00e33086 */
 /* 306de: 00e36cce */
 /* 306us: 00e36c9e */
-int16_t const dat_first[576] =
+int16_t const dat_6x6[576] =
 {
+#if OS_COUNTRY == CTRY_CZ
+#include "fonts/6x6/czech.c"
+#else
 #include "fonts/6x6/system.c"
+#endif
 };

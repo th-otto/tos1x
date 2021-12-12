@@ -29,7 +29,11 @@ extern int16_t const off_8x8[];
 /* 306us: 00e37b7a */
 int16_t const dat_8x16[2048] =
 {
+#if OS_COUNTRY == CTRY_CZ
+#include "fonts/8x16/czech.c"
+#else
 #include "fonts/8x16/system.c"
+#endif
 };
 
 

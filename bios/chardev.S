@@ -1332,12 +1332,25 @@ rs6conf2:
  */
         movep.l   MFP_UCR-MFP_REGS(mfpareg),d7
         move.w    6(a7),d0                      /* if -1 then don't change */
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+        /* swedish/czech versions have the RSCONF1 patch applied (from tos14fix) */
+        cmp.w     #3,d0
+        bhi.s     rs6conf6
+        bne.s     rs6conf5
+        bra.s     rs6conf4
+        nop
+        nop
+        nop
+        nop
+#else
         cmp.w     #-1,d0
         beq.s     rs6conf6
         move.b    d0,ctr(a0)
         beq.s     rs6conf5
 		and.b     #$FD,d0
         beq.s     rs6conf5
+#endif
+rs6conf4:
 		move.b    #1,d0
 rs6conf5:
         move.b    d0,ctr(a0)                    /* set new handshake state */

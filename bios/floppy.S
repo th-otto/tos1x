@@ -761,7 +761,12 @@ go2trac1:
         move.w    #$0086,(a6)                   /* set destination track# in */
         move.w    ABSW(fd_track),d7             /* 1770's data register */
         bsr       wrfdcd7                       /* (write track#) */
+#if OS_COUNTRY == CTRY_CZ
+		/* czech version has the FASTLOAD patch applied */
+        moveq.l   #$10,d6                       /* execute 1770 "seek" */
+#else
         moveq.l   #$14,d6                       /* execute 1770 "seek" */
+#endif
         bsr.s     flopcmds                      /* (include seek-rate bits) */
         bne.s     go2trret                      /* return error on seek failure */
         move.w    ABSW(fd_track),fd_curtrack(a1)  /* update current track number */

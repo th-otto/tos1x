@@ -105,5 +105,9 @@ int16_t const off_8x8[257] =
 /* 306us: 00e3737a */
 int16_t const dat_8x8[1024] =
 {
+#if OS_COUNTRY == CTRY_CZ
+#include "fonts/8x8/czech.c"
+#else
 #include "fonts/8x8/system.c"
+#endif
 };

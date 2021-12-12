@@ -413,11 +413,11 @@ VOID text_init(NOTHING)
 	/* Initialize the font ring.  font_ring[1] is setup before entering here */
 	/* since it contains the font which varies with the screen resolution.   */
 
-	LV(font_ring)[0] = &first;
+	LV(font_ring)[0] = &f6x6; /* 6x6 font is the first */
 	LV(font_ring)[2] = NULL;
 	LV(font_ring)[3] = NULL;
 
-	id_save = first.font_id;
+	id_save = f6x6.font_id;
 
 	chain_ptr = LV(font_ring);
 	i = 0;
@@ -826,7 +826,7 @@ VOID dst_font(NOTHING)
 	/* If we fell through the loop, we could not find the face. */
 	/* Default to the system font.                  */
 
-	test_font = &first;
+	test_font = &f6x6;
 
   find_height:
 
@@ -1105,7 +1105,7 @@ VOID dqt_name(NOTHING)
 
 	/* The element is out of bounds use the system font */
 
-	tmp_font = &first;
+	tmp_font = &f6x6;
 
   found_element:
 

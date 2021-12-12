@@ -135,11 +135,16 @@ _os_conf:               /* Flag for PAL version + country */
 	/* hack for polish version: apparently language code not patched */
     dc.w   (CTRY_UK<<1)+OS_PAL
 #else
+#if (OS_COUNTRY == CTRY_CZ) & (TOSVERSION == 0x104)
+	/* hack for czech version: apparently language code not patched */
+    dc.w   (CTRY_DE<<1)+OS_PAL
+#else
 #if (OS_COUNTRY == CTRY_NL) & (TOSVERSION == 0x104)
 	/* hack for dutch version: apparently wrong language code used */
     dc.w   (CTRY_SA<<1)+OS_PAL
 #else
     dc.w   (OS_COUNTRY<<1)+OS_PAL
+#endif
 #endif
 #endif
 #endif
@@ -605,7 +610,12 @@ biosinit:
 /* --- set the current system time and date */
         move.w    _os_dosdate,_date  /* use BIOS time as current time */
         jsr       ngetdt             /* set current time to RTC time */
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+        /* swedish/czech versions have the TIME_SAVE patch applied */
+        bpl.s     clockdone
+#else
         bcc.s     clockdone
+#endif
         bsr       igetdt             /* read time from the keyboard controller */
         swap      d0
         tst.b     d0
@@ -644,7 +654,12 @@ copyenv:
 nextenvc:
         move.b    (a0)+,(a1)+
         bpl.s     copyenv
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+        /* swedish/czech versions have the BOOT_DEV patch applied */
+        move.w    _bootdev,d0
+#else
         move.b    _bootdev,d0                  /* compute drive#, and shove it (infamous old bug accessing _bootdev as byte) */
+#endif
         add.b     #$41,d0
         move.b    d0,(a2)
         pea.l     gem_env                      /* push address of environment string */
@@ -1133,7 +1148,7 @@ biosxbios:
 #endif
 traph2: movem.l   d3-d7/a3-a7,-(a1)      /* regs, including stack pointer */
         move.l    a1,_savptr
-        btst      #13,d0                 /* were we in user mode? */
+        btst      #13,d0                 /* were we in supervisor mode? */
         bne.s     bx_sp_ok               /* yes, the sp already points to the arguments */
         move.l    usp,a7                 /* no, the arguments were on the user stack */
 bx_sp_ok:
@@ -1876,11 +1891,20 @@ autoscan:
         clr.w     -(a7)
         move.w    #$004A,-(a7)                  /* Mshrink to basepage only */
         trap      #1
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+        /* swedish/czech versions have the STACK_POINTER patch applied */
+		adda.w    #12,a7
+        tst.w     d0
+        bne.s     autosca4                      /* if Mshrink failed, done */
+        move.w    #7,-(a7)
+        move.l    (execpath).w,-(a7)
+#else
         addq.w    #6,a7
         tst.w     d0
         bne.s     autosca4                      /* if Mshrink failed, done */
         move.w    #7,-(a7)                      /* find r/o+hidden+system files */
         move.l    execpath,-(a7)                /* -> filename (on input) */
+#endif
         move.w    #$004E,-(a7)                  /* Fsfirst */
         moveq.l   #8,d7
 autosca1:
@@ -1950,19 +1974,19 @@ bombimage:
 waitvbl:    lea       MFP_TBDR,a0           /* a0 -> timer B data register */
             lea       MFP_TBCR,a1           /* a1 -> timer B control register */
             move.b    #$10,(a1)             /* reset timer B */
-            moveq     #1,d4                     /* wait for the timer to expire */
-            move.b    #0,(a1)                   /* stop timer B */
-            move.b    #$f0,(a0)                 /* event every 240 scan lines */
-            move.b    #8,MFP_TBCR               /* timer b: event count mode (HBL) */
+            moveq     #1,d4                 /* wait for the timer to expire */
+            move.b    #0,(a1)               /* stop timer B */
+            move.b    #$f0,(a0)             /* event every 240 scan lines */
+            move.b    #8,MFP_TBCR           /* timer b: event count mode (HBL) */
 waitvbl2:   move.b    (a0),d0
-            cmp.b     d4,d0                   /* wait for HBL 239 scan lines to pass */
+            cmp.b     d4,d0                 /* wait for HBL 239 scan lines to pass */
             bne.s     waitvbl2
 waitvbl3:   move.b    (a0),d4
-            move.w    #615,d3                   /* wait till we are inside the vbl area */
+            move.w    #615,d3               /* wait till we are inside the vbl area */
 waitvbl4:   cmp.b     (a0),d4
             bne.s     waitvbl3
             dbra      d3,waitvbl4
-            move.b    #$10,(a1)                 /* timer b: reset */
+            move.b    #$10,(a1)             /* timer b: reset */
             jmp       (a6)
 
 
