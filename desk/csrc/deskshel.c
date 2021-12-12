@@ -53,7 +53,7 @@ PP(const char *file;)
 	THEDSK *d;
 	
 	d = thedesk;
-	menu_bar(d->rtree[ADMENU], FALSE);
+	menu_bar(d->g_atree[ADMENU], FALSE);
 	dv_hide_c();
 	dv_enter_cur();
 	xvq_chcells(&d_nrows);
@@ -61,7 +61,7 @@ PP(const char *file;)
 	showfile(file, FALSE);
 	dv_exit_cur();
 	dv_show_c(0);
-	menu_bar(d->rtree[ADMENU], TRUE);
+	menu_bar(d->g_atree[ADMENU], TRUE);
 	form_dial(FMD_FINISH, 0, 0, 0, 0, thedesk->full.g_x, thedesk->full.g_y, thedesk->full.g_w, thedesk->full.g_h);
 	wait_msg();
 }

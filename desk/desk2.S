@@ -1,5 +1,6 @@
-	xdef _xfd8538
-_xfd8538: ds.b 0
+#if 0
+	xdef _inf_disk
+_inf_disk: ds.b 0
 		link      a6,#-58
 		movem.l   d6-d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -73,6 +74,7 @@ _xfd8538: ds.b 0
 xfd85_1:
 		moveq.l   #1,d0
 		dc.w      0xF821 ; movem.l (a7)+,d7/a5
+#endif
 
 	xdef _desk_pref
 _desk_pref: ds.b 0
@@ -211,8 +213,8 @@ xfd86_13:
 xfd86_14:
 		dc.w      0xF83D ; movem.l (a7)+,d4-d7/a5
 
-	xdef _desk_dfree
-_desk_dfree: ds.b 0
+	xdef _dos_space
+_dos_space: ds.b 0
 		link      a6,#-24
 		move.w    8(a6),(a7)
 		pea.l     -16(a6)
@@ -3595,7 +3597,7 @@ xfdaa_5:
 		movea.l   -10(a6),a0
 		move.w    12(a0),(a7)
 		andi.w    #255,(a7)
-		jsr       _xfd8538
+		jsr       _inf_disk
 		bra.s     xfdaa_7
 xfdaa_6:
 		tst.w     d0
@@ -3877,9 +3879,6 @@ xfdadb_4:
 
 	data
 
-xfeb156:
-	ascii ":\*.*"
-	dc.b 0
 xfeb15c:
 	ascii ":\*.*"
 	dc.b 0

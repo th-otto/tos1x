@@ -279,7 +279,7 @@
 [00fe7d18] dc.l $00fe73d0            ; F458 ; fc_rwsec DESKTOP
 [00fe7d1c] dc.l $00fe5e44            ; F45C ; max AES
 [00fe7d20] dc.l $00fe7408            ; F460 ; fc_clfix DESKTOP
-[00fe7d24] dc.l $00fd8780            ; F464 ; desk_dfree DESKTOP
+[00fe7d24] dc.l $00fd8780            ; F464 ; dos_free DESKTOP
 [00fe7d28] dc.l $00fd8d76            ; F468
 [00fe7d2c] dc.l $00fdd164            ; F46C ; dos_gdrv AES
 [00fe7d30] dc.l $00fd8fae            ; F470
@@ -366,7 +366,7 @@
 [00fe7e74] dc.l $00fda900            ; F5B4
 [00fe7e78] dc.l $00fda85e            ; F5B8
 [00fe7e7c] dc.l $00fd82e8            ; F5BC ; inf_file DESKTOP
-[00fe7e80] dc.l $00fd8538            ; F5C0
+[00fe7e80] dc.l $00fd8538            ; F5C0 ; inf_disk DESKTOP
 [00fe7e84] dc.l $00fdcd6a            ; F5C4
 [00fe7e88] dc.l $00fd7d32            ; F5C8 ; wind_get DESKTOP
 [00fe7e8c] dc.l $00fda3de            ; F5CC

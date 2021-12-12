@@ -323,7 +323,7 @@ VOID menu_verify(NOTHING)
 	
 	enable = x_first(&str, &type);
 
-	menu_ienable(thedesk->rtree[ADMENU], IAPPITEM, enable);
+	menu_ienable(thedesk->g_atree[ADMENU], IAPPITEM, enable);
 
 	enable = FALSE;
 
@@ -332,12 +332,12 @@ VOID menu_verify(NOTHING)
 		if (w_gnext())
 			enable = TRUE;
 
-		menu_ienable(thedesk->rtree[ADMENU], SHOWITEM, TRUE);
+		menu_ienable(thedesk->g_atree[ADMENU], SHOWITEM, TRUE);
 	}
 
 	ch_cache(FALSE);
 #ifdef PRINTITEM /* take out for sparrow */
-	menu_ienable(thedesk->rtree[ADMENU], PRINTITEM, gl_restype <= 3 ? TRUE : FALSE);
+	menu_ienable(thedesk->g_atree[ADMENU], PRINTITEM, gl_restype <= 3 ? TRUE : FALSE);
 #endif
 }
 
@@ -542,7 +542,7 @@ PP(int16_t msgbuff;)
 
 #ifdef PRINTITEM								/* take out for sparrow */
 	case PRINTITEM:						/* print screen     */
-		if (!(thedesk->rtree[ADMENU][PRINTITEM].ob_state & DISABLED))
+		if (!(thedesk->g_atree[ADMENU][PRINTITEM].ob_state & DISABLED))
 		{
 			if (do1_alert(PRINTTOP) == 1)
 			{
@@ -618,9 +618,9 @@ PP(int16_t msgbuff;)
 	}
 
   	while (xxxview[i])
-		menu_icheck(thedesk->rtree[ADMENU], xxxview[i++], 0);
+		menu_icheck(thedesk->g_atree[ADMENU], xxxview[i++], 0);
 
-	menu_icheck(thedesk->rtree[ADMENU], msgbuff, 1);
+	menu_icheck(thedesk->g_atree[ADMENU], msgbuff, 1);
 }
 
 
@@ -709,7 +709,7 @@ PP(register int16_t item;)
 		if (item == ABOUTITEM)
 		{
 			rb_start();
-			fmdodraw(thedesk->rtrees[ADDINFO], DEOK);
+			fmdodraw(thedesk->g_atrees[ADDINFO], DEOK);
 			rb_stop();
 		}
 		break;
@@ -727,7 +727,7 @@ PP(register int16_t item;)
 		break;
 	}
 
-	menu_tnormal(thedesk->rtree[ADMENU], title, 1);
+	menu_tnormal(thedesk->g_atree[ADMENU], title, 1);
 }
 
 

@@ -195,7 +195,7 @@ typedef struct {
 	/* 13370 */ GRECT full;				/* full window size value */
 	/*     0 */ char unused2[272];
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
-	/* 13654 */ OBJECT *rtree[16];		/* resource trees */
+	/* 13654 */ OBJECT *g_atree[16];	/* resource trees */
 	/* 13718 */ int16_t o13718;
 	/* 13720 */ int16_t o13720;
 	/* 13722 */ int16_t o13722;

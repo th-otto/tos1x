@@ -338,7 +338,7 @@ lineftab: ds.b 0
 		dc.l _fc_rwsec            ; F458
 		dc.l _max                 ; F45C
 		dc.l _fc_clfix            ; F460
-		dc.l _desk_dfree          ; F464
+		dc.l _dos_space           ; F464
 		dc.l _xfd8d76             ; F468
 		dc.l _dos_gdrv            ; F46C
 		dc.l _xfd8fae             ; F470
@@ -425,7 +425,7 @@ lineftab: ds.b 0
 		dc.l _xfda900             ; F5B4
 		dc.l _xfda85e             ; F5B8
 		dc.l _inf_file            ; F5BC
-		dc.l _xfd8538             ; F5C0
+		dc.l _inf_disk            ; F5C0
 		dc.l _xfdcd6a             ; F5C4
 		dc.l _wind_get            ; F5C8
 		dc.l _xfda3de             ; F5CC

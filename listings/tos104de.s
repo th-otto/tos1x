@@ -31054,7 +31054,7 @@ dr_code:
 [00fd8592] 4880                      ext.w     d0
 [00fd8594] 3f00                      move.w    d0,-(a7)
 [00fd8596] 0657 ffc0                 addi.w    #$FFC0,(a7)
-[00fd859a] f464                      dc.w      $F464; desk_dfree
+[00fd859a] f464                      dc.w      $F464; dos_space
 [00fd859c] defc 000a                 adda.w    #$000A,a7
 [00fd85a0] 422e ffd4                 clr.b     -44(a6)
 [00fd85a4] 486e ffd4                 pea.l     -44(a6)

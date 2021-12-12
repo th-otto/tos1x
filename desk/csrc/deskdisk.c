@@ -137,7 +137,7 @@ PP(int16_t op;)
 	register LPTREE tree;
 	int32_t value;
 
-	tree = thedesk->rtree[ADFORMAT];
+	tree = thedesk->g_atree[ADFORMAT];
 	obj = (OBJECT *)tree;
 
 	/* check for switch in cookie jar   */
@@ -444,7 +444,7 @@ PP(OBJECT *obj;)
 
 	if (!ret)
 	{
-		desk_dfree(lbuf, devno + 1);
+		dos_space(lbuf, devno + 1);
 		lbuf[0] = lbuf[0] * lbuf[2] * lbuf[3];
 		merge_str(g_buffer, get_string(FCSIZE), lbuf);
 		if (form_alert(1, g_buffer) == 1)

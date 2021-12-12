@@ -28,7 +28,7 @@ VOID desk_pref(NOTHING)
 	
 	d = thedesk;
 	
-	obj = d->rtree[ADSETPREF];
+	obj = d->g_atree[ADSETPREF];
 	cyes = thedesk->ddele_save;
 	obj[SPCDYES].ob_state = cyes;
 	obj[SPCDNO].ob_state = !cyes;

@@ -437,7 +437,6 @@ PP(register int32_t *size;)
 }
 
 
-#if 1
 /************************************************************************/
 /* i n f _ f i l e                                                      */
 /************************************************************************/
@@ -463,7 +462,7 @@ PP(BOOLEAN isdir;)
 	UNUSED(a4);
 	UNUSED(unused);
 	d = thedesk;
-	tree = (LPTREE)d->rtree[ADFILEIN];
+	tree = (LPTREE)d->g_atree[ADFILEIN];
 	strcpy(d->g_srcpth, ppath);
 	strcpy(d->g_dstpth, ppath);
 	for (nmidx = 0; d->g_srcpth[nmidx] != '*'; nmidx++)
@@ -536,4 +535,48 @@ PP(BOOLEAN isdir;)
 		return FALSE;
 	}
 }
-#endif
+
+
+/************************************************************************/
+/* i n f _ d i s k                                                      */
+/************************************************************************/
+/* 104de: 00fd8538 */
+/* 106de: 00e1904a */
+BOOLEAN inf_disk(P(char) drv_id)
+PP(char drv_id;)
+{
+	register THEDSK *d;
+	register LPTREE tree;
+	int32_t total;
+	int32_t avail;
+	BOOLEAN more;
+	char puse_str[12];
+	char pav_str[10];
+	char tmp_str[12];
+	char drive[2];
+	char plab_str[12];
+	
+	UNUSED(more);
+	d = thedesk;
+	tree = (LPTREE)d->g_atree[ADDISKIN];
+	drive[0] = drv_id;
+	drive[1] = '\0';
+	d->g_srcpth[0] = drive[0];
+	strcpy(&d->g_srcpth[1], ":\\*.*");
+	if (inf_fifo(tree, DINFILES, DINFOLDS, d->g_srcpth))
+	{
+		desk_wait(TRUE);
+		dos_space(drv_id - 'A' + 1, &total, &avail);
+		tmp_str[0] = '\0';
+		dos_label(drv_id - 'A' + 1, tmp_str);
+		fmt_str(tmp_str, plab_str);
+		inf_sset(tree, DIDRIVE, drive);
+		inf_sset(tree, DIVOLUME, plab_str);
+		inf_setsize(&d->g_size, puse_str, tree, DIUSED, FALSE);
+		inf_setsize(&avail, pav_str, tree, DIAVAIL, FALSE);
+		desk_wait(FALSE);
+		fmdodraw(tree, DIOK);
+	}
+	return TRUE;
+}
+

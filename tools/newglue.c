@@ -576,39 +576,63 @@ PP(char **argv;)
 
 		if (country && strcmp(country, "us") == 0)
 		{
-			if (i == 0 && size == 0x13a4)
+			if (i == 0 && size == 0x13a4) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x0e60);
-			} else if (i == 1 && size == 0x5e3c)
+			} else if (i == 0 && size == 0x13b0) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0009);
+				putbeshort(address - 2, 0x000f);
+			} else if (i == 1 && size == 0x5e3c) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x001b);
 				putbeshort(address - 2, 0x0040);
-			} else if (i == 2 && size == 0x02a6)
+			} else if (i == 1 && size == 0x2bec) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x2b6a);
+				putbeshort(address - 2, 0x0008);
+			} else if (i == 2 && size == 0x02a6) /* 2.06/3.06 */
 			{
 				address[-5] = 0x01;
 				putbeshort(address - 4, 0x0009);
 				putbeshort(address - 2, 0xffff);
 				putbeshort(address - 0, 0xffff);
+			} else if (i == 2 && size == 0x021c) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0005);
+				putbeshort(address - 2, 0x0014);
 			}
 		}
 
 		if (country && strcmp(country, "uk") == 0)
 		{
-			if (i == 0 && size == 0x13a4)
+			if (i == 0 && size == 0x13a4) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x0e60);
-			} else if (i == 1 && size == 0x5e3c)
+			} else if (i == 0 && size == 0x13b0) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0009);
+				putbeshort(address - 2, 0x000f);
+			} else if (i == 1 && size == 0x5e3c) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x001b);
 				putbeshort(address - 2, 0x0040);
-			} else if (i == 2 && size == 0x02a6)
+			} else if (i == 1 && size == 0x2bec) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x2b6a);
+				putbeshort(address - 2, 0x0008);
+			} else if (i == 2 && size == 0x02a6) /* 2.06/3.06 */
 			{
 				address[-5] = 0x01;
 				putbeshort(address - 4, 0x0009);
 				putbeshort(address - 2, 0xffff);
 				putbeshort(address - 0, 0xffff);
+			} else if (i == 2 && size == 0x021c) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0005);
+				putbeshort(address - 2, 0x0014);
 			}
 		}
 

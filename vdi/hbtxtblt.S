@@ -1431,8 +1431,15 @@ wrmtab:
 	dc.b	$0,$1,$E,$F		/* mode E  D' = not [S and D] */
 	dc.b	$0,$0,$F,$F		/* mode F  D' = 1 */
 *
+
+/* easteregg alert... */
+
 blt_adj:
+#if OS_COUNTRY == CTRY_UK
+	dc.w 0
+#else
 	move.l	-(a0),d0
+#endif
 	neg.w	-(a1)
 	moveq.l	#$65,d3
 	movea.l	(a3),a0

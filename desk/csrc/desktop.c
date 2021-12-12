@@ -95,8 +95,8 @@ PP(int16_t which;)
 	OBJECT *obj;
 	int16_t w, x, y;
 
-	obj = thedesk->rtree[ADMENU];					/* shift the menu   */
-	objc_offset(thedesk->rtree[ADMENU], which, &x, &y);
+	obj = thedesk->g_atree[ADMENU];					/* shift the menu   */
+	objc_offset(thedesk->g_atree[ADMENU], which, &x, &y);
 
 	w = obj[which].ob_width + x;
 	if (w >= (thedesk->full.g_w + thedesk->full.g_x))
@@ -252,7 +252,7 @@ top:
 	/* check desktop file */
 
 	wind_update(TRUE);
-	menu_bar(d->rtree[ADMENU], TRUE);	/* show the menu    */
+	menu_bar(d->g_atree[ADMENU], TRUE);	/* show the menu    */
 
 	do_redraw(0, &d->full, 0);
 	wind_update(FALSE);
@@ -358,7 +358,7 @@ PP(BOOLEAN set;)
 	THEDSK *d;
 	
 	UNUSED(value);
-	d->rtree[ADMENU][BITBLT].ob_state &= ~DISABLED;
+	d->g_atree[ADMENU][BITBLT].ob_state &= ~DISABLED;
 
 	{									/* turn the blt on  */
 		/* blt is there     */
@@ -378,12 +378,12 @@ PP(BOOLEAN set;)
 		} else
 		{
 			value = FALSE;
-			d->rtree[ADMENU][BITBLT].ob_state |= DISABLED;
+			d->g_atree[ADMENU][BITBLT].ob_state |= DISABLED;
 		}
 	}
 
 	if (value)
-		d->rtree[ADMENU][BITBLT].ob_state |= CHECKED;
+		d->g_atree[ADMENU][BITBLT].ob_state |= CHECKED;
 	else
-		d->rtree[ADMENU][BITBLT].ob_state &= ~CHECKED;
+		d->g_atree[ADMENU][BITBLT].ob_state &= ~CHECKED;
 }
