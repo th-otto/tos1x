@@ -442,7 +442,7 @@ lineftab: ds.b 0
 		dc.l _xfdab74             ; F5F8
 		dc.l _menu_icheck         ; F5FC
 		dc.l _xfdc09c             ; F600
-		dc.l _xfd87dc             ; F604
+		dc.l _ins_disk            ; F604
 		dc.l _xfd59a0             ; F608
 		dc.l _xfd8a16             ; F60C
 		dc.l _hd_keybd            ; F610

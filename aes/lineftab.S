@@ -383,7 +383,7 @@
 [00fe7eb8] dc.l $00fdab74            ; F5F8
 [00fe7ebc] dc.l $00fd7c1e            ; F5FC ; menu_icheck DESKTOP
 [00fe7ec0] dc.l $00fdc09c            ; F600
-[00fe7ec4] dc.l $00fd87dc            ; F604
+[00fe7ec4] dc.l $00fd87dc            ; F604 ; ins_disk DESKTOP
 [00fe7ec8] dc.l $00fd59a0            ; F608
 [00fe7ecc] dc.l $00fd8a16            ; F60C
 [00fe7ed0] dc.l $00fdb6f6            ; F610 ; hd_keybd DESKTOP

@@ -530,7 +530,7 @@ do_opt2:
 		move.l    a5,d0
 		beq.s     do_opt3
 		move.l    a5,(a7)
-		jsr       _xfd87dc
+		jsr       _ins_disk
 		tst.w     d0
 		beq.s     do_opt3
 		jsr       _xfd59a0

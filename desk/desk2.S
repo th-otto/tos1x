@@ -1,35 +1,5 @@
-	xdef _dos_space
-_dos_space: ds.b 0
-		link      a6,#-24
-		move.w    8(a6),(a7)
-		pea.l     -16(a6)
-		move.w    #54,-(a7) ; Dfree
-		dc.w      0xF0D8 ; trap
-		addq.l    #6,a7
-		move.l    -8(a6),-(a7)
-		move.l    -4(a6),-(a7)
-		jsr       _lmul
-		addq.l    #8,a7
-		move.l    d0,-20(a6)
-		move.l    -20(a6),-(a7)
-		move.l    -12(a6),-(a7)
-		jsr       _lmul
-		addq.l    #8,a7
-		move.l    d0,-(a7)
-		movea.l   10(a6),a0
-		move.l    (a7)+,(a0)
-		move.l    -20(a6),-(a7)
-		move.l    -16(a6),-(a7)
-		jsr       _lmul
-		addq.l    #8,a7
-		move.l    d0,-(a7)
-		movea.l   14(a6),a0
-		move.l    (a7)+,(a0)
-		moveq.l   #1,d0
-		dc.w      0xF001 ; movem.l (a7)+,#0
-
-	xdef _xfd87dc
-_xfd87dc: ds.b 0
+	xdef _ins_disk
+_ins_disk: ds.b 0
 		link      a6,#-34
 		movem.l   d4-d7/a3-a5,-(a7)
 		movea.l   8(a6),a5

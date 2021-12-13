@@ -78,7 +78,9 @@ longframe	equ $59e			; BIOS system variable...
  *****************************************************************/
 /* 104de: 00fdce42 */
 	xdef	_dsptch
-_dsptch:
+_dsptch: ds.b 0
+	xdef	dsptch
+dsptch: ds.b 0
 	tst.b	_indisp			; be atomic
 	beq.b	dsp1			; if clear, enter with _indisp set
 	rts				; else just forget the whole thing
@@ -97,7 +99,9 @@ dsp2:
 /* 104de: 00fdce56 */
 /* 106de: 00e1e436 */
 	xdef	_cli
-_cli:
+_cli: ds.b 0
+	xdef	cli
+cli: ds.b 0
 	move	sr,savsr		; save it
 	ori	#$700,sr
 	rts
@@ -109,7 +113,9 @@ _cli:
 /* 104de: 00fdce62 */
 /* 106de: 00e1e442 */
 	xdef	_sti
-_sti:
+_sti: ds.b 0
+	xdef	sti
+sti: ds.b 0
 	move	savsr,sr
 	rts
 
@@ -150,7 +156,7 @@ _hsti:
 /* 306de: 00e258aa */
 /* 106de: 00e1e456 */
 	xdef	_dsptch
-_dsptch:
+_dsptch: ds.b 0
 	tas	_indisp			; be atomic
 	beq.b	dsp1			; if clear, enter with _indisp set
 	rts				; else just forget the whole thing

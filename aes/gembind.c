@@ -1185,6 +1185,8 @@ asm("text");
 /* 206de: 00e172a4 */
 /* 104de: 00fdf894 */
 /* 106de: 00e2133a */
+asm("    .globl xif");
+asm("xif: ds.b 0");
 VOID xif(P(intptr_t) pcrys_blk)
 PP(intptr_t pcrys_blk;)
 {

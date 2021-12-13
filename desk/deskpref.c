@@ -12,6 +12,9 @@
 #include "desktop.h"
 #include "taddr.h"
 
+#undef Dfree
+#define Dfree(a,b)      trap(0x36,a,b)
+
 
 /*
  *	Set preferences dialog.
@@ -70,4 +73,22 @@ BOOLEAN desk_pref(NOTHING)
 			return TRUE;
 	}
 	return FALSE;
+}
+
+
+/* 104de: 00fd8780 */
+/* 106de: 00e192e2 */
+int dos_space(P(int) drive, P(int32_t *) total, P(int32_t *) avail)
+PP(int drive;)
+PP(int32_t *total;)
+PP(int32_t *avail;)
+{
+	int32_t lbuf[4];
+	int32_t clsize;
+
+	Dfree(lbuf, drive);
+	clsize = lbuf[3] * lbuf[2];
+	*total = clsize * lbuf[1];
+	*avail = clsize * lbuf[0];
+	return TRUE;
 }

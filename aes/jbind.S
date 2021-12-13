@@ -186,10 +186,10 @@ _err_trap:
 #endif
 
         move.w  6(a7),d1                /* drive */
-        jsr     _cli
+        jsr     cli
         move.l  a7,errsave              /* save stack */
         move.l  #errstk+ERRSTKSIZE-4,a7         /* switch stack */
-        jsr     _sti
+        jsr     sti
         movem.l d3-d7/a3-a6,-(a7)
         move.l  #_err_tbl,a1
         move.w  d0,-(a7)                /* save error */
@@ -244,7 +244,7 @@ er_1:
 /* 106de: 00e1e8c4 */
         xdef    _dos_exec
 _dos_exec:
-        jsr     _cli
+        jsr     cli
         move.l  _rlr,a0
         move.l  8(a0),a0                /* get uda (pd->uda) */
         move.l  62(a0),_savsup          /* save uda->supstk */
@@ -255,7 +255,7 @@ _dos_exec:
         suba.l  #64,a1                  /* give up some space */
 #endif
         move.l  a1,62(a0)               /* make uda->supstk below GEM's ssp */
-        jsr     _sti
+        jsr     sti
 
         move.l  a7,a1
         clr.l   -(a7)                   /*  NULLPTR */
@@ -270,11 +270,11 @@ _dos_exec:
         adda.l  #16,a7
 #endif
 
-        jsr     _cli
+        jsr     cli
         move.l  _rlr,a0
         move.l  8(a0),a0
         move.l  _savsup,62(a0)          /* restore uda->supstk */
-        jsr     _sti
+        jsr     sti
         clr.w   _DOS_ERR
         tst.w   d0
         beq     exok
@@ -460,7 +460,7 @@ _back:  clr.w   -(sp)
  */
 _gosuper:
 
-        jsr     _cli                    /* interrupts off */
+        jsr     cli                     /* interrupts off */
 
         move.l  usp,a0
         movem.l d1-d7/a0-a6,-(a0)       /* save regs of caller on users stack */
@@ -475,7 +475,7 @@ _gosuper:
         move.l  a7,70(a6)               /* save current super stack ptr */
         movea.l 62(a6),a7               /* get super stack from uda.u_spsuper */
 
-        jsr     _sti                    /* interrupts on */
+        jsr     sti                     /* interrupts on */
 /*
  * --Set up to call super() in xif.c
  *
@@ -508,10 +508,10 @@ _gosuper:
         cmp.w   #CRYSTAL1,d0
         bne     super1             /* if CRYSTAL2, fall into dsptch (same as appl_yield() for PC-GEM) */
         move.l  d1,-(sp)
-        jsr     _xif
+        jsr     xif
         addq.l  #4,sp
 super1:
-        jsr     _dsptch
+        jsr     dsptch
         clr.w   d0      
 /*
  *
@@ -525,7 +525,7 @@ _supret:
         move.w  4(a7),d0                /* Get return passed from super(). */
 #endif
 
-        jsr     _cli
+        jsr     cli
 #if 0
         add.l   #$18,a7                 /* restore stack */
 #endif
@@ -538,7 +538,7 @@ _supret:
         movem.l (a0)+,d1-d7/a0-a6       /* restore user's regs */
         move.l  a0,usp
 
-        jsr     _sti
+        jsr     sti
         rte
 
 

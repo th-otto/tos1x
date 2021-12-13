@@ -13,7 +13,7 @@ CPPFLAGS=
 CFLAGS=-f
 LDFLAGS=
 ASFLAGS="-u -L"
-AESFLAGS=
+aeshack=false
 undefined=false
 nolocals=false
 absolute=false
@@ -40,10 +40,9 @@ do
 	--optimize) optimize=true ;;
 	-fomit-frame-pointer) ;;
 	-fno-common) ;;
-	-faes) AESFLAGS=-A ;;
-	-fno-aes) AESFLAGS= ;;
-	-A) AESFLAGS=-A ;;
-	-A0) AESFLAGS= ;;
+	-faes) aeshack=true ;;
+	-fno-aes) aeshack=false ;;
+	-A) aeshack=true ;;
 	-a)
 	     textbase=$1
 	     shift
@@ -83,6 +82,11 @@ if test "$infile" = ""; then
 	exit 1
 fi
 
+if $aeshack; then
+	CFLAGS="${CFLAGS} -A"
+	ASFLAGS="${ASFLAGS} -A${BIN}lineftab.txt"
+fi
+
 status=1
 if $compile; then
 	case $infile in
@@ -91,10 +95,10 @@ if $compile; then
 		result="${base}.o"
 		test "$V" = 1 && echo "${BIN}cp68 ${CPPFLAGS} ${infile} ${base}.i"
 		if ${BIN}cp68 ${CPPFLAGS} ${infile} ${base}.i; then
-			test "$V" = 1 && echo "${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS} ${AESFLAGS}"
-			if ${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS} ${AESFLAGS}; then
-				test "$V" = 1 && echo "${BIN}c168 ${base}.1 ${base}.2 ${base}.s ${AESFLAGS}"
-				if ${BIN}c168 ${base}.1 ${base}.2 ${base}.s ${AESFLAGS}; then
+			test "$V" = 1 && echo "${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS}"
+			if ${BIN}c068 ${base}.i ${base}.1 ${base}.2 ${base}.3 ${CFLAGS}; then
+				test "$V" = 1 && echo "${BIN}c168 ${base}.1 ${base}.2 ${base}.s"
+				if ${BIN}c168 ${base}.1 ${base}.2 ${base}.s; then
 					status=0
 					if $optimize; then
 						test "$V" = 1 && echo "${BIN}optimize -q ${base}.s"
@@ -103,8 +107,8 @@ if $compile; then
 						fi
 					fi
 					if ! $generate_asm; then
-						test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.s"
-						if ! ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.s; then
+						test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${base}.s"
+						if ! ${BIN}as68 ${ASFLAGS} ${base}.s; then
 							status=1
 						fi
 					else
@@ -126,8 +130,8 @@ if $compile; then
 		result="${base}.o"
 		test "$V" = 1 && echo "${BIN}cp68 ${CPPFLAGS} -P ${infile} ${base}.i"
 		if ${BIN}cp68 ${CPPFLAGS} -P ${infile} ${base}.i; then
-			test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.i"
-			if ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${base}.i; then
+			test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${base}.i"
+			if ${BIN}as68 ${ASFLAGS} ${base}.i; then
 				status=0
 				if test "$outfile" != "" -a "$outfile" != "$result"; then
 					mv "$result" "$outfile" || status=1
@@ -140,8 +144,8 @@ if $compile; then
 		base=${infile%.s}
 		base=${base# }
 		result="${base}.o"
-		test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${infile}"
-		if ${BIN}as68 ${ASFLAGS} ${AESFLAGS} ${infile}; then
+		test "$V" = 1 && echo "${BIN}as68 ${ASFLAGS} ${infile}"
+		if ${BIN}as68 ${ASFLAGS} ${infile}; then
 			status=0
 			if test "$outfile" != "" -a "$outfile" != "$result"; then
 				mv "$result" "$outfile" || status=1
