@@ -1022,7 +1022,7 @@ VOID ini_windows(NOTHING)
 
 	win = &winpd[0];
 
-	for (i = 0; i < MAXWIN; i++, win++)
+	for (i = 0; i < NUM_WNODES; i++, win++)
 	{
 #if (TOSVERSION >= 0x400)
 		win->w_obj = NULL;
@@ -1046,7 +1046,7 @@ VOID ini_windows(NOTHING)
 
 	win = &winpd[0];
 
-	for (i = 0; i < MAXWIN; i++, win++)
+	for (i = 0; i < NUM_WNODES; i++, win++)
 	{
 #if TOSVERSION < 0x400
 		if (!alloc_obj(0, win))			/* in case memory alloc failed   */
@@ -1246,7 +1246,7 @@ VOID free_windows(NOTHING)
 	register DESKWIN *win;
 	int16_t i;
 
-	for (i = 0; i < MAXWIN; i++)
+	for (i = 0; i < NUM_WNODES; i++)
 	{
 		win = &winpd[i];
 

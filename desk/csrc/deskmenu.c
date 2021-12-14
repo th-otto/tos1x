@@ -610,10 +610,10 @@ PP(int16_t msgbuff;)
 
 	v_2:
 		i = 3;
-		if (mode == thedesk->s_sort)				/* No change    */
+		if (mode == thedesk->g_isort)				/* No change    */
 			break;
-		thedesk->s_sort = mode;
-		sort_show(thedesk->s_sort, FALSE);
+		thedesk->g_isort = mode;
+		sort_show(thedesk->g_isort, FALSE);
 		break;
 	}
 

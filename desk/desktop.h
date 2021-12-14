@@ -96,9 +96,15 @@ typedef intptr_t LPTREE;
 #define TRASHCAN  3
 #define CARTICON  4
 
+#define AF_ISCRYS 0x0001			/* is crystal appl.	*/
+#define AF_ISGRAF 0x0002			/* is graphic appl.	*/
+#define AF_ISDESK 0x0004			/* is placed on desk */
+#define AF_ISPARM 0x0008			/* is in need of input */
+#define AF_ISFMEM 0x0010			/* is in need of full memory */
+
 #define TOS     0
-#define PRG     3               /* or icon type         */
-#define TTP     8
+#define PRG     (AF_ISGRAF|AF_ISCRYS)
+#define TTP     AF_ISPARM
 #define DISK    7
 
 #define S_ICON  0               /* view as icon */
@@ -111,9 +117,6 @@ typedef intptr_t LPTREE;
 #define S_NO    4               /* no sort      */
 
 #define MAX_LEVEL       8       /* max level of folder  */
-
-#define DESKICON        0
-#define WINICON         1
 
 #define APP_NODE 48     /* number of user definable file type   */
 #define APP_DESK 48     /* number of desktop icon should equal to number of */
@@ -150,22 +153,54 @@ typedef intptr_t LPTREE;
 
 #define ARGULEN 12
 
-typedef struct	app
+#define E_NOFNODES 100
+#define E_NOPNODES 101
+#define E_NODNODES 102
+
+
+typedef struct app
 {
 	/*  0 */ struct app *a_next;    /* app pointer */
 	/*  4 */ int16_t a_apptype;
 	/*  6 */ int16_t a_type; 		/* file type */
-	/*  8 */ int16_t a_obj;			/* object # in desktop tree */
-#define a_doc a_unused2  /* tmp hack until desktop source has been completed */
-	/* 10 */ char *a_path;
-	/* 14 */ char *a_name; 			/* app name */
-	/* 18 */ int16_t a_icon; 		/* icon number */
-	/* 20 */ int16_t a_flags;
+	/*  8 */ int16_t a_obid;		/* object # in desktop tree */
+	/* 10 */ char *a_pappl;         /* filename.ext of ap */
+	/* 14 */ char *a_pdata; 		/* wildcards of data file */
+	/* 18 */ int16_t a_aicon; 		/* application icon # */
+	/* 20 */ int16_t a_dicon;       /* data icon # */
 	/* 22 */ int16_t a_char;
 	/* 24 */ int16_t a_x;
 	/* 26 */ int16_t a_y;
 	/* 28 */
 } APP;
+
+typedef struct _fnode FNODE;
+
+struct _fnode {
+	FNODE    *f_next;
+	FNODE    *f_pfndx;
+	char     f_junk;				/* to align on even boundaries */
+	char     f_attr;
+	uint16_t f_time;	/* time */
+	uint16_t f_date;	/* date */
+	int32_t  f_size;
+	char     f_name[LEN_ZFNAME + 1];
+	int16_t  f_obid;
+	APP      *f_pa;
+	BOOLEAN  f_isapp;
+};
+
+
+typedef struct pathnode PNODE;
+struct pathnode {
+	PNODE *p_next;
+	uint16_t p_flags;
+	uint16_t p_attr;
+	char		p_spec[LEN_ZFPATH];
+	FNODE		*p_flist;
+	uint16_t	p_count;
+	int32_t		p_size;
+};
 
 typedef struct idtype
 {
@@ -176,12 +211,23 @@ typedef struct idtype
 	char i_name[NAMELEN];
 } IDTYPE;
 
+struct s238 {
+	char o0[238];
+};
+
 #ifndef NUM_IB
 #  define NUM_IB 5
 #endif
 
 typedef struct {
-	/*     0 */ char o0[12310];
+	/*     0 */ FNODE *g_favail;
+	/*     4 */ PNODE g_plist[NUM_PNODES];
+	/*   704 */ PNODE *g_pavail;
+	/*   708 */ PNODE *g_phead;
+	/*   712 */ char g_wdta[PATHLEN];
+	/*   840 */ DTA *a_wdta;
+	/*   844 */ char o844[11464];
+	/* 12308 */ int16_t g_isort;		/* current sort type */
 	/* 12310 */ char g_srcpth[PATHLEN];
 	/* 12438 */ char g_dstpth[PATHLEN];
 	/* 12566 */ char o12566[404];
@@ -226,17 +272,18 @@ typedef struct {
 	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
 	/* 23322 */ ICONBLK icona2[NUM_IB + 1];
 	/* 23526 */ char unused4[24];
-	/* 23550 */ int16_t s_sort;			/* sort item */
-	/* 23552 */ int16_t s_view;			/* view item */
+	/* 23550 */ int16_t sitem_save;		/* saved sort item */
+	/* 23552 */ int16_t vitem_save;		/* view item */
 	/* 23554 */ BOOLEAN ccopy_save;		/* copy ? */
 	/* 23556 */ BOOLEAN cdele_save;		/* delete ? */
 	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
 	/* 23560 */ int16_t pref_save;		/* screen pref */
 	/* 23562 */ BOOLEAN write_save;		/* write ? */
-	/* 23564 */ DESKWIN winpd[MAXWIN];	/* window process structure */
+	/* 23564 */ DESKWIN winpd[NUM_WNODES];	/* window process structure */
 	/* 24132 */ char unused5[6332];
 	/* 30440 */ char autofile[PATHLEN];
-	/* 30568 */ char o30568[4];
+	/* 30568 */ unsigned short g_fnnext;
+	/* 30570 */ unsigned short g_fnavail;
 	/* 30572 */
 	
 } THEDSK;
@@ -248,6 +295,8 @@ typedef struct {
  */
 #define CHAR_FOR_CARTRIDGE 'c'
 
+
+extern char const getall[];
 
 /*
  * deskupda.c
@@ -427,6 +476,7 @@ int16_t read_files PROTO((DESKWIN *win, int16_t attr));
 extern THEDSK *thedesk;
 
 char *escan_str PROTO((const char *pcurr, char *ppstr)); /* also referenced by AES */
+char *escani_str PROTO((const char *pcurr, char **ppstr));
 char *scan_2 PROTO((const char *pcurr, int16_t *pwd)); /* also referenced by AES */
 char *save_2 PROTO((char *pcurr, uint16_t wd)); /* also referenced by AES */
 char *save_sstr PROTO((char *pcurr, const char *pstr));
@@ -441,9 +491,20 @@ VOID app_mtoi PROTO((int16_t newx, int16_t newy, int16_t *px, int16_t *py));
  */
 VOID cp_iblk PROTO((const ICONBLK *src_iblk, ICONBLK *dest_iblk));
 VOID rm_icons PROTO((NOTHING));
-VOID ins_icons PROTO((NOTHING));
+BOOLEAN ins_disk PROTO((APP *app));
 VOID cl_delay PROTO((NOTHING));
 VOID ins_app PROTO((NOTHING));
+
+
+/*
+ * deskfpd.c
+ */
+VOID pn_init PROTO((NOTHING));
+VOID fpd_parse PROTO((const char *pspec, int16_t *pdrv, char *ppath, char *pname, char *pext));
+PNODE *pn_open PROTO((int16_t drive, const char *path, const char *name, const char *ext, uint16_t attr));
+VOID pn_free PROTO((PNODE *thepath));
+FNODE *pn_sort PROTO((int16_t lstcnt, FNODE *pflist));
+int pn_folder PROTO((PNODE *thepath));
 
 
 /*
@@ -721,3 +782,7 @@ VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));
 VOID av_hardcopy PROTO((NOTHING));
 VOID wind_grget PROTO((short handle, short field, GRECT *gr));
+
+
+struct s238 *xfdc3f4 PROTO((short id));
+

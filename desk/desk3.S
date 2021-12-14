@@ -79,7 +79,7 @@ deskm2:
 		bra       deskm22
 deskm3:
 		jsr       _xfdc184
-		jsr       _xfd8d90
+		jsr       _pn_init
 		clr.l     -(a7)
 		jsr       _xfda13c
 		addq.l    #4,a7

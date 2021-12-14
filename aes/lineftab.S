@@ -280,24 +280,24 @@
 [00fe7d1c] dc.l $00fe5e44            ; F45C ; max AES
 [00fe7d20] dc.l $00fe7408            ; F460 ; fc_clfix DESKTOP
 [00fe7d24] dc.l $00fd8780            ; F464 ; dos_free DESKTOP
-[00fe7d28] dc.l $00fd8d76            ; F468
+[00fe7d28] dc.l $00fd8d76            ; F468 ; fn_init DESKTOP
 [00fe7d2c] dc.l $00fdd164            ; F46C ; dos_gdrv AES
-[00fe7d30] dc.l $00fd8fae            ; F470
-[00fe7d34] dc.l $00fd8df2            ; F474
-[00fe7d38] dc.l $00fd8f32            ; F478
+[00fe7d30] dc.l $00fd8fae            ; F470 ; pn_alloc DESKTOP
+[00fe7d34] dc.l $00fd8df2            ; F474 ; fpd_bldspec DESKTOP
+[00fe7d38] dc.l $00fd8f32            ; F478 ; fn_pfree DESKTOP
 [00fe7d3c] dc.l $00fe5ef8            ; F47C ; strchk AES
 [00fe7d40] dc.l $00fe5ee4            ; F480 ; scasb AES
-[00fe7d44] dc.l $00fd9056            ; F484
+[00fe7d44] dc.l $00fd9056            ; F484 ; pn_fcomp
 [00fe7d48] dc.l $00fe65c2            ; F488 ; cart_sfirst AES
-[00fe7d4c] dc.l $00fd8f4a            ; F48C
+[00fe7d4c] dc.l $00fd8f4a            ; F48C ; fn_alloc DESKTOP
 [00fe7d50] dc.l $00fe65d4            ; F490 ; cart_snext AES
-[00fe7d54] dc.l $00fd9118            ; F494
+[00fe7d54] dc.l $00fd9118            ; F494 ; pn_sort DESKTOP
 [00fe7d58] dc.l $00fe606a            ; F498 ; merge_str AES
 [00fe7d5c] dc.l $00fd7ae6            ; F49C ; form_alert DESKTOP
 [00fe7d60] dc.l $00fd7a0c            ; F4A0 ; appl_write DESKTOP
 [00fe7d64] dc.l $00fdc4e6            ; F4A4
 [00fe7d68] dc.l $00fd95c0            ; F4A8
-[00fe7d6c] dc.l $00fd931a            ; F4AC
+[00fe7d6c] dc.l $00fd931a            ; F4AC ; pn_folder DESKTOP
 [00fe7d70] dc.l $00fda13c            ; F4B0
 [00fe7d74] dc.l $00fdcd94            ; F4B4
 [00fe7d78] dc.l $00fd7d48            ; F4B8 ; wind_set DESKTOP
@@ -312,9 +312,9 @@
 [00fe7d9c] dc.l $00fd5b36            ; F4DC
 [00fe7da0] dc.l $00fd9848            ; F4E0
 [00fe7da4] dc.l $00fdadb6            ; F4E4
-[00fe7da8] dc.l $00fd8fe6            ; F4E8
+[00fe7da8] dc.l $00fd8fe6            ; F4E8 ; pn_open DESKTOP
 [00fe7dac] dc.l $00fd9922            ; F4EC
-[00fe7db0] dc.l $00fd9022            ; F4F0
+[00fe7db0] dc.l $00fd9022            ; F4F0 ; pn_free DESKTOP
 [00fe7db4] dc.l $00fd9a6c            ; F4F4
 [00fe7db8] dc.l $00fdcd06            ; F4F8
 [00fe7dbc] dc.l $00fe6a5a            ; F4FC ; fc_start DESKTOP
@@ -361,7 +361,7 @@
 [00fe7e60] dc.l $00fd9fde            ; F5A0
 [00fe7e64] dc.l $00fda4b6            ; F5A4
 [00fe7e68] dc.l $00fdc376            ; F5A8
-[00fe7e6c] dc.l $00fd8e6c            ; F5AC
+[00fe7e6c] dc.l $00fd8e6c            ; F5AC ; fpd_parse DESKTOP
 [00fe7e70] dc.l $00fda5d2            ; F5B0
 [00fe7e74] dc.l $00fda900            ; F5B4
 [00fe7e78] dc.l $00fda85e            ; F5B8
@@ -385,7 +385,7 @@
 [00fe7ec0] dc.l $00fdc09c            ; F600
 [00fe7ec4] dc.l $00fd87dc            ; F604 ; ins_disk DESKTOP
 [00fe7ec8] dc.l $00fd59a0            ; F608
-[00fe7ecc] dc.l $00fd8a16            ; F60C
+[00fe7ecc] dc.l $00fd8a16            ; F60C ; ins_app DESKTOP
 [00fe7ed0] dc.l $00fdb6f6            ; F610 ; hd_keybd DESKTOP
 [00fe7ed4] dc.l $00fd8622            ; F614 ; desk_pref DESKTOP
 [00fe7ed8] dc.l $00fdba7e            ; F618
@@ -414,7 +414,7 @@
 [00fe7f34] dc.l $00fd5062            ; F674 ; read_inf DESKTOP
 [00fe7f38] dc.l $00fd79e0            ; F678 ; ap_exit AES
 [00fe7f3c] dc.l $00fdc184            ; F67C
-[00fe7f40] dc.l $00fd8d90            ; F680
+[00fe7f40] dc.l $00fd8d90            ; F680 ; pn_init
 [00fe7f44] dc.l $00fd7c0e            ; F684 ; menu_bar DESKTOP
 [00fe7f48] dc.l $00fdbb94            ; F688
 [00fe7f4c] dc.l $00fdb5ea            ; F68C ; hd_button DESKTOP

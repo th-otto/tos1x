@@ -41,6 +41,8 @@ AESDESK_OBJS = \
 	../desk/deskif.o \
 	../desk/deskmisc.o \
 	../desk/deskpref.o \
+	../desk/deskins.o \
+	../desk/deskfpd.o \
 	../desk/desk2.o \
 	../desk/rainbow.o \
 	../desk/desk4.o \

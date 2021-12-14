@@ -202,10 +202,10 @@ PP(const char *intail;)
 	UNUSED(buffer);
 	type = app->a_type;
 	/* installed document   */
-	if (install && app->a_name[0])
+	if (install && app->a_pdata[0])
 	{
 		tail = infile;					/* infile becomes tail  */
-		file = app->a_name;
+		file = app->a_pdata;
 	} else
 	{
 		tail = intail[0] ? &intail[1] : Nostr;

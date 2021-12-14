@@ -14,6 +14,7 @@
 #define ALLITEMS (NAME|CLOSER|FULLER|MOVER|INFO|SIZER|UPARROW|DNARROW|VSLIDE|LFARROW|RTARROW|HSLIDE)
 
 #define LEN_ZFNAME 13
+#define LEN_ZFPATH (PATHLEN - 6) /* BUG: too short */
 
 typedef struct dir
 {
@@ -23,18 +24,6 @@ typedef struct dir
 	int32_t	 d_size;	/* size */
 	char	 d_name[LEN_ZFNAME + 1]; /* name */
 } DIR;
-
-typedef struct _fnode FNODE;
-
-struct _fnode {
-	FNODE *f_next;
-	char o4[5];
-	char f_attr;
-	uint16_t f_time;	/* time */
-	uint16_t f_date;	/* date */
-	int32_t f_size;
-	char f_name[LEN_ZFNAME];
-};
 
 typedef	struct dta
 {

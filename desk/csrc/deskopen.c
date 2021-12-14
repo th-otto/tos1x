@@ -46,7 +46,7 @@ VOID open_def(NOTHING)
 
 	win = thedesk->winpd;
 
-	for (i = 0; i < MAXWIN; i++)
+	for (i = 0; i < NUM_WNODES; i++)
 	{
 		if (win[i].w_path[0])
 		{
@@ -767,10 +767,10 @@ PP(register char *new;)
 	/* check the install application */
 	if (!install)
 	{
-		if (streq(app->a_name, s))
+		if (streq(app->a_pdata, s))
 		{
 			if (new)
-				lp_fill(new, &app->a_name);
+				lp_fill(new, &app->a_pdata);
 			else
 				app_free(app);
 

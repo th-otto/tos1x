@@ -177,7 +177,7 @@ PP(register char *ppstr;)
 
 
 /* 104de: 00fd4e40 */
-LINEF_STATIC char *escani_str(P(const char *)pcurr, P(char **)ppstr)
+char *escani_str(P(const char *)pcurr, P(char **)ppstr)
 PP(register const char *pcurr;)
 PP(char **ppstr;)
 {
@@ -243,20 +243,20 @@ PP(register APP *app;)
 	}
 
 	pcurr += 2;
-	if (app->a_apptype & 4)
+	if (app->a_apptype & AF_ISDESK)
 	{
 		pcurr = scan_2(pcurr, &app->a_x);
 		pcurr = scan_2(pcurr, &app->a_y);
 	}
 
-	pcurr = scan_2(pcurr, &app->a_icon);			/* get the icon id  */
-	pcurr = scan_2(pcurr, &app->a_flags);
+	pcurr = scan_2(pcurr, &app->a_aicon);			/* get the icon id  */
+	pcurr = scan_2(pcurr, &app->a_dicon);
 	
 	app->a_char = *pcurr == ' ' ? 0 : *pcurr;
 	pcurr += 2;
 	
-	pcurr = escani_str(pcurr, &app->a_path);
-	pcurr = escani_str(pcurr, &app->a_name);
+	pcurr = escani_str(pcurr, &app->a_pappl);
+	pcurr = escani_str(pcurr, &app->a_pdata);
 	
 	return pcurr;
 }
@@ -340,9 +340,9 @@ BOOLEAN read_inf(NOTHING)
 	for (i = NUM_ANODE - 1; i >= 0; i--)
 	{
 		d->app[i].a_next = &d->app[i + 1];
-		d->app[i].a_path = ptr;
+		d->app[i].a_pappl = ptr;
 		ptr += PATH_LEN;
-		d->app[i].a_name = ptr;
+		d->app[i].a_pdata = ptr;
 		ptr += EXTENSION;
 	}
 	d->applist = NULL;
@@ -473,8 +473,8 @@ BOOLEAN read_inf(NOTHING)
 			pcurr += 2;
 
 			pcurr = scan_2(pcurr, &envr);
-			d->s_view = (envr & 0x80) != 0;
-			d->s_sort = (envr & 0x60) >> 5;
+			d->vitem_save = (envr & 0x80) != 0;
+			d->sitem_save = (envr & 0x60) >> 5;
 			d->cdele_save = (envr & 0x10) != 0;
 			d->ccopy_save = (envr & 0x08) != 0;
 			d->write_save = envr & 0x01;
@@ -611,8 +611,8 @@ PP(BOOLEAN todisk;)
 	*pcurr++ = ' ';
 	envr = 0x0;
 	envr |= d->write_save;
-	envr |= d->s_view ? 0x80 : 0x00;
-	envr |= (d->s_sort << 5) & 0x60;
+	envr |= d->vitem_save ? 0x80 : 0x00;
+	envr |= (d->sitem_save << 5) & 0x60;
 	envr |= d->cdele_save ? 0x10 : 0x00;
 	envr |= d->ccopy_save ? 0x08 : 0x00;
 	pcurr = save_2(pcurr, envr);
@@ -628,7 +628,7 @@ PP(BOOLEAN todisk;)
 	/********* save the opened window first	************/
 
 	/* save windows */
-	for (i = 0; i < MAXWIN; i++)
+	for (i = 0; i < NUM_WNODES; i++)
 	{
 		*pcurr++ = '#';
 		*pcurr++ = 'W';
@@ -673,10 +673,10 @@ PP(BOOLEAN todisk;)
 			*pcurr++ = 'C';
 			break;
 		case PROGRAM:
-			if ((app->a_apptype & 0x01) && (app->a_apptype & 0x02))
+			if ((app->a_apptype & AF_ISCRYS) && (app->a_apptype & AF_ISGRAF))
 				*pcurr++ = 'G';
 			else
-				*pcurr++ = app->a_apptype & 0x08 ? 'P' : 'F';
+				*pcurr++ = app->a_apptype & AF_ISPARM ? 'P' : 'F';
 			break;
 		case FOLDER:
 			*pcurr++ = 'D';
@@ -685,17 +685,17 @@ PP(BOOLEAN todisk;)
 
 		*pcurr++ = ' ';
 
-		if (app->a_apptype & 4)
+		if (app->a_apptype & AF_ISDESK)
 		{
 			pcurr = save_2(pcurr, app->a_x / d->r_dicon.g_w);
 			pcurr = save_2(pcurr, (app->a_y - d->full.g_y) / d->r_dicon.g_h);
 		}
-		pcurr = save_2(pcurr, app->a_icon);
-		pcurr = save_2(pcurr, app->a_flags);
+		pcurr = save_2(pcurr, app->a_aicon);
+		pcurr = save_2(pcurr, app->a_dicon);
 		*pcurr++ = app->a_char == 0 ? ' ' : app->a_char;
 		*pcurr++ = ' ';
-		pcurr = save_sstr(pcurr, app->a_path);
-		pcurr = save_sstr(pcurr, app->a_name);
+		pcurr = save_sstr(pcurr, app->a_pappl);
+		pcurr = save_sstr(pcurr, app->a_pdata);
 		*pcurr++ = 0x0d;
 		*pcurr++ = 0x0a;
 	}

@@ -1,6 +1,6 @@
 DESK_OBJS1= desk1.o desk2.o rainbow.o desk4.o desk3.o # deskact.o deskbind.o deskbutt.o deskdir.o
-DESK_OBJS2= deskinf.o deskdisk.o # deskins.o deskmem.o deskfile.o 
-DESK_OBJS3= deskmisc.o deskpref.o # deskmenu.o deskopen.o desksear.o
+DESK_OBJS2= deskinf.o deskdisk.o # deskmem.o deskfile.o 
+DESK_OBJS3= deskmisc.o deskpref.o deskins.o deskfpd.o # deskmenu.o deskopen.o desksear.o
 DESK_OBJS4= deskshow.o deskrsc.o deskstor.o # desksele.o deskshel.o
 DESK_OBJS5= deskif.o # desktop.o deskupda.o deskwin.o
 
@@ -30,6 +30,8 @@ DESK_CSRCS=\
 	deskdisk.c \
 	deskmisc.c \
 	deskpref.c \
+	deskins.c \
+	deskfpd.c \
 	deskrsc.c \
 	deskstor.c \
 	${empty}
@@ -41,7 +43,6 @@ DESK_CSRCS=\
 #	deskdisk.c \
 #	deskfile.c \
 #	deskinf.c \
-#	deskins.c \
 #	deskmem.c \
 #	deskmenu.c \
 #	deskmisc.c \

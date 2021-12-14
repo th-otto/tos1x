@@ -339,24 +339,24 @@ lineftab: ds.b 0
 		dc.l _max                 ; F45C
 		dc.l _fc_clfix            ; F460
 		dc.l _dos_space           ; F464
-		dc.l _xfd8d76             ; F468
+		dc.l _fn_init             ; F468
 		dc.l _dos_gdrv            ; F46C
-		dc.l _xfd8fae             ; F470
-		dc.l _xfd8df2             ; F474
-		dc.l _xfd8f32             ; F478
+		dc.l _pn_alloc            ; F470
+		dc.l _fpd_bldspec         ; F474
+		dc.l _fn_pfree            ; F478
 		dc.l _strchk              ; F47C
 		dc.l _scasb               ; F480
-		dc.l _xfd9056             ; F484
+		dc.l _pn_fcomp            ; F484
 		dc.l _cart_sfirst         ; F488
-		dc.l _xfd8f4a             ; F48C
+		dc.l _fn_alloc            ; F48C
 		dc.l _cart_snext          ; F490
-		dc.l _xfd9118             ; F494
+		dc.l _pn_sort             ; F494
 		dc.l _merge_str           ; F498
 		dc.l _form_alert          ; F49C
 		dc.l _appl_write          ; F4A0
 		dc.l _xfdc4e6             ; F4A4
 		dc.l _xfd95c0             ; F4A8
-		dc.l _xfd931a             ; F4AC
+		dc.l _pn_folder           ; F4AC
 		dc.l _xfda13c             ; F4B0
 		dc.l _xfdcd94             ; F4B4
 		dc.l _wind_set            ; F4B8
@@ -371,9 +371,9 @@ lineftab: ds.b 0
 		dc.l _xfd5b36             ; F4DC
 		dc.l _xfd9848             ; F4E0
 		dc.l _xfdadb6             ; F4E4
-		dc.l _xfd8fe6             ; F4E8
+		dc.l _pn_open             ; F4E8
 		dc.l _xfd9922             ; F4EC
-		dc.l _xfd9022             ; F4F0
+		dc.l _pn_free             ; F4F0
 		dc.l _xfd9a6c             ; F4F4
 		dc.l _xfdcd06             ; F4F8
 		dc.l _fc_start            ; F4FC
@@ -420,7 +420,7 @@ lineftab: ds.b 0
 		dc.l _xfd9fde             ; F5A0
 		dc.l _xfda4b6             ; F5A4
 		dc.l _xfdc376             ; F5A8
-		dc.l _xfd8e6c             ; F5AC
+		dc.l _fpd_parse           ; F5AC
 		dc.l _xfda5d2             ; F5B0
 		dc.l _xfda900             ; F5B4
 		dc.l _xfda85e             ; F5B8
@@ -444,7 +444,7 @@ lineftab: ds.b 0
 		dc.l _xfdc09c             ; F600
 		dc.l _ins_disk            ; F604
 		dc.l _xfd59a0             ; F608
-		dc.l _xfd8a16             ; F60C
+		dc.l _ins_app             ; F60C
 		dc.l _hd_keybd            ; F610
 		dc.l _desk_pref           ; F614
 		dc.l _xfdba7e             ; F618
@@ -473,7 +473,7 @@ lineftab: ds.b 0
 		dc.l _read_inf            ; F674
 		dc.l _ap_exit             ; F678
 		dc.l _xfdc184             ; F67C
-		dc.l _xfd8d90             ; F680
+		dc.l _pn_init             ; F680
 		dc.l _menu_bar            ; F684
 		dc.l _xfdbb94             ; F688
 		dc.l _hd_button           ; F68C

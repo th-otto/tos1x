@@ -561,7 +561,7 @@ do_opt4:
 		move.l    a5,(a7)
 		move.l    -12(a6),-(a7)
 		addi.l    #18,(a7)
-		jsr       _xfd8a16
+		jsr       _ins_app
 		addq.l    #4,a7
 		tst.w     d0
 		beq.s     do_opt5
@@ -846,7 +846,7 @@ hd_men10:
 		movea.l   24(a0,d1.l),a0
 		move.l    130(a0),(a7)
 		move.w    #-1,-(a7)
-		jsr       _xfd9118
+		jsr       _pn_sort
 		addq.l    #2,a7
 		move.l    d0,-(a7)
 		movea.l   _lp_mid,a0
@@ -1234,7 +1234,7 @@ xfdbb_1:
 		pea.l     12982(a3)
 		pea.l     -2(a6)
 		pea.l     14(a5)
-		bsr       _xfd8e6c
+		bsr       _fpd_parse
 		adda.w    #20,a7
 		pea.l     2(a5)
 		move.l    a5,-(a7)

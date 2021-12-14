@@ -179,7 +179,7 @@ BOOLEAN lp_collect(NOTHING)
 
 	while (app)
 	{
-		lp_fill(app->a_name, &app->a_name);
+		lp_fill(app->a_pdata, &app->a_pdata);
 		app = app->a_next;
 	}
 
