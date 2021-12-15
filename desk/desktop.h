@@ -17,6 +17,9 @@
 #endif
 
 #include "mobdefs.h"
+
+typedef struct pathnode PNODE;
+
 #include "window.h"
 
 #include "deskrsc.h"
@@ -90,11 +93,11 @@ typedef intptr_t LPTREE;
 /*****  APPLICATION FILE TYPE DEFINES      ******/
 /*      -1 means match the type                 */
 
-#define PROGRAM   0
-#define FOLDER    1
-#define DRIVE     2
-#define TRASHCAN  3
-#define CARTICON  4
+#define AT_ISFILE   0 /* file                 */
+#define AT_ISFOLD   1 /* folder               */
+#define AT_ISDISK   2 /* disk or diskette     */
+#define AT_ISTRSH   3 /* Trash                */
+#define AT_ISCART   4 /* cartridge            */
 
 #define AF_ISCRYS 0x0001			/* is crystal appl.	*/
 #define AF_ISGRAF 0x0002			/* is graphic appl.	*/
@@ -191,7 +194,6 @@ struct _fnode {
 };
 
 
-typedef struct pathnode PNODE;
 struct pathnode {
 	PNODE *p_next;
 	uint16_t p_flags;
@@ -234,12 +236,12 @@ typedef struct {
 	/* 12970 */ int32_t g_nfiles;
 	/* 12974 */ int32_t g_ndirs;
 	/* 12978 */ int32_t g_size;
-	/* 12982 */ char strbuf[128];
+	/* 12982 */ char g_tmppth[PATHLEN];
 	/* 13310 */ char o13110[240];
 	/* 13350 */ int16_t msgbuf[8];		
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13370 */ GRECT full;				/* full window size value */
-	/*     0 */ char unused2[272];
+	/* 13378 */ char o13378[272];
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
 	/* 13654 */ OBJECT *g_atree[16];	/* resource trees */
 	/* 13718 */ int16_t o13718;
@@ -260,7 +262,7 @@ typedef struct {
 	/* 13794 */ int16_t o13794;
 	/* 13796 */ int16_t o13796;
 	/* 13798 */ int16_t o13798;
-	/* 13800 */ char unused3[16];
+	/* 13800 */ char o13800[16];
 	/* 13816 */ GRECT dicon;			/* desktop icon size */
 	/* 13824 */ char afile[SIZE_AFILE];
 	/* 18016 */ int16_t size_afile;		/* length of recently read desktop.inf */
@@ -271,7 +273,7 @@ typedef struct {
 	/* 23114 */ APP *applist;			/* app buffer list */
 	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
 	/* 23322 */ ICONBLK icona2[NUM_IB + 1];
-	/* 23526 */ char unused4[24];
+	/* 23526 */ char o23526[24];
 	/* 23550 */ int16_t sitem_save;		/* saved sort item */
 	/* 23552 */ int16_t vitem_save;		/* view item */
 	/* 23554 */ BOOLEAN ccopy_save;		/* copy ? */
@@ -279,8 +281,9 @@ typedef struct {
 	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
 	/* 23560 */ int16_t pref_save;		/* screen pref */
 	/* 23562 */ BOOLEAN write_save;		/* write ? */
-	/* 23564 */ DESKWIN winpd[NUM_WNODES];	/* window process structure */
-	/* 24132 */ char unused5[6332];
+	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
+	/* 24108 */ char o24108[92];
+	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
 	/* 30570 */ unsigned short g_fnavail;
@@ -297,6 +300,7 @@ typedef struct {
 
 
 extern char const getall[];
+extern int16_t gl_kstate;
 
 /*
  * deskupda.c
@@ -316,7 +320,7 @@ VOID winfo PROTO((DESKWIN *win));
 DESKWIN *w_gnext PROTO((NOTHING));
 DESKWIN *w_gfirst PROTO((NOTHING));
 VOID up_allwin PROTO((const char *path, BOOLEAN full));
-BOOLEAN up_win PROTO((DESKWIN *win, BOOLEAN mediac));
+VOID up_win PROTO((DESKWIN *win));
 VOID bottop PROTO((NOTHING));
 BOOLEAN path_alloc PROTO((int16_t level));
 VOID free_path PROTO((NOTHING));
@@ -342,6 +346,8 @@ VOID close_window PROTO((int16_t handle, BOOLEAN closeit));
 VOID free_windows PROTO((NOTHING));
 VOID do_redraw PROTO((int16_t handle, GRECT *pc, int16_t which));
 VOID do_xyfix PROTO((GRECT *pc));
+DESKWIN *win_ith PROTO((int level));
+VOID up_1win PROTO((DESKWIN *win));
 
 
 /*
@@ -452,6 +458,11 @@ extern int f_rename;
 
 BOOLEAN dofiles PROTO((const char *s, const char *d, int16_t code, int32_t *ndirs, int32_t *nfiles, int32_t *tsize, int16_t type, BOOLEAN multiple));
 BOOLEAN doright PROTO((int flag));
+BOOLEAN d_doop PROTO((int op, OBJECT *tree, char *psrc_path, char *pdst_path, int16_t *pfcnt, int16_t *pdcnt));
+BOOLEAN fun_op PROTO((int op, PNODE *pspath));
+BOOLEAN dir_op PROTO((int op, const char *psrc_path, FNODE *pflist, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt, uint32_t *psize));
+BOOLEAN par_chk PROTO((const char *psrc_path, FNODE *pflist, char *pdst_path));
+BOOLEAN fun_wdst PROTO((PNODE *pspath, APP *app, int flag));
 
 
 /*
@@ -464,7 +475,7 @@ VOID fc_start PROTO((const char *source, int16_t op));
  * deskfile.c
  */
 VOID pri_win PROTO((NOTHING));
-VOID newfolder PROTO((DESKWIN *win));
+BOOLEAN newfolder PROTO((DESKWIN *win));
 VOID sort_file PROTO((DESKWIN *win, int16_t mode));
 VOID set_newview PROTO((int16_t index, DESKWIN *win));
 int16_t read_files PROTO((DESKWIN *win, int16_t attr));
@@ -484,6 +495,7 @@ BOOLEAN read_inf PROTO((NOTHING));
 VOID save_inf PROTO((BOOLEAN todisk));
 VOID app_posicon PROTO((int16_t colx, int16_t coly, int16_t *px, int16_t *py));
 VOID app_mtoi PROTO((int16_t newx, int16_t newy, int16_t *px, int16_t *py));
+VOID inf_setsize PROTO((VOIDPTR p1, char *buf, OBJECT *tree, int16_t obj, BOOLEAN flag));
 
 
 /*
@@ -493,7 +505,7 @@ VOID cp_iblk PROTO((const ICONBLK *src_iblk, ICONBLK *dest_iblk));
 VOID rm_icons PROTO((NOTHING));
 BOOLEAN ins_disk PROTO((APP *app));
 VOID cl_delay PROTO((NOTHING));
-VOID ins_app PROTO((NOTHING));
+BOOLEAN ins_app PROTO((char *name, APP *app));
 
 
 /*
@@ -531,7 +543,7 @@ extern int16_t o_item;
 VOID menu_verify PROTO((NOTHING));
 VOID do_view PROTO((int16_t msgbuff));
 VOID do_file PROTO((int16_t item));
-VOID hd_msg PROTO((int16_t *msgbuff));
+VOID hd_msg PROTO((NOTHING));
 VOID actions PROTO((NOTHING));
 int32_t av_mem PROTO((NOTHING));
 VOID av_desk PROTO((NOTHING));
@@ -563,7 +575,7 @@ int16_t ch_level PROTO((const char *path));
 OBJECT *fm_draw PROTO((LPTREE tree));
 VOID do_finish PROTO((OBJECT *obj));
 int16_t xform_do PROTO((OBJECT *obj, int16_t which));
-int16_t fmdodraw PROTO((int16_t item, int16_t which));
+VOID fmdodraw PROTO((OBJECT *tree, int16_t item));
 VOID lbintoasc PROTO((int32_t longval, char *buffer));
 char *r_slash PROTO((const char *path));
 BOOLEAN xcut_path PROTO((char *path, char *buffer, int16_t cut));
@@ -571,20 +583,22 @@ BOOLEAN cut_path PROTO((char *path));
 VOID cat_path PROTO((char *name, char *path));
 VOID rep_path PROTO((const char *name, char *path));
 VOID rep_all PROTO((char *path));
-BOOLEAN dos_error PROTO((int16_t button, int16_t item));
+BOOLEAN dos_error PROTO((NOTHING));
 int16_t do1_alert PROTO((int16_t item));
 VOID rc_center PROTO((GRECT *rec1, GRECT *rec2));
 VOID my_itoa PROTO((uint16_t number, char *pnumstr));
 VOID fmt_time PROTO((uint16_t time, char *ptime));
 VOID fmt_date PROTO((uint16_t date, char *pdate));
-long bldstring PROTO((DIR *dir, char *dst));
+long bldstring PROTO((intptr_t dir, char *dst));
 char *g_name PROTO((const char *file)); /* also referenced by AES */
 VOID save_ext PROTO((const char *path, char *buffer));
 VOID save_mid PROTO((char *path, char *buffer));
 BOOLEAN chk_par PROTO((const char *srcptr, const char *dstptr));
-int16_t fill_string PROTO((int16_t button, int16_t item, VOIDPTR parms));
+int16_t fun_alert PROTO((int16_t button, int16_t item, VOIDPTR parms));
 BOOLEAN asctobin PROTO((char *ptr, int32_t *value));
 VOID wait_msg PROTO((NOTHING));
+VOID send_msg PROTO((int16_t type, int16_t whom, int16_t w3, int16_t w4, int16_t w5, int16_t w6, int16_t w7));
+intptr_t get_spec PROTO((OBJECT *tree, int obid));
 
 
 /*
@@ -769,6 +783,9 @@ int toupper PROTO((int ch));
 int isdrive PROTO((NOTHING));
 int16_t rom_ram PROTO((int which, intptr_t pointer));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
+BOOLEAN inf_file PROTO((char *ppath, FNODE *info, BOOLEAN isdir));
+BOOLEAN inf_disk PROTO((char drv_id));
+
 
 int32_t trap PROTO((short code, ...));
 int32_t trp14 PROTO((short code, ...));
@@ -784,5 +801,27 @@ VOID av_hardcopy PROTO((NOTHING));
 VOID wind_grget PROTO((short handle, short field, GRECT *gr));
 
 
-struct s238 *xfdc3f4 PROTO((short id));
+int16_t dr_code PROTO((PARMBLK *parm));
 
+#ifdef LINEF_HACK
+int16_t hex_dig PROTO((char achar));
+char uhex_dig PROTO((int16_t wd));
+const char *inf_xdesk PROTO((const char *pcurr, APP *app));
+VOID app_reverse PROTO((NOTHING));
+BOOLEAN inf_fifo PROTO((OBJECT *tree, int16_t foldersidx, int16_t filesidx, char *ppath));
+VOID inf_dttmsz PROTO((OBJECT *tree, FNODE *info, int16_t dateidx, int16_t timeidx, int16_t sizeidx, int32_t *size));
+VOID fn_init PROTO((NOTHING));
+BOOLEAN fpd_bldspec PROTO((int16_t drive, const char *ppath, const char *pname, const char *pext, char *pspec));
+VOID fn_pfree PROTO((VOIDPTR *ptr));
+FNODE *fn_alloc PROTO((NOTHING));
+PNODE *pn_alloc PROTO((NOTHING));
+int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
+
+#endif
+
+
+struct s238 *xfdc3f4 PROTO((short id));
+VOID xfd75f2 PROTO((char *, char *));
+VOID xfda13c PROTO((int16_t w_handle, BOOLEAN));
+VOID xfdcd94 PROTO((DESKWIN *win));
+VOID xtr_mask PROTO((const char *name, char *mask));

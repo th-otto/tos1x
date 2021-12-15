@@ -119,7 +119,7 @@ static TEDINFO const gl_asamp =
 };
 
 
-static BOOLEAN w_union PROTO((ORECT *po, GRECT *pt));
+LINEF_STATIC BOOLEAN w_union PROTO((ORECT *po, GRECT *pt));
 
 
 
@@ -772,7 +772,7 @@ PP(register int16_t w_handle;)
 #if AESVERSION >= 0x200
 		w_bldbar(kind, istop /* || issub */, W_VBAR, pw, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
 #else
-		w_bldbar(kind, istop /* || issub */, W_VBAR, pw->w_vslide, pw->w_vslsize, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
+		w_bldbar(kind, istop /* || issub */, W_VBAR, pw->w_vslide, pw->w_vslsiz, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
 #endif
 	}
 
@@ -783,7 +783,7 @@ PP(register int16_t w_handle;)
 #if AESVERSION >= 0x200
 		w_bldbar(kind, istop /* || issub */, W_HBAR, pw, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
 #else
-		w_bldbar(kind, istop /* || issub */, W_HBAR, pw->w_hslide, pw->w_hslsize, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
+		w_bldbar(kind, istop /* || issub */, W_HBAR, pw->w_hslide, pw->w_hslsiz, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
 #endif
 	}
 
@@ -1860,11 +1860,7 @@ PP(int my;)									/* mouse's y position */
 /* 306de: 00e22c24 */
 /* 104de: 00fe5a92 */
 /* 106de: 00e28176 */
-#if (AESVERSION >= 0x330) | !BINEXACT
-int16_t wm_update(P(int) beg_update)
-#else
 VOID wm_update(P(int) beg_update)
-#endif
 PP(register int beg_update;)								/* flag for the call's function */
 {
 	if (beg_update < 2)
@@ -1882,9 +1878,6 @@ PP(register int beg_update;)								/* flag for the call's function */
 		beg_update -= 2;
 		take_ownership(beg_update);
 	}
-#if (AESVERSION >= 0x330) | !BINEXACT
-	return TRUE;
-#endif
 }
 
 

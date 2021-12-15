@@ -31,16 +31,16 @@ _rb_start: ds.b 0
 		moveq.l   #16,d0
 		move.w    d0,(nxtidx).w
 		move.w    d0,(colidx).w
-		move.w    (0xFFFF8242).w,(colsave).w
+		move.w    ($FFFF8242).w,(colsave).w
 		move.w    sr,-(a7)
-		move.w    #0x2700,sr
+		move.w    #$2700,sr
 		move.l    (vblvec).w,(vblsave).w
 		move.l    #vblintr,(vblvec).w
 		move.l    (mfpvec).w,(mfpsave).w
 		move.l    #mfpintr,(mfpvec).w
 		move.l    (hblvec).w,(hblsave).w
 		move.l    #hblintr,(hblvec).w
-		bclr      #5,(0xFFFFFA09).w ; disable timer C
+		bclr      #5,($FFFFFA09).w ; disable timer C
 		move.w    (a7)+,sr
 rb_sta1:
 		rts
@@ -55,15 +55,15 @@ _rb_stop: ds.b 0
 		cmpi.b    #2,(_sshiftmod).w
 		bge.s     rb_sto2 ; skip for high-res
 		move.w    sr,-(a7)
-		move.w    #0x2700,sr
-		bclr      #0,(0xFFFFFA07).w ; disable HBL
-		bclr      #0,(0xFFFFFA13).w ; mask HBL
-		bset      #5,(0xFFFFFA09).w ; enable timer C
+		move.w    #$2700,sr
+		bclr      #0,($FFFFFA07).w ; disable HBL
+		bclr      #0,($FFFFFA13).w ; mask HBL
+		bset      #5,($FFFFFA09).w ; enable timer C
 		move.l    (vblsave).w,(vblvec).w
 		move.l    (mfpsave).w,(mfpvec).w
 		move.l    (hblsave).w,(hblvec).w
 		move.w    (a7)+,sr
-		move.w    (colsave).w,(0xFFFF8242).w
+		move.w    (colsave).w,($FFFF8242).w
 		lea.l     (vblsave).w,a0
 		moveq.l   #5,d0
 rb_sto1:
@@ -74,14 +74,14 @@ rb_sto2:
 		rts
 
 mfpintr:
-		move.w    #0x2500,sr
+		move.w    #$2500,sr
 		move.l    (mfpsave).w,-(a7)
 		rts
 
 vblintr:
 		move.l    d0,-(a7)
 		move.w    sr,-(a7)
-		move.w    #0x2600,sr
+		move.w    #$2600,sr
 		moveq.l   #2,d0
 vblintr1:
 		pea.l     vblintr2(pc)
@@ -98,20 +98,20 @@ vblintr2:
 		rts
 
 settimer:
-		clr.b     (0xFFFFFA1B).w ; stop timer B
+		clr.b     ($FFFFFA1B).w ; stop timer B
 settim1:
-		move.b    d0,(0xFFFFFA21).w ; timer b data register
-		cmp.b     (0xFFFFFA21).w,d0
+		move.b    d0,($FFFFFA21).w ; timer b data register
+		cmp.b     ($FFFFFA21).w,d0
 		bne.s     settim1
-		move.b    #8,(0xFFFFFA1B).w ; set event count mode
-		bset      #0,(0xFFFFFA07).w ; enable hbl
-		bset      #0,(0xFFFFFA13).w ; unmask hbl
+		move.b    #8,($FFFFFA1B).w ; set event count mode
+		bset      #0,($FFFFFA07).w ; enable hbl
+		bset      #0,($FFFFFA13).w ; unmask hbl
 		rts
 
 hblintr:
 		move.l    d0,-(a7)
 		move.w    (colidx).w,d0
-		move.w    coltab(pc,d0.w),(0xFFFF8242).w
+		move.w    coltab(pc,d0.w),($FFFF8242).w
 		tst.w     (hblcount).w
 		bne.s     hblint2
 		move.w    #36,(hblcount).w
@@ -136,27 +136,27 @@ hblint3:
 hblint4:
 		subq.w    #1,(hblcount).w
 		bne.s     hblint5
-		bclr      #0,(0xFFFFFA07).w ; disable HBL
-		move.w    (colsave).w,(0xFFFF8242).w
+		bclr      #0,($FFFFFA07).w ; disable HBL
+		move.w    (colsave).w,($FFFF8242).w
 hblint5:
-		bclr      #0,(0xFFFFFA0F).w ; service interrupt
+		bclr      #0,($FFFFFA0F).w ; service interrupt
 		move.l    (a7)+,d0
 		rte
 
 
 coltab:
-		dc.w 0x0701,0x0702,0x0703,0x0704
-		dc.w 0x0705,0x0706,0x0707,0x0717
-		dc.w 0x0707,0x0607,0x0507,0x0407
-		dc.w 0x0307,0x0207,0x0107,0x0007
-		dc.w 0x0017,0x0027,0x0037,0x0047
-		dc.w 0x0057,0x0067,0x0077,0x0177
-		dc.w 0x0077,0x0076,0x0075,0x0074
-		dc.w 0x0073,0x0072,0x0071,0x0070
-		dc.w 0x0170,0x0270,0x0370,0x0470
-		dc.w 0x0570,0x0670,0x0770,0x0771
-		dc.w 0x0770,0x0760,0x0750,0x0740
-		dc.w 0x0730,0x0720,0x0710,0x0700
-		dc.w 0x0222,0x0223,0x0233,0x0333
-		dc.w 0x0334,0x0344,0x0444,0x0445
-		dc.w 0x0455,0x0555
+		dc.w $0701,$0702,$0703,$0704
+		dc.w $0705,$0706,$0707,$0717
+		dc.w $0707,$0607,$0507,$0407
+		dc.w $0307,$0207,$0107,$0007
+		dc.w $0017,$0027,$0037,$0047
+		dc.w $0057,$0067,$0077,$0177
+		dc.w $0077,$0076,$0075,$0074
+		dc.w $0073,$0072,$0071,$0070
+		dc.w $0170,$0270,$0370,$0470
+		dc.w $0570,$0670,$0770,$0771
+		dc.w $0770,$0760,$0750,$0740
+		dc.w $0730,$0720,$0710,$0700
+		dc.w $0222,$0223,$0233,$0333
+		dc.w $0334,$0344,$0444,$0445
+		dc.w $0455,$0555

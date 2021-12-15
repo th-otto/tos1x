@@ -31,8 +31,9 @@ BOOLEAN desk_pref(NOTHING)
 	register short flag;
 	short dummy;
 
+	UNUSED(dummy);
 	d = thedesk;
-	tree = d->g_atree[ADSETPREF];
+	tree = (LPTREE)d->g_atree[ADSETPREF];
 	
 	cyes = d->g_cdelepref;
 	LWSET(OB_STATE(SPCDYES), cyes);
@@ -61,11 +62,11 @@ BOOLEAN desk_pref(NOTHING)
 	flag = gl_restype - 2;
 	LWSET(OB_STATE(flag + SPLOW), SELECTED);
 
-	if (xform_do(tree, ROOT) == SPOK)
+	if (xform_do((OBJECT *)tree, ROOT) == SPOK)
 	{
-		d->g_cdelepref = inf_what(tree, SPCDYES, SPCDNO);
-		d->g_ccopypref = inf_what(tree, SPCCYES, SPCCNO);
-		d->g_covwrpref = !inf_what(tree, YWRITE, NWRITE);
+		d->g_cdelepref = inf_what((OBJECT *)tree, SPCDYES, SPCDNO);
+		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);
+		d->g_covwrpref = !inf_what((OBJECT *)tree, YWRITE, NWRITE);
 
 		flag = inf_gindex(tree, SPLOW, 3) + 2;
 

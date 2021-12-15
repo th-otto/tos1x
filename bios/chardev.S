@@ -2937,3 +2937,8 @@ soundir6:
 soundir7:
         movem.l   (a7)+,d0-d1/a0                /* pop stack & exit */
         rts
+
+		bss
+		
+		xdef baudrate
+		comm baudrate,2

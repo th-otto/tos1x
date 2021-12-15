@@ -233,7 +233,7 @@ VOID sh_witem(NOTHING)
 
 			switch (subtype)
 			{
-			case TRASHCAN:				/* trash can info   */
+			case AT_ISTRSH:				/* trash can info   */
 				ret = TRSINFO;
 			case DISK:
 				strcpy(buffer, wildext);
@@ -543,8 +543,8 @@ PP(DESKWIN *win;)
 			open_disk(item, buffer, TRUE);
 			break;
 
-		case TRASHCAN:
-			fill_string(itype->i_name, TRSINFO);
+		case AT_ISTRSH:
+			fun_alert(itype->i_name, TRSINFO);
 			break;
 
 		default:
@@ -730,7 +730,7 @@ PP(int16_t id;)
 	{
 		buffer[0] = id;
 		buffer[1] = 0;
-		fill_string(buffer, STNOMEM);
+		fun_alert(buffer, STNOMEM);
 		return FALSE;
 	}
 

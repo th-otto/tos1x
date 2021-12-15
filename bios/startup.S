@@ -754,13 +754,13 @@ nextdev:
 _dmaread:
 		moveq.l   #1,d5
 dmaread1:
-		lea.l     $8606(a4),a6
-		lea.l     $8604(a4),a5
+		lea.l     $ffff8606(a4),a6
+		lea.l     $ffff8604(a4),a5
 		st        _flock(a4)
 		move.l    _dskbufp(a4),-(a7)
-		move.b    3(a7),$860d(a4)
-		move.b    2(a7),$860b(a4)
-		move.b    1(a7),$8609(a4)
+		move.b    3(a7),$ffff860d(a4)
+		move.b    2(a7),$ffff860b(a4)
+		move.b    1(a7),$ffff8609(a4)
 		addq.w    #4,a7
 		move.w    #$0098,(a6)
 		move.w    #$0198,(a6)

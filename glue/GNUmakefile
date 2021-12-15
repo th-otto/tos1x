@@ -36,13 +36,14 @@ AESDESK_OBJS = \
 	../aes/geminit.o \
 	../aes/apgrlib.o \
 	../aes/apgsxif.o \
-	../desk/deskinf.o \
+	../desk/deskapp1.o \
 	../desk/desk1.o \
 	../desk/deskif.o \
-	../desk/deskmisc.o \
+	../desk/deskinf.o \
 	../desk/deskpref.o \
 	../desk/deskins.o \
 	../desk/deskfpd.o \
+	../desk/deskwin.o \
 	../desk/desk2.o \
 	../desk/rainbow.o \
 	../desk/desk4.o \
@@ -119,10 +120,10 @@ tos.rel: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o ../vdi/vdivar.o ../aes/gembase.o 
 else
 
 CCLIBS := `$(CC) -print-file-name=libgcc.a`
-LDFLAGS := -nostdlib -nostartfiles -Wl,--script=../common/rom.ld,--entry=_os_entry,-Ttext=0x$(rombase),-Tbss=0
+LDFLAGS := -nostdlib -nostartfiles -Wl,--script=../common/rom.ld,--entry=_os_entry,-Ttext=0x$(rombase),-Tbss=0 -Wl,-Map,tos.map
 
 tos.img: $(STARTUP) $(LIBS) tosrsc$(COUNTRY).o vars.o tosvars.o ebss.o
-	$(AM_V_LD)$(LD) $(LDFLAGS) -o $@ $(STARTUP) vars.o tosvars.o ../bios/bios.a ../vdi/vdi.a ../bdos/bdos.a ../vdi/vdi.a ../aes/aes.a ../desk/desk.a tosrsc$(COUNTRY).o $(CCLIBS)
+	$(AM_V_LD)$(LD) $(LDFLAGS) -o $@ $(STARTUP) vars.o tosvars.o ../bios/bios.a ../vdi/vdi.a ../bdos/bdos.a ../vdi/vdi.a ../bios/bios.a ../aes/aes.a ../desk/desk.a tosrsc$(COUNTRY).o $(CCLIBS)
 
 endif
 

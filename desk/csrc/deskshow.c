@@ -222,7 +222,7 @@ PP(int mode;)
 			doa2:
 				if (!Bconout(serial, *ptr))							/* device not present ?   */
 				{						/* retry ?      */
-					if (fill_string(2, STNOMEM, NULL) == 1)
+					if (fun_alert(2, STNOMEM, NULL) == 1)
 						goto doa2;
 					else				/* cancel */
 					{

@@ -112,7 +112,7 @@ lineftab: ds.b 0
 		dc.l _wm_set              ; F0D0
 		dc.l _wm_calc             ; F0D4
 		dc.l _trap                ; F0D8
-		dc.l _fill_string         ; F0DC
+		dc.l _fun_alert           ; F0DC
 		dc.l _rsrc_gaddr          ; F0E0
 		dc.l _bconws              ; F0E4
 		dc.l _form_error          ; F0E8
@@ -354,8 +354,8 @@ lineftab: ds.b 0
 		dc.l _merge_str           ; F498
 		dc.l _form_alert          ; F49C
 		dc.l _appl_write          ; F4A0
-		dc.l _xfdc4e6             ; F4A4
-		dc.l _xfd95c0             ; F4A8
+		dc.l _win_ith             ; F4A4
+		dc.l _up_win              ; F4A8
 		dc.l _pn_folder           ; F4AC
 		dc.l _xfda13c             ; F4B0
 		dc.l _xfdcd94             ; F4B4
@@ -363,13 +363,13 @@ lineftab: ds.b 0
 		dc.l _wind_grget          ; F4BC
 		dc.l _send_msg            ; F4C0
 		dc.l _xform_do            ; F4C4
-		dc.l _xfd9572             ; F4C8
-		dc.l _xfd6cce             ; F4CC
-		dc.l _xfd7774             ; F4D0
-		dc.l _xfda28a             ; F4D4
-		dc.l _xfd9768             ; F4D8
+		dc.l _up_1win             ; F4C8
+		dc.l _dir_op              ; F4CC
+		dc.l _par_chk             ; F4D0
+		dc.l _get_spec            ; F4D4
+		dc.l _fun_op              ; F4D8
 		dc.l _xfd5b36             ; F4DC
-		dc.l _xfd9848             ; F4E0
+		dc.l _fun_wdst            ; F4E0
 		dc.l _xfdadb6             ; F4E4
 		dc.l _pn_open             ; F4E8
 		dc.l _xfd9922             ; F4EC
@@ -435,10 +435,10 @@ lineftab: ds.b 0
 		dc.l _sh_name             ; F5DC
 		dc.l _menu_ienable        ; F5E0
 		dc.l _xfdb152             ; F5E4
-		dc.l _xfda984             ; F5E8
-		dc.l _xfdaaa8             ; F5EC
-		dc.l _xfd9624             ; F5F0
-		dc.l _xfdad22             ; F5F4
+		dc.l _open_item           ; F5E8
+		dc.l _show_item           ; F5EC
+		dc.l _newfolder           ; F5F0
+		dc.l _close_win           ; F5F4
 		dc.l _xfdab74             ; F5F8
 		dc.l _menu_icheck         ; F5FC
 		dc.l _xfdc09c             ; F600

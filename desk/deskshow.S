@@ -5,7 +5,7 @@ _showfile: ds.b 0
 		clr.w     d7
 		move.w    d7,-2(a6)
 		moveq.l   #-1,d6
-		move.l    #0x00001000,(a7)
+		move.l    #$00001000,(a7)
 		move.w    #72,-(a7) ; Malloc
 		jsr       _trap
 		addq.l    #2,a7
@@ -14,14 +14,14 @@ _showfile: ds.b 0
 		tst.w     12(a6)
 		beq.s     showf1
 		clr.l     (a7)
-		move.l    #0x0001001B,-(a7)
-		jsr       _fill_string
+		move.l    #$0001001B,-(a7)
+		jsr       _fun_alert
 		addq.l    #4,a7
 		bra       showf32
 		bra.s     showf2
 showf1:
 		pea.l     -18(a6)
-		move.l    #0x0005000B,-(a7)
+		move.l    #$0005000B,-(a7)
 		jsr       _rsrc_gaddr
 		addq.l    #8,a7
 		move.l    -18(a6),(a7)
@@ -46,7 +46,7 @@ showf3:
 		bra.s     showf34
 showf4:
 		pea.l     -18(a6)
-		move.l    #0x0005000A,-(a7)
+		move.l    #$0005000A,-(a7)
 		jsr       _rsrc_gaddr
 		addq.l    #8,a7
 		move.l    -18(a6),(a7)
@@ -64,7 +64,7 @@ showf5:
 		move.w    #33,-(a7) ; Setprt
 		jsr       _trp14
 		addq.l    #2,a7
-		and.w     #0x0010,d0
+		and.w     #$0010,d0
 		beq.s     showf7
 		moveq.l   #1,d0
 showf6:
@@ -144,8 +144,8 @@ showf17:
 		cmpi.w    #'Q',-14(a6)
 		beq       showf31
 		move.l    -12(a6),d0
-		and.l     #0x00FF0000,d0
-		cmp.l     #0x00610000,d0
+		and.l     #$00FF0000,d0
+		cmp.l     #$00610000,d0
 		beq       showf31
 showf18:
 		addq.w    #1,d4
@@ -157,7 +157,7 @@ showf19:
 		bgt       showf10
 showf20:
 		move.l    -8(a6),(a7)
-		move.l    #0x00001000,-(a7)
+		move.l    #$00001000,-(a7)
 		move.w    d6,-(a7)
 		move.w    #63,-(a7) ; Fread
 		jsr       _trap
@@ -175,7 +175,7 @@ showf23:
 		move.b    (a5),d0
 		ext.w     d0
 		move.w    d0,(a7)
-		move.l    #0x00030002,-(a7)
+		move.l    #$00030002,-(a7)
 		jsr       _trp13
 		addq.l    #4,a7
 		addq.w    #1,d7
@@ -186,7 +186,7 @@ showf23:
 		cmpi.w    #24,-2(a6)
 		blt.s     showf24
 		pea.l     -18(a6)
-		move.l    #0x00050001,-(a7)
+		move.l    #$00050001,-(a7)
 		jsr       _rsrc_gaddr
 		addq.l    #8,a7
 		move.l    #xfeb9b4,(a7)
@@ -211,7 +211,11 @@ showf25:
 		jsr       _doui
 		addq.l    #6,a7
 		tst.w     d0
+#ifdef __GNUC__
+		bne       showf31
+#else
 		bne.s     showf31
+#endif
 showf26:
 		addq.w    #1,d4
 		addq.l    #1,a5
@@ -219,10 +223,14 @@ showf27:
 		move.w    d4,d0
 		ext.l     d0
 		cmp.l     d0,d5
+#ifdef __GNUC__
+		bgt       showf23
+#else
 		bgt.s     showf23
+#endif
 showf28:
 		move.l    -8(a6),(a7)
-		move.l    #0x00001000,-(a7)
+		move.l    #$00001000,-(a7)
 		move.w    d6,-(a7)
 		move.w    #63,-(a7) ; Fread
 		jsr       _trap
@@ -232,7 +240,7 @@ showf28:
 		tst.l     d5
 		bge.s     showf29
 		pea.l     -18(a6)
-		move.l    #0x00050009,-(a7)
+		move.l    #$00050009,-(a7)
 		jsr       _rsrc_gaddr
 		addq.l    #8,a7
 		move.l    #xfeb9bb,(a7)
@@ -242,7 +250,7 @@ showf28:
 		bra.s     showf30
 showf29:
 		pea.l     -18(a6)
-		move.l    #0x00050002,-(a7)
+		move.l    #$00050002,-(a7)
 		jsr       _rsrc_gaddr
 		addq.l    #8,a7
 		move.l    #xfeb9be,(a7)
@@ -269,7 +277,7 @@ showf32:
 		jsr       _trap
 		addq.l    #2,a7
 showf33:
-		dc.w      0xF83D ; movem.l (a7)+,d4-d7/a5
+		dc.w      $F83D
 
 	xdef _doui
 _doui: ds.b 0
@@ -304,7 +312,7 @@ doui3:
 /* case 13 */
 doui4:
 		movea.l   10(a6),a0
-		move.w    #0x0017,(a0)
+		move.w    #$0017,(a0)
 		clr.w     d0
 		bra.s     doui13
 
@@ -328,8 +336,8 @@ doui7:
 /* default */
 doui8:
 		move.l    -4(a6),d0
-		and.l     #0x00FF0000,d0
-		cmp.l     #0x00610000,d0
+		and.l     #$00FF0000,d0
+		cmp.l     #$00610000,d0
 		bne.s     doui9
 		moveq.l   #1,d0
 		bra.s     doui13
@@ -357,7 +365,7 @@ doui12:
 		bne       doui1
 		clr.w     d0
 doui13:
-		dc.w      0xF001 ; movem.l (a7)+,#0
+		dc.w      $F001
 
 
 	xdef _bconws
@@ -370,13 +378,13 @@ bconws1:
 		move.b    (a5)+,d0
 		ext.w     d0
 		move.w    d0,(a7)
-		move.l    #0x00030002,-(a7)
+		move.l    #$00030002,-(a7)
 		jsr       _trp13
 		addq.l    #4,a7
 bconws2:
 		tst.b     (a5)
 		bne.s     bconws1
-		dc.w      0xF801 ; movem.l (a7)+,a5
+		dc.w      $F801
 
 	data
 

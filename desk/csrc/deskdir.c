@@ -292,7 +292,7 @@ PP(int flag;)
 					goto endright;
 				}
 #endif
-				if ((ret = fill_string(fixsrc, STNOMEM)) == 2)
+				if ((ret = fun_alert(fixsrc, STNOMEM)) == 2)
 					goto redel;
 
 				if (ret == 1)			/* skip */
@@ -418,7 +418,7 @@ BOOLEAN doact(NOTHING)
 							if (thedesk->write_save)
 								goto kk_1;
 
-							switch (fill_string(fixdst, STNOMEM))
+							switch (fun_alert(fixdst, STNOMEM))
 							{
 							case 1:	/* skip */
 								backdir(fixsrc);
@@ -464,7 +464,7 @@ BOOLEAN doact(NOTHING)
 				remvd:
 					if (Ddelete(fixsrc))
 					{					/* delete a dir */
-						if ((ret = fill_string(fixsrc, STNOMEM)) == 2)
+						if ((ret = fun_alert(fixsrc, STNOMEM)) == 2)
 							goto remvd;	/* retry */
 
 						else if (ret == 3)
@@ -518,7 +518,7 @@ BOOLEAN doact(NOTHING)
 						}
 #endif
 						/* retry */
-						if ((ret = fill_string(fixsrc, STNOMEM)) == 2)
+						if ((ret = fun_alert(fixsrc, STNOMEM)) == 2)
 							goto remvf;
 						else if (ret == 3)
 						{				/* abort */
@@ -685,7 +685,7 @@ PP(char *fstr;)
 			return FALSE;
 #endif
 		/* skip */
-		if ((ret = fill_string(fixsrc, STNOMEM)) == 1)
+		if ((ret = fun_alert(fixsrc, STNOMEM)) == 1)
 		{
 			updatnum(NUMFILE, --numfiles);
 			return SKIP;
@@ -803,7 +803,7 @@ PP(char *fstr;)
 
 			if ((outhand = Fcreate(fixdst, mydta->d_fattr & 7)) < 0)
 			{
-				if ((ret = fill_string(fixdst, STNOMEM)) == 2)
+				if ((ret = fun_alert(fixdst, STNOMEM)) == 2)
 					goto create;
 
 				else if (ret == 3)		/* abort */
@@ -854,7 +854,7 @@ PP(char *fstr;)
 			Fdelete(fixdst);
 			buf[0] = *fixdst;
 			buf[1] = 0;
-			fill_string(buf, STDISKFULL);
+			fun_alert(buf, STDISKFULL);
 #if (TOSVERSION < 0x400) & BINEXACT
 			goto y0;
 #else
@@ -977,7 +977,7 @@ PP(char *dir;)
 			if (thedesk->write_save)
 				goto ll_1;
 			/* retry */
-			if ((ret = fill_string(fixdst, STNOMEM)) == 2)
+			if ((ret = fun_alert(fixdst, STNOMEM)) == 2)
 				goto repeat;
 			else if (ret == 3)			/* abort */
 			{
@@ -1018,7 +1018,7 @@ BOOLEAN deleted(NOTHING)
   domore:
 	if (Ddelete(fixsrc))
 	{									/* retry    */
-		if ((ret = fill_string(fixsrc, STNOMEM)) == 2)
+		if ((ret = fun_alert(fixsrc, STNOMEM)) == 2)
 			goto domore;
 		else if (ret == 3)				/* abort */
 		{

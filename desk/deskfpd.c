@@ -49,7 +49,7 @@ VOID pn_init(NOTHING)
 	register int i;
 	
 	d = thedesk;
-	d->a_wdta = d->g_wdta;
+	d->a_wdta = (DTA *)d->g_wdta;
 	fn_init();
 	for (i = NUM_PNODES - 1; i >= 0; i--)
 	{
@@ -113,12 +113,12 @@ PP(char *ppath;)
 PP(char *pname;)
 PP(char *pext;)
 {
-	const char *pstart;
+	const char *start;
 	const char *p1st;
 	register const char *plast;
 	register const char *pperiod;
 
-	pstart = pspec;
+	start = pspec;
 	/* get the drive */
 	if (*pspec++ != '\0' && *pspec == ':')
 	{
@@ -130,7 +130,7 @@ PP(char *pext;)
 	} else
 	{
 		*pdrv = dos_gdrv() + 'A';
-		pspec = pstart;
+		pspec = start;
 	}
 	/* scan for key bytes */
 	p1st = pspec;
@@ -276,7 +276,7 @@ PP(register PNODE *thepath;)
 	register THEDSK *d;
 	
 	d = thedesk;
-	fn_pfree(&thepath->p_flist);
+	fn_pfree((VOIDPTR *)&thepath->p_flist);
 	pp = &d->g_phead;
 	while (thepath != *pp)
 	{
@@ -448,11 +448,11 @@ PP(register PNODE *thepath;)
 	d = thedesk;
 	thepath->p_count = 0;
 	thepath->p_size = 0;
-	fn_pfree(&thepath->p_flist);
+	fn_pfree((VOIDPTR *)&thepath->p_flist);
 	thefile = NULL;
 	if (iscart)
 	{
-		found = cart_sfirst(thedesk->a_wdta, thepath->p_attr);
+		found = cart_sfirst((char *)thedesk->a_wdta, thepath->p_attr);
 	} else
 	{
 		dos_sdta(thedesk->a_wdta);

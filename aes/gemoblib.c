@@ -75,6 +75,8 @@ PP(PARMBLK *fdata;)
 /* 306de: 00e232e4 */
 /* 104de: 00fe2ce2 */
 /* 106de: 00e24df0 */
+asm("    .globl _ob_fformat");
+asm("_ob_fformat: .text");
 VOID ob_format(P(int16_t) just, P(char *) raw_str, P(char *) tmpl_str, P(char *) fmtstr)
 PP(int16_t just;)
 PP(char *raw_str;)
@@ -978,8 +980,8 @@ PP(register int16_t child;)
 /* 104de: 00fe355c */
 /* 106de: 00e25776 */
 /* BUG: doesnt return FALSE as documented */
-asm("  .globl _ob_fdelete")
-asm("_ob_fdelete: ds.b 0")
+asm("  .globl _ob_fdelete");
+asm("_ob_fdelete: .text");
 VOID ob_delete(P(LPTREE) tree, P(int16_t) obj)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -1243,8 +1245,8 @@ PP(int16_t *pflag;)
 /* 306de: 00e23fea */
 /* 104de: 00fe3826 */
 /* 106de: 00e25a7c */
-asm("  .globl _ob_factxywh")
-asm("_ob_factxywh: ds.b 0")
+asm("  .globl _ob_factxywh");
+asm("_ob_factxywh: .text");
 VOID ob_actxywh(P(LPTREE) tree, P(int16_t) obj, P(GRECT *) pt)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -1300,8 +1302,8 @@ PP(GRECT *pt;)
 /* 306de: 00e2409a */
 /* 104de: 00fe38c2 */
 /* 106de: 00e25b2e */
-asm("  .globl _ob_foffset")
-asm("_ob_foffset: ds.b 0")
+asm("  .globl _ob_foffset");
+asm("_ob_foffset: .text");
 VOID ob_offset(P(LPTREE) tree, P(int16_t) obj, P(int16_t *) pxoff, P(int16_t *) pyoff)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)

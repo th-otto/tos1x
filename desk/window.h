@@ -31,29 +31,36 @@ typedef	struct dta
 	DIR	dirfile;
 } DTA;
 
-typedef	struct deskwin
+typedef struct window_save
 {
-	/*   0 */ GRECT	w_sizes;			/* window current size and pos */
-	/*   8 */ int16_t w_coli;			/* the horizontal column index */
-	/*  10 */ int16_t w_rowi;			/* the vertical row index */
-	/*  12 */ int16_t w_icon;			/* disk icon that owns this window */
-	/*  14 */ char w_path[82];			/* window path name */
-#define w_buf w_path /* tmp hack until desktop source has been completed */
-	/*  96 */ int16_t w_id;				/* window handle */
-#define w_srtitem w_id /* tmp hack until desktop source has been completed */
-	/*     */ char w_info[12];			/* info line */
-	/*     */ int16_t w_items;			/* max number of file items */
-	/*     */ int16_t w_maxicons;		/* max # of icons allocated in window */
-	/*     */ TEDINFO *w_ted;
-	/*     */ ICONBLK *w_iblk;			/* starting address of iconblk */
-	/*     */ char *w_text;				/* starting address of text */
-	          int16_t w_obj;
-	/*     */ int16_t w_hvicons;		/* number of invisible icon per row */
-	/*     */ int16_t w_vvicons;		/* number of invisible icon per col */
-	/*     */ int16_t w_xcol;			/* number of visible column of icon */
-	/*     */ int16_t w_xrow;			/* number of visible row of icon */
-	/* 136 */ 
-} DESKWIN;	
+	int16_t	x_save;
+	int16_t	y_save;
+	int16_t	w_save;
+	int16_t	h_save;
+	int16_t	hsl_save;
+	int16_t	vsl_save;
+	int16_t	obid_save;
+	char	pth_save[LEN_ZFPATH];
+} WSAVE;
+
+typedef	struct deskwin DESKWIN;
+struct deskwin {
+	DESKWIN *w_next;
+	int16_t	w_flags;	/* window creation flags */
+	int16_t	w_id;		/* window handle id #	*/
+	int16_t	w_obid;		/* desktop object id	*/
+	int16_t	w_root;		/* pseudo root ob. in gl_screen for this windows objects */
+	int16_t	w_cvcol;	/* current virt. col	*/
+	int16_t	w_cvrow;	/* current virt. row	*/
+	int16_t	w_pncol;	/* physical # of cols	*/
+	int16_t	w_pnrow;	/* physical # of rows	*/
+	int16_t	w_vncol;	/* virtual # of cols 	*/
+	int16_t	w_vnrow;	/* virtual # of rows	*/
+	PNODE	*w_path;
+	char	w_name[121];
+	char	w_info[88];
+	/* 238 */
+};
 
 
 typedef struct myblk

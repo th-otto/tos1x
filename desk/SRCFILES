@@ -1,8 +1,8 @@
-DESK_OBJS1= desk1.o desk2.o rainbow.o desk4.o desk3.o # deskact.o deskbind.o deskbutt.o deskdir.o
-DESK_OBJS2= deskinf.o deskdisk.o # deskmem.o deskfile.o 
-DESK_OBJS3= deskmisc.o deskpref.o deskins.o deskfpd.o # deskmenu.o deskopen.o desksear.o
+DESK_OBJS1= desk1.o desk2.o rainbow.o desk4.o desk3.o
+DESK_OBJS2= deskapp1.o deskdisk.o
+DESK_OBJS3= deskinf.o deskpref.o deskins.o deskfpd.o deskwin.o
 DESK_OBJS4= deskshow.o deskrsc.o deskstor.o # desksele.o deskshel.o
-DESK_OBJS5= deskif.o # desktop.o deskupda.o deskwin.o
+DESK_OBJS5= deskif.o
 
 DESK_OBJS=${DESK_OBJS1} ${DESK_OBJS2} ${DESK_OBJS3} ${DESK_OBJS4} ${DESK_OBJS5} ${DESK_OBJS6} ${DESK_OBJS7}
 
@@ -21,42 +21,21 @@ DESK_ASRCS=\
 	${empty}
 
 DESK_CSRCS=\
-	deskinf.c \
+	deskapp1.c \
 	desk1.o \
 	deskif.o \
 	desk2.o \
 	desk3.o \
 	deskshow.c \
 	deskdisk.c \
-	deskmisc.c \
+	deskinf.c \
 	deskpref.c \
 	deskins.c \
 	deskfpd.c \
+	deskwin.c \
 	deskrsc.c \
 	deskstor.c \
 	${empty}
-
-#	deskact.c \
-#	deskbind.c \
-#	deskbutt.c \
-#	deskdir.c \
-#	deskdisk.c \
-#	deskfile.c \
-#	deskinf.c \
-#	deskmem.c \
-#	deskmenu.c \
-#	deskmisc.c \
-#	deskopen.c \
-#	desksear.c \
-#	desksele.c \
-#	deskshel.c \
-#	deskshow.c \
-#	deskstor.c \
-#	desktop.c \
-#	deskupda.c \
-#	deskwin.c \
-#	deskrsc.c \
-#
 
 DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)
 

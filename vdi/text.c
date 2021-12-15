@@ -45,6 +45,8 @@
 #include "gsxdef.h"
 #include "gsxextrn.h"
 
+int16_t width;
+int16_t height;
 
 VOID copy_name PROTO((const char *source, char *dest));
 VOID make_header PROTO((NOTHING));

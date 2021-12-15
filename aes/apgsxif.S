@@ -130,11 +130,6 @@
 IBM	equ	3
 SMALL	equ	5
 
-#if LINEF_HACK
-	xdef	_ob_fformat
-_ob_fformat equ _ob_format
-#endif
-
 
 #if CCODE
 VOID gsx_sclip(GRECT *pt)

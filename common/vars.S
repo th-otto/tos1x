@@ -564,7 +564,7 @@ _endvdibss: ds.b 0
 	V(_D,b,13092) /* sizeof(THEGLO) */
 
 	PTR(_eul)
-	INT(x00a786)
+	INT(_f_level)
 	PTR(_thedesk)
 	INT(_fpt)
 	PTR(_nrl)
@@ -627,7 +627,6 @@ _endvdibss: ds.b 0
 	INT(_d_maxcolor)
 	INT(_d_level)
 	INT(_f_abort)
-	INT(_f_level)
 	V(_path1,b,PATHLEN)
 	V(_path2,b,PATHLEN)
 	INT(_d_display)

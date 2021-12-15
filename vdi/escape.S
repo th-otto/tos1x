@@ -291,7 +291,11 @@ ctrl_tbl:
 
 do_bell: ds.b 0
 	xref ringbell
+#ifdef __GNUC__
+	jmp ringbell
+#else
 	bra.w ringbell
+#endif
 
 do_tab:
 

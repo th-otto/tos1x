@@ -965,6 +965,8 @@ VOID cir_dda(NOTHING)
 	int16_t i, j;
 	register int16_t *xptr, *yptr, x, y, d;
 
+	UNUSED(unused1);
+	UNUSED(unused2);
 	/* Calculate the number of vertical pixels required. */
 
 	d = LV(cur_work)->line_width;

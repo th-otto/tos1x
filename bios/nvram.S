@@ -203,4 +203,11 @@ wrRTC2:     move.b    (a1,d0.w),(a0,d1.w)
 no_RTC_found:moveq    #-1,d0
             rts
 
+        bss
+
+        xdef rtcbufa
+        comm rtcbufa,13
+        xdef rtcbufb
+        comm rtcbufb,13
+
 #endif /* MSTECLK */

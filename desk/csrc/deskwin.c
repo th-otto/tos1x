@@ -73,40 +73,6 @@ PP(register GRECT *pc;)
 }
 
 
-/* 306de: 00e3456c */
-VOID up_allwin(P(const char *) path, P(BOOLEAN) dofull)
-PP(const char *path;)
-PP(BOOLEAN dofull;)
-{
-	register DESKWIN *win;
-	register int i;
-	
-	desk_wait(TRUE);
-	for (i = 4; i != 0; i--)
-	{
-		while (win)
-		{
-			if (dofull)						/* compare the full path    */
-			{
-				if (streq(path, win->w_path))
-#if 0
-					up_win(win);
-#endif
-			} else							/* just the id  */
-			{
-				if (path[0] == win->w_path[0])
-				{
-#if 0
-					up_win(win);
-#endif
-				}
-			}
-		}
-	}
-}
-
-
-
 /*
  * Update the window info line
  */

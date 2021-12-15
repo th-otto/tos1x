@@ -266,7 +266,7 @@ PP(BOOLEAN setdir;)
 {
 	if (m_sfirst(file, FA_ARCH|FA_DIREC|FA_RDONLY))			/* search the file */
 	{
-		fill_string(NO_CONST(file), STNOMEM);
+		fun_alert(NO_CONST(file), STNOMEM);
 		return;
 	}
 

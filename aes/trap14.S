@@ -68,7 +68,9 @@
 /* 106de: 00e29e74 */
 	xdef _bios
 	xdef _trp13
+	xdef _trp13int
 _trp13:
+_trp13int:
 _bios:
 	move.l	(sp)+,trp13aret
 	trap	#13

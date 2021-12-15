@@ -38,10 +38,10 @@ PP(register APP *app;)
 	driveid[0] = app->a_char;
 	driveid[1] = '\0';
 	strcpy(label, app->a_pappl);
-	inf_sset(tree, DRID, driveid);
-	inf_sset(tree, DRLABEL, label);
+	inf_sset((OBJECT *)tree, DRID, driveid);
+	inf_sset((OBJECT *)tree, DRLABEL, label);
 	redraw = FALSE;
-	ret = xform_do(tree, ROOT);
+	ret = xform_do((OBJECT *)tree, ROOT);
 	fs_sget(tree, DRID, newdrive);
 	fs_sget(tree, DRLABEL, newlabel);
 	if (ret == DRCANCEL)
@@ -84,7 +84,7 @@ PP(register APP *app;)
 			if (newapp != NULL)
 			{
 				newapp->a_apptype = app->a_apptype;
-				newapp->a_type = newdrive[0] != CHAR_FOR_CARTRIDGE ? DRIVE : CARTICON;
+				newapp->a_type = newdrive[0] != CHAR_FOR_CARTRIDGE ? AT_ISDISK : AT_ISCART;
 				newapp->a_obid = app->a_obid;
 				newapp->a_aicon = app->a_aicon;
 				newapp->a_dicon = -1;
@@ -101,7 +101,7 @@ PP(register APP *app;)
 				app = newapp;
 			} else
 			{
-				fill_string(1, NOICON, NULL);
+				fun_alert(1, NOICON, NULL);
 				return FALSE;
 			}
 		}
@@ -123,7 +123,7 @@ PP(register APP *app;)
 {
 	register LPTREE tree;
 	register APP *newapp;
-	register char *src;
+	register const char *src;
 	char buffer[12];
 	char ext[4];
 	char newext[4];
@@ -152,8 +152,8 @@ PP(register APP *app;)
 	if (*src == '.')
 		src++;
 	strcpy(ext, src);
-	inf_sset(tree, APNAME, buffer);
-	inf_sset(tree, APDFTYPE, ext);
+	inf_sset((OBJECT *)tree, APNAME, buffer);
+	inf_sset((OBJECT *)tree, APDFTYPE, ext);
 	apptype = app->a_apptype;
 	if (app->a_apptype & AF_ISCRYS)
 		LWSET(OB_STATE(APGEM), SELECTED);
@@ -180,7 +180,7 @@ PP(register APP *app;)
 	{
 		LWSET(OB_STATE(NORMALBOX), SELECTED);
 	}
-	ret = xform_do(tree, ROOT);
+	ret = xform_do((OBJECT *)tree, ROOT);
 	change = TRUE;
 	fs_sget(tree, APDFTYPE, newext);
 	field = inf_gindex(tree, APGEM, 3);
@@ -197,6 +197,10 @@ PP(register APP *app;)
 	case 2:
 		newapptype = TTP;
 		break;
+#ifdef __GNUC__
+	default:
+		__builtin_unreachable();
+#endif
 	}
 	LWSET(OB_STATE(APGEM + field), NORMAL);
 	if (ret == APCANCEL)
@@ -224,7 +228,7 @@ PP(register APP *app;)
 				newapp = app_alloc(TRUE);
 				if (newapp != NULL)
 				{
-					newapp->a_type = PROGRAM;
+					newapp->a_type = AT_ISFILE;
 					newapp->a_obid = NIL;
 					path[(int)strlen(path)] = '@';
 					*(escani_str(path, &newapp->a_pappl) - 1) = '\0';
@@ -236,7 +240,7 @@ PP(register APP *app;)
 					app = newapp;
 				} else
 				{
-					fill_string(1, NOAPP, NULL);
+					fun_alert(1, NOAPP, NULL);
 					return FALSE;
 				}
 			}

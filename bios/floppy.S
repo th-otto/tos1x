@@ -1084,3 +1084,6 @@ floprat2:
     
     xdef fd_deferr
     comm fd_deferr,2
+    
+    xdef lastacstm
+    comm lastacstm,4

@@ -14,6 +14,7 @@
 #include "crysbind.h"
 #include "taddr.h"
 #include "gemrsc.h"
+#include "gsxdefs.h"
 
 
 /* int16_t gl_dspcnt; */ /* unused */
@@ -1186,7 +1187,7 @@ asm("text");
 /* 104de: 00fdf894 */
 /* 106de: 00e2133a */
 asm("    .globl xif");
-asm("xif: ds.b 0");
+asm("xif: .text");
 VOID xif(P(intptr_t) pcrys_blk)
 PP(intptr_t pcrys_blk;)
 {

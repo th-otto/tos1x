@@ -930,7 +930,7 @@ PP(const char *tail;)
 		file_op(buffer, OP_COPY);
 		break;
 
-	case TRASHCAN:
+	case AT_ISTRSH:
 		/* do_file(DELMENU); */
 		break;
 

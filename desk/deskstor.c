@@ -39,3 +39,7 @@ char inf_path[PATHLEN];					/* store the inf path   */
 char comtail[PATHLEN];					/* comtail tail buffer */
 DESKWIN *winhead;						/* head of window list      */
 GRECT fobj;								/* file object  */
+THEDSK *thedesk;
+int16_t gl_apid;
+int16_t pglobal[15];
+int16_t gl_kstate;

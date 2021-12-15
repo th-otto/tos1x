@@ -860,11 +860,12 @@ extern BOOLEAN diskin;
 int dos_sfirst PROTO((const char *name, int attrib));
 int dos_snext PROTO((NOTHING));
 int dos_open PROTO((const char *name, int mode));
+int dos_create PROTO((const char *name, int mode));
 int dos_read PROTO((int fd, size_t size, VOIDPTR buf));
 int dos_write PROTO((int fd, size_t size, VOIDPTR buf));
 long dos_lseek PROTO((int fd, int whence, long offset));
 int dos_gdir PROTO((int drive, char *pdrvpath));
-int dos_mkdir PROTO((const char *path, int attr));
+int dos_mkdir PROTO((const char *path));
 int dos_set PROTO((int h, uint16_t time, uint16_t date));
 int dos_label PROTO((int drive, const char *name));
 int dos_space PROTO((int drive, int32_t *total, int32_t *avail));
@@ -1014,6 +1015,7 @@ int32_t trp13int PROTO((short code, ...));
 int32_t trp13int PROTO((short code, ...));
 VOID gsx_fgclip PROTO((GRECT *pt));
 VOID gsx_fattr PROTO((uint16_t text, uint16_t mode, uint16_t color));
+VOID ob_fdelete PROTO((LPTREE tree, int16_t obj));
 #else
 #define ob_fformat ob_format
 #define ob_foffset ob_offset
@@ -1030,4 +1032,54 @@ VOID gsx_fattr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 #define trp14int trp14
 #define gsx_fgclip gsx_gclip
 #define gsx_fattr gsx_attr
+#define ob_fdelete ob_delete
+#endif
+
+
+#if LINEF_HACK
+/*
+ * functions referenced in linef table
+ */
+int16_t sndcli PROTO((char *pfilespec, int16_t acc));
+char *fs_back PROTO((char *pstr));
+int16_t scan_to_end PROTO((char *pstr, int16_t idx, char chr));
+VOID ins_char PROTO((char *str, int16_t pos, char chr, int16_t tot_len));
+int16_t find_pos PROTO((char *str, int16_t pos));
+VOID pxl_rect PROTO((LPTREE tree, int16_t obj, int16_t ch_pos, GRECT *pt));
+VOID curfld PROTO((LPTREE tree, int16_t obj, int16_t new_pos, int16_t dist));
+int16_t instr PROTO((char chr, const char *str));
+BOOLEAN check PROTO((char *in_char, char valchar));
+VOID ob_stfn PROTO((int16_t idx, int16_t *Pstart, int16_t *pfinish));
+int16_t ob_delit PROTO((int16_t idx));
+VOID fix_chpos PROTO((intptr_t pfix, int16_t ifx));
+intptr_t get_sub PROTO((int16_t rsindex, int16_t rtype, int16_t rsize));
+intptr_t get_addr PROTO((uint16_t rstype, uint16_t rsindex));
+VOID fix_trindex PROTO((NOTHING));
+VOID fix_objects PROTO((NOTHING));
+VOID fix_tedinfo PROTO((NOTHING));
+VOID fix_nptrs PROTO((int16_t cnt, int16_t type));
+int16_t rs_readit PROTO((intptr_t pglobal, const char *rsfname));
+VOID w_nilit PROTO((int16_t num, OBJECT *olist));
+VOID w_obadd PROTO((OBJECT *olist, int16_t parent, int16_t child));
+VOID w_setup PROTO((PD *ppd, int16_t w_handle, int16_t kind));
+GRECT *w_getxptr PROTO((int16_t which, int16_t w_handle));
+VOID w_setsize PROTO((int16_t which, int16_t w_handle, GRECT *pt));
+VOID w_adjust PROTO((int16_t parent, int16_t obj, int16_t x, int16_t y, int16_t w, int16_t h));
+VOID w_hvassign PROTO((BOOLEAN isvert, int16_t parent, int16_t obj,
+	int16_t vx, int16_t vy,
+	int16_t hx, int16_t hy,
+	int16_t w, int16_t h));
+VOID do_walk PROTO((int16_t wh, OBJECT *tree, int16_t obj, int16_t depth, GRECT * pc));
+VOID w_cpwalk PROTO((int16_t wh, int16_t obj, int16_t depth, BOOLEAN usetrue));
+VOID w_strchg PROTO((int16_t w_handle, int16_t obj, intptr_t pstring));
+VOID w_barcalc PROTO((BOOLEAN isvert, int16_t space, int16_t sl_value, int16_t sl_size, int16_t min_sld, GRECT *ptv, GRECT * pth));
+VOID w_bldbar PROTO((uint16_t kind, BOOLEAN istop, int16_t w_bar, int16_t sl_value, int16_t sl_size, int16_t x, int16_t y, int16_t w, int16_t h));
+VOID w_redraw PROTO((int16_t w_handle, GRECT *dirty));
+BOOLEAN w_mvfix PROTO((GRECT *ps, GRECT *pd));
+BOOLEAN w_move PROTO((int16_t w_handle, int16_t *pstop, GRECT *prc));
+VOID draw_change PROTO((int16_t w_handle, GRECT *pt));
+VOID w_owns PROTO((int16_t w_handle, ORECT *po, GRECT *pt, GRECT *poutwds));
+VOID wm_opcl PROTO((int16_t wh, GRECT *pt, BOOLEAN isadd));
+int16_t ob_user PROTO((LPTREE tree, int16_t obj, GRECT *pt, intptr_t userblk, int16_t curr_state, int16_t new_state));
+VOID just_draw PROTO((LPTREE tree, int16_t obj, int16_t sx, int16_t sy));
 #endif

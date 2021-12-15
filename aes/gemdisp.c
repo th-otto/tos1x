@@ -58,8 +58,8 @@ PD *slr;
 /* 306de: 00e1b8ea */
 /* 104de: 00fde286 */
 /* 106de: 00e1fa66 */
-asm("  .globl forkq")
-asm("forkq: ds.b 0")
+asm("  .globl forkq");
+asm("forkq: .text");
 BOOLEAN forkq(P(FCODE) fcode, P(int32_t) fdata)
 PP(FCODE fcode;)
 PP(int32_t fdata;)

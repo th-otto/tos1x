@@ -398,7 +398,7 @@ _dos_gdir:
 
 /* 306de: 00e25aa2 (unused) */
 #if CCODE
-  WORD dos_mkdir(const char *path, int attr)
+  WORD dos_mkdir(const char *path)
   {
   	LONG	ret;
 

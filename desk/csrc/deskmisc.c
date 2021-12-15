@@ -1,6 +1,5 @@
 /*      DESKMISC.C              3/16/89 - 9/13/89       Derek Mui       */
 /*      Change chk_par          9/25/89                 D.Mui           */
-/*      Fix at fill_string to take out control character        7/9/91  */
 /*      Add get_fstring         7/7/92                  D.Mui           */
 
 /************************************************************************/
@@ -24,34 +23,6 @@ PP(BOOLEAN state;)
 }
 
 
-BOOLEAN dos_error(P(int16_t) button, P(int16_t) item)
-PP(int16_t button;)
-PP(int16_t item;)
-{
-	if (DOS_ERR)
-	{
-		if (DOS_AX == E_ACCDN)
-		{
-			fill_string(1, STILLCOPY, NULL);
-		} else if (DOS_AX <= -32)
-		{
-			form_error(~DOS_AX - 30);
-		}
-		return FALSE;
-	}
-	return TRUE;
-}
-
-
-/* 306de: 00e2fdfc */
-/* 104de: 00fe74a6 */
-int16_t do1_alert(P(int16_t) item)
-PP(int16_t item;)
-{
-	return fill_string(1, item, NULL);
-}
-
-
 /*
  * Check the level of depth
  */
@@ -70,32 +41,6 @@ PP(const char *path;)
 	}
 
 	return level;
-}
-
-
-/*
- * Perform an alert box message
- */
-/* 306de: 00e301dc */
-/* 104de: 00fd947e */
-int16_t fill_string(P(int16_t) button, P(int16_t) item, P(const char *) arg)
-PP(int16_t button;)
-PP(int16_t item;)
-PP(const char *arg);
-{
-	register char *ptr;
-	register THEDSK *d;
-	
-	ptr = g_buffer;
-	d = thedesk;
-	rsrc_gaddr(R_STRING, item, (VOIDPTR *)&d->str);
-
-	if (arg)
-	{
-		merge_str(ptr, d->str, arg);
-		d->str = ptr;
-	}
-	return form_alert(button, d->str);
 }
 
 

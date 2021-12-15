@@ -19,7 +19,7 @@ deskshow_OPTIMIZE=0
 deskstor_OPTIMIZE=0
 desktop_OPTIMIZE=0
 deskupda_OPTIMIZE=0
-deskwin_OPTIMIZE=0
+deskwin_OPTIMIZE=1
 deskmn_OPTIMIZE=0
 deskif_OPTIMIZE=0
 
