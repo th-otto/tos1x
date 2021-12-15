@@ -334,7 +334,7 @@ _endvdibss: ds.b 0
 
 	V(x00632c,b,16)
 	V(x00633c,b,16)
-	V(x00634c,b,122)
+	V(_cp_dst,b,122)
 
 	INT(x0063c6)
 
@@ -572,7 +572,7 @@ _endvdibss: ds.b 0
 	PTR(_rul)
 	V(_evx,b,28) /* sizeof(EVB) */
 	PTR(_g_buffer)
-	PTR(_lp_mid)
+	PTR(_winhead)
 	PTR(_zlr)
 	INT(_g_flag)
 	INT(_sh_gem)
@@ -630,7 +630,6 @@ _endvdibss: ds.b 0
 	V(_path1,b,PATHLEN)
 	V(_path2,b,PATHLEN)
 	INT(_d_display)
-	PTR(_winhead)
 	PTR(_path3)
 	V(_inf_path,b,PATHLEN)
 	INT(_p_timedate)

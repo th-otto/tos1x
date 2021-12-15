@@ -20,6 +20,7 @@
 #include "toserrno.h"
 
 char *g_buffer;						/* merge string buffer  */
+STATIC char cp_dst[LEN_ZFPATH];
 
 
 /*
@@ -340,3 +341,289 @@ PP(int obid;)
 	return ret;
 }
 
+
+/* 104de: 00fd9922 */
+/* 106de: 00e1a5e2 */
+BOOLEAN fun_file2win(P(PNODE *) pn_src, P(char *) spec, P(APP *) app, P(FNODE *) fn_dest)
+PP(PNODE *pn_src;)
+PP(char *spec;)
+PP(register APP *app;)
+PP(register FNODE *fn_dest;)
+{
+	int ret;
+	register char *p;
+	
+	strcpy(thedesk->g_tmppth, spec);
+	for (p = thedesk->g_tmppth; *p != '*'; ++p)
+		;
+	*p = '\0';
+	if (app != NULL && app->a_type == AT_ISFOLD)
+	{
+		p = strcpy(p, fn_dest->f_name);
+		strcpy(p - 1, wilds);
+	} else
+	{
+		strcat(p, getall);
+	}
+	strcpy(cp_dst, thedesk->g_tmppth);
+	ret = fun_op(OP_COPY, pn_src);
+	if (ret)
+	{
+		up_allwin(cp_dst, TRUE);
+		up_allwin(pn_src->p_spec, TRUE);
+	}
+	return ret;
+}
+
+
+/* 104de: 00fd99e0 */
+/* 106de: 00e1a7b4 */
+VOID fun_win2desk(P(int16_t) wh, P(int16_t) obj)
+PP(int16_t wh;)
+PP(int16_t obj;)
+{
+	DESKWIN *win;
+	APP *app;
+	
+	app = app_afind(TRUE, AT_ISFILE, obj, NULL, NULL);
+	win = win_find(wh);
+	if (streq(win->w_name, *((char **)&thedesk->r_dicon))) /* hä? */
+	{
+		switch (app->a_type)
+		{
+		case AT_ISDISK:
+		case AT_ISCART:
+			fun_alert(1, STNOROM, NULL);
+			break;
+		case AT_ISTRSH:
+			form_error(~E_ACCDN - 30);
+			break;
+		}
+	} else
+	{
+		fun_wdst(win->w_path, app, obj);
+	}
+}
+
+
+/* 104de: 00fd9a6c */
+/* 106de: 00e1a856 */
+BOOLEAN fun_f2any(P(int16_t) sobj, P(DESKWIN *) wn_dest, P(APP *) an_dest, P(FNODE *) fn_dest, P(int16_t) dobj)
+PP(int16_t sobj;)
+PP(DESKWIN *wn_dest;)
+PP(APP *an_dest;)
+PP(FNODE *fn_dest;)
+PP(int16_t dobj;)
+{
+	register BOOLEAN okay;
+	ICONBLK *ib_src;
+	register FNODE *bp8;
+	register PNODE *pn_src;
+	
+	ib_src = (ICONBLK *)get_spec(thedesk->g_screen, sobj);
+	if (!xfdadb6(ib_src->ib_char))
+		return FALSE;
+	pn_src = pn_open(ib_src->ib_char, "", "*", "*", FA_DIREC|FA_HIDDEN|FA_SYSTEM);
+#if !BINEXACT
+	okay = FALSE; /* BUG: should be above */
+#endif
+	if (pn_src != NULL)
+	{
+		pn_folder(pn_src);
+#if BINEXACT
+		okay = FALSE; /* BUG: should be above */
+#endif
+		if (pn_src->p_flist != NULL)
+		{
+			for (bp8 = pn_src->p_flist; bp8; bp8 = bp8->f_next)
+				bp8->f_obid = 0;
+			thedesk->g_screen[ROOT].ob_state = SELECTED;
+			if (wn_dest != NULL)
+				okay = fun_file2win(pn_src, wn_dest->w_path->p_spec, an_dest, fn_dest);
+			else
+				okay = fun_wdst(pn_src, an_dest, dobj);
+			thedesk->g_screen[ROOT].ob_state = NORMAL;
+		}
+		pn_free(pn_src);
+		hd_win(0);
+	}
+	return okay;
+}
+
+
+/* 104de: 00fd9b3c */
+/* 106de: 00e1a94c */
+VOID fun_desk2win(P(int16_t) wh, P(int16_t) dobj)
+PP(int16_t wh;)
+PP(register int16_t dobj;)
+{
+	register DESKWIN *wn_dest;
+	FNODE *fn_dest;
+	BOOLEAN isapp;
+	FNODE *fn_src;
+	register int16_t sobj;
+	register APP *an_src;
+	register APP *an_dest;
+
+	wn_dest = win_find(wh);
+	an_dest = i_find(wh, dobj, &fn_dest, &isapp);
+	sobj = 0;
+	while ((sobj = win_isel(thedesk->g_screen, TRUE, sobj)))
+	{
+		an_src = i_find(0, sobj, &fn_src, &isapp);
+		if (an_src->a_type == AT_ISTRSH)
+		{
+			fun_alert(1, STNOBIN2, NULL);
+			continue;
+		}
+		if (an_src->a_type == AT_ISCART)
+		{
+			fun_alert(1, STNOROM, NULL);
+			continue;
+		}
+		if (fun_f2any(sobj, wn_dest, an_dest, fn_dest, dobj))
+			up_1win(wn_dest);
+	}
+}
+
+
+/* 104de: 00fd9be0 */
+/* 106de: 00e1aa12 */
+BOOLEAN fun_d2desk(P(int16_t) dobj)
+PP(int16_t dobj;)
+{
+	int16_t sobj;
+	BOOLEAN isapp;
+	FNODE *fn;
+	register APP *source;
+	register APP *target;
+	long unused;
+	ICONBLK *src_icon;
+	ICONBLK *dst_icon;
+	char dst_name[12];
+	char src_name[2];
+	char *parms[3];
+	BOOLEAN cont;
+	register THEDSK *d;
+	long unused2;
+
+	UNUSED(unused);
+	UNUSED(unused2);
+	d = thedesk;
+	cont = FALSE;
+	target = app_afind(TRUE, AT_ISFILE, dobj, NULL, NULL);
+	sobj = 0;
+	while ((sobj = win_isel(d->g_screen, TRUE, sobj)))
+	{
+		source = i_find(0, sobj, &fn, &isapp);
+
+		if (source == target)
+			continue;
+		if (source->a_type == AT_ISCART || source->a_type == AT_ISTRSH)
+		{
+			fun_alert(1, STNODRAG, NULL);
+			return FALSE;
+		} else
+		{
+			switch (target->a_type)
+			{
+			case AT_ISTRSH:
+				fun_alert(1, STNOBIN, NULL);
+				return FALSE;
+			case AT_ISCART:
+				fun_alert(1, STNOROM, NULL);
+				return FALSE;
+#if BINEXACT
+				break;
+#endif
+			case AT_ISDISK:
+				src_icon = (ICONBLK *)get_spec(d->g_screen, sobj);
+				dst_icon = (ICONBLK *)get_spec(d->g_screen, dobj);
+				src_name[0] = src_icon->ib_char & 255;
+				src_name[1] = '\0';
+				dst_name[0] = ' ';
+				dst_name[1] = dst_icon->ib_char & 255;
+				dst_name[2] = '\0';
+				if (src_name[0] > 'B' ||
+					src_name[0] < 'A' ||
+					dst_name[1] > 'B' ||
+					dst_name[1] < 'A')
+				{
+					fun_alert(1, FCDISKONLY, NULL);
+					return FALSE;
+				}
+				parms[0] = src_name;
+				parms[1] = dst_name + 1;
+				parms[2] = dst_name + 1;
+				if (fun_alert(2, STCOPY, parms) == 1)
+				{
+					fc_start(src_name, CMD_COPY);
+					cont = FALSE;
+				}
+				break;
+			}
+		}
+	}
+	return cont;
+}
+
+
+/* 104de: 00fd9d76 */
+/* 106de: 00e1abd2 */
+BOOLEAN desk1_drag(P(int16_t) wh, P(int16_t) dest_wh, P(int16_t) sobj, P(int16_t) dobj)
+PP(register int16_t wh;)
+PP(register int16_t dest_wh;)
+PP(register int16_t sobj;)
+PP(register int16_t dobj;)
+{
+	BOOLEAN done;
+	BOOLEAN isapp;
+	FNODE *pf;
+	register DESKWIN *srcwin;
+	register DESKWIN *dstwin;
+	register APP *app;
+	
+	done = FALSE;
+	if (wh)
+	{
+		if (dest_wh)
+		{
+			srcwin = win_find(wh);
+			dstwin = win_find(dest_wh);
+			if (streq(srcwin->w_name, *((char **)&thedesk->r_dicon)) ||
+				streq(dstwin->w_name, *((char **)&thedesk->r_dicon)))
+			{
+				fun_alert(1, STNOROM, NULL);
+			} else
+			{
+				app = i_find(dest_wh, dobj, &pf, &isapp);
+				if (fun_file2win(srcwin->w_path, dstwin->w_path->p_spec, app, pf) && wh != dest_wh)
+					hd_win(wh);
+			}
+		} else
+		{
+			if (dobj == sobj)
+			{
+				fun_alert(1, STNOWIN, NULL);
+			} else
+			{
+				fun_win2desk(wh, dobj);
+			}
+		}
+	} else
+	{
+		if (dest_wh)
+		{
+			fun_desk2win(dest_wh, dobj);
+		} else
+		{
+			if (dobj != sobj)
+				done = fun_d2desk(dobj);
+		}
+	}
+	return done;
+}
+
+
+/* 104de: 00fd9e58 */
+/* 106de: 00e1ace0 */

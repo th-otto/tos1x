@@ -137,7 +137,7 @@ PP(register APP *app;)
 	BOOLEAN isnew;
 	BOOLEAN isauto;
 	char path[LEN_ZFPATH];
-	struct s238 *o178;
+	DESKWIN *win;
 	char o180[2];
 	THEDSK *d;
 	char *end;
@@ -161,8 +161,8 @@ PP(register APP *app;)
 		LWSET(OB_STATE(APPARMS), SELECTED);
 	else
 		LWSET(OB_STATE(APDOS), SELECTED);
-	o178 = xfdc3f4(d->o13720);
-	end = strscn(&o178->o0[29], path, ' ');
+	win = win_find(d->o13720);
+	end = strscn(&win->w_name[1], path, ' ');
 	*end = '\0';
 	unfmt_str(buffer, filetype);
 	if (end[-1] == '\\')

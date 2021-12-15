@@ -213,10 +213,6 @@ typedef struct idtype
 	char i_name[NAMELEN];
 } IDTYPE;
 
-struct s238 {
-	char o0[238];
-};
-
 #ifndef NUM_IB
 #  define NUM_IB 5
 #endif
@@ -300,6 +296,7 @@ typedef struct {
 
 
 extern char const getall[];
+extern char const wilds[];
 extern int16_t gl_kstate;
 
 /*
@@ -462,7 +459,18 @@ BOOLEAN d_doop PROTO((int op, OBJECT *tree, char *psrc_path, char *pdst_path, in
 BOOLEAN fun_op PROTO((int op, PNODE *pspath));
 BOOLEAN dir_op PROTO((int op, const char *psrc_path, FNODE *pflist, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt, uint32_t *psize));
 BOOLEAN par_chk PROTO((const char *psrc_path, FNODE *pflist, char *pdst_path));
-BOOLEAN fun_wdst PROTO((PNODE *pspath, APP *app, int flag));
+BOOLEAN fun_wdst PROTO((PNODE *pspath, APP *app, int obid));
+BOOLEAN fun_file2win PROTO((PNODE *pn_src, char *spec, APP *app, FNODE *fn_dest));
+VOID fun_win2desk PROTO((int16_t wh, int16_t obj));
+BOOLEAN fun_f2any PROTO((int16_t sobj, DESKWIN *wn_dest, APP *an_dest, FNODE *fn_dest, int16_t dobj));
+VOID fun_desk2win PROTO((int16_t wh, int16_t obj));
+BOOLEAN fun_d2desk PROTO((int16_t dobj));
+BOOLEAN desk1_drag PROTO((int16_t wh, int16_t dest_wh, int16_t sobj, int16_t dobj));
+
+
+/*
+ * deskobj.c
+ */
 
 
 /*
@@ -547,6 +555,7 @@ VOID hd_msg PROTO((NOTHING));
 VOID actions PROTO((NOTHING));
 int32_t av_mem PROTO((NOTHING));
 VOID av_desk PROTO((NOTHING));
+VOID hd_win PROTO((int));
 
 
 /*
@@ -643,7 +652,7 @@ BOOLEAN o_select PROTO((NOTHING));
 BOOLEAN x_select PROTO((NOTHING));
 BOOLEAN x_next PROTO((const char **name, int16_t *type));
 BOOLEAN x_first PROTO((const char **name, int16_t *type));
-BOOLEAN i_find PROTO((int16_t mx, int16_t my, DESKWIN **winout, int16_t *item, int16_t *type));
+APP *i_find PROTO((int16_t wh, int16_t item, FNODE **ppf, BOOLEAN *pisapp));
 BOOLEAN i_next PROTO((int16_t start, OBJECT *obj, int16_t *itemout));
 
 
@@ -820,8 +829,11 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 #endif
 
 
-struct s238 *xfdc3f4 PROTO((short id));
+DESKWIN *win_find PROTO((int16_t wh));
 VOID xfd75f2 PROTO((char *, char *));
 VOID xfda13c PROTO((int16_t w_handle, BOOLEAN));
 VOID xfdcd94 PROTO((DESKWIN *win));
+BOOLEAN xfdadb6 PROTO((int ch));
 VOID xtr_mask PROTO((const char *name, char *mask));
+APP *app_afind PROTO((BOOLEAN isdesk, int16_t a_type, int16_t obid, char *pname, BOOLEAN *pisapp));
+int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));

@@ -1,490 +1,3 @@
-    xdef _xfd9922
-_xfd9922: ds.b 0
-        link      a6,#-2
-        movem.l   d7/a3-a5,-(a7)
-        movea.l   16(a6),a5
-        movea.l   20(a6),a4
-        move.l    _thedesk,(a7)
-        addi.l    #12982,(a7)
-        move.l    12(a6),-(a7)
-        jsr _xstrpcpy
-        addq.l    #4,a7
-        movea.l   _thedesk,a3
-        adda.l    #12982,a3
-        bra.s     xfd99_2
-xfd99_1:
-        addq.l    #1,a3
-xfd99_2:
-        cmpi.b    #'*',(a3)
-        bne.s     xfd99_1
-        clr.b     (a3)
-        move.l    a5,d0
-        beq.s     xfd99_3
-        cmpi.w    #1,6(a5)
-        bne.s     xfd99_3
-        move.l    a3,(a7)
-        pea.l     18(a4)
-        jsr _xstrpcpy
-        addq.l    #4,a7
-        movea.l   d0,a3
-        pea.l     -1(a3)
-        move.l    #_wilds,-(a7)
-        jsr _xstrpcpy
-        addq.l    #8,a7
-        bra.s     xfd99_4
-xfd99_3:
-        move.l    a3,(a7)
-        move.l    #_getall,-(a7)
-        jsr _xstrpcat
-        addq.l    #4,a7
-xfd99_4:
-        move.l    #x00634c,(a7)
-        move.l    _thedesk,-(a7)
-        addi.l    #12982,(a7)
-        jsr _xstrpcpy
-        addq.l    #4,a7
-        move.l    8(a6),(a7)
-        move.w    #2,-(a7)
-        jsr       _fun_op
-        addq.l    #2,a7
-        move.w    d0,-2(a6)
-        tst.w     -2(a6)
-        beq.s     xfd99_5
-        move.w    #1,(a7)
-        move.l    #x00634c,-(a7)
-        jsr _up_allwin
-        addq.l    #4,a7
-        move.w    #1,(a7)
-        move.l    8(a6),-(a7)
-        addq.l    #8,(a7)
-        jsr _up_allwin
-        addq.l    #4,a7
-xfd99_5:
-        move.w    -2(a6),d0
-        dc.w      $FE01
-
-    xdef _xfd99e0
-_xfd99e0: ds.b 0
-        link      a6,#-12
-        clr.l     (a7)
-        clr.l     -(a7)
-        move.w    10(a6),-(a7)
-        clr.w     -(a7)
-        move.w    #1,-(a7)
-        jsr       _xfd5b36
-        adda.w    #10,a7
-        move.l    d0,-8(a6)
-        move.w    8(a6),(a7)
-        jsr       _xfdc3f4
-        move.l    d0,-4(a6)
-        movea.l   _thedesk,a0
-        move.l    13736(a0),(a7)
-        move.l    -4(a6),-(a7)
-        addi.l    #28,(a7)
-        jsr _streq
-        addq.l    #4,a7
-        tst.w     d0
-        beq.s     xfd99e_5
-        movea.l   -8(a6),a0
-        move.w    6(a0),d0
-        bra.s     xfd99e_3
-xfd99e_1:
-        clr.l     (a7)
-        move.l    #$00010018,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        bra.s     xfd99e_4
-xfd99e_2:
-        move.w    #5,(a7)
-        jsr _form_error
-        bra.s     xfd99e_4
-xfd99e_3:
-        cmp.w     #2,d0
-        beq.s     xfd99e_1
-        cmp.w     #3,d0
-        beq.s     xfd99e_2
-        cmp.w     #4,d0
-        beq.s     xfd99e_1
-xfd99e_4:
-        bra.s     xfd99e_6
-xfd99e_5:
-        move.w    10(a6),(a7)
-        move.l    -8(a6),-(a7)
-        movea.l   -4(a6),a0
-        move.l    24(a0),-(a7)
-        jsr       _fun_wdst
-        addq.l    #8,a7
-xfd99e_6:
-        dc.w      $F001
-
-    xdef _xfd9a6c
-_xfd9a6c: ds.b 0
-        link      a6,#-4
-        movem.l   d6-d7/a4-a5,-(a7)
-        move.w    8(a6),(a7)
-        move.l    _thedesk,-(a7)
-        addi.l    #24200,(a7)
-        jsr       _get_spec
-        addq.l    #4,a7
-        move.l    d0,-4(a6)
-        movea.l   -4(a6),a0
-        move.w    12(a0),(a7)
-        jsr       _xfdadb6
-        tst.w     d0
-        bne.s     xfd9a_1
-        clr.w     d0
-        bra       xfd9a_8
-xfd9a_1:
-        move.w    #22,(a7)
-        move.l    #xfeb165,-(a7)
-        move.l    #xfeb163,-(a7)
-        move.l    #xfeb162,-(a7)
-        movea.l   -4(a6),a0
-        move.w    12(a0),-(a7)
-        jsr       _pn_open
-        adda.w    #14,a7
-        movea.l   d0,a4
-        move.l    a4,d0
-        beq.s     xfd9a_7
-        move.l    a4,(a7)
-        jsr       _pn_folder
-        clr.w     d7
-        tst.l     130(a4)
-        beq.s     xfd9a_6
-        movea.l   130(a4),a5
-        bra.s     xfd9a_3
-xfd9a_2:
-        clr.w     32(a5)
-        movea.l   (a5),a5
-xfd9a_3:
-        move.l    a5,d0
-        bne.s     xfd9a_2
-        movea.l   _thedesk,a0
-        move.w    #1,24210(a0)
-        tst.l     10(a6)
-        beq.s     xfd9a_4
-        move.l    18(a6),(a7)
-        move.l    14(a6),-(a7)
-        movea.l   10(a6),a0
-        move.l    24(a0),-(a7)
-        addq.l    #8,(a7)
-        move.l    a4,-(a7)
-        jsr       _xfd9922
-        adda.w    #12,a7
-        move.w    d0,d7
-        bra.s     xfd9a_5
-xfd9a_4:
-        move.w    22(a6),(a7)
-        move.l    14(a6),-(a7)
-        move.l    a4,-(a7)
-        jsr       _fun_wdst
-        addq.l    #8,a7
-        move.w    d0,d7
-xfd9a_5:
-        movea.l   _thedesk,a0
-        clr.w     24210(a0)
-xfd9a_6:
-        move.l    a4,(a7)
-        jsr       _pn_free
-        clr.w     (a7)
-        jsr _hd_win
-xfd9a_7:
-        move.w    d7,d0
-xfd9a_8:
-        dc.w      $FC21
-
-    xdef _xfd9b3c
-_xfd9b3c: ds.b 0
-        link      a6,#-10
-        movem.l   d5-d7/a3-a5,-(a7)
-        move.w    10(a6),d7
-        move.w    8(a6),(a7)
-        jsr       _xfdc3f4
-        movea.l   d0,a5
-        pea.l     -6(a6)
-        pea.l     -4(a6)
-        move.w    d7,-(a7)
-        move.w    8(a6),-(a7)
-        jsr       _xfdb04c
-        adda.w    #12,a7
-        movea.l   d0,a3
-        clr.w     d6
-        bra.s     xfd9b3_3
-xfd9b3_4:
-        pea.l     -6(a6)
-        pea.l     -10(a6)
-        move.w    d6,-(a7)
-        clr.w     -(a7)
-        jsr       _xfdb04c
-        adda.w    #12,a7
-        movea.l   d0,a4
-        cmpi.w    #3,6(a4)
-        bne.s     xfd9b3_1
-        clr.l     (a7)
-        move.l    #$00010014,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        bra.s     xfd9b3_3
-xfd9b3_1:
-        cmpi.w    #4,6(a4)
-        bne.s     xfd9b3_2
-        clr.l     (a7)
-        move.l    #$00010018,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        bra.s     xfd9b3_3
-xfd9b3_2:
-        move.w    d7,(a7)
-        move.l    -4(a6),-(a7)
-        move.l    a3,-(a7)
-        move.l    a5,-(a7)
-        move.w    d6,-(a7)
-        jsr       _xfd9a6c
-        adda.w    #14,a7
-        tst.w     d0
-        beq.s     xfd9b3_3
-        move.l    a5,(a7)
-        jsr       _up_1win
-xfd9b3_3:
-        move.w    d6,(a7)
-        move.w    #1,-(a7)
-        move.l    _thedesk,-(a7)
-        addi.l    #24200,(a7)
-        jsr       _xfdcd06
-        addq.l    #6,a7
-        move.w    d0,d6
-        bne       xfd9b3_4
-        dc.w      $FE31
-
-    xdef _xfd9be0
-_xfd9be0: ds.b 0
-        link      a6,#-52
-        movem.l   d7/a3-a5,-(a7)
-        movea.l   _thedesk,a3
-        clr.w     -48(a6)
-        clr.l     (a7)
-        clr.l     -(a7)
-        move.w    8(a6),-(a7)
-        clr.w     -(a7)
-        move.w    #1,-(a7)
-        jsr       _xfd5b36
-        adda.w    #10,a7
-        movea.l   d0,a4
-        clr.w     -2(a6)
-        bra       xfd9b_13
-xfd9b_1:
-        pea.l     -4(a6)
-        pea.l     -8(a6)
-        move.w    -2(a6),-(a7)
-        clr.w     -(a7)
-        jsr       _xfdb04c
-        adda.w    #12,a7
-        movea.l   d0,a5
-        cmpa.l    a4,a5
-        beq       xfd9b_13
-        cmpi.w    #4,6(a5)
-        beq.s     xfd9b_2
-        cmpi.w    #3,6(a5)
-        bne.s     xfd9b_3
-xfd9b_2:
-        clr.l     (a7)
-        move.l    #$00010010,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        clr.w     d0
-        bra       xfd9b_14
-        bra       xfd9b_13
-xfd9b_3:
-        move.w    6(a4),d0
-        bra       xfd9b_12
-xfd9b_4:
-        clr.l     (a7)
-        move.l    #$00010011,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        clr.w     d0
-        bra       xfd9b_14
-xfd9b_5:
-        clr.l     (a7)
-        move.l    #$00010018,-(a7)
-xfd9b_6:
-        jsr _fun_alert
-        addq.l    #4,a7
-        clr.w     d0
-        bra       xfd9b_14
-xfd9b_7:
-        bra       xfd9b_13
-xfd9b_8:
-        move.w    -2(a6),(a7)
-        pea.l     24200(a3)
-        jsr       _get_spec
-        addq.l    #4,a7
-        move.l    d0,-16(a6)
-        move.w    8(a6),(a7)
-        pea.l     24200(a3)
-        jsr       _get_spec
-        addq.l    #4,a7
-        move.l    d0,-20(a6)
-        movea.l   -16(a6),a0
-        move.w    12(a0),d0
-        and.w     #255,d0
-        move.b    d0,-34(a6)
-        clr.b     -33(a6)
-        move.b    #' ',-32(a6)
-        movea.l   -20(a6),a0
-        move.w    12(a0),d0
-        and.w     #255,d0
-        move.b    d0,-31(a6)
-        clr.b     -30(a6)
-        cmpi.b    #'B',-34(a6)
-        bgt.s     xfd9b_9
-        cmpi.b    #'A',-34(a6)
-        blt.s     xfd9b_9
-        cmpi.b    #'B',-31(a6)
-        bgt.s     xfd9b_9
-        cmpi.b    #'A',-31(a6)
-        bge.s     xfd9b_10
-xfd9b_9:
-        clr.l     (a7)
-        move.l    #$00010021,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        clr.w     d0
-        bra.w     xfd9b_14
-xfd9b_10:
-        lea.l     -34(a6),a0
-        move.l    a0,-46(a6)
-        lea.l     -31(a6),a0
-        move.l    a0,-42(a6)
-        lea.l     -31(a6),a0
-        move.l    a0,-38(a6)
-        pea.l     -46(a6)
-        move.l    #$00020012,-(a7)
-        jsr _fun_alert
-        addq.l    #8,a7
-        cmp.w     #1,d0
-        bne.s     xfd9b_11
-        move.w    #$00FB,(a7)
-        pea.l     -34(a6)
-        jsr _fc_start
-        addq.l    #4,a7
-        clr.w     -48(a6)
-xfd9b_11:
-        bra.s     xfd9b_13
-xfd9b_12:
-        cmp.w     #2,d0
-        beq       xfd9b_8
-        cmp.w     #3,d0
-        beq       xfd9b_4
-        cmp.w     #4,d0
-        beq       xfd9b_5
-xfd9b_13:
-        move.w    -2(a6),(a7)
-        move.w    #1,-(a7)
-        pea.l     24200(a3)
-        jsr       _xfdcd06
-        addq.l    #6,a7
-        move.w    d0,-2(a6)
-        bne       xfd9b_1
-        move.w    -48(a6),d0
-xfd9b_14:
-        dc.w      $FE01
-
-    xdef _xfd9d76
-_xfd9d76: ds.b 0
-        link      a6,#-8
-        movem.l   d3-d7/a3-a5,-(a7)
-        move.w    8(a6),d7
-        move.w    10(a6),d6
-        move.w    12(a6),d5
-        move.w    14(a6),d4
-        clr.w     -2(a6)
-        tst.w     d7
-        beq       xfd9d_7
-        tst.w     d6
-        beq       xfd9d_4
-        move.w    d7,(a7)
-        jsr       _xfdc3f4
-        movea.l   d0,a5
-        move.w    d6,(a7)
-        jsr       _xfdc3f4
-        movea.l   d0,a4
-        movea.l   _thedesk,a0
-        move.l    13736(a0),(a7)
-        pea.l     28(a5)
-        jsr _streq
-        addq.l    #4,a7
-        tst.w     d0
-        bne.s     xfd9d_1
-        movea.l   _thedesk,a0
-        move.l    13736(a0),(a7)
-        pea.l     28(a4)
-        jsr _streq
-        addq.l    #4,a7
-        tst.w     d0
-        beq.s     xfd9d_2
-xfd9d_1:
-        clr.l     (a7)
-        move.l    #$00010018,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        bra.s     xfd9d_3
-xfd9d_2:
-        pea.l     -4(a6)
-        pea.l     -8(a6)
-        move.w    d4,-(a7)
-        move.w    d6,-(a7)
-        jsr       _xfdb04c
-        adda.w    #12,a7
-        movea.l   d0,a3
-        move.l    -8(a6),(a7)
-        move.l    a3,-(a7)
-        move.l    24(a4),-(a7)
-        addq.l    #8,(a7)
-        move.l    24(a5),-(a7)
-        jsr       _xfd9922
-        adda.w    #12,a7
-        tst.w     d0
-        beq.s     xfd9d_3
-        cmp.w     d6,d7
-        beq.s     xfd9d_3
-        move.w    d7,(a7)
-        jsr _hd_win
-xfd9d_3:
-        bra.s     xfd9d_6
-xfd9d_4:
-        cmp.w     d5,d4
-        bne.s     xfd9d_5
-        clr.l     (a7)
-        move.l    #$00010013,-(a7)
-        jsr _fun_alert
-        addq.l    #4,a7
-        bra.s     xfd9d_6
-xfd9d_5:
-        move.w    d4,(a7)
-        move.w    d7,-(a7)
-        jsr       _xfd99e0
-        addq.l    #2,a7
-xfd9d_6:
-        bra.s     xfd9d_9
-xfd9d_7:
-        tst.w     d6
-        beq.s     xfd9d_8
-        move.w    d4,(a7)
-        move.w    d6,-(a7)
-        jsr       _xfd9b3c
-        addq.l    #2,a7
-        bra.s     xfd9d_9
-xfd9d_8:
-        cmp.w     d5,d4
-        beq.s     xfd9d_9
-        move.w    d4,(a7)
-        jsr       _xfd9be0
-        move.w    d0,-2(a6)
-xfd9d_9:
-        move.w    -2(a6),d0
-        dc.w      $FE3D
-
     xdef _xfd9e58
 _xfd9e58: ds.b 0
         link      a6,#0
@@ -747,7 +260,7 @@ _hd_win: ds.b 0
         tst.w     d7
         beq.s     hd_win1
         move.w    d7,(a7)
-        jsr       _xfdc3f4
+        jsr       _win_find
         movea.l   d0,a5
         move.w    10(a5),d6
         bra.s     hd_win2
@@ -779,7 +292,7 @@ _xfda13c: ds.b 0
         tst.w     d7
         beq.s     xfda13_2
         move.w    d7,(a7)
-        jsr       _xfdc3f4
+        jsr       _win_find
         movea.l   d0,a5
         tst.w     d6
         beq.s     xfda13_1
@@ -813,7 +326,7 @@ _do_redraw: ds.b 0
         tst.w     d7
         beq.s     do_red1
         move.w    d7,(a7)
-        jsr       _xfdc3f4
+        jsr       _win_find
         movea.l   d0,a5
         move.w    10(a5),d5
         bra.s     do_red2
@@ -1549,7 +1062,7 @@ _open_item: ds.b 0
         pea.l     -6(a6)
         move.w    d7,-(a7)
         move.w    13720(a3),-(a7)
-        jsr       _xfdb04c
+        jsr       _i_find
         adda.w    #12,a7
         movea.l   d0,a5
         tst.w     13720(a3)
@@ -1558,7 +1071,7 @@ _open_item: ds.b 0
         bra.s     xfda9_4
 xfda9_1:
         move.w    13720(a3),(a7)
-        jsr       _xfdc3f4
+        jsr       _win_find
         movea.l   d0,a4
         move.l    13736(a3),(a7)
         pea.l     28(a4)
@@ -1664,13 +1177,13 @@ _show_item: ds.b 0
         pea.l     -6(a6)
         move.w    d7,-(a7)
         move.w    13720(a3),-(a7)
-        jsr       _xfdb04c
+        jsr       _i_find
         adda.w    #12,a7
         movea.l   d0,a5
         tst.w     13720(a3)
         beq.s     xfdaa_1
         move.w    13720(a3),(a7)
-        jsr       _xfdc3f4
+        jsr       _win_find
         movea.l   d0,a4
 xfdaa_1:
         move.l    a5,d0
@@ -1753,7 +1266,7 @@ _xfdab74: ds.b 0
 		move.l    -10(a6),-(a7)
 		move.w    d7,-(a7)
 		move.l    #$0001FFFF,-(a7)
-		jsr       _xfd5b36
+		jsr       _app_afind
 		adda.w    #14,a7
 		movea.l   d0,a5
 xfdab_1:
@@ -2004,16 +1517,6 @@ xfdadb_4:
 
 	data
 
-xfeb162:
-	dc.b 0
-xfeb163:
-	ascii "*"
-	dc.b 0
-xfeb165:
-	ascii "*"
-	dc.b 0
-	even
-
 	xdef xfeb168
 xfeb168:
 	dc.w -1
@@ -2084,7 +1587,5 @@ xfeb1be:
 	dc.b 92,0
 
 	bss
-	xdef x00634c
-	comm x00634c,122
 	xdef _f_level
 	comm _f_level,2

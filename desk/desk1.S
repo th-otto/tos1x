@@ -133,8 +133,8 @@ xfd59_7:
 		addq.l    #2,a7
 		dc.w      $0000FC21
 
-	xdef _xfd5b36
-_xfd5b36: ds.b 0
+	xdef _app_afind
+_app_afind: ds.b 0
 		link      a6,#0
 		movem.l   d6-d7/a3-a5,-(a7)
 		movea.l   14(a6),a5
@@ -637,7 +637,7 @@ xfd5f_3:
 		tst.w     -28(a6)
 		beq.s     xfd5f_5
 		move.w    -28(a6),(a7)
-		jsr _xfdc3f4
+		jsr _win_find
 		move.l    d0,-12(a6)
 		tst.l     -12(a6)
 		beq.s     xfd5f_4
@@ -714,7 +714,7 @@ xfd5f_9:
 		pea.l     -44(a6)
 		move.w    (a4),-(a7)
 		move.w    -28(a6),-(a7)
-		jsr       _xfdb04c
+		jsr       _i_find
 		adda.w    #12,a7
 		movea.l   d0,a3
 		cmpi.w    #1,6(a3)

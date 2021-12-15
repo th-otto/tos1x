@@ -62906,7 +62906,7 @@ desktop.inf:
 6126: ustak
 61AA: diskin
 61AC: aautopath
-63C2:
+634C: cp_dst
 63C6:
 63C8: srsave
 63CA: savsr
@@ -63118,7 +63118,7 @@ A792: rlr
 A796: rul
 A79A: evx
 A7B6: g_buffer
-A7BA:
+A7BA: winhead
 A7BE: zlr
 A7C2: g_flag
 A7C4: sh_gem

@@ -185,10 +185,10 @@
 [00fe7ba0] dc.l $00fe5dda            ; F2E0 ; rc_constrain AES
 [00fe7ba4] dc.l $00fd5e9a            ; F2E4
 [00fe7ba8] dc.l $00fd7d00            ; F2E8 ; wind_find DESKTOP
-[00fe7bac] dc.l $00fdc3f4            ; F2EC
+[00fe7bac] dc.l $00fdc3f4            ; F2EC ; win_find DESKTOP
 [00fe7bb0] dc.l $00fd5bfe            ; F2F0
 [00fe7bb4] dc.l $00fd637e            ; F2F4
-[00fe7bb8] dc.l $00fdb04c            ; F2F8
+[00fe7bb8] dc.l $00fdb04c            ; F2F8 ; i_find DESKTOP
 [00fe7bbc] dc.l $00fe5d18            ; F2FC ; rc_intersect AES
 [00fe7bc0] dc.l $00fd7c8c            ; F300 ; objc_change DESKTOP
 [00fe7bc4] dc.l $00fe5d82            ; F304 ; rc_union AES
@@ -309,18 +309,18 @@
 [00fe7d90] dc.l $00fd7774            ; F4D0 ; par_chk DESKTOP
 [00fe7d94] dc.l $00fda28a            ; F4D4 ; get_spec DESKTOP
 [00fe7d98] dc.l $00fd9768            ; F4D8 ; fun_op DESKTOP
-[00fe7d9c] dc.l $00fd5b36            ; F4DC
+[00fe7d9c] dc.l $00fd5b36            ; F4DC ; app_afind DESKTOP
 [00fe7da0] dc.l $00fd9848            ; F4E0 ; fun_wdst DESKTOP
 [00fe7da4] dc.l $00fdadb6            ; F4E4
 [00fe7da8] dc.l $00fd8fe6            ; F4E8 ; pn_open DESKTOP
-[00fe7dac] dc.l $00fd9922            ; F4EC
+[00fe7dac] dc.l $00fd9922            ; F4EC ; fun_file2win DESKTOP
 [00fe7db0] dc.l $00fd9022            ; F4F0 ; pn_free DESKTOP
-[00fe7db4] dc.l $00fd9a6c            ; F4F4
-[00fe7db8] dc.l $00fdcd06            ; F4F8
+[00fe7db4] dc.l $00fd9a6c            ; F4F4 ; fun_f2any DESKTOP
+[00fe7db8] dc.l $00fdcd06            ; F4F8 ; win_isel DESKTOP
 [00fe7dbc] dc.l $00fe6a5a            ; F4FC ; fc_start DESKTOP
-[00fe7dc0] dc.l $00fd99e0            ; F500
-[00fe7dc4] dc.l $00fd9b3c            ; F504
-[00fe7dc8] dc.l $00fd9be0            ; F508
+[00fe7dc0] dc.l $00fd99e0            ; F500 ; fun_win2desk DESKTOP
+[00fe7dc4] dc.l $00fd9b3c            ; F504 ; fun_desk2win DESKTOP
+[00fe7dc8] dc.l $00fd9be0            ; F508 ; fun_d2desk DESKTOP
 [00fe7dcc] dc.l $00fd7d6e            ; F50C ; my_itoa DESKTOP
 [00fe7dd0] dc.l $00fd7e02            ; F510 ; fmt_date DESKTOP
 [00fe7dd4] dc.l $00fd7db6            ; F514 ; fmt_time DESKTOP
@@ -393,7 +393,7 @@
 [00fe7ee0] dc.l $00fe1bae            ; F620 ; av_hardcopy AES
 [00fe7ee4] dc.l $00fd65ba            ; F624
 [00fe7ee8] dc.l $00fd66ba            ; F628
-[00fe7eec] dc.l $00fd9d76            ; F62C
+[00fe7eec] dc.l $00fd9d76            ; F62C ; desk1_drag DESKTOP
 [00fe7ef0] dc.l $00fdb318            ; F630 ; do_file DESKTOP
 [00fe7ef4] dc.l $00fdb17c            ; F634
 [00fe7ef8] dc.l $00fe75e0            ; F638 ; mediach AES

@@ -244,10 +244,10 @@ lineftab: ds.b 0
 		dc.l _rc_constrain        ; F2E0
 		dc.l _xfd5e9a             ; F2E4
 		dc.l _wind_find           ; F2E8
-		dc.l _xfdc3f4             ; F2EC
+		dc.l _win_find            ; F2EC
 		dc.l _xfd5bfe             ; F2F0
 		dc.l _xfd637e             ; F2F4
-		dc.l _xfdb04c             ; F2F8
+		dc.l _i_find              ; F2F8
 		dc.l _rc_intersect        ; F2FC
 		dc.l _objc_change         ; F300
 		dc.l _rc_union            ; F304
@@ -368,18 +368,18 @@ lineftab: ds.b 0
 		dc.l _par_chk             ; F4D0
 		dc.l _get_spec            ; F4D4
 		dc.l _fun_op              ; F4D8
-		dc.l _xfd5b36             ; F4DC
+		dc.l _app_afind           ; F4DC
 		dc.l _fun_wdst            ; F4E0
 		dc.l _xfdadb6             ; F4E4
 		dc.l _pn_open             ; F4E8
-		dc.l _xfd9922             ; F4EC
+		dc.l _fun_file2win        ; F4EC
 		dc.l _pn_free             ; F4F0
-		dc.l _xfd9a6c             ; F4F4
-		dc.l _xfdcd06             ; F4F8
+		dc.l _fun_f2any           ; F4F4
+		dc.l _win_isel            ; F4F8
 		dc.l _fc_start            ; F4FC
-		dc.l _xfd99e0             ; F500
-		dc.l _xfd9b3c             ; F504
-		dc.l _xfd9be0             ; F508
+		dc.l _fun_win2desk        ; F500
+		dc.l _fun_desk2win        ; F504
+		dc.l _fun_d2desk          ; F508
 		dc.l _my_itoa             ; F50C
 		dc.l _fmt_date            ; F510
 		dc.l _fmt_time            ; F514
@@ -452,7 +452,7 @@ lineftab: ds.b 0
 		dc.l _av_hardcopy         ; F620
 		dc.l _xfd65ba             ; F624
 		dc.l _xfd66ba             ; F628
-		dc.l _xfd9d76             ; F62C
+		dc.l _desk1_drag          ; F62C
 		dc.l _do_file             ; F630
 		dc.l _xfdb17c             ; F634
 		dc.l _mediach             ; F638

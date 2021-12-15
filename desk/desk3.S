@@ -15,7 +15,7 @@ _deskmain: ds.b 0
 		move.l    d0,_g_buffer
 		move.l    #4*238,(a7)
 		jsr _dos_alloc
-		move.l    d0,_lp_mid
+		move.l    d0,_winhead
 		movea.l   _thedesk,a5
 		jsr _ap_init
 		move.w    #1,(a7)
@@ -341,7 +341,7 @@ deskm21:
 		jsr _dos_free
 		move.l    _thedesk,(a7)
 		jsr _dos_free
-		move.l    _lp_mid,(a7)
+		move.l    _winhead,(a7)
 		jsr _dos_free
 		move.w    d7,d0
 deskm22:
@@ -495,7 +495,7 @@ xfdc1_5:
 		move.w    d7,d0
 		muls.w    #238,d0
 		movea.l   d0,a5
-		adda.l    _lp_mid,a5
+		adda.l    _winhead,a5
 		clr.w     8(a5)
 		clr.w     6(a5)
 		move.w    #8,(a7)
@@ -549,7 +549,7 @@ xfdc2_1:
 		subq.w    #2,d0
 		muls.w    #238,d0
 		movea.l   d0,a5
-		adda.l    _lp_mid,a5
+		adda.l    _winhead,a5
 		clr.w     4(a5)
 		move.w    8(a6),8(a5)
 		move.w    d7,10(a5)
@@ -628,14 +628,14 @@ xfdc37_1:
 		addq.l    #8,a7
 		dc.w      $F801
 
-	xdef _xfdc3f4
-_xfdc3f4: ds.b 0
+	xdef _win_find
+_win_find: ds.b 0
 		link      a6,#0
 		movem.l   d6-d7,-(a7)
 		clr.w     d7
 		bra.s     xfdc3f_3
 xfdc3f_1:
-		movea.l   _lp_mid,a0
+		movea.l   _winhead,a0
 		move.w    d7,d1
 		muls.w    #238,d1
 		move.w    6(a0,d1.l),d0
@@ -643,7 +643,7 @@ xfdc3f_1:
 		bne.s     xfdc3f_2
 		move.w    d7,d0
 		muls.w    #238,d0
-		add.l     _lp_mid,d0
+		add.l     _winhead,d0
 		bra.s     xfdc3f_4
 xfdc3f_2:
 		addq.w    #1,d7
@@ -704,7 +704,7 @@ _xfdc47a: ds.b 0
 		subq.w    #2,d0
 		muls.w    #238,d0
 		movea.l   d0,a4
-		adda.l    _lp_mid,a4
+		adda.l    _winhead,a4
 		pea.l     28(a4)
 		move.l    13736(a5),-(a7)
 		jsr _streq
@@ -748,7 +748,7 @@ xfdc4_2:
 		move.w    d6,d0
 		subq.w    #2,d0
 		muls.w    #238,d0
-		add.l     _lp_mid,d0
+		add.l     _winhead,d0
 		dc.w      $F831
 
 	xdef _xfdc524
@@ -869,7 +869,7 @@ xfdc61_1:
 		clr.w     -(a7)
 xfdc61_2:
 		clr.w     -(a7)
-		jsr       _xfd5b36
+		jsr       _app_afind
 		adda.w    #14,a7
 		move.l    d0,34(a5)
 		dc.w      $F801
@@ -1338,7 +1338,7 @@ _srl_bar: ds.b 0
 		link      a6,#-16
 		movem.l   d7/a5,-(a7)
 		move.w    8(a6),(a7)
-		jsr _xfdc3f4
+		jsr _win_find
 		movea.l   d0,a5
 		tst.w     12(a6)
 		beq.s     srl_bar1
@@ -1380,7 +1380,7 @@ _xfdcbe0: ds.b 0
 		link      a6,#0
 		movem.l   d5-d7/a5,-(a7)
 		move.w    8(a6),(a7)
-		jsr _xfdc3f4
+		jsr _win_find
 		movea.l   d0,a5
 		moveq.l   #1,d7
 		move.w    10(a6),d0
@@ -1463,7 +1463,7 @@ _xfdcc68: ds.b 0
 xfdcc_1:
 		move.w    d7,d0
 		muls.w    #238,d0
-		add.l     _lp_mid,d0
+		add.l     _winhead,d0
 		movea.l   d0,a0
 		move.w    6(a0),d6
 		tst.w     d6
@@ -1477,7 +1477,7 @@ xfdcc_1:
 		move.l    -8(a6),-(a7)
 		move.w    d7,d0
 		muls.w    #238,d0
-		add.l     _lp_mid,d0
+		add.l     _winhead,d0
 		move.l    d0,-(a7)
 		jsr       _xfdc652
 		adda.w    #12,a7
@@ -1514,8 +1514,8 @@ xfdcc_6:
 		dc.w      $FC31
 
 
-	xdef _xfdcd06
-_xfdcd06: ds.b 0
+	xdef _win_isel
+_win_isel: ds.b 0
 		link      a6,#0
 		movem.l   d5-d7,-(a7)
 		move.w    12(a6),d7
@@ -1654,6 +1654,6 @@ xfeb2e6:
 	comm x007098,32
 	xdef x0063c6
 	comm x0063c6,2
-	xdef _lp_mid
-	comm _lp_mid,4
+	xdef _winhead
+	comm _winhead,4
 	

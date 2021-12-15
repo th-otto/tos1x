@@ -13,8 +13,8 @@ desk_w2:
 		addq.l    #2,a7
 		dc.w      $F001
 
-	xdef _xfdb04c
-_xfdb04c: ds.b 0
+	xdef _i_find
+_i_find: ds.b 0
 		link      a6,#-134
 		movem.l   d5-d7/a3-a5,-(a7)
 		move.w    8(a6),d7
@@ -31,7 +31,7 @@ _xfdb04c: ds.b 0
 		move.l    -4(a6),-(a7)
 		move.w    d6,-(a7)
 		move.l    #$0001FFFF,-(a7)
-		jsr       _xfd5b36
+		jsr       _app_afind
 		adda.w    #10,a7
 		movea.l   d0,a4
 		bra       xfdb0_10
@@ -39,7 +39,7 @@ xfdb0_1:
 		cmp.w     #-1,d6
 		beq       xfdb0_10
 		move.w    d7,(a7)
-		jsr       _xfdc3f4
+		jsr       _win_find
 		move.l    d0,-8(a6)
 		movea.l   -8(a6),a0
 		movea.l   24(a0),a0
@@ -104,7 +104,7 @@ xfdb0_8:
 		clr.w     -(a7)
 xfdb0_9:
 		clr.w     -(a7)
-		jsr       _xfd5b36
+		jsr       _app_afind
 		adda.w    #10,a7
 		movea.l   d0,a4
 xfdb0_10:
@@ -165,7 +165,7 @@ xfdb1_3:
 		move.w    d6,-(a7)
 		movea.l   _thedesk,a0
 		move.w    13720(a0),-(a7)
-		jsr       _xfdb04c
+		jsr       _i_find
 		adda.w    #12,a7
 		movea.l   d0,a5
 xfdb1_4:
@@ -233,7 +233,7 @@ xfdb1_14:
 		move.w    13718(a0),-(a7)
 		move.l    _thedesk,-(a7)
 		addi.l    #24200,(a7)
-		jsr       _xfdcd06
+		jsr       _win_isel
 		addq.l    #6,a7
 		move.w    d0,d6
 		bne       xfdb1_3
@@ -310,7 +310,7 @@ _do_file: ds.b 0
 		clr.w     (a7)
 		move.w    13718(a3),-(a7)
 		pea.l     24200(a3)
-		jsr       _xfdcd06
+		jsr       _win_isel
 		addq.l    #6,a7
 		move.w    d0,d6
 		move.w    8(a6),d0
@@ -513,7 +513,7 @@ _do_opt: ds.b 0
 		clr.w     (a7)
 		move.w    13718(a4),-(a7)
 		pea.l     24200(a4)
-		jsr       _xfdcd06
+		jsr       _win_isel
 		addq.l    #6,a7
 		move.w    d0,d6
 		tst.w     d6
@@ -522,7 +522,7 @@ _do_opt: ds.b 0
 		pea.l     -12(a6)
 		move.w    d6,-(a7)
 		move.w    13720(a4),-(a7)
-		jsr       _xfdb04c
+		jsr       _i_find
 		adda.w    #12,a7
 		movea.l   d0,a5
 do_opt1:
@@ -713,7 +713,7 @@ hd_butt1:
 		tst.w     d4
 		beq.s     hd_butt2
 		move.w    d4,(a7)
-		jsr       _xfdc3f4
+		jsr       _win_find
 		movea.l   d0,a5
 		move.w    10(a5),d6
 		bra.s     hd_butt3
@@ -724,7 +724,7 @@ hd_butt3:
 		move.w    d6,-(a7)
 		move.w    d4,-(a7)
 		move.w    d7,-(a7)
-		jsr       _xfd9d76
+		jsr       _desk1_drag
 		addq.l    #6,a7
 		move.w    d0,-2(a6)
 hd_butt4:
@@ -844,11 +844,11 @@ hd_men4:
 hd_men10:
 		move.w    d4,d0
 		muls.w    #238,d0
-		add.l     _lp_mid,d0
+		add.l     _winhead,d0
 		movea.l   d0,a0
 		tst.w     6(a0)
 		beq.s     hd_men9
-		movea.l   _lp_mid,a0
+		movea.l   _winhead,a0
 		move.w    d4,d1
 		muls.w    #238,d1
 		movea.l   24(a0,d1.l),a0
@@ -857,7 +857,7 @@ hd_men10:
 		jsr       _pn_sort
 		addq.l    #2,a7
 		move.l    d0,-(a7)
-		movea.l   _lp_mid,a0
+		movea.l   _winhead,a0
 		move.w    d4,d1
 		muls.w    #238,d1
 		movea.l   24(a0,d1.l),a0
@@ -963,7 +963,7 @@ hd_msg7:
 		jsr _wind_get
 		adda.w    #20,a7
 		move.w    13356(a4),(a7)
-		jsr       _xfdc3f4
+		jsr       _win_find
 		movea.l   d0,a5
 		move.l    a5,(a7)
 		jsr       _xfdc430
@@ -1050,7 +1050,7 @@ hd_msg14:
 		jsr _wind_get
 		adda.w    #20,a7
 		move.w    13356(a4),(a7)
-		jsr       _xfdc3f4
+		jsr       _win_find
 		movea.l   d0,a5
 		move.w    -8(a6),(a7)
 		move.w    -6(a6),-(a7)
@@ -1089,7 +1089,7 @@ hd_msg17:
 		jsr _wind_get
 		adda.w    #20,a7
 		move.w    13356(a4),(a7)
-		jsr       _xfdc3f4
+		jsr       _win_find
 		movea.l   d0,a5
 		move.w    -8(a6),(a7)
 		move.w    -6(a6),-(a7)
