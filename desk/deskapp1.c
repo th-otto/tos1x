@@ -290,7 +290,7 @@ PP(register int16_t *py;)
 	if (*px > (gl_width / 2))
 		*px += gl_width % w;
 	
-	newy -= d->full.g_y;
+	newy -= d->g_full.g_y;
 	h = d->r_dicon.g_h;
 	y = newy / h;
 	ym = newy % h;
@@ -299,10 +299,10 @@ PP(register int16_t *py;)
 		*py = (y + 1) * h;
 	else
 		*py = y * h;
-	*py = min(*py, d->full.g_h - h);
-	if (*py > (d->full.g_h / 2))
-		*py += d->full.g_h % h;
-	*py += d->full.g_y;
+	*py = min(*py, d->g_full.g_h - h);
+	if (*py > (d->g_full.g_h / 2))
+		*py += d->g_full.g_h % h;
+	*py += d->g_full.g_y;
 }
 
 
@@ -506,7 +506,7 @@ eof:;
 
 	for (app = d->applist; app; app = app->a_next)
 	{
-		app_mtoi(app->a_x * d->r_dicon.g_w, app->a_y * d->r_dicon.g_h + d->full.g_y, &app->a_x, &app->a_y);
+		app_mtoi(app->a_x * d->r_dicon.g_w, app->a_y * d->r_dicon.g_h + d->g_full.g_y, &app->a_x, &app->a_y);
 	}
 
 	d->o13744 = 9;
@@ -694,7 +694,7 @@ PP(BOOLEAN todisk;)
 		if (app->a_apptype & AF_ISDESK)
 		{
 			pcurr = save_2(pcurr, app->a_x / d->r_dicon.g_w);
-			pcurr = save_2(pcurr, (app->a_y - d->full.g_y) / d->r_dicon.g_h);
+			pcurr = save_2(pcurr, (app->a_y - d->g_full.g_y) / d->r_dicon.g_h);
 		}
 		pcurr = save_2(pcurr, app->a_aicon);
 		pcurr = save_2(pcurr, app->a_dicon);

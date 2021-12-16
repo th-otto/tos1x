@@ -38,12 +38,15 @@ AESDESK_OBJS = \
 	../aes/apgsxif.o \
 	../desk/deskapp1.o \
 	../desk/desk1.o \
+	../desk/deskact.o \
 	../desk/deskif.o \
 	../desk/deskinf.o \
 	../desk/deskpref.o \
 	../desk/deskins.o \
 	../desk/deskfpd.o \
 	../desk/deskwin.o \
+	../desk/deskobj.o \
+	../desk/desksupp.o \
 	../desk/desk2.o \
 	../desk/rainbow.o \
 	../desk/desk4.o \

@@ -212,7 +212,7 @@ fc_st33:
 		jsr _up_allwin
 		addq.l    #4,a7
 		clr.w     (a7)
-		jsr _hd_win
+		jsr _desk_clear
 		bra       fc_st30
 
 /* case 23 */

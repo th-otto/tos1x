@@ -231,30 +231,30 @@ lineftab: ds.b 0
 		dc.l _fs_sset             ; F2AC
 		dc.l _inf_gindex          ; F2B0
 		dc.l _objc_find           ; F2B4
-		dc.l _xfd6228             ; F2B8
+		dc.l _act_chkobj          ; F2B8
 		dc.l _app_mtoi            ; F2BC
 		dc.l _do_redraw           ; F2C0
 		dc.l _graf_mouse          ; F2C4
 		dc.l _gsx_pline           ; F2C8
-		dc.l _xfd5e3a             ; F2CC
+		dc.l _gr_plns             ; F2CC
 		dc.l _evnt_multi          ; F2D0
-		dc.l _xfd5d7c             ; F2D4
+		dc.l _gr_extent           ; F2D4
 		dc.l _gsx_attr            ; F2D8
 		dc.l _graf_mkstate        ; F2DC
 		dc.l _rc_constrain        ; F2E0
-		dc.l _xfd5e9a             ; F2E4
+		dc.l _gr_bwait            ; F2E4
 		dc.l _wind_find           ; F2E8
 		dc.l _win_find            ; F2EC
-		dc.l _xfd5bfe             ; F2F0
-		dc.l _xfd637e             ; F2F4
+		dc.l _gr_obfind           ; F2F0
+		dc.l _act_chg             ; F2F4
 		dc.l _i_find              ; F2F8
 		dc.l _rc_intersect        ; F2FC
 		dc.l _objc_change         ; F300
 		dc.l _rc_union            ; F304
-		dc.l _xfd6452             ; F308
+		dc.l _act_allchg          ; F308
 		dc.l _graf_rubbox         ; F30C
-		dc.l _xfd5f34             ; F310
-		dc.l _xfd5c50             ; F314
+		dc.l _gr_drgplns          ; F310
+		dc.l _move_drvicon        ; F314
 		dc.l _evnt_button         ; F318
 		dc.l _hex_dig             ; F31C
 		dc.l _uhex_dig            ; F320
@@ -283,8 +283,8 @@ lineftab: ds.b 0
 		dc.l _dos_delete          ; F37C
 		dc.l _up_allwin           ; F380
 		dc.l _dos_sdrv            ; F384
-		dc.l _xfd9eca             ; F388
-		dc.l _xfd9f56             ; F38C
+		dc.l _obj_wfree           ; F388
+		dc.l _obj_ialloc          ; F38C
 		dc.l _movs                ; F390
 		dc.l _ap_bvset            ; F394
 		dc.l _wildcmp             ; F398
@@ -330,7 +330,7 @@ lineftab: ds.b 0
 		dc.l _drawclip            ; F438
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440
-		dc.l _hd_win              ; F444
+		dc.l _desk_clear          ; F444
 		dc.l _fc_format           ; F448
 		dc.l _fc_copy             ; F44C
 		dc.l _trp14int            ; F450
@@ -357,7 +357,7 @@ lineftab: ds.b 0
 		dc.l _win_ith             ; F4A4
 		dc.l _up_win              ; F4A8
 		dc.l _pn_folder           ; F4AC
-		dc.l _xfda13c             ; F4B0
+		dc.l _desk_verify         ; F4B0
 		dc.l _xfdcd94             ; F4B4
 		dc.l _wind_set            ; F4B8
 		dc.l _wind_grget          ; F4BC
@@ -401,10 +401,10 @@ lineftab: ds.b 0
 		dc.l _objc_add            ; F554
 		dc.l _do_cdir             ; F558
 		dc.l _shel_write          ; F55C
-		dc.l _xfda2fa             ; F560
-		dc.l _xfdc652             ; F564
-		dc.l _xfda2a0             ; F568
-		dc.l _xfda22c             ; F56C
+		dc.l _do_wopen            ; F560
+		dc.l _win_bldview         ; F564
+		dc.l _do_xyfix            ; F568
+		dc.l _get_xywh            ; F56C
 		dc.l _graf_growbox        ; F570
 		dc.l _wind_open           ; F574
 		dc.l _wind_close          ; F578
@@ -415,9 +415,9 @@ lineftab: ds.b 0
 		dc.l _xfdc430             ; F58C
 		dc.l _gsx_escapes         ; F590
 		dc.l _showfile            ; F594
-		dc.l _xfda066             ; F598
+		dc.l _pro_run             ; F598
 		dc.l _xfdc2a6             ; F59C
-		dc.l _xfd9fde             ; F5A0
+		dc.l _pro_chdir           ; F5A0
 		dc.l _xfda4b6             ; F5A4
 		dc.l _xfdc376             ; F5A8
 		dc.l _fpd_parse           ; F5AC
@@ -438,7 +438,7 @@ lineftab: ds.b 0
 		dc.l _open_item           ; F5E8
 		dc.l _show_item           ; F5EC
 		dc.l _newfolder           ; F5F0
-		dc.l _close_win           ; F5F4
+		dc.l _close_window        ; F5F4
 		dc.l _xfdab74             ; F5F8
 		dc.l _menu_icheck         ; F5FC
 		dc.l _xfdc09c             ; F600
@@ -450,8 +450,8 @@ lineftab: ds.b 0
 		dc.l _xfdba7e             ; F618
 		dc.l _save_inf            ; F61C
 		dc.l _av_hardcopy         ; F620
-		dc.l _xfd65ba             ; F624
-		dc.l _xfd66ba             ; F628
+		dc.l _act_bsclick         ; F624
+		dc.l _act_bdown           ; F628
 		dc.l _desk1_drag          ; F62C
 		dc.l _do_file             ; F630
 		dc.l _xfdb17c             ; F634
@@ -472,13 +472,13 @@ lineftab: ds.b 0
 		dc.l _wind_calc           ; F670
 		dc.l _read_inf            ; F674
 		dc.l _ap_exit             ; F678
-		dc.l _xfdc184             ; F67C
+		dc.l _obj_init            ; F67C
 		dc.l _pn_init             ; F680
 		dc.l _menu_bar            ; F684
 		dc.l _xfdbb94             ; F688
 		dc.l _hd_button           ; F68C
 		dc.l _set_defdrv          ; F690
-		dc.l _xfd9e58             ; F694
+		dc.l _obj_walloc          ; F694
 		dc.l _wind_create         ; F698
 		dc.l _wind_delete         ; F69C
 		dc.l _objc_order          ; F6A0

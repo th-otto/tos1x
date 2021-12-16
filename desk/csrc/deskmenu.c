@@ -766,7 +766,7 @@ VOID hd_msg(NOTHING)
 	case WM_MOVED:
 	case WM_FULLED:
 	case WM_SIZED:
-		hd_win(d->o13720);
+		desk_clear(d->o13720);
 		break;
 	}
 	if (d->p_msgbuf[0] == MN_SELECTED)

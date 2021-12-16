@@ -133,7 +133,7 @@ PP(register DESKWIN *win;)
 	GRECT gr;
 
 	pn_folder(win->w_path);
-	xfda13c(win->w_id, TRUE);
+	desk_verify(win->w_id, TRUE);
 	xfdcd94(win);
 	wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
 	wind_grget(win->w_id, WF_WORKXYWH, &gr);
@@ -445,7 +445,7 @@ PP(int16_t dobj;)
 			thedesk->g_screen[ROOT].ob_state = NORMAL;
 		}
 		pn_free(pn_src);
-		hd_win(0);
+		desk_clear(0);
 	}
 	return okay;
 }
@@ -598,7 +598,7 @@ PP(register int16_t dobj;)
 			{
 				app = i_find(dest_wh, dobj, &pf, &isapp);
 				if (fun_file2win(srcwin->w_path, dstwin->w_path->p_spec, app, pf) && wh != dest_wh)
-					hd_win(wh);
+					desk_clear(wh);
 			}
 		} else
 		{
@@ -623,7 +623,3 @@ PP(register int16_t dobj;)
 	}
 	return done;
 }
-
-
-/* 104de: 00fd9e58 */
-/* 106de: 00e1ace0 */

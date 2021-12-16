@@ -1,254 +1,5 @@
-    xdef _xfd9e58
-_xfd9e58: ds.b 0
-        link      a6,#0
-        movem.l   d6-d7/a5,-(a7)
-        movea.l   _thedesk,a5
-        moveq.l   #1,d7
-        bra.s     xfd9e5_2
-xfd9e5_1:
-        movea.l   a5,a0
-        move.w    d7,d1
-        addq.w    #1,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        tst.w     24220(a0)
-        beq.s     xfd9e5_3
-        movea.l   a5,a0
-        move.w    d7,d1
-        addq.w    #1,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        tst.w     24222(a0)
-        beq.s     xfd9e5_3
-        addq.w    #1,d7
-xfd9e5_2:
-        cmp.w     #5,d7
-        blt.s     xfd9e5_1
-xfd9e5_3:
-        cmp.w     #5,d7
-        bge.s     xfd9e5_4
-        move.l    12(a6),-(a7)
-        move.l    8(a6),-(a7)
-        move.l    a5,d0
-        move.w    d7,d1
-        addq.w    #1,d1
-        muls.w    #24,d1
-        add.l     d1,d0
-        move.l    d0,-(a7)
-        addi.l    #24216,(a7)
-        jsr _r_set
-        adda.w    #12,a7
-        move.w    d7,d0
-        addq.w    #1,d0
-        bra.s     xfd9e5_5
-        bra.s     xfd9e5_5
-xfd9e5_4:
-        clr.w     d0
-xfd9e5_5:
-        dc.w      $F821
-
-    xdef _xfd9eca
-_xfd9eca: ds.b 0
-        link      a6,#0
-        movem.l   d5-d7/a5,-(a7)
-        movea.l   _thedesk,a5
-        move.l    14(a6),-(a7)
-        move.l    10(a6),-(a7)
-        move.l    a5,d0
-        move.w    8(a6),d1
-        muls.w    #24,d1
-        add.l     d1,d0
-        move.l    d0,-(a7)
-        addi.l    #24216,(a7)
-        jsr _r_set
-        adda.w    #12,a7
-        movea.l   a5,a0
-        move.w    8(a6),d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        move.w    24202(a0),d7
-        bra.s     xfd9e_2
-xfd9e_1:
-        movea.l   a5,a0
-        move.w    d7,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        move.w    24200(a0),d6
-        movea.l   a5,a0
-        move.w    d7,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        move.w    #-1,24200(a0)
-        move.w    d6,d7
-xfd9e_2:
-        cmp.w     8(a6),d7
-        bgt.s     xfd9e_1
-        movea.l   a5,a0
-        move.w    8(a6),d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        moveq.l   #-1,d0
-        move.w    d0,24204(a0)
-        movea.l   a5,a1
-        move.w    8(a6),d2
-        muls.w    #24,d2
-        adda.l    d2,a1
-        move.w    d0,24202(a1)
-        dc.w      $F831
-
-    xdef _xfd9f56
-_xfd9f56: ds.b 0
-        link      a6,#0
-        movem.l   d6-d7/a5,-(a7)
-        movea.l   _thedesk,a5
-        moveq.l   #6,d7
-        bra.s     xfd9f_2
-xfd9f_1:
-        movea.l   a5,a0
-        move.w    d7,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        cmpi.w    #-1,24200(a0)
-        beq.s     xfd9f_3
-        addq.w    #1,d7
-xfd9f_2:
-        cmp.w     #260,d7
-        blt.s     xfd9f_1
-xfd9f_3:
-        cmp.w     #260,d7
-        bge.s     xfd9f_4
-        movea.l   a5,a0
-        move.w    d7,d1
-        muls.w    #24,d1
-        adda.l    d1,a0
-        moveq.l   #-1,d0
-        move.w    d0,24204(a0)
-        movea.l   a5,a1
-        move.w    d7,d2
-        muls.w    #24,d2
-        adda.l    d2,a1
-        move.w    d0,24202(a1)
-        move.w    d7,(a7)
-        move.w    8(a6),-(a7)
-        move.l    24108(a5),-(a7)
-        jsr _objc_add
-        addq.l    #6,a7
-        move.l    14(a6),-(a7)
-        move.l    10(a6),-(a7)
-        move.l    a5,d0
-        move.w    d7,d1
-        muls.w    #24,d1
-        add.l     d1,d0
-        move.l    d0,-(a7)
-        addi.l    #24216,(a7)
-        jsr _r_set
-        adda.w    #12,a7
-        move.w    d7,d0
-        bra.s     xfd9f_5
-        bra.s     xfd9f_5
-xfd9f_4:
-        clr.w     d0
-xfd9f_5:
-        dc.w      $F821
-
-    xdef _xfd9fde
-_xfd9fde: ds.b 0
-        link      a6,#0
-        movem.l   d6-d7/a5,-(a7)
-        movea.l   _g_buffer,a5
-        cmpi.w    #99,8(a6)
-        bne.s     xfd9fd_1
-        clr.w     _DOS_ERR
-        moveq.l   #1,d0
-        bra.s     xfd9fd_8
-xfd9fd_1:
-        tst.w     8(a6)
-        beq.s     xfd9fd_7
-        move.b    #92,256(a5)
-        pea.l     257(a5)
-        move.l    10(a6),-(a7)
-        jsr _xstrpcpy
-        addq.l    #8,a7
-        moveq.l   #1,d7
-        bra.s     xfd9fd_5
-xfd9fd_2:
-        movea.l   a5,a0
-        movea.w   d7,a1
-        adda.l    a1,a0
-        cmpi.b    #' ',256(a0)
-        beq.s     xfd9fd_3
-        movea.l   a5,a0
-        movea.w   d7,a1
-        adda.l    a1,a0
-        cmpi.b    #'*',256(a0)
-        bne.s     xfd9fd_4
-xfd9fd_3:
-        movea.l   a5,a0
-        movea.w   d7,a1
-        adda.l    a1,a0
-        clr.b     256(a0)
-        bra.s     xfd9fd_6
-        bra.s     xfd9fd_5
-xfd9fd_4:
-        addq.w    #1,d7
-xfd9fd_5:
-        movea.l   a5,a0
-        movea.w   d7,a1
-        adda.l    a1,a0
-        tst.b     256(a0)
-        bne.s     xfd9fd_2
-xfd9fd_6:
-        pea.l     256(a5)
-        move.w    8(a6),-(a7)
-        addi.w    #$FFBF,(a7)
-        jsr _do_cdir
-        addq.l    #6,a7
-xfd9fd_7:
-        moveq.l   #1,d0
-xfd9fd_8:
-        dc.w      $F821
-
-    xdef _xfda066
-_xfda066: ds.b 0
-        link      a6,#-4
-        movem.l   d7/a5,-(a7)
-        movea.l   _thedesk,a5
-        tst.b     13518(a5)
-        bne.s     xfda06_1
-        move.l    a5,(a7)
-        addi.l    #13519,(a7)
-        jsr _strlen
-        move.w    d0,-4(a6)
-        move.b    d0,13518(a5)
-        movea.l   a5,a0
-        movea.w   -4(a6),a1
-        adda.l    a1,a0
-        move.b    #13,13519(a0)
-xfda06_1:
-        move.w    #1,(a7)
-        jsr _desk_wait
-        move.l    13646(a5),(a7)
-        move.l    13514(a5),-(a7)
-        move.l    8(a6),-(a7)
-        move.w    #1,-(a7)
-        jsr _shel_write
-        adda.w    #10,a7
-        move.w    d0,-2(a6)
-        clr.b     13518(a5)
-        cmpi.w    #-1,12(a6)
-        beq.s     xfda06_2
-        move.l    13374(a5),-(a7)
-        move.l    13370(a5),-(a7)
-        move.l    12(a6),-(a7)
-        clr.w     -(a7)
-        jsr       _xfda2fa
-        adda.w    #14,a7
-xfda06_2:
-        move.w    -2(a6),d0
-        dc.w      $F801
-
-    xdef _hd_win
-_hd_win: ds.b 0
+    xdef _desk_clear
+_desk_clear: ds.b 0
         link      a6,#-8
         movem.l   d5-d7/a5,-(a7)
         move.w    8(a6),d7
@@ -278,12 +29,12 @@ hd_win2:
         movea.l   _thedesk,a0
         move.l    24108(a0),-(a7)
         move.w    d7,-(a7)
-        jsr       _xfd6452
+        jsr       _act_allchg
         adda.w    #24,a7
         dc.w      $F831
 
-    xdef _xfda13c
-_xfda13c: ds.b 0
+    xdef _desk_verify
+_desk_verify: ds.b 0
         link      a6,#-8
         movem.l   d5-d7/a4-a5,-(a7)
         move.w    8(a6),d7
@@ -304,7 +55,7 @@ _xfda13c: ds.b 0
         move.l    -4(a6),-(a7)
         move.l    -8(a6),-(a7)
         move.l    a5,-(a7)
-        jsr       _xfdc652
+        jsr       _win_bldview
         adda.w    #12,a7
 xfda13_1:
         move.w    10(a5),13718(a4)
@@ -381,8 +132,8 @@ do_red6:
         addq.l    #2,a7
         dc.w      $FC39
 
-    xdef _xfda22c
-_xfda22c: ds.b 0
+    xdef _get_xywh
+_get_xywh: ds.b 0
         link      a6,#0
         movem.l   d6-d7,-(a7)
         move.w    12(a6),d7
@@ -421,8 +172,8 @@ _get_spec: ds.b 0
         move.l    12(a0,d1.l),d0
         dc.w      $F001
 
-    xdef _xfda2a0
-_xfda2a0: ds.b 0
+    xdef _do_xyfix
+_do_xyfix: ds.b 0
         link      a6,#-8
         movem.l   d7/a4-a5,-(a7)
         movea.l   8(a6),a5
@@ -455,8 +206,8 @@ xfda2_2:
         move.w    d0,(a4)
         dc.w      $FC01
 
-    xdef _xfda2fa
-_xfda2fa: ds.b 0
+    xdef _do_wopen
+_do_wopen: ds.b 0
         link      a6,#-16
         movem.l   d4-d7/a3-a5,-(a7)
         move.w    8(a6),d7
@@ -466,7 +217,7 @@ _xfda2fa: ds.b 0
         movea.l   _thedesk,a4
         pea.l     16(a6)
         pea.l     14(a6)
-        jsr       _xfda2a0
+        jsr       _do_xyfix
         addq.l    #8,a7
         pea.l     -8(a6)
         pea.l     -6(a6)
@@ -474,7 +225,7 @@ _xfda2fa: ds.b 0
         pea.l     -2(a6)
         move.w    d5,-(a7)
         pea.l     24200(a4)
-        jsr       _xfda22c
+        jsr       _get_xywh
         adda.w    #22,a7
         pea.l     6(a3)
         pea.l     4(a3)
@@ -482,7 +233,7 @@ _xfda2fa: ds.b 0
         move.l    a3,-(a7)
         move.w    13718(a4),-(a7)
         pea.l     24200(a4)
-        jsr       _xfda22c
+        jsr       _get_xywh
         adda.w    #22,a7
         move.w    (a3),d0
         add.w     d0,-2(a6)
@@ -513,7 +264,7 @@ xfda2f_1:
         move.w    13718(a4),-(a7)
         move.l    24108(a4),-(a7)
         move.w    13720(a4),-(a7)
-        jsr       _xfd637e
+        jsr       _act_chg
         adda.w    #20,a7
         tst.w     d7
         beq.s     xfda2f_2
@@ -648,7 +399,7 @@ xfda4_2:
         move.w    #1,(a7)
         movea.l   _thedesk,a0
         move.w    13722(a0),-(a7)
-        jsr       _xfda13c
+        jsr       _desk_verify
         addq.l    #2,a7
         bra       xfda4_8
         bra.s     xfda4_4
@@ -690,7 +441,7 @@ xfda4_6:
         move.w    d6,-(a7)
         move.w    6(a5),-(a7)
         move.w    d7,-(a7)
-        jsr       _xfda2fa
+        jsr       _do_wopen
         adda.w    #14,a7
         tst.w     d7
         beq.s     xfda4_7
@@ -699,7 +450,7 @@ xfda4_6:
 xfda4_7:
         move.w    #1,(a7)
         move.w    6(a5),-(a7)
-        jsr       _xfda13c
+        jsr       _desk_verify
         addq.l    #2,a7
         tst.w     d7
         bne.s     xfda4_8
@@ -726,7 +477,7 @@ _xfda5d2: ds.b 0
         pea.l     -18(a6)
         move.w    18(a6),-(a7)
         pea.l     24200(a4)
-        jsr       _xfda22c
+        jsr       _get_xywh
         adda.w    #22,a7
         pea.l     -16(a6)
         pea.l     -14(a6)
@@ -734,7 +485,7 @@ _xfda5d2: ds.b 0
         pea.l     -10(a6)
         move.w    13718(a4),-(a7)
         pea.l     24200(a4)
-        jsr       _xfda22c
+        jsr       _get_xywh
         adda.w    #22,a7
         move.w    -10(a6),d0
         add.w     d0,-18(a6)
@@ -936,7 +687,7 @@ xfda5_14:
         move.w    13720(a4),-(a7)
         move.w    -4(a6),-(a7)
         move.w    -2(a6),-(a7)
-        jsr       _xfda066
+        jsr       _pro_run
         addq.l    #6,a7
         bra.s     xfda5_16
 xfda5_15:
@@ -972,7 +723,7 @@ _xfda85e: ds.b 0
         beq.s     xfda8_1
         move.l    #xfeb1b3,(a7)
         move.w    d6,-(a7)
-        jsr       _xfd9fde
+        jsr       _pro_chdir
         addq.l    #2,a7
 xfda8_1:
         move.l    a3,d0
@@ -1026,7 +777,7 @@ _xfda900: ds.b 0
         beq.s     xfda90_2
         move.l    16(a6),(a7)
         move.w    14(a6),-(a7)
-        jsr       _xfd9fde
+        jsr       _pro_chdir
         addq.l    #2,a7
         move.l    24(a5),(a7)
         jsr       _pn_free
@@ -1343,7 +1094,7 @@ xfdac0_2:
 		move.w    d0,13722(a4)
 		move.w    #1,(a7)
 		move.w    13722(a4),-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		clr.w     d0
 		dc.w      $FC21
@@ -1397,8 +1148,8 @@ _xfdac8c: ds.b 0
 		clr.w     d0
 		dc.w      $FE01
 
-	xdef _close_win
-_close_win: ds.b 0
+	xdef _close_window
+_close_window: ds.b 0
 		link      a6,#-138
 		movem.l   d5-d7/a3-a5,-(a7)
 		movea.l   8(a6),a5
@@ -1516,34 +1267,6 @@ xfdadb_4:
 		dc.w      $F031
 
 	data
-
-	xdef xfeb168
-xfeb168:
-	dc.w -1
-	dc.w -1
-	dc.w -1
-	dc.w 25 ; G_IBOX
-	dc.w 0
-	dc.w 0
-	dc.l 0
-	dc.w 0
-	dc.w 0
-	dc.w 0
-	dc.w 0
-	xdef xfeb180
-xfeb180:
-	dc.w -1
-	dc.w -1
-	dc.w -1
-	dc.w 20 ; G_BOX
-	dc.w 0
-	dc.w 0
-	dc.l $1100
-	dc.w 0
-	dc.w 0
-	dc.w 0
-	dc.w 0
-
 
 xfeb198:
 	dc.l xfda9_5

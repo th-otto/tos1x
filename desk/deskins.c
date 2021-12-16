@@ -161,7 +161,7 @@ PP(register APP *app;)
 		LWSET(OB_STATE(APPARMS), SELECTED);
 	else
 		LWSET(OB_STATE(APDOS), SELECTED);
-	win = win_find(d->o13720);
+	win = win_find(d->g_cwin);
 	end = strscn(&win->w_name[1], path, ' ');
 	*end = '\0';
 	unfmt_str(buffer, filetype);

@@ -347,7 +347,7 @@ do_fil5:
 		move.l    a5,(a7)
 		jsr       _newfolder
 		clr.w     (a7)
-		jsr _hd_win
+		jsr _desk_clear
 do_fil14:
 		bra.s     do_fil13
 
@@ -356,10 +356,10 @@ do_fil6:
 		move.l    a5,d0
 		beq.s     do_fil7
 		move.w    13720(a3),(a7)
-		jsr _hd_win
+		jsr _desk_clear
 		clr.w     (a7)
 		move.l    a5,-(a7)
-		jsr       _close_win
+		jsr       _close_window
 		addq.l    #4,a7
 do_fil7:
 		bra.s     do_fil13
@@ -369,10 +369,10 @@ do_fil8:
 		move.l    a5,d0
 		beq.s     do_fil9
 		move.w    13720(a3),(a7)
-		jsr _hd_win
+		jsr _desk_clear
 		move.w    #1,(a7)
 		move.l    a5,-(a7)
-		jsr       _close_win
+		jsr       _close_window
 		addq.l    #4,a7
 do_fil9:
 		bra.s     do_fil13
@@ -508,7 +508,7 @@ _do_opt: ds.b 0
 		pea.l     -2(a6)
 		move.w    13718(a4),-(a7)
 		pea.l     24200(a4)
-		jsr       _xfda22c
+		jsr       _get_xywh
 		adda.w    #22,a7
 		clr.w     (a7)
 		move.w    13718(a4),-(a7)
@@ -668,11 +668,11 @@ _hd_button: ds.b 0
 		cmp.w     13720(a4),d7
 		beq.s     hd_butt1
 		move.w    13720(a4),(a7)
-		jsr _hd_win
+		jsr _desk_clear
 hd_butt1:
 		clr.w     (a7)
 		move.w    d7,-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		move.w    d7,13722(a4)
 		move.l    a3,(a7)
@@ -689,7 +689,7 @@ hd_butt1:
 		move.w    13718(a4),-(a7)
 		move.l    24108(a4),-(a7)
 		move.w    13720(a4),-(a7)
-		jsr       _xfd65ba
+		jsr       _act_bsclick
 		adda.w    #18,a7
 		pea.l     -4(a6)
 		pea.l     14(a6)
@@ -705,7 +705,7 @@ hd_butt1:
 		move.w    13718(a4),-(a7)
 		move.l    24108(a4),-(a7)
 		move.w    13720(a4),-(a7)
-		jsr       _xfd66ba
+		jsr       _act_bdown
 		adda.w    #20,a7
 		move.w    d0,d4
 		cmp.w     #-1,d4
@@ -737,7 +737,7 @@ hd_butt5:
 		move.w    13718(a4),-(a7)
 		move.l    24108(a4),-(a7)
 		move.w    13720(a4),-(a7)
-		jsr       _xfd65ba
+		jsr       _act_bsclick
 		adda.w    #18,a7
 		move.w    #18,(a7) ; OPENITEM
 		jsr _do_file
@@ -907,7 +907,7 @@ _hd_msg: ds.b 0
 		bra.s     hd_msg2
 hd_msg1:
 		move.w    13720(a4),(a7)
-		jsr _hd_win
+		jsr _desk_clear
 		bra.s     hd_msg3
 hd_msg2:
 		sub.w     #20,d0
@@ -926,7 +926,7 @@ hd_msg3:
 hd_msg4:
 		clr.w     (a7)
 		move.w    13722(a4),-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		move.l    13356(a4),-(a7)
 		jsr _hd_menu
@@ -969,7 +969,7 @@ hd_msg7:
 		jsr       _xfdc430
 		clr.w     (a7)
 		move.w    6(a5),-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		move.w    6(a5),13722(a4)
 		bra       hd_msg17
@@ -986,7 +986,7 @@ hd_msg9:
 		jsr       _xfda422
 		move.w    #1,(a7)
 		move.w    13356(a4),-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		moveq.l   #1,d6
 		bra       hd_msg17
@@ -1021,7 +1021,7 @@ hd_msg13:
 		move.w    13360(a4),-4(a6)
 		pea.l     -4(a6)
 		pea.l     -2(a6)
-		jsr       _xfda2a0
+		jsr       _do_xyfix
 		addq.l    #8,a7
 		move.w    13362(a4),-6(a6)
 		move.w    13364(a4),-8(a6)
@@ -1037,7 +1037,7 @@ hd_msg13:
 		bne.s     hd_msg14
 		move.w    #1,(a7)
 		move.w    13356(a4),-(a7)
-		jsr       _xfda13c
+		jsr       _desk_verify
 		addq.l    #2,a7
 		bra.s     hd_msg15
 hd_msg14:
@@ -1171,7 +1171,7 @@ xfdba_3:
 		adda.w    #20,a7
 		pea.l     2(a5)
 		move.l    a5,-(a7)
-		jsr       _xfda2a0
+		jsr       _do_xyfix
 		addq.l    #8,a7
 		move.w    12(a4),8(a5)
 		move.w    14(a4),10(a5)
@@ -1250,11 +1250,11 @@ xfdbb_1:
 		adda.w    #20,a7
 		pea.l     2(a5)
 		move.l    a5,-(a7)
-		bsr       _xfda2a0
+		bsr       _do_xyfix
 		addq.l    #8,a7
 		pea.l     12982(a3)
 		move.w    -2(a6),-(a7)
-		bsr       _xfd9fde
+		bsr       _pro_chdir
 		addq.l    #6,a7
 		tst.w     _DOS_ERR
 		bne.s     xfdbb_2
