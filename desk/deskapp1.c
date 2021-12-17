@@ -279,7 +279,7 @@ PP(register int16_t *py;)
 
 	d = thedesk;
 
-	w = d->r_dicon.g_w;
+	w = d->g_icw;
 	x = newx / w;
 	xm = newx % w;
 	if (xm > (w / 2))
@@ -291,7 +291,7 @@ PP(register int16_t *py;)
 		*px += gl_width % w;
 	
 	newy -= d->g_full.g_y;
-	h = d->r_dicon.g_h;
+	h = d->g_ich;
 	y = newy / h;
 	ym = newy % h;
 	
@@ -494,33 +494,33 @@ eof:;
 	d->iconaddr[0].ib_ychar = 14;
 	d->icona2[0].ib_xchar = 5;
 	d->icona2[0].ib_ychar = 14;
-	d->dicon.g_w = (d->iconaddr[0].ib_xtext << 1) + d->iconaddr[0].ib_wtext;
-	d->dicon.g_h = d->iconaddr[0].ib_hicon + d->iconaddr[0].ib_htext + 2;
-	d->r_dicon.g_w = gl_height <= 300 ? 0 : 8;
-	d->r_dicon.g_w += d->dicon.g_w;
-	w = gl_width / d->r_dicon.g_w;
-	d->r_dicon.g_w += (gl_width % d->r_dicon.g_w) / w;
-	d->r_dicon.g_h = d->dicon.g_h + 2;
-	h = (gl_height - gl_hbox) / d->r_dicon.g_h;
-	d->r_dicon.g_h += ((gl_height - gl_hbox) % d->r_dicon.g_h) / h;
+	d->g_wicon = (d->iconaddr[0].ib_xtext << 1) + d->iconaddr[0].ib_wtext;
+	d->g_hicon = d->iconaddr[0].ib_hicon + d->iconaddr[0].ib_htext + 2;
+	d->g_icw = gl_height <= 300 ? 0 : 8;
+	d->g_icw += d->g_wicon;
+	w = gl_width / d->g_icw;
+	d->g_icw += (gl_width % d->g_icw) / w;
+	d->g_ich = d->g_hicon + 2;
+	h = (gl_height - gl_hbox) / d->g_ich;
+	d->g_ich += ((gl_height - gl_hbox) % d->g_ich) / h;
 
 	for (app = d->applist; app; app = app->a_next)
 	{
-		app_mtoi(app->a_x * d->r_dicon.g_w, app->a_y * d->r_dicon.g_h + d->g_full.g_y, &app->a_x, &app->a_y);
+		app_mtoi(app->a_x * d->g_icw, app->a_y * d->g_ich + d->g_full.g_y, &app->a_x, &app->a_y);
 	}
 
-	d->o13744 = 9;
-	d->o13746 = 5;
+	d->g_nmicon = 9;
+	d->g_nmtext = 5;
 	memset(d->o13748, 0, sizeof(d->o13748));
 	d->o13748[0] = gl_wschar << 2;
 	d->o13748[2] = d->o13748[0];
-	d->o13748[3] = d->dicon.g_h - gl_wschar - 2;
+	d->o13748[3] = d->g_hicon - gl_wschar - 2;
 	d->o13748[5] = d->o13748[3];
-	d->o13748[7] = d->dicon.g_h;
-	d->o13748[8] = d->dicon.g_w;
-	d->o13766[0] = d->dicon.g_h;
-	d->o13766[1] = d->dicon.g_w;
-	d->o13766[2] = d->dicon.g_h - gl_wschar - 2;
+	d->o13748[7] = d->g_hicon;
+	d->o13748[8] = d->g_wicon;
+	d->o13766[0] = d->g_hicon;
+	d->o13766[1] = d->g_wicon;
+	d->o13766[2] = d->g_hicon - gl_wschar - 2;
 	d->o13766[3] = gl_wschar << 3;
 	d->o13766[4] = d->o13766[2];
 	d->o13766[5] = gl_wschar << 3;
@@ -693,8 +693,8 @@ PP(BOOLEAN todisk;)
 
 		if (app->a_apptype & AF_ISDESK)
 		{
-			pcurr = save_2(pcurr, app->a_x / d->r_dicon.g_w);
-			pcurr = save_2(pcurr, (app->a_y - d->g_full.g_y) / d->r_dicon.g_h);
+			pcurr = save_2(pcurr, app->a_x / d->g_icw);
+			pcurr = save_2(pcurr, (app->a_y - d->g_full.g_y) / d->g_ich);
 		}
 		pcurr = save_2(pcurr, app->a_aicon);
 		pcurr = save_2(pcurr, app->a_dicon);

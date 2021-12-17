@@ -25,7 +25,6 @@ deskif_OPTIMIZE=0
 desksupp_OPTIMIZE=1
 
 desk1_ASFLAGS=-n
-desk2_ASFLAGS=-n
 desk3_ASFLAGS=-n
 desk4_ASFLAGS=-n
 deskshow_ASFLAGS=-n

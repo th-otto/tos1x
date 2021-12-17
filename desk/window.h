@@ -15,6 +15,7 @@
 
 #define LEN_ZFNAME 13
 #define LEN_ZFPATH (PATHLEN - 6) /* BUG: too short */
+#define LEN_ZEXT 4
 
 typedef struct dir
 {
@@ -42,6 +43,8 @@ typedef struct window_save
 	int16_t	obid_save;
 	char	pth_save[LEN_ZFPATH];
 } WSAVE;
+
+#define DROOT 1 /* desktop pseudo root */
 
 typedef	struct deskwin DESKWIN;
 struct deskwin {

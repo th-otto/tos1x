@@ -391,8 +391,8 @@ PP(char *ppath;)
 
 /* 104de: 00fd81e8 */
 /* 106de: 00e18c68 */
-VOID inf_setsize(P(VOIDPTR) p1, P(char *) buf, P(OBJECT *) tree, P(int16_t) obj, P(BOOLEAN) flag)
-PP(VOIDPTR p1;)
+VOID inf_setsize(P(const VOIDPTR) p1, P(char *) buf, P(OBJECT *) tree, P(int16_t) obj, P(BOOLEAN) flag)
+PP(const VOIDPTR p1;)
 PP(char *buf;)
 PP(OBJECT *tree;)
 PP(int16_t obj;)

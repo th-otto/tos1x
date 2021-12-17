@@ -47,7 +47,6 @@ AESDESK_OBJS = \
 	../desk/deskwin.o \
 	../desk/deskobj.o \
 	../desk/desksupp.o \
-	../desk/desk2.o \
 	../desk/rainbow.o \
 	../desk/desk4.o \
 	../desk/desk3.o \

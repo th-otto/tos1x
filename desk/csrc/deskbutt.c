@@ -28,8 +28,8 @@ int16_t av_icon(NOTHING)
 		if (obj[i].ob_flags & HIDETREE)
 		{
 			k = i;
-			col = thedesk->full.g_w / thedesk->r_dicon.g_w;
-			row = thedesk->full.g_h / thedesk->r_dicon.g_h;
+			col = thedesk->full.g_w / thedesk->g_icw;
+			row = thedesk->full.g_h / thedesk->g_icwh;
 
 			for (xrow = 0; xrow < row; xrow++)
 			{

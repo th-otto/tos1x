@@ -58,7 +58,7 @@ BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GREC
 
 /* 104de: 00fd6452 */
 /* 106de: 00e16ab8 */
-VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, int16_t dochg, int16_t dodraw));
+VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, BOOLEAN dochg, BOOLEAN dodraw, BOOLEAN dox));
 
 
 /* 104de: 00fd65ba */

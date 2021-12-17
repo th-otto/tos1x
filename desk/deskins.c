@@ -89,14 +89,14 @@ PP(register APP *app;)
 				newapp->a_aicon = app->a_aicon;
 				newapp->a_dicon = -1;
 				if (app->a_x < gl_width / 2)
-					newapp->a_x = thedesk->r_dicon.g_w + app->a_x;
+					newapp->a_x = thedesk->g_icw + app->a_x;
 				else
-					newapp->a_x = app->a_x - thedesk->r_dicon.g_w;
+					newapp->a_x = app->a_x - thedesk->g_icw;
 				if (app->a_y < (gl_height - gl_hbox) / 2)
-					newapp->a_y = thedesk->r_dicon.g_h + app->a_y;
+					newapp->a_y = thedesk->g_ich + app->a_y;
 				else
-					newapp->a_y = app->a_y - thedesk->r_dicon.g_h;
-				newapp->a_y = thedesk->dicon.g_h + app->a_y;
+					newapp->a_y = app->a_y - thedesk->g_ich;
+				newapp->a_y = thedesk->g_hicon + app->a_y;
 				app_mtoi(newapp->a_x, newapp->a_y, &newapp->a_x, &newapp->a_y);
 				app = newapp;
 			} else

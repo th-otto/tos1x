@@ -382,7 +382,7 @@ do_fil10:
 		tst.w     d6
 		beq.s     do_fil11
 		move.w    d6,(a7)
-		jsr       _xfdab74
+		jsr       _do_format
 		move.w    d0,d7
 do_fil11:
 		bra.s     do_fil13
@@ -551,7 +551,7 @@ do_opt2:
 		move.w    -4(a6),-(a7)
 		move.w    -2(a6),-(a7)
 		clr.w     -(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		addq.l    #8,a7
 do_opt3:
 		bra       do_opt17
@@ -773,7 +773,7 @@ _hd_keybd: ds.b 0
 		move.b    8(a0),d0
 		ext.w     d0
 		move.w    d0,(a7)
-		jsr       _xfdadb6
+		jsr       _pro_chroot
 		tst.w     d0
 		beq.s     hd_key1
 		move.w    #1,(a7)
@@ -941,7 +941,7 @@ hd_msg5:
 		move.l    13362(a4),-(a7)
 		move.l    13358(a4),-(a7)
 		move.w    13356(a4),-(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		adda.w    #10,a7
 hd_msg6:
 		bra       hd_msg17
@@ -966,7 +966,7 @@ hd_msg7:
 		jsr       _win_find
 		movea.l   d0,a5
 		move.l    a5,(a7)
-		jsr       _xfdc430
+		jsr       _win_top
 		clr.w     (a7)
 		move.w    6(a5),-(a7)
 		jsr       _desk_verify
@@ -983,7 +983,7 @@ hd_msg8:
 /* case WM_FULLED */
 hd_msg9:
 		move.w    13356(a4),(a7)
-		jsr       _xfda422
+		jsr       _do_wfull
 		move.w    #1,(a7)
 		move.w    13356(a4),-(a7)
 		jsr       _desk_verify
@@ -1231,7 +1231,7 @@ xfdbb_1:
 		tst.b     14(a5)
 		beq       xfdbb_3
 		move.w    12(a5),(a7)
-		jsr       _xfdc2a6
+		jsr       _win_alloc
 		movea.l   d0,a4
 		move.l    a4,d0
 #ifdef __GNUC__
@@ -1259,7 +1259,7 @@ xfdbb_1:
 		tst.w     _DOS_ERR
 		bne.s     xfdbb_2
 		move.w    -2(a6),(a7)
-		bsr       _xfdadb6
+		bsr       _pro_chroot
 		tst.w     d0
 		beq.s     xfdbb_2
 		move.l    a5,(a7)
@@ -1270,12 +1270,12 @@ xfdbb_1:
 		move.w    12(a5),-(a7)
 		move.w    #1,-(a7)
 		move.l    a4,-(a7)
-		bsr       _xfda4b6
+		bsr       _do_diropen
 		adda.w    #22,a7
 		bra.s     xfdbb_3
 xfdbb_2:
 		move.l    a4,(a7)
-		bsr       _xfdc376
+		bsr       _win_free
 xfdbb_3:
 		addq.w    #1,d7
 xfdbb_4:

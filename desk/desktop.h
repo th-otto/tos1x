@@ -229,7 +229,9 @@ typedef struct {
 	/* 12308 */ int16_t g_isort;		/* current sort type */
 	/* 12310 */ char g_srcpth[PATHLEN];
 	/* 12438 */ char g_dstpth[PATHLEN];
-	/* 12566 */ char o12566[404];
+	/* 12566 */ char o12566[8];
+	/* 12574 */ DTA r_dta;
+	/* 12618 */ char o12618[352];
 	/* 12970 */ int32_t g_nfiles;
 	/* 12974 */ int32_t g_ndirs;
 	/* 12978 */ int32_t g_size;
@@ -254,17 +256,20 @@ typedef struct {
 	/* 13730 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
 	/* 13732 */ int16_t s_bitblt;
 	/* 13734 */ int16_t g_covwrpref;	/* curr. overwrite pref.*/
-	/* 13736 */ GRECT r_dicon;			/* real time desktop icon size */
-	/* 13744 */ int16_t o13744;
-	/* 13746 */ int16_t o13746;
+	/* 13736 */ char *p_cartname;
+	/* 13740 */ int16_t g_icw;
+	/* 13742 */ int16_t g_ich;
+	/* 13744 */ int16_t g_nmicon;
+	/* 13746 */ int16_t g_nmtext;
 	/* 13748 */ int16_t o13748[9];
 	/* 13766 */ int16_t o13766[9];
 	/* 13784 */ int16_t o13784[5];
 	/* 13794 */ int16_t o13794;
 	/* 13796 */ int16_t o13796;
 	/* 13798 */ int16_t o13798;
-	/* 13800 */ char o13800[16];
-	/* 13816 */ GRECT dicon;			/* desktop icon size */
+	/* 13800 */ char o13800[20];
+	/* 13820 */ int16_t g_wicon;		/* desktop icon size */
+	/* 13822 */ int16_t g_hicon;
 	/* 13824 */ char afile[SIZE_AFILE];
 	/* 18016 */ int16_t size_afile;		/* length of recently read desktop.inf */
 	/* 18018 */ char appbuf[SIZE_AFILE];
@@ -284,7 +289,8 @@ typedef struct {
 	/* 23562 */ BOOLEAN write_save;		/* write ? */
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
 	/* 24108 */ OBJECT *g_pscreen;
-	/* 24112 */ char o24108[88];
+	/* 24112 */ char o24108[20];
+	/* 24132 */ char printname[68];
 	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
@@ -345,12 +351,14 @@ DESKWIN *get_win PROTO((int16_t handle));
 VOID open_window PROTO((int16_t handle));
 int16_t create_window PROTO((NOTHING));
 DESKWIN *get_top PROTO((NOTHING));
-VOID close_window PROTO((int16_t handle, BOOLEAN closeit));
 VOID free_windows PROTO((NOTHING));
-VOID do_redraw PROTO((int16_t handle, GRECT *pc, int16_t which));
-VOID do_xyfix PROTO((GRECT *pc));
 DESKWIN *win_ith PROTO((int level));
 VOID up_1win PROTO((DESKWIN *win));
+VOID win_sname PROTO((DESKWIN *pw));
+VOID win_sinfo PROTO((DESKWIN *pw));
+VOID win_top PROTO((DESKWIN *thewin));
+DESKWIN *win_alloc PROTO((int16_t obid));
+VOID win_free PROTO((DESKWIN *thewin));
 
 
 /*
@@ -515,7 +523,7 @@ BOOLEAN read_inf PROTO((NOTHING));
 VOID save_inf PROTO((BOOLEAN todisk));
 VOID app_posicon PROTO((int16_t colx, int16_t coly, int16_t *px, int16_t *py));
 VOID app_mtoi PROTO((int16_t newx, int16_t newy, int16_t *px, int16_t *py));
-VOID inf_setsize PROTO((VOIDPTR p1, char *buf, OBJECT *tree, int16_t obj, BOOLEAN flag));
+VOID inf_setsize PROTO((const VOIDPTR p1, char *buf, OBJECT *tree, int16_t obj, BOOLEAN flag));
 
 
 /*
@@ -623,13 +631,29 @@ VOID send_msg PROTO((int16_t type, int16_t whom, int16_t w3, int16_t w4, int16_t
 /*
  * desksupp.c
  */
-BOOLEAN pro_chdir PROTO((int drv, char *ppath));
+BOOLEAN pro_chdir PROTO((int drv, const char *ppath));
 int pro_run PROTO((int16_t isgraf, int16_t iscr, int16_t wh, int16_t curr));
 VOID desk_clear PROTO((int16_t wh));
-VOID desk_verify PROTO((int16_t wh, int16_t changed));
+VOID desk_verify PROTO((int16_t wh, BOOLEAN changed));
+VOID do_wredraw PROTO((int16_t handle, int16_t x, int16_t y, int16_t w, int16_t h));
 VOID get_xywh PROTO((OBJECT *olist, int16_t obj, int16_t *px, int16_t *py, int16_t *pw, int16_t *ph));
-intptr_t get_spec PROTO((OBJECT *tree, int obid));
-VOID do_wopen PROTO((int16_t new_win, int16_t wh, int16_t curr, int16_t x, int16_t y, int16_t w, int16_t h));
+ICONBLK *get_spec PROTO((OBJECT *tree, int obid));
+VOID do_xyfix PROTO((int16_t *px, int16_t *py));
+VOID do_wopen PROTO((BOOLEAN new_win, int16_t wh, int16_t curr, int16_t x, int16_t y, int16_t w, int16_t h));
+VOID zoom_closed PROTO((BOOLEAN close, int16_t w_id, int16_t xicon, int16_t yicon));
+VOID do_wfull PROTO((int16_t wh));
+BOOLEAN do_diropen PROTO((DESKWIN *pw, BOOLEAN new_win, int16_t curr_icon, int16_t drv, const char *ppath, const char *pname, const char *pext, GRECT *pt));
+BOOLEAN do_aopen PROTO((DESKWIN *win, APP *pa, BOOLEAN isapp, int16_t curr, int16_t drv, const char *path, const char *name));
+BOOLEAN do_dopen PROTO((int16_t curr));
+BOOLEAN do_fopen PROTO((DESKWIN *pw, int16_t curr, int16_t drv, const char *ppath, const char *pname, const char *pext));
+BOOLEAN open_item PROTO((int16_t curr));
+BOOLEAN show_item PROTO((int16_t curr));
+BOOLEAN do_format PROTO((int16_t curr));
+BOOLEAN true_closewnd PROTO((DESKWIN *pw));
+BOOLEAN w_setpath PROTO((DESKWIN *pw, int drv, const char *path, const char *name, const char *ext));
+BOOLEAN close_window PROTO((DESKWIN *pw, BOOLEAN trueclose));
+BOOLEAN pro_chroot PROTO((int drive));
+
 
 
 /*
@@ -644,10 +668,8 @@ BOOLEAN desk_pref PROTO((NOTHING));
 VOID open_def PROTO((NOTHING));
 VOID ch_path PROTO((DESKWIN *win));
 BOOLEAN open_subdir PROTO((DESKWIN *win, int16_t icon, BOOLEAN opendisk, BOOLEAN init, BOOLEAN redraw));
-VOID show_item PROTO((NOTHING));
 VOID close_path PROTO((DESKWIN *win));
 VOID close_top PROTO((NOTHING));
-VOID open_item PROTO((int16_t item, int16_t type, DESKWIN *win));
 VOID open_file PROTO((DESKWIN *win, int16_t item, const char *tail));
 BOOLEAN open_disk PROTO((int16_t icon, const char *path, BOOLEAN init));
 VOID do_box PROTO((DESKWIN *win, int16_t item, int16_t desk, int16_t open, BOOLEAN openfull));
@@ -700,7 +722,7 @@ BOOLEAN showfile PROTO((const char *fname, int mode));
 BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GRECT *pc, uint16_t chgvalue, int16_t dochg, int16_t dodraw, int16_t chkdisabled));
 VOID act_bsclick PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, int16_t keystate, GRECT *pc, int16_t dclick));
 int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t *in_mx, int16_t *in_my, int16_t keystate, GRECT *pc, int16_t *pdobj));
-VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, int16_t dochg, int16_t dodraw));
+VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, BOOLEAN dochg, BOOLEAN dodraw, BOOLEAN dox));
 
 
 /*
@@ -801,7 +823,7 @@ VOID unfmt_str PROTO((const char *instr, char *outstr));
 VOID inf_sset PROTO((OBJECT *tree, int16_t obj, const char *pstr));
 VOID fs_sget PROTO((LPTREE tree, int16_t obj, char *pstr));
 int16_t inf_gindex PROTO((LPTREE tree, int16_t baseobj, int16_t numobj));
-VOID merge_str PROTO((char *pdst, const char *ptmp, VOIDPTR parms));
+VOID merge_str PROTO((char *pdst, const char *ptmp, const VOIDPTR parms));
 int16_t wildcmp PROTO((const char *pwild, const char *ptest));
 VOID bfill PROTO((int16_t num, char bval, VOIDPTR addr));
 int16_t min PROTO((int16_t a, int16_t b));
@@ -843,7 +865,7 @@ VOID wind_grget PROTO((short handle, short field, GRECT *gr));
 
 int16_t dr_code PROTO((PARMBLK *parm));
 
-#ifdef LINEF_HACK
+#if LINEF_HACK
 int16_t hex_dig PROTO((char achar));
 char uhex_dig PROTO((int16_t wd));
 const char *inf_xdesk PROTO((const char *pcurr, APP *app));
@@ -856,14 +878,14 @@ VOID fn_pfree PROTO((VOIDPTR *ptr));
 FNODE *fn_alloc PROTO((NOTHING));
 PNODE *pn_alloc PROTO((NOTHING));
 int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
-
 #endif
 
 
 DESKWIN *win_find PROTO((int16_t wh));
 VOID xfd75f2 PROTO((char *, char *));
-VOID xfdcd94 PROTO((DESKWIN *win));
-BOOLEAN xfdadb6 PROTO((int ch));
 VOID xtr_mask PROTO((const char *name, char *mask));
 APP *app_afind PROTO((BOOLEAN isdesk, int16_t a_type, int16_t obid, char *pname, BOOLEAN *pisapp));
 int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
+VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
+DESKWIN *xfdc47a PROTO((NOTHING));
+char *xfdcd6a PROTO((int curr));

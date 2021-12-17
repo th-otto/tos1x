@@ -156,10 +156,10 @@ VOID ini_rsc(NOTHING)
 	d->dicon.g_h = iblk->ib_hicon + iblk->ib_htext;
 
 	rc_copy(&d->dicon, &d->r_dicon);
-	d->r_dicon.g_w += 5;
-	d->r_dicon.g_h += 7;
-	d->r_dicon.g_w += (d->full.g_w % d->r_dicon.g_w) / (d->full.g_w / d->r_dicon.g_w);
-	d->r_dicon.g_h += (d->full.g_h % d->r_dicon.g_h) / (d->full.g_h / d->r_dicon.g_h);
+	d->g_icw += 5;
+	d->g_ich += 7;
+	d->g_icw += (d->full.g_w % d->g_icw) / (d->full.g_w / d->g_icw);
+	d->g_ich += (d->full.g_h % d->g_ich) / (d->full.g_h / d->g_ich);
 
 	w = gl_wchar * 14;					/* text outline */
 

@@ -134,7 +134,7 @@ PP(register DESKWIN *win;)
 
 	pn_folder(win->w_path);
 	desk_verify(win->w_id, TRUE);
-	xfdcd94(win);
+	win_sinfo(win);
 	wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
 	wind_grget(win->w_id, WF_WORKXYWH, &gr);
 	send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
@@ -316,7 +316,7 @@ PP(int obid;)
 			 * if destination is disk then use
 			 * icon char. to build dest path
 			 */
-			iblk = (ICONBLK *)get_spec(thedesk->g_screen, obid);
+			iblk = get_spec(thedesk->g_screen, obid);
 			thedesk->g_tmppth[0] = iblk->ib_char & 255;
 			strcpy(&thedesk->g_tmppth[1], ":\\*.*");
 			op = OP_COPY;
@@ -387,7 +387,7 @@ PP(int16_t obj;)
 	
 	app = app_afind(TRUE, AT_ISFILE, obj, NULL, NULL);
 	win = win_find(wh);
-	if (streq(win->w_name, *((char **)&thedesk->r_dicon))) /* hä? */
+	if (streq(win->w_name, thedesk->p_cartname))
 	{
 		switch (app->a_type)
 		{
@@ -420,8 +420,8 @@ PP(int16_t dobj;)
 	register FNODE *bp8;
 	register PNODE *pn_src;
 	
-	ib_src = (ICONBLK *)get_spec(thedesk->g_screen, sobj);
-	if (!xfdadb6(ib_src->ib_char))
+	ib_src = get_spec(thedesk->g_screen, sobj);
+	if (!pro_chroot(ib_src->ib_char))
 		return FALSE;
 	pn_src = pn_open(ib_src->ib_char, "", "*", "*", FA_DIREC|FA_HIDDEN|FA_SYSTEM);
 #if !BINEXACT
@@ -537,8 +537,8 @@ PP(int16_t dobj;)
 				break;
 #endif
 			case AT_ISDISK:
-				src_icon = (ICONBLK *)get_spec(d->g_screen, sobj);
-				dst_icon = (ICONBLK *)get_spec(d->g_screen, dobj);
+				src_icon = get_spec(d->g_screen, sobj);
+				dst_icon = get_spec(d->g_screen, dobj);
 				src_name[0] = src_icon->ib_char & 255;
 				src_name[1] = '\0';
 				dst_name[0] = ' ';
@@ -590,8 +590,8 @@ PP(register int16_t dobj;)
 		{
 			srcwin = win_find(wh);
 			dstwin = win_find(dest_wh);
-			if (streq(srcwin->w_name, *((char **)&thedesk->r_dicon)) ||
-				streq(dstwin->w_name, *((char **)&thedesk->r_dicon)))
+			if (streq(srcwin->w_name, thedesk->p_cartname) ||
+				streq(dstwin->w_name, thedesk->p_cartname))
 			{
 				fun_alert(1, STNOROM, NULL);
 			} else

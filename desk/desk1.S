@@ -338,7 +338,7 @@ xfd5c_4:
 		move.w    -4(a6),-(a7)
 		move.w    -2(a6),-(a7)
 		clr.w     -(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		adda.w    #10,a7
 		move.l    13820(a3),-(a7)
 		move.w    d6,d0
@@ -348,7 +348,7 @@ xfd5c_4:
 		muls.w    #24,d0
 		move.w    16(a5,d0.l),-(a7)
 		clr.w     -(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		adda.w    #10,a7
 		addq.w    #1,d7
 xfd5c_5:
@@ -956,7 +956,7 @@ xfd63_3:
 		move.l    4(a3),-(a7)
 		move.l    (a3),-(a7)
 		move.w    8(a6),-(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		adda.w    #10,a7
 xfd63_4:
 		moveq.l   #1,d0
@@ -1089,7 +1089,7 @@ xfd64_6:
 		move.l    4(a3),-(a7)
 		move.l    (a3),-(a7)
 		move.w    8(a6),-(a7)
-		jsr _do_redraw
+		jsr _do_wredraw
 		adda.w    #10,a7
 xfd64_8:
 		dc.w      $fE31
@@ -2925,3 +2925,7 @@ xfeb13d: dc.b 0
 	comm x00632c,16
 	xdef x00633c
 	comm x00633c,16
+
+	bss
+	xdef _f_level
+	comm _f_level,2

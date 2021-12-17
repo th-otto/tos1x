@@ -611,7 +611,7 @@ PP(register uint16_t *count;)
 
 	if (!r_files(path, select, count, filename))
 	{									/* if failed    */
-		fm_error(2);
+		fm_error(~E_FILNF - 30);
 		status = FALSE;
 		goto r_exit;
 	}

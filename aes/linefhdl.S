@@ -233,7 +233,7 @@ lineftab: ds.b 0
 		dc.l _objc_find           ; F2B4
 		dc.l _act_chkobj          ; F2B8
 		dc.l _app_mtoi            ; F2BC
-		dc.l _do_redraw           ; F2C0
+		dc.l _do_wredraw          ; F2C0
 		dc.l _graf_mouse          ; F2C4
 		dc.l _gsx_pline           ; F2C8
 		dc.l _gr_plns             ; F2CC
@@ -358,7 +358,7 @@ lineftab: ds.b 0
 		dc.l _up_win              ; F4A8
 		dc.l _pn_folder           ; F4AC
 		dc.l _desk_verify         ; F4B0
-		dc.l _xfdcd94             ; F4B4
+		dc.l _win_sinfo           ; F4B4
 		dc.l _wind_set            ; F4B8
 		dc.l _wind_grget          ; F4BC
 		dc.l _send_msg            ; F4C0
@@ -370,7 +370,7 @@ lineftab: ds.b 0
 		dc.l _fun_op              ; F4D8
 		dc.l _app_afind           ; F4DC
 		dc.l _fun_wdst            ; F4E0
-		dc.l _xfdadb6             ; F4E4
+		dc.l _pro_chroot          ; F4E4
 		dc.l _pn_open             ; F4E8
 		dc.l _fun_file2win        ; F4EC
 		dc.l _pn_free             ; F4F0
@@ -411,26 +411,26 @@ lineftab: ds.b 0
 		dc.l _graf_shrinkbox      ; F57C
 		dc.l _rc_equal            ; F580
 		dc.l _xfdc47a             ; F584
-		dc.l _xfdcdec             ; F588
-		dc.l _xfdc430             ; F58C
+		dc.l _win_sname           ; F588
+		dc.l _win_top             ; F58C
 		dc.l _gsx_escapes         ; F590
 		dc.l _showfile            ; F594
 		dc.l _pro_run             ; F598
-		dc.l _xfdc2a6             ; F59C
+		dc.l _win_alloc           ; F59C
 		dc.l _pro_chdir           ; F5A0
-		dc.l _xfda4b6             ; F5A4
-		dc.l _xfdc376             ; F5A8
+		dc.l _do_diropen          ; F5A4
+		dc.l _win_free            ; F5A8
 		dc.l _fpd_parse           ; F5AC
-		dc.l _xfda5d2             ; F5B0
-		dc.l _xfda900             ; F5B4
-		dc.l _xfda85e             ; F5B8
+		dc.l _do_aopen            ; F5B0
+		dc.l _do_fopen            ; F5B4
+		dc.l _do_dopen            ; F5B8
 		dc.l _inf_file            ; F5BC
 		dc.l _inf_disk            ; F5C0
 		dc.l _xfdcd6a             ; F5C4
 		dc.l _wind_get            ; F5C8
-		dc.l _xfda3de             ; F5CC
-		dc.l _xfdac02             ; F5D0
-		dc.l _xfdac8c             ; F5D4
+		dc.l _zoom_closed         ; F5CC
+		dc.l _true_closewnd       ; F5D0
+		dc.l _w_setpath           ; F5D4
 		dc.l _trp13               ; F5D8
 		dc.l _sh_name             ; F5DC
 		dc.l _menu_ienable        ; F5E0
@@ -439,7 +439,7 @@ lineftab: ds.b 0
 		dc.l _show_item           ; F5EC
 		dc.l _newfolder           ; F5F0
 		dc.l _close_window        ; F5F4
-		dc.l _xfdab74             ; F5F8
+		dc.l _do_format           ; F5F8
 		dc.l _menu_icheck         ; F5FC
 		dc.l _xfdc09c             ; F600
 		dc.l _ins_disk            ; F604
@@ -463,7 +463,7 @@ lineftab: ds.b 0
 		dc.l _do_opt              ; F64C
 		dc.l _menu_tnormal        ; F650
 		dc.l _hd_menu             ; F654
-		dc.l _xfda422             ; F658
+		dc.l _do_wfull            ; F658
 		dc.l _xfdcbe0             ; F65C
 		dc.l _srl_bar             ; F660
 		dc.l _evnt_dclick         ; F664

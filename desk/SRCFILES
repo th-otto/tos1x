@@ -1,4 +1,4 @@
-DESK_OBJS1= desk1.o desksupp.o deskact.o desk2.o rainbow.o desk4.o desk3.o
+DESK_OBJS1= desk1.o desksupp.o deskact.o rainbow.o desk4.o desk3.o
 DESK_OBJS2= deskapp1.o deskdisk.o
 DESK_OBJS3= deskinf.o deskpref.o deskins.o deskfpd.o deskwin.o deskobj.o
 DESK_OBJS4= deskshow.o deskrsc.o deskstor.o # desksele.o deskshel.o
@@ -18,6 +18,7 @@ DESK_HEADERS=\
 
 DESK_ASRCS=\
 	deskif.S \
+	rainbow.S \
 	${empty}
 
 DESK_CSRCS=\
@@ -26,7 +27,6 @@ DESK_CSRCS=\
 	deskact.c \
 	desksupp.c \
 	deskif.S \
-	desk2.S \
 	desk3.S \
 	deskshow.c \
 	deskdisk.c \
