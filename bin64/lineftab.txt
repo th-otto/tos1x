@@ -398,7 +398,7 @@ F5F8 do_format
 F5FC menu_icheck
 F600 xfdc09c
 F604 ins_disk
-F608 xfd59a0
+F608 app_blddesk
 F60C ins_app
 F610 hd_keybd
 F614 desk_pref

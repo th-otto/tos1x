@@ -489,11 +489,11 @@ eof:;
 	temp = (NUM_IB + 1) * sizeof(ICONBLK); /* BUG: there are only 5 icons */
 	rsrc_gaddr(R_ICONBLK, 0, (VOIDPTR *)&icons);
 	LBCOPY(d->iconaddr, icons, temp);
-	LBCOPY(d->icona2, icons, temp);
+	LBCOPY(d->g_iblist, icons, temp);
 	d->iconaddr[0].ib_xchar = 5;
 	d->iconaddr[0].ib_ychar = 14;
-	d->icona2[0].ib_xchar = 5;
-	d->icona2[0].ib_ychar = 14;
+	d->g_iblist[0].ib_xchar = 5;
+	d->g_iblist[0].ib_ychar = 14;
 	d->g_wicon = (d->iconaddr[0].ib_xtext << 1) + d->iconaddr[0].ib_wtext;
 	d->g_hicon = d->iconaddr[0].ib_hicon + d->iconaddr[0].ib_htext + 2;
 	d->g_icw = gl_height <= 300 ? 0 : 8;
@@ -511,25 +511,25 @@ eof:;
 
 	d->g_nmicon = 9;
 	d->g_nmtext = 5;
-	memset(d->o13748, 0, sizeof(d->o13748));
-	d->o13748[0] = gl_wschar << 2;
-	d->o13748[2] = d->o13748[0];
-	d->o13748[3] = d->g_hicon - gl_wschar - 2;
-	d->o13748[5] = d->o13748[3];
-	d->o13748[7] = d->g_hicon;
-	d->o13748[8] = d->g_wicon;
-	d->o13766[0] = d->g_hicon;
-	d->o13766[1] = d->g_wicon;
-	d->o13766[2] = d->g_hicon - gl_wschar - 2;
-	d->o13766[3] = gl_wschar << 3;
-	d->o13766[4] = d->o13766[2];
-	d->o13766[5] = gl_wschar << 3;
-	d->o13766[7] = d->o13748[0];
-	memset(d->o13784, 0, sizeof(d->o13784));
-	d->o13784[2] = gl_wchar * 12;
-	d->o13784[4] = d->o13784[2];
-	d->o13794 = gl_hchar;
-	d->o13798 = gl_hchar;
+	memset(d->g_xyicon, 0, 9 * sizeof(d->g_xyicon[0])); /* BUG */
+	d->g_xyicon[0] = gl_wschar << 2;
+	d->g_xyicon[2] = d->g_xyicon[0];
+	d->g_xyicon[3] = d->g_hicon - gl_wschar - 2;
+	d->g_xyicon[5] = d->g_xyicon[3];
+	d->g_xyicon[7] = d->g_hicon;
+	d->g_xyicon[8] = d->g_wicon;
+	d->g_xyicon[9] = d->g_hicon;
+	d->g_xyicon[10] = d->g_wicon;
+	d->g_xyicon[11] = d->g_hicon - gl_wschar - 2;
+	d->g_xyicon[12] = gl_wschar << 3;
+	d->g_xyicon[13] = d->g_xyicon[11];
+	d->g_xyicon[14] = gl_wschar << 3;
+	d->g_xyicon[16] = d->g_xyicon[0];
+	memset(d->g_xytext, 0, 5 * sizeof(d->g_xytext[0])); /* BUG */
+	d->g_xytext[2] = gl_wchar * 12;
+	d->g_xytext[4] = d->g_xytext[2];
+	d->g_xytext[5] = gl_hchar;
+	d->g_xytext[7] = gl_hchar;
 	return TRUE;
 }
 
@@ -548,6 +548,9 @@ PP(int16_t res;)
 }
 
 
+/*
+ * Reverse list when we write so that we can read it in naturally
+ */
 /* 104de: 00fd55be */
 LINEF_STATIC VOID app_reverse(NOTHING)
 {

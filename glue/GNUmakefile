@@ -37,8 +37,9 @@ AESDESK_OBJS = \
 	../aes/apgrlib.o \
 	../aes/apgsxif.o \
 	../desk/deskapp1.o \
-	../desk/desk1.o \
+	../desk/deskapp3.o \
 	../desk/deskact.o \
+	../desk/desk1.o \
 	../desk/deskif.o \
 	../desk/deskinf.o \
 	../desk/deskpref.o \

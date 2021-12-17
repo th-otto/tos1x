@@ -1,5 +1,6 @@
-deskact_OPTIMIZE=0
+deskact_OPTIMIZE=1
 deskapp_OPTIMIZE=0
+deskapp3_OPTIMIZE=1
 deskbind_OPTIMIZE=0
 deskbutt_OPTIMIZE=0
 deskdir_OPTIMIZE=0

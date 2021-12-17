@@ -537,7 +537,7 @@ do_opt2:
 		jsr       _ins_disk
 		tst.w     d0
 		beq.s     do_opt3
-		jsr       _xfd59a0
+		jsr       _app_blddesk
 		pea.l     -8(a6)
 		pea.l     -6(a6)
 		pea.l     -4(a6)

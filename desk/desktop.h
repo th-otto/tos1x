@@ -110,8 +110,8 @@ typedef intptr_t LPTREE;
 #define TTP     AF_ISPARM
 #define DISK    7
 
-#define S_ICON  0               /* view as icon */
-#define S_TEXT  1               /* view as text */
+#define V_ICON  0               /* view as icon */
+#define V_TEXT  1               /* view as text */
 
 #define S_NAME  0               /* sort as name */
 #define S_DATE  1
@@ -225,8 +225,19 @@ typedef struct {
 	/*   708 */ PNODE *g_phead;
 	/*   712 */ char g_wdta[PATHLEN];
 	/*   840 */ DTA *a_wdta;
-	/*   844 */ char o844[11464];
-	/* 12308 */ int16_t g_isort;		/* current sort type */
+	/*   844 */ short o844;
+	/*   846 */ ICONBLK gl_icons[NUM_SOBS];
+	/*  9686 */ int16_t g_index[NUM_SOBS];
+	/* 10206 */ char o10206[2086];
+	/* 10292 */ short g_iview;              /* current view type */
+	/* 10294 */ short g_iwext;              /* w,h of extent of a single item */
+	/* 10296 */ short g_ihext;
+	/* 10298 */ short g_iwint;              /* w,h of interval between items */
+	/* 10300 */ short g_ihint;
+	/* 10302 */ short g_iwspc;              /* w,h of space used by a single item */
+	/* 10304 */ short g_ihspc;
+	/* 10306 */ short g_incol;              /* # of cols in full window */
+	/* 12308 */ int16_t g_isort;			/* current sort type */
 	/* 12310 */ char g_srcpth[PATHLEN];
 	/* 12438 */ char g_dstpth[PATHLEN];
 	/* 12566 */ char o12566[8];
@@ -261,13 +272,8 @@ typedef struct {
 	/* 13742 */ int16_t g_ich;
 	/* 13744 */ int16_t g_nmicon;
 	/* 13746 */ int16_t g_nmtext;
-	/* 13748 */ int16_t o13748[9];
-	/* 13766 */ int16_t o13766[9];
-	/* 13784 */ int16_t o13784[5];
-	/* 13794 */ int16_t o13794;
-	/* 13796 */ int16_t o13796;
-	/* 13798 */ int16_t o13798;
-	/* 13800 */ char o13800[20];
+	/* 13748 */ int16_t g_xyicon[18];
+	/* 13784 */ int16_t g_xytext[18];
 	/* 13820 */ int16_t g_wicon;		/* desktop icon size */
 	/* 13822 */ int16_t g_hicon;
 	/* 13824 */ char afile[SIZE_AFILE];
@@ -278,8 +284,8 @@ typedef struct {
 	/* 23110 */ APP *appfree;			/* app buffer free list */
 	/* 23114 */ APP *applist;			/* app buffer list */
 	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
-	/* 23322 */ ICONBLK icona2[NUM_IB + 1];
-	/* 23526 */ char o23526[24];
+	/* 23322 */ ICONBLK g_iblist[NUM_IB + 1];
+	/* 23526 */ int16_t g_ismask[(NUM_IB + 1) * 2];
 	/* 23550 */ int16_t sitem_save;		/* saved sort item */
 	/* 23552 */ int16_t vitem_save;		/* view item */
 	/* 23554 */ BOOLEAN ccopy_save;		/* copy ? */
@@ -423,7 +429,7 @@ int16_t form_alert PROTO((int16_t defbut, const char *astring));
 int16_t form_error PROTO((int16_t errnum));
 int16_t form_center PROTO((OBJECT *tree, int16_t *pcx, int16_t *pcy, int16_t *pcw, int16_t *pch));
 int16_t graf_handle PROTO((int16_t *gwchar, int16_t *ghchar, int16_t *gwbox, int16_t *ghbox));
-VOID graf_rubbox PROTO((int16_t xorigin, int16_t yorigin, int16_t wmin, int16_t hmin, int16_t *pwend, int16_t phend));
+VOID graf_rubbox PROTO((int16_t xorigin, int16_t yorigin, int16_t wmin, int16_t hmin, int16_t *pwend, int16_t *phend));
 int16_t graf_mkstate PROTO((int16_t *pmx, int16_t *pmy, int16_t *pmstate, int16_t *pkstate));
 VOID graf_growbox PROTO((int16_t orgx, int16_t orgy, int16_t orgw, int16_t orgh, int16_t x, int16_t y, int16_t w, int16_t h));
 VOID graf_shrinkbox PROTO((int16_t orgx, int16_t orgy, int16_t orgw, int16_t orgh, int16_t x, int16_t y, int16_t w, int16_t h));
@@ -436,6 +442,7 @@ int16_t objc_order PROTO((OBJECT *tree, int16_t mov_obj, int16_t newpos));
 int16_t objc_find PROTO((OBJECT *tree, int16_t startob, int16_t depth, int16_t mx, int16_t my));
 int16_t objc_add PROTO((OBJECT *tree, int16_t parent, int16_t child));
 int16_t objc_draw PROTO((OBJECT *tree, int16_t drawob, int16_t depth, int16_t xc, int16_t yc, int16_t wc, int16_t hc));
+int16_t objc_change PROTO((OBJECT *tree, int16_t drawob, int16_t depth, int16_t xc, int16_t yc, int16_t wc, int16_t hc, int16_t newstate, BOOLEAN redraw));
 int16_t rsrc_free PROTO((NOTHING));
 int16_t rsrc_gaddr PROTO((int16_t rstype, int16_t rsid, VOIDPTR *paddr));
 int16_t shel_get PROTO((char *pbuffer, int16_t len));
@@ -721,8 +728,15 @@ BOOLEAN showfile PROTO((const char *fname, int mode));
  */
 BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GRECT *pc, uint16_t chgvalue, int16_t dochg, int16_t dodraw, int16_t chkdisabled));
 VOID act_bsclick PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, int16_t keystate, GRECT *pc, int16_t dclick));
-int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t *in_mx, int16_t *in_my, int16_t keystate, GRECT *pc, int16_t *pdobj));
+int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, GRECT *pc, int16_t *pdobj));
 VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, BOOLEAN dochg, BOOLEAN dodraw, BOOLEAN dox));
+
+
+/*
+ * deskapp3.c
+ */
+VOID app_blddesk PROTO((NOTHING));
+APP *app_afind PROTO((BOOLEAN isdesk, int16_t a_type, int16_t obid, char *pname, BOOLEAN *pisapp));
 
 
 /*
@@ -861,6 +875,7 @@ VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));
 VOID av_hardcopy PROTO((NOTHING));
 VOID wind_grget PROTO((short handle, short field, GRECT *gr));
+int16_t ap_bvset PROTO((int16_t bvdisk, int16_t bvhard));
 
 
 int16_t dr_code PROTO((PARMBLK *parm));
@@ -884,7 +899,6 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 DESKWIN *win_find PROTO((int16_t wh));
 VOID xfd75f2 PROTO((char *, char *));
 VOID xtr_mask PROTO((const char *name, char *mask));
-APP *app_afind PROTO((BOOLEAN isdesk, int16_t a_type, int16_t obid, char *pname, BOOLEAN *pisapp));
 int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
 VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
 DESKWIN *xfdc47a PROTO((NOTHING));

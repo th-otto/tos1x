@@ -70,7 +70,7 @@ WORD ap_init(WORD *pglobal)
 	xdef _ap_init
 _ap_init:
 		lea.l      _pglobal,a1
-		move.l     #(1<<16)+0x120,(a1) ; BUG: words swapped, wrong version
+		move.l     #(1<<16)+$120,(a1) ; BUG: words swapped, wrong version
 		movea.l    _rlr,a0
 		move.w     28(a0),4(a1) ; rlr->p_pid
 		move.w     _gl_nplanes,20(a1)

@@ -443,7 +443,7 @@ lineftab: ds.b 0
 		dc.l _menu_icheck         ; F5FC
 		dc.l _xfdc09c             ; F600
 		dc.l _ins_disk            ; F604
-		dc.l _xfd59a0             ; F608
+		dc.l _app_blddesk         ; F608
 		dc.l _ins_app             ; F60C
 		dc.l _hd_keybd            ; F610
 		dc.l _desk_pref           ; F614

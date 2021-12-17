@@ -128,7 +128,7 @@ deskm6:
 		move.l    13654(a5),-(a7)
 		jsr _menu_icheck
 		addq.l    #6,a7
-		jsr       _xfd59a0
+		jsr       _app_blddesk
 		move.l    13374(a5),-(a7)
 		move.l    13370(a5),-(a7)
 		clr.w     -(a7)
