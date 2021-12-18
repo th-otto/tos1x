@@ -179,7 +179,7 @@ PP(register char *dst;)
 	int16_t len;
 	register char *src;
 
-	LBCOPY((char *)&buf.d_att + 1, (VOIDPTR)dir, sizeof(DIR) - 1);
+	LBCOPY((char *)&buf.d_att, (VOIDPTR)dir, sizeof(DIR) - 1);
 	ptr = dst;
 	src = buf.d_name;
 	
@@ -368,7 +368,7 @@ PP(int16_t filesidx;)
 PP(char *ppath;)
 {
 	register THEDSK *d;
-	int16_t dummy;
+	uint16_t dummy;
 	char folderstr[6];
 	char filesstr[6];
 	BOOLEAN more;
@@ -484,7 +484,7 @@ PP(BOOLEAN isdir;)
 	{
 		LWSET(OB_STATE(FIRONLY), DISABLED);
 		LWSET(OB_STATE(FIRWRITE), DISABLED);
-		xfd75f2(d->g_srcpth, info->f_name);
+		add_path(d->g_srcpth, info->f_name);
 		strid = STFOLDINFO;
 		if (inf_fifo((OBJECT *)tree, FINFILES, FINFOLDS, d->g_srcpth) == FALSE)
 #if BINEXACT

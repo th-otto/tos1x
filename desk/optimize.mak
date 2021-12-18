@@ -3,7 +3,7 @@ deskapp_OPTIMIZE=0
 deskapp3_OPTIMIZE=1
 deskbind_OPTIMIZE=0
 deskbutt_OPTIMIZE=0
-deskdir_OPTIMIZE=0
+deskdir_OPTIMIZE=1
 deskdisk_OPTIMIZE=0
 deskfile_OPTIMIZE=0
 deskinf_OPTIMIZE=1
@@ -25,7 +25,6 @@ deskmn_OPTIMIZE=0
 deskif_OPTIMIZE=0
 desksupp_OPTIMIZE=1
 
-desk1_ASFLAGS=-n
 desk3_ASFLAGS=-n
 desk4_ASFLAGS=-n
 deskshow_ASFLAGS=-n

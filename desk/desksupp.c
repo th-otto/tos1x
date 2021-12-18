@@ -885,7 +885,7 @@ PP(int drive;)
 		path[0] = (char)drive; /* FIXME: cast */
 		path[1] = ':';
 		strcpy(&path[2], wilds);
-		dos_sdta(&thedesk->r_dta);
+		dos_sdta(thedesk->g_dtastk);
 		if (dos_sfirst(path, FA_DIREC|FA_SYSTEM|FA_HIDDEN) == 0 && DOS_AX != E_NOFILES)
 			rv = FALSE;
 	}

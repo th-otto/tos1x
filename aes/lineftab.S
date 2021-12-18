@@ -244,30 +244,30 @@
 [00fe7c8c] dc.l $00fd695a            ; F3CC ; fm_draw DESKTOP
 [00fe7c90] dc.l $00fd7abc            ; F3D0 ; form_do DESKTOP
 [00fe7c94] dc.l $00fe6034            ; F3D4 ; inf_what AES
-[00fe7c98] dc.l $00fd6b16            ; F3D8
-[00fe7c9c] dc.l $00fd75f2            ; F3DC
+[00fe7c98] dc.l $00fd6b16            ; F3D8 ; dirop_init DESKTOP
+[00fe7c9c] dc.l $00fd75f2            ; F3DC ; add_path DESKTOP
 [00fe7ca0] dc.l $00fd6e40            ; F3E0 ; d_doop DESKTOP
-[00fe7ca4] dc.l $00fd795c            ; F3E4
-[00fe7ca8] dc.l $00fd7316            ; F3E8
+[00fe7ca4] dc.l $00fd795c            ; F3E4 ; sub_path DESKTOP
+[00fe7ca8] dc.l $00fd7316            ; F3E8 ; dirop_file DESKTOP
 [00fe7cac] dc.l $00fd691c            ; F3EC ; do_finish DESKTOP
 [00fe7cb0] dc.l $00fdd188            ; F3F0 ; dos_free AES
 [00fe7cb4] dc.l $00fdd168            ; F3F4 ; dos_sdta AES
-[00fe7cb8] dc.l $00fd6a5a            ; F3F8 ; xtr_mask DESKTOP
+[00fe7cb8] dc.l $00fd6a5a            ; F3F8 ; add_fname DESKTOP
 [00fe7cbc] dc.l $00fdcfb4            ; F3FC ; dos_sfirst AES
-[00fe7cc0] dc.l $00fd7620            ; F400
+[00fe7cc0] dc.l $00fd7620            ; F400 ; do_namecon DESKTOP
 [00fe7cc4] dc.l $00fe5ed0            ; F404 ; xstrpcat AES
-[00fe7cc8] dc.l $00fd7730            ; F408
-[00fe7ccc] dc.l $00fd7814            ; F40C
+[00fe7cc8] dc.l $00fd7730            ; F408 ; notsame_name DESKTOP
+[00fe7ccc] dc.l $00fd7814            ; F40C ; d_dofdel DESKTOP
 [00fe7cd0] dc.l $00fdd05c            ; F410 ; dos_mkdir AES
 [00fe7cd4] dc.l $00fdcfde            ; F414 ; dos_snext AES
 [00fe7cd8] dc.l $00fdd180            ; F418 ; dos_rmdir AES
 [00fe7cdc] dc.l $00fdd102            ; F41C ; dos_rename AES
 [00fe7ce0] dc.l $00fdd080            ; F420 ; dos_set AES
-[00fe7ce4] dc.l $00fd6a7c            ; F424 ; rep_all DESKTOP
-[00fe7ce8] dc.l $00fd6a9c            ; F428
+[00fe7ce4] dc.l $00fd6a7c            ; F424 ; del_fname DESKTOP
+[00fe7ce8] dc.l $00fd6a9c            ; F428 ; get_fname
 [00fe7cec] dc.l $00fe5fd0            ; F42C ; fs_sget AES
 [00fe7cf0] dc.l $00fe5f4e            ; F430 ; unfmt_str AES
-[00fe7cf4] dc.l $00fd791e            ; F434
+[00fe7cf4] dc.l $00fd791e            ; F434 ; splitpath DESKTOP
 [00fe7cf8] dc.l $00fd6a0a            ; F438 ; drawclip DESKTOP
 [00fe7cfc] dc.l $00fd69b6            ; F43C ; drawfld DESKTOP
 [00fe7d00] dc.l $00fe752a            ; F440 ; fc_draw DESKTOP

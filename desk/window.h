@@ -19,7 +19,8 @@
 
 typedef struct dir
 {
-	int16_t	 d_att;		/* attribute */
+	int8_t	 d_junk;
+	int8_t	 d_att;		/* attribute */
 	uint16_t d_time;	/* time */
 	uint16_t d_date;	/* date */
 	int32_t	 d_size;	/* size */

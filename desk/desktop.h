@@ -240,9 +240,9 @@ typedef struct {
 	/* 12308 */ int16_t g_isort;			/* current sort type */
 	/* 12310 */ char g_srcpth[PATHLEN];
 	/* 12438 */ char g_dstpth[PATHLEN];
-	/* 12566 */ char o12566[8];
-	/* 12574 */ DTA r_dta;
-	/* 12618 */ char o12618[352];
+	/* 12566 */ char *g_xbuf;               /* data xfer buffer and */
+	/* 12570 */ long g_xlen;                /* length for copying */
+	/* 12574 */ DTA g_dtastk[MAX_LEVEL + 1];
 	/* 12970 */ int32_t g_nfiles;
 	/* 12974 */ int32_t g_ndirs;
 	/* 12978 */ int32_t g_size;
@@ -295,8 +295,15 @@ typedef struct {
 	/* 23562 */ BOOLEAN write_save;		/* write ? */
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
 	/* 24108 */ OBJECT *g_pscreen;
-	/* 24112 */ char o24108[20];
-	/* 24132 */ char printname[68];
+	/* 24112 */ char ml_files[4];
+	/* 24116 */ char ml_dirs[4];
+	/* 24120 */ char o24120[8];
+	/* 24128 */ BOOLEAN ml_havebox;
+	/* 24130 */ BOOLEAN ml_dlpr;
+	/* 24132 */ char printname[26];
+	/* 24158 */ char ml_fstr[13];
+	/* 24171 */ char ml_ftmp[13];
+	/* 24184 */ char o24184[16];
 	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
@@ -476,7 +483,7 @@ extern int f_rename;
 
 BOOLEAN dofiles PROTO((const char *s, const char *d, int16_t code, int32_t *ndirs, int32_t *nfiles, int32_t *tsize, int16_t type, BOOLEAN multiple));
 BOOLEAN doright PROTO((int flag));
-BOOLEAN d_doop PROTO((int op, OBJECT *tree, char *psrc_path, char *pdst_path, int16_t *pfcnt, int16_t *pdcnt));
+BOOLEAN d_doop PROTO((int op, OBJECT *tree, char *psrc_path, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt));
 BOOLEAN fun_op PROTO((int op, PNODE *pspath));
 BOOLEAN dir_op PROTO((int op, const char *psrc_path, FNODE *pflist, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt, uint32_t *psize));
 BOOLEAN par_chk PROTO((const char *psrc_path, FNODE *pflist, char *pdst_path));
@@ -487,6 +494,12 @@ BOOLEAN fun_f2any PROTO((int16_t sobj, DESKWIN *wn_dest, APP *an_dest, FNODE *fn
 VOID fun_desk2win PROTO((int16_t wh, int16_t obj));
 BOOLEAN fun_d2desk PROTO((int16_t dobj));
 BOOLEAN desk1_drag PROTO((int16_t wh, int16_t dest_wh, int16_t sobj, int16_t dobj));
+VOID add_fname PROTO((char *path, const char *name));
+VOID del_fname PROTO((char *path));
+VOID del_fname PROTO((char *path));
+VOID get_fname PROTO((const char *pstr, char *newstr));
+BOOLEAN dos_error PROTO((NOTHING));
+VOID add_path PROTO((char *path, const char *name));
 
 
 /*
@@ -607,7 +620,7 @@ VOID drawclip PROTO((OBJECT *obj, int16_t which));
 BOOLEAN getcookie PROTO((int32_t cookie, int32_t *p_value)); /* also referenced by AES */
 VOID f_str PROTO((OBJECT *obj, int16_t item, int32_t value));
 int16_t ch_level PROTO((const char *path));
-OBJECT *fm_draw PROTO((LPTREE tree));
+VOID fm_draw PROTO((LPTREE tree));
 VOID do_finish PROTO((OBJECT *obj));
 int16_t xform_do PROTO((OBJECT *obj, int16_t which));
 VOID fmdodraw PROTO((OBJECT *tree, int16_t item));
@@ -617,8 +630,6 @@ BOOLEAN xcut_path PROTO((char *path, char *buffer, int16_t cut));
 BOOLEAN cut_path PROTO((char *path));
 VOID cat_path PROTO((char *name, char *path));
 VOID rep_path PROTO((const char *name, char *path));
-VOID rep_all PROTO((char *path));
-BOOLEAN dos_error PROTO((NOTHING));
 int16_t do1_alert PROTO((int16_t item));
 VOID rc_center PROTO((GRECT *rec1, GRECT *rec2));
 VOID my_itoa PROTO((uint16_t number, char *pnumstr));
@@ -897,8 +908,6 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 
 
 DESKWIN *win_find PROTO((int16_t wh));
-VOID xfd75f2 PROTO((char *, char *));
-VOID xtr_mask PROTO((const char *name, char *mask));
 int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
 VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
 DESKWIN *xfdc47a PROTO((NOTHING));

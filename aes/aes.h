@@ -866,6 +866,7 @@ int dos_write PROTO((int fd, size_t size, VOIDPTR buf));
 long dos_lseek PROTO((int fd, int whence, long offset));
 int dos_gdir PROTO((int drive, char *pdrvpath));
 int dos_mkdir PROTO((const char *path));
+int dos_rmdir PROTO((const char *path));
 int dos_set PROTO((int h, uint16_t time, uint16_t date));
 int dos_label PROTO((int drive, const char *name));
 int dos_space PROTO((int drive, int32_t *total, int32_t *avail));

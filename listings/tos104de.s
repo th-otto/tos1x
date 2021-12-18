@@ -28752,6 +28752,7 @@ do_finish:
 [00fd6a56] 5c8f                      addq.l    #6,a7
 [00fd6a58] f001                      dc.w      $F001 ; movem.l (a7)+,#0
 
+add_fname:
 [00fd6a5a] 4e56 0000                 link      a6,#0
 [00fd6a5e] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd6a62] 2a6e 0008                 movea.l   8(a6),a5
@@ -28765,7 +28766,7 @@ do_finish:
 [00fd6a78] 588f                      addq.l    #4,a7
 [00fd6a7a] f801                      dc.w      $F801 ; movem.l (a7)+,a5
 
-rep_all:
+del_fname:
 [00fd6a7c] 4e56 0000                 link      a6,#0
 [00fd6a80] 48e7 0104                 movem.l   d7/a5,-(a7)
 [00fd6a84] 2a6e 0008                 movea.l   8(a6),a5
@@ -29673,11 +29674,11 @@ dos_error:
 [00fd75da] 6002                      bra.s     $00FD75DE
 [00fd75dc] f374                      dc.w      $F374 ; dos_error
 [00fd75de] 2e8d                      move.l    a5,(a7)
-[00fd75e0] f424                      dc.w      $F424 ; rep_all
+[00fd75e0] f424                      dc.w      $F424 ; del_fname
 [00fd75e2] 0c6e 0001 0008            cmpi.w    #1,8(a6)
 [00fd75e8] 6704                      beq.s     $00FD75EE
 [00fd75ea] 2e8c                      move.l    a4,(a7)
-[00fd75ec] f424                      dc.w      $F424 ; rep_all
+[00fd75ec] f424                      dc.w      $F424 ; del_fname
 [00fd75ee] 3003                      move.w    d3,d0
 [00fd75f0] fe3f                      dc.w      $FE3F ; movem.l (a7)+,d3-d7/a3-a5
 
@@ -32526,7 +32527,7 @@ up_allwin:
 [00fd974a] f4c8                      dc.w      $F4C8
 [00fd974c] 2eb9 0000 a788            move.l    _thedesk,(a7)
 [00fd9752] 0697 0000 3016            addi.l    #$00003016,(a7)
-[00fd9758] f424                      dc.w      $F424 ; rep_all
+[00fd9758] f424                      dc.w      $F424 ; del_fname
 [00fd975a] 4a46                      tst.w     d6
 [00fd975c] 6600 ff1e                 bne       $00FD967C
 [00fd9760] 4257                      clr.w     (a7)
@@ -62906,6 +62907,10 @@ desktop.inf:
 6126: ustak
 61AA: diskin
 61AC: aautopath
+622C: do_srcpath
+62AC: do_dstpath
+632C: do_dstname
+633C: do_srcname
 634C: cp_dst
 63C6:
 63C8: srsave

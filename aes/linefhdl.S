@@ -303,30 +303,30 @@ lineftab: ds.b 0
 		dc.l _fm_draw             ; F3CC
 		dc.l _form_do             ; F3D0
 		dc.l _inf_what            ; F3D4
-		dc.l _xfd6b16             ; F3D8
-		dc.l _xfd75f2             ; F3DC
+		dc.l _dirop_init          ; F3D8
+		dc.l _add_path            ; F3DC
 		dc.l _d_doop              ; F3E0
-		dc.l _xfd795c             ; F3E4
-		dc.l _xfd7316             ; F3E8
+		dc.l _sub_path            ; F3E4
+		dc.l _dirop_file          ; F3E8
 		dc.l _do_finish           ; F3EC
 		dc.l _dos_free            ; F3F0
 		dc.l _dos_sdta            ; F3F4
-		dc.l _xtr_mask            ; F3F8
+		dc.l _add_fname           ; F3F8
 		dc.l _dos_sfirst          ; F3FC
-		dc.l _xfd7620             ; F400
+		dc.l _do_namecon          ; F400
 		dc.l _xstrpcat            ; F404
-		dc.l _xfd7730             ; F408
-		dc.l _xfd7814             ; F40C
+		dc.l _notsame_name        ; F408
+		dc.l _d_dofdel            ; F40C
 		dc.l _dos_mkdir           ; F410
 		dc.l _dos_snext           ; F414
 		dc.l _dos_rmdir           ; F418
 		dc.l _dos_rename          ; F41C
 		dc.l _dos_set             ; F420
-		dc.l _rep_all             ; F424
-		dc.l _xfd6a9c             ; F428
+		dc.l _del_fname           ; F424
+		dc.l _get_fname           ; F428
 		dc.l _fs_sget             ; F42C
 		dc.l _unfmt_str           ; F430
-		dc.l _xfd791e             ; F434
+		dc.l _splitpath           ; F434
 		dc.l _drawclip            ; F438
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440

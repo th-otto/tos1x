@@ -203,7 +203,7 @@ PP(register DESKWIN *win;)
 			unfmt_str(fnew_name, unew_name);
 			if (unew_name[0])				/* no name  */
 			{
-				xtr_mask(thedesk->g_srcpth, unew_name);
+				add_fname(thedesk->g_srcpth, unew_name);
 
 				dos_sdta(&dta);
 
@@ -223,7 +223,7 @@ PP(register DESKWIN *win;)
 							up_1win(win);
 					}
 				}
-				rep_all(thedesk->g_srcpth);
+				del_fname(thedesk->g_srcpth);
 			}
 		}
 	} while (cont);

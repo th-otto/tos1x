@@ -202,34 +202,6 @@ PP(int16_t state;)
 
 
 /*
- * Draw a single field of a dialog box
- */
-/* 306de: 00e2f890 */
-VOID drawfld(P(OBJECT *)obj, P(int16_t) which)
-PP(OBJECT *obj;)
-PP(int16_t which;)
-{
-	GRECT t;
-	RC_COPY((GRECT *)&obj[which].ob_x, &t);
-	objc_offset(obj, which, &t.g_x, &t.g_y);
-	objc_draw(obj, which, 0, t.g_x, t.g_y, t.g_w, t.g_h);
-}
-
-
-/* 104de: 00fd6a0a */
-VOID drawclip(P(OBJECT *)obj, P(int16_t) which)
-PP(OBJECT *obj;)
-PP(int16_t which;)
-{
-	GRECT t;
-	RC_COPY((GRECT *)&obj[which].ob_x, &t);
-	ob_offset(obj, which, &t.g_x, &t.g_y);
-	gsx_sclip(&t);
-	ob_draw(obj, which, 0);
-}
-
-
-/*
  * Format a value and fill the leading space
  */
 /* 306de: 00e2f94a */
@@ -249,20 +221,6 @@ PP(int32_t value;)
 	bfill(len1, ' ', chrptr);
 	len2 = strlen(buffer);
 	strcpy(chrptr + (int32_t) (len1 - len2), buffer);
-}
-
-
-/* 306de: 00e2fa08 */
-OBJECT *fm_draw(P(int16_t) item)
-PP(int16_t item;)
-{
-	register OBJECT *addr;
-	int16_t x, y, w, h;
-
-	addr = get_tree(item);
-	form_center(addr, &x, &y, &w, &h);
-	objc_draw(addr, ROOT, MAX_DEPTH, x, y, w, h);
-	return addr;
 }
 
 
@@ -287,34 +245,6 @@ VOID wait_msg(NOTHING)
 			break;
 
 	} while (TRUE);
-}
-
-
-/* 306de: 00e2fafe */
-/* 104de: 00fd691c */
-VOID do_finish(P(OBJECT *) obj)
-PP(OBJECT *obj;)
-{
-	GRECT pt;
-
-	form_center(obj, &pt.g_x, &pt.g_y, &pt.g_w, &pt.g_h);
-	form_dial(FMD_FINISH, 0, 0, 0, 0, pt.g_x, pt.g_y, pt.g_w, pt.g_h);
-}
-
-
-/* 306de: 00e2fc7c */
-/* 104de: 00fd68fa */
-char *r_slash(P(const char *)path)
-PP(register const char *path;)
-{
-	while (*path)
-		path++;
-
-	while (*path != '\\')
-	{
-		path--;
-	}
-	return NO_CONST(path);
 }
 
 
@@ -404,25 +334,6 @@ PP(char *path;)
 	path = r_slash(path);
 	path++;
 	strcpy(path, name);
-}
-
-
-/* 104de: 00fd6a5a */
-VOID xtr_mask(P(const char *) name, P(char *) mask)
-PP(register const char *name;)
-PP(char *mask;)
-{
-	while (*name != '*')
-		name++;
-	strcpy(mask, name);
-}
-
-
-VOID rep_all(P(char *) path)
-PP(char *path;)
-{
-	path = r_slash(path);
-	strcpy(path, getall);
 }
 
 

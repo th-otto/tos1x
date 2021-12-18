@@ -329,11 +329,11 @@ _endvdibss: ds.b 0
 	V(ustak,l,33)
 	INT(_diskin)
 	V(_aautopath,b,CMDLEN)
-	V(x00622c,b,CMDLEN) /* g_dir maybe */
-	V(x0062ac,b,CMDLEN) /* g_path maybe */
+	V(_do_srcpath,b,PATHLEN)
+	V(_do_dstpath,b,PATHLEN)
 
-	V(x00632c,b,16)
-	V(x00633c,b,16)
+	V(_do_dstname,b,16)
+	V(_do_srcname,b,16)
 	V(_cp_dst,b,122)
 
 	INT(x0063c6)

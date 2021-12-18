@@ -39,7 +39,7 @@ AESDESK_OBJS = \
 	../desk/deskapp1.o \
 	../desk/deskapp3.o \
 	../desk/deskact.o \
-	../desk/desk1.o \
+	../desk/deskdir.o \
 	../desk/deskif.o \
 	../desk/deskinf.o \
 	../desk/deskpref.o \
