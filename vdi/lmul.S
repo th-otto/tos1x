@@ -19,18 +19,18 @@
  * 
  * 	sign = 0;
  * 	if(l1 < 0) {
- * 		l1 = -l1;	//make it positive
+ * 		l1 = -l1;	; make it positive
  * 		sign++;
  * 	}
  * 	if(l2 < 0) {
- * 		l2 = -l2;	//make it positive
+ * 		l2 = -l2;	; make it positive
  * 		sign++;
  * 	}
  * 	t1 = l1.loword*l2.loword;
  * 	t2 = l1.hiword*l2.loword + l2.hiword*l1.loword;
  * 	t1.hiword = t1.hiword + t2;
  * 	if(sign&1)
- * 		t1 = -t1;	//negate results
+ * 		t1 = -t1;	; negate results
  * 	return(t1);
  * }
  */

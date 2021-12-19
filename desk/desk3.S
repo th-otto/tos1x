@@ -88,7 +88,7 @@ deskm3:
 		jsr _menu_bar
 		addq.l    #4,a7
 		move.l    13654(a5),(a7)
-		jsr       _xfdb17c
+		jsr       _men_update
 		clr.w     d6
 		bra.s     deskm5
 deskm4:
@@ -145,7 +145,7 @@ deskm6:
 		jsr       _desk_verify
 		addq.l    #4,a7
 		clr.w     13722(a5)
-		jsr       _xfdbb94
+		jsr       _cnx_get
 		move.l    13654(a5),-12(a6)
 		move.w    #-1,(a7)
 		move.w    #$0040,-(a7) ; _Blitmode
@@ -194,7 +194,7 @@ deskm8:
 deskm9:
 		movea.w   d6,a0
 		adda.l    a0,a0
-		adda.l    #xfeb1fc,a0
+		adda.l    #_ILL_XXX,a0
 		move.w    (a0),d7
 		move.w    d7,d0
 		addq.w    #1,d6
@@ -289,7 +289,7 @@ deskm15:
 deskm16:
 		tst.w     d5
 		beq       deskm12
-		jsr       _xfdba7e
+		jsr       _cnx_put
 		clr.w     (a7)
 		jsr _save_inf
 		clr.w     (a7)
@@ -348,8 +348,8 @@ deskm22:
 		dc.w      $F83F
 
 
-	xdef _xfdc09c
-_xfdc09c: ds.b 0
+	xdef _win_view
+_win_view: ds.b 0
 		link      a6,#0
 		movem.l   d7/a5,-(a7)
 		movea.l   _thedesk,a5
@@ -487,7 +487,7 @@ xfdc1_4:
 		cmp.w     #5,d7
 		blt.s     xfdc1_3
 		clr.l     -(a7)
-		jsr       _xfdc09c
+		jsr       _win_view
 		addq.l    #4,a7
 		clr.w     d7
 		bra.s     xfdc1_6
@@ -508,7 +508,7 @@ xfdc1_5:
 		move.w    d7,d0
 		asl.w     #3,d0
 		ext.l     d0
-		add.l     #x007098,d0
+		add.l     #_g_winsave,d0
 		move.l    d0,-(a7)
 		jsr _LBCOPY
 		addq.l    #8,a7
@@ -535,7 +535,7 @@ xfdc2_1:
 		asl.w     #3,d0
 		ext.l     d0
 		movea.l   d0,a4
-		adda.l    #x007098,a4
+		adda.l    #_g_winsave,a4
 		move.l    4(a4),-(a7)
 		move.l    (a4),-(a7)
 		jsr       _obj_walloc
@@ -622,7 +622,7 @@ xfdc37_1:
 		move.w    x0063c6,d0
 		asl.w     #3,d0
 		ext.l     d0
-		add.l     #x007098,d0
+		add.l     #_g_winsave,d0
 		move.l    d0,-(a7)
 		jsr _LBCOPY
 		addq.l    #8,a7
@@ -682,8 +682,8 @@ _win_top: ds.b 0
 xfdc43_1:
 		dc.w      $F801
 
-	xdef _xfdc47a
-_xfdc47a: ds.b 0
+	xdef _win_ontop
+_win_ontop: ds.b 0
 		link      a6,#0
 		movem.l   d6-d7/a4-a5,-(a7)
 		movea.l   _thedesk,a5
@@ -1333,8 +1333,8 @@ xfdc9_16:
 xfdc9_17:
 		dc.w      $FC3D
 
-	xdef _srl_bar
-_srl_bar: ds.b 0
+	xdef _win_slide
+_win_slide: ds.b 0
 		link      a6,#-16
 		movem.l   d7/a5,-(a7)
 		move.w    8(a6),(a7)
@@ -1375,8 +1375,8 @@ srl_bar2:
 		dc.w      $F801
 
 
-	xdef _xfdcbe0
-_xfdcbe0: ds.b 0
+	xdef _win_arrow
+_win_arrow: ds.b 0
 		link      a6,#0
 		movem.l   d5-d7/a5,-(a7)
 		move.w    8(a6),(a7)
@@ -1453,8 +1453,8 @@ xfdcb_10:
 		addq.l    #6,a7
 		dc.w      $F831
 
-	xdef _xfdcc68
-_xfdcc68: ds.b 0
+	xdef _win_bdall
+_win_bdall: ds.b 0
 		link      a6,#-8
 		movem.l   d5-d7/a4-a5,-(a7)
 		movea.l   _thedesk,a5
@@ -1559,8 +1559,8 @@ xfdcd_6:
 		dc.w      $F031
 
 
-	xdef _xfdcd6a
-_xfdcd6a: ds.b 0
+	xdef _win_iname
+_win_iname: ds.b 0
 		link      a6,#-12
 		move.w    8(a6),d0
 		muls.w    #24,d0
@@ -1650,8 +1650,6 @@ xfeb2e6:
 		dc.l xfdcb_8
 
 	bss
-	xdef x007098
-	comm x007098,32
 	xdef x0063c6
 	comm x0063c6,2
 	xdef _winhead

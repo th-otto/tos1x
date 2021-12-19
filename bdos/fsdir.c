@@ -225,7 +225,7 @@ PP(const char **np;)
 		p = dirtbl[run->p_curdir[d]];	/*  else use curr dir   */
 	}
 	
-	/* whew ! *//*  <= thankyou, Jason, for that wonderful comment */
+	/* whew ! */ /*  <= thankyou, Jason, for that wonderful comment */
 
 	*np = n;
 	X_USER(p) = osuser;

@@ -17,7 +17,7 @@
  * Number of Trees:          14
  * Number of Userblks:       0
  * Number of Images:         11
- * Total file size:          11010
+ * Total file size:          11018
  */
 
 #undef RSC_NAME
@@ -56,23 +56,29 @@
 #define VIEWMENU           5 /* TITLE in tree ADMENU */
 #define OPTNMENU           6 /* TITLE in tree ADMENU */
 #define ABOUITEM           9 /* STRING in tree ADMENU */
+#define L1ITEM            10 /* STRING in tree ADMENU */
 #define OPENITEM          18 /* STRING in tree ADMENU */
 #define SHOWITEM          19 /* STRING in tree ADMENU */
+#define L2ITEM            20 /* STRING in tree ADMENU */
 #define NEWFITEM          21 /* STRING in tree ADMENU */
 #define CLSFITEM          22 /* STRING in tree ADMENU */
 #define CLSWITEM          23 /* STRING in tree ADMENU */
+#define L3ITEM            24 /* STRING in tree ADMENU */
 #define FORMITEM          25 /* STRING in tree ADMENU */
 #define ICONITEM          27 /* STRING in tree ADMENU */
 #define TEXTITEM          28 /* STRING in tree ADMENU */
+#define L4ITEM            29 /* STRING in tree ADMENU */
 #define NAMEITEM          30 /* STRING in tree ADMENU */
 #define DATEITEM          31 /* STRING in tree ADMENU */
 #define SIZEITEM          32 /* STRING in tree ADMENU */
 #define TYPEITEM          33 /* STRING in tree ADMENU */
 #define IDSKITEM          35 /* STRING in tree ADMENU */
 #define IAPPITEM          36 /* STRING in tree ADMENU */
+#define L5ITEM            37 /* STRING in tree ADMENU */
 #define PREFITEM          38 /* STRING in tree ADMENU */
 #define SAVEITEM          39 /* STRING in tree ADMENU */
 #define PRINTITEM         40 /* STRING in tree ADMENU */
+#define L6ITEM            41 /* STRING in tree ADMENU */
 #define BITBLT            42 /* STRING in tree ADMENU */
 
 #define ADFILEIN           1 /* form/dialog */

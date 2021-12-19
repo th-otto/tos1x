@@ -478,7 +478,7 @@ BOOLEAN read_inf(NOTHING)
 			d->sitem_save = (envr & 0x60) >> 5;
 			d->cdele_save = (envr & 0x10) != 0;
 			d->ccopy_save = (envr & 0x08) != 0;
-			d->write_save = envr & 0x01;
+			d->covwr_save = envr & 0x01;
 			pcurr = scan_2(pcurr, &envr);
 			d->cbit_save = (envr & 0xf0) >> 4;
 			d->pref_save = gl_restype - 1;
@@ -619,7 +619,7 @@ PP(BOOLEAN todisk;)
 	*pcurr++ = 'E';
 	*pcurr++ = ' ';
 	envr = 0x0;
-	envr |= d->write_save;
+	envr |= d->covwr_save;
 	envr |= d->vitem_save ? 0x80 : 0x00;
 	envr |= (d->sitem_save << 5) & 0x60;
 	envr |= d->cdele_save ? 0x10 : 0x00;

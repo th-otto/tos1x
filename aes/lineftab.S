@@ -264,7 +264,7 @@
 [00fe7cdc] dc.l $00fdd102            ; F41C ; dos_rename AES
 [00fe7ce0] dc.l $00fdd080            ; F420 ; dos_set AES
 [00fe7ce4] dc.l $00fd6a7c            ; F424 ; del_fname DESKTOP
-[00fe7ce8] dc.l $00fd6a9c            ; F428 ; get_fname
+[00fe7ce8] dc.l $00fd6a9c            ; F428 ; get_fname DESKTOP
 [00fe7cec] dc.l $00fe5fd0            ; F42C ; fs_sget AES
 [00fe7cf0] dc.l $00fe5f4e            ; F430 ; unfmt_str AES
 [00fe7cf4] dc.l $00fd791e            ; F434 ; splitpath DESKTOP
@@ -287,7 +287,7 @@
 [00fe7d38] dc.l $00fd8f32            ; F478 ; fn_pfree DESKTOP
 [00fe7d3c] dc.l $00fe5ef8            ; F47C ; strchk AES
 [00fe7d40] dc.l $00fe5ee4            ; F480 ; scasb AES
-[00fe7d44] dc.l $00fd9056            ; F484 ; pn_fcomp
+[00fe7d44] dc.l $00fd9056            ; F484 ; pn_fcomp DESKTOP
 [00fe7d48] dc.l $00fe65c2            ; F488 ; cart_sfirst AES
 [00fe7d4c] dc.l $00fd8f4a            ; F48C ; fn_alloc DESKTOP
 [00fe7d50] dc.l $00fe65d4            ; F490 ; cart_snext AES
@@ -344,14 +344,14 @@
 [00fe7e1c] dc.l $00fd7cce            ; F55C ; shel_write DESKTOP
 [00fe7e20] dc.l $00fda2fa            ; F560 ; do_wopen DESKTOP
 [00fe7e24] dc.l $00fdc652            ; F564 ; win_bldview DESKTOP
-[00fe7e28] dc.l $00fda2a0            ; F568 ; do_xyfix
-[00fe7e2c] dc.l $00fda22c            ; F56C ; get_xywh
+[00fe7e28] dc.l $00fda2a0            ; F568 ; do_xyfix DESKTOP
+[00fe7e2c] dc.l $00fda22c            ; F56C ; get_xywh DESKTOP
 [00fe7e30] dc.l $00fd7bca            ; F570 ; graf_growbox DESKTOP
 [00fe7e34] dc.l $00fd7d2a            ; F574 ; wind_open DESKTOP
 [00fe7e38] dc.l $00fd7cec            ; F578 ; wind_close DESKTOP
 [00fe7e3c] dc.l $00fd7be0            ; F57C ; graf_shrinkbox DESKTOP
 [00fe7e40] dc.l $00fe5d02            ; F580 ; rc_equal AES
-[00fe7e44] dc.l $00fdc47a            ; F584
+[00fe7e44] dc.l $00fdc47a            ; F584 ; win_ontop DESKTOP
 [00fe7e48] dc.l $00fdcdec            ; F588 ; win_sname DESKTOP
 [00fe7e4c] dc.l $00fdc430            ; F58C ; win_top DESKTOP
 [00fe7e50] dc.l $00fe1bb2            ; F590 ; gsx_escapes AES
@@ -367,7 +367,7 @@
 [00fe7e78] dc.l $00fda85e            ; F5B8 ; do_dopen DESKTOP
 [00fe7e7c] dc.l $00fd82e8            ; F5BC ; inf_file DESKTOP
 [00fe7e80] dc.l $00fd8538            ; F5C0 ; inf_disk DESKTOP
-[00fe7e84] dc.l $00fdcd6a            ; F5C4
+[00fe7e84] dc.l $00fdcd6a            ; F5C4 ; win_iname DESKTOP
 [00fe7e88] dc.l $00fd7d32            ; F5C8 ; wind_get DESKTOP
 [00fe7e8c] dc.l $00fda3de            ; F5CC ; zoom_closed DESKTOP
 [00fe7e90] dc.l $00fdac02            ; F5D0 ; true_closewnd DESKTOP
@@ -375,38 +375,38 @@
 [00fe7e98] dc.l $00fe7582            ; F5D8 ; trp13; duplicate AES
 [00fe7e9c] dc.l $00fe411e            ; F5DC ; sh_name AES
 [00fe7ea0] dc.l $00fd7c2a            ; F5E0 ; menu_ienable DESKTOP
-[00fe7ea4] dc.l $00fdb152            ; F5E4
+[00fe7ea4] dc.l $00fdb152            ; F5E4 ; men_list DESKTOP
 [00fe7ea8] dc.l $00fda984            ; F5E8 ; open_item DESKTOP
 [00fe7eac] dc.l $00fdaaa8            ; F5EC ; show_item DESKTOP
 [00fe7eb0] dc.l $00fd9624            ; F5F0 ; newfolder DESKTOP
 [00fe7eb4] dc.l $00fdad22            ; F5F4 ; close_window DESKTOP
 [00fe7eb8] dc.l $00fdab74            ; F5F8 ; do_format DESKTOP
 [00fe7ebc] dc.l $00fd7c1e            ; F5FC ; menu_icheck DESKTOP
-[00fe7ec0] dc.l $00fdc09c            ; F600
+[00fe7ec0] dc.l $00fdc09c            ; F600 ; win_view DESKTOP
 [00fe7ec4] dc.l $00fd87dc            ; F604 ; ins_disk DESKTOP
 [00fe7ec8] dc.l $00fd59a0            ; F608 ; app_blddesk DESKTOP
 [00fe7ecc] dc.l $00fd8a16            ; F60C ; ins_app DESKTOP
 [00fe7ed0] dc.l $00fdb6f6            ; F610 ; hd_keybd DESKTOP
 [00fe7ed4] dc.l $00fd8622            ; F614 ; desk_pref DESKTOP
-[00fe7ed8] dc.l $00fdba7e            ; F618
+[00fe7ed8] dc.l $00fdba7e            ; F618 ; cnx_put DESKTOP
 [00fe7edc] dc.l $00fd55e8            ; F61C ; save_inf DESKTOP
 [00fe7ee0] dc.l $00fe1bae            ; F620 ; av_hardcopy AES
 [00fe7ee4] dc.l $00fd65ba            ; F624 ; act_bsclick DESKTOP
 [00fe7ee8] dc.l $00fd66ba            ; F628 ; act_bdown DESKTOP
 [00fe7eec] dc.l $00fd9d76            ; F62C ; desk1_drag DESKTOP
-[00fe7ef0] dc.l $00fdb318            ; F630 ; do_file DESKTOP
-[00fe7ef4] dc.l $00fdb17c            ; F634
+[00fe7ef0] dc.l $00fdb318            ; F630 ; do_filemenu DESKTOP
+[00fe7ef4] dc.l $00fdb17c            ; F634 ; men_update DESKTOP
 [00fe7ef8] dc.l $00fe75e0            ; F638 ; mediach AES
 [00fe7efc] dc.l $00fdae56            ; F63C ; rb_start DESKTOP
 [00fe7f00] dc.l $00fdaeae            ; F640 ; rb_stop DESKTOP
-[00fe7f04] dc.l $00fdb3bc            ; F644
-[00fe7f08] dc.l $00fdcc68            ; F648
-[00fe7f0c] dc.l $00fdb470            ; F64C ; do_opt DESKTOP
+[00fe7f04] dc.l $00fdb3bc            ; F644 ; do_viewmenu DESKTOP
+[00fe7f08] dc.l $00fdcc68            ; F648 ; win_bdall DESKTOP
+[00fe7f0c] dc.l $00fdb470            ; F64C ; do_optnmenu DESKTOP
 [00fe7f10] dc.l $00fd7be8            ; F650 ; menu_tnormal DESKTOP
-[00fe7f14] dc.l $00fdb774            ; F654 ; hd_menu DESTKOP
+[00fe7f14] dc.l $00fdb774            ; F654 ; hd_menu DESKTOP
 [00fe7f18] dc.l $00fda422            ; F658 ; do_wfull DESKTOP
-[00fe7f1c] dc.l $00fdcbe0            ; F65C
-[00fe7f20] dc.l $00fdcb5c            ; F660 ; srl_bar DESKTOP
+[00fe7f1c] dc.l $00fdcbe0            ; F65C ; win_arrow DESKTOP
+[00fe7f20] dc.l $00fdcb5c            ; F660 ; win_slide DESKTOP
 [00fe7f24] dc.l $00fd7ab0            ; F664 ; evnt_dclick DESKTOP
 [00fe7f28] dc.l $00fd7988            ; F668 ; ap_init AES
 [00fe7f2c] dc.l $00fd7d0a            ; F66C ; wind_update DESKTOP
@@ -414,9 +414,9 @@
 [00fe7f34] dc.l $00fd5062            ; F674 ; read_inf DESKTOP
 [00fe7f38] dc.l $00fd79e0            ; F678 ; ap_exit AES
 [00fe7f3c] dc.l $00fdc184            ; F67C ; obj_init DESKTOP
-[00fe7f40] dc.l $00fd8d90            ; F680 ; pn_init
+[00fe7f40] dc.l $00fd8d90            ; F680 ; pn_init DESKTOP
 [00fe7f44] dc.l $00fd7c0e            ; F684 ; menu_bar DESKTOP
-[00fe7f48] dc.l $00fdbb94            ; F688
+[00fe7f48] dc.l $00fdbb94            ; F688 ; cnx_get DESKTOP
 [00fe7f4c] dc.l $00fdb5ea            ; F68C ; hd_button DESKTOP
 [00fe7f50] dc.l $00fd598e            ; F690 ; set_defdrv DESKTOP
 [00fe7f54] dc.l $00fd9e58            ; F694 ; obj_walloc DESKTOP

@@ -172,7 +172,7 @@ PP(VOIDPTR buf;)
 			return rv;
 		}
 
-		/* else *//* For character devices:   */
+		/* else */ /* For character devices:   */
 		rv = Is_Character;
 
 		if (h == H_Null)
@@ -223,7 +223,7 @@ PP(VOIDPTR buf;)
 			return Bcostat(HXFORM(h));
 		}
 
-		/* else *//* For disk file:       */
+		/* else */ /* For disk file:       */
 		return pofd->o_bytnum != pofd->o_fileln;
 
 	case REMEDIA:						/* Get removeable media sts */

@@ -362,7 +362,7 @@ PP(register GRECT *pt;)
 	if (tmp == NULL)
 	{
 		fun_alert(1, STFOF8DEE, NULL);
-		pw = xfdc47a();
+		pw = win_ontop();
 		thedesk->g_wlastsel = pw ? pw->w_id : 0;
 		desk_verify(thedesk->g_wlastsel, TRUE);
 		goto done;
@@ -752,7 +752,7 @@ PP(register int16_t curr;)
 	app = NULL;
 	if (d->g_cwin == 0)
 	{
-		pname = xfdcd6a(curr);
+		pname = win_iname(curr);
 		app = app_afind(TRUE, -1, curr, pname, &isapp);
 	}
 	if (app != NULL && app->a_type == AT_ISDISK)
@@ -784,7 +784,7 @@ PP(register DESKWIN *pw;)
 	zoom_closed(1, pw->w_id, d->g_screen[pw->w_obid].ob_x, d->g_screen[pw->w_obid].ob_y);
 	pn_free(pw->w_path);
 	win_free(pw);
-	pw = xfdc47a();
+	pw = win_ontop();
 	d->g_wlastsel = pw ? pw->w_id : 0;
 	desk_verify(d->g_wlastsel, TRUE);
 	return FALSE;

@@ -535,7 +535,7 @@ _endvdibss: ds.b 0
 	INT(_pr_xrat)
 	INT(_pr_button)
 	
-	V(x007098,w,4*4)
+	V(_g_winsave,w,4*NUM_WNODES) /* GRECT[NUM_WNODES] */
 	
 	INT(_gl_wsptschar)
 	INT(_gl_wptschar)

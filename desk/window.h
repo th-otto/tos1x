@@ -61,14 +61,8 @@ struct deskwin {
 	int16_t	w_vncol;	/* virtual # of cols 	*/
 	int16_t	w_vnrow;	/* virtual # of rows	*/
 	PNODE	*w_path;
-	char	w_name[121];
-	char	w_info[88];
+	char	w_name[LEN_ZFPATH - 1];
+	char	w_info[81];
+	GRECT   w_curr;
 	/* 238 */
 };
-
-
-typedef struct myblk
-{
-	GRECT	*mygrect;
-	char	*myptr;
-} MYBLK;

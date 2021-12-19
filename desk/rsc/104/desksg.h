@@ -1,5 +1,5 @@
 /*
- * resource set indices for deskde
+ * resource set indices for desksg
  *
  * created by ORCS 2.18
  */
@@ -22,11 +22,11 @@
 
 #undef RSC_NAME
 #ifndef __ALCYON__
-#define RSC_NAME "deskde"
+#define RSC_NAME "desksg"
 #endif
 #undef RSC_ID
-#ifdef deskde
-#define RSC_ID deskde
+#ifdef desksg
+#define RSC_ID desksg
 #else
 #define RSC_ID 0
 #endif
@@ -56,23 +56,29 @@
 #define VIEWMENU           5 /* TITLE in tree ADMENU */
 #define OPTNMENU           6 /* TITLE in tree ADMENU */
 #define ABOUITEM           9 /* STRING in tree ADMENU */
+#define L1ITEM            10 /* STRING in tree ADMENU */
 #define OPENITEM          18 /* STRING in tree ADMENU */
 #define SHOWITEM          19 /* STRING in tree ADMENU */
+#define L2ITEM            20 /* STRING in tree ADMENU */
 #define NEWFITEM          21 /* STRING in tree ADMENU */
 #define CLSFITEM          22 /* STRING in tree ADMENU */
 #define CLSWITEM          23 /* STRING in tree ADMENU */
+#define L3ITEM            24 /* STRING in tree ADMENU */
 #define FORMITEM          25 /* STRING in tree ADMENU */
 #define ICONITEM          27 /* STRING in tree ADMENU */
 #define TEXTITEM          28 /* STRING in tree ADMENU */
+#define L4ITEM            29 /* STRING in tree ADMENU */
 #define NAMEITEM          30 /* STRING in tree ADMENU */
 #define DATEITEM          31 /* STRING in tree ADMENU */
 #define SIZEITEM          32 /* STRING in tree ADMENU */
 #define TYPEITEM          33 /* STRING in tree ADMENU */
 #define IDSKITEM          35 /* STRING in tree ADMENU */
 #define IAPPITEM          36 /* STRING in tree ADMENU */
+#define L5ITEM            37 /* STRING in tree ADMENU */
 #define PREFITEM          38 /* STRING in tree ADMENU */
 #define SAVEITEM          39 /* STRING in tree ADMENU */
 #define PRINTITEM         40 /* STRING in tree ADMENU */
+#define L6ITEM            41 /* STRING in tree ADMENU */
 #define BITBLT            42 /* STRING in tree ADMENU */
 
 #define ADFILEIN           1 /* form/dialog */
@@ -274,7 +280,7 @@
 #    define _WORD short
 #  endif
 #endif
-extern _WORD deskde_rsc_load(_WORD wchar, _WORD hchar);
-extern _WORD deskde_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
-extern _WORD deskde_rsc_free(void);
+extern _WORD desksg_rsc_load(_WORD wchar, _WORD hchar);
+extern _WORD desksg_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
+extern _WORD desksg_rsc_free(void);
 #endif

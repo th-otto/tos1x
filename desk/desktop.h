@@ -248,7 +248,7 @@ typedef struct {
 	/* 12978 */ int32_t g_size;
 	/* 12982 */ char g_tmppth[PATHLEN];
 	/* 13310 */ int16_t g_xyobpts[MAX_OBS * 2];
-	/* 13350 */ int16_t msgbuf[8];		
+	/* 13350 */ int16_t g_rmsg[8];		    /* general AES message area */
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13370 */ GRECT g_full;				/* full window size value */
 	/* 13378 */ GRECT g_desk;
@@ -261,7 +261,7 @@ typedef struct {
 	/* 13718 */ int16_t g_croot;        /* current pseudo root */
 	/* 13720 */ int16_t g_cwin;         /* current window # */
 	/* 13722 */ int16_t g_wlastsel;     /* window holding last selection */
-	/* 13724 */ int16_t g_viewpref;     /* curr. view item chked */
+	/* 13724 */ int16_t g_cviewitem;    /* curr. view item chked */
 	/* 13726 */ int16_t g_csortitem;    /* curr. sort item chked */
 	/* 13728 */ int16_t g_ccopypref;	/* curr. copy pref.	*/
 	/* 13730 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
@@ -292,11 +292,11 @@ typedef struct {
 	/* 23556 */ BOOLEAN cdele_save;		/* delete ? */
 	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
 	/* 23560 */ int16_t pref_save;		/* screen pref */
-	/* 23562 */ BOOLEAN write_save;		/* write ? */
+	/* 23562 */ BOOLEAN covwr_save;		/* write ? */
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
 	/* 24108 */ OBJECT *g_pscreen;
-	/* 24112 */ char ml_files[4];
-	/* 24116 */ char ml_dirs[4];
+	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
+	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
 	/* 24120 */ char o24120[8];
 	/* 24128 */ BOOLEAN ml_havebox;
 	/* 24130 */ BOOLEAN ml_dlpr;
@@ -350,7 +350,7 @@ VOID clr_allwin PROTO((NOTHING));
 VOID clr_xwin PROTO((DESKWIN *win, BOOLEAN infoupdate));
 VOID srl_verbar PROTO((DESKWIN *win, uint16_t pos));
 VOID srl_hzbar PROTO((DESKWIN *win, uint16_t pos));
-VOID srl_bar PROTO((int16_t handle, uint16_t pos, BOOLEAN vertical));
+VOID win_slide PROTO((int16_t handle, uint16_t pos, BOOLEAN vertical));
 VOID srl_row PROTO((DESKWIN *win, int16_t row, int16_t dir));
 VOID srl_col PROTO((DESKWIN *win, int16_t col, int16_t dir));
 VOID blt_window PROTO((DESKWIN *win, int16_t mode, int16_t size));
@@ -372,12 +372,14 @@ VOID win_sinfo PROTO((DESKWIN *pw));
 VOID win_top PROTO((DESKWIN *thewin));
 DESKWIN *win_alloc PROTO((int16_t obid));
 VOID win_free PROTO((DESKWIN *thewin));
+VOID win_bdall PROTO((NOTHING));
+VOID win_arrow PROTO((int16_t wh, int16_t arrow_type));
 
 
 /*
  * deskact.c
  */
-extern BOOLEAN back_update;						/* update background    */
+extern BOOLEAN back_update;						/* update background */
 
 BOOLEAN ch_obj PROTO((int16_t mx, int16_t my, DESKWIN **win, int16_t *item, int16_t *type));
 BOOLEAN ch_undo PROTO((NOTHING));
@@ -471,7 +473,6 @@ int16_t wind_calc PROTO((int16_t wctype, uint16_t kind, int16_t x, int16_t y, in
  */
 int16_t av_icon PROTO((NOTHING));
 VOID clr_dicons PROTO((NOTHING));
-VOID hd_button PROTO((int16_t clicks, int16_t kstate, int16_t mx, int16_t my));
 
 
 /*
@@ -587,14 +588,28 @@ extern BOOLEAN o_status;							/* for o_select */
 extern DESKWIN *o_win;
 extern int16_t o_type;
 extern int16_t o_item;
+extern GRECT g_winsave[NUM_WNODES];
 
 VOID menu_verify PROTO((NOTHING));
-VOID do_view PROTO((int16_t msgbuff));
-VOID do_file PROTO((int16_t item));
-VOID hd_msg PROTO((NOTHING));
+BOOLEAN do_viewmenu PROTO((int16_t item));
+BOOLEAN do_filemenu PROTO((int16_t item));
+BOOLEAN do_optnmenu PROTO((int16_t item));
+BOOLEAN hd_msg PROTO((NOTHING));
 VOID actions PROTO((NOTHING));
 int32_t av_mem PROTO((NOTHING));
 VOID av_desk PROTO((NOTHING));
+VOID cnx_put PROTO((NOTHING));
+VOID cnx_get PROTO((NOTHING));
+BOOLEAN hd_button PROTO((int16_t clicks, int16_t mx, int16_t my, int16_t bstate, int16_t kstate));
+BOOLEAN hd_keybd PROTO((uint16_t key));
+BOOLEAN hd_menu PROTO((int16_t title, int16_t item));
+
+
+/*
+ * rainbow.S
+ */
+VOID rb_start PROTO((NOTHING));
+VOID rb_stop PROTO((NOTHING));
 
 
 /*
@@ -879,7 +894,7 @@ int32_t trp14 PROTO((short code, ...));
 int16_t trp14int PROTO((short code, ...));
 int32_t trp13 PROTO((short code, ...));
 
-VOID mediach PROTO((int16_t drv));
+int mediach PROTO((int16_t drv));
 
 VOID gsx_attr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
@@ -910,5 +925,7 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 DESKWIN *win_find PROTO((int16_t wh));
 int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
 VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
-DESKWIN *xfdc47a PROTO((NOTHING));
-char *xfdcd6a PROTO((int curr));
+DESKWIN *win_ontop PROTO((NOTHING));
+char *win_iname PROTO((int16_t curr));
+VOID men_update PROTO((LPTREE tree));
+VOID win_view PROTO((int16_t vtype, int16_t isort));

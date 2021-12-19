@@ -785,7 +785,6 @@ PP(const char *name;)
 }
 
 
-#if 1
 /* 104de: 00fd7620 */
 /* 106de: 00e17edc */
 LINEF_STATIC int do_namecon(P(char *)dstpath, P(char *)name)
@@ -828,7 +827,6 @@ PP(char *name;)
 	unfmt_str(d->ml_fstr, name);
 	return butt;
 }
-#endif
 
 
 /* 104de: 00fd7730 */

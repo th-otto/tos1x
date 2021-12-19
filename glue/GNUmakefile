@@ -49,7 +49,7 @@ AESDESK_OBJS = \
 	../desk/deskobj.o \
 	../desk/desksupp.o \
 	../desk/rainbow.o \
-	../desk/desk4.o \
+	../desk/desktop.o \
 	../desk/desk3.o \
 	../aes/jdispa.o \
 	../aes/jdos.o \
