@@ -482,17 +482,17 @@ PP(BOOLEAN vertical;)
 PP(register int16_t newcv;)
 {
 	register int16_t delcv;
-	int16_t pn; /* 2 */
+	int16_t pn;
 	register int16_t sx;
 	register int16_t sy;
-	int16_t dx; /* 4 */
-	int16_t dy; /* 6 */
-	int16_t wblt; /* 8 */
-	int16_t hblt; /* 10 */
-	int16_t revblt; /* 12 */
-	int16_t tmp; /* 14 */
-	GRECT c; /* 22 */
-	GRECT t; /* 30 */
+	int16_t dx;
+	int16_t dy;
+	int16_t wblt;
+	int16_t hblt;
+	int16_t revblt;
+	int16_t tmp;
+	GRECT c;
+	GRECT t;
 	register GRECT *pc;
 	
 	pc = &c;
@@ -657,6 +657,10 @@ PP(int16_t arrow_type;)
 		newcv = pw->w_cvcol + 1;
 		vertical = FALSE;
 		break;
+#if !BINEXACT
+	default:
+		return;
+#endif
 	}
 	win_blt(pw, vertical, newcv);
 }
@@ -675,6 +679,7 @@ VOID win_bdall(void)
 	register DESKWIN *win;
 	
 	d = thedesk; /* FIXME: unused */
+	UNUSED(d);
 	for (ii = 0; ii < NUM_WNODES; ii++)
 	{
 		wh = g_wlist[ii].w_id;

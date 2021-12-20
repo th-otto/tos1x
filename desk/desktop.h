@@ -381,6 +381,7 @@ VOID win_arrow PROTO((int16_t wh, int16_t arrow_type));
 VOID win_start PROTO((NOTHING));
 DESKWIN *win_ontop PROTO((NOTHING));
 VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
+int16_t win_isel PROTO((OBJECT *olist, int16_t root, int16_t curr));
 
 
 /*
@@ -527,13 +528,9 @@ VOID fc_start PROTO((const char *source, int16_t op));
 
 
 /*
- * deskfile.c
+ * deskfun.c
  */
-VOID pri_win PROTO((NOTHING));
 BOOLEAN newfolder PROTO((DESKWIN *win));
-VOID sort_file PROTO((DESKWIN *win, int16_t mode));
-VOID set_newview PROTO((int16_t index, DESKWIN *win));
-int16_t read_files PROTO((DESKWIN *win, int16_t attr));
 
 
 /*
@@ -903,7 +900,7 @@ VOID gsx_attr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));
 VOID av_hardcopy PROTO((NOTHING));
-VOID wind_grget PROTO((short handle, short field, GRECT *gr));
+int16_t wind_grget PROTO((short handle, short field, GRECT *gr));
 int16_t ap_bvset PROTO((int16_t bvdisk, int16_t bvhard));
 
 
@@ -926,7 +923,6 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 
 
 DESKWIN *win_find PROTO((int16_t wh));
-int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
 char *win_iname PROTO((int16_t curr));
 VOID men_update PROTO((LPTREE tree));
 VOID win_view PROTO((int16_t vtype, int16_t isort));
