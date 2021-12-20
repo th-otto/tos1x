@@ -427,7 +427,7 @@ F66C wind_update
 F670 wind_calc
 F674 read_inf
 F678 ap_exit
-F67C obj_init
+F67C win_start
 F680 pn_init
 F684 menu_bar
 F688 cnx_get
@@ -437,10 +437,10 @@ F694 obj_walloc
 F698 wind_create
 F69C wind_delete
 F6A0 objc_order
-F6A4 xfdc524
-F6A8 xfdc61c
+F6A4 win_ocalc
+F6A8 win_icalc
 F6AC bb_screen
-F6B0 xfdc988
+F6B0 win_blt
 F6B4 signal
 F6B8 ev_block
 F6BC fpdnm

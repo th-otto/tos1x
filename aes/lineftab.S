@@ -413,7 +413,7 @@
 [00fe7f30] dc.l $00fd7d58            ; F670 ; wind_calc DESKTOP
 [00fe7f34] dc.l $00fd5062            ; F674 ; read_inf DESKTOP
 [00fe7f38] dc.l $00fd79e0            ; F678 ; ap_exit AES
-[00fe7f3c] dc.l $00fdc184            ; F67C ; obj_init DESKTOP
+[00fe7f3c] dc.l $00fdc184            ; F67C ; win_start DESKTOP
 [00fe7f40] dc.l $00fd8d90            ; F680 ; pn_init DESKTOP
 [00fe7f44] dc.l $00fd7c0e            ; F684 ; menu_bar DESKTOP
 [00fe7f48] dc.l $00fdbb94            ; F688 ; cnx_get DESKTOP
@@ -423,10 +423,10 @@
 [00fe7f58] dc.l $00fd7d14            ; F698 ; wind_create DESKTOP
 [00fe7f5c] dc.l $00fd7cf6            ; F69C ; wind_delete DESKTOP
 [00fe7f60] dc.l $00fd7c5c            ; F6A0 ; objc_order DESKTOP
-[00fe7f64] dc.l $00fdc524            ; F6A4
-[00fe7f68] dc.l $00fdc61c            ; F6A8
+[00fe7f64] dc.l $00fdc524            ; F6A4 ; win_ocalc DESKTOP
+[00fe7f68] dc.l $00fdc61c            ; F6A8 ; win_icalc DESKTOP
 [00fe7f6c] dc.l $00fd4862            ; F6AC ; bb_screen AES
-[00fe7f70] dc.l $00fdc988            ; F6B0
+[00fe7f70] dc.l $00fdc988            ; F6B0 ; win_blt DESKTOP
 [00fe7f74] dc.l $00fdd4ee            ; F6B4 ; signal AES
 [00fe7f78] dc.l $00fdfbfc            ; F6B8 ; ev_block AES
 [00fe7f7c] dc.l $00fdeb0a            ; F6BC ; fpdnm AES

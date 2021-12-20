@@ -472,7 +472,7 @@ lineftab: ds.b 0
 		dc.l _wind_calc           ; F670
 		dc.l _read_inf            ; F674
 		dc.l _ap_exit             ; F678
-		dc.l _obj_init            ; F67C
+		dc.l _win_start           ; F67C
 		dc.l _pn_init             ; F680
 		dc.l _menu_bar            ; F684
 		dc.l _cnx_get             ; F688
@@ -482,10 +482,10 @@ lineftab: ds.b 0
 		dc.l _wind_create         ; F698
 		dc.l _wind_delete         ; F69C
 		dc.l _objc_order          ; F6A0
-		dc.l _xfdc524             ; F6A4
-		dc.l _xfdc61c             ; F6A8
+		dc.l _win_ocalc           ; F6A4
+		dc.l _win_icalc           ; F6A8
 		dc.l _bb_screen           ; F6AC
-		dc.l _xfdc988             ; F6B0
+		dc.l _win_blt             ; F6B0
 		dc.l _signal              ; F6B4
 		dc.l _ev_block            ; F6B8
 		dc.l _fpdnm               ; F6BC

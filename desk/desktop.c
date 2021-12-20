@@ -15,21 +15,22 @@
 
 
 #include "desktop.h"
+#include "taddr.h"
 
 
-int8_t const ILL_HDSK[] = { FORMITEM, IAPPITEM, 0 };
-int8_t const ILL_ITEM[] = { L2ITEM, L3ITEM, L4ITEM, L5ITEM, 0 };
-int8_t const ILL_FILE[] = { FORMITEM, IDSKITEM, 0 };
-int8_t const ILL_DOCU[] = { FORMITEM, IDSKITEM, IAPPITEM, 0 };
-int8_t const ILL_FDSK[] = { IAPPITEM, 0 };
-int8_t const ILL_TRASH[] = { OPENITEM, FORMITEM, IDSKITEM, IAPPITEM, IDSKITEM, 0 };
-int8_t const ILL_NOSEL[] = { OPENITEM, SHOWITEM, FORMITEM, IDSKITEM, IAPPITEM, 0 };
-int8_t const ILL_NOTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, 0 };
-int8_t const ILL_DESKTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, ICONITEM, TEXTITEM, NAMEITEM, DATEITEM, SIZEITEM, TYPEITEM, 0 };
-int8_t const ILL_YSEL[] = { OPENITEM, IDSKITEM, FORMITEM, SHOWITEM, 0 };
-int8_t const ILL_CART[] = { SHOWITEM, NEWFITEM, FORMITEM, IAPPITEM, 0 };
-int8_t const ILL_NOCART[] = { NEWFITEM, 0 };
-int16_t const ILL_XXX[] = { ABOUITEM, OPENITEM, ICONITEM, IDSKITEM, 0 };
+static int8_t const ILL_HDSK[] = { FORMITEM, IAPPITEM, 0 };
+static int8_t const ILL_ITEM[] = { L2ITEM, L3ITEM, L4ITEM, L5ITEM, 0 };
+static int8_t const ILL_FILE[] = { FORMITEM, IDSKITEM, 0 };
+static int8_t const ILL_DOCU[] = { FORMITEM, IDSKITEM, IAPPITEM, 0 };
+static int8_t const ILL_FDSK[] = { IAPPITEM, 0 };
+static int8_t const ILL_TRASH[] = { OPENITEM, FORMITEM, IDSKITEM, IAPPITEM, IDSKITEM, 0 };
+static int8_t const ILL_NOSEL[] = { OPENITEM, SHOWITEM, FORMITEM, IDSKITEM, IAPPITEM, 0 };
+static int8_t const ILL_NOTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, 0 };
+static int8_t const ILL_DESKTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, ICONITEM, TEXTITEM, NAMEITEM, DATEITEM, SIZEITEM, TYPEITEM, 0 };
+static int8_t const ILL_YSEL[] = { OPENITEM, IDSKITEM, FORMITEM, SHOWITEM, 0 };
+static int8_t const ILL_CART[] = { SHOWITEM, NEWFITEM, FORMITEM, IAPPITEM, 0 };
+static int8_t const ILL_NOCART[] = { NEWFITEM, 0 };
+static int16_t const top_items[] = { ABOUITEM, OPENITEM, ICONITEM, IDSKITEM, 0 };
 
 
 #undef Blitmode
@@ -559,9 +560,9 @@ PP(register int16_t item;)
 		desk_wait(TRUE);
 		for (i = 0; i < NUM_WNODES; i++)
 		{
-			if (winhead[i].w_id != 0)
+			if (g_wlist[i].w_id != 0)
 			{
-				winhead[i].w_path->p_flist = pn_sort(-1, winhead[i].w_path->p_flist);
+				g_wlist[i].w_path->p_flist = pn_sort(-1, g_wlist[i].w_path->p_flist);
 			}
 		}
 		win_bdall();
@@ -595,10 +596,10 @@ BOOLEAN hd_msg(NOTHING)
 	case WM_CLOSED:
 	case WM_FULLED:
 	case WM_ARROWED:
-	case WM_HSLID:						// reinstated in DESKTOP v1.2
+	case WM_HSLID:
 	case WM_VSLID:
-	case WM_SIZED:						// reinstated in DESKTOP v1.2
-	case WM_MOVED:						// reinstated in DESKTOP v1.2
+	case WM_SIZED:
+	case WM_MOVED:
 		desk_clear(d->g_cwin);
 		break;
 	}
@@ -685,14 +686,14 @@ BOOLEAN hd_msg(NOTHING)
 	}
 	
 	d->g_rmsg[0] = 0;
-	men_update(d->g_atree[ADMENU]);
+	men_update((LPTREE)d->g_atree[ADMENU]);
 	return done;
 }
 
 
 /* 104de: 00fdba7e */
 /* 106de: 00e1cdde */
-VOID cnx_put PROTO(NOTHING)
+VOID cnx_put(NOTHING)
 {
 	register int iwin;
 	register int nwin;
@@ -786,4 +787,226 @@ VOID cnx_get(NOTHING)
 		}
 	}
 	cnx_put();
+}
+
+
+
+/*
+ *  Run desktop
+ */
+/* 104de: 00fdbc88 */
+/* 106de: 00e1d034 */
+BOOLEAN deskmain(NOTHING)
+{
+	register int16_t obj;
+	register int ii;
+	register BOOLEAN done;
+#define blitter_present done /* reuse register */
+	register int16_t flags;
+	int16_t ev_which;
+	int16_t x;
+	int16_t y;
+	int16_t x2;
+	OBJECT *tree;
+	int16_t mx, my;
+	int16_t bstate;
+	int16_t k_state;
+	int16_t kret;
+	int16_t bret;
+	register THEDSK *d;
+	register int unused;
+	char unused2[54];
+
+	UNUSED(unused);
+	UNUSED(unused2);
+	
+	/* initialize libraries	*/
+	thedesk = (THEDSK *)dos_alloc((long)sizeof(THEDSK));
+	bfill(sizeof(THEDSK), 0, thedesk);
+	g_buffer = dos_alloc(512L);
+	g_wlist = (DESKWIN *)dos_alloc(NUM_WNODES * (long)sizeof(DESKWIN));
+	d = thedesk;
+	
+	ap_init();
+
+	/* initialize mouse */
+	wind_update(BEG_UPDATE);
+
+    /* get desktop work area coordinates */
+    wind_get(DESK, WF_WORKXYWH, &d->g_desk.g_x, &d->g_desk.g_y, &d->g_desk.g_w, &d->g_desk.g_h);
+
+	/* desk and calc full */
+	wind_calc(1, -1, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h, &d->g_full.g_x, &d->g_full.g_y, &d->g_full.g_w, &d->g_full.g_h);
+
+	d->g_pcmd = d->g_cmd;
+	d->g_ptail = d->g_tail;
+	d->p_msgbuf = d->g_rmsg;
+	
+	desk_wait(TRUE);
+
+	/* initialize resources */
+	rom_ram(1, (intptr_t)pglobal);
+
+	/* initialize menus and dialogs */
+	rsrc_gaddr(R_STRING, STCART, (VOIDPTR *)&d->p_cartname);
+	for (ii = 0; ii < NUM_ADTREES; ii++)
+		rsrc_gaddr(R_TREE, ii, (VOIDPTR *) &d->g_atree[ii]);
+
+	if (!read_inf())
+	{
+		ap_exit();
+		return FALSE;
+	}
+	
+	/* initialize windows */
+	win_start();
+
+	/* initialize folders, paths, and drives */
+	pn_init();
+
+	/* show menu        */
+	desk_verify(DESK, FALSE);				/* should this be here  */
+
+	menu_bar(d->g_atree[ADMENU], TRUE);
+
+	/* establish menu items that need to be checked, check 'em */
+	men_update((LPTREE)d->g_atree[ADMENU]);
+	for (ii = 0; ii < 7; ii++)
+		ob_change((LPTREE)d->g_atree[ADMENU], ii + ICONITEM, NORMAL, FALSE);
+	ob_change((LPTREE)d->g_atree[ADMENU], L4ITEM, DISABLED, FALSE);
+	
+	if (isdrive() == 0)
+	{
+		ob_change((LPTREE)d->g_atree[ADMENU], L6ITEM, DISABLED, FALSE); /* WTF? */
+	}
+	
+	d->g_cviewitem = ICONITEM;
+	menu_icheck(d->g_atree[ADMENU], d->g_cviewitem, TRUE);
+
+	d->g_csortitem = NAMEITEM;
+	menu_icheck(d->g_atree[ADMENU], d->g_csortitem, TRUE);
+
+	/* initialize desktop and its objects */
+	app_blddesk();
+
+	/* Take over the desktop */
+	do_wredraw(DESK, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h);
+	wind_set(DESK, WF_NEWDESK, d->g_pscreen, DROOT, FALSE);
+	
+	/* set up current parms */
+	desk_verify(DESK, FALSE);
+
+	/* establish desktop's state from info found in app_start, open windows */
+	d->g_wlastsel = DESK;
+
+	cnx_get();
+	
+	tree = d->g_atree[ADMENU];
+	blitter_present = Blitmode(-1);
+	if (blitter_present & 2)
+	{
+		LWSET(OB_TAIL(EXTRABOX), BITBLT);
+		LWSET(OB_NEXT(PRINTITEM), L6ITEM);
+		LWSET(OB_HEIGHT(EXTRABOX), gl_hchar * 8);
+		d->s_bitblt = d->cbit_save;
+		menu_icheck(d->g_atree[ADMENU], BITBLT, d->s_bitblt);
+		Blitmode(d->s_bitblt);
+	} else
+	{
+		LWSET(OB_TAIL(EXTRABOX), PRINTITEM);
+		LWSET(OB_NEXT(PRINTITEM), EXTRABOX);
+		LWSET(OB_HEIGHT(EXTRABOX), gl_hchar * 6);
+	}
+	
+	ii = 0;
+	while (TRUE)
+	{
+		if ((obj = top_items[ii++]) == 0)
+			break;
+		--obj;
+		objc_offset(tree, obj, &x, &y);
+		y = LWGET(OB_WIDTH(obj));
+		x2 = x + y;
+		if (x2 >= d->g_desk.g_w)
+		{
+			x = (x - x2) + d->g_desk.g_w - gl_wchar;
+			LWSET(OB_X(obj), x);
+		}
+	}
+	
+	wind_update(END_UPDATE);
+
+	/* get ready for main loop */
+	flags = MU_BUTTON | MU_MESAG | MU_KEYBD;
+	done = FALSE;
+
+	/* turn mouse on */
+	desk_wait(FALSE);
+
+	/* loop handling user input until done */
+	while (!done)
+	{
+		/* block for input */
+		ev_which = evnt_multi(flags, 0x02, 0x01, 0x01,
+			0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0,
+			d->p_msgbuf,
+			0, 0,
+			&mx, &my, &bstate, &k_state, &kret, &bret);
+
+		/* grab the screen */
+		wind_update(BEG_UPDATE);
+
+		/* handle system message */
+		if (ev_which & MU_MESAG)
+			done = hd_msg();
+
+		/* handle keybd message */
+		if (ev_which & MU_KEYBD)
+			done = hd_keybd(kret);
+
+		/* handle button down */
+		if (ev_which & MU_BUTTON)
+			done = hd_button(bret, mx, my, bstate, k_state);
+
+		/* free the screen */
+		wind_update(END_UPDATE);
+	}
+
+	/* save state in memory for when we come back to the desktop */
+	cnx_put();
+	save_inf(FALSE);
+
+	/* turn off the menu bar */
+	menu_bar(NULL, FALSE);
+
+	/* free memory */
+	for (ii = 0; ii < NUM_PNODES; ii++)
+	{
+		if (d->g_plist[ii].p_flist != NULL)
+			dos_free(d->g_plist[ii].p_flist);
+		d->g_plist[ii].p_flist = NULL;
+	}
+
+	/* exit the gem AES */
+	ap_exit();
+	obj = TRUE;
+
+	/* resolution change? */
+	if (gl_rschange)
+	{
+		set_defdrv();
+		if (isdrive() != 0)
+		{
+			diskin = pro_chroot(dos_gdrv() + 'A');
+		}
+		obj = FALSE;
+	}
+	
+	dos_free(g_buffer);
+	dos_free(thedesk);
+	dos_free(g_wlist);
+	
+	return obj;
+#undef blitter_present
 }

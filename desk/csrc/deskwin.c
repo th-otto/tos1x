@@ -147,7 +147,7 @@ DESKWIN *w_gnext(NOTHING)
 DESKWIN *w_gfirst(NOTHING)
 {
 #if 0
-	ww_win = winhead;
+	ww_win = g_wlist;
 #endif
 	return w_gnext();
 }
@@ -865,18 +865,18 @@ PP(register DESKWIN *win;)
 #if 0
 		set_dir(win->w_path);
 #endif
-		if (winhead == win)				/* already on top   */
+		if (g_wlist == win)				/* already on top   */
 			return;
 
-		winptr = winhead;
+		winptr = g_wlist;
 
 		while (winptr)
 		{
 			if (winptr->w_next == win)
 			{
 				winptr->w_next = win->w_next;
-				win->w_next = winhead;
-				winhead = win;
+				win->w_next = g_wlist;
+				g_wlist = win;
 				break;
 			}
 
@@ -1026,7 +1026,7 @@ VOID ini_windows(NOTHING)
 	}
 
 	winpd[i - 1].w_next = NULL;
-	winhead = &winpd[0];
+	g_wlist = &winpd[0];
 #endif
 }
 
@@ -1037,7 +1037,7 @@ DESKWIN *alloc_win(NOTHING)
 #if 0
 	register DESKWIN *win;
 
-	win = winhead;
+	win = g_wlist;
 
 	while (win)
 	{
@@ -1072,7 +1072,7 @@ PP(int16_t handle;)
 #if 0
 	register DESKWIN *win;
 
-	win = winhead;
+	win = g_wlist;
 
 	while (win)
 	{

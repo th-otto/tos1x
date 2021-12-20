@@ -17,8 +17,6 @@
 #include "desktop.h"
 #include "taddr.h"
 
-#define LEN_FNODE 45
-
 
 LINEF_STATIC int16_t act_chkobj PROTO((OBJECT *tree, int16_t root, int16_t obj, int16_t mx, int16_t my, int16_t w, int16_t h));
 #if LINEF_HACK

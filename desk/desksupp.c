@@ -86,7 +86,7 @@ PP(int16_t curr;)
 	d->g_tail[0] = '\0';
 	if (wh != -1)
 	{
-		do_wopen(FALSE, wh, curr, d->g_full.g_x, d->g_full.g_y, d->g_full.g_w, d->g_full.g_h);
+		do_wopen(FALSE, wh, curr, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h);
 	}
 	return ret;
 }

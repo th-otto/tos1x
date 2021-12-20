@@ -218,6 +218,8 @@ typedef struct idtype
 #  define NUM_IB 5
 #endif
 
+#define NUM_ADTREES 16 /* actually only 14 (NUM_TREE) */
+
 typedef struct {
 	/*     0 */ FNODE *g_favail;
 	/*     4 */ PNODE g_plist[NUM_PNODES];
@@ -225,10 +227,12 @@ typedef struct {
 	/*   708 */ PNODE *g_phead;
 	/*   712 */ char g_wdta[PATHLEN];
 	/*   840 */ DTA *a_wdta;
-	/*   844 */ short o844;
+	/*   844 */ short n_winalloc;
 	/*   846 */ ICONBLK gl_icons[NUM_SOBS];
 	/*  9686 */ int16_t g_index[NUM_SOBS];
-	/* 10206 */ char o10206[2086];
+	/* 10206 */ USERBLK g_udefs[NUM_SOBS];
+	/* 10286 */ short g_num;                /* number of points */
+	/* 10288 */ int16_t *g_pxy;             /* outline pts to drag */
 	/* 10292 */ short g_iview;              /* current view type */
 	/* 10294 */ short g_iwext;              /* w,h of extent of a single item */
 	/* 10296 */ short g_ihext;
@@ -250,14 +254,14 @@ typedef struct {
 	/* 13310 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 13350 */ int16_t g_rmsg[8];		    /* general AES message area */
 	/* 13366 */ int16_t *p_msgbuf;		
-	/* 13370 */ GRECT g_full;				/* full window size value */
 	/* 13378 */ GRECT g_desk;
+	/* 13370 */ GRECT g_full;				/* full window size value */
 	/* 13386 */ char g_cmd[PATHLEN];
 	/* 13514 */ char *g_pcmd;
 	/* 13518 */ char g_tail[128];
 	/* 13646 */ char *g_ptail;
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
-	/* 13654 */ OBJECT *g_atree[16];	/* resource trees */
+	/* 13654 */ OBJECT *g_atree[NUM_ADTREES];	/* resource trees */
 	/* 13718 */ int16_t g_croot;        /* current pseudo root */
 	/* 13720 */ int16_t g_cwin;         /* current window # */
 	/* 13722 */ int16_t g_wlastsel;     /* window holding last selection */
@@ -374,6 +378,9 @@ DESKWIN *win_alloc PROTO((int16_t obid));
 VOID win_free PROTO((DESKWIN *thewin));
 VOID win_bdall PROTO((NOTHING));
 VOID win_arrow PROTO((int16_t wh, int16_t arrow_type));
+VOID win_start PROTO((NOTHING));
+DESKWIN *win_ontop PROTO((NOTHING));
+VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
 
 
 /*
@@ -465,7 +472,7 @@ int16_t wind_create PROTO((uint16_t kind, int16_t wx, int16_t wy, int16_t ww, in
 int16_t wind_open PROTO((int16_t handle, int16_t wx, int16_t wy, int16_t ww, int16_t wh));
 int16_t wind_get PROTO((int16_t w_handle, int16_t w_field, int16_t *pw1, int16_t *pw2, int16_t *pw3, int16_t *pw4));
 int16_t wind_set PROTO((int16_t w_handle, int16_t w_field, ...));
-int16_t wind_calc PROTO((int16_t wctype, uint16_t kind, int16_t x, int16_t y, int16_t w, int16_t h, int16_t px, int16_t py, int16_t pw, int16_t ph));
+int16_t wind_calc PROTO((int16_t wctype, uint16_t kind, int16_t x, int16_t y, int16_t w, int16_t h, int16_t *px, int16_t *py, int16_t *pw, int16_t *ph));
 
 
 /*
@@ -511,7 +518,6 @@ extern OBJECT const gl_sampob[2];
 int16_t obj_walloc PROTO((int16_t x, int16_t y, int16_t w, int16_t h));
 VOID obj_wfree PROTO((int16_t obj, int16_t x, int16_t y, int16_t w, int16_t h));
 int16_t obj_ialloc PROTO((int16_t wparent, int16_t x, int16_t y, int16_t w, int16_t h));
-VOID obj_init PROTO((NOTHING));
 
 
 /*
@@ -752,6 +758,9 @@ BOOLEAN showfile PROTO((const char *fname, int mode));
 /*
  * deskact.c
  */
+#define LEN_FNODE 45
+#define MIN_HINT 2
+
 BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GRECT *pc, uint16_t chgvalue, int16_t dochg, int16_t dodraw, int16_t chkdisabled));
 VOID act_bsclick PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, int16_t keystate, GRECT *pc, int16_t dclick));
 int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, GRECT *pc, int16_t *pdobj));
@@ -787,7 +796,7 @@ extern char *path3;
 extern char inf_path[PATHLEN];			/* store the inf path   */
 extern char *g_buffer;					/* merge string buffer  */
 extern char comtail[PATHLEN];			/* comtail tail buffer */
-extern DESKWIN *winhead;				/* head of window list      */
+extern DESKWIN *g_wlist;				/* head of window list      */
 extern GRECT fobj;						/* file object  */
 extern char const infdata[];
 
@@ -821,9 +830,6 @@ extern int16_t intin[];
 extern int16_t intout[];
 extern int16_t ptsin[];
 extern int16_t gl_btrue;
-#if AESVERSION >= 0x200
-extern BOOLEAN ctldown;
-#endif
 extern int16_t gl_restype;
 extern BOOLEAN gl_rschange;
 extern int16_t gl_ncols;
@@ -834,9 +840,6 @@ extern int16_t gl_bvhard;
 extern int16_t gl_width;
 extern VOIDPTR ad_intin;
 
-#if TOSVERSION >= 0x400
-extern uint16_t d_rezword;
-#endif
 
 
 /*
@@ -924,8 +927,6 @@ int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 
 DESKWIN *win_find PROTO((int16_t wh));
 int16_t win_isel PROTO((OBJECT *olist, BOOLEAN root, int16_t curr));
-VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
-DESKWIN *win_ontop PROTO((NOTHING));
 char *win_iname PROTO((int16_t curr));
 VOID men_update PROTO((LPTREE tree));
 VOID win_view PROTO((int16_t vtype, int16_t isort));

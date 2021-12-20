@@ -21,6 +21,7 @@ deskstor_OPTIMIZE=0
 desktop_OPTIMIZE=1
 deskupda_OPTIMIZE=0
 deskwin_OPTIMIZE=1
+deskfun_OPTIMIZE=1
 deskmn_OPTIMIZE=0
 deskif_OPTIMIZE=0
 desksupp_OPTIMIZE=1

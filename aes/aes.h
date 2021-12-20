@@ -344,7 +344,11 @@ extern VOIDPTR gl_store;				/* 3/11/86  */
 extern int16_t gl_mx;					/* 3/12/86  */
 extern int16_t gl_my;					/* 3/12/86  */
 
+#if AESVERSION >= 0x200
 int16_t ap_init PROTO((intptr_t pglobal));
+#else
+int16_t ap_init PROTO((NOTHING));
+#endif
 int16_t ap_exit PROTO((NOTHING));
 int16_t rd_mymsg PROTO((VOIDPTR buffer));
 int16_t ap_rdwr PROTO((int16_t code, int16_t id, int16_t length, int16_t *pbuff));

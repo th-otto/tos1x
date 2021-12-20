@@ -336,7 +336,7 @@ _endvdibss: ds.b 0
 	V(_do_srcname,b,16)
 	V(_cp_dst,b,122)
 
-	INT(x0063c6)
+	INT(_n_winsave)
 
 	V(srsave,w,1)
 	V(savsr,w,1)
@@ -572,7 +572,7 @@ _endvdibss: ds.b 0
 	PTR(_rul)
 	V(_evx,b,28) /* sizeof(EVB) */
 	PTR(_g_buffer)
-	PTR(_winhead)
+	PTR(_g_wlist)
 	PTR(_zlr)
 	INT(_g_flag)
 	INT(_sh_gem)

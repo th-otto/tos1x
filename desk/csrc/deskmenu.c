@@ -307,7 +307,7 @@ VOID menu_verify(NOTHING)
 	o_select();
 	x_select();
 
-	enable = winhead->w_id == -1 ? FALSE : TRUE;
+	enable = g_wlist->w_id == -1 ? FALSE : TRUE;
 
 	i = 0;
 

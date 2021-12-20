@@ -45,12 +45,12 @@ AESDESK_OBJS = \
 	../desk/deskpref.o \
 	../desk/deskins.o \
 	../desk/deskfpd.o \
-	../desk/deskwin.o \
+	../desk/deskfun.o \
 	../desk/deskobj.o \
 	../desk/desksupp.o \
 	../desk/rainbow.o \
 	../desk/desktop.o \
-	../desk/desk3.o \
+	../desk/deskwin.o \
 	../aes/jdispa.o \
 	../aes/jdos.o \
 	../aes/jbind.o \

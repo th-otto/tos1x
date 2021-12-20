@@ -285,10 +285,10 @@ PP(BOOLEAN setdir;)
 			goto ex_2;
 	} else								/* set as top window    */
 	{
-		if (winhead->w_id == -1)
+		if (g_wlist->w_id == -1)
 			goto ex_3;
 
-		if (!set_dir(winhead->w_path))
+		if (!set_dir(g_wlist->w_path))
 		{
 		ex_2:
 			do1_alert(STNOMEM);

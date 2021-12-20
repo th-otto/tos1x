@@ -17,7 +17,7 @@
  * Number of Trees:          14
  * Number of Userblks:       0
  * Number of Images:         11
- * Total file size:          11884
+ * Total file size:          11878
  */
 
 #undef RSC_NAME
@@ -72,6 +72,7 @@
 #define DATEITEM          31 /* STRING in tree ADMENU */
 #define SIZEITEM          32 /* STRING in tree ADMENU */
 #define TYPEITEM          33 /* STRING in tree ADMENU */
+#define EXTRABOX          34 /* BOX in tree ADMENU */
 #define IDSKITEM          35 /* STRING in tree ADMENU */
 #define IAPPITEM          36 /* STRING in tree ADMENU */
 #define L5ITEM            37 /* STRING in tree ADMENU */
@@ -195,7 +196,7 @@
 #define PRINTFIL          13 /* free form */
 #define PFILE              1 /* FTEXT in tree PRINTFIL */
 
-#define STISTR             0 /* Free string */
+#define STINFOST           0 /* Free string */
 
 #define STMORE             1 /* Free string */
 
