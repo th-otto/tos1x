@@ -115,19 +115,19 @@ BIOS, VDI, GEMDOS, AES, DESKTOP: only 1.04 for now
 
 # Supported language versions
 
-us - USA
-de - Germany
-fr - France
-uk - United Kingdom (uses US resources)
-es - Spain
-it - Italy (no ROM yet found to verify)
-se - Sweden (the ROM has some patches applied)
-fi - Finland (uses swedish keyboard and resources)
-no - Norway (uses swedish keyboard and resources)
-sf - Switzerland (French) (uses french keyboard and resources)
-sg - Switzerland (German) (uses german keyboard and resources)
-nl - Netherlands
-cz - Czech (originally was a patched german version)
+ - us - USA
+ - de - Germany
+ - fr - France
+ - uk - United Kingdom (uses US resources)
+ - es - Spain
+ - it - Italy (no ROM yet found to verify)
+ - se - Sweden (the ROM has some patches applied)
+ - fi - Finland (uses swedish keyboard and resources)
+ - no - Norway (uses swedish keyboard and resources)
+ - sf - Switzerland (French) (uses french keyboard and resources)
+ - sg - Switzerland (German) (uses german keyboard and resources)
+ - nl - Netherlands
+ - cz - Czech (originally was a patched german version)
 
 # How to compile
 
@@ -165,7 +165,7 @@ it yourself:
 - Be patient. Using some emulator should take less than a minute to
   compile the sources, but on real hardware it may take several hours.
 
-You can also cross-compile the sources on linux, using the tools in the bin68
+You can also cross-compile the sources on linux, using the tools in the bin64
 directory. In that case, it is assumed that GNU make is used, and will pick
 up the GNUmakefile in each directory instead of the Makefile.
 With parallel makes that will give you compilation times of less than a second
