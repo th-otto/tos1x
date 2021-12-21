@@ -1,7 +1,7 @@
 DESK_OBJS1= desksupp.o deskact.o deskdir.o rainbow.o
 DESK_OBJS2= deskapp1.o deskapp3.o deskdisk.o desktop.o deskfun.o
 DESK_OBJS3= deskinf.o deskpref.o deskins.o deskfpd.o deskwin.o deskobj.o
-DESK_OBJS4= deskshow.o deskrsc.o deskstor.o # desksele.o deskshel.o
+DESK_OBJS4= deskshow.o
 DESK_OBJS5= deskif.o
 
 DESK_OBJS=${DESK_OBJS1} ${DESK_OBJS2} ${DESK_OBJS3} ${DESK_OBJS4} ${DESK_OBJS5} ${DESK_OBJS6} ${DESK_OBJS7}
@@ -22,24 +22,21 @@ DESK_ASRCS=\
 	${empty}
 
 DESK_CSRCS=\
+	deskact.c \
 	deskapp1.c \
 	deskapp3.c \
-	deskact.c \
 	deskdir.c \
-	desktop.c \
-	desksupp.c \
-	deskif.S \
-	deskshow.c \
 	deskdisk.c \
-	deskinf.c \
-	deskpref.c \
-	deskins.c \
 	deskfpd.c \
 	deskfun.c \
-	deskwin.c \
+	deskinf.c \
+	deskins.c \
 	deskobj.c \
-	deskrsc.c \
-	deskstor.c \
+	deskpref.c \
+	deskshow.c \
+	desksupp.c \
+	desktop.c \
+	deskwin.c \
 	${empty}
 
 DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)

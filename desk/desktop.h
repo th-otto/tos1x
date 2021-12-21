@@ -301,13 +301,13 @@ typedef struct {
 	/* 24108 */ OBJECT *g_pscreen;
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
-	/* 24120 */ char o24120[8];
+	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
 	/* 24128 */ BOOLEAN ml_havebox;
 	/* 24130 */ BOOLEAN ml_dlpr;
 	/* 24132 */ char printname[26];
 	/* 24158 */ char ml_fstr[13];
 	/* 24171 */ char ml_ftmp[13];
-	/* 24184 */ char o24184[16];
+	/* 24184 */ char o24184[16];		/* unused */
 	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
@@ -329,19 +329,11 @@ extern char const wilds[];
 extern int16_t gl_kstate;
 
 /*
- * deskupda.c
- */
-extern char *q_addr;							/* Inf file address */
-extern BOOLEAN q_change;						/* Inf file is changed */
-
-VOID q_inf PROTO((NOTHING));
-VOID q_sea PROTO((char *old, char *new));
-VOID q_write PROTO((NOTHING));
-
-
-/*
  * deskwin.c
  */
+extern GRECT g_winsave[NUM_WNODES];
+extern DESKWIN *g_wlist;				/* head of window list      */
+
 VOID winfo PROTO((DESKWIN *win));
 DESKWIN *w_gnext PROTO((NOTHING));
 DESKWIN *w_gfirst PROTO((NOTHING));
@@ -382,6 +374,10 @@ VOID win_start PROTO((NOTHING));
 DESKWIN *win_ontop PROTO((NOTHING));
 VOID win_bldview PROTO((DESKWIN *pwin, int16_t x, int16_t y, int16_t w, int16_t h));
 int16_t win_isel PROTO((OBJECT *olist, int16_t root, int16_t curr));
+DESKWIN *win_find PROTO((int16_t wh));
+char *win_iname PROTO((int16_t curr));
+VOID men_update PROTO((LPTREE tree));
+VOID win_view PROTO((int16_t vtype, int16_t isort));
 
 
 /*
@@ -399,8 +395,10 @@ int16_t make_icon PROTO((int16_t drive, int16_t icon, int16_t type, const char *
 
 
 /*
- * deskapp.c
+ * deskapp1.c
  */
+extern char const infdata[];
+
 BOOLEAN app_reschange PROTO((int16_t res)); /* also referenced by AES */
 VOID app_free PROTO((APP *app));
 APP *app_alloc PROTO((BOOLEAN atend));
@@ -477,18 +475,9 @@ int16_t wind_calc PROTO((int16_t wctype, uint16_t kind, int16_t x, int16_t y, in
 
 
 /*
- * deskbutt.c
- */
-int16_t av_icon PROTO((NOTHING));
-VOID clr_dicons PROTO((NOTHING));
-
-
-/*
  * deskdir.c
  */
 extern int f_level;							/* the current depth of the directory path */
-extern int d_display;						/* display copy box or not      */
-extern int f_rename;
 
 BOOLEAN dofiles PROTO((const char *s, const char *d, int16_t code, int32_t *ndirs, int32_t *nfiles, int32_t *tsize, int16_t type, BOOLEAN multiple));
 BOOLEAN doright PROTO((int flag));
@@ -530,6 +519,8 @@ VOID fc_start PROTO((const char *source, int16_t op));
 /*
  * deskfun.c
  */
+extern char *g_buffer;					/* merge string buffer  */
+
 BOOLEAN newfolder PROTO((DESKWIN *win));
 
 
@@ -572,27 +563,8 @@ int pn_folder PROTO((PNODE *thepath));
 
 
 /*
- * deskmem.c
- */
-extern char *lp_start;
-extern uint16_t apsize;
-
-BOOLEAN apbuf_init PROTO((NOTHING));
-BOOLEAN mem_init PROTO((NOTHING));
-const char *lp_fill PROTO((const char *path, const char **buf));
-BOOLEAN lp_collect PROTO((NOTHING));
-
-
-/*
  * deskmenu.c
  */
-extern int16_t d_exit;		/* desktop exit flag	*/
-extern BOOLEAN o_status;							/* for o_select */
-extern DESKWIN *o_win;
-extern int16_t o_type;
-extern int16_t o_item;
-extern GRECT g_winsave[NUM_WNODES];
-
 VOID menu_verify PROTO((NOTHING));
 BOOLEAN do_viewmenu PROTO((int16_t item));
 BOOLEAN do_filemenu PROTO((int16_t item));
@@ -722,13 +694,6 @@ VOID xvq_chcells PROTO((int16_t *num));
 /*
  * desksele.c
  */
-extern BOOLEAN x_status;			/* for x_select         */
-extern int16_t x_type;				/* ditto            */
-extern DESKWIN *x_win;				/* ditto            */
-extern int16_t d_dir;				/* count how many folders are selected inside the window */
-
-VOID x_del PROTO((NOTHING));
-BOOLEAN o_select PROTO((NOTHING));
 BOOLEAN x_select PROTO((NOTHING));
 BOOLEAN x_next PROTO((const char **name, int16_t *type));
 BOOLEAN x_first PROTO((const char **name, int16_t *type));
@@ -749,7 +714,7 @@ VOID run_it PROTO((const char *file, char *tail, BOOLEAN graphic, BOOLEAN setdir
 /*
  * deskshow.c
  */
-BOOLEAN showfile PROTO((const char *fname, int mode));
+VOID showfile PROTO((const char *fname, int mode));
 
 
 /*
@@ -772,39 +737,8 @@ APP *app_afind PROTO((BOOLEAN isdesk, int16_t a_type, int16_t obid, char *pname,
 
 
 /*
- * deskstor.c
- */
-extern char dr[];						/* drives flag          */
-extern BOOLEAN p_timedate;				/* preserve time and date   */
-extern int16_t d_nrows;					/* number of rows used by show  */
-extern int16_t d_level;					/* window path level        */
-extern char *d_path;					/* window path buffer       */
-extern int16_t d_xywh[18];				/* disk icon pline points   */
-extern int16_t f_xywh[18];				/* file icon pline points   */
-extern OBJECT *background;				/* desktop object address   */
-extern int16_t maxicon;					/* max number of desktop icons  */
-extern intptr_t gh_buffer;				/* ghost icon outline buffer address */
-extern IDTYPE *backid;					/* background icon type definition  */
-extern DTA dtabuf;						/* dta buffer   */
-extern uint16_t windspec;				/* window pattern   */
-extern char path1[PATHLEN];				/* utility path     */
-extern char path2[PATHLEN];
-extern char *path3;
-extern char *g_buffer;					/* merge string buffer  */
-extern char comtail[PATHLEN];			/* comtail tail buffer */
-extern DESKWIN *g_wlist;				/* head of window list      */
-extern GRECT fobj;						/* file object  */
-extern char const infdata[];
-
-
-/*
  * desktop.c
  */
-extern BOOLEAN m_st;						/* machine type flag    */
-extern int16_t m_cpu;						/* cpu type     */
-extern int16_t numicon;						/* the number of icon in the resource   */
-extern char restable[];						/* resolution table */
-extern int16_t d_maxcolor;
 extern int16_t pglobal[];
 extern int16_t gl_apid;
 
@@ -919,9 +853,3 @@ FNODE *fn_alloc PROTO((NOTHING));
 PNODE *pn_alloc PROTO((NOTHING));
 int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 #endif
-
-
-DESKWIN *win_find PROTO((int16_t wh));
-char *win_iname PROTO((int16_t curr));
-VOID men_update PROTO((LPTREE tree));
-VOID win_view PROTO((int16_t vtype, int16_t isort));

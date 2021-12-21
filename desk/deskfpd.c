@@ -1,19 +1,19 @@
-/*	DESKFPD.C	06/11/84 - 03/29/85		Lee Lorenzen	*/
-/*	source merge	5/19/87  - 5/28/87		mdf		*/
-/*	for 3.0		11/4/87				mdf		*/
+/*      DESKFPD.C       06/11/84 - 03/29/85             Lee Lorenzen    */
+/*      source merge    5/19/87  - 5/28/87              mdf             */
+/*      for 3.0         11/4/87                         mdf             */
 
 /*
-*       Copyright 1999, Caldera Thin Clients, Inc.                      
-*       This software is licenced under the GNU Public License.         
-*       Please see LICENSE.TXT for further information.                 
-*                                                                       
-*                  Historical Copyright                                 
-*	-------------------------------------------------------------
-*	GEM Desktop					  Version 3.0
-*	Serial No.  XXXX-0000-654321		  All Rights Reserved
-*	Copyright (C) 1987			Digital Research Inc.
-*	-------------------------------------------------------------
-*/
+ *       Copyright 1999, Caldera Thin Clients, Inc.                      
+ *       This software is licenced under the GNU Public License.         
+ *       Please see LICENSE.TXT for further information.                 
+ *                                                                       
+ *                  Historical Copyright                                 
+ *       -------------------------------------------------------------
+ *       GEM Desktop                                       Version 3.0
+ *       Serial No.  XXXX-0000-654321              All Rights Reserved
+ *       Copyright (C) 1987                      Digital Research Inc.
+ *       -------------------------------------------------------------
+ */
 
 #include "desktop.h"
 

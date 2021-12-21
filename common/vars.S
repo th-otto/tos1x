@@ -394,7 +394,7 @@ _endvdibss: ds.b 0
 	V(_ptsout,w,10)
 	GRECT(_ctrl)
 	
-	ds.b 50
+	V(_temp,b,50)
 	
 	INT(_gl_dabase)
 	V(_gl_adacc,l,MAX_ACCS)
@@ -601,93 +601,6 @@ _endvdibss: ds.b 0
 	INT(_tmpmon)
 	INT(_button)
 
-
-/*
- * variables below are left-over from TOS 2.x source,
- * and are not assigned yet
- */
-#if 0
-	INT(_d_dir)
-	PTR(_slr)
-	PTR(_lp_end)
-
-	GRECT(_fobj)
-	INT(_xprint)
-	INT(_m_st)
-	V(_temp,b,50) /* unused */
-	V(_rets,w,6) /* unused */
-	PTR(_ad_pfile) /* unused */
-	INT(_q_change)
-	PTR(_gh_buffer)
-	INT(_back_up)
-	V(_dr,b,32)
-	V(_gl_cmform,w,37) /* MFORM */
-	INT(_f_rename)
-	PTR(_background)
-	INT(_d_maxcolor)
-	INT(_d_level)
-	INT(_f_abort)
-	V(_path1,b,PATHLEN)
-	V(_path2,b,PATHLEN)
-	INT(_d_display)
-	PTR(_path3)
-	INT(_p_timedate)
-	V(_mentable,b,MAXMENU)
-	even
-	V(_gl_omform,w,37) /* MFORM */
-	PTR(_iconmem)
-	V(_comtail,b,PATHLEN)
-	INT(_font_save)
-	PTR(_newbuff)
-	V(_restable,b,6)
-	INT(_maxicon)
-	INT(_x_index)
-	LONG(_numfiles)
-	PTR(_lp_start)
-	INT(_s_stofit)
-	INT(_numicon)
-	INT(_sh_up) /* unused */
-	V(_filestr,b,NAMELEN)
-	INT(_windspec)
-	INT(_o_status)
-	PTR(_o_win)
-	PTR(_backid)
-	PTR(_fixdst)
-	PTR(_fixsrc)
-	INT(_apsize)
-
-	INT(_x_status)
-	LONG(_tolsize)
-	INT(_m_cpu)
-	PTR(_cpbox)
-	INT(_i_status) /* unused */
-	INT(_x_cur)
-	PTR(_x_win)
-	PTR(_dpd)
-	V(_dtabuf,b,44+4)
-	V(_pxyarray,w,10) /* unused */
-	V(_q_path,b,40) /* unused */
-	
-	LONG(_numdirs)
-	PTR(_q_addr)
-	PTR(_d_path)
-	INT(_rename)
-	INT(_opcode)
-	INT(_o_item)
-	INT(_d_exit)
-	
-	ds.b 16 /* unused? */
-	
-	INT(_srcbuf)
-	INT(_srclen)
-	INT(_dstbuf)
-	INT(_dstlen)
-	INT(_o_type)
-	V(_d_xywh,w,18)
-	V(_f_xywh,w,18)
-	INT(_x_type)
-#endif
-	
 /* end AES+DESKTOP */
 
 /* This label is referenced by the GEM_MUPB structure */

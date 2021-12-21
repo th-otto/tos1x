@@ -1,18 +1,19 @@
-/*      DESKINF.C               05/04/89 - 09/18/89     D.Mui           */
-/*      Read in different setting of color and pattern depends on the   */
-/*      color                   6/28/90                 D.Mui           */
-/*      Put in default values of color and pattern      7/2/90  D.Mui   */
-/*      Changed default color   7/20/90                 D.Mui           */
-/*      Save_inf returns status and move the up_allwin 8/14/91  D.Mui   */
-/*      Added another 0x00 to mkeys[] for VIDITEM obj  07/07/92 C.Gee   */
-/*      Change all the iconblk to ciconblk      7/11/92 D.Mui           */
-/*      The #E will save 10 fields instead of 4 7/17/92 D.Mui           */
+/*       DESKAPP.C      06/11/84 - 07/11/85             Lee Lorenzen    */
+/*      for 3.0         3/6/86   - 5/6/86               MDF             */
+/*      for 2.3         9/25/87                         mdf             */
 
-/************************************************************************/
-/*      New Desktop for Atari ST/TT Computer                            */
-/*      Atari Corp                                                      */
-/*      Copyright 1989,1990     All Rights Reserved                     */
-/************************************************************************/
+/*
+ *       Copyright 1999, Caldera Thin Clients, Inc.                      
+ *       This software is licenced under the GNU Public License.         
+ *       Please see LICENSE.TXT for further information.                 
+ *                                                                       
+ *                  Historical Copyright                                 
+ *       -------------------------------------------------------------
+ *       GEM Desktop                                       Version 2.3
+ *       Serial No.  XXXX-0000-654321              All Rights Reserved
+ *       Copyright (C) 1987                      Digital Research Inc.
+ *       -------------------------------------------------------------
+ */
 
 #include "desktop.h"
 

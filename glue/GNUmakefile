@@ -93,8 +93,6 @@ AESDESK_OBJS = \
 	../aes/gemglobe.o \
 	../aes/linefhdl.o \
 	../aes/gembase.o \
-	../desk/deskrsc.o \
-	../desk/deskstor.o \
 	\
 	$(empty)
 

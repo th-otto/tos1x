@@ -1,19 +1,19 @@
-/*	 DESKAPP.C	06/11/84 - 07/11/85		Lee Lorenzen	*/
-/*	for 3.0		3/6/86   - 5/6/86		MDF		*/
-/*	for 2.3		9/25/87				mdf		*/
+/*   DESKAPP.C  06/11/84 - 07/11/85     Lee Lorenzen    */
+/*  for 3.0     3/6/86   - 5/6/86       MDF     */
+/*  for 2.3     9/25/87             mdf     */
 
 /*
-*       Copyright 1999, Caldera Thin Clients, Inc.                      
-*       This software is licenced under the GNU Public License.         
-*       Please see LICENSE.TXT for further information.                 
-*                                                                       
-*                  Historical Copyright                                 
-*	-------------------------------------------------------------
-*	GEM Desktop					  Version 2.3
-*	Serial No.  XXXX-0000-654321		  All Rights Reserved
-*	Copyright (C) 1987			Digital Research Inc.
-*	-------------------------------------------------------------
-*/
+ *       Copyright 1999, Caldera Thin Clients, Inc.                      
+ *       This software is licenced under the GNU Public License.         
+ *       Please see LICENSE.TXT for further information.                 
+ *                                                                       
+ *                  Historical Copyright                                 
+ *   -------------------------------------------------------------
+ *   GEM Desktop                   Version 2.3
+ *   Serial No.  XXXX-0000-654321          All Rights Reserved
+ *   Copyright (C) 1987          Digital Research Inc.
+ *   -------------------------------------------------------------
+ */
 
 #include "desktop.h"
 

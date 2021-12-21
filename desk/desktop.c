@@ -17,6 +17,10 @@
 #include "desktop.h"
 #include "taddr.h"
 
+THEDSK *thedesk;
+int16_t gl_kstate;
+int16_t gl_apid;
+int16_t pglobal[15];
 
 static int8_t const ILL_HDSK[] = { FORMITEM, IAPPITEM, 0 };
 static int8_t const ILL_ITEM[] = { L2ITEM, L3ITEM, L4ITEM, L5ITEM, 0 };

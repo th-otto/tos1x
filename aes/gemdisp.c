@@ -50,8 +50,10 @@
 
 #define KEYSTOP 0x2b1c0000L				/* control backslash    */
 
+#if AESVERSION >= 0x200
 PD *dpd;								/* critical error process   */
 PD *slr;
+#endif
 
 /****************************************************************/
 

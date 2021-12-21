@@ -1,5 +1,5 @@
-/*	DESKACT.C	06/11/84 - 09/05/85		Lee Lorenzen	*/
-/*	merged source	5/18/87 - 5/28/87		mdf		*/
+/*      DESKACT.C       06/11/84 - 09/05/85             Lee Lorenzen    */
+/*      merged source   5/18/87 - 5/28/87               mdf             */
 
 /*
  *       Copyright 1999, Caldera Thin Clients, Inc.                      

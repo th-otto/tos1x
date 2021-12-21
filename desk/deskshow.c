@@ -120,7 +120,7 @@ LINEF_STATIC VOID bconws PROTO((const char *s));
 /* 306de: 00e331aa */
 /* 104de: 00fe66b2 */
 /* 106de: 00e28e36 */
-BOOLEAN showfile(P(const char *)fname, P(int) mode)
+VOID showfile(P(const char *)fname, P(int) mode)
 PP(const char *fname;)
 PP(int mode;)
 {

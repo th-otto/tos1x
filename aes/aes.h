@@ -441,8 +441,10 @@ VOID take_ownership PROTO((BOOLEAN beg_ownit));
 /*
  * gemdisp.c
  */
+#if AESVERSION >= 0x200
 extern PD *dpd;								/* critical error process   */
 extern PD *slr;
+#endif
 
 BOOLEAN forkq PROTO((FCODE f_code, int32_t f_data));
 VOID disp_act PROTO((PD *p));

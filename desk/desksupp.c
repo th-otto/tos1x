@@ -1,19 +1,19 @@
-/*	DESKSUPP.C	05/04/84 - 06/20/85	Lee Lorenzen		*/
-/*	for 3.0 (xm)	3/12/86	 - 01/17/87	MDF			*/
-/*	for 3.0			11/13/87		mdf		*/
+/*      DESKSUPP.C      05/04/84 - 06/20/85     Lee Lorenzen            */
+/*      for 3.0 (xm)    3/12/86  - 01/17/87     MDF                     */
+/*      for 3.0                 11/13/87                mdf             */
 
 /*
-*       Copyright 1999, Caldera Thin Clients, Inc.                      
-*       This software is licenced under the GNU Public License.         
-*       Please see LICENSE.TXT for further information.                 
-*                                                                       
-*                  Historical Copyright                                 
-*	-------------------------------------------------------------
-*	GEM Desktop					  Version 3.0
-*	Serial No.  XXXX-0000-654321		  All Rights Reserved
-*	Copyright (C) 1987			Digital Research Inc.
-*	-------------------------------------------------------------
-*/
+ *       Copyright 1999, Caldera Thin Clients, Inc.                      
+ *       This software is licenced under the GNU Public License.         
+ *       Please see LICENSE.TXT for further information.                 
+ *                                                                       
+ *                  Historical Copyright                                 
+ *       -------------------------------------------------------------
+ *       GEM Desktop                                       Version 3.0
+ *       Serial No.  XXXX-0000-654321              All Rights Reserved
+ *       Copyright (C) 1987                      Digital Research Inc.
+ *       -------------------------------------------------------------
+ */
 
 #include "desktop.h"
 #include "gsxdefs.h"

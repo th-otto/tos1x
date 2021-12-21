@@ -1,20 +1,20 @@
-/*	DESKDIR.C	09/03/84 - 06/05/85	Lee Lorenzen		*/
-/*			4/7/86   - 8/27/86	MDF			*/
-/*	merge source	5/19/97  - 5/28/87	mdf			*/
-/*	for 3.0		11/13/87		mdf			*/
+/*      DESKDIR.C       09/03/84 - 06/05/85     Lee Lorenzen            */
+/*                      4/7/86   - 8/27/86      MDF                     */
+/*      merge source    5/19/97  - 5/28/87      mdf                     */
+/*      for 3.0         11/13/87                mdf                     */
 
 /*
-*       Copyright 1999, Caldera Thin Clients, Inc.                      
-*       This software is licenced under the GNU Public License.         
-*       Please see LICENSE.TXT for further information.                 
-*                                                                       
-*                  Historical Copyright                                 
-*	-------------------------------------------------------------
-*	GEM Desktop					  Version 3.0
-*	Serial No.  XXXX-0000-654321		  All Rights Reserved
-*	Copyright (C) 1987			Digital Research Inc.
-*	-------------------------------------------------------------
-*/
+ *       Copyright 1999, Caldera Thin Clients, Inc.                      
+ *       This software is licenced under the GNU Public License.         
+ *       Please see LICENSE.TXT for further information.                 
+ *                                                                       
+ *                  Historical Copyright                                 
+ *       -------------------------------------------------------------
+ *       GEM Desktop                                       Version 3.0
+ *       Serial No.  XXXX-0000-654321              All Rights Reserved
+ *       Copyright (C) 1987                      Digital Research Inc.
+ *       -------------------------------------------------------------
+ */
 
 #include "desktop.h"
 #include "taddr.h"
