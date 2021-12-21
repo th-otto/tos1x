@@ -1318,7 +1318,7 @@ VOID d_justified(NOTHING)
 			rmcharx = 0;
 			rmchary = ddirection;
 			break;
-#if BINEXACT
+#if BINEXACT & (OS_COUNTRY != CTRY_NL)
 			asm("ds.b 0"); /* prevent superfluous bra from being removed */
 #endif
 		}

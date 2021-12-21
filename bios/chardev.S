@@ -2010,6 +2010,10 @@ kbdsv3:
 kbdsv4:
 #endif
 
+#if OS_COUNTRY == CTRY_NL
+/* nothing to do */
+#endif
+
 #if OS_COUNTRY == CTRY_PL
         cmpi.b    #$1A,d1                       /* convert ALT-udiaresis to @ or backslash */
         bne.s     kbdpl1

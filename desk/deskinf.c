@@ -123,7 +123,7 @@ PP(register char *pdate;)
 #endif
 
 /* BUG: UK should be date format 0 */
-#if (OS_COUNTRY == CTRY_UK) | (OS_COUNTRY == CTRY_PL) | (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_ES) | (OS_COUNTRY == CTRY_IT) | (OS_COUNTRY == CTRY_SF)
+#if (OS_COUNTRY == CTRY_UK) | (OS_COUNTRY == CTRY_PL) | (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_ES) | (OS_COUNTRY == CTRY_IT) | (OS_COUNTRY == CTRY_SF) | (OS_COUNTRY == CTRY_NL)
 #define st_date 1
 #define st_dchar '-' /* BUG: should actually be '/' */
 #endif

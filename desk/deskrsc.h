@@ -37,6 +37,9 @@
 #if OS_COUNTRY == CTRY_DK
 #include "../desk/rsc/104/deskdk.h"
 #endif
+#if OS_COUNTRY == CTRY_NL
+#include "../desk/rsc/104/desknl.h"
+#endif
 #if OS_COUNTRY == CTRY_PL
 #include "../desk/rsc/104/deskpl.h"
 #endif

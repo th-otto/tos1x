@@ -55,7 +55,7 @@ BOOLEAN nogem;		/* gem.rsc already read in ? */
 #define EURODATE 1		/*			Date/TimeFlag	     */
 #endif
 
-#if (OS_COUNTRY == CTRY_UK)
+#if (OS_COUNTRY == CTRY_UK) | (OS_COUNTRY == CTRY_NL)
 #define EUROTIME 0
 #define EURODATE 1
 #endif

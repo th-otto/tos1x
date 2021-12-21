@@ -126,8 +126,7 @@ fi - Finland (uses swedish keyboard and resources)
 no - Norway (uses swedish keyboard and resources)
 sf - Switzerland (French) (uses french keyboard and resources)
 sg - Switzerland (German) (uses german keyboard and resources)
-
-nl - Netherlands (the ROM has some patches applied)
+nl - Netherlands
 cz - Czech (originally was a patched german version)
 
 # How to compile

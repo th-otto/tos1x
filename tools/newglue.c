@@ -698,6 +698,24 @@ PP(char **argv;)
 			}
 		}
 
+		if (country && strcmp(country, "nl") == 0)
+		{
+			if (i == 0 && size == 0x1408) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x0028);
+				putbeshort(address - 2, 0x0027);
+			} else if (i == 1 && size == 0x2d94) /* 1.04 */
+			{
+				putbeshort(address - 4, 0xffff);
+				putbeshort(address - 2, 0xffff);
+			} else if (i == 2 && size == 0x0224) /* 1.04 */
+			{
+				putbeshort(address - 4, 0x2526);
+				putbeshort(address - 2, 0x0000);
+				putbeshort(address - 0, 0x2616);
+			}
+		}
+
 		if (country && strcmp(country, "es") == 0)
 		{
 			if (i == 0 && size == 0x1420) /* 1.04 */

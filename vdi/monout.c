@@ -1277,7 +1277,7 @@ PP(int16_t *ty;)
 	case 4:
 		*ty = -y;
 		break;
-#if BINEXACT
+#if BINEXACT & (OS_COUNTRY != CTRY_NL)
 		asm("ds.b 0"); /* hmpf, optimizer seems to have missed to remove superfluous bra */
 #endif
 	}
