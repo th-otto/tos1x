@@ -35,7 +35,6 @@ VDI_INCLUDES=\
 	${empty}
 
 VDI_ASRCS=\
-	palette.S \
 	allgem.S \
 	blastman.S \
 	blitinit.S \
@@ -87,6 +86,7 @@ SRCS:=${VDI_SRCS}
 
 
 EXTRA_DIST1:=\
+	Makefile \
 	SRCFILES \
 	optimize.mak \
 	vdiext.S \

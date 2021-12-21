@@ -290,12 +290,32 @@ ctrl_tbl:
 
 
 do_bell: ds.b 0
-	xref ringbell
-#ifdef __GNUC__
-	jmp ringbell
-#else
-	bra.w ringbell
+
+/*
+ * for some unknown reason, "bra.w ringbell" gives a
+ * 16-bit PC-relative overflow.
+ */
+
+#if BINEXACT
+
+/*
+ * With as68 we could use "bra.w ringbell",
+ * but then aln (used in native compilations) gives a
+ * 16-bit PC-relative overflow when linking the single
+ * vdi.o
+ */
+#if TOSVERSION == 0x104
+ringbell  equ $341E-(VDITBASE-BIOSTBASE)
 #endif
+
+	dc.w $6000,ringbell
+
+#else
+
+	jmp	ringbell			; need local variable in ctrl_tbl
+
+#endif
+
 
 do_tab:
 

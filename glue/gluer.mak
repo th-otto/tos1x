@@ -1,4 +1,4 @@
-tosrsc$(COUNTRY).o: tosrsc$(COUNTRY).c
+tosrsc$(COUNTRY).o: tosrsc$(COUNTRY).c $(top_srcdir)/common/config.h
 
 tosrsc$(COUNTRY).c: $(MKBININC) glue.$(COUNTRY)
 	$(AM_V_GEN)$(MKBININC) glue.$(COUNTRY) tosrsc $@

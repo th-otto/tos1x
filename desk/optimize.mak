@@ -15,6 +15,3 @@ deskwin_OPTIMIZE=1
 deskfun_OPTIMIZE=1
 deskif_OPTIMIZE=0
 desksupp_OPTIMIZE=1
-
-deskshow_ASFLAGS=-n
-desk1_ASFLAGS=-n

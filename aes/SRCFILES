@@ -119,6 +119,7 @@ AES_SRCS = $(AES_HEADERS) $(AES_ASRCS) $(AES_CSRCS)
 SRCS:=${AES_SRCS}
 
 EXTRA_DIST1:=\
+	Makefile \
 	SRCFILES \
 	optimize.mak \
 	aesext.S \

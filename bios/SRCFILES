@@ -41,6 +41,7 @@ BIOS_CSRCS = \
 BIOS_SRCS = $(BIOS_HEADERS) $(BIOS_INCLUDES) $(BIOS_ASRCS) $(BIOS_CSRCS)
 
 EXTRA_DIST1:=\
+	Makefile \
 	SRCFILES \
 	optimize.mak \
 	biosext.S \

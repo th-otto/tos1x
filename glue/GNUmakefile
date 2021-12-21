@@ -24,77 +24,7 @@ include $(top_srcdir)/config.mak
 include ../bios/SRCFILES
 include ../vdi/SRCFILES
 include ../bdos/SRCFILES
-
-#
-# unlike later TOS versions, aes & desktop sources are mixed,
-# and we have to reorder the objects
-#include ../aes/SRCFILES
-#include ../desk/SRCFILES
-
-AESDESK_OBJS = \
-	../aes/gemjstrt.o \
-	../aes/geminit.o \
-	../aes/apgrlib.o \
-	../aes/apgsxif.o \
-	../desk/deskapp1.o \
-	../desk/deskapp3.o \
-	../desk/deskact.o \
-	../desk/deskdir.o \
-	../desk/deskif.o \
-	../desk/deskinf.o \
-	../desk/deskpref.o \
-	../desk/deskins.o \
-	../desk/deskfpd.o \
-	../desk/deskfun.o \
-	../desk/deskobj.o \
-	../desk/desksupp.o \
-	../desk/rainbow.o \
-	../desk/desktop.o \
-	../desk/deskwin.o \
-	../aes/jdispa.o \
-	../aes/jdos.o \
-	../aes/jbind.o \
-	../aes/gemaints.o \
-	../aes/gemasync.o \
-	../aes/gemcli.o \
-	../aes/gemctrl.o \
-	../aes/gemdisp.o \
-	../aes/gemflag.o \
-	../aes/geminput.o \
-	../aes/gempd.o \
-	../aes/gemqueue.o \
-	../aes/gemwrect.o \
-	../aes/gembind.o \
-	../aes/gemaplib.o \
-	../aes/gemevlib.o \
-	../aes/gemfmalt.o \
-	../aes/gemfmlib.o \
-	../aes/gemfslib.o \
-	../aes/gemgrlib.o \
-	../aes/gemgsxif.o \
-	../aes/gemmnlib.o \
-	../aes/gemobed.o \
-	../aes/gemoblib.o \
-	../aes/gemrslib.o \
-	../aes/gemsclib.o \
-	../aes/gemshlib.o \
-	../aes/gemwmlib.o \
-	../aes/gsx2.o \
-	../aes/large.o \
-	../aes/optimize.o \
-	../aes/function.o \
-	../aes/gemobjop.o \
-	../aes/ratrbp.o \
-	../aes/romcart.o \
-	../desk/deskshow.o \
-	../desk/deskdisk.o \
-	../aes/trap14.o \
-	../aes/gemrom.o \
-	../aes/gemglobe.o \
-	../aes/linefhdl.o \
-	../aes/gembase.o \
-	\
-	$(empty)
+include aesdesk.mak
 
 all:: $(IMG)
 
@@ -106,7 +36,10 @@ OBJS = $(STARTUP) vars.o tosvars.o $(addprefix ../bios/,$(BIOS_OBJS)) $(addprefi
 
 LINK_OBJS := $(shell echo $(OBJS) | tr ' ' ',')
 
-ROMSIZE = 192k
+ROMSIZE_104 = 192k
+ROMSIZE_106 = 256k
+ROMSIZE_162 = 256k
+ROMSIZE = $(ROMSIZE_$(TOSVERSION))
 
 ifeq ($(USE_CROSS_ALCYON),1)
 tos.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o
@@ -146,7 +79,7 @@ check:: $(IMG)
 	$(CMP) $(CMPL) -x --ignore-initial=0x0:0x0 --offsets=0x$(rombase):0 $(top_srcdir)/roms/tos$(TOSVERSION)$(COUNTRY).img $(IMG)
 
 clean:
-	$(RM) *.o *.a *.i $(IMG) tos.img tosimg.tmp cartridg.tmp cartridg.img tostmp.map $(PROGRAMS) tosrsc*.c glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
+	$(RM) *.o *.a *.i $(IMG) tos.img tosimg.tmp tostmp.map $(PROGRAMS) tosrsc*.c glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
 
 distclean: clean
 	$(RM) $(top_srcdir)/common/sections.mak *.img

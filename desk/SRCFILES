@@ -44,6 +44,7 @@ DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)
 SRCS:=${DESK_SRCS}
 
 EXTRA_DIST1:=\
+	Makefile \
 	SRCFILES \
 	optimize.mak \
 	deskext.S \

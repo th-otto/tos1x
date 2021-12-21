@@ -49,7 +49,7 @@ vars.o: $(top_srcdir)/common/vars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 # no check here; to much hassle to get all the external dependencies
-check::
+check:: desk.a
 
 dist::
 	$(CP) -a $(SRCS) $(EXTRA_DIST1) $(EXTRA_DIST2) $(top_srcdir)/$(DISTDIR1)/$(subdir)

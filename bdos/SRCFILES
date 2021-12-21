@@ -44,6 +44,7 @@ BDOS_CSRCS=\
 BDOS_SRCS = $(BDOS_HEADERS) $(BDOS_ASRCS) $(BDOS_CSRCS)
 
 EXTRA_DIST1:=\
+	Makefile \
 	SRCFILES \
 	vdidsp.S \
 	optimize.mak \

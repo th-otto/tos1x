@@ -63,7 +63,7 @@ aesext.o: aesext.S $(top_srcdir)/common/sections.inc $(top_srcdir)/common/config
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 # no check here; has to be done in desktop
-check::
+check:: aes.a
 
 clean:
 	$(RM) $(AES_OBJS)

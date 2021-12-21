@@ -24,21 +24,17 @@
 
 #if BINEXACT
 
-       xdef ringbell
 
 #if TOSVERSION == 0x104
 _zeromem equ BIOSTBASE+$1EE0
-ringbell equ BIOSTBASE+$34E4
 #endif
 
 #if TOSVERSION == 0x106
 _zeromem equ BIOSTBASE+$1EE0
-ringbell equ BIOSTBASE+$34E4
 #endif
 
 #if TOSVERSION == 0x162
 _zeromem equ BIOSTBASE+$1EE0
-ringbell equ BIOSTBASE+$34E4
 #endif
 
 #else

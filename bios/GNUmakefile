@@ -33,9 +33,6 @@ bios.a: $(BIOS_OBJS) ${MAKEFILE}
 startup.o: startup.S $(top_srcdir)/common/config.h header.h scrdmp.inc
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(NO_BRANCH_OPT) $(CPPFLAGS) -c -o $@ $<
 
-start1x.o: start1x.S $(top_srcdir)/common/config.h header.h scrdmp.inc
-	$(AM_V_AS)$(AS) $(ASFLAGS) $(NO_BRANCH_OPT) $(CPPFLAGS) -c -o $@ $<
-
 floppy.o: floppy.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(NO_BRANCH_OPT) $(CPPFLAGS) -c -o $@ $<
 

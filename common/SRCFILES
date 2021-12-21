@@ -3,6 +3,7 @@ SRCS = compiler.h stdint.h types.h toserrno.h ostruct.h \
 	asmdefs.h ctrycode.h ws.h rom.ld
 
 EXTRA_DIST1 = \
+	Makefile \
 	SRCFILES \
 	$(empty)
 

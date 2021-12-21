@@ -1140,6 +1140,12 @@ PP(register VOIDPTR *addr_in;)
 		asm("jsr        _fm_show");
 		asm("addq.w     #8,a7");
 		ret = -1;
+		/*
+		 * Note: this break will generate a branch to the end of the switch,
+		 * which will be the first of the tst.w instructions below,
+		 * and thus be wrong. It is hacked in the Makefile by replacing
+		 * it to bra L9999
+		 */
 		break;
 #else
 		fm_show(ALRTNOFUNC, NULL, 1); /* why not use no_aes here? */
