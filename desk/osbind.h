@@ -25,7 +25,7 @@
 
 /* note: trp13/trp14 are from AES */
 long trp13 PROTO((short op, ...));
-long trp14 PROTO((short op, ...));
+int16_t trp14 PROTO((short op, ...));
 long xbios PROTO((short op, ...));
 long gemdos PROTO((short op, ...));
 

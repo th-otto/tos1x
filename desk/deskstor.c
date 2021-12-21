@@ -35,7 +35,6 @@ uint16_t windspec;						/* window pattern   */
 char path1[PATHLEN];					/* utility path     */
 char path2[PATHLEN];
 char *path3;
-char inf_path[PATHLEN];					/* store the inf path   */
 char comtail[PATHLEN];					/* comtail tail buffer */
 GRECT fobj;								/* file object  */
 THEDSK *thedesk;

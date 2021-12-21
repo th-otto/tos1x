@@ -971,7 +971,7 @@ int16_t mul_div PROTO((int16_t mul1, int16_t mul2, int16_t divis));
 VOID getmouse PROTO((NOTHING));
 VOID putmouse PROTO((NOTHING));
 int32_t trp13 PROTO((short code, ...));
-int32_t trp14 PROTO((short code, ...));
+int16_t trp14 PROTO((short code, ...));
 int32_t gemdos PROTO((short code, ...));
 int32_t bios PROTO((short code, ...));
 

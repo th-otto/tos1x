@@ -487,7 +487,7 @@ chksrc:
 		goto errmem;
 	}
 
-	buf = dos_alloc(bufsize);				/* get the buffer       */
+	buf = (intptr_t)dos_alloc(bufsize);				/* get the buffer       */
 	disksect = spc * dsbs->tracks;		/* total sectors on disk    */
 	sectbufs = bufsize / bps;			/* how many sector buffers  */
 	leftover = disksect % sectbufs;		/* sectors left for last loop */

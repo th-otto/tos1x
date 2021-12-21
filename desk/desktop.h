@@ -790,7 +790,6 @@ extern uint16_t windspec;				/* window pattern   */
 extern char path1[PATHLEN];				/* utility path     */
 extern char path2[PATHLEN];
 extern char *path3;
-extern char inf_path[PATHLEN];			/* store the inf path   */
 extern char *g_buffer;					/* merge string buffer  */
 extern char comtail[PATHLEN];			/* comtail tail buffer */
 extern DESKWIN *g_wlist;				/* head of window list      */
@@ -890,7 +889,7 @@ BOOLEAN inf_disk PROTO((char drv_id));
 
 
 int32_t trap PROTO((short code, ...));
-int32_t trp14 PROTO((short code, ...));
+int16_t trp14 PROTO((short code, ...));
 int16_t trp14int PROTO((short code, ...));
 int32_t trp13 PROTO((short code, ...));
 

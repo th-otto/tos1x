@@ -631,7 +631,6 @@ _endvdibss: ds.b 0
 	V(_path2,b,PATHLEN)
 	INT(_d_display)
 	PTR(_path3)
-	V(_inf_path,b,PATHLEN)
 	INT(_p_timedate)
 	V(_mentable,b,MAXMENU)
 	even
@@ -650,7 +649,6 @@ _endvdibss: ds.b 0
 	INT(_sh_up) /* unused */
 	V(_filestr,b,NAMELEN)
 	INT(_windspec)
-	INT(_d_nrows)
 	INT(_o_status)
 	PTR(_o_win)
 	PTR(_backid)
