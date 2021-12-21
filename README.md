@@ -15,7 +15,7 @@ It is therefor mainly intended to be used as reference.
 
 # Directory Structure
 
-bin:
+- bin:  
   Prebuild binaries of tools used in the build process. These are
   essentially identical to the ones from the developer kit, with 
   a few modifications. Sources of almost all of these tools are found
@@ -30,50 +30,50 @@ bin:
   to save some ROM space. Without these, you won't get a binary exact
   image, nor a working ROM, since it will be too large to fit in 192k.
 
-bin64:
+- bin64:  
   Same tools as above, but compiled for linux-64bit. The cc68 executable
   in this directory is just a shell script that recognizes a few of
   the usual unix cc switches, and translates them to call the various
   alcyon executables.
 
-include:
+- include:  
   Include files for the C compiler. Only a few of them are actually
   needed for TOS itself, most of them are only needed to build the
   tools.
 
-lib:
+- lib:  
   Prebuild libraries and startup files for the C runtime library.
   None of these is linked into a ROM image, they are only used for the tools.
 
-bios:
+- bios:  
   Source of the BIOS part of TOS.
 
-vdi:
+- vdi:  
   Source of the VDI part of TOS.
 
-bdos:
+- bdos:  
   Source of the GEMDOS part of TOS.
 
-aes:
+- aes:  
   Source of the AES part of TOS.
 
-desk:
+- desk:  
   Source of the desktop application.
 
-common:
+- common:  
   Shared include files for the above components.
 
-tools:
+- tools:  
   Source of some small tools used in the build process,
   namely the one that glues the builtin resources and
   newdesk/desktop.inf files together. If you are cross-compiling,
   these must be compiled by your native host compiler.
 
-listings:
+- listings:  
   Disassembler listings of various TOS versions that were used while
   working on some parts of the system.
 
-glue:
+- glue:  
   The final ROM images will be build here. It also contains link maps
   for some ROM versions, for reference. The identifiers in those maps
   are truncated to 8 characters, though (a limitation of the DRI
