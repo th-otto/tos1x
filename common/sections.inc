@@ -363,22 +363,22 @@
 #if OS_COUNTRY == CTRY_IT
 #define BIOSTLEN    BTLEN_US+$68
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009B6 /* to be done */
-#define GLUELEN     $000043B2 /* to be checked */
+#define DESKDLEN    $000009B6
+#define GLUELEN     $000043B2
 #endif
 
 #if OS_COUNTRY == CTRY_SG
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
 #define DESKDLEN    $000009DC /* to be checked */
-#define GLUELEN     $00004266 /* to be checked */
+#define GLUELEN     $00004266
 #endif
 
 #if OS_COUNTRY == CTRY_SF
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
 #define DESKDLEN    $000009FA /* to be checked */
-#define GLUELEN     $000044D6 /* to be checked */
+#define GLUELEN     $000044D6
 #endif
 
 #if OS_COUNTRY == CTRY_SE
@@ -414,32 +414,105 @@
 
 #if TOSVERSION == 0x106
 
+#define BIOSTBASE   $00E00000
+
+/*
+ * these are identical in almost all language versions
+ */
+#define BIOSDLEN    $00000256
+#define VDITLEN     $000098D6
+#define VDIDLEN     $00002846
+#define BDOSTLEN    $00005FAA
+#define BDOSDLEN    $00000396
+#define AESTLEN     $00000000 /* included in desk */
+#define AESDLEN     $00000000 /* included in desk */
+
+
+#define BTLEN_US    $00004514
+#define DTLEN_US    $000163E6
+
 #if OS_COUNTRY == CTRY_US
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    DTLEN_US
+#define DESKDLEN    $000009DA
 #define GLUELEN     $000041C4
 #endif
 
 #if OS_COUNTRY == CTRY_DE
+#define BIOSTLEN    BTLEN_US+$5A
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6
 #define GLUELEN     $00004226
 #endif
 
 #if OS_COUNTRY == CTRY_FR
+#define BIOSTLEN    BTLEN_US+$78
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009F4
 #define GLUELEN     $000044D6
 #endif
 
 #if OS_COUNTRY == CTRY_UK
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    DTLEN_US
+#define DESKDLEN    $000009DA
 #define GLUELEN     $000041C4
 #endif
 
 #if OS_COUNTRY == CTRY_ES
+#define BIOSTLEN    BTLEN_US+$86
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009BE
 #define GLUELEN     $0000441A
 #endif
 
 #if OS_COUNTRY == CTRY_IT
+#define BIOSTLEN    BTLEN_US+$68
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009B0
 #define GLUELEN     $000043B2
 #endif
 
+#if OS_COUNTRY == CTRY_SG
+#define BIOSTLEN    BTLEN_US+$86
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6 /* to be checked */
+#define GLUELEN     $00004266
+#endif
+
 #if OS_COUNTRY == CTRY_SF
+#define BIOSTLEN    BTLEN_US+$86
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009F6 /* to be checked */
 #define GLUELEN     $000044D6
+#endif
+
+#if OS_COUNTRY == CTRY_SE
+#define BIOSTLEN    BTLEN_US+$78
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6
+#define GLUELEN     $00004226
+#endif
+
+#if OS_COUNTRY == CTRY_NL
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    DTLEN_US
+#define DESKDLEN    $000009DA
+#define GLUELEN     $000043CC
+/*
+ * only version which is 4 bytes shorter,
+ * due to 2 small differences in vdi/monout.c
+ * and vdi/text.c
+ */
+#undef VDITLEN
+#define VDITLEN     $000098D4
+#endif
+
+#if OS_COUNTRY == CTRY_CZ
+#define BIOSTLEN    BTLEN_US+$5A
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6
+#define GLUELEN     $00004226
 #endif
 
 #endif /* TOSVERSION == 0x106 */
