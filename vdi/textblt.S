@@ -31,7 +31,7 @@
 
 
 #define V_FUNC(func,la,r) \
-	move.l	(lineavars+USERDEVINIT)+func,r
+	move.l	(lineavars+LA_ROUTINES)+func,r
 
 #define V_CALL(func,la,r) \
 		V_FUNC(func,la,r) \

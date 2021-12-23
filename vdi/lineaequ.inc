@@ -277,14 +277,10 @@
 #define COPYTRAN		116
 /* ptr to routine for quitting seedfill. */
 #define quitfill		118
-/* ptr to user routine before dev_init */
-#define USERDEVINIT		122
-/* ptr to user routine before esc_init */
-#define USERESCINIT		126
-#define resrvd2                 130
-
-/* pointer to drawing primitives vector list */
-#define LA_ROUTINES		162
+/* currently active drawing primitives */
+#define LA_ROUTINES		122
+/* hardware assisted drawing primitives */
+#define LA_HARDROUTINES		162
 /* drawing primitives done in software   */
 #define LA_SOFTROUTINES		166
 #define BLT_MODE		170

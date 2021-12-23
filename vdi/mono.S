@@ -91,5 +91,5 @@ on_bounds:
 
 no_clip:
 		lea.l	lineavars+FBASE,a5	; a5 -> font form
-		move.l	(USERDEVINIT)+(V_MONO)-FBASE(a5),a4		; a4 -> version of mono
+		move.l	(LA_ROUTINES)+(V_MONO)-FBASE(a5),a4		; a4 -> version of mono
 		jmp	(a4)

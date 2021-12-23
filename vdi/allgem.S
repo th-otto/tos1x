@@ -557,7 +557,7 @@ esc1:
 		xdef resetdev
 resetdev:
         move.l    #_STSoftList,PIXLV(LA_SOFTROUTINES,a1)
-        move.l    #_STHardList,PIXLV(LA_ROUTINES,a1)
+        move.l    #_STHardList,PIXLV(LA_HARDROUTINES,a1)
         jmp       _SETBLT
 
 rezinit:

@@ -47,17 +47,15 @@
 /* 206de: 00e073ac */
 /* 104de: 00fcb604 */
 		xdef _SETBLT
-		xdef rout_init
-rout_init:
 _SETBLT:
         move.w    d0,PIXLV(BLT_MODE,a1)
         movea.l   PIXLV(LA_SOFTROUTINES,a1),a0
         btst      #0,d0
         beq.s     setblt0
-        movea.l   PIXLV(LA_ROUTINES,a1),a0
+        movea.l   PIXLV(LA_HARDROUTINES,a1),a0
 setblt0:
-        lea.l     PIXLV(USERDEVINIT,a1),a1
-        moveq.l   #9,d0
+        lea.l     PIXLV(LA_ROUTINES,a1),a1
+        moveq.l   #10-1,d0
 rCopyLoop:
         move.l    (a0)+,(a1)+
         dbf       d0,rCopyLoop

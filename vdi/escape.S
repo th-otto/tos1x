@@ -97,7 +97,7 @@ O6 equ 6 ; WTF? why?
 /* v_stat_0+O6 == 0; stupid as68 does not optimize it */
 #define V_STAT_0
 #define V_FUNC(func,la,r) \
-	move.l	LV((USERDEVINIT)+O6+func,la),r
+	move.l	LV((LA_ROUTINES)+O6+func,la),r
 #define PIXL6(r) lea lineavars-O6,r
 
 #define V_CALL(func,la,r) \

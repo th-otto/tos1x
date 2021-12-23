@@ -419,14 +419,10 @@ _TEXT_BG: equ lineavars+(TEXT_BG)
 _COPYTRAN: equ lineavars+(COPYTRAN)
 	xdef _quitfill
 _quitfill: equ lineavars+(quitfill)
-	xdef _USERDEVINIT
-_USERDEVINIT: equ lineavars+(USERDEVINIT)
-	xdef _USERESCINIT
-_USERESCINIT: equ lineavars+(USERESCINIT)
-	xdef _resrvd2
-_resrvd2: equ lineavars+(resrvd2)
 	xdef _LA_ROUTINES
 _LA_ROUTINES: equ lineavars+(LA_ROUTINES)
+	xdef _LA_HARDROUTINES
+_LA_HARDROUTINES: equ lineavars+(LA_HARDROUTINES)
 	xdef _LA_SOFTROUTINES
 _LA_SOFTROUTINES: equ lineavars+(LA_SOFTROUTINES)
 	xdef _BLT_MODE
