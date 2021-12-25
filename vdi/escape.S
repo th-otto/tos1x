@@ -1285,8 +1285,8 @@ end_o_line:
 
 	clr.w	d1			; scroll from top of screen.
 
-	pea	save_it(pc)		 return to "save_it"
-	bra	p_sc_up			 do the scroll.
+	pea	save_it(pc)		 ; return to "save_it"
+	bra	p_sc_up			 ; do the scroll.
 
 no_scroll:
 

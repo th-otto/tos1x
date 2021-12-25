@@ -1835,7 +1835,7 @@ autoname:                      dc.b '*.PRG',0
 /* 306de: 00e0133c */
 /* 206de: 00e011f6 */
 /* 104de: 00fc0bf4 */
-/* 106de: 00e00d94 */
+/* 106de: 00e00d90 */
 autoexec:
         lea.l     autopath(pc),a0
         lea.l     autoname(pc),a1

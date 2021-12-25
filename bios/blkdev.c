@@ -270,6 +270,7 @@ PP(int16_t _dev;)
  */
 /* 306de: 00e05a96 */
 /* 104de: 00fc1a24 */
+/* 106de: 00e01bfc */
 /* 404: 00e04c5c */
 ERROR bhdv_rwabs(P(int16_t) rw, P(char *) buf, P(int16_t) cnt, P(RECNO) recnr, P(int16_t) dev, P(LRECNO) lrecnr)
 PP(int16_t rw;)

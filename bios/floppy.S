@@ -49,6 +49,7 @@ dsb_sizeof equ 4
 /* 306de: 00e03ba8 */
 /* 206de: 00e037c6 */
 /* 104de: 00fc0ef0 */
+/* 106de: 00e0108c */
         xdef _flopini
 _flopini:
         lea.l     dsb,a1                        /* get ptr to correct DSB */
@@ -93,6 +94,7 @@ flopini3:
 /* 306de: 00e03c10 */
 /* 206de: 00e03820 */
 /* 104de: 00fc0f38 */
+/* 106de: 00e010d4 */
         xdef _floprd
 _floprd:
         bsr       fdchange                      /* test for disk change */
@@ -780,7 +782,8 @@ go2trret:
  * Returns:      EQ/NE on success/failure
  * Falls-into:   flopcmds
  */
-/* 104de: fc1528 */
+/* 104de: 00fc1528 */
+/* 106de: 00e016f0 */
 restore:
         clr.w     d6                            /* $00 = 1770 "restore" command */
         bsr.s     flopcmds                      /* do restore */
@@ -970,6 +973,7 @@ rwdly1:     dbf       d7,rwdly1
 /* 306de: 00e04454 */
 /* 206de: 00e0406a */
 /* 104de: 00fc1640 */
+/* 106de: 00e01818 */
 fdchange:
             cmpi.w    #1,_nflops                /* if there are zero or two floppies */
             bne.s     fdchang2                  /* then do nothing (return OK) */
@@ -1018,6 +1022,7 @@ setdchg:
 /* 306de: 00e044b6 */
 /* 206de: 00e040cc */
 /* 104de: 00fc1692 */
+/* 106de: 00e0186a */
         xdef _floprate
 _floprate:
 /* --- pick a DSB */

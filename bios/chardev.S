@@ -80,6 +80,7 @@ BCONMAP_START_HANDLE equ 6
 /* 306de: 00e02266 */
 /* 206de: 00e01f8c */
 /* 104de: 00fc326a */
+/* 106de: 00e03456 */
 	xdef _bco3stat
 _bco3stat:
         moveq.l   #-1,d0
@@ -573,11 +574,10 @@ _bco2stat:
         rts
 
 
+#if TOSVERSION <= 0x104
 /*********************************************************
  * VT52 emulator callback for the bell sound
  *********************************************************/
-/* 306de: 00e03b86 */
-/* 206de: 00e037a4 */
 /* 104de: 00fc34e4 */
 #if !BINEXACT
 		xdef ringbell
@@ -589,6 +589,7 @@ ringbell:
         move.b    #0,ABSW(_snddelay)            /* enable sound timer */
 soundir8:
         rts
+#endif
 
 /***********************************************************************************
  *                                                                                 *
@@ -612,6 +613,7 @@ soundir8:
 /* 306de: 00e024d6 */
 /* 206de: 00e02206 */
 /* 104de: 00fc34fc */
+/* 106de: 00e036bc */
 	xdef initmfp
 initmfp:
         lea.l     ABSW2(MFP_REGS),a0            /* init mfp address pointer */
@@ -809,6 +811,7 @@ mfpvectr:
 /* 306de: 00e0270a */
 /* 206de: 00e023d4 */
 /* 104de: 00fc36ac */
+/* 106de: 00e0386c */
 settimer:
         movem.l   d0-d4/a0-a3,-(a7)             /* save all registers to be messed with!! */
         movea.l   #MFP_REGS,a0                  /* set mfp chip address pointer */
@@ -899,6 +902,7 @@ tdrtab:  dc.b $1e,$20,$22,$24
 /* 306de: 00e027b0 */
 /* 206de: 00e0247a */
 /* 104de: 00fc3754 */
+/* 106de: 00e03914 */
 	xdef _mfpint
 _mfpint:
         move.w    4(a7),d0
@@ -947,6 +951,7 @@ initint:
 /* 306de: 00e027da */
 /* 206de: 00e024a4 */
 /* 104de: 00fc377e */
+/* 106de: 00e0393e */
 	xdef _jdisint
 _jdisint:
         move.w    4(a7),d0
@@ -986,6 +991,7 @@ jdisint1:
 /* 306de: 00e02810 */
 /* 206de: 00e024da */
 /* 104de: 00fc37b8 */
+/* 106de: 00e03978 */
 	xdef _jenabint
 _jenabint:
         move.w    4(a7),d0
@@ -1040,6 +1046,7 @@ bselect1:
 /* 306de: 00e02848 */
 /* 205de: 00e02512 */
 /* 104de: 00fc37f2 */
+/* 106de: 00e039b2 */
 rcvrint:
         movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
         lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
@@ -1103,6 +1110,7 @@ rcvrint7:
 /* 306de: 00e028e2 */
 /* 205de: 00e025ac */
 /* 104de: 00fc3890 */
+/* 106de: 00e03a50 */
 txrint:
         movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
         lea.l     ABSW2(MFP_REGS),a2            /* set mfp chip address pointer */
@@ -1120,6 +1128,7 @@ txrint1:
 /* 306de: 00e028fe */
 /* 206de: 00e025c8 */
 /* 104de: 00fc38aa */
+/* 106de: 00e03a6a */
 ctsint:
         movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
         lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
@@ -1150,6 +1159,7 @@ ctsint2:
 /* 306de: 00e02944 */
 /* 206de: 00e0260e */
 /* 104de: 00fc38f6 */
+/* 106de: 00e03ab6 */
 rxerror:
         movem.l   d0/a0,-(a7)                   /* save all registers */
         lea.l     ABSW2(MFP_REGS),a0            /* set mfp chip address pointer */
@@ -1163,6 +1173,7 @@ rxerror1:
 /* 306de: 00e02964 */
 /* 206de: 00e0262e */
 /* 104de: 00fc3918 */
+/* 106de: 00e03ad8 */
 txerror:
         move.l    a0,-(a7)
         lea.l     ABSW2(MFP_REGS),a0            /* set mfp chip address pointer */
@@ -1178,6 +1189,7 @@ txerror1:
 /* 306de: 00e02980 */
 /* 206de: 00e0264a */
 /* 104de: 00fc3932 */
+/* 106de: 00e03af2 */
 iorecout:
         lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
 		move.b    ctr(a0),d0
@@ -1241,6 +1253,7 @@ iorecget:
 /* 306de: 00e029fc */
 /* 206de: 00e026c6 */
 /* 104de: 00fc39b6 */
+/* 106de: 00e03b76 */
 rtson:
         lea.l     ABSW2(psgsel),a1
         move.w    sr,-(a7)
@@ -1287,6 +1300,7 @@ wrapin1:
 /* 306de: 00e02a40 */
 /* 206de: 00e0270a */
 /* 104de: 00fc39fe */
+/* 106de: 00e03bbe */
 	xdef _iorec
 _iorec:
         move.w    4(a7),d1             /* device number */
@@ -1315,6 +1329,7 @@ iorectab:
 /* 306de: 00e02a60 */
 /* 206de: 00e0272a */
 /* 104de: 00fc3a16 */
+/* 106de: 00e03bd6 */
 	xdef _rsconf
 _rsconf:
 /*
@@ -2324,6 +2339,7 @@ coldbend:   dc.w 0
 /* 306de: 00e0387e */
 /* 206de: 00e03498 */
 /* 104de: 00fc407e */
+/* 106de: 00e04242 */
 	xdef _giaccess
 _giaccess:
         move.w    4(a7),d0
@@ -2371,6 +2387,7 @@ dtron:
 /* 306de: 00e038b6 */
 /* 206de: 00e034d0 */
 /* 104de: 00fc40b6 */
+/* 106de: 00e0427a */
 	xdef _ongibit
 _ongibit:
         moveq.l   #0,d2
@@ -2408,6 +2425,7 @@ onbit:
 /* 306de: 00e038de */
 /* 206de: 00e034f8 */
 /* 104de: 00fc40dc */
+/* 106de: 00e042a0 */
 	xdef _offgibit
 _offgibit:
         moveq.l   #0,d2
@@ -2469,6 +2487,7 @@ offbit:
 /* 306de: 00e03906 */
 /* 206de: 00e03520 */
 /* 104de: 00fc4102 */
+/* 106de: 00e042c6 */
 /* first we determine if the init is for a absolute, relative or keycode */
 /* mouse action. */
 	xdef _initmouse
@@ -2580,6 +2599,7 @@ setmouse:
 /* 306de: 00e039ce */
 /* 206de: 00e035e8 */
 /* 104de: 00fc41cc */
+/* 106de: 00e04390 */
 	xdef _xbtimer
 _xbtimer:
         moveq.l   #0,d0
@@ -2627,6 +2647,7 @@ xbtimtab:  dc.b 13,8,5,4
 /* 306de: 00e03a08 */
 /* 206de: 00e03622 */
 /* 104de: 00fc4206 */
+/* 106de: 00e043ca */
 /* 404: 00e03b64 */
 	xdef _keytbl
 _keytbl:
@@ -2660,6 +2681,7 @@ _keytbl3:
 /* 306de: 00e03a08 */
 /* 206de: 00e0364e */
 /* 104de: 00fc4232 */
+/* 106de: 00e043f6 */
 	xdef _bioskeys
 _bioskeys:
         move.l    #_keytblnorm,ABSW(_curkeytbl)
@@ -2681,6 +2703,7 @@ _bioskeys:
 /* 306de: 00e03a4e */
 /* 206de: 00e0366c */
 /* 104de: 00fc424c */
+/* 106de: 00e04410 */
 	xdef _dosound
 _dosound:
         move.l    ABSW(_sndtable),d0            /* return current status in D0.L */
@@ -2708,6 +2731,7 @@ dosound1:
 /* 306de: 00e03a62 */
 /* 206de: 00e03680 */
 /* 104de: 00fc4260 */
+/* 106de: 00e04424 */
 	xdef _setprt
 _setprt:
         move.w    ABSW(_prtconfig),d0           /* get current config word before we change it */
@@ -2737,6 +2761,7 @@ setprt1:
 /* 306de: 00e03a74 */
 /* 206de: 00e03692 */
 /* 104de: 00fc4272 */
+/* 106de: 00e04436 */
 	xdef _kbrate
 _kbrate:
         move.w    ABSW(kb_initial),d0           /* get current initial/repeat values */
@@ -2785,6 +2810,7 @@ kbrate1:
 /* 306de: 00e03a96 */
 /* 206de: 00e036b4 */
 /* 104de: 00fc4294 */
+/* 106de: 00e04458 */
 	xdef _kbdvbase
 _kbdvbase:
         move.l    #midivec,d0
@@ -2811,6 +2837,7 @@ _kbdvbase:
 /* 306de: 00e03a9e */
 /* 206de: 00e036bc */
 /* 104de: 00fc429c */
+/* 106de: 00e04460 */
 timercint:
         addq.l    #1,_hz_200                    /* increment raw tick counter */
         rol.w     _tim_c_sieve                  /* rotate divisor bits */
@@ -2943,6 +2970,37 @@ soundir6:
 soundir7:
         movem.l   (a7)+,d0-d1/a0                /* pop stack & exit */
         rts
+
+#if TOSVERSION > 0x104
+/*********************************************************
+ * VT52 emulator callback for the bell sound
+ *********************************************************/
+/* 306de: 00e03b86 */
+/* 206de: 00e037a4 */
+/* 104de: 00fc34e4 */
+/* 106de: 00e0454c */
+#if !BINEXACT
+		xdef ringbell
+#endif
+ringbell:
+        btst      #2,ABSW(_conterm)             /* console bell enabled? */
+        beq.s     soundir8                      /* (no sound) */
+        movea.l   _bell_hook,a0
+        jsr       (a0)                          /* go through the bell vector */
+        rts
+
+/*
+ * default function for system variable bell_hook
+ */
+/* 306de: 00e03b98 */
+/* 206de: 00e037b6 */
+	xdef _do_bell
+_do_bell:
+        move.l    #_bellsnd,ABSW(_sndtable)     /* sound data for console bell */
+        move.b    #0,ABSW(_snddelay)            /* enable sound timer */
+soundir8:
+        rts
+#endif
 
 		bss
 		

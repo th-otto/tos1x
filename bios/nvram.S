@@ -29,6 +29,7 @@ rtc_sec         equ $fffffc20
 
 /* 206de: 00e01a96 */
 /* 104de: 00fc1f4c */
+/* 106de: 00e02124 */
 ngetdt: bsr.s     checkRTC
         bcs.s     ngetdt2
         bsr.s     readRTCTime

@@ -191,7 +191,7 @@ PP(register DESKWIN *thewin;)
  *	Find the WNODE that has this id.
  */
 /* 104de: 00fdc3f4 */
-/* 106de. 00e1d8c2 */
+/* 106de: 00e1d8c2 */
 DESKWIN *win_find(P(int16_t) wh)
 PP(int16_t wh;)
 {

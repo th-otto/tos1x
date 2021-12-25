@@ -14,6 +14,7 @@
 /* 306de: 00e02160 */
 /* 206de: 00e01e86 */
 /* 104de: 00fc315e */
+/* 106de: 00e03336 */
 	xdef _clockvec
 _clockvec:
 		lea.l     0,a5                          /* set base register */
@@ -47,6 +48,7 @@ _clockvec:
 /* 306de: 00e021a4 */
 /* 206de: 00e01eca */
 /* 104de: 00fc31a8 */
+/* 106de: 00e03380 */
 	xdef igetdt
 igetdt:
         move.b    #-1,ABSW(iclk_ready)
@@ -67,6 +69,7 @@ igetdt2:
 /* 306de: 00e021ce */
 /* 206de: 00e01ef4 */
 /* 104de: 00fc31d2 */
+/* 106de: 00e033aa */
 	xdef isetdt
 isetdt:
         move.l    4(a7),ABSW(iclkwtime)
