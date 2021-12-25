@@ -163,7 +163,7 @@ PP(int16_t my;)
 		w_bldactive(w_handle);
 		tree = gl_awind;
 		UNUSED(tree);
-#if BINEXACT
+#ifdef __ALCYON__
 		cpt = ob_find((LPTREE) gl_awind, 10L, mx, my); /* sigh */
 #else
 		cpt = ob_find((LPTREE) gl_awind, 0, 10, mx, my);
@@ -331,7 +331,7 @@ PP(int16_t my;)
 	if (gl_mntree != 0 && inside(mx, my, &gl_rmnactv))
 	{
 		mesag = 0;
-#if !BINEXACT
+#ifndef __ALCYON__
 		owner = 0;
 #endif
 		if (mn_do(&title, &item))
@@ -350,7 +350,7 @@ PP(int16_t my;)
 			}
 		}
 		/* application menu item has been selected so send it */
-#if BINEXACT
+#ifdef __ALCYON__
 		ct_msgup(mesag, owner, title, item, NULL, 0);
 #else
 		ct_msgup(mesag, owner, title, item, 0, 0, 0);
@@ -485,7 +485,7 @@ PP(BOOLEAN mon;)
 		gl_moff = 0;					/* reset the flag to make bbset */
 	} else
 	{
-#if BINEXACT /* sigh */
+#ifdef __ALCYON__ /* sigh */
 		gsx_ncode(HIDE_CUR, 0L);		/* turn off the mouse anyway    */
 #else
 		gsx_ncode(HIDE_CUR, 0, 0);		/* turn off the mouse anyway    */
@@ -495,7 +495,7 @@ PP(BOOLEAN mon;)
 
 		if (tmpmon)						/* the mouse was on     */
 		{
-#if BINEXACT
+#ifdef __ALCYON__
 			gsx_ncode(SHOW_CUR, 0L); /* sigh */
 #else
 			gsx_ncode(SHOW_CUR, 0, 0);

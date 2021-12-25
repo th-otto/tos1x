@@ -18,6 +18,7 @@
 #define __VDIDEFS_H__ 1
 
 #include "config.h"
+#include <compiler.h>
 
 #define MAX_PAL		512	    /* palette size                     */
 
@@ -38,7 +39,11 @@
 /*
  * see lineavar.h for explanation
  */
-#define LINEA_HACK (BINEXACT)
+#ifdef __ALCYON__
+#define LINEA_HACK 1
+#else
+#define LINEA_HACK 0
+#endif
 
 
 #define MU_PLANES 4

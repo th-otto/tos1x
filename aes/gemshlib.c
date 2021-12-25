@@ -425,7 +425,7 @@ PP(const char *psrch;)
 		if (!(*byteptr))				/* end of search string */
 		{
 			*ppath = chrptr;
-#if BINEXACT
+#ifdef __ALCYON__
 			return; /* BUG: should return TRUE */
 #else
 			return TRUE;
@@ -438,7 +438,7 @@ PP(const char *psrch;)
 	}
 
 	*ppath = NULL;						/* failed, return null  */
-#if BINEXACT
+#ifdef __ALCYON__
 	return; /* BUG: should return FALSE */
 #else
 	return FALSE;

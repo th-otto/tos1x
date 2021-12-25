@@ -25,6 +25,14 @@
 #include "gsxdefs.h"
 
 
+#define ASM_HACKS 0
+#ifdef __ALCYON__
+#if (TOSVERSION <= 0x104)
+#undef ASM_HACKS
+#define ASM_HACKS 1
+#endif
+#endif
+
 /*
  * Note on the assembler snippets below:
  * - some of them just look as if the optimize pass has
@@ -92,7 +100,7 @@ PP(char *fmtstr;)
 
 	if (*raw_str == '@')
 	{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 		/* WTF? */
 		asm("clr.b      (a0)");
 #else
@@ -162,7 +170,7 @@ PP(int16_t new_state;)
 
 	pb.pb_tree = (OBJECT *)tree;
 	pb.pb_obj = obj;
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("move.l     22(a6),-24(a6)");
 	asm("pea.l      -20(a6)");
 	asm("move.l     14(a6),-(a7)");
@@ -215,7 +223,7 @@ PP(register int16_t sy;)
 
 	pt = &t;
 
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	/* WTF code even worse than before */
 	asm("pea.l      -12(a6)");
 	asm("move.l     a5,-(a7)");
@@ -246,7 +254,7 @@ PP(register int16_t sy;)
 	 */
 	if (gl_wclip && gl_hclip)
 	{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 		asm("pea.l      -48(a6)");
 		asm("pea.l      (a5)");
 		asm("jsr        _rc_copy");
@@ -284,7 +292,7 @@ PP(register int16_t sy;)
 	 */
 	if (obtype != G_STRING)
 	{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 		asm("move.w     -12(a6),d0");
 		asm("bge.s      L9810");
 		asm("clr.w      d0");
@@ -302,7 +310,7 @@ PP(register int16_t sy;)
 		case G_FBOXTEXT:
 		case G_TEXT:
 		case G_FTEXT:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     #28,(a7)");
 			asm("move.l     -24(a6),-(a7)");
 			asm("move.l     #_edblk,-(a7)");
@@ -331,7 +339,7 @@ PP(register int16_t sy;)
 		case G_BOX:
 		case G_BOXCHAR:
 		case G_IBOX:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("pea.l      -10(a6)");
 			asm("pea.l      -8(a6)");
 			asm("pea.l      -6(a6)");
@@ -351,7 +359,7 @@ PP(register int16_t sy;)
 				bcol = BLACK;
 
 				{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 					asm("clr.l      -8(a6)");
 #else
 					ipat = IP_HOLLOW;
@@ -366,7 +374,7 @@ PP(register int16_t sy;)
 			/* draw box's border */
 			if (th != 0)
 			{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 				asm("move.w     -2(a6),(a7)");
 				asm("move.l     #1,-(a7)");
 				asm("jsr        _gsx_attr");
@@ -383,7 +391,7 @@ PP(register int16_t sy;)
 			/* draw filled box  */
 			if (obtype != G_IBOX)		/* 8/1/92 */
 			{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 				asm("move.w     -30(a6),(a7)");
 				asm("move.l     a5,-(a7)");
 				asm("jsr        _gr_inside");
@@ -413,7 +421,7 @@ PP(register int16_t sy;)
 		{
 		case G_FTEXT:
 		case G_FBOXTEXT:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.l     _edblk,(a7)");
 			asm("move.l     #_D+6910,-(a7)"); /* D.g_rawstr */
 			asm("jsr        _LSTCPY");
@@ -444,7 +452,7 @@ PP(register int16_t sy;)
 			/* fall thru to gr_gtext */
 		case G_TEXT:
 		case G_BOXTEXT:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     -30(a6),(a7)");
 			asm("pea.l      (a5)");
 			asm("jsr        _gr_inside");
@@ -469,7 +477,7 @@ PP(register int16_t sy;)
 #endif
 			break;
 		case G_IMAGE:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     #14,(a7)");
 			asm("move.l     -24(a6),-(a7)");
 			asm("move.l     #_bi,-(a7)");
@@ -499,7 +507,7 @@ PP(register int16_t sy;)
 #endif
 			break;
 		case G_ICON:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     #34,(a7)");
 			asm("move.l     -24(a6),-(a7)");
 			asm("move.l     #_ib,-(a7)");
@@ -529,7 +537,7 @@ PP(register int16_t sy;)
 			state &= ~SELECTED;
 			break;
 		case G_USERDEF:
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			/* WTF code even worse than before */
 			asm("move.w     -14(a6),(a7)");
 			asm("move.w     -14(a6),-(a7)");
@@ -573,7 +581,7 @@ PP(register int16_t sy;)
 		if (state & OUTLINED)
 		{
 			{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 				asm("move.w     #1,(a7)");
 				asm("move.l     #1,-(a7)");
 				asm("jsr        _gsx_attr");
@@ -607,7 +615,7 @@ PP(register int16_t sy;)
 			gr_inside(pt, th);
 		} else
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("neg.w      -12(a6)");
 #else
 			th = -th;
@@ -616,7 +624,7 @@ PP(register int16_t sy;)
 
 		if ((state & SHADOWED) && th)
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     -2(a6),(a7)");
 			asm("move.w     #25,-(a7)");
 			asm("jsr        _gsx_1code");
@@ -663,7 +671,7 @@ PP(register int16_t sy;)
 
 		if (state & CHECKED)
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.w     #1,(a7)");
 			asm("move.l     #0x00010002,-(a7)");
 			asm("jsr        _gsx_attr");
@@ -683,7 +691,7 @@ PP(register int16_t sy;)
 
 		if (state & CROSSED)
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("clr.w      (a7)");
 			asm("move.l     #2,-(a7)");
 			asm("jsr        _gsx_attr");
@@ -712,7 +720,7 @@ PP(register int16_t sy;)
 
 		if (state & DISABLED)
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.l     #0x00190000,-(a7)");
 			asm("jsr        _gsx_1code");
 			asm("move.l     4(a5),-(a7)");
@@ -730,7 +738,7 @@ PP(register int16_t sy;)
 
 		if ((state & SELECTED))
 		{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 			asm("move.l     4(a5),-(a7)");
 			asm("move.l     (a5),-(a7)");
 			asm("move.w     #7,-(a7)");
@@ -743,7 +751,7 @@ PP(register int16_t sy;)
 		}
 		/* July 30 1992 - ml */ /* 8/1/92 */
 	}
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("L9999:");
 #endif
 }
@@ -766,7 +774,7 @@ PP(int16_t depth;)
 	int16_t last, pobj;
 	int16_t sx, sy;
 
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("movea.l    d7,a0");
 	asm("move.w     12(a6),d1");
 	asm("bne.s      L9700");
@@ -806,7 +814,7 @@ PP(int16_t depth;)
 #endif
 
 	gsx_moff();
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("move.w     14(a6),(a7)");
 	asm("move.w     -8(a6),-(a7)");
 	asm("move.w     -6(a6),-(a7)");
@@ -857,7 +865,7 @@ PP(int16_t my;)
 
 	if (currobj == 0)
 	{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 		asm("clr.l      -(a7)");
 		asm("clr.l      -(a7)");
 		asm("pea.l      -22(a6)");
@@ -868,7 +876,7 @@ PP(int16_t my;)
 #endif
 	} else
 	{
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 		asm("move.w     d6,(a7)");
 		asm("move.l     d7,-(a7)");
 		asm("jsr        _get_par");
@@ -884,7 +892,7 @@ PP(int16_t my;)
 #endif
 	}
 
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("clr.l      -6(a6)");
 #else
 	done = FALSE;
@@ -1103,7 +1111,7 @@ PP(int16_t redraw;)
 
 	pt = &t;
 
-#if BINEXACT & (AESVERSION < 0x200)
+#if BINEXACT
 	asm("pea.l      -6(a6)");
 	asm("pea.l      (a5)");
 	asm("pea.l      -2(a6)");
@@ -1118,7 +1126,7 @@ PP(int16_t redraw;)
 	ob_sst(tree, obj, &spec, &curr_state, &obtype, &flags, pt, &th);
 #endif
 	
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("clr.w      d0");
 	asm("move.w     -16(a6),d0");
 	asm("cmp.w      14(a6),d0");
@@ -1220,7 +1228,7 @@ PP(int16_t redraw;)
 
 		gsx_mon();
 	}
-#if BINEXACT & (AESVERSION < 0x200)
+#if ASM_HACKS
 	asm("L9699:");
 #endif
 }

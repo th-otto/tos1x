@@ -177,7 +177,7 @@ PP(register DESKWIN *thewin;)
 	thewin->w_id = 0;
 	thewin->w_obid = 0;
 	objc_order(thedesk->g_pscreen, thewin->w_root, 1);
-#if BINEXACT
+#ifdef __ALCYON__
 	obj_wfree(thewin->w_root, 0L, 0L);
 #else
 	obj_wfree(thewin->w_root, 0, 0, 0, 0);
@@ -435,7 +435,7 @@ PP(int16_t h;)
 	/* set slider size & position */
 	wh = pwin->w_id;
 	sl_size = mul_div(pwin->w_pncol, 1000, pwin->w_vncol);
-#if BINEXACT
+#ifdef __ALCYON__
 	wind_set(wh, WF_HSLSIZE, sl_size, 0L, 0);
 #else
 	wind_set(wh, WF_HSLSIZE, sl_size, 0, 0, 0);
@@ -445,14 +445,14 @@ PP(int16_t h;)
 		sl_value = mul_div(pwin->w_cvcol, 1000, pwin->w_vncol - pwin->w_pncol);
 	else
 		sl_value = 0;
-#if BINEXACT
+#ifdef __ALCYON__
 	wind_set(wh, WF_HSLIDE, sl_value, 0L, 0);
 #else
 	wind_set(wh, WF_HSLIDE, sl_value, 0, 0, 0);
 #endif
 
 	sl_size = mul_div(pwin->w_pnrow, 1000, pwin->w_vnrow);
-#if BINEXACT
+#ifdef __ALCYON__
 	wind_set(wh, WF_VSLSIZE, sl_size, 0L, 0);
 #else
 	wind_set(wh, WF_VSLSIZE, sl_size, 0, 0, 0);
@@ -462,7 +462,7 @@ PP(int16_t h;)
 		sl_value = mul_div(pwin->w_cvrow, 1000, pwin->w_vnrow - pwin->w_pnrow);
 	else
 		sl_value = 0;
-#if BINEXACT
+#ifdef __ALCYON__
 	wind_set(wh, WF_VSLIDE, sl_value, 0L, 0);
 #else
 	wind_set(wh, WF_VSLIDE, sl_value, 0, 0, 0);
@@ -657,7 +657,7 @@ PP(int16_t arrow_type;)
 		newcv = pw->w_cvcol + 1;
 		vertical = FALSE;
 		break;
-#if !BINEXACT
+#ifndef __ALCYON__
 	default:
 		return;
 #endif

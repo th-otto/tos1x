@@ -224,7 +224,7 @@ PP(int16_t w_handle;)
 		break;
 #endif
 	}
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: no return value here, but won't be reached */
 	return 0;
 #endif
@@ -305,18 +305,14 @@ PP(int16_t y;)
 PP(int16_t w;)
 PP(int16_t h;)
 {
-#if (AESVERSION >= 0x200) | !BINEXACT
+#if !BINEXACT
 	register OBJECT *pobj;
 	
 	pobj = &W_ACTIVE[obj];
-#if BINEXACT
-	rc_copy((GRECT *)&x, (GRECT *)&pobj->ob_x); /* WTF */
-#else
 	pobj->ob_x = x;
 	pobj->ob_y = y;
 	pobj->ob_width = w;
 	pobj->ob_height = h;
-#endif
 
 	pobj->ob_head = pobj->ob_tail = NIL;
 #else
@@ -911,7 +907,7 @@ PP(GRECT *prc;)
 	register int16_t sminus1, dminus1;
 
 	if (w_walkflag)
-#if BINEXACT
+#ifdef __ALCYON_
 		return;
 #else
 		return FALSE;
@@ -1540,7 +1536,7 @@ PP(int16_t w_handle;)							/* handle of window to be closed */
 VOID wm_delete(P(int16_t) w_handle)
 PP(int16_t w_handle;)							/* handle of window to be deleted */
 {
-#if BINEXACT
+#if 1
 	D.w_win[w_handle].w_flags &= ~VF_INUSE;
 #else
 	newrect(gl_wtree, w_handle, 0, 0);		/* give back recs. */

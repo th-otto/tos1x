@@ -640,7 +640,7 @@ PP(register int16_t curr;)
 	if (d->g_cwin == 0)
 	{
 		drv = 0;
-#if !BINEXACT
+#ifndef __ALCYON__
 		pw = NULL; /* silence compiler */
 #endif
 	} else
@@ -703,7 +703,7 @@ PP(register int16_t curr;)
 	pa = i_find(d->g_cwin, curr, &pf, &isapp);
 	if (d->g_cwin != 0)
 		pw = win_find(d->g_cwin);
-#if !BINEXACT
+#ifndef __ALCYON__
 	else
 		pw = NULL; /* BUG: not handled */
 #endif

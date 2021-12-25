@@ -41,7 +41,7 @@ PP(register int16_t my;)
 
 	sobj = objc_find(tree, root, 2, mx, my);
 	if (sobj != root && sobj != NIL)
-#if BINEXACT /* hmpf */
+#ifdef __ALCYON__ /* hmpf */
 		sobj = act_chkobj(tree, root, sobj, mx, my, 0x10001L);
 #else
 		sobj = act_chkobj(tree, root, sobj, mx, my, 1, 1);
@@ -177,7 +177,7 @@ PP(register int16_t *xyobpts;)
 	gr_plns(po->g_x, po->g_y, numpts, &xylnpts[0], numobs, &xyobpts[0]);
 	/* wait for change  */
 	ev_which = evnt_multi(MU_BUTTON | MU_M1, 1,
-#if BINEXACT
+#ifdef __ALCYON__
 		0x10000L,
 #else
 		1, 0,
@@ -632,7 +632,7 @@ PP(int16_t *pdobj;)
 	/* rubber box to enclose a group of icons */
 	if (sobj == root || sobj == NIL)
 	{
-#if BINEXACT
+#ifdef __ALCYON__
 		r_set(pm, mx, my, 0x60006L);
 #else
 		r_set(pm, mx, my, 6, 6);
@@ -703,7 +703,7 @@ PP(int16_t *pdobj;)
 	}
 
 	evnt_button(
-#if BINEXACT
+#ifdef __ALCYON__
 		1, 0x10000L,
 #else
 		1, 1, 0,

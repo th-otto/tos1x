@@ -871,7 +871,7 @@ _gsx_start:
 	move.w	d4,_gl_hclip
 	move.w	d4,_gl_height		; d4 = gl_height
 
-#if (AESVERSION <= 0x320) & BINEXACT
+#if 1
     /* BUG: calculating gl_nplanes from number of colors */
 	move.w    22(a3),d0         ; d0 = gl_ws.ws_ncolors
 	clr.w     d1
@@ -947,7 +947,7 @@ _gsxsta2:
 	divs	d0,d5			; d5 <- gl_wbox
 	move.w	d5,_gl_wbox
 
-#if (AESVERSION >= 0x200) | !BINEXACT
+#if 0
 	move.w	d5,d0			; d0 <- gl_wbox
 	sub.w	#2,d0
 	cmp.w	_gl_wchar,d0		; gl_wbox must >= gl_wchar + 2

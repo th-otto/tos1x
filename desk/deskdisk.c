@@ -153,7 +153,7 @@ PP(int16_t op;)
 
 	fm_draw(tree);
 
-#if !BINEXACT
+#ifndef __ALCYON__
 	field = 0; /* BUG: used uninitailized below */
 #endif
 	while (TRUE)						/* while loop   */
@@ -349,7 +349,7 @@ PP(LPTREE tree;)
 		Protobt(bufaddr, 0x01000000L, disktype, 0);
 		*bufaddr = 0xe9;
 
-#if BINEXACT
+#ifdef __ALCYON__
 		if ((ret = fc_rwsec(WSECTS, bufaddr, 0x10000L, devno)))
 #else
 		if ((ret = fc_rwsec(WSECTS, bufaddr, 1, 0, devno)))
@@ -363,7 +363,7 @@ PP(LPTREE tree;)
 		 * (this makes the media dirty, with drivemode = "changed")
 		 */
 
-#if BINEXACT
+#ifdef __ALCYON__
 		if ((ret = fc_rwsec(WSECTS, bufaddr, 0x10000L, devno)))
 #else
 		if ((ret = fc_rwsec(WSECTS, bufaddr, 1, 0, devno)))
@@ -504,7 +504,7 @@ chksrc:
 	}
 
 	/* read boot sector */
-#if BINEXACT
+#ifdef __ALCYON__
 	if (fc_rwsec(RSECTS, (VOIDPTR)bootbuf, 0x10000L, devnos))
 #else
 	if (fc_rwsec(RSECTS, (VOIDPTR)bootbuf, 1, 0, devnos))
@@ -588,7 +588,7 @@ chksrc:
 
 	/* change the serialno */
 	Protobt(bootbuf, 0x01000000L, -1, -1);
-#if BINEXACT
+#ifdef __ALCYON__
 	fc_rwsec(WSECTS, (VOIDPTR)bootbuf, 0x10000L, devnod);
 #else
 	fc_rwsec(WSECTS, (VOIDPTR)bootbuf, 1, 0, devnod);

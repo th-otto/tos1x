@@ -318,7 +318,7 @@ PP(int16_t which;)
 	do
 	{
 		events = evnt_multi(MU_MESAG | MU_TIMER,
-#if BINEXACT
+#ifdef __ALCYON__
 			0L, 0L,
 			0L, 0L,
 			0L, 0L, 0,
@@ -487,7 +487,7 @@ PP(BOOLEAN isdir;)
 		add_path(d->g_srcpth, info->f_name);
 		strid = STFOLDINFO;
 		if (inf_fifo((OBJECT *)tree, FINFILES, FINFOLDS, d->g_srcpth) == FALSE)
-#if BINEXACT
+#ifdef __ALCYON__
 			return; /* hmpf */
 #else
 			return FALSE;

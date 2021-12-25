@@ -622,7 +622,7 @@ BOOLEAN hd_msg(NOTHING)
 		break;
 
 	case WM_TOPPED:
-#if BINEXACT
+#ifdef __ALCYON__
 		wind_set(d->g_rmsg[3], WF_TOP, 0L, 0L);
 #else
 		wind_set(d->g_rmsg[3], WF_TOP, 0, 0, 0, 0);

@@ -348,7 +348,7 @@ bye2:
 
 	ret = FDIRECTORY;					/* initial action   */
 	
-#if !BINEXACT
+#ifndef __ALCYON__
 	bret = 0; /* quiet compiler */
 #endif
 

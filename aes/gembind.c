@@ -248,7 +248,7 @@ PP(register VOIDPTR *addr_in;)
 			tmparm = HW(MT_HICOUNT) + LW(MT_LOCOUNT);
 #endif
 		}
-#if !BINEXACT
+#ifndef __ALCYON__
 		else
 			tmparm = 0; /* BUG: using undefined value */
 #endif

@@ -140,7 +140,7 @@ PP(int16_t curob;)
 		fix_chpos(p + (intptr_t) (2 * i), val);
 		val = !val;
 	}
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: missing return */
 	return TRUE;
 #endif

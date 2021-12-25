@@ -177,7 +177,7 @@ VOID d_gtext(NOTHING)
 				NPTSOUT = 0;
 			}
 			delh = width - (olin << 1);	/* jde 29aug85      */
-#if !BINEXACT
+#ifndef __ALCYON__
 			break;
 		default:
 			/* BUG: undefined values used below */
@@ -226,7 +226,7 @@ VOID d_gtext(NOTHING)
 			delv = 0;
 			delh += d1 + d2;
 			break;
-#if !BINEXACT
+#ifndef __ALCYON__
 		default:
 			/* BUG: undefined values used below */
 			delv = 0;
@@ -240,7 +240,7 @@ VOID d_gtext(NOTHING)
 
 		switch (LV(CHUP))
 		{
-#if !BINEXACT
+#ifndef __ALCYON__
 		default:
 			/* BUG: undefined values used below */
 #endif

@@ -388,7 +388,7 @@ PP(MDBLOCK *p;)
 		i = 0;
 	}
 
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: no explicit return statement here, but has q == NULL in D0 */
 	return NULL;
 #endif

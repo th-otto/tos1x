@@ -352,7 +352,7 @@ PP(register int16_t ry1;)
 	int16_t ry;
 
 	/* zero out button wait if mouse moves more then a little */
-#if BINEXACT /* sigh */
+#ifdef __ALCYON__ /* sigh */
 	gsx_ncode(MOUSE_ST, 0L);
 #else
 	gsx_ncode(MOUSE_ST, 0, 0);

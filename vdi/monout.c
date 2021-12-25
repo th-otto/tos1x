@@ -373,7 +373,7 @@ VOID v_gdp(NOTHING)
 
 		case 9:						/* GDP Justified Text */
 			d_justified();
-#if !BINEXACT
+#ifndef __ALCYON__
 			break;
 #endif
 		}
@@ -945,7 +945,7 @@ VOID st_fl_ptr(NOTHING)
 	case 4:
 		pm = 0x000f;
 		pp = &work_ptr->ud_patrn[0];
-#if !BINEXACT
+#ifndef __ALCYON__
 		break;
 	default:
 		/* BUG: illegal values for fill_style set patptr to undefined pointer pp */
@@ -1447,7 +1447,7 @@ PP(int16_t inc;)
 	/* will be obscured by the arrowhead.                                  */
 
 	temp = NPTSIN;
-#if !BINEXACT
+#ifndef __ALCYON__
 	line_len = 0; /* BUG: used uninitialized below for nptsin < 1 */
 	dx = dy = 0;
 #endif

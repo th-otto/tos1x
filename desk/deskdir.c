@@ -24,7 +24,7 @@
 #define Fread(a,b,c)    trap(0x3f,a,b,c)
 #undef Fwrite
 #define Fwrite(a,b,c)    trap(0x40,a,b,c)
-#if BINEXACT
+#ifdef __ALCYON__
 #undef Bconstat
 #undef Bconin
 #define Bconstat(a) trp13(0x10002L)
@@ -297,14 +297,14 @@ PP(uint32_t *psize;)
 	register LPTREE tree;
 	register int ret;
 	
-#if !BINEXACT
+#ifndef __ALCYON__
 	tree = 0; /* BUG: used uninitialized below */
 #endif
 	d = thedesk;
 	strcpy(do_srcpath, psrc_path);
 	strcpy(do_dstpath, pdst_path);
 	op = (gl_kstate & K_CTRL) && op == OP_COPY ? OP_MOVE : op;
-#if !BINEXACT
+#ifndef __ALCYON__
 	ret = TRUE; /* BUG: may be used uninitialized */
 #endif
 	if (dirop_init(op, do_srcpath, do_dstpath, pfcnt, pdcnt))
@@ -383,7 +383,7 @@ PP(uint16_t *pdcnt;)
 	d = thedesk;
 	level = 0;
 	srcname = ptr = r_slash(psrc_path);
-#if BINEXACT
+#ifdef __ALCYON__
 	asm("movea.l    a3,a0");
 	asm("clr.b (a0)");
 #else

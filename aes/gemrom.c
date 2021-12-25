@@ -130,7 +130,7 @@ PP(register intptr_t pointer;)
 		do_rsfix((intptr_t)rs_hdr, size);
 		rs_fixit(pointer);
 	}
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: no return here */
 	return size;
 #endif
@@ -175,7 +175,7 @@ BOOLEAN rsc_read(NOTHING)
 		Cconws("Unable to install resource !");
 		while (!Bconstat(2))
 			;
-#if BINEXACT
+#ifdef __ALCYON__
 		/* BUG: no return value here */
 		return;
 #else
@@ -203,7 +203,7 @@ BOOLEAN rsc_read(NOTHING)
 	nodesk = FALSE;
 	nogem = FALSE;
 
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: no return value here */
 	return TRUE;
 #endif

@@ -145,7 +145,7 @@ PP(int16_t dev;)
 	bpb->fsiz = getiword(BS->spf);
 	/* BUG: original code assumes 2 FATs */
 	/* BUG: original code ignores res field of bootsector */
-#if !BINEXACT
+#if 0
 	{
 		int16_t res1;
 		res1 = getiword(BS->res);

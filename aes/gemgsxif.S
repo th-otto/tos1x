@@ -146,7 +146,7 @@ VOID gsx_mfree(NOTHING)
 /* 404: 00e33f06 */
 	xdef _gsx_mfree
 _gsx_mfree:
-#if (AESVERSION >= 0x330) | !BINEXACT
+#if 0
 	tst.l	_gl_tmp			; Fix 8/3/92
 	beq	g1
 #endif
@@ -1244,15 +1244,6 @@ vdi_cont:
 	addq.l	#6,sp
 	move.l	#_ptsin,pioff		; some routines alter this pointer
 	rts				; so we shall always reset it.
-
-#if (AESVERSION >= 0x200) & !BINEXACT
-	xdef _set_cache
-_set_cache:
-	move.l 4(a7),d1
-	CACR_D0
-	D1_CACR
-	rts
-#endif
 
 
 vdi_list:	

@@ -319,7 +319,7 @@ PP(int16_t *prets;)
 	}
 
 	/* check for quick out if something has already happened */
-#if !BINEXACT
+#ifndef __ALCYON__
 	which = 0; /* quiet compiler */
 #endif
 	if (what == 0x0)

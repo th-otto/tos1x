@@ -37,7 +37,7 @@
 /* 306de: 00e1c1f4 */
 /* 104de: 00fde542 */
 /* 106de: 00e1fd4e */
-#if BINEXACT
+#ifdef __ALCYON__
 VOID tchange(P(int32_t) c)
 PP(register int32_t c;)	/* number of ticks that have gone by  */
 #else
@@ -46,13 +46,13 @@ PP(int16_t p1;)
 PP(int16_t p2;)
 #endif
 {
-#if !BINEXACT
+#ifndef __ALCYON__
 	register int32_t c;	/* number of ticks that have gone by  */
 #endif
 	register EVB *d;
 	register int32_t c1;
 
-#if !BINEXACT
+#ifndef __ALCYON__
 	c = HW(p1) | LW(p2);
 #endif
 	/* pull pd's off the delay list that have waited long enough */

@@ -174,7 +174,7 @@ VOID forker(NOTHING)
 				}
 			}
 		}
-#if BINEXACT
+#ifdef __ALCYON__
 		(*f->f_code) (f->f_data);
 #else
 		(*f->f_code) (LHIWD(f->f_data), LLOWD(f->f_data));
@@ -193,7 +193,7 @@ VOID chkkbd(NOTHING)
 	register int16_t achar, kstat;
 	register int16_t *pintin;
 
-#if BINEXACT /* sigh */
+#ifdef __ALCYON__ /* sigh */
 	gsx_ncode(KEY_SHST, 0L);
 #else
 	gsx_ncode(KEY_SHST, 0, 0);
@@ -207,7 +207,7 @@ VOID chkkbd(NOTHING)
 
 		pintin[0] = 4;
 		pintin[1] = 2;
-#if BINEXACT
+#ifdef __ALCYON__
 		gsx_ncode(SET_INPUT_MODE, 0x00000002L); /* sigh */
 #else
 		gsx_ncode(SET_INPUT_MODE, 0, 2);
@@ -222,7 +222,7 @@ VOID chkkbd(NOTHING)
 
 	if ((achar) || (kstat != kstate))
 	{
-#if BINEXACT
+#ifdef __ALCYON__
 		forkq(kchange, achar, kstat);
 #else
 		forkq(kchange, HW(achar) | LW(kstat));

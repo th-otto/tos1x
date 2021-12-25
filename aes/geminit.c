@@ -629,7 +629,7 @@ int16_t pred_dinf(NOTHING)
 					temp += 5;
 					scan_2(temp, &res);
 					{					/* turn on the bit ?        */
-#if BINEXACT /* sigh... */
+#ifdef __ALCYON__ /* sigh... */
 						trp14(((res & 0xF0) >> 4) ? 0x00400001L : 0x00400000L);
 #else
 						Blitmode(((res & 0xF0) >> 4) ? 1 : 0);
@@ -670,7 +670,7 @@ int16_t pred_dinf(NOTHING)
 /* 104de: 00fd430c */
 BOOLEAN gsx_malloc(NOTHING)
 {
-#if BINEXACT /* sigh... */
+#ifdef __ALCYON__ /* sigh... */
 	gsx_fix(&gl_tmp, NULL, 0L);
 #else
 	gsx_fix(&gl_tmp, NULL, 0, 0);
@@ -687,7 +687,7 @@ BOOLEAN gsx_malloc(NOTHING)
 		gl_mlen = 13312;
 
 	gl_tmp.fd_addr = dos_alloc(gl_mlen);
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* BUG: no return here, which will return the value of gl_tmp.fd_addr casted to int... */
 	return TRUE;
 #endif

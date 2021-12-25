@@ -341,7 +341,7 @@ PP(int which;)
 #endif
 		}
 	}
-#if !BINEXACT
+#ifndef __ALCYON__
 	/* not reached */
 	return 0;
 #endif

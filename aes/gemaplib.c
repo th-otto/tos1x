@@ -152,7 +152,7 @@ PP(int16_t id;)
 PP(int16_t length;)
 PP(int16_t *pbuff;)
 {
-#if BINEXACT
+#ifdef __ALCYON__
 	/* use id,len,pbuff on stack as a QPB  */ /* WTF */
 	return ev_block(code, (intptr_t)ADDR(&id));
 	/*
@@ -235,14 +235,14 @@ PP(int16_t scale;)
 			{
 				/* disconnect the cursor from VDI until the playing is done */
 				i_lptr1(justretf, 0x0);
-#if BINEXACT
+#ifdef __ALCYON__
 				gsx_ncode(CUR_VECX, 0L); /* sigh */
 #else
 				gsx_ncode(CUR_VECX, 0, 0);
 #endif
 				m_lptr2(&drwaddr);
 				i_lptr1(justretf, 0x0);	/* not interrupt of mouse movement */
-#if BINEXACT
+#ifdef __ALCYON__
 				gsx_ncode(MOT_VECX, 0L); /* sigh */
 #else
 				gsx_ncode(MOT_VECX, 0, 0);
@@ -270,7 +270,7 @@ PP(int16_t scale;)
 	if (gl_play)						/* connect back the mouse */
 	{
 		i_lptr1(drwaddr);
-#if BINEXACT
+#ifdef __ALCYON__
 		gsx_ncode(CUR_VECX, 0L); /* sigh */
 		i_lptr1(gl_store, 0x0);
 		gsx_ncode(MOT_VECX, 0L); /* sigh */
