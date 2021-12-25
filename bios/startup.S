@@ -629,6 +629,11 @@ biosinit:
         move.w    d0,_time
 clockdone:
 
+#if TP_64 /* IDE_BOOT */
+/* boot eventually from first IDE device */
+		jsr       ideboot
+#endif
+
 /* boot eventually from a block device (floppy or harddisk) */
         bsr       diskboot
 /* memory test and attempt to boot from SCSI/ACSI */
@@ -1186,6 +1191,7 @@ trph3:  move.l    (a1)+,-(a7)            /* return adress */
 /* 306de: 00e00dfa */
 /* 206de: 00e00da4 */
 /* 104de: 00fc0818 */
+/* 106de: 00e009a6 */
 #define INDIRECT $80000000
 bios_vecs:
         dc.w 12
@@ -1206,6 +1212,7 @@ bios_vecs:
 /* 306de: 00e00e2c */
 /* 206de: 00e00dd6 */
 /* 104de: 00fc084a */
+/* 106de: 00e009d8 */
 xbios_vecs:
         dc.w (xbvecsend-xbios_vecs)/4
         dc.l _initmouse
@@ -1250,7 +1257,11 @@ xbios_vecs:
         dc.l _puntaes
         dc.l bios_unimpl
         dc.l _floprate
+#if TP_64 /* IDE_BOOT */
+        dc.l dmaread
+#else
         dc.l bios_unimpl
+#endif
         dc.l bios_unimpl
         dc.l bios_unimpl
         dc.l bios_unimpl
@@ -2142,6 +2153,10 @@ noblitter:
         move.w    d1,sr
         movea.l   a2,a7
         rts
+
+#if TP_64
+#include "ideboot/ideboot.S"
+#endif
 
 		text
 

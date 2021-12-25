@@ -621,7 +621,7 @@ xbios_vecs:
            00fc 0af0                 dc.l _puntaes
            00fc 0652                 dc.l bios_unimpl
 [00fc08f0] 00fc 1692                 dc.l _floprate
-           00fc 0652                 dc.l bios_unimpl
+[00fc08f4] 00fc 0652                 dc.l bios_unimpl
            00fc 0652                 dc.l bios_unimpl
            00fc 0652                 dc.l bios_unimpl
            00fc 0652                 dc.l bios_unimpl

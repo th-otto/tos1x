@@ -618,8 +618,10 @@
 [00e00930] 2f39 0000 0404            move.l     $00000404,-(a7)
 [00e00936] 70ff                      moveq.l    #-1,d0
 [00e00938] 4e75                      rts
+xbiostrap:
 [00e0093a] 41fa 009c                 lea.l      $00E009D8(pc),a0
 [00e0093e] 6004                      bra.s      $00E00944
+biostrap:
 [00e00940] 41fa 0064                 lea.l      $00E009A6(pc),a0
 [00e00944] 2279 0000 04a2            movea.l    $000004A2,a1
 [00e0094a] 301f                      move.w     (a7)+,d0
@@ -654,131 +656,90 @@
 [00e0099c] 3f19                      move.w     (a1)+,-(a7)
 [00e0099e] 23c9 0000 04a2            move.l     a1,$000004A2
 [00e009a4] 4e73                      rte
-[00e009a6] 000c 00e0                 ori.b      #$E0,a4 ; apollo only
-[00e009aa] 0b9e                      bclr       d5,(a6)+
-[00e009ac] 00e0                      dc.w       $00E0 ; illegal
-[00e009ae] 0ae4 00e0                 cas.b      d0,d3,-(a4) ; 68020+ only
-[00e009b2] 0aea 00e0 0af6            cas.b      d0,d3,2806(a2) ; 68020+ only
-[00e009b8] 8000                      or.b       d0,d0
-[00e009ba] 0476 00e0 0bca 00e0       subi.w     #$00E0,([za6,zd0.l*2],$00E0) ; 68020+ only; reserved BD=0
-[00e009c2] 0be2                      bset       d5,-(a2)
-[00e009c4] 8000                      or.b       d0,d0
-[00e009c6] 0472 00e0 0af0            subi.w     #$00E0,-16(a2,d0.l*2) ; 68020+ only
-[00e009cc] 8000                      or.b       d0,d0
-[00e009ce] 047e 00e0                 subi.w     #$00E0,???
-[00e009d2] 0b86                      bclr       d5,d6
-[00e009d4] 00e0                      dc.w       $00E0 ; illegal
-[00e009d6] 0b8c 0041                 movep.w    d5,65(a4)
-[00e009da] 00e0                      dc.w       $00E0 ; illegal
-[00e009dc] 42c6                      move.w     ccr,d6
-[00e009de] 00e0                      dc.w       $00E0 ; illegal
-[00e009e0] 0794                      bclr       d3,(a4)
-[00e009e2] 00e0                      dc.w       $00E0 ; illegal
-[00e009e4] 0bea 00e0                 bset       d5,224(a2)
-[00e009e8] 0bfe                      bset       d5,???
-[00e009ea] 00e0                      dc.w       $00E0 ; illegal
-[00e009ec] 0c04 00e0                 cmpi.b     #$E0,d4
-[00e009f0] 0c10 00e0                 cmpi.b     #$E0,(a0)
-[00e009f4] 0c5c 00e0                 cmpi.w     #$00E0,(a4)+
-[00e009f8] 0c64 00e0                 cmpi.w     #$00E0,-(a4)
-[00e009fc] 10d4                      move.b     (a4),(a0)+
-[00e009fe] 00e0                      dc.w       $00E0 ; illegal
-[00e00a00] 11b2 00e0 127a            move.b     -32(a2,d0.w),122(a0,d1.w*2) ; 68020+ only
-[00e00a06] 00e0                      dc.w       $00E0 ; illegal
-[00e00a08] 190a                      move.l     b2,-(a4) ; apollo only
-[00e00a0a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a0c] 346a 00e0                 movea.w    224(a2),a2
-[00e00a10] 3914                      move.w     (a4),-(a4)
-[00e00a12] 00e0                      dc.w       $00E0 ; illegal
-[00e00a14] 3bbe 00e0                 move.w     ???,-32(a5,d0.w)
-[00e00a18] 3bd6                      move.w     (a6),???
-[00e00a1a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a1c] 43ca                      lea.l      (b2),a1 ; apollo only
-[00e00a1e] 00e0                      dc.w       $00E0 ; illegal
-[00e00a20] 1e4e                      movea.l    b6,b7 ; apollo only
-[00e00a22] 00e0                      dc.w       $00E0 ; illegal
-[00e00a24] 1f1a                      move.b     (a2)+,-(a7)
-[00e00a26] 00e0                      dc.w       $00E0 ; illegal
-[00e00a28] 1444                      movea.l    d4,b2 ; apollo only
-[00e00a2a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a2c] 0e96 00e0                 moves.l    (a6),d0
-[00e00a30] a94c                      mov3q.l    #4,a4
-[00e00a32] 00e0                      dc.w       $00E0 ; illegal
-[00e00a34] 0fe8 00e0                 bset       d7,224(a0)
-[00e00a38] 0fda                      bset       d7,(a2)+
-[00e00a3a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a3c] 43f6 00e0                 lea.l      -32(a6,d0.w),a1
-[00e00a40] 3658                      movea.w    (a0)+,a3
-[00e00a42] 00e0                      dc.w       $00E0 ; illegal
-[00e00a44] 393e                      move.w     ???,-(a4)
-[00e00a46] 00e0                      dc.w       $00E0 ; illegal
-[00e00a48] 3978 00e0 4242            move.w     ($000000E0).w,16962(a4)
-[00e00a4e] 00e0                      dc.w       $00E0 ; illegal
-[00e00a50] 42a0                      clr.l      -(a0)
-[00e00a52] 00e0                      dc.w       $00E0 ; illegal
-[00e00a54] 427a 00e0                 clr.w      $00E00B36(pc) ; apollo only
-[00e00a58] 4390                      chk.w      (a0),d1
-[00e00a5a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a5c] 4410                      neg.b      (a0)
-[00e00a5e] 00e0                      dc.w       $00E0 ; illegal
-[00e00a60] 4424                      neg.b      -(a4)
-[00e00a62] 00e0                      dc.w       $00E0 ; illegal
-[00e00a64] 4458                      neg.w      (a0)+
-[00e00a66] 00e0                      dc.w       $00E0 ; illegal
-[00e00a68] 4436 00e0                 neg.b      -32(a6,d0.w)
-[00e00a6c] 2334 00e0                 move.l     -32(a4,d0.w),-(a1)
-[00e00a70] 0918                      btst       d4,(a0)+
-[00e00a72] 00e0                      dc.w       $00E0 ; illegal
-[00e00a74] 0ade 00e0                 cas.b      d0,d3,(a6)+ ; 68020+ only
-[00e00a78] 0c88 00e0 0794            cmpi.l     #$00E00794,a0 ; apollo only
-[00e00a7e] 00e0                      dc.w       $00E0 ; illegal
-[00e00a80] 186a 00e0                 movea.l    224(a2),b4 ; apollo only
-[00e00a84] 0794                      bclr       d3,(a4)
-[00e00a86] 00e0                      dc.w       $00E0 ; illegal
-[00e00a88] 0794                      bclr       d3,(a4)
-[00e00a8a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a8c] 0794                      bclr       d3,(a4)
-[00e00a8e] 00e0                      dc.w       $00E0 ; illegal
-[00e00a90] 0794                      bclr       d3,(a4)
-[00e00a92] 00e0                      dc.w       $00E0 ; illegal
-[00e00a94] 0794                      bclr       d3,(a4)
-[00e00a96] 00e0                      dc.w       $00E0 ; illegal
-[00e00a98] 0794                      bclr       d3,(a4)
-[00e00a9a] 00e0                      dc.w       $00E0 ; illegal
-[00e00a9c] 0794                      bclr       d3,(a4)
-[00e00a9e] 00e0                      dc.w       $00E0 ; illegal
-[00e00aa0] 0794                      bclr       d3,(a4)
-[00e00aa2] 00e0                      dc.w       $00E0 ; illegal
-[00e00aa4] 0794                      bclr       d3,(a4)
-[00e00aa6] 00e0                      dc.w       $00E0 ; illegal
-[00e00aa8] 0794                      bclr       d3,(a4)
-[00e00aaa] 00e0                      dc.w       $00E0 ; illegal
-[00e00aac] 0794                      bclr       d3,(a4)
-[00e00aae] 00e0                      dc.w       $00E0 ; illegal
-[00e00ab0] 0794                      bclr       d3,(a4)
-[00e00ab2] 00e0                      dc.w       $00E0 ; illegal
-[00e00ab4] 0794                      bclr       d3,(a4)
-[00e00ab6] 00e0                      dc.w       $00E0 ; illegal
-[00e00ab8] 0794                      bclr       d3,(a4)
-[00e00aba] 00e0                      dc.w       $00E0 ; illegal
-[00e00abc] 0794                      bclr       d3,(a4)
-[00e00abe] 00e0                      dc.w       $00E0 ; illegal
-[00e00ac0] 0794                      bclr       d3,(a4)
-[00e00ac2] 00e0                      dc.w       $00E0 ; illegal
-[00e00ac4] 0794                      bclr       d3,(a4)
-[00e00ac6] 00e0                      dc.w       $00E0 ; illegal
-[00e00ac8] 0794                      bclr       d3,(a4)
-[00e00aca] 00e0                      dc.w       $00E0 ; illegal
-[00e00acc] 0794                      bclr       d3,(a4)
-[00e00ace] 00e0                      dc.w       $00E0 ; illegal
-[00e00ad0] 0794                      bclr       d3,(a4)
-[00e00ad2] 00e0                      dc.w       $00E0 ; illegal
-[00e00ad4] 0794                      bclr       d3,(a4)
-[00e00ad6] 00e0                      dc.w       $00E0 ; illegal
-[00e00ad8] 0794                      bclr       d3,(a4)
-[00e00ada] 00e0                      dc.w       $00E0 ; illegal
-[00e00adc] 103a 206f                 move.b     $00E02B4D(pc),d0
-[00e00ae0] 0004 4ed0                 ori.b      #$D0,d4
+bios_vecs:
+[00e009a6] 000c                      dc.w 12
+           00e00b9e                      bclr       d5,(a6)+
+[00e009ac] 00e00ae4 
+           00e00aea
+           00e00af6            cas.b      d0,d3,2806(a2) ; 68020+ only
+[00e009b8] 80000476
+           00e00bca
+           00e00be2                      bset       d5,-(a2)
+[00e009c4] 80000472
+           00e00af0            subi.w     #$00E0,-16(a2,d0.l*2) ; 68020+ only
+[00e009cc] 8000047e
+           00e00b86                      bclr       d5,d6
+[00e009d4] 00e00b8c
+xbios_vecs:
+[00e009d8] 0041                      dc.w 0x41
+[00e009da] 00e042c6                      move.w     ccr,d6
+[00e009de] 00e00794                      bclr       d3,(a4)
+[00e009e2] 00e00bea
+           00e00bfe                      bset       d5,???
+[00e009ea] 00e00c04
+           00e00c10
+           00e00c5c
+           00e00c64
+           00e010d4                      move.b     (a4),(a0)+
+[00e009fe] 00e011b2
+           00e0127a            move.b     -32(a2,d0.w),122(a0,d1.w*2) ; 68020+ only
+[00e00a06] 00e0190a                      move.l     b2,-(a4) ; apollo only
+[00e00a0a] 00e0346a
+           00e03914                      move.w     (a4),-(a4)
+[00e00a12] 00e03bbe
+           00e03bd6                      move.w     (a6),???
+[00e00a1a] 00e043ca                      lea.l      (b2),a1 ; apollo only
+[00e00a1e] 00e01e4e                      movea.l    b6,b7 ; apollo only
+[00e00a22] 00e01f1a                      move.b     (a2)+,-(a7)
+[00e00a26] 00e01444                      movea.l    d4,b2 ; apollo only
+[00e00a2a] 00e00e96
+           00e0a94c                      mov3q.l    #4,a4
+[00e00a32] 00e00fe8
+           00e00fda                      bset       d7,(a2)+
+[00e00a3a] 00e043f6
+           00e03658                      movea.w    (a0)+,a3
+[00e00a42] 00e0393e                      move.w     ???,-(a4)
+[00e00a46] 00e03978
+           00e04242            move.w     ($000000E0).w,16962(a4)
+[00e00a4e] 00e042a0                      clr.l      -(a0)
+[00e00a52] 00e0427a
+           00e04390                      chk.w      (a0),d1
+[00e00a5a] 00e04410                      neg.b      (a0)
+[00e00a5e] 00e04424                      neg.b      -(a4)
+[00e00a62] 00e04458                      neg.w      (a0)+
+[00e00a66] 00e04436
+           00e02334
+           00e00918                      btst       d4,(a0)+
+[00e00a72] 00e00ade
+           00e00c88
+           00e00794            cmpi.l     #$00E00794,a0 ; apollo only
+[00e00a7e] 00e0186a
+[00e00a82] 00e00794                      bclr       d3,(a4)
+[00e00a86] 00e00794                      bclr       d3,(a4)
+[00e00a8a] 00e00794                      bclr       d3,(a4)
+[00e00a8e] 00e00794                      bclr       d3,(a4)
+[00e00a92] 00e00794                      bclr       d3,(a4)
+[00e00a96] 00e00794                      bclr       d3,(a4)
+[00e00a9a] 00e00794                      bclr       d3,(a4)
+[00e00a9e] 00e00794                      bclr       d3,(a4)
+[00e00aa2] 00e00794                      bclr       d3,(a4)
+[00e00aa6] 00e00794                      bclr       d3,(a4)
+[00e00aaa] 00e00794                      bclr       d3,(a4)
+[00e00aae] 00e00794                      bclr       d3,(a4)
+[00e00ab2] 00e00794                      bclr       d3,(a4)
+[00e00ab6] 00e00794                      bclr       d3,(a4)
+[00e00aba] 00e00794                      bclr       d3,(a4)
+[00e00abe] 00e00794                      bclr       d3,(a4)
+[00e00ac2] 00e00794                      bclr       d3,(a4)
+[00e00ac6] 00e00794                      bclr       d3,(a4)
+[00e00aca] 00e00794                      bclr       d3,(a4)
+[00e00ace] 00e00794                      bclr       d3,(a4)
+[00e00ad2] 00e00794                      bclr       d3,(a4)
+[00e00ad6] 00e00794                      bclr       d3,(a4)
+[00e00ada] 00e0103a
+
+[00e00ade] 206f 0004                 movea.l    4(a7),a0
+[00e00ae2] 4ed0                      jmp        (a0)
 [00e00ae4] 41ed 051e                 lea.l      1310(a5),a0
 [00e00ae8] 6010                      bra.s      $00E00AFA
 [00e00aea] 41ed 053e                 lea.l      1342(a5),a0
