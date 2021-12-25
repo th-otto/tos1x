@@ -1349,7 +1349,7 @@ rs6conf2:
  */
         movep.l   MFP_UCR-MFP_REGS(mfpareg),d7
         move.w    6(a7),d0                      /* if -1 then don't change */
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+#if TP_70
         /* swedish/czech versions have the RSCONF1 patch applied (from tos14fix) */
         cmp.w     #3,d0
         bhi.s     rs6conf6
@@ -1375,7 +1375,11 @@ rs6conf6:
 /*  set timer baud rate */
         tst.w     4(a7)                         /* if -1 then don't change */
         bmi.s     rs6conf7
+#if TP_71
+		moveq.l   #4,d0
+#else
 		moveq.l   #0,d0
+#endif
         move.b    d0,MFP_RSR-MFP_REGS(mfpareg)  /* disable receiver */
         move.b    d0,MFP_TSR-MFP_REGS(mfpareg)  /* disable transmitter */
         move.w    4(a7),d1                      /* new baudrate */
@@ -1387,7 +1391,11 @@ rs6conf6:
 		move.l    d0,d1
 		moveq.l   #3,d0
 		bsr       settimer
+#if TP_71
+		moveq.l   #5,d0
+#else
 		moveq.l   #1,d0
+#endif
         move.b    d0,MFP_RSR-MFP_REGS(mfpareg)  /* enable receiver */
         move.b    d0,MFP_TSR-MFP_REGS(mfpareg)  /* enable transmitter */
 rs6conf7:

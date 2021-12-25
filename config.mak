@@ -31,6 +31,11 @@ COUNTRY=de
 #
 BINEXACT=1
 
+#
+# Set this to 1 to build a RAM version relocated to 0x380000.
+#
+RAMVERSION=0
+
 -include $(top_srcdir)/localcnf.mak
 
 #
@@ -53,6 +58,8 @@ $(top_srcdir)/common/config.h: $(top_srcdir)/config.mak ${MAKEFILE}
 	$(AM_V_at)echo '#if !BINEXACT' >> $@
 	$(AM_V_at)echo '#include "localcnf.h"' >> $@
 	$(AM_V_at)echo '#endif' >> $@
+	$(AM_V_at)echo '#include "patchdef.h"' >> $@
+	$(AM_V_at)echo '#include "nopatch.h"' >> $@
 	$(AM_V_at)echo '#endif' >> $@
 
 $(top_srcdir)/common/sections.mak: $(top_srcdir)/common/sections.inc $(top_srcdir)/common/config.h

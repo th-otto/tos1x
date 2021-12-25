@@ -404,8 +404,6 @@ nomemchk:
 
 		SETBASEREG
 
-/* detect basic STe/TT DMA sound */
-
 /* clear the remainder of the BSS section */
 
         movea.l   #__sbss,a0
@@ -489,8 +487,14 @@ gemok:
 #if !P68010
 		adda.l    #$2000000,a1				/* exception number in top 8 bits of the address */
 #endif
+#if TP_05 /* SHELL_P */
+		clr.l     (_shell_p).w
+        lea.l     (2*4).w,a0
+        moveq     #64-3,d0
+#else
         lea.l     (2*4).l,a0
         move.w    #64-3,d0
+#endif
 initexc:
         move.l    a1,(a0)+
 #if !P68010
@@ -610,7 +614,7 @@ biosinit:
 /* --- set the current system time and date */
         move.w    _os_dosdate,_date  /* use BIOS time as current time */
         jsr       ngetdt             /* set current time to RTC time */
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+#if TP_69 /* TIME_SAVE */
         /* swedish/czech versions have the TIME_SAVE patch applied */
         bpl.s     clockdone
 #else
@@ -654,7 +658,7 @@ copyenv:
 nextenvc:
         move.b    (a0)+,(a1)+
         bpl.s     copyenv
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+#if TP_13
         /* swedish/czech versions have the BOOT_DEV patch applied */
         move.w    _bootdev,d0
 #else
