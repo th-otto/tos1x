@@ -16,6 +16,7 @@
 /* 306de: 00e16e68 */
 /* 306us: 00e16e0e */
 /* 104de: 00fc788a */
+/* 106de: 00e07a5a */
 FH syshnd(P(FH) h)
 PP(register FH h;)
 {

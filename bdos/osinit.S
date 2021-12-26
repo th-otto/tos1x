@@ -35,6 +35,7 @@ cve     equ 5
  ******************************************************************************/
 
 /* 104de: 00fc920a */
+/* 106de: 00e093da */
     xdef    __osinit
 __osinit:
 	move.l  #_enter,ABSW2($84)     /* take over the handling of TRAP #1 */
@@ -251,13 +252,14 @@ enter_1: ds.b 0
 #else
 #if !P68010
     tst.w   _longframe
-    bne     chklong
-    cmp.w   #$20,6(sp)  /* toggle/inquire state? */
-    beq x20_sup     /* yes, go perform function */
-    bra enter_2
-chklong:
-#endif
+    beq     chkshort
     cmp.w   #$20,8(sp)  /* toggle/inquire state? */
+    bra.s checksup
+chkshort:
+#endif
+    cmp.w   #$20,6(sp)  /* toggle/inquire state? */
+checksup:
+	nop
 #endif
     beq x20_sup     /* yes, go perform function */
 
@@ -273,8 +275,9 @@ enter_2:
     tst.w   _longframe
     beq     noadj
 #endif
-    addq.l    #2,a7
+    tst.w      (a7)+
 noadj:
+	nop
 #endif
     btst    #13,d0      /* if he is in system state, use his stack */
     bne systk
@@ -311,7 +314,7 @@ callos: move.l  a0,-(sp)    /* push parm pointer */
  ***************************************************************************/
 
 entusr:
-#if GEMDOS < 0x18
+#if (GEMDOS < 0x17) & (TOSVERSION < 0x106)
 _gouser:
 #endif
     move.l  _run,a5
@@ -343,7 +346,7 @@ retsys: move.l  a6,sp
     move.l  a4,usp
     bra gousr
 
-#if GEMDOS >= 0x18
+#if (GEMDOS >= 0x17) | (TOSVERSION >= 0x106)
 _gouser:
     movea.l  _run,a5
     move.l   104(a5),d0
@@ -378,12 +381,12 @@ xu_0: ds.b 0
     move.w    (a7)+,4(a0) /* transform format word */
 #else
     move.w    (sp)+,d0  /* pop SR */
-    move.l    (a7)+,d1  /* pop PC */
+    move.l    (a7)+,a1  /* pop PC */
     tst.w    _longframe
     beq       usrnolong
     move.w    (a7)+,-(a0) /* transform format word */
 usrnolong:
-    move.l    d1,-(a0)    /* transport the return address */
+    move.l    a1,-(a0)    /* transport the return address */
 #endif
 #endif
 
@@ -426,8 +429,11 @@ supnolong:
     move.l  8(sp),a1   /* point to new SSP */
     move.w  (sp)+,d0    /* pop SR */
     move.l  (sp)+,-(a1)    /* pop and transfer the return address */
-#endif
 supcont:
+#if TOSVERSION >= 0x106
+	nop
+#endif
+#endif
     move.w  d0,-(a1)    /* push SR */
     move.l  usp,a0      /* get USP */
     cmpa.l  a0,sp       /* already at old USP? */
@@ -446,12 +452,17 @@ xs_0: ds.b 0
 	movea.l   a7,a0
 	addq.l    #6,a0
 #else
+#if TOSVERSION <= 0x106
+    /* BUG: no test for _longframe here */
+    lea     6(sp),a0        /* create USP */
+#else
 #if !P68010
     lea     6(sp),a0        /* create USP */
     tst.w   _longframe
     beq     xs_exit    
 #endif
     lea     8(sp),a0        /* create USP */
+#endif
 #endif
 xs_exit:
     move.l  a0,usp      /* update USP */
@@ -499,7 +510,7 @@ _oscall:
 	xref _date
 	xref _time
 _xbgettime:
-#if (GEMDOS >= 0x18) | !BINEXACT
+#if (GEMDOS >= 0x18) | !BINEXACT | (TOSVERSION >= 0x106)
 	move.w    #$0017,-(a7)
 	trap      #14
 	addq.l    #2,a7

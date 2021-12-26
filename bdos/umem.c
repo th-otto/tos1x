@@ -50,6 +50,7 @@ static VOID printstr PROTO((const char *str));
 /* 306de: 00e1800c */
 /* 306us: 00e17fb2 */
 /* 104de: 00fc8972 */
+/* 106de: 00e08b42 */
 VOID xminit(NOTHING)
 {
 	Getmpb(&pmd);
@@ -598,6 +599,7 @@ PP(int16_t mode;)
 /* 306de: 00e183cc */
 /* 306us: 00e18372 */
 /* 104de: 00fc8c10 */
+/* 106de: 00e08de0 */
 int32_t xmalloc(P(int32_t) amount)
 PP(int32_t amount;)
 {
@@ -778,6 +780,7 @@ PP(int32_t len;)
 /* 306de: 00e18570 */
 /* 306us: 00e18516 */
 /* 104de: 00fc8d12 */
+/* 106de: 00e08ee2 */
 VOID foldermsg(NOTHING)
 {
 	printstr("\033H*** OUT OF INTERNAL MEMORY:\033K\r\n*** USE FOLDR100.PRG TO GET MORE.\033K\r\n\033K\n\033K\n*** SYSTEM HALTED ***\033K");

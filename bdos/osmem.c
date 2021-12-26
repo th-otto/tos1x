@@ -26,6 +26,7 @@ MDBLOCK *root[MAXQUICK];
 /* 306de: 00e185b0 */
 /* 306us: 00e18556 */
 /* 104de: 00fc8d52 */
+/* 106de: 00e08f22 */
 VOID osminit(NOTHING)
 {
 	ofdlist = NULL;
@@ -390,7 +391,7 @@ PP(MDBLOCK *p;)
 
 #ifndef __ALCYON__
 	/* BUG: no explicit return statement here, but has q == NULL in D0 */
-	return NULL;
+	return q;
 #endif
 }
 

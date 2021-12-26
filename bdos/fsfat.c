@@ -45,6 +45,7 @@ static DND *leftmost PROTO((DND *));
 /* 306de: 00e1412c */
 /* 306us: 00e140d2 */
 /* 104de: 00fc4c18 */
+/* 106de: 00e04de8 */
 DND *fsgetofd(NOTHING)
 {
 	register int i;
@@ -353,6 +354,7 @@ PP(DMD *dm;)
 #else
 
 /* 104de: 00fc4faa */
+/* 106de: 00e0517a */
 VOID flushbcb(P(BCB *) b)
 PP(register BCB *b;)
 {
@@ -421,6 +423,7 @@ PP(DMD *dmd;)
 /* 306de: 00e1473e */
 /* 306us: 00e146e4 */
 /* 104de: 00fc516a */
+/* 106de: 00e0553a */
 char *getrec(P(RECNO) recno, P(DMD *)dm, P(int) wrtflg)
 PP(register RECNO recno;)
 PP(register DMD *dm;)
@@ -955,6 +958,7 @@ PP(int flg;)								/* update curbyt ? (yes if less than 1 cluster transferred) 
 /* 306de: 00e14f10 */
 /* 306us: 00e14eb6 */
 /* 104de: 00fc5906 */
+/* 106de: 00e05ad6 */
 ERROR xrw(P(int) wrtflg, P(OFD *) p, P(long) len, P(char *) ubufr, P(xfer) bufxfr)
 PP(int wrtflg;)
 PP(register OFD *p;)

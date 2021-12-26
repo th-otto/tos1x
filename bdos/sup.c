@@ -89,6 +89,7 @@ FND
 
 /* 306de: 00e3d9f8 */
 /* 306us: 00e3d9c8 */
+/* 106de: 00e2a516 */
 FND const funcs[0x58] = {
 
 	/* 0x00 */ { GDF x0term, 0 },
@@ -275,6 +276,7 @@ int32_t xgetver(NOTHING)
 /* 306de: 00e18b0e */
 /* 306us: 00e18ab4 */
 /* 104de: 00fc966a */
+/* 106de: 00e09896 */
 VOID cinit(NOTHING)
 {
 	register PD *r;
@@ -313,6 +315,7 @@ VOID cinit(NOTHING)
 /* 306de: 00e18bb6 */
 /* 306us: 00e18b5c */
 /* 104de: 00fc9712 */
+/* 106de: 00e0993e */
 VOID freetree(P(DND *)d)
 PP(DND *d;)
 {
@@ -345,6 +348,7 @@ PP(DND *d;)
 /* 306de: 00e18c46 */
 /* 306us: 00e18bec */
 /* 104de: 00fc97a2 */
+/* 106de: 00e099ce */
 VOID offree(P(DMD *) d)
 PP(DMD *d;)
 {
@@ -744,6 +748,7 @@ PP(int16_t n;)
 /* 306de: 00e193ac */
 /* 306us: 00e19352 */
 /* 104de: 00fc9f08 */
+/* 106de: 00e0a134 */
 VOID tikfrk(P(int) n)
 PP(int n;)
 {

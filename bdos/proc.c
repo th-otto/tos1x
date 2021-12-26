@@ -60,6 +60,7 @@ xjmp_buf bakbuf;
 /* 306de: 00e176d6 */
 /* 306us: 00e1767c */
 /* 104de: 00fc80f8 */
+/* 106de: 00e082c8 */
 VOID xtermres(P(int32_t) blkln, P(int16_t) rc)
 PP(int32_t blkln;)
 PP(int16_t rc;)
@@ -693,10 +694,10 @@ PP(PD *pdptr;)
 
 #else
 
-/* 104de: 00fc8250 */
-
 static ERROR xpgmld PROTO((const char *s, PD *p));
 
+/* 104de: 00fc8250 */
+/* 106de: 00e08420 */
 ERROR xexec(P(int16_t) mode, P(char *) s, P(char *) t, P(char *) v)
 PP(int16_t mode;)								/*  0, 3, 4, or 5       */
 PP(char *s;)
@@ -945,6 +946,7 @@ PP(char *v;)								/* command, tail, environment   */
  */
 
 /* 104de: 00fc86f4 */
+/* 106de: 00e088c4 */
 static ERROR xpgmld(P(const char *) s, P(PD *) pdptr)
 PP(const char *s;)
 PP(PD *pdptr;)

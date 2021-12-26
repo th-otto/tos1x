@@ -23,6 +23,7 @@
 /* 306de: 00e1726a */
 /* 306us: 00e17210 */
 /* 104de: 00fc7c8c */
+/* 106de: 00e07e5c */
 ERROR xsfirst(P(const char *) name, P(int16_t) att)
 PP(const char *name;)
 PP(int16_t att;)
@@ -293,6 +294,7 @@ PP(register char *s2;)									/*  s2 dest         */
 /* 306de: 00e17424 */
 /* 306us: 00e173ca */
 /* 104de: 00fc7e46 */
+/* 106de: 00e08016 */
 VOID builds(P(const char *) s1, P(char *) s2)
 PP(register char *s1;)							/*  source          */
 PP(register char *s2;)									/*  s2 dest         */

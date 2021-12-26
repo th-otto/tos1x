@@ -84,6 +84,7 @@ PP(register FCB *fcb;)									/*  root where we start the search  */
 /* 306de: 00e15580 */
 /* 306us: 00e15526 */
 /* 104de: 00fc5f76 */
+/* 106de: 00e06146 */
 FCB *scan(P(DND *) dnd, P(const char *) n, P(int16_t) att, P(int32_t *) posp)
 PP(register DND *dnd;)
 PP(const char *n;)
@@ -550,6 +551,7 @@ PP(register DND *dn;)								/*  dir descr for dir           */
 /* 306de: 00e15afc */
 /* 306us: 00e15aa2 */
 /* 104de: 00fc64f2 */
+/* 106de: 00e066c2 */
 ERROR xmkdir(P(const char *) s)
 PP(const char *s;)
 {

@@ -50808,211 +50808,96 @@ _ui_mupb:
 [00e2a50a] 001f 001f                 ori.b      #$1F,(a7)+
 [00e2a50e] 001e 001f                 ori.b      #$1F,(a6)+
 [00e2a512] 001e 001f                 ori.b      #$1F,(a6)+
-[00e2a516] 00e0                      dc.w       $00E0 ; illegal
-[00e2a518] 8352                      or.w       d1,(a2)
-[00e2a51a] 0000                      dc.w       $0000
-[00e2a51c] 00e0                      dc.w       $00E0 ; illegal
-[00e2a51e] 4a8c                      tst.l      a4
-[00e2a520] 0080 00e0 4878            ori.l      #$00E04878,d0
-[00e2a526] 0081 00e0 4ade            ori.l      #$00E04ADE,d1
-[00e2a52c] 0082 00e0 493a            ori.l      #$00E0493A,d2
-[00e2a532] 0082 00e0 4962            ori.l      #$00E04962,d2
-[00e2a538] 0083 00e0 4b02            ori.l      #$00E04B02,d3
-[00e2a53e] 0080 00e0 4a38            ori.l      #$00E04A38,d0
-[00e2a544] 0080 00e0 4aa6            ori.l      #$00E04AA6,d0
-[00e2a54a] 0080 00e0 4b62            ori.l      #$00E04B62,d0
-[00e2a550] 0081 00e0 4c92            ori.l      #$00E04C92,d1
-[00e2a556] 0080 00e0 45a4            ori.l      #$00E045A4,d0
-[00e2a55c] 0080 00e0 987e            ori.l      #$00E0987E,d0
-[00e2a562] 0000                      dc.w       $0000
-[00e2a564] 00e0                      dc.w       $00E0 ; illegal
-[00e2a566] 987e                      sub.w      ???,d4
-[00e2a568] 0000                      dc.w       $0000
-[00e2a56a] 00e0                      dc.w       $00E0 ; illegal
-[00e2a56c] 7e26                      moveq.l    #38,d7
-[00e2a56e] 0000                      dc.w       $0000
-[00e2a570] 00e0                      dc.w       $00E0 ; illegal
-[00e2a572] 987e                      sub.w      ???,d4
-[00e2a574] 0000                      dc.w       $0000
-[00e2a576] 00e0                      dc.w       $00E0 ; illegal
-[00e2a578] 45be                      chk.w      ???,d2
-[00e2a57a] 0081 00e0 45e2            ori.l      #$00E045E2,d1
-[00e2a580] 0083 00e0 4606            ori.l      #$00E04606,d3
-[00e2a586] 0082 00e0 4622            ori.l      #$00E04622,d2
-[00e2a58c] 0082 00e0 987e            ori.l      #$00E0987E,d2
-[00e2a592] 0000                      dc.w       $0000
-[00e2a594] 00e0                      dc.w       $00E0 ; illegal
-[00e2a596] 987e                      sub.w      ???,d4
-[00e2a598] 0000                      dc.w       $0000
-[00e2a59a] 00e0                      dc.w       $00E0 ; illegal
-[00e2a59c] 987e                      sub.w      ???,d4
-[00e2a59e] 0000                      dc.w       $0000
-[00e2a5a0] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5a2] 987e                      sub.w      ???,d4
-[00e2a5a4] 0000                      dc.w       $0000
-[00e2a5a6] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5a8] 987e                      sub.w      ???,d4
-[00e2a5aa] 0000                      dc.w       $0000
-[00e2a5ac] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5ae] 7e46                      moveq.l    #70,d7
-[00e2a5b0] 0000                      dc.w       $0000
-[00e2a5b2] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5b4] 7e12                      moveq.l    #18,d7
-[00e2a5b6] 0001 00e0                 ori.b      #$E0,d1
-[00e2a5ba] 987e                      sub.w      ???,d4
-[00e2a5bc] 0000                      dc.w       $0000
-[00e2a5be] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5c0] 987e                      sub.w      ???,d4
-[00e2a5c2] 0000                      dc.w       $0000
-[00e2a5c4] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5c6] 987e                      sub.w      ???,d4
-[00e2a5c8] 0000                      dc.w       $0000
-[00e2a5ca] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5cc] 987e                      sub.w      ???,d4
-[00e2a5ce] 0000                      dc.w       $0000
-[00e2a5d0] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5d2] 987e                      sub.w      ???,d4
-[00e2a5d4] 0000                      dc.w       $0000
-[00e2a5d6] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5d8] 987e                      sub.w      ???,d4
-[00e2a5da] 0000                      dc.w       $0000
-[00e2a5dc] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5de] 987e                      sub.w      ???,d4
-[00e2a5e0] 0000                      dc.w       $0000
-[00e2a5e2] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5e4] 987e                      sub.w      ???,d4
-[00e2a5e6] 0000                      dc.w       $0000
-[00e2a5e8] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5ea] 987e                      sub.w      ???,d4
-[00e2a5ec] 0000                      dc.w       $0000
-[00e2a5ee] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5f0] 987e                      sub.w      ???,d4
-[00e2a5f2] 0000                      dc.w       $0000
-[00e2a5f4] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5f6] 987e                      sub.w      ???,d4
-[00e2a5f8] 0000                      dc.w       $0000
-[00e2a5fa] 00e0                      dc.w       $00E0 ; illegal
-[00e2a5fc] 987e                      sub.w      ???,d4
-[00e2a5fe] 0000                      dc.w       $0000
-[00e2a600] 00e0                      dc.w       $00E0 ; illegal
-[00e2a602] 987e                      sub.w      ???,d4
-[00e2a604] 0000                      dc.w       $0000
-[00e2a606] 00e0                      dc.w       $00E0 ; illegal
-[00e2a608] 987e                      sub.w      ???,d4
-[00e2a60a] 0000                      dc.w       $0000
-[00e2a60c] 00e0                      dc.w       $00E0 ; illegal
-[00e2a60e] 987e                      sub.w      ???,d4
-[00e2a610] 0000                      dc.w       $0000
-[00e2a612] 00e0                      dc.w       $00E0 ; illegal
-[00e2a614] a42c 0000 00e0            mac.w      d0.l,d0.l,0,224(a4),d2,acc1
-[00e2a61a] a43c 0000                 mac.w      d?.l,d?.l,0,acc0
-[00e2a61e] 00e0                      dc.w       $00E0 ; illegal
-[00e2a620] a4ba 0000                 mac.w      d?.l,d?.l,0,acc1
-[00e2a624] 00e0                      dc.w       $00E0 ; illegal
-[00e2a626] a4ca 0000                 mac.w      a2.l,a2.l,0,acc1
-[00e2a62a] 00e0                      dc.w       $00E0 ; illegal
-[00e2a62c] 987e                      sub.w      ???,d4
-[00e2a62e] 0000                      dc.w       $0000
-[00e2a630] 00e0                      dc.w       $00E0 ; illegal
-[00e2a632] 7e00                      moveq.l    #0,d7
-[00e2a634] 0000                      dc.w       $0000
-[00e2a636] 00e0                      dc.w       $00E0 ; illegal
-[00e2a638] 9888                      sub.l      a0,d4
-[00e2a63a] 0000                      dc.w       $0000
-[00e2a63c] 00e0                      dc.w       $00E0 ; illegal
-[00e2a63e] 82c8                      divu.w     a0,d1
-[00e2a640] 0001 00e0                 ori.b      #$E0,d1
-[00e2a644] 987e                      sub.w      ???,d4
-[00e2a646] 0000                      dc.w       $0000
-[00e2a648] 00e0                      dc.w       $00E0 ; illegal
-[00e2a64a] 987e                      sub.w      ???,d4
-[00e2a64c] 0000                      dc.w       $0000
-[00e2a64e] 00e0                      dc.w       $00E0 ; illegal
-[00e2a650] 987e                      sub.w      ???,d4
-[00e2a652] 0000                      dc.w       $0000
-[00e2a654] 00e0                      dc.w       $00E0 ; illegal
-[00e2a656] 987e                      sub.w      ???,d4
-[00e2a658] 0000                      dc.w       $0000
-[00e2a65a] 00e0                      dc.w       $00E0 ; illegal
-[00e2a65c] 5f8e                      subq.l     #7,a6
-[00e2a65e] 0001 00e0                 ori.b      #$E0,d1
-[00e2a662] 987e                      sub.w      ???,d4
-[00e2a664] 0000                      dc.w       $0000
-[00e2a666] 00e0                      dc.w       $00E0 ; illegal
-[00e2a668] 987e                      sub.w      ???,d4
-[00e2a66a] 0000                      dc.w       $0000
-[00e2a66c] 00e0                      dc.w       $00E0 ; illegal
-[00e2a66e] 66c2                      bne.s      $00E2A632
-[00e2a670] 0001 00e0                 ori.b      #$E0,d1
-[00e2a674] 68ce                      bvc.s      $00E2A644
-[00e2a676] 0001 00e0                 ori.b      #$E0,d1
-[00e2a67a] 643c                      bcc.s      $00E2A6B8
-[00e2a67c] 0001 00e0                 ori.b      #$E0,d1
-[00e2a680] 7e7e                      moveq.l    #126,d7
-[00e2a682] 0001 00e0                 ori.b      #$E0,d1
-[00e2a686] 7eba                      moveq.l    #-70,d7
-[00e2a688] 0001 00e0                 ori.b      #$E0,d1
-[00e2a68c] 7c16                      moveq.l    #22,d6
-[00e2a68e] 0000                      dc.w       $0000
-[00e2a690] 00e0                      dc.w       $00E0 ; illegal
-[00e2a692] 7ce2                      moveq.l    #-30,d6
-[00e2a694] 0082 00e0 7d22            ori.l      #$00E07D22,d2
-[00e2a69a] 0082 00e0 7468            ori.l      #$00E07468,d2
-[00e2a6a0] 0001 00e0                 ori.b      #$E0,d1
-[00e2a6a4] 78e8                      moveq.l    #-24,d4
-[00e2a6a6] 0081 00e0 72d8            ori.l      #$00E072D8,d1
-[00e2a6ac] 0001 00e0                 ori.b      #$E0,d1
-[00e2a6b0] 987e                      sub.w      ???,d4
-[00e2a6b2] 0000                      dc.w       $0000
-[00e2a6b4] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6b6] 7acc                      moveq.l    #-52,d5
-[00e2a6b8] 0000                      dc.w       $0000
-[00e2a6ba] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6bc] 7b50                      ???
-[00e2a6be] 0000                      dc.w       $0000
-[00e2a6c0] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6c2] 6538                      bcs.s      $00E2A6FC
-[00e2a6c4] 0001 00e0                 ori.b      #$E0,d1
-[00e2a6c8] 8de0                      divs.w     -(a0),d6
-[00e2a6ca] 0001 00e0                 ori.b      #$E0,d1
-[00e2a6ce] 8e34 0001                 or.b       1(a4,d0.w),d7
-[00e2a6d2] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6d4] 8c48                      or.w       a0,d6 ; apollo only
-[00e2a6d6] 0002 00e0                 ori.b      #$E0,d2
-[00e2a6da] 8420                      or.b       -(a0),d2
-[00e2a6dc] 0003 00e0                 ori.b      #$E0,d3
-[00e2a6e0] 82f6 0000                 divu.w     0(a6,d0.w),d1
-[00e2a6e4] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6e6] 987e                      sub.w      ???,d4
-[00e2a6e8] 0000                      dc.w       $0000
-[00e2a6ea] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6ec] 7e5c                      moveq.l    #92,d7
-[00e2a6ee] 0001 00e0                 ori.b      #$E0,d1
-[00e2a6f2] 6ada                      bpl.s      $00E2A6CE
-[00e2a6f4] 0000                      dc.w       $0000
-[00e2a6f6] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6f8] 987e                      sub.w      ???,d4
-[00e2a6fa] 0000                      dc.w       $0000
-[00e2a6fc] 00e0                      dc.w       $00E0 ; illegal
-[00e2a6fe] 987e                      sub.w      ???,d4
-[00e2a700] 0000                      dc.w       $0000
-[00e2a702] 00e0                      dc.w       $00E0 ; illegal
-[00e2a704] 987e                      sub.w      ???,d4
-[00e2a706] 0000                      dc.w       $0000
-[00e2a708] 00e0                      dc.w       $00E0 ; illegal
-[00e2a70a] 987e                      sub.w      ???,d4
-[00e2a70c] 0000                      dc.w       $0000
-[00e2a70e] 00e0                      dc.w       $00E0 ; illegal
-[00e2a710] 987e                      sub.w      ???,d4
-[00e2a712] 0000                      dc.w       $0000
-[00e2a714] 00e0                      dc.w       $00E0 ; illegal
-[00e2a716] 987e                      sub.w      ???,d4
-[00e2a718] 0000                      dc.w       $0000
-[00e2a71a] 00e0                      dc.w       $00E0 ; illegal
-[00e2a71c] 75f8                      ???
-[00e2a71e] 0002 00e0                 ori.b      #$E0,d2
-[00e2a722] 73b6                      ???
-[00e2a724] 0001 ffff                 ori.b      #$FF,d1
+funcs:
+[00e2a516] 00e08352 0000
+[00e2a51c] 00e04a8c 0080
+           00e04878 0081
+           00e04ade 0082
+           00e0493a 0082
+           00e04962 0083
+           00e04b02 0080
+           00e04a38 0080
+           00e04aa6 0080
+           00e04b62 0081
+           00e04c92 0080
+           00e045a4 0080
+           00e0987e 0000
+[00e2a564] 00e0987e 0000
+[00e2a56a] 00e07e26 0000
+[00e2a570] 00e0987e 0000
+[00e2a576] 00e045be 0081
+           00e045e2 0083
+           00e04606 0082
+           00e04622 0082
+           00e0987e 0000
+[00e2a594] 00e0987e 0000
+[00e2a59a] 00e0987e 0000
+[00e2a5a0] 00e0987e 0000
+[00e2a5a6] 00e0987e 0000
+[00e2a5ac] 00e07e46 0000
+[00e2a5b2] 00e07e12 0001
+           00e0987e 0000
+[00e2a5be] 00e0987e 0000
+[00e2a5c4] 00e0987e 0000
+[00e2a5ca] 00e0987e 0000
+[00e2a5d0] 00e0987e 0000
+[00e2a5d6] 00e0987e 0000
+[00e2a5dc] 00e0987e 0000
+[00e2a5e2] 00e0987e 0000
+[00e2a5e8] 00e0987e 0000
+[00e2a5ee] 00e0987e 0000
+[00e2a5f4] 00e0987e 0000
+[00e2a5fa] 00e0987e 0000
+[00e2a600] 00e0987e 0000
+[00e2a606] 00e0987e 0000
+[00e2a60c] 00e0987e 0000
+[00e2a612] 00e0a42c 0000
+           00e0a43c 0000
+[00e2a61e] 00e0a4ba 0000
+[00e2a624] 00e0a4ca 0000
+[00e2a62a] 00e0987e 0000
+[00e2a630] 00e07e00 0000
+[00e2a636] 00e09888 0000
+[00e2a63c] 00e082c8 0001
+           00e0987e 0000
+[00e2a648] 00e0987e 0000
+[00e2a64e] 00e0987e 0000
+[00e2a654] 00e0987e 0000
+[00e2a65a] 00e05f8e 0001
+           00e0987e 0000
+[00e2a666] 00e0987e 0000
+[00e2a66c] 00e066c2 0001
+           00e068ce 0001
+           00e0643c 0001
+           00e07e7e 0001
+           00e07eba 0001
+           00e07c16 0000
+[00e2a690] 00e07ce2 0082
+           00e07d22 0082
+           00e07468 0001
+           00e078e8 0081
+           00e072d8 0001
+           00e0987e 0000
+[00e2a6b4] 00e07acc 0000
+[00e2a6ba] 00e07b50 0000
+[00e2a6c0] 00e06538 0001
+           00e08de0 0001
+           00e08e34 0001
+[00e2a6d2] 00e08c48 0002
+           00e08420 0003
+           00e082f6 0000
+[00e2a6e4] 00e0987e 0000
+[00e2a6ea] 00e07e5c 0001
+           00e06ada 0000
+[00e2a6f6] 00e0987e 0000
+[00e2a6fc] 00e0987e 0000
+[00e2a702] 00e0987e 0000
+[00e2a708] 00e0987e 0000
+[00e2a70e] 00e0987e 0000
+[00e2a714] 00e0987e 0000
+[00e2a71a] 00e075f8 0002
+           00e073b6 0001
+[00e2a726] ffff                 ori.b      #$FF,d1
 [00e2a728] fefd ffff 00e0            nfB??.l    $00E1A80A
 [00e2a72e] 9bec 00e0                 suba.l     224(a4),a5
 [00e2a732] 9c10                      sub.b      (a0),d6

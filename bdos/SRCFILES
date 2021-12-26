@@ -3,6 +3,7 @@ BDOS_104_OBJS2=fsmain.o fssupp.o proc.o umem.o osmem.o osinit.o lmul.o ldiv.o
 BDOS_104_OBJS3=xfer.o bdosmain.o sup.o time.o
 
 BDOS_104_OBJS=${BDOS_104_OBJS1} ${BDOS_104_OBJS2} ${BDOS_104_OBJS3}
+BDOS_106_OBJS=${BDOS_104_OBJS}
 
 BDOS_OBJS=${BDOS_${TOSVERSION}_OBJS}
 
