@@ -276,6 +276,10 @@ initpal:
         move.b    #$01,ABSW(v_bas_h)
         clr.b     ABSW(v_bas_m)
 
+#if TOSVERSION >= 0x106
+		clr.b     ABSW(v_bas_l)
+#endif
+
         move.b    ABSW(memctrl),d6                /* d6 = memory controller configuration */
 
         move.l    ABSW(_phystop),d5               /* d5 -> (possible) top of physical mem */
@@ -302,12 +306,20 @@ chkpatloop: move.w    d0,(a0)+					/* fill 512-8 bytes with a test pattern */
 
 chkmemloop: lsr.w     #2,d6						/* shift memory configuration down by a bank (bank 1 is in bits 0..1, bank 0 is in bits 2..3) */
 
+#if TOSVERSION >= 0x106
+			movea.l   #$00040008,a0
+#else
 			movea.w   #$0208,a0
+#endif
             lea       chkmem3(pc),a5
             bra       memchk0
 chkmem3:    beq.s     chkmem7					/* bank is not working => */
 
+#if TOSVERSION >= 0x106
+			movea.l   #$00080008,a0
+#else
 			movea.w   #$0408,a0
+#endif
             lea       chkmem4(pc),a5
             bra       memchk0
 chkmem4:    beq.s     chkmem6					/* bank has 512Kb of memory => */
@@ -321,7 +333,12 @@ chkmem5:    bne.s     chkmem7					/* bank is empty => */
 chkmem6:    addq.w    #4,d6						/* 4   = 0100 512Kb bank size */
 chkmem7:    sub.l     #$200000,d1				/* - 2Mb */
             beq.s     chkmemloop
+#if TOSVERSION >= 0x106
+			SETBASEREG
+            move.b    d6,ABSW(memconf)			/* set memory configuration */
+#else
             move.b    d6,(memconf).l			/* set memory configuration */
+#endif
 
 /*
  * We now need to size the actual memory present.  We test memory,
@@ -363,8 +380,9 @@ st_ramsize_done:                    /* bus error or bad ram  */
         suba.l    d7,a0               /* (a0 -> first zone that failed) */
         move.l    a0,d5               /* d5 = st ram size */
         move.l    a4,(_buserror).l
-		SETBASEREG
 
+#if TOSVERSION < 0x106
+		SETBASEREG
 		move.l    d5,d0
 		sub.l     #$00008000,d0
 		lsr.w     #8,d0
@@ -372,12 +390,25 @@ st_ramsize_done:                    /* bus error or bad ram  */
 		swap      d0
 		move.b    d0,ABSW(v_bas_h)
 		movea.l   d5,a0
+#endif
 
 /* =========================================================================== */
 /* ==== This part is executed only on first boot ============================= */
 /* =========================================================================== */
 
         /* Clear the memory */
+#if TOSVERSION >= 0x106
+        move.l    #sysvars_start,a0
+        move.l    d5,d4
+        moveq.l   #0,d0
+clrmem:
+		move.l    d0,(a0)+
+		move.l    d0,(a0)+
+		move.l    d0,(a0)+
+		move.l    d0,(a0)+
+        cmpa.l    d4,a0
+        bne.s     clrmem
+#else
         move.l    #sysvars_start,d4
         moveq.l   #0,d0
         moveq.l   #0,d1
@@ -392,6 +423,7 @@ clrmem:
         bne.s     clrmem
 
 		SETBASEREG
+#endif
 
         move.b    d6,ABSW(memctrl)
         move.l  d5,ABSW(_phystop)            /* highest address as phystop */
@@ -400,6 +432,10 @@ clrmem:
         move.l    #$237698AA,ABSW(_memval2)  /* set memval2 to ok */
         move.l    #$5555AAAA,ABSW(_memval3)  /* set memval3 to ok */
 
+#if TOSVERSION >= 0x106
+		clr.l     ABSW2(_ramtop)             /* no FASTRAM available */
+		move.l    #$1357BD13,ABSW(_ramvalid) /* ramtop is valid (ramvalid == RAMMAGIC) */
+#endif
 nomemchk:
 
 		SETBASEREG
@@ -424,6 +460,9 @@ scrsize equ ((640*400)/8+$300)
         move.l    a0,ABSW(_v_bas_ad)
         move.b    ABSW(_v_bas_ad+1),ABSW(v_bas_h)
         move.b    ABSW(_v_bas_ad+2),ABSW(v_bas_m)
+#if TOSVERSION >= 0x106
+        move.b    ABSW(_v_bas_ad+3),ABSW(v_bas_l)
+#endif
 clrscr:
         move.l    d0,(a0)+
         move.l    d0,(a0)+
@@ -471,10 +510,88 @@ gemok:
         move.l    #save_beg+save_siz,ABSW(_savptr)   /* register-save pointer for traps 13&14 */
         move.l    #bios_unimpl,ABSW(_swv_vec)        /* ignore monitor changes for now */
         clr.l     ABSW(_drvbits)                     /* remove all drives */
-        clr.w     ABSW(_longframe)
-		
-        bsr       instoshdr
+#if TOSVERSION >= 0x106
+        move.l    #_do_bell,ABSW(_bell_hook)
+        move.l    #_do_keyclick,ABSW(_kcl_hook)
+        clr.w     ABSW(sndmactl)
+        lea.l     microwtab(pc),a0
+        move.w    (a0)+,ABSW(mwmask)
+        bra.s     checkmicro
+microwtab:
+        dc.w      $0ffe  /* value for microwire mask register */
+        dc.w      $09d1                     /* 10-011-101000-1 = LCM - Master Volume - 0 db volume (max) - end-bit */
+        dc.w      $0aa9                     /* 10-101-010100-1 = LCM - Left channel volume - 0 db volume (max) - end-bit */
+        dc.w      $0a29                     /* 10-100-010100-1 = LCM - Right channel volume - 0 db volume (max) - end-bit */
+        dc.w      $090d                     /* 10-010-000110-1 = LCM - Trebble control - 0 db (linear) - end-bit */
+        dc.w      $088d                     /* 10-001-000110-1 = LCM - Bass control - 0 db (linear) - end-bit */
+        dc.w      $0803                     /* 10-000-000001-1 = LCM - Mixer - DMA + YM2149 - end-bit */
+        dc.w      0
+nextmicro:
+        move.w    d0,ABSW(mwdata)
+waitmicro:
+        tst.w     ABSW(mwdata)
+        bne.s     waitmicro
+checkmicro:
+        move.w    (a0)+,d0
+        bne.s     nextmicro
+nodmasound:
 
+/* =========================================================================== */
+/* initialize cookie jar */
+/* =========================================================================== */
+
+        bsr       instoshdr
+        lea.l     cookies,a0
+        move.l    a0,ABSW(_p_cookies)
+        move.l    #$5F435055,(a0)+ /* '_CPU' */
+/* detect CPU type */
+        moveq.l   #0,d1         /* assume 68000 */
+        movea.w   #_illinst,a2
+        movea.l   (a2),a3       /* save illegal instruction vector */
+        movea.l   a7,a1         /* save SP */
+        move.l    #cpuexit,(a2)
+        CCR_D0                  /* move.w ccr,d0 legal on 68010+ */
+        moveq.l   #10,d1        /* assume 68000 */
+        dc.w $49c0              /* extb.l    d0 */
+        moveq.l   #20,d1        /* assume 68020 */
+        CACR_D0
+        bset      #9,d0         /* set an unused bit */
+        D0_CACR
+        CACR_D0
+        bclr      #9,d0
+        beq.s     cpuexit
+        moveq.l   #30,d1        /* assume 68030 */
+        D0_CACR
+cpuexit:
+        movea.l   a1,a7         /* restore SP */
+        move.l    a3,(a2)       /* save illegal instruction vector */
+        move.l    d1,(a0)+      /* set _CPU cookie */
+        sne       (_longframe+1).l
+cooVDO:	move.l    #$5F56444F,(a0)+
+		move.l    #$10000,(a0)+             /* 1,0 = STE Shifter */
+		move.l    #$5F4D4348,(a0)+			/* '_MCH' */
+		move.l    #$10000,(a0)+             /* 1,x = STE (520, 1040, 2080, 4160, Mega STE, ST Book) */
+        move.l    #$5F534E44,(a0)+ /* '_SND' */
+        moveq.l   #1,d1
+		moveq.l   #0,d0
+		move.w    ABSW(STConfig),d0
+        lsr.w     #8,d0
+        btst      #7,d0
+        sne       d2
+        and.b     #$02,d2
+        or.b      d2,d1
+        move.l    d1,(a0)+
+        move.l    #$5F535749,(a0)+ /* '_SWI' */
+		move.l    d0,(a0)+
+/* terminate cookie jar */
+        clr.l     (a0)+
+        move.l    #NCOOKIES,(a0)+
+
+#else
+        clr.w     ABSW(_longframe)
+        bsr       instoshdr
+#endif
+		
 /* =========================================================================== */
 /* initialize exception vectors */
 /* =========================================================================== */
@@ -605,10 +722,40 @@ nomed:
         moveq.l   #1,d0
         bsr       _run_cartridge_applications
 
+#if TOSVERSION >= 0x106
+		move.l    #_int_priv,ABSW(_privvio)
+		bra.s     biosinit
+		xdef flushCaches
+flushCaches:
+		move.w    sr,-(a7)
+		ori.w     #$0700,sr
+		CACR_D0
+		or.l      #$00000808,d0     /* clear & disable instruction/data caches on */
+		D0_CACR              /*  68020-60 (even though bit usage differs!) */
+		move.w     (a7)+,sr
+		rts
+_int_priv:
+		movem.l   d0/a0,-(a7)
+		movea.l   10(a7),a0       /* get exception pc */
+		move.w    (a0),d0         /* the offending instruction */
+		and.w     #$FFC0,d0       /* isolate move from SR opcode */
+		cmp.w     #$40C0,d0       /* we don't care where "To" was */
+		bne.s     pi_back         /* Not a MOVE SR,XX instruction */
+		move.b    #$42,(a0)       /* turn into move ccr,xx */
+		movem.l   (a7)+,d0/a0
+		rte
+pi_back:
+		movem.l    (a7)+,d0/a0
+		jmp       any_vec+$08000000             /* illegal instruction => _term; $80000000 to get exception number in high byte */
+#endif
+
 /*
  * continue with rest of bios initialization
  */
-biosinit:
+biosinit: ds.b 0
+#if TOSVERSION >= 0x106
+		nop
+#endif
 		jsr       _osinit            /* initialize DOS */
 
 /* --- set the current system time and date */
@@ -720,6 +867,7 @@ ikbdres:
 /* 306de: 00e0098a */
 /* 206de: 00e00962 */
 /* 104de: 00fc0530 */
+/* 106de: 00e00640 */
 diskboot:
         moveq.l   #3,d0
         bsr       _run_cartridge_applications
@@ -736,10 +884,15 @@ nodiskboot:
 /* 306de: 00e009a2 */
 /* 206de: 00e0097a */
 /* 104de: 00fc054c */
+/* 106de: 00e0065c */
 dmaboot:
 /* --- boot from DMA device */
 dmadone:
 	    moveq	  #0,d7     /* d7 = device (ASCI0) */
+
+#if TOSVERSION >= 0x106
+		move.l    _hz_200.l,-(a7)
+#endif
 
 confdone:
 		suba.l    a4,a4
@@ -760,6 +913,9 @@ dmacrc:
 nextdev:
         add.b     #$20,d7
         bne.s     confdone
+#if TOSVERSION >= 0x106
+		addq.l     #4,a7
+#endif
         rts
 
 _dmaread:
@@ -782,17 +938,40 @@ dmaread1:
 		or.b      #$08,d0
 		swap      d0
 		move.w    #$008A,d0
+#if TOSVERSION >= 0x106
+		move.l     #2000,d1
+		sub.l      _hz_200.l,d1
+		moveq.l    #10,d2
+		cmp.l      d2,d1
+		bgt.s      dmaread5
+		move.l     d2,d1
+dmaread5:
+		move.l     d1,d2
+#endif
 		bsr.s     acsistat
 		bne.s     dmaread3
 		moveq.l   #3,d6
 		lea.l     acmdtab(pc),a0
 dmaread2:
 		move.l    (a0)+,d0
+#if TOSVERSION >= 0x106
+		move.l     d2,d1
+#endif
 		bsr.s     acsistat
 		bne.s     dmaread3
 		dbf       d6,dmaread2
 		move.l    #$0000000A,(a5)
+#if TOSVERSION >= 0x106
+		move.l     #8000,d1
+		sub.l      _hz_200.l,d1
+		move.l     #$00000190,d2
+		cmp.l      d2,d1
+		bgt.s      dmaread6
+		move.l     d2,d1
+dmaread6: ds.b 0
+#else
 		move.w    #$0190,d1
+#endif
 		bsr.s     acsista0
 		bne.s     dmaread3
 		move.w    #$008A,(a6)
@@ -811,14 +990,20 @@ acmdtab:
 		dc.l      $0000008a,$0000008A,$0000008a,$0001008A
 acsistat:
 		move.l    d0,(a5)
+#if TOSVERSION < 0x106
 		moveq.l   #10,d1
+#endif
 acsista0:
 		add.l     _hz_200(a4),d1
 acsista1:
 		btst      #5,MFP_GPIP(a4)
 		beq.s     acsista2
 		cmp.l     _hz_200(a4),d1
+#if TOSVERSION >= 0x106
+		bhi.s     acsista1
+#else
 		bne.s     acsista1
+#endif
 		moveq.l   #-1,d1
 acsista2:
 		rts
@@ -914,7 +1099,26 @@ memchk3:
 /* 306de: 00e00c24 */
 /* 206de: 00e00bd0 */
 /* 104de: 00fc068a */
+/* 106de: 00e007cc */
 dflt_pal:
+#if TOSVERSION >= 0x106
+		dc.w $0fff     /* 0 white */
+		dc.w $0f00     /* 1 red */
+		dc.w $00f0     /* 2 green */
+		dc.w $0ff0     /* 3 yellow */
+		dc.w $000f     /* 4 blue */
+		dc.w $0f0f     /* 5 magenta */
+		dc.w $00ff     /* 6 cyan */
+		dc.w $0555     /* 7 "low white" */
+		dc.w $0333     /* 8 grey */
+		dc.w $0f33     /* 9 light red */
+		dc.w $03f3     /* 10 light green */
+		dc.w $0ff3     /* 11 light yellow */
+		dc.w $033f     /* 12 light blue */
+		dc.w $0f3f     /* 13 light magenta */
+		dc.w $03ff     /* 14 light cyan */
+		dc.w $0000     /* 15 black */
+#else
 		dc.w $0777     /* 0 white */
 		dc.w $0700     /* 1 red */
 		dc.w $0070     /* 2 green */
@@ -931,6 +1135,7 @@ dflt_pal:
 		dc.w $0737     /* 13 light magenta */
 		dc.w $0377     /* 14 light cyan */
 		dc.w $0000     /* 15 black */
+#endif
 
 /*
  * Int 0x68 - HBL interrupt
@@ -975,7 +1180,29 @@ int_vbl:
         addq.l    #1,_vbclock         /* count number of VBL interrupts */
 		SETBASEREG
 
+#if TOSVERSION >= 0x106
+		move.w     sr,-(a7)
+		ori.w      #$0700,sr
+moncheck:
+		move.b     ABSW(sndmactl+1),d0
         move.b    ABSW(MFP_GPIP),d1
+        btst      #7,d1
+        sne       d1
+        move.b    ABSW(MFP_GPIP),d2
+        btst      #7,d2
+        sne       d2
+        cmp.b     d1,d2
+        bne.s     moncheck
+        cmp.b     ABSW(sndmactl+1),d0
+        bne.s     moncheck
+        move.w    (a7)+,sr
+        btst      #0,d0
+        beq.s     nomoncheck
+        not.b     d1
+nomoncheck:
+#else
+        move.b    ABSW(MFP_GPIP),d1
+#endif
         move.b    ABSW(v_shf_mod),d0
 		and.b     #3,d0
 		cmp.b     #STHIGH,d0
@@ -1022,6 +1249,9 @@ vbl_no_palette:
         tst.l     ABSW(_screenpt)
         beq.s     vbl_no_screenpt
         move.l    ABSW(_screenpt),ABSW(_v_bas_ad)
+#if TOSVERSION >= 0x106
+        move.b    ABSW(_v_bas_ad+3),ABSW(v_bas_l)
+#endif
         move.b    ABSW(_v_bas_ad+2),ABSW(v_bas_m)
         move.b    ABSW(_v_bas_ad+1),ABSW(v_bas_h)
 vbl_no_screenpt:
@@ -1152,12 +1382,16 @@ biosxbios:
         move.l    (a7)+,-(a1)            /* save return address */
 #if !P68000
 #if !P68010 | !BINEXACT
-        tst.w     ABSW(_longframe)
+        tst.w     ABSW2(_longframe)
         beq.s     traph2
 #endif
         tst.w     (a7)+                  /* skip format word */
 #endif
-traph2: movem.l   d3-d7/a3-a7,-(a1)      /* regs, including stack pointer */
+traph2: 
+#if TOSVERSION >= 0x106
+        nop
+#endif
+        movem.l   d3-d7/a3-a7,-(a1)      /* regs, including stack pointer */
         move.l    a1,_savptr
         btst      #13,d0                 /* were we in supervisor mode? */
         bne.s     bx_sp_ok               /* yes, the sp already points to the arguments */
@@ -1179,12 +1413,16 @@ bx_ret:
         movem.l   (a1)+,d3-d7/a3-a7      /* Get regs back, including sp */
 #if !P68000
 #if !P68010 | !BINEXACT
-        tst.w     ABSW(_longframe)
+        tst.w     ABSW2(_longframe)
         beq.s     trph3
 #endif
         clr.w     -(a7)                  /* push NULL format word */
 #endif
-trph3:  move.l    (a1)+,-(a7)            /* return adress */
+trph3:
+#if TOSVERSION >= 0x106
+        nop
+#endif
+        move.l    (a1)+,-(a7)            /* return adress */
         move.w    (a1)+,-(a7)            /* sr */
         move.l    a1,_savptr
         rte                              /* return with return value in D0 */
@@ -1448,6 +1686,7 @@ tconstat:
 /* 306de: 00e010a4 */
 /* 206de: 00e00fb0 */
 /* 104de: 00fc09f8 */
+/* 106de: 00e00b86 */
 _drvmap:
         move.l    ABSW(_drvbits),d0
         rts
@@ -1470,6 +1709,7 @@ _drvmap:
 /* 306de: 00e010aa */
 /* 206de: 00e00fb6 */
 /* 104de: 00fc09fe */
+/* 106de: 00e00b8c */
 _kbshift:
         moveq.l   #0,d0
         move.b    ABSW(_shifty),d0
@@ -1493,6 +1733,7 @@ kbshift1:
 /* 306de: 00e010bc */
 /* 206de: 00e00fc8 */
 /* 104de: 00fc0a10 */
+/* 106de: 00e00b9e */
 _getmpb:
         movea.l   4(a7),a0
         lea.l     ABSW(_themd),a1
@@ -1525,6 +1766,7 @@ _getmpb:
 /* 306de: 00e01124 */
 /* 206de: 00e00ff4 */
 /* 104de: 00fc0a3c */
+/* 106de: 00e00bca */
 _setexc:
         move.w    4(a7),d0          /* d0 = vector # */
         lsl.w     #2,d0             /* turn into longword index */
@@ -1543,6 +1785,7 @@ setexc1:
 /* 306de: 00e0113c */
 /* 206de: 00e0100c */
 /* 104de: 00fc0a54 */
+/* 106de: 00e00be2 */
 _tickcal:
         moveq.l   #0,d0
         move.w    ABSW(_timer_ms),d0
@@ -1556,12 +1799,16 @@ _tickcal:
 /* 306de: 00e01144 */
 /* 206de: 00e01014 */
 /* 104de: 00fc0a5c */
+/* 106de: 00e00bea */
 _physbase:
         moveq.l   #0,d0             /* cleanup pointer-to-be */
         move.b    ABSW(v_bas_h),d0    /* load and shift bits 16..23 */
         lsl.w     #8,d0
         move.b    ABSW(v_bas_m),d0    /* load and shift bits 8..15 */
         lsl.l     #8,d0
+#if TOSVERSION >= 0x106
+        move.b    ABSW(v_bas_l),d0    /* load bits 0..7 */
+#endif
         rts
 
 /*
@@ -1572,6 +1819,7 @@ _physbase:
 /* 306de: 00e01160 */
 /* 206de: 00e01030 */
 /* 104de: 00fc0a6c */
+/* 106de: 00e00bfe */
 _logbase:
         move.l    ABSW(_v_bas_ad),d0
         rts
@@ -1584,6 +1832,7 @@ _logbase:
 /* 306de: 00e01166 */
 /* 206de: 00e01036 */
 /* 104de: 00fc0a72 */
+/* 106de: 00e00c0a */
 _getrez:
         moveq.l   #0,d0
 		move.b    ABSW(v_shf_mod),d0          /* get screen rezolution */
@@ -1602,6 +1851,7 @@ _getrez:
 /* 306de: 00e01172 */
 /* 206de: 00e01042 */
 /* 104de: 00fc0a7e */
+/* 106de: 00e00c10 */
 _vsetscreen:
 /* --- set logical location: */
         tst.l     4(a7)                      /* if(logloc < 0) then ignore it */
@@ -1613,6 +1863,9 @@ nosetl:
         bmi.s     nosetp
         move.b    9(a7),ABSW(v_bas_h)
         move.b    10(a7),ABSW(v_bas_m)
+#if TOSVERSION >= 0x106
+        move.b    11(a7),ABSW(v_bas_l)
+#endif
 nosetp:
 /* --- set screen resolution (clears the screen, clobbers the cursor): */
         tst.w     12(a7)                     /* if(rez < 0) then ignore it */
@@ -1636,6 +1889,7 @@ nosetr:
 /* 306de: 00e011c8 */
 /* 206de: 00e0108e */
 /* 104de: 00fc0ac4 */
+/* 106de: 00e00c5c */
 _setpalette:
         move.l    4(a7),ABSW(_colorptr)     /* next VBL will do this */
         rts
@@ -1652,13 +1906,18 @@ _setpalette:
 /* 306de: 00e011d0 */
 /* 206de: 00e01096 */
 /* 104de: 00fc0acc */
+/* 106de: 00e00c64 */
 _setcolor:
         move.w    4(a7),d1                   /* get color number */
         add.w     d1,d1                      /* turn into word index */
         and.w     #$001F,d1                  /* force color range (prevent buserr) */
         lea.l     ABSW(palette),a0             /* a0 -> base of palette memory */
         move.w    0(a0,d1.w),d0              /* return old color */
+#if TOSVERSION >= 0x106
+        and.w     #$0FFF,d0                  /* mask dirty bits */
+#else
         and.w     #$0777,d0                  /* mask dirty bits */
+#endif
         tst.w     6(a7)                      /* if new color is <0, don't set it */
         bmi.s     setcol3                    /* (punt) */
         move.w    6(a7),0(a0,d1.w)           /* set new color */
@@ -1696,7 +1955,7 @@ puntaes1:
 /* 206de: 00e010e2 */
 /* 104de: 00fc0b0a */
 any_vec:
-#if P68000
+#if P68000 | (TOSVERSION < 0x200)
 		bsr.s     savp_2                     /* stack PC */
 		nop
 savp_2:
@@ -1766,6 +2025,9 @@ drawbombs:
         lsl.w     #8,d0
         move.b    ABSW(v_bas_m),d0
         lsl.l     #8,d0
+#if TOSVERSION >= 0x106
+        move.b    ABSW(v_bas_l),d0
+#endif
 drawbo1:
         movea.l   d0,a0                      /* a0 -> base of mem to draw at */
         adda.w    bofftab(pc,d7.w),a0
@@ -2056,6 +2318,7 @@ run_res3:
 /* 306de: 00e0156e */
 /* 206de: 00e01446 */
 /* 104de: 00fc0e3e */
+/* 106de: 00e00fda */
 _gettime:
         lea.l     readRTCTime,a3
         lea.l     igetdt,a4
@@ -2070,6 +2333,7 @@ _gettime:
 /* 306de: 00e0157c */
 /* 206de: 00e01454 */
 /* 104de: 00fc0e4c */
+/* 106de: 00e00fe8 */
 _settime:
         lea.l     writeRTCTime,a3
         lea.l     isetdt,a4
@@ -2140,6 +2404,7 @@ blitmod1:
 /* 306de: 00e01604 */
 /* 206de: 00e014dc */
 /* 104de: 00fc0ec6 */
+/* 106de: 00e01062 */
 blittest:
         move.w    sr,d1
         move.w    #0,d0                         /* d0 = 0 -> blitter not installed */
@@ -2172,6 +2437,11 @@ noblitter:
 
 		xdef oshdr
 		comm oshdr,70 /* 6+48+16 */
+
+#if TOSVERSION >= 0x106
+		xdef cookies
+		comm cookies,NCOOKIES*2*4
+#endif
 
 		xdef _pbdef
 		comm _pbdef,30

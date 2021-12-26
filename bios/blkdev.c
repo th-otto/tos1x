@@ -42,6 +42,7 @@ extern char dskbuf[];
  */
 /* 306de: 00e055da */
 /* 104de: 00fc16ba */
+/* 106de: 00e01892 */
 /* 404: 00e04792 */
 VOID bhdv_init(NOTHING)
 {
@@ -84,6 +85,7 @@ VOID bhdv_init(NOTHING)
  */
 /* 306de: 00e05652 */
 /* 104de: 00fc1732 */
+/* 106de: 00e0190a */
 ERROR dbmsg(P(int16_t) rsrvd, P(int16_t) msg_num, P(int32_t) msg_arg)
 PP(int16_t rsrvd;)
 PP(int16_t msg_num;)
@@ -102,6 +104,7 @@ PP(int32_t msg_arg;)
 /* 206de: 00e0526a */
 /* 306de: 00e0565c */
 /* 104de: 00fc173c */
+/* 106de: 00e01914 */
 /* 404: 00e0480c */
 BPB *bhdv_getbpb(P(int16_t) dev)
 PP(int16_t dev;)
@@ -195,6 +198,7 @@ PP(int16_t dev;)
  */
 /* 306de: 00e058ae */
 /* 104de: 00fc18ec */
+/* 106de: 00e01ac4 */
 /* 404: 00e04a6c */
 int16_t bhdv_mediach(P(int16_t) dev)
 PP(int16_t dev;)
@@ -310,6 +314,7 @@ PP(LRECNO lrecnr;) /* not supported by TOS */
 /* 206de: 00e0572c */
 /* 306de: 00e05b1e */
 /* 104de: 00fc1aac */
+/* 106de: 00e01c84 */
 static ERROR dorwabs(P(int16_t) rw, P(char *) buf, P(RECNO) recnr, P(int16_t) dev, P(int16_t) cnt)
 PP(int16_t rw;)
 PP(char *buf;)
@@ -398,6 +403,7 @@ PP(int16_t cnt;)
 /* 206de: 00e05946 */
 /* 306de: 00e05d38 */
 /* 104de: 00fc1c76 */
+/* 106de: 00e01e4e */
 long random(NOTHING)
 {
 	if (rseed == 0)
@@ -415,6 +421,7 @@ long random(NOTHING)
 /* 206de: 00e05996 */
 /* 306de: 00e05d88 */
 /* 104de: 00fc1cc6 */
+/* 106de: 00e01e9e */
 /* 404: 00e04f54 */
 int16_t bhdv_boot(NOTHING)
 {
@@ -464,6 +471,7 @@ static char const proto_data[NUM_PROTOBT_ENTRIES * 19] = {
  */
 /* 306de: 00e05e04 */
 /* 104de: 00fc1d42 */
+/* 106de: 00e01f1a */
 VOID protobt(P(VOIDPTR) buf, P(int32_t) serialno, P(int16_t) disktype, P(int16_t) execflag)
 PP(VOIDPTR buf;)
 PP(int32_t serialno;)

@@ -49,6 +49,10 @@ name: ds.t size
 
 	V(oshdr,b,6+64)
 
+#if TOSVERSION >= 0x106
+	V(cookies,l,NCOOKIES*2)
+#endif
+
 	xdef __sbss
 __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIOS */
 
@@ -602,6 +606,10 @@ _endvdibss: ds.b 0
 	INT(_button)
 
 /* end AES+DESKTOP */
+
+#if TOSVERSION >= 0x106
+	ds.l 1
+#endif
 
 /* This label is referenced by the GEM_MUPB structure */
 	xdef _endgembss

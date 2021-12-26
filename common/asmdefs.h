@@ -78,7 +78,7 @@
 /*
  * set to 1 if we run on plain 68k only
  */
-#define P68000  (TOSVERSION < 0x200)
+#define P68000  (TOSVERSION <= 0x104)
 
 /*
  * set to 1 if we are on a 68010+ with 8-byte trap exception frames.

@@ -24,6 +24,7 @@
 		xdef _osinit
 		xdef bdoslmul
 
+#if TOSVERSION == 0x104
 line1010    equ VDITBASE+$08AA
 _SETBLT     equ VDITBASE+$1318
 _GETBLT     equ VDITBASE+$1340
@@ -36,6 +37,23 @@ _bcon2out   equ VDITBASE+$0078
 
 _osinit   equ BDOSTBASE+$5240
 bdoslmul  equ BDOSTBASE+$510A
+#endif
+
+#if TOSVERSION == 0x106
+line1010    equ VDITBASE+$08AA
+_SETBLT     equ VDITBASE+$1318
+_GETBLT     equ VDITBASE+$1340
+esc_init    equ VDITBASE+$1236
+resetdev    equ VDITBASE+$12C0
+blink       equ VDITBASE+$0402
+_cursconf   equ VDITBASE+$0434
+_bcon5out   equ VDITBASE+$006C
+_bcon2out   equ VDITBASE+$0078
+
+_osinit   equ BDOSTBASE+$5286
+bdoslmul  equ BDOSTBASE+$5150
+#endif
+
 
 /* from AES */
 		xdef gemstart

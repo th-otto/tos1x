@@ -104,6 +104,7 @@ bco3sret:
  **************************************************************************/
 /* 306de: 00e02276 */
 /* 206de: 00e01f9c */
+/* 106de: 00e03452 */
 	xdef _bcon3out
 _bcon3out:
         move.w    6(a7),d1
@@ -130,6 +131,7 @@ bcon3o2:
  **************************************************************************/
 /* 306de: 00e0228c */
 /* 206de: 00e01fb2 */
+/* 106de: 00e046a */
 		xdef _midiws
 _midiws:
         moveq.l   #0,d3
@@ -154,6 +156,7 @@ midiws1:
  **************************************************************************/
 /* 306de: 00e022a0 */
 /* 206de: 00e01fc6 */
+/* 106de: 00e0347e */
 	xdef _bcon3stat
 _bcon3stat:
         lea.l     ABSW(midiiorec),a0            /* point to midi i/o bufrec */
@@ -186,6 +189,7 @@ bcon3s1:
  **************************************************************************/
 /* 306de: 00e022ba */
 /* 206de: 00e01fe0 */
+/* 106de: 00e03498 */
 /* assume that a0/a1 are inited by the midstat call for the rest of */
 /* this routine. */
 	xdef _bcon3in
@@ -228,6 +232,7 @@ bcon3i2:
 /* 306de: 00e022ee */
 /* 206de: 00e02016 */
 /* 104de: 00fc32f6 */
+/* 106de: 00e034ce */
 	xdef _bcon0out
 _bcon0out:
 #if BINEXACT
@@ -290,6 +295,7 @@ strobeon:
 /* 306de: 00e02372 */
 /* 206de: 00e0209a */
 /* 104de: 00fc3372 */
+/* 106de: 00e0354a */
 	xdef _bcon0in
 _bcon0in:
         moveq.l   #7,d1                         /* get current io enable register contents */
@@ -314,6 +320,7 @@ bcon0in1:
 /* 306de: 00e02394 */
 /* 206de: 00e020bc */
 /* 104de: 00fc3392 */
+/* 106de: 00e0356a */
 	xdef _bco0stat
 _bco0stat:
 #if !BINEXACT
@@ -337,6 +344,7 @@ bco0st1:
 /* 306de: 00e023a4 */
 /* 206de: 00e020cc */
 /* 104de: 00fc33a6 */
+/* 106de: 00e0357e */
 	xdef _bcon6stat
 _bcon6stat:
         lea.l     ABSW2(rs232iorec),a0            /* point to rs-232 buffer record */
@@ -358,6 +366,7 @@ bcon6st2:
 /* 306de: 00e023ba */
 /* 206de: 00e020e2 */
 /* 104de: 00fc33be */
+/* 106de: 00e03596 */
 	xdef _bcon6in
 _bcon6in:
         lea.l     ABSW2(rs232iorec),a0          /* point to rs-232 buffer record */
@@ -395,6 +404,7 @@ bcon6in3:
 /* 306de: 00e02406 */
 /* 206de: 00e0212e */
 /* 104de: 00fc3408 */
+/* 106de: 00e035e0 */
 	xdef _bco6stat
 _bco6stat:
         lea.l     ABSW2(rs232iorec+IOREC_SIZE),a0  /* point to rs-232 output buffer record */
@@ -417,6 +427,7 @@ _bco6sret:
 /* 306de: 00e0241e */
 /* 206de: 00e02146 */
 /* 104de: 00fc3422 */
+/* 106de: 00e03608 */
 	xdef _bcon6out
 _bcon6out:
         move.w    6(a7),d0
@@ -449,6 +460,7 @@ bcon6o2:
 /* 306de: 00e02446 */
 /* 206de: 00e0216e */
 /* 104de: 00fc344a */
+/* 106de: 00e03622 */
 	xdef _bco4stat
 _bco4stat:
         moveq.l   #-1,d0
@@ -472,6 +484,7 @@ bco4st1:
 /* 306de: 00e02456 */
 /* 206de: 00e0217e */
 /* 104de: 00fc345c */
+/* 106de: 00e03634 */
 	xdef _bcon4out
 _bcon4out:
         move.w    6(a7),d1
@@ -502,6 +515,7 @@ ikbd_wr3:
 /* 306de: 00e02474 */
 /* 206de: 00e021a6 */
 /* 104de: 00fc3480 */
+/* 106de: 00e03658 */
 		xdef _ikbdws
 _ikbdws:
         moveq.l   #0,d3
@@ -519,6 +533,7 @@ ikbdws1:
  */
 /* 306de: 00e02488 */
 /* 206de: 00e021b8 */
+/* 106de: 00e0366c */
 /* 404: 00e0258e */
 	xdef _bcon2stat
 _bcon2stat:
@@ -538,6 +553,7 @@ bcon2st1:
 /* 306de: 00e0249e */
 /* 206de: 00e021ce */
 /* 104de: 00fc34aa */
+/* 106de: 00e03682 */
 /* 404: 00e025a4 */
 	xdef _bcon2in
 _bcon2in:
@@ -568,6 +584,7 @@ bcon2in2:
  */
 /* 306de: 00e024d2 */
 /* 206de: 00e02202 */
+/* 106de: 00e036b8 */
 	xdef _bco2stat
 _bco2stat:
         moveq.l   #-1,d0
@@ -736,6 +753,7 @@ dummyrts:
 
 /* 306de: 00e026b2 */
 /* 206de: 00e0237c */
+/* 106de: 00e03816 */
 copymem:
         move.b    (a1)+,(a0)+
         dbf       d0,copymem
@@ -1218,6 +1236,7 @@ ioreco3:
  *************************************************************************/
 /* 306de: 00e029be */
 /* 206de: 00e02688 */
+/* 106de: 00e03b34 */
 iorecput:
         move.w    tail(a0),d1
         bsr.s     wrapin
@@ -1235,6 +1254,7 @@ iorecp1:
  *************************************************************************/
 /* 306de: 00e029dc */
 /* 206de: 00e026a6 */
+/* 106de: 00e03b54 */
 iorecget:
         move.w    head(a0),d1
         cmp.w     tail(a0),d1                   /* head-index = tail-index? */
@@ -1360,17 +1380,26 @@ rs6conf2:
         nop
         nop
 #else
+#if TOSVERSION >= 0x106
+        cmp.w     #3,d0
+        bhi.s     rs6conf6
+        bne.s     rs6conf3
+        moveq.l   #1,d0                         /* set flag for handshake */
+rs6conf3:
+        move.b    d0,ctr(a0)                    /* set new handshake state */
+#else
         cmp.w     #-1,d0
         beq.s     rs6conf6
         move.b    d0,ctr(a0)
         beq.s     rs6conf5
 		and.b     #$FD,d0
         beq.s     rs6conf5
-#endif
 rs6conf4:
 		move.b    #1,d0
 rs6conf5:
         move.b    d0,ctr(a0)                    /* set new handshake state */
+#endif
+#endif
 rs6conf6:
 /*  set timer baud rate */
         tst.w     4(a7)                         /* if -1 then don't change */
@@ -1591,6 +1620,7 @@ kbd_joy:
 /* 306de: 00e033ea */
 /* 206de: 00e03044 */
 /* 104de: 00fc3c70 */
+/* 106de: 00e03e24 */
 _kbdvec:
         move.b    ABSW(_shifty),d1              /* get current shift state */
         cmpi.b    #$2A,d0                       /* left shift pressed? */
@@ -1637,8 +1667,15 @@ kbdvec8:
         bne.s     kbdvec11
         btst      #0,ABSW(_conterm)             /* should click sound be produced? */
         beq.s     kbdvec9
+#if TOSVERSION >= 0x200 /* BUG: no check here in 1.06 */
+        movem.l   d0-d2/a0-a2,-(a7)
+        movea.l   ABSW(_kcl_hook),a0
+        jsr       (a0)
+        movem.l   (a7)+,d0-d2/a0-a2
+#else
         move.l    #_clicksnd,ABSW(_sndtable)
-        move.b    #$00,ABSW(_snddelay)
+        move.b    #0,ABSW(_snddelay)
+#endif
 kbdvec9:
         bchg      #4,d1                         /* toggle CAPS LOCK state */
 kbdvec10:
@@ -1671,8 +1708,15 @@ kbdvec14:
 kbdvec15:
         btst      #0,ABSW(_conterm)             /* should click sound be produced? */
         beq.s     kbdvec16
+#if TOSVERSION >= 0x106
+        movem.l   d0-d2/a0-a2,-(a7)
+        movea.l   ABSW(_kcl_hook),a1
+        jsr       (a1)
+        movem.l   (a7)+,d0-d2/a0-a2
+#else
         move.l    #_clicksnd,ABSW(_sndtable)
-        move.b    #$00,ABSW(_snddelay)
+        move.b    #0,ABSW(_snddelay)
+#endif
 kbdvec16:
         move.l    a0,-(a7)                      /* store ikbdiorec pointer */
         moveq.l   #0,d1
@@ -2219,6 +2263,20 @@ kbdvec46:
         move.w    d1,tail(a0)
 kbdvec47:
         rts
+
+#if TOSVERSION >= 0x106
+/*
+ * default function for system variable kcl_hook
+ */
+/* 306de: 00e0378a */
+/* 206de: 00e033e4 */
+/* 106de: 00e04172 */
+	xdef _do_keyclick
+_do_keyclick:
+        move.l    #_clicksnd,ABSW(_sndtable)
+        move.b    #0,ABSW(_snddelay)
+        rts
+#endif
 
 /* 306de: 00e0379a */
 midiread:
@@ -3002,6 +3060,7 @@ ringbell:
  */
 /* 306de: 00e03b98 */
 /* 206de: 00e037b6 */
+/* 106de: 00e0455e */
 	xdef _do_bell
 _do_bell:
         move.l    #_bellsnd,ABSW(_sndtable)     /* sound data for console bell */

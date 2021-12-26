@@ -658,84 +658,84 @@ biostrap:
 [00e009a4] 4e73                      rte
 bios_vecs:
 [00e009a6] 000c                      dc.w 12
-           00e00b9e                      bclr       d5,(a6)+
+           00e00b9e
 [00e009ac] 00e00ae4 
            00e00aea
-           00e00af6            cas.b      d0,d3,2806(a2) ; 68020+ only
+           00e00af6
 [00e009b8] 80000476
            00e00bca
-           00e00be2                      bset       d5,-(a2)
+           00e00be2
 [00e009c4] 80000472
-           00e00af0            subi.w     #$00E0,-16(a2,d0.l*2) ; 68020+ only
+           00e00af0
 [00e009cc] 8000047e
-           00e00b86                      bclr       d5,d6
+           00e00b86
 [00e009d4] 00e00b8c
 xbios_vecs:
 [00e009d8] 0041                      dc.w 0x41
-[00e009da] 00e042c6                      move.w     ccr,d6
-[00e009de] 00e00794                      bclr       d3,(a4)
+[00e009da] 00e042c6
+[00e009de] 00e00794
 [00e009e2] 00e00bea
-           00e00bfe                      bset       d5,???
+           00e00bfe
 [00e009ea] 00e00c04
            00e00c10
            00e00c5c
            00e00c64
-           00e010d4                      move.b     (a4),(a0)+
+           00e010d4
 [00e009fe] 00e011b2
-           00e0127a            move.b     -32(a2,d0.w),122(a0,d1.w*2) ; 68020+ only
-[00e00a06] 00e0190a                      move.l     b2,-(a4) ; apollo only
+           00e0127a
+[00e00a06] 00e0190a
 [00e00a0a] 00e0346a
-           00e03914                      move.w     (a4),-(a4)
+           00e03914
 [00e00a12] 00e03bbe
-           00e03bd6                      move.w     (a6),???
-[00e00a1a] 00e043ca                      lea.l      (b2),a1 ; apollo only
-[00e00a1e] 00e01e4e                      movea.l    b6,b7 ; apollo only
-[00e00a22] 00e01f1a                      move.b     (a2)+,-(a7)
-[00e00a26] 00e01444                      movea.l    d4,b2 ; apollo only
+           00e03bd6
+[00e00a1a] 00e043ca
+[00e00a1e] 00e01e4e
+[00e00a22] 00e01f1a
+[00e00a26] 00e01444
 [00e00a2a] 00e00e96
-           00e0a94c                      mov3q.l    #4,a4
+           00e0a94c
 [00e00a32] 00e00fe8
-           00e00fda                      bset       d7,(a2)+
+           00e00fda
 [00e00a3a] 00e043f6
-           00e03658                      movea.w    (a0)+,a3
-[00e00a42] 00e0393e                      move.w     ???,-(a4)
+           00e03658
+[00e00a42] 00e0393e
 [00e00a46] 00e03978
-           00e04242            move.w     ($000000E0).w,16962(a4)
-[00e00a4e] 00e042a0                      clr.l      -(a0)
+           00e04242
+[00e00a4e] 00e042a0
 [00e00a52] 00e0427a
-           00e04390                      chk.w      (a0),d1
-[00e00a5a] 00e04410                      neg.b      (a0)
-[00e00a5e] 00e04424                      neg.b      -(a4)
-[00e00a62] 00e04458                      neg.w      (a0)+
+           00e04390
+[00e00a5a] 00e04410
+[00e00a5e] 00e04424
+[00e00a62] 00e04458
 [00e00a66] 00e04436
            00e02334
-           00e00918                      btst       d4,(a0)+
+           00e00918
 [00e00a72] 00e00ade
            00e00c88
-           00e00794            cmpi.l     #$00E00794,a0 ; apollo only
+           00e00794
 [00e00a7e] 00e0186a
-[00e00a82] 00e00794                      bclr       d3,(a4)
-[00e00a86] 00e00794                      bclr       d3,(a4)
-[00e00a8a] 00e00794                      bclr       d3,(a4)
-[00e00a8e] 00e00794                      bclr       d3,(a4)
-[00e00a92] 00e00794                      bclr       d3,(a4)
-[00e00a96] 00e00794                      bclr       d3,(a4)
-[00e00a9a] 00e00794                      bclr       d3,(a4)
-[00e00a9e] 00e00794                      bclr       d3,(a4)
-[00e00aa2] 00e00794                      bclr       d3,(a4)
-[00e00aa6] 00e00794                      bclr       d3,(a4)
-[00e00aaa] 00e00794                      bclr       d3,(a4)
-[00e00aae] 00e00794                      bclr       d3,(a4)
-[00e00ab2] 00e00794                      bclr       d3,(a4)
-[00e00ab6] 00e00794                      bclr       d3,(a4)
-[00e00aba] 00e00794                      bclr       d3,(a4)
-[00e00abe] 00e00794                      bclr       d3,(a4)
-[00e00ac2] 00e00794                      bclr       d3,(a4)
-[00e00ac6] 00e00794                      bclr       d3,(a4)
-[00e00aca] 00e00794                      bclr       d3,(a4)
-[00e00ace] 00e00794                      bclr       d3,(a4)
-[00e00ad2] 00e00794                      bclr       d3,(a4)
-[00e00ad6] 00e00794                      bclr       d3,(a4)
+[00e00a82] 00e00794
+[00e00a86] 00e00794
+[00e00a8a] 00e00794
+[00e00a8e] 00e00794
+[00e00a92] 00e00794
+[00e00a96] 00e00794
+[00e00a9a] 00e00794
+[00e00a9e] 00e00794
+[00e00aa2] 00e00794
+[00e00aa6] 00e00794
+[00e00aaa] 00e00794
+[00e00aae] 00e00794
+[00e00ab2] 00e00794
+[00e00ab6] 00e00794
+[00e00aba] 00e00794
+[00e00abe] 00e00794
+[00e00ac2] 00e00794
+[00e00ac6] 00e00794
+[00e00aca] 00e00794
+[00e00ace] 00e00794
+[00e00ad2] 00e00794
+[00e00ad6] 00e00794
 [00e00ada] 00e0103a
 
 [00e00ade] 206f 0004                 movea.l    4(a7),a0
@@ -11492,6 +11492,7 @@ prtstr:
 [00e097ec] 12d8                      move.b     (a0)+,(a1)+
 [00e097ee] 51c8 fffc                 dbf        d0,$00E097EC
 [00e097f2] 4e75                      rts
+_osinit:
 [00e097f4] 4e56 fffc                 link       a6,#$FFFC
 [00e097f8] 23fc 0000 6114 0000 6100  move.l     #$00006114,$00006100
 [00e09802] 23fc 0000 613c 0000 6128  move.l     #$0000613C,$00006128
@@ -61427,6 +61428,6 @@ _tosrsc: (glue header)
 *
 ********************************************************************************
 ********************************************************************************
-[00e31bd8] ffff ffff ffff ffff       vperm      #$FFFFFFFF,e23,e23,e23
+[00e31bd8] ffff ffff ffff ffff
 ...
 [00e3fff8] ffff ffff ffff ffff

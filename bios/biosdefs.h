@@ -20,6 +20,8 @@
 /* media def has changed */
 #define MEDIACHANGE      2
 
+#define NCOOKIES 8
+
 #define MSTECLK (TOSVERSION >= 0x104)
 
 /*
