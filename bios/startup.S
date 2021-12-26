@@ -629,15 +629,17 @@ biosinit:
         move.w    d0,_time
 clockdone:
 
+/* boot eventually from a block device (floppy or harddisk) */
+        bsr       diskboot
+
+/* memory test and attempt to boot from SCSI/ACSI */
+        bsr       dmaboot
+
 #if TP_64 /* IDE_BOOT */
 /* boot eventually from first IDE device */
 		jsr       ideboot
 #endif
 
-/* boot eventually from a block device (floppy or harddisk) */
-        bsr       diskboot
-/* memory test and attempt to boot from SCSI/ACSI */
-        bsr       dmaboot
 /* run resident programs */
         bsr       run_reset_resident
         tst.w     _cmdload                     /* load shell from disk? */
