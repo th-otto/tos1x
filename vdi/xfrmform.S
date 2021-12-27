@@ -94,6 +94,7 @@ C_MFDB_D	equ	18	; pointer to destination MFDB
 /* 306de: 00e0d25a */
 /* 206de: 00e0da2e */
 /* 104de: 00fd1c8e */
+/* 106de: 00e11eb2 */
 	xdef _vr_trnfm
 _vr_trnfm:
 

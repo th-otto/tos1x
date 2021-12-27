@@ -123,20 +123,8 @@ BOOLEAN clip_line PROTO((NOTHING));
 VOID plygn PROTO((NOTHING));
 VOID gdp_rbox PROTO((NOTHING));
 VOID gdp_arc PROTO((NOTHING));
-VOID clc_nsteps PROTO((NOTHING));
 VOID gdp_ell PROTO((NOTHING));
-VOID clc_arc PROTO((NOTHING));
-VOID Calc_pts PROTO((int16_t j));
 VOID st_fl_ptr PROTO((NOTHING));
-VOID cir_dda PROTO((NOTHING));
-VOID wline PROTO((NOTHING));
-VOID perp_off PROTO((int16_t *px,int16_t *py));
-VOID quad_xform PROTO((int quad, int x, int y, int16_t *tx, int16_t *ty));
-VOID do_circ PROTO((int16_t cx, int16_t cy));
-VOID s_fa_attr PROTO((NOTHING));
-VOID r_fa_attr PROTO((NOTHING));
-VOID do_arrow PROTO((NOTHING));
-VOID arrow PROTO((int16_t *xy,int16_t inc));
 VOID init_wk PROTO((NOTHING));
 VOID d_opnvwk PROTO((NOTHING));          /* VDI #100  */
 VOID d_clsvwk PROTO((NOTHING));          /* VDI #101  */

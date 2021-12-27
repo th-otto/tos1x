@@ -58,7 +58,19 @@
 
 const int16_t *const markhead[] = { m_dot, m_plus, m_star, m_square, m_cross, m_dmnd };
 
-int16_t code PROTO((int16_t x,int16_t y));
+static int16_t code PROTO((int16_t x,int16_t y));
+static VOID cir_dda PROTO((NOTHING));
+static VOID Calc_pts PROTO((int16_t j));
+static VOID wline PROTO((NOTHING));
+static VOID clc_arc PROTO((NOTHING));
+static VOID clc_nsteps PROTO((NOTHING));
+static VOID perp_off PROTO((int16_t *px,int16_t *py));
+static VOID quad_xform PROTO((int quad, int x, int y, int16_t *tx, int16_t *ty));
+static VOID do_circ PROTO((int16_t cx, int16_t cy));
+static VOID s_fa_attr PROTO((NOTHING));
+static VOID r_fa_attr PROTO((NOTHING));
+static VOID do_arrow PROTO((NOTHING));
+static VOID arrow PROTO((int16_t *xy, int16_t inc));
 
 
 
@@ -68,6 +80,7 @@ int16_t code PROTO((int16_t x,int16_t y));
 /* 306de: 00e08b94 */
 /* 206de: 00e082b2 */
 /* 104de: 00fcc50a */
+/* 106de: 00e0c736 */
 VOID vq_extnd(NOTHING)
 {
 	register int16_t i;
@@ -121,6 +134,7 @@ VOID vq_extnd(NOTHING)
 /* 306de: 00e08c5c */
 /* 206de: 00e0837a */
 /* 104de: 00fcc5d2 */
+/* 106de: 00e0c7fe */
 VOID v_clswk(NOTHING)
 {
 	ATTRIBUTE *next_work;
@@ -544,7 +558,7 @@ BOOLEAN clip_line(NOTHING)
 /* 306de: 00e0932a */
 /* 206de: 00e08a72 */
 /* 104de: 00fcccca */
-int16_t code(P(int16_t ) x, P(int16_t ) y)
+static int16_t code(P(int16_t ) x, P(int16_t ) y)
 PP(int16_t x;)
 PP(int16_t y;)
 {
@@ -783,7 +797,7 @@ VOID gdp_arc(NOTHING)
 }
 
 
-VOID clc_nsteps(NOTHING)
+static VOID clc_nsteps(NOTHING)
 {
 	if (LV(xrad) > LV(yrad))
 		LV(n_steps) = LV(xrad);
@@ -837,7 +851,7 @@ VOID gdp_ell(NOTHING)
 }
 
 
-VOID clc_arc(NOTHING)
+static VOID clc_arc(NOTHING)
 {
 	int16_t i, j;
 	register int16_t *cntl_ptr, *xy_ptr;
@@ -887,7 +901,7 @@ VOID clc_arc(NOTHING)
 }
 
 
-VOID Calc_pts(P(int16_t) j)
+static VOID Calc_pts(P(int16_t) j)
 PP(int16_t j;)
 {
 	int16_t k;
@@ -958,7 +972,7 @@ VOID st_fl_ptr(NOTHING)
 
 
 /* Moved the circle DDA code that was in vsl_width() here. */
-VOID cir_dda(NOTHING)
+static VOID cir_dda(NOTHING)
 {
 	int unused1;
 	int unused2;
@@ -1026,7 +1040,7 @@ VOID cir_dda(NOTHING)
 /* 306de: 00e09e1e */
 /* 206de: 00e0956c */
 /* 104de: 00fcd7c4 */
-VOID wline(NOTHING)
+static VOID wline(NOTHING)
 {
 	int16_t i, k, box[10];							/* box two high to close polygon */
 	int16_t numpts, wx1, wy1, wx2, wy2, vx, vy;
@@ -1163,7 +1177,7 @@ VOID wline(NOTHING)
 /* 306de: 00e0a010 */
 /* 206de: 00e09756 */
 /* 104de: 00fcd9ae */
-VOID perp_off(P(int16_t *) px, P(int16_t *) py)
+static VOID perp_off(P(int16_t *) px, P(int16_t *) py)
 PP(int16_t *px;)
 PP(int16_t *py;)
 {
@@ -1243,7 +1257,7 @@ PP(int16_t *py;)
 /* 306de: 00e0a154 */
 /* 206de: 00e09896 */
 /* 104de: 00fcdaee */
-VOID quad_xform(P(int) quad, P(int) x, P(int) y, P(int16_t *) tx, P(int16_t *) ty)
+static VOID quad_xform(P(int) quad, P(int) x, P(int) y, P(int16_t *) tx, P(int16_t *) ty)
 PP(int quad;)
 PP(int x;)
 PP(int y;)
@@ -1277,7 +1291,7 @@ PP(int16_t *ty;)
 	case 4:
 		*ty = -y;
 		break;
-#if BINEXACT & (OS_COUNTRY != CTRY_NL)
+#if (TOSVERSION < 0x106) & BINEXACT & (OS_COUNTRY != CTRY_NL)
 		asm("ds.b 0"); /* hmpf, optimizer seems to have missed to remove superfluous bra */
 #endif
 	}
@@ -1287,7 +1301,7 @@ PP(int16_t *ty;)
 /* 306de: 00e0a1cc */
 /* 206de: 00e0990c */
 /* 104de: 00fcdb66 */
-VOID do_circ(P(int16_t) cx, P(int16_t) cy)
+static VOID do_circ(P(int16_t) cx, P(int16_t) cy)
 PP(int16_t cx;)
 PP(int16_t cy;)
 {
@@ -1334,7 +1348,7 @@ PP(int16_t cy;)
 /* 306de: 00e0a2ca */
 /* 206de: 00e09a14 */
 /* 104de: 00fcdc6e */
-VOID s_fa_attr(NOTHING)
+static VOID s_fa_attr(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;
 
@@ -1360,7 +1374,7 @@ VOID s_fa_attr(NOTHING)
 /* 306de: 00e0a336 */
 /* 206de: 00e09a80 */
 /* 104de: 00fcdcda */
-VOID r_fa_attr(NOTHING)
+static VOID r_fa_attr(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;
 
@@ -1378,7 +1392,7 @@ VOID r_fa_attr(NOTHING)
 /* 306de: 00e0a36e */
 /* 206de: 00e09ab8 */
 /* 104de: 00fcdd12 */
-VOID do_arrow(NOTHING)
+static VOID do_arrow(NOTHING)
 {
 	int16_t x_start, y_start, new_x_start, new_y_start;
 	register int16_t *pts_in;
@@ -1423,7 +1437,7 @@ VOID do_arrow(NOTHING)
 /* 306de: 00e0a40a */
 /* 206de: 00e09b54 */
 /* 104de: 00fcddae */
-VOID arrow(P(int16_t *) xy, P(int16_t) inc)
+static VOID arrow(P(int16_t *) xy, P(int16_t) inc)
 PP(int16_t *xy;)
 PP(int16_t inc;)
 {
@@ -1536,6 +1550,7 @@ PP(int16_t inc;)
 /* 306de: 00e0a676 */
 /* 206de: 00e09dc0 */
 /* 104de: 00fce01a */
+/* 106de: 00e0e244 */
 VOID init_wk(NOTHING)
 {
 	register int16_t l;
@@ -1658,6 +1673,7 @@ VOID init_wk(NOTHING)
 /* 306de: 00e0a886 */
 /* 206de: 00e09fd0 */
 /* 104de: 00fce22a */
+/* 106de: 00e0e454 */
 VOID d_opnvwk(NOTHING)
 {
 	register int16_t handle;
@@ -1715,6 +1731,7 @@ VOID d_opnvwk(NOTHING)
 /* 306de: 00e0a900 */
 /* 206de: 00e0a062 */
 /* 104de: 00fce2bc */
+/* 106de: 00e0e4e6 */
 VOID d_clsvwk(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;
@@ -1741,6 +1758,7 @@ VOID d_clsvwk(NOTHING)
 /* 306de: 00e0a956 */
 /* 206de: 00e0a0b8 */
 /* 104de: 00fce312 */
+/* 106de: 00e0e53c */
 VOID dsf_udpat(NOTHING)
 {
 	register int16_t *sp, *dp, i, count;

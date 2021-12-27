@@ -53,9 +53,9 @@
 #define QMAX		(QSIZE - 3)
 
 
-BOOLEAN get_seed PROTO((int16_t xin, int16_t yin, int16_t *xleftout, int16_t *xrightout, BOOLEAN *collide));
+static BOOLEAN get_seed PROTO((int16_t xin, int16_t yin, int16_t *xleftout, int16_t *xrightout, BOOLEAN *collide));
 VOID seedfill PROTO((NOTHING));
-VOID crunch_Q PROTO((NOTHING));
+static VOID crunch_Q PROTO((NOTHING));
 
 
 /*
@@ -64,6 +64,7 @@ VOID crunch_Q PROTO((NOTHING));
 /* 306de: 00e0cc8a */
 /* 206de: 00e0d2de */
 /* 104de: 00fd153e */
+/* 106de: 00e110a0 */
 VOID d_contourfill(NOTHING)
 {
 	LV(quitfill) = retfalse;
@@ -198,7 +199,7 @@ VOID seedfill(NOTHING)
 /* 306de: 00e0d042 */
 /* 206de: 00e0d7be */
 /* 104de: 00fd1a1e */
-VOID crunch_Q(NOTHING)
+static VOID crunch_Q(NOTHING)
 {
 	while (q[qTop - 3] == EMPTY && qTop > Qbottom)
 		qTop -= 3;
@@ -214,7 +215,7 @@ VOID crunch_Q(NOTHING)
 /* 306de: 00e0d0a6 */
 /* 206de: 00e0d818 */
 /* 104de: 00fd1a78 */
-BOOLEAN get_seed(P(int16_t) xin, P(int16_t) yin, P(int16_t *) xleftout, P(int16_t *) xrightout, P(BOOLEAN *) collide)
+static BOOLEAN get_seed(P(int16_t) xin, P(int16_t) yin, P(int16_t *) xleftout, P(int16_t *) xrightout, P(BOOLEAN *) collide)
 PP(int16_t xin;)
 PP(int16_t yin;)
 PP(int16_t *xleftout;)
@@ -276,6 +277,7 @@ PP(BOOLEAN *collide;)
 /* 306de: 00e0d1ec */
 /* 206de: 00e0d9d4 */
 /* 104de: 00fd1c34 */
+/* 106de: 00e11e58 */
 VOID v_get_pixel(NOTHING)
 {
 	register int16_t pel;

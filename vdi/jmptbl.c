@@ -37,6 +37,7 @@
 /* VDI functions 1 - 39 */
 /* 306de: 00e3d65e */
 /* 104de: 00feade6 */
+/* 106de: 00e2cd60 */
 VOID (*jmptb1[]) PROTO((NOTHING)) =
 {
 	v_opnwk,
@@ -83,6 +84,7 @@ VOID (*jmptb1[]) PROTO((NOTHING)) =
 /* VDI functions 100 - 131 */
 /* 306de: 00e3d6fa */
 /* 104de: 00feae82 */
+/* 106de: 00e2cdfc */
 VOID (*jmptb2[]) PROTO((NOTHING)) =
 {
 	d_opnvwk,
@@ -125,6 +127,7 @@ VOID (*jmptb2[]) PROTO((NOTHING)) =
 
 /* 306de: 00e07fa2 */
 /* 104de: 00fcb684 */
+/* 106de: 00fe0b8b0 */
 VOID SCREEN(NOTHING)
 {
 	register int16_t opcode, r, *control;

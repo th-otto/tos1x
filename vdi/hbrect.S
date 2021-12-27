@@ -51,6 +51,7 @@
 
 /* 206de: 00e0c644 */
 /* 104de: 00fd08a4 */
+/* 106de: 00e10ac8 */
 	xdef	hb_rect
 hb_rect:
 

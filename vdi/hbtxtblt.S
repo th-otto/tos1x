@@ -75,6 +75,7 @@ ramlen		equ	-46
 
 /* 206de: 00e0b7e0 */
 /* 104de: 00fcfa40 */
+/* 106de: 00e0fc64 */
 hb_text:
 
 	link	a4,#ramlen		;a4 -> local ram

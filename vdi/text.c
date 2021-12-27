@@ -48,8 +48,7 @@
 int16_t width;
 int16_t height;
 
-VOID copy_name PROTO((const char *source, char *dest));
-VOID make_header PROTO((NOTHING));
+static VOID make_header PROTO((NOTHING));
 
 
 /*
@@ -58,6 +57,7 @@ VOID make_header PROTO((NOTHING));
 /* 306de: 00e0a9b2 */
 /* 206de: 00e0a114 */
 /* 104de: 00fce36e */
+/* 106de: 00e0e598 */
 VOID d_gtext(NOTHING)
 {
 	int16_t monotest;
@@ -119,7 +119,7 @@ VOID d_gtext(NOTHING)
 /*  Now checks all fonts, not just system.				*/
 
 		if (
-#if BINEXACT
+#if (TOSVERSION < 0x106) & BINEXACT
 			fnt_ptr->font_id == 1 &&
 #endif
 #if BINEXACT
@@ -401,6 +401,7 @@ VOID d_gtext(NOTHING)
 /* 306de: 00e0b094 */
 /* 206de: 00e0a82a */
 /* 104de: 00fcea8a */
+/* 106de: 00e0ecae */
 VOID text_init(NOTHING)
 {
 	int16_t i, j;
@@ -549,7 +550,7 @@ VOID dst_height(NOTHING)
 /* 306de: 00e0b2e6 */
 /* 206de: 00e0aa7c */
 /* 104de: 00fcecdc */
-VOID copy_name(P(const char *) source, P(char *) dest)
+static VOID copy_name(P(const char *) source, P(char *) dest)
 PP(const char *source;)
 PP(char *dest;)
 {
@@ -568,7 +569,7 @@ PP(char *dest;)
 /* 306de: 00e0b30e */
 /* 206de: 00e0aaa4 */
 /* 104de: 00fced04 */
-VOID make_header(NOTHING)
+static VOID make_header(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;
 	register const FONT_HEAD *source_font;

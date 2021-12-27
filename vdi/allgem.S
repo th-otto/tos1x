@@ -39,6 +39,7 @@ DEFREZ    equ 2
 
 /* 306de: 00e06676 */
 /* 104de: 00fcb270 */
+/* 106de: 00e0b49c */
 		xdef	_GSHIFT_S
 _GSHIFT_S:	move.b	_shifty,d0	; Get the keyboard state
 		andi.w	#$000F,d0	; We only want the low 4 bits
@@ -122,6 +123,7 @@ _INIT_G:	PIXLA(a1)
 
 /* 306de: 00e066e6 */
 /* 104de: 00fcb2e0 */
+/* 106de: 00e0b50c */
    		xdef	_vex_timv
 _vex_timv:	PIXLA(a1)
 		move.l	PIXLV(CONTRL,a1),a0
@@ -155,6 +157,7 @@ _vex_timv:	PIXLA(a1)
  */
 /* 206de: 00e070b8 */
 /* 104de: 00fcb310 */
+/* 106de: 00e0b53c */
 _FindDevice:
 		move.w    #$0004,-(a7)
         trap      #14         /* Getrez() */
@@ -217,6 +220,28 @@ FindDev5:
         moveq.l   #3,d0
         rts
 
+#if TOSVERSION >= 0x106
+paltab4:  dc.w $0fff
+          dc.w $0f00
+          dc.w $00f0
+          dc.w $0000
+paltab16: dc.w $0fff
+          dc.w $0f00
+          dc.w $00f0
+          dc.w $0ff0
+          dc.w $000f
+          dc.w $0f0f
+          dc.w $00ff
+          dc.w $0555
+          dc.w $0333
+          dc.w $0f33
+          dc.w $03f3
+          dc.w $0ff3
+          dc.w $033f
+          dc.w $0f3f
+          dc.w $03ff
+          dc.w $0000
+#else
 paltab4:  dc.w $0777
           dc.w $0700
           dc.w $0070
@@ -237,6 +262,7 @@ paltab16: dc.w $0777
           dc.w $0737
           dc.w $0377
           dc.w $0000
+#endif
 
 /*******************************************************************************
  *
@@ -248,6 +274,7 @@ paltab16: dc.w $0777
 
 /* 306de: 00e067ee */
 /* 104de: 00fcb3c6 */
+/* 106de: 00e0b5f2 */
 tick_int:
 		movem.l	d0-d7/a0-a6,-(sp)
 		PIXLA(a1)
@@ -433,6 +460,7 @@ no_char:	rts
 
 /* 306de: 00e068ac */
 /* 104de: 00fcb484 */
+/* 106de: 00e0b6b0 */
 mouse_init:
 		PIXLA(a1)
 		lea	user_init,a0		; button and motion vectors
@@ -513,6 +541,7 @@ dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
 /* 306de: 00e0694a */
 /* 206de: 00e072ca */
 /* 104de: 00fcb522 */
+/* 106de: 00e0b74e */
 		xdef	esc_init
 		xdef	_esc_init
 esc_init:

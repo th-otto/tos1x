@@ -46,6 +46,7 @@
 /* 306de: 00e0792c */
 /* 208de: 00e068ee */
 /* 104de: 00fcab96 */
+/* 106de: 00e0adc2 */
 /* 404: 00e094ea */
 		xdef	line1010
 line1010:	move.l	2(sp),a1	; fetch pc off stack.

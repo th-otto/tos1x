@@ -57,6 +57,7 @@ max_vert		equ	MAX_PTSIN		; PTSIN maximum length:	1024 verticies
 /* 306de: 00e078b4 */
 /* 206de: 00e068c8 */
 /* 104de: 00fcab20 */
+/* 106de: 00e0ad4c */
 	xdef	_GSX_ENTRY
 _GSX_ENTRY:
 

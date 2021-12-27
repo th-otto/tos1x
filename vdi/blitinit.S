@@ -46,6 +46,7 @@
 /* 306de: 00e07f20 */
 /* 206de: 00e073ac */
 /* 104de: 00fcb604 */
+/* 106de: 00e0b830 */
 		xdef _SETBLT
 _SETBLT:
         move.w    d0,PIXLV(BLT_MODE,a1)
@@ -73,6 +74,7 @@ rCopyLoop:
 /* 306de: 00e07f48 */
 /* 206de: 00e073d4 */
 /* 104de: 00fcb62c */
+/* 106de: 00e0b858 */
 		xdef _GETBLT
 _GETBLT:
         move.w    PIXLV(BLT_MODE,a0),d0

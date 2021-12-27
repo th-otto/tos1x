@@ -35,6 +35,7 @@ FONT_HEAD ram8x8;
 /* 306de: 00e06a76 */
 /* 206de: 00e0807e */
 /* 104de: 00fcc2d6 */
+/* 106de: 00e0c502 */
 VOID v_opnwk(NOTHING)
 {
 	register int16_t i;

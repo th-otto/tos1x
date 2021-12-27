@@ -20,7 +20,11 @@
 #include "config.h"
 #include <compiler.h>
 
+#if TOSVERSION >= 0x106
+#define	MAX_PAL		4096	/* palette size                     */
+#else
 #define MAX_PAL		512	    /* palette size                     */
+#endif
 
 /*
  * set to 1 for supporting hardware accelerated blitter routines

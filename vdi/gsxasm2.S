@@ -57,6 +57,7 @@
 /* 306de: 00e0c0a4 */
 /* 206de: 00e0c414 */
 /* 104de: 00fd0674 */
+/* 106de: 00e10898 */
 		xdef	_vtrap1
 _vtrap1:	PIXLA(a0)
 		move.l	(sp)+,PIXLV(retsav,a0)
@@ -85,6 +86,7 @@ _vtrap1:	PIXLA(a0)
 /* 306de: 00e0c0c4 */
 /* 206de: 00e0c424 */
 /* 104de: 00fd0684 */
+/* 106de: 00e108a8 */
 		xdef	_TRNSFONT
 _TRNSFONT:
 		PIXLA(a1)
@@ -122,6 +124,7 @@ swap_loop:	move.w	(a0),d1		; d1 <- font form word
 /* 306de: 00e0c0e6 */
 /* 206de: 00e0c446 */
 /* 104de: 00fd06a6 */
+/* 106de: 00e108ca */
 		xdef	_put_pix
 _put_pix:
 		PIXLA(a2)
@@ -174,6 +177,7 @@ ppx_clr:	and.w	d0,(a1)+	; clear the bit.
 /* 306de: 00e0c12e */
 /* 206de: 00e0c48e */
 /* 104de: 00fd06ee */
+/* 106de: 00e10912 */
 		xdef	_get_pix
 _get_pix:
 		PIXLA(a1)

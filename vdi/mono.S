@@ -41,6 +41,7 @@ fail_ret:
 /* 306de: 00e0c050 */
 /* 206de: 00e0c2e2 */
 /* 104de: 00fd0542 */
+/* 106de: 00e10766 */
 	xdef	_MONO8XHT
 _MONO8XHT:
 		move.l    a5,-(a7)

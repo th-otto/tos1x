@@ -78,6 +78,7 @@ FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 
 /* 306de: 00e07a38 */
 /* 104de: 00fcac28 */
+/* 106de: 00e0ae54 */
 		xdef	_vec_len
 _vec_len:
 		move.w	4(sp),d0	; d0 <- dX
@@ -518,6 +519,7 @@ shf_tab:   *    1 2   4       8		; number of planes
 
 /* 306de: 00e07c22 */
 /* 104de: 00fcae16 */
+/* 106de: 00e0b042 */
 		xdef	_ABLINE
 _ABLINE: ds.b 0
 		xdef	M_ABLINE

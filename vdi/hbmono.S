@@ -44,6 +44,7 @@ OF equ FBASE
 *-
 /* 206de: 00e0c336 */
 /* 104de: 00fd0596 */
+/* 106de: 00e107ba */
 	xdef	 hb_mono
 hb_mono:
 	lea	BLASTER+B_OFF,a4    ;12	 a4 -> base of bitblt regs

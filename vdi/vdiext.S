@@ -30,7 +30,7 @@ _zeromem equ BIOSTBASE+$1EE0
 #endif
 
 #if TOSVERSION == 0x106
-_zeromem equ BIOSTBASE+$1EE0
+_zeromem equ BIOSTBASE+$20B8
 #endif
 
 #if TOSVERSION == 0x162

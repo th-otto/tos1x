@@ -129,6 +129,7 @@ O6 equ 6 ; WTF? why?
 /* 306de: 00e07226 */
 /* 206de: 00e06094 */
 /* 104de: 00fca2ec */
+/* 106de: 00e0a518 */
 	xdef	_v_escape
 _v_escape:
 	PIXL6(a4)
@@ -195,6 +196,7 @@ v_offset:
 /* 306de: 00e07292 */
 /* 206de: 00e06100 */
 /* 104de: 00fca358 */
+/* 106de: 00e0a584 */
 	xdef	_asc_out
 _asc_out: ds.b 0
 /*
@@ -220,6 +222,7 @@ conout: ds.b 0
 /* 306de: 00e0729e */
 /* 206de: 00e0610c */
 /* 104de: 00fca364 */
+/* 106de: 00e0a590 */
 	xdef _bcon2out
 _bcon2out: ds.b 0
 
@@ -291,11 +294,6 @@ ctrl_tbl:
 
 do_bell: ds.b 0
 
-/*
- * for some unknown reason, "bra.w ringbell" gives a
- * 16-bit PC-relative overflow.
- */
-
 #if BINEXACT
 
 /*
@@ -306,6 +304,10 @@ do_bell: ds.b 0
  */
 #if TOSVERSION == 0x104
 ringbell  equ $341E-(VDITBASE-BIOSTBASE)
+#endif
+
+#if TOSVERSION == 0x106
+ringbell  equ $442C+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
 #endif
 
 	dc.w $6000,ringbell
@@ -495,6 +497,7 @@ b2w_tbl:
 /* 306de: 00e073e6 */
 /* 206de: 00e0625a */
 /* 104de: 00fca4b6 */
+/* 106de: 00e0a6e2 */
 vq_chcells:		move.l	LV((CONTRL)+O6,a4),a0		; a0 -> CONTRL array.
 		move.w	#2,8(a0)		; 2 integers are returned.
 
@@ -509,6 +512,7 @@ vq_chcells:		move.l	LV((CONTRL)+O6,a4),a0		; a0 -> CONTRL array.
 /* 306de: 00e07406 */
 /* 206de: 00e0627e */
 /* 104de: 00fca4d6 */
+/* 106de: 00e0a702 */
 v_esc_nop:
 esc_exit:	rts
 
@@ -520,6 +524,7 @@ esc_exit:	rts
 /* 306de: 00e07408 */
 /* 206de: 00e06280 */
 /* 104de: 00fca4d8 */
+/* 106de: 00e0a704 */
 v_hardcopy:	move.w	#20,-(sp)		; Invoke bios
 		trap	#14
 
@@ -904,6 +909,7 @@ escd:
 /* 306de: 00e07562 */
 /* 206de: 00e063de */
 /* 104de: 00fca636 */
+/* 106de: 00e0a862 */
 show_cursor:
 
 	move.w	LV((disab_cnt)+O6,a4),d0	; old count=0  =>  cursor is visible
@@ -1110,6 +1116,7 @@ ascii_lf:
 /* 306de: 00e0761a */
 /* 206de: 00e06496 */
 /* 104de: 00fca6ee */
+/* 106de: 00e0a91a */
 	xdef blink
 blink:	PIXL6(a4)
 
@@ -1149,6 +1156,7 @@ bl_exit:
 /* 306de: 00e0764c */
 /* 206de: 00e064c8 */
 /* 104de: 00fca720 */
+/* 106de: 00e0a94c */
 	xdef _cursconf
 _cursconf:
 	PIXL6(a4)
@@ -1224,6 +1232,7 @@ getdelay:
 /* 306de: 00e076a4 */
 /* 206de: 00e06520 */
 /* 104de: 00fca778 */
+/* 106de: 00e0a9a4 */
 ascii_out:
 	PIXL6(a4)
 	cmp.w	LV((v_fnt_st)+O6,a4),d1		; test against minimum

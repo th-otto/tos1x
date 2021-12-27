@@ -54483,7 +54483,9 @@ f6x6:
 [00e2cd52] 000a 000b                 ori.b      #$0B,a2 ; apollo only
 [00e2cd56] 000e 000c                 ori.b      #$0C,a6 ; apollo only
 [00e2cd5a] 000f 000d                 ori.b      #$0D,a7 ; apollo only
-[00e2cd5e] 0001 00e0                 ori.b      #$E0,d1
+[00e2cd5e] 0001
+jmptb1:
+[00e2cd60] 00e0                      ori.b      #$E0,d1
 [00e2cd62] c502                      abcd.b     d2,d2
 [00e2cd64] 00e0                      dc.w       $00E0 ; illegal
 [00e2cd66] c7fe                      muls.w     ???,d3

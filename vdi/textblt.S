@@ -66,6 +66,7 @@ _scrtsiz:	dc.w	204	; WUT THE FUT ??$*&@!??
 /* 306de: 00e0bfb4 */
 /* 206de: 00e0b74a */
 /* 104de: 00fcf9aa */
+/* 106de: 00e0fbce */
 	xdef	_CLC_DDA
 _CLC_DDA:
 	PIXLA(a0)
@@ -172,14 +173,15 @@ sz_sm_2:
 
 
 *****************************************
-*					*
-*  Text Blt code entry point here...	*
-*					*
+*                                       *
+*  Text Blt code entry point here...    *
+*                                       *
 *****************************************
 
 /* 306de: 00e0c038 */
 /* 206de: 00e0b7ce */
 /* 104de: 00fcfa2e */
+/* 106de: 00e0fc52 */
 _TEXT_BLT:
 	movem.l	a5-a6,-(sp)
 	LA(a6)

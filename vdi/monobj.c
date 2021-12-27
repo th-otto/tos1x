@@ -56,6 +56,7 @@
  */
 /* 306de: 00e081e6 */
 /* 104de: 00fcb900 */
+/* 106de: 00e0bb2c */
 VOID vsl_type(NOTHING)
 {
 	register int16_t li;
@@ -127,7 +128,7 @@ VOID vsl_ends(NOTHING)
 	work_ptr = LV(cur_work);
 	*pointer++ = work_ptr->line_beg = lb;
 	*pointer = work_ptr->line_end = le;
-}										/* End "vsl_ends". */
+}
 
 /*--------------------------------------------------------------------------*/
 /* 

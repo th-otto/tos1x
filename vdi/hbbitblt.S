@@ -76,6 +76,7 @@ fr_rt_mask:
 
 /* 206de: 00e0d07c */
 /* 104de: 00fd12dc */
+/* 106de: 00e11500 */
 	xdef	hb_bitblt
 hb_bitblt:
 

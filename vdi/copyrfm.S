@@ -92,6 +92,7 @@ PAT_FLAG	equ	  4	/* flag:1 SRCE and PATTERN   flag:0 SOURCE only */
 /* 306de: 00e0c998 */
 /* 206de: 00e0cd50 */
 /* 104de: 00fd0fb0 */
+/* 106de: 00e111d4 */
 	xdef	_COPY_RFM
 _COPY_RFM:
 
