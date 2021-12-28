@@ -1,7 +1,9 @@
 TOS14FIX_OBJS = tos14fix.o
+TOS14FX2_OBJS = tos14fx2.o
 
 SRCS = \
 	tos14fix.S \
+	tos14fx2.S \
 	$(empty)
 
 EXTRA_DIST1 = \
