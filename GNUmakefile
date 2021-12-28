@@ -3,7 +3,7 @@ top_srcdir=.
 include GNUmakefile.cmn
 include Makefile.sil
 
-SUBDIRS = common tools bios vdi bdos aes desk glue
+SUBDIRS = common tools bios vdi bdos aes desk system glue
 
 EXTRA_DIST1 = \
 	Makefile \

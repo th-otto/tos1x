@@ -1,0 +1,14 @@
+TOS14FIX_OBJS = tos14fix.o
+
+SRCS = \
+	tos14fix.S \
+	$(empty)
+
+EXTRA_DIST1 = \
+	Makefile \
+	SRCFILES \
+	$(empty)
+
+EXTRA_DIST2 = \
+	GNUmakefile \
+	$(empty)
