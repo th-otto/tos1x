@@ -2,12 +2,10 @@ OSSTART equ $fc0000
 OSDATE  equ $04061989
 
 _lineftrap      equ $02c
+_trap1vec       equ $084       /* Trap #1 (GEMDOS) */
 _trap14vec      equ $0b8       /* Trap #14 (XBIOS) */
 resvector       equ $42a
 resvalid        equ $426
-
-oldresvalid     equ $5f8
-oldresvector    equ $5fc
 
 patcharea       equ $600
 
@@ -55,9 +53,10 @@ exit:
 
 welcomemsg:
 		dc.b 10,13,27,'p'
-		.ascii '    Rainbow TOS patches loaded.    '
+		.ascii '  Rainbow TOS patches loaded.  '
 		dc.b 27,'q',10,13
-		.ascii ' Copyright ',0xbd,' 1989,1991 Atari Corp. ',10,13,0
+		.ascii ' Copyright ',0xbd,' 1989, Atari Corp. ',10,13
+		.ascii ' Version 1.5 ,by K.Isakovic    ',10,13,0
 		.even
 
 instpat:
@@ -96,9 +95,10 @@ instpat4:
 		move.l     a0,(a1)
 		tst.b      (_lineftrap).w
 		bne.s      instpat5
+		move.l     (_lineftrap).w,mylineftrap-4
 		lea.l      gooldtrap(pc),a0
-		move.w     #0x4EF9,(a0)+ ; JMP opcode
-		move.l     (_lineftrap).w,(a0)
+		move.l     #$207AFFF0,(a0)+   ; movea.l    mylineftrap-4(pc),a0
+		move.w     #$4ED0,(a0)        ; jmp (a0)
 instpat5:
 		lea.l      patchcode(pc),a0
 		lea.l      (patcharea).w,a1
@@ -107,22 +107,53 @@ instpat5:
 instpat6:
 		move.l     (a0)+,(a1)+
 		dbf        d0,instpat6
+
+/*
+ * install an entry in cookie jar
+ */
+		move.l     ($000005A0).w,d0
+		beq.s      nocookie
+		movea.l    d0,a0
+		clr.l      d0
+cookie1:
+		tst.l      (a0)
+		beq.s      cookie2
+		addq.w     #1,d0
+		addq.l     #8,a0
+		bra.s      cookie1
+cookie2:
+		cmp.l      4(a0),d0
+		bge.s      nocookie
+		clr.l      8(a0)
+		move.l     4(a0),12(a0)
+		move.l     #$54464958,(a0) /* 'TFIX' */
+		move.l     #$00010005,4(a0) /* version number */
+		
+nocookie:
 		move.w     sr,-(a7)
 		ori.w      #0x0700,sr
 * install new line-f trap handler
 		move.l     #(mylineftrap-patchcode)+patcharea,(_lineftrap).w
-* save old xbios entry
-		move.l     (_trap14vec).w,(gooldbios+2-patchcode)+patchares
 * install new xbios handler
-		move.l     #(newxbios-patchcode)+patcharea,(_trap14vec).w
-* save old reset vector
-		move.l     (resvector).w,(oldresvector).w
+		lea        (_trap14vec).w,a0
+		lea        ((newxbios-4-patchcode)+patcharea).w,a1
+		move.l     (a0),(a1)+
+		move.l     a1,(a0)
+* install new gemdos handler
+		lea        (_trap1vec).w,a0
+		lea        ((newgemdos-4-patchcode)+patcharea).w,a1
+		move.l     (a0),(a1)+
+		move.l     a1,(a0)
 * install new reset vector
-		move.l     #(myresvec-patchcode)+patcharea,(resvector).w
+		lea        (resvector).w,a0
+		lea        ((myresvec-4-patchcode)+patcharea).w,a1
+		move.l     (a0),(a1)+
+		move.l     a1,(a0)
 * save old resvalid
-		move.l     (resvalid).w,(oldresvalid).w
+		lea        (resvalid).w,a0
+		move.l     (a0),(oldresvalid-patchcode+patcharea).w
 * make new reset vector valid
-		move.l     #0x31415926,(resvalid).w
+		move.l     #0x31415926,(a0)
 		move.w     (a7)+,sr
 		rts
 
@@ -132,12 +163,20 @@ instpat6:
 
 patchcode:
 	dc.l 0x0BADC0DE
+oldresvalid:
+	dc.l 0
+	dc.l 0x58425241 /* 'XBRA' */
+	dc.l 0x54464958 /* 'TFIX' */
+	dc.l 0
 myresvec:
 		clr.l      (patcharea).w
-		move.l     (oldresvector).w,(resvector).w
-		move.l     (oldresvalid).w,(resvalid).w
+		move.l     myresvec-4(pc),(resvector).w
+		move.l     oldresvalid(pc),(resvalid).w
 		jmp        (a6)
 
+	dc.l 0x58425241 /* 'XBRA' */
+	dc.l 0x54464958 /* 'TFIX' */
+	dc.l 0
 newxbios:
 #if 0
 		btst       #13,(a7)                 /* were we in supervisor mode? */
@@ -152,8 +191,8 @@ bx_user:
 bx_sp_ok:
 		cmpi.w     #15,(a0)                 /* Rsconf call? */
 		beq.s      rsconf
-gooldbios:
-		dc.w 0x4ef9,0,0                     /* jmp (xxx).l; use constants to prevent it from being optimized */
+		move.l     newxbios-4(pc),a0
+		jmp        (a0)
 rsconf:
 		cmpi.w     #-2,2(a0)                /* -2 = return last baudrate */
 		bne.s      rs6conf2
@@ -166,8 +205,9 @@ rs6conf2:
 		movep.l    MFP_UCR(a1),d0           /* grab the old ucs,rsr,tsr,scr contents */
 		move.l     d0,(a2)                  /* patch return value */
 		move.w     4(a0),d0                 /* get new flow control */
-		cmp.w      #3,d0                    /* valid values are 0-3 */
-		bhi.s      rs6conf6
+		bmi        rs6conf6
+		andi.b     #3,d0
+		cmp.b      #3,d0                    /* valid values are 0-3 */
 		bne.s      rs6conf3
 		moveq.l    #1,d0                    /* set flag for handshake */
 rs6conf3:
@@ -207,7 +247,7 @@ rs6con10:
 		bmi.s      retvalue
 		move.b     13(a0),MFP_SCR(a1)
 retvalue:
-		dc.w 0x203c,0,0 /* move.l #x,d0; use constants to prevent it from being optimized */
+		move.l     #0x00BC614E,d0
 		rte
 
 /* baudrate table - control register setting */
@@ -216,6 +256,9 @@ baudctrl: dc.b $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$02,$02
 bauddata: dc.b $01,$02,$04,$05,$08,$0a,$0b,$10,$20,$40,$60,$80,$8f,$af,$40,$60
 
 
+	dc.l 0x58425241 /* 'XBRA' */
+	dc.l 0x54464958 /* 'TFIX' */
+	dc.l 0
 mylineftrap:
 		movea.l    2(a7),a0                 /* fetch caller pc */
 		cmpi.w     #$F5DC,(a0)              /* sh_name call? */
@@ -239,7 +282,7 @@ linef1:
 		beq.s      sh_name
 		andi.w     #$0FFF,d1
 getlinef:
-		dc.w 0x207c,0,0                     /* move.l #xxx.l a0; use constansts to prevent it from being optimized */
+		move.l     #0x00123456,a0
 		movea.l    0(a0,d1.w),a0
 		jmp        (a0)
 linefh1:
@@ -252,7 +295,7 @@ linefh1:
 		/* if any registers were saved, the epilogue would contain a tst.l (a7)+ instruction */
 		addq.l     #4,a7
 movinst:
-		dc.w $4cdf,0		                /* movem.l (a7)+,noregs */
+		movem.l    (a7)+,d0
 linefh2:
 		move.w     d2,sr                    /* restore interrupts */
 		unlk       a6                       /* perform the unlk that was removed from epilogue */
@@ -277,5 +320,36 @@ sh_name3:
 		addq.l     #1,a1
 		move.l     a1,d0
 		rts
+
+
+	dc.l 0x58425241 /* 'XBRA' */
+	dc.l 0x54464958 /* 'TFIX' */
+	dc.l 0
+/*
+ * fix for Mshrink(0)
+ */
+newgemdos:
+#if 0
+		btst       #13,(a7)                 /* were we in supervisor mode? */
+#else
+		dc.w       0x0817,0x000d  /* assemblers may choke on the invalid #13 above */
+#endif
+		beq.s      newgemd1
+		lea.l      6(a7),a0                 /* yes, arguments are on stack */
+		bra.s      newgemd2
+newgemd1:
+		move.l     usp,a0                   /* arguments are on user stack */
+newgemd2:
+		cmpi.w     #$004A,(a0)              /* Mshrink call? */
+		bne.s      newgemd3
+		tst.l      8(a0)                    /* size == 0? */
+		bne.s      newgemd3
+		move.l     4(a0),d0                 /* get pointer */
+		move.l     d0,2(a0)                 /* put in position */
+		move.w     #$0049,(a0)              /* modify call to Mfree */
+newgemd3:
+		movea.l    newgemdos-4(pc),a0
+		jmp        (a0)
+
 endpatchcode:
 		.text

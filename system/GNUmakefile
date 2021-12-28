@@ -15,7 +15,7 @@ LIBS =
 CPPFLAGS = -I../common -I$(INC)
 CFLAGS = $(OPTS) $(WARN)
 
-PROGRAMS = tos14fix.prg tos14fx2.prg
+PROGRAMS = tos14fix.prg tos14fx2.prg tos14fx5.prg
 
 all:: $(PROGRAMS)
 
@@ -35,6 +35,14 @@ ifeq ($(USE_CROSS_ALCYON),1)
 	$(AM_V_at)${RELMOD} tos14fx2.rel $@
 else
 	$(AM_V_LD)${LD} ${LDFLAGS} -nostdlib -nostartfiles -s -o $@ ${TOS14FX2_OBJS}
+endif
+
+tos14fx5.prg: $(TOS14FX5_OBJS) ${MAKEFILE}
+ifeq ($(USE_CROSS_ALCYON),1)
+	$(AM_V_LD)${LINK68} '[PRGFLAGS[0]]' tos14fx5.rel=${TOS14FX5_OBJS}
+	$(AM_V_at)${RELMOD} tos14fx5.rel $@
+else
+	$(AM_V_LD)${LD} ${LDFLAGS} -nostdlib -nostartfiles -s -o $@ ${TOS14FX5_OBJS}
 endif
 
 check::

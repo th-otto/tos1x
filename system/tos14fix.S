@@ -239,7 +239,7 @@ linef1:
 		beq.s      sh_name
 		andi.w     #$0FFF,d1
 getlinef:
-		dc.w 0x207c,0,0                     /* move.l (xxx).l a0; use constansts to prevent it from being optimized */
+		dc.w 0x207c,0,0                     /* move.l #xxx.l a0; use constansts to prevent it from being optimized */
 		movea.l    0(a0,d1.w),a0
 		jmp        (a0)
 linefh1:

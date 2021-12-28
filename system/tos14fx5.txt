@@ -1,0 +1,115 @@
+       TOS14FX5.PRG, a modified TOS14FIX.PRG
+       --------------------------------------
+
+The TOS14FX5 patch is installed in the auto folder. It replaces
+the original TOS14FIX from ATARI, which still has got some bugs.
+TOS14FX5 only runs with original TOS 1.4.
+
+My version uses XBRA, installs an entry in the cookie jar and
+fixes another TOS error. And the main feature: I will work on
+new fixes if neccassary.
+
+If you use virus detectors:
+---------------------------
+It is normal for TOS14FIX and TOS14FX5 that the reset-, xbios and
+linef trap handler is in the memory region $600 to $800. So ignore
+the warnings. In this TOS14FX5 version the vectrs point to:
+
+     Vector | Adress
+     -------+--------
+     Reset  | $614
+     Xbios  | $632
+     LineF  | $716
+     GemDos | $79C
+
+
+TOS 1.4 clones:
+---------------
+There are some special TOS versions, that are build upon TOS 1.4.
+The TOS14FIX patch does not run on these versions, because in
+the rsconf-call (To configure the RS232 interface) it directly 
+jumps into the ROM code. The special TOS versions don't need 
+the TOS14FX5 patch, because the errors are fixed in the TOS itself. 
+
+The versions of TOS14FXn
+------------------------
+  Version 1.0, Berlin 1989
+  ------------------------
+After the XBRA standard (A standard for programs that change system
+vectors) reached germany, i was not very happy that a patch that was
+neccassary to run TOS 1.4 did not use the standard. So i made a
+little change in the TOS14FIX. 
+
+  Version 1.1, Berlin 19.03.90
+  ----------------------------
+Someone found a bug in the original TOS14FIX and posted the bug report
+to the fido-net. I corrected the bug in my version.
+
+The error occurs if Rsconf(-2,x,x,x,) is called. (This call should return
+the baud rate.) The ATARI crashes, because the trap exception ended with
+RTS (Return Subroutine) and not RTE (Return exception).
+
+  Version 1.2, Berlin 12.04.90
+  ----------------------------
+If the  Mshrink-function is called with a new length of NULL, the
+TOS 1.4 makes a wrong entry in the internal memory-free-list. After
+the end of a program this error is magically restored (I don't know
+the internal code...). The Mshrink-error comes up, if you start a
+program from the TEMPUS editor and previously had no text loaded.
+I found this error in november 89, when i developped the ATARI 
+system monitor SysMon. I thougt this error is corrected by the
+poolfix code, but someone in the fido net told that this error
+is not fixed. I did a test and even if poolfix was installed, the
+bug occured. So i build a bugfix into TOS14FX2.
+
+  Version 1.3, Berlin 23.04.90
+  ----------------------------
+TOS14FX3 installs a Cookie with ID TFI, if a cookie jar is
+present. The value of the cookie is the version number.
+
+  Version 1.4, Berlin 09.12.90
+  ----------------------------
+The modular controlpanel XControl.Acc showed an error in my (not
+the original code!) version of TOS14FX3. This error was fixed in
+TOS14FX4.
+
+  Version 1.5, Berlin 18.01.91
+  ----------------------------
+Michael Ziegler (GEM RZ/SZ) found an error in the TT-TOS 3.01
+that made it impossible to set the handshake with the function
+Rsconf. (The variable was copied as word not as byte, so the
+Handshake value is written into the wrong system variable...)
+A workaround was to call rsconf with the value in the low AND
+hightbyte, but TOS14FIX and TOS14FX4 didn't thake this value.
+(Allowed values are in range 0..2, not $0202). The new TOS14FX5
+version runs with this workaround, because the test code was
+changed to wipe out the highbyte.
+   
+******************************************************************
+*                                                                *
+*  Only if the files                                             * 
+*                                                                *
+*          TOS14FIX.PRG   TOS14FIX.TXT                           *
+*          TOS14FX5.PRG   TOS14FX5.TXT                           *
+*                                                                *
+* are not modified, private users are allowed to copy and use    *
+* 'TOS14FX5' for free.                                           *
+*                                                                *
+* A commercial use in any form (also includes the distribution   *
+* on public-domain discs or simular) is NOT ALLOWED.             *
+*                                                                *
+* You get the latest version from the author or in the german    *
+* MAUS mailbox net.                                              *
+*                                                                *
+******************************************************************
+
+If you send me a disc or write me a letter don't forget to include
+two 'international reply cupons', since i can't use foreign stamps!
+
+With best regards
+
+   Karsten Isakovic
+
+   Wilmersdorfer Str.82
+   10629 Berlin
+   Germany
