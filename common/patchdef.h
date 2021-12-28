@@ -48,6 +48,7 @@
 /*
  * TP_70: RSCONF1: Fix rsconf bug
  * (from TOS14FIX.PRG, ST-Computer 1/90).
+ * Only needed for 1.04; in 1.06 this has been fixed
  */
 #ifndef TP_70
 #define TP_70 0

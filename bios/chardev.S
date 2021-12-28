@@ -1369,6 +1369,14 @@ rs6conf2:
  */
         movep.l   MFP_UCR-MFP_REGS(mfpareg),d7
         move.w    6(a7),d0                      /* if -1 then don't change */
+#if TOSVERSION >= 0x106
+        cmp.w     #3,d0
+        bhi.s     rs6conf6
+        bne.s     rs6conf3
+        moveq.l   #1,d0                         /* set flag for handshake */
+rs6conf3:
+        move.b    d0,ctr(a0)                    /* set new handshake state */
+#else
 #if TP_70
         /* swedish/czech versions have the RSCONF1 patch applied (from tos14fix) */
         cmp.w     #3,d0
@@ -1379,14 +1387,6 @@ rs6conf2:
         nop
         nop
         nop
-#else
-#if TOSVERSION >= 0x106
-        cmp.w     #3,d0
-        bhi.s     rs6conf6
-        bne.s     rs6conf3
-        moveq.l   #1,d0                         /* set flag for handshake */
-rs6conf3:
-        move.b    d0,ctr(a0)                    /* set new handshake state */
 #else
         cmp.w     #-1,d0
         beq.s     rs6conf6
