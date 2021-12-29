@@ -1,0 +1,65 @@
+Atari Corp., January 19, 1990
+
+There is a rare bug in Rainbow TOS (1.4) and STe TOS (1.6) involving
+the way GEMDOS handles its internal memory.  You probably have never
+seen this bug, and if you use this patch program, you never will.
+
+Place POOLFIX3.PRG in your AUTO folder and reboot your machine.  That's
+all there is to it.  POOLFIX3.PRG will run every time you boot your
+machine, so the bug will never ever bite you.
+
+You might get a message to the effect that it must run first in the
+AUTO folder.  If this happens, copy the programs from your AUTO folder
+to another place and erase them all from the AUTO folder.  Now copy
+POOLFIX3.PRG into your AUTO folder, and then all the other programs
+which were there.
+
+(A version of this patch was released January 10; it didn't work, and
+shouldn't be used.  Another was released January 18; it didn't work
+either. (Look, I'm only human!)  This is Take 3.)
+
+**********************************************************************
+
+If you are interested in the technical details of why this program
+is necessary and what it does, read on:
+
+The bug doesn't bite very often.  You probably haven't ever seen it. 
+It happens when programs use Malloc a lot and you have a lot of folders
+in your system.  (Yes, this bug was introduced as part of the code
+which got rid of the 40-folder limit.)
+
+The OS pool is the internal memory used by GEMDOS to keep track of
+directories, files, handles, and internal memory.  Sometimes, GEMDOS
+uses only part of a block.  When there are two blocks that are only
+partly used, and the used parts would fit into one block, the space
+can be compacted to create one completely used block and one free
+block.
+
+Unfortunately, there's a bug in the compaction routine.  This patch
+prevents that compaction routine from being executed, by doing the
+compaction (with a bug-free routine) before GEMDOS has a chance to.
+
+This code runs before every GEMDOS call.  It uses a flag to tell
+whether it needs to run the compaction routine before it lets GEMDOS
+handle the call.  If the call is one of the Pterm calls, or an Mfree()
+call, it sets the flag so the compaction will run before the NEXT
+Gemdos call:
+
+	new gemdos entry point:
+
+		if (flag is set)
+			run compact;
+
+		if (call is Mfree or one of the Pterm calls)
+			set the flag;
+		else
+			clear the flag;
+
+		jump to the original gemdos entry point;
+
+
+The compaction routine runs through GEMDOS's internal memory using
+unpublished variables (don't you dare use them yourself!) and compacts
+empty space out of the memory blocks, so the routine inside GEMDOS
+never finds any space to compact, and the incorrect code never runs.
+

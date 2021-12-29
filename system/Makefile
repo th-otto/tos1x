@@ -1,11 +1,11 @@
 include ../Makefile.cmn
 include ../Makefile.sil
 
-TOS14FIX_ASFLAGS = -n
+poolfix3_ASFLAGS = -n
 
 LIBS = ${LIBC}
 
-PROGRAMS = tos14fix.prg
+PROGRAMS = tos14fix.prg tos14fx2.prg tos14fx5.prg poolfix3.prg
 
 all:: $(PROGRAMS)
 
@@ -13,6 +13,15 @@ include SRCFILES
 
 tos14fix.prg: $(TOS14FIX_OBJS) ${MAKEFILE}
 	$(AM_V_LD)${LD} ${LDFLAGS} -h 7 -o $@ ${TOS14FIX_OBJS}
+
+tos14fx2.prg: $(TOS14FX2_OBJS) ${MAKEFILE}
+	$(AM_V_LD)${LD} ${LDFLAGS} -h 7 -o $@ ${TOS14FX2_OBJS}
+
+tos14fx5.prg: $(TOS14FX5_OBJS) ${MAKEFILE}
+	$(AM_V_LD)${LD} ${LDFLAGS} -h 7 -o $@ ${TOS14FX5_OBJS}
+
+poolfix3.prg: $(POOLFIX3_OBJS) ${MAKEFILE}
+	$(AM_V_LD)${LD} ${LDFLAGS} -h 7 -o $@ ${POOLFIX3_OBJS}
 
 check::
 

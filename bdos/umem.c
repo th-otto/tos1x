@@ -553,7 +553,7 @@ PP(MPB *_mp;)
 
 
 /*
- *  xmalloc - 
+ *  xmxalloc - 
  *
  *	Function 0x44	Mxalloc
  *
