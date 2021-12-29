@@ -1,0 +1,21 @@
+~ $20,4b                        ; movea.l   a3,a0
+~ $30,3c,04,58                  ; move.w    #$0458,d0
+~ $42,58                        ; clr.w     (a0)+
+~ $51,c8,ff,fc                  ; dbf       d0,$00FDCD28
+~ $4e,71                        ; nop
+~ $4e,71                        ; nop
+~ $4e,71                        ; nop
+~ $4e,71                        ; nop
+~ $41,eb,08,02                  ; lea.l     2050(a3),a0
+~ $2e,88                        ; move.l    a0,(a7)
+~ $2f,0b                        ; move.l    a3,-(a7)
+~ $f7,0c                        ; dc.w      $F70C ; illegal
+~ $58,8f                        ; addq.l    #4,a7
+~ $41,eb,00,b8                  ; lea.l     184(a3),a0
+~ $27,48,00,08                  ; move.l    a0,8(a3)
+~ $20,08                        ; move.l    a0,d0
+~ $d0,bc,00,00,07,46            ; add.l     #$00000746,d0
+~ $21,40,00,3e                  ; move.l    d0,62(a0)
+~ $49,eb,08,26                  ; lea.l     2086(a3),a4
+~ $42,47                        ; clr.w     d7
+~ $60,22                        ; bra.s     $00FDCD80

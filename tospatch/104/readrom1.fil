@@ -1,0 +1,11 @@
+;*******************************************************************************
+;* Diese kleine Datei liest das ROM-TOS 1.0x aus und erzeugt ein TOS.IMG
+;*
+;* ½ 1992-94 Markus Heiden
+
+.BASE   = FC0000
+.LENGTH =  30000
+
+>1
+<*
+

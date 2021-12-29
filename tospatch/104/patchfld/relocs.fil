@@ -1,0 +1,103 @@
+; country specific offsets for various routines
+; .d1 is caused by different alt-key handling in bios,
+;    and affects all addresses >= $00fc3e6a/03e6a
+; .d2 is caused by different time/date formats in desktop,
+;    and affects all addresses >= $00fd7dd0/17dd0
+_SWITCH .NATION
+
+  _CASE .USA:
+    .d1 = -5A
+    .d2 = -32
+    .RSC_TAB = 2BA10
+    .ROMTOP  = 2FBD4
+
+  _CASE .FRG:
+    .d1 = 0
+    .d2 = 0
+    .RSC_TAB = 2BA3E
+    .ROMTOP  = 2FC64
+
+  _CASE .FRA:
+    .d1 = 1E
+    .d2 = 0
+    .RSC_TAB = 2BA5C
+    .ROMTOP  = 2FF32
+
+  _CASE .UK:
+    .d1 = -5A
+    .d2 = -32
+    .RSC_TAB = 2BA10
+    .ROMTOP  = 2FBD4
+
+  _CASE .SPA:
+    .d1 = 2C
+    .d2 = 0
+    .RSC_TAB = 2BA6A
+    .ROMTOP  = 2FE84
+
+  _CASE .ITA:
+    .d1 = 0E
+    .d2 = 0
+    .RSC_TAB = 2BA4C
+    .ROMTOP  = 2FDFE
+
+  _CASE .SWE:
+    .d1 = 1E
+    .d2 = 1E
+    .RSC_TAB = 2BA5C
+    .ROMTOP  = 2FD36
+
+  _CASE .SWF:
+    .d1 = 2C
+    .d2 = 0
+    .RSC_TAB = 2BA6A
+    .ROMTOP  = 2FF40
+
+  _CASE .SWG:
+    .d1 = 2C
+    .d2 = 0
+    .RSC_TAB = 2BA6A
+    .ROMTOP  = 2FC90
+
+  _CASE .CZE:
+    .d1 = 0
+    .d2 = 0
+    .RSC_TAB = 2BA3E
+    .ROMTOP  = 2FC64
+
+  _CASE .HOL:
+    .d1 = -5A
+    .d2 = -36
+    .RSC_TAB = 2BA0C
+    .ROMTOP  = 2FDD8
+
+  _DEFAULT:
+    _ERROR "unsupported country"
+_ENDSWITCH
+
+.RSC_LEN  = .ROMTOP-.RSC_TAB
+
+;*******************************************************************************
+;*******************************************************************************
+;* MRF:
+;* Reloc corrections ONLY (!!!) for TOS 1.04 from 6.4.1989
+;* based on an idea by Andreas Kromke (KAOS 1.2 or KAOS 1.4).
+;* The Reloc corrections support TOS lengths up to $30000. 
+
+!117E ; move.b    #$FE,(a2)+
+!3A4C ; and.b     #$FD,d0
+!3BAC ; cmpi.b    #$FD,d0
+!890E+.d1 ; add.l     #$000000FE,d6
+!B01C+.d1 ; data in sbblit.S
+!1ABF4+.d2 ; move.w    #$00FC,(a7)
+
+!0DA2 .. 0DC2       ; bomb image
+
+!282CE+.d2 .. 2844E+.d2 ; bios keyboard tables
+!28876+.d2 .. 28A78+.d2 ; 6x6 font offsets
+!28A78+.d2 .. 28EF4+.d2 ; 6x6 font data
+!28F52+.d2 .. 29154+.d2 ; 8x8 font offsets
+!29154+.d2 .. 29954+.d2 ; 8x8 font data
+!29954+.d2 .. 2A954+.d2 ; 8x16 font data
+!.RSC_TAB .. .ROMTOP ; resource data
+
