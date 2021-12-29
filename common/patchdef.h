@@ -51,12 +51,19 @@
  * Only needed for 1.04; in 1.06 this has been fixed
  */
 #ifndef TP_70
-#define TP_70 0
+#define TP_70 1
 #endif
 
 /*
  * TP_71: RSCONF2: Do not send startbit when setting baudrate
  */
 #ifndef TP_71
-#define TP_71 0
+#define TP_71 1
+#endif
+
+/*
+ * TP_72: POOLFIX: Make POOLFIX3 obsolete
+ */
+#ifndef TP_72
+#define TP_72 1
 #endif

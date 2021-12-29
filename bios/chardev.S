@@ -1382,11 +1382,13 @@ rs6conf3:
         cmp.w     #3,d0
         bhi.s     rs6conf6
         bne.s     rs6conf5
+#if BINEXACT
         bra.s     rs6conf4
         nop
         nop
         nop
         nop
+#endif
 #else
         cmp.w     #-1,d0
         beq.s     rs6conf6
@@ -1394,11 +1396,11 @@ rs6conf3:
         beq.s     rs6conf5
 		and.b     #$FD,d0
         beq.s     rs6conf5
+#endif
 rs6conf4:
 		move.b    #1,d0
 rs6conf5:
         move.b    d0,ctr(a0)                    /* set new handshake state */
-#endif
 #endif
 rs6conf6:
 /*  set timer baud rate */

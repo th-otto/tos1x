@@ -280,7 +280,7 @@ static MDBLOCK *getosm(NOTHING)
 	{
 		p2 = mdfind(&p1, &a, p);
 		mdlink(x, p2);
-#if GEMDOS >= 0x18
+#if (GEMDOS >= 0x18) | TP_72
 		x->m_own = MF_FREE;
 #else
 		p2->m_own = NULL;
@@ -306,7 +306,7 @@ int mdlink(P(MD *) m, P(MD *) p)
 PP(register MD *m;)
 PP(register MD *p;)
 {
-#if GEMDOS >= 0x18
+#if (GEMDOS >= 0x18) | TP_72
 	register int i;
 	static MD **mds[2] = { &pmd.mp_mfl, &pmd.mp_mal };
 	register MD *q;
@@ -367,7 +367,7 @@ PP(MDBLOCK *p;)
 	
 	while (q != NULL)
 	{
-#if GEMDOS >= 0x18
+#if (GEMDOS >= 0x18) | TP_72
 		if (q->x_flag > 0)
 #endif
 		{

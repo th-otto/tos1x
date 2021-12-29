@@ -96,6 +96,7 @@
 #undef TP_69
 #undef TP_70
 #undef TP_71
+#undef TP_72
 
 #define TP_01 0
 #define TP_02 0
@@ -164,6 +165,7 @@
 #define TP_69 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
 #define TP_70 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
 #define TP_71 0
+#define TP_72 0
 
 #endif
 
