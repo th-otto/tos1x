@@ -32,7 +32,7 @@ rs232iorec equ $0c70
 /* absolute address from TOS 1.04 */
 settimer equ $00FC36AC
 
-	.text
+	text
 
 entry:
 		pea.l      instpat
@@ -53,14 +53,18 @@ exit:
 
 welcomemsg:
 		dc.b 10,13,27,'p'
-		.ascii '  Rainbow TOS patches loaded.  '
+		ascii "  Rainbow TOS patches loaded.  "
 		dc.b 27,'q',10,13
-		.ascii ' Copyright ',0xbd,' 1989, Atari Corp. ',10,13
-		.ascii ' Version 1.5 ,by K.Isakovic    ',10,13,0
-		.even
+		ascii " Copyright "
+		dc.b $bd
+		ascii " 1989, Atari Corp. "
+		dc.b 10,13
+		ascii " Version 1.5 ,by K.Isakovic    "
+		dc.b 10,13,0
+		even
 
 instpat:
-		movea.l    (0x000004F2).w,a0
+		movea.l    ($000004F2).w,a0
 		movea.l    8(a0),a0
 		move.l     #OSSTART,d0   ; correct ROM base?
 		cmp.l      a0,d0
@@ -73,7 +77,7 @@ instpat1:
 		rts
 instpat2:
 		move.l     (patcharea).w,d0
-		cmp.l      #0x0BADC0DE,d0 ; already installed?
+		cmp.l      #$0BADC0DE,d0 ; already installed?
 		bne.s      instpat3
 		rts
 instpat3:
@@ -86,9 +90,9 @@ instpat3:
  */
 		movea.l    20(a0),a0  ; hdr->os_magic
 instpat4:
-		cmpi.w     #0x4E75,-(a0) ; RTS opcode
+		cmpi.w     #$4E75,-(a0) ; RTS opcode
 		bne.s      instpat4
-		cmpi.w     #0x4E5E,-(a0) ; UNLK opcode
+		cmpi.w     #$4E5E,-(a0) ; UNLK opcode
 		bne.s      instpat4
 		addq.w     #4,a0         ; now have start of linef dispatcher table
 		lea.l      getlinef+2(pc),a1
@@ -131,7 +135,7 @@ cookie2:
 		
 nocookie:
 		move.w     sr,-(a7)
-		ori.w      #0x0700,sr
+		ori.w      #$0700,sr
 * install new line-f trap handler
 		move.l     #(mylineftrap-patchcode)+patcharea,(_lineftrap).w
 * install new xbios handler
@@ -153,7 +157,7 @@ nocookie:
 		lea        (resvalid).w,a0
 		move.l     (a0),(oldresvalid-patchcode+patcharea).w
 * make new reset vector valid
-		move.l     #0x31415926,(a0)
+		move.l     #$31415926,(a0)
 		move.w     (a7)+,sr
 		rts
 
@@ -162,11 +166,11 @@ nocookie:
  */
 
 patchcode:
-	dc.l 0x0BADC0DE
+	dc.l $0BADC0DE
 oldresvalid:
 	dc.l 0
-	dc.l 0x58425241 /* 'XBRA' */
-	dc.l 0x54464958 /* 'TFIX' */
+	dc.l $58425241 /* 'XBRA' */
+	dc.l $54464958 /* 'TFIX' */
 	dc.l 0
 myresvec:
 		clr.l      (patcharea).w
@@ -174,14 +178,14 @@ myresvec:
 		move.l     oldresvalid(pc),(resvalid).w
 		jmp        (a6)
 
-	dc.l 0x58425241 /* 'XBRA' */
-	dc.l 0x54464958 /* 'TFIX' */
+	dc.l $58425241 /* 'XBRA' */
+	dc.l $54464958 /* 'TFIX' */
 	dc.l 0
 newxbios:
 #if 0
 		btst       #13,(a7)                 /* were we in supervisor mode? */
 #else
-		dc.w       0x0817,0x000d  /* assemblers may choke on the invalid #13 above */
+		dc.w       $0817,$000d  /* assemblers may choke on the invalid #13 above */
 #endif
 		beq.s      bx_user
 		lea.l      6(a7),a0                 /* yes, arguments are on stack */
@@ -199,7 +203,7 @@ rsconf:
 		move.w     (baudrate).w,d0          /* last baudrate */
 		rte
 rs6conf2:
-		ori.w      #0x0700,sr               /* no interrupts for now */
+		ori.w      #$0700,sr               /* no interrupts for now */
 		lea.l      (MFP_REGS).w,a1          /* set mfp chip address pointer */
 		lea.l      retvalue+2(pc),a2
 		movep.l    MFP_UCR(a1),d0           /* grab the old ucs,rsr,tsr,scr contents */
@@ -247,7 +251,7 @@ rs6con10:
 		bmi.s      retvalue
 		move.b     13(a0),MFP_SCR(a1)
 retvalue:
-		move.l     #0x00BC614E,d0
+		move.l     #$00BC614E,d0
 		rte
 
 /* baudrate table - control register setting */
@@ -256,8 +260,8 @@ baudctrl: dc.b $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$02,$02
 bauddata: dc.b $01,$02,$04,$05,$08,$0a,$0b,$10,$20,$40,$60,$80,$8f,$af,$40,$60
 
 
-	dc.l 0x58425241 /* 'XBRA' */
-	dc.l 0x54464958 /* 'TFIX' */
+	dc.l $58425241 /* 'XBRA' */
+	dc.l $54464958 /* 'TFIX' */
 	dc.l 0
 mylineftrap:
 		movea.l    2(a7),a0                 /* fetch caller pc */
@@ -282,7 +286,7 @@ linef1:
 		beq.s      sh_name
 		andi.w     #$0FFF,d1
 getlinef:
-		move.l     #0x00123456,a0
+		move.l     #$00123456,a0
 		movea.l    0(a0,d1.w),a0
 		jmp        (a0)
 linefh1:
@@ -322,8 +326,8 @@ sh_name3:
 		rts
 
 
-	dc.l 0x58425241 /* 'XBRA' */
-	dc.l 0x54464958 /* 'TFIX' */
+	dc.l $58425241 /* 'XBRA' */
+	dc.l $54464958 /* 'TFIX' */
 	dc.l 0
 /*
  * fix for Mshrink(0)
@@ -332,7 +336,7 @@ newgemdos:
 #if 0
 		btst       #13,(a7)                 /* were we in supervisor mode? */
 #else
-		dc.w       0x0817,0x000d  /* assemblers may choke on the invalid #13 above */
+		dc.w       $0817,$000d  /* assemblers may choke on the invalid #13 above */
 #endif
 		beq.s      newgemd1
 		lea.l      6(a7),a0                 /* yes, arguments are on stack */
@@ -352,4 +356,4 @@ newgemd3:
 		jmp        (a0)
 
 endpatchcode:
-		.text
+		text

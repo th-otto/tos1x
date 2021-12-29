@@ -66,7 +66,7 @@ L40:
         bsr        find_cookie             ;test for free 'cookie'
         addq.l     #4,sp
         /* addi.l     #8,(a5) */
-        dc.w 0x0695,0,8 /* XXX */
+        dc.w $0695,0,8 /* XXX */
         move.l     (a5),-(sp)
         move.l     24(a6),d0
         add.l      28(a6),d0
@@ -123,35 +123,44 @@ error_exit:
 
 
 installed_s:
-        dc.b    'POOL PATCH OF 19-JAN-90 INSTALLED.'
+        ascii   "POOL PATCH OF 19-JAN-90 INSTALLED."
 crnl:
         dc.b    13,10,0
 already_in_s:
-        dc.b    'The pool patch is already installed.',0
+        ascii   "The pool patch is already installed."
+        dc.b    0
 not_needed_s:
-        dc.b    'The pool patch is not needed in this TOS',0
+        ascii   "The pool patch is not needed in this TOS"
+        dc.b    0
 bad_linkage_s:
-        dc.b    'The pool patch must run first in the',13,10
-        dc.b    '\AUTO\ folder (before any program',13,10
-        dc.b    'links into the GEMDOS (trap 1) vector).',0
+        ascii   "The pool patch must run first in the"
+        dc.b    13,10
+        ascii   "\AUTO\ folder (before any program"
+        dc.b    13,10
+        ascii   "links into the GEMDOS (trap 1) vector)."
+        dc.b    0
 strange_TOS_s:
-        dc.b    'This GEMDOS needs the pool patch, but',13,10
-        dc.b    "this program doesn't recognize this TOS.",0
-		.even
+        ascii   "This GEMDOS needs the pool patch, but"
+        dc.b    13,10
+        ascii   "this program doesn"
+        dc.b    39
+        ascii   "t recognize this TOS."
+        dc.b    0
+		even
 
 
 basepage_p:     dc.l    0
 
 
-        dc.l 0x58425241 /* 'XBRA' */
-        dc.l 0x5f4f4f4c /* '_OOL' */
+        dc.l $58425241 /* 'XBRA' */
+        dc.l $5f4f4f4c /* '_OOL' */
         dc.l 0
 newgemdos:
         tst.b      poolfix_flag
         beq        L2A2
         bsr        all_sub
 L2A2:
-        move.w     usp,a0
+        move.l     usp,a0
         btst       #5,(sp)
         beq.b      L2B6
         lea        6(sp),a0
@@ -195,14 +204,14 @@ L304:
         cmpi.l     #1,12(a3)
         bne        L31E
         /* add        #1,d4 */
-        dc.w 0xd87c,1 /* XXX */
+        dc.w $d87c,1 /* XXX */
         move.l     a5,d0
         bne        L31E
         move.l     a4,a5
         move.w     d5,d6
 L31E:
         /* add        #1,d5 */
-        dc.w 0xda7c,1 /* XXX */
+        dc.w $da7c,1 /* XXX */
         adda.l     #16,a3
 L328:
         cmp        #4,d5
@@ -229,7 +238,7 @@ L34A:
         move.w     d6,d7
 L35A:
         /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        dc.w $de7c,1 /* XXX */
         cmp        #4,d7
         beq        L36E
         tst.b      4(a4)
@@ -269,7 +278,7 @@ L39A:
         move.w     #3,d6
 L3D6:
         /* add        #1,d6 */
-        dc.w 0xdc7c,1 /* XXX */
+        dc.w $dc7c,1 /* XXX */
         cmp        #4,d6
         beq        L3EA
         tst.b      4(a5)
@@ -316,7 +325,7 @@ L426:
         move.w     #3,d7
 L45E:
         /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        dc.w $de7c,1 /* XXX */
         cmp        #4,d7
         beq        L472
         tst.b      4(a4)
@@ -356,14 +365,14 @@ L4AA:
         add.l      a5,d0
         move.l     d0,(sp)
         /* addi.l     #6,(sp) */
-        dc.w 0x0697,0,6 /* XXX */
+        dc.w $0697,0,6 /* XXX */
         move.w     d7,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a4,d0
         move.l     d0,-(sp)
         /* addi.l     #6,(sp) */
-        dc.w 0x0697,0,6 /* XXX */
+        dc.w $0697,0,6 /* XXX */
         jsr        block_sub
         addq.l     #4,sp
         move.w     d7,d0
@@ -374,7 +383,7 @@ L4AA:
         move.l     #1,18(a0)
 L4EA:
         /* add        #1,d6 */
-        dc.w 0xdc7c,1 /* XXX */
+        dc.w $dc7c,1 /* XXX */
         cmp        #4,d6
         beq        L4FE
         tst.b      4(a5)
@@ -396,7 +405,7 @@ L502:
         bne.b      L4EA
 L522:
         /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        dc.w $de7c,1 /* XXX */
         cmp        #4,d7
         beq        L536
         tst.b      4(a4)
@@ -454,7 +463,7 @@ L5A6:
         move.l     a4,d0
         bne.b      L59C
         /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        dc.w $de7c,1 /* XXX */
 L5AE:
         cmp        #2,d7
         blt.b      L582

@@ -34,7 +34,7 @@ rs232iorec equ $0c70
 /* absolute address from TOS 1.04 */
 settimer equ $00FC36AC
 
-	.text
+	text
 
 entry:
 		pea.l      instpat
@@ -55,13 +55,16 @@ exit:
 
 welcomemsg:
 		dc.b 10,13,27,'p'
-		.ascii '    Rainbow TOS patches loaded.    '
+		ascii "    Rainbow TOS patches loaded.    "
 		dc.b 27,'q',10,13
-		.ascii ' Copyright ',0xbd,' 1989,1991 Atari Corp. ',10,13,0
-		.even
+		ascii " Copyright "
+		dc.b $bd
+		ascii " 1989,1991 Atari Corp. "
+		dc.b 10,13,0
+		even
 
 instpat:
-		movea.l    (0x000004F2).w,a0
+		movea.l    ($000004F2).w,a0
 		movea.l    8(a0),a0
 		move.l     #OSSTART,d0   ; correct ROM base?
 		cmp.l      a0,d0
@@ -74,7 +77,7 @@ instpat1:
 		rts
 instpat2:
 		move.l     (patcharea).w,d0
-		cmp.l      #0x0BADC0DE,d0 ; already installed?
+		cmp.l      #$0BADC0DE,d0 ; already installed?
 		bne.s      instpat3
 		rts
 instpat3:
@@ -87,9 +90,9 @@ instpat3:
  */
 		movea.l    20(a0),a0  ; hdr->os_magic
 instpat4:
-		cmpi.w     #0x4E75,-(a0) ; RTS opcode
+		cmpi.w     #$4E75,-(a0) ; RTS opcode
 		bne.s      instpat4
-		cmpi.w     #0x4E5E,-(a0) ; UNLK opcode
+		cmpi.w     #$4E5E,-(a0) ; UNLK opcode
 		bne.s      instpat4
 		addq.w     #4,a0         ; now have start of linef dispatcher table
 		lea.l      getlinef+2(pc),a1
@@ -97,7 +100,7 @@ instpat4:
 		tst.b      (_lineftrap).w
 		bne.s      instpat5
 		lea.l      gooldtrap(pc),a0
-		move.w     #0x4EF9,(a0)+ ; JMP opcode
+		move.w     #$4EF9,(a0)+ ; JMP opcode
 		move.l     (_lineftrap).w,(a0)
 instpat5:
 		lea.l      patchcode(pc),a0
@@ -108,11 +111,11 @@ instpat6:
 		move.l     (a0)+,(a1)+
 		dbf        d0,instpat6
 		move.w     sr,-(a7)
-		ori.w      #0x0700,sr
+		ori.w      #$0700,sr
 * install new line-f trap handler
 		move.l     #(mylineftrap-patchcode)+patcharea,(_lineftrap).w
 * save old xbios entry
-		move.l     (_trap14vec).w,(gooldbios+2-patchcode)+patchares
+		move.l     (_trap14vec).w,(gooldbios+2-patchcode)+patcharea
 * install new xbios handler
 		move.l     #(newxbios-patchcode)+patcharea,(_trap14vec).w
 * save old reset vector
@@ -122,7 +125,7 @@ instpat6:
 * save old resvalid
 		move.l     (resvalid).w,(oldresvalid).w
 * make new reset vector valid
-		move.l     #0x31415926,(resvalid).w
+		move.l     #$31415926,(resvalid).w
 		move.w     (a7)+,sr
 		rts
 
@@ -131,7 +134,7 @@ instpat6:
  */
 
 patchcode:
-	dc.l 0x0BADC0DE
+	dc.l $0BADC0DE
 myresvec:
 		clr.l      (patcharea).w
 		move.l     (oldresvector).w,(resvector).w
@@ -142,7 +145,7 @@ newxbios:
 #if 0
 		btst       #13,(a7)                 /* were we in supervisor mode? */
 #else
-		dc.w       0x0817,0x000d  /* assemblers may choke on the invalid #13 above */
+		dc.w       $0817,$000d  /* assemblers may choke on the invalid #13 above */
 #endif
 		beq.s      bx_user
 		lea.l      6(a7),a0                 /* yes, arguments are on stack */
@@ -153,14 +156,14 @@ bx_sp_ok:
 		cmpi.w     #15,(a0)                 /* Rsconf call? */
 		beq.s      rsconf
 gooldbios:
-		dc.w 0x4ef9,0,0                     /* jmp (xxx).l; use constants to prevent it from being optimized */
+		dc.w $4ef9,0,0                     /* jmp (xxx).l; use constants to prevent it from being optimized */
 rsconf:
 		cmpi.w     #-2,2(a0)                /* -2 = return last baudrate */
 		bne.s      rs6conf2
 		move.w     (baudrate).w,d0          /* last baudrate */
 		rte
 rs6conf2:
-		ori.w      #0x0700,sr               /* no interrupts for now */
+		ori.w      #$0700,sr               /* no interrupts for now */
 		lea.l      (MFP_REGS).w,a1          /* set mfp chip address pointer */
 		lea.l      retvalue+2(pc),a2
 		movep.l    MFP_UCR(a1),d0           /* grab the old ucs,rsr,tsr,scr contents */
@@ -207,7 +210,7 @@ rs6con10:
 		bmi.s      retvalue
 		move.b     13(a0),MFP_SCR(a1)
 retvalue:
-		dc.w 0x203c,0,0 /* move.l #x,d0; use constants to prevent it from being optimized */
+		dc.w $203c,0,0 /* move.l #x,d0; use constants to prevent it from being optimized */
 		rte
 
 /* baudrate table - control register setting */
@@ -239,7 +242,7 @@ linef1:
 		beq.s      sh_name
 		andi.w     #$0FFF,d1
 getlinef:
-		dc.w 0x207c,0,0                     /* move.l #xxx.l a0; use constansts to prevent it from being optimized */
+		dc.w $207c,0,0                     /* move.l #xxx.l a0; use constansts to prevent it from being optimized */
 		movea.l    0(a0,d1.w),a0
 		jmp        (a0)
 linefh1:
@@ -278,4 +281,4 @@ sh_name3:
 		move.l     a1,d0
 		rts
 endpatchcode:
-		.text
+		text

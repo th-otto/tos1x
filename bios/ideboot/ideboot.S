@@ -35,23 +35,23 @@
 
 
 #define IDEDATA		(A2)
-#define FEATURES	0x5(A2)
-#define	SECTORCNT	0x9(A2)
-#define SECTORNO	0xD(A2)
-#define CYLLOW		0x11(A2)
-#define CYLHIGH		0x15(A2)
-#define HEAD		0x19(A2)
-#define CMDSTAT		0x1D(A2)
-#define IDECONTROL	0x39(A2)
+#define FEATURES	$5(A2)
+#define	SECTORCNT	$9(A2)
+#define SECTORNO	$D(A2)
+#define CYLLOW		$11(A2)
+#define CYLHIGH		$15(A2)
+#define HEAD		$19(A2)
+#define CMDSTAT		$1D(A2)
+#define IDECONTROL	$39(A2)
 
-#define hz200		0x4BA.w
-#define diskbuf		0x4C6.w
+#define hz200		$4BA.w
+#define diskbuf		$4C6.w
 
 #define LBAMODE		(1<<6)
-#define READ_SECTOR	0x20
+#define READ_SECTOR	$20
 #define DRQ			3
 
-#define DMAr		0x444D4172
+#define DMAr		$444D4172
 #define EUNDEV		-15
 
 /* TEST code */
@@ -99,7 +99,7 @@ ideboot:
 	moveq	#0,D0	/* root sector */
 	bsr.s	ideread
 	bne.s	noboot	/* ideread also sets condition codes */
-	cmp.w	#0x1234,D1
+	cmp.w	#$1234,D1
 	bne.s	noboot
 
 	move.l	diskbuf,A0
@@ -117,15 +117,15 @@ noboot:
  * Modifies: D0,D1,D2,A0,A1,A2 (A0 points to end of buffer on return)
  */
 ideread:
-	lea		0xFFF00000,A2
+	lea		$FFF00000,A2
 
 	/* check for IDE */
-	move.l	0x8.w,D1		/* old bus error */
+	move.l	$8.w,D1		/* old bus error */
 	lea		berr(PC),A1
-	move.l	A1,0x8.w
+	move.l	A1,$8.w
 	move.l	SP,A1
 	tst.w	(A2)
-	move.l	D1,0x8.w
+	move.l	D1,$8.w
 	
 	/* select device and wait for DRDY */
 	move.l	hz200,D1
@@ -134,8 +134,8 @@ ideread:
 	clr.b	IDECONTROL
 waitdrdy:
 	move.b	CMDSTAT,D2
-	and.b	#0xC9,D2
-	cmp.b	#0x40,D2
+	and.b	#$C9,D2
+	cmp.b	#$40,D2
 	beq.s	ready
 	cmp.l	hz200,D1
 	bpl.s	waitdrdy
@@ -164,7 +164,7 @@ waitdrq:
 
 berr:
 	/* bus error: no IDE interface */
-	move.l	D1,0x8.w
+	move.l	D1,$8.w
 	move.l	A1,SP
 errout:
 	moveq	#-1,D0

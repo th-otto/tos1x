@@ -140,30 +140,38 @@ L15E:
         rts
 
 installed_s:
-        dc.b    'POOL PATCH OF 19-JAN-90 INSTALLED.',13,10
-        dc.b    'Improved 27-MAR-90 by Claus Brod'
+        ascii   "POOL PATCH OF 19-JAN-90 INSTALLED."
+        dc.b    13,10
+        ascii   "Improved 27-MAR-90 by Claus Brod"
 crnl:
         dc.b    13,10,0
 already_in_s:
-        dc.b    'Pool patch already installed.',0
+        ascii   "Pool patch already installed."
+        dc.b    0
 not_needed_s:
-        dc.b    'Pool patch not needed in this TOS',0
+        ascii   "Pool patch not needed in this TOS"
+        dc.b    0
 bad_linkage_s:
-        dc.b    'Something linked into the GEMDOS trap',13,10
-        dc.b    'without following XBRA rules.',13,10,0
+        ascii   "Something linked into the GEMDOS trap"
+        dc.b    13,10
+        ascii   "without following XBRA rules."
+        dc.b    13,10,0
 strange_TOS_s:
-        dc.b    "POOLFIX4 doesn't recognize this TOS.",0
-		.even
+        ascii   "POOLFIX4 doesn"
+        dc.b    39
+        ascii   "t recognize this TOS."
+        dc.b    0
+		even
 
-        dc.l 0x58425241 /* 'XBRA' */
-        dc.l 0x5f4f4f4c /* '_OOL' */
+        dc.l $58425241 /* 'XBRA' */
+        dc.l $5f4f4f4c /* '_OOL' */
         dc.l 0
 newgemdos:
         tst.b      poolfix_flag
         beq.s      L2A2
         bsr.s      all_sub
 L2A2:
-        move.w     usp,a0
+        move.l     usp,a0
         btst       #5,(sp)
         beq.s      L2B6
         lea        6(sp),a0

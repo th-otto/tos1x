@@ -391,7 +391,7 @@ PP(MDBLOCK *p;)
 
 #ifndef __ALCYON__
 	/* BUG: no explicit return statement here, but has q == NULL in D0 */
-	return q;
+	return (MD *)q;
 #endif
 }
 
