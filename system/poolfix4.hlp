@@ -1,0 +1,144 @@
+POOLFIX4 (Got to patch and get again and again... c'mon, Leila, gimme
+========  a break - or: Reasons To Be Cheerful, Part 4)
+
+Yep, it's true, TOS 1.4 is buggy. Well, ATARI has done something about
+it and released several fix programs to blow up your AUTO folder. A
+very... ahem... remarkable representative of this kind of programs is
+POOLFIX written by Allan Pratt which tries to fix a new bug in the pool
+manager. Allan released three versions of this program, and then he
+settled down with a long sigh of relieve thinking he did it right at
+last.
+
+Well, he wasn't quite right. Allan's POOLFIX versions needed to be
+placed first in the AUTO folder because POOLFIX tries to locate
+some illegal system variables by following the TRAP #1 vector into
+ROM code. If any program occupies the TRAP #1 vector before POOLFIX
+shows up, things are messed up: POOLFIX refuses to install itself.
+
+This isn't a big problem for most of you out there, but it is a
+problem for people using hard disk drivers and other programs that
+start up before AUTO folder programs and use the TRAP #1 vector
+for their own purposes. It is also a pain in the neck for everyone
+to be forced to re-order their AUTO folder once again, and as time
+passes by, you tend to forget which programs in the AUTO folder
+need to be started in which order, and soon chaos spreads.
+
+I was faced with the problem when I realized that POOLFIX3 didn't
+want to install itself when my own hard disk driver (included in
+the book SCHEIBENKLEISTER), version 3.5, was running. This is due
+to the fact that I use the TRAP #1 vector in CBHD 3.5 (my HD driver)
+to do some DESKTOP.INF patching that my readers urged me to implement.
+The problem, however, could have been solved easily if POOLFIX would
+follow the official ATARI guidelines for XBRA completely. CBHD 3.5
+uses XBRA to notify other programs that it linked into the TRAP #1
+vector, and so it would be no problem for POOLFIX to follow the
+TRAP #1 XBRA chain into ROM. Allan, however, didn't think of this
+neat possibility - being able to follow the chain was, as far as
+I know, one of the main reasons for adopting the XBRA standard.
+
+(The same problem occurs with FATSPEED, a freeware (?) GEMDOS
+speed-up for TOS 1.2; if the programmer of FATSPEED should read
+this some day, he or she should think of implementing this follow-
+the-chain-into-ROM-technique into FATSPEED, too. Tnx so much.)
+
+As always, users are forced to do the patching themselves. In this
+case, I reassembled POOLFIX and inserted a full-blown XBRA algorithm.
+Apart from that, I optimized the program a bit so that it occupies
+lesser space in RAM than the previous version. It's also a bit
+shorter on disk, but since it uses 2 clusters as before, there's
+no speedup when booting. BTW: I used TURBO ASS for this job, a
+remarkably fast shareware assembler written by Markus Fritze and
+S”ren Hellwig, Birkhahnkamp 38, 2000 Norderstedt 1, West Germany.
+
+POOLFIX4, as I called it, has been tested successfully on my MegaST
+with TOS 1.4 in ROM, on my STE with TOS 1.6 in ROM, and with a 1040
+with TOS 1.2 (where it doesn't install itself since TOS 1.2 doesn't
+need the patch). If there are any incompatibilities with any programs,
+please tell me:
+
+    Claus Brod
+    Am Felsenkeller 2
+    8772 Marktheidenfeld
+    West Germany
+    (049-)(0)9391-3206
+
+    (e-mail: C.BROD@LINK-N (Zerberus net), soon also on FIDO and
+             Usenet)
+
+This program should always be posted or copied with this documentation.
+I claim no rights on this program (how should I, most of the code
+is from Allan, who hopefully doesn't mind if I correct him this way),
+so it's freeware. Spread it. I said: Spread it! Did I say "spread it"?
+No? So I'll say it again: Spread it!
+
+Sorry, Allan, but I HAD to do this for my readers. I will send ATARI
+a copy of this program, so that they may be able to use it as an
+official version (it's clearly better than the original). Let's
+wait and see if they want it.
+
+------------------------------------
+Atari Corp., January 19, 1990
+
+There is a rare bug in Rainbow TOS (1.4) and STe TOS (1.6) involving
+the way GEMDOS handles its internal memory.  You probably have never
+seen this bug, and if you use this patch program, you never will.
+
+Place POOLFIX3.PRG in your AUTO folder and reboot your machine.  That's
+all there is to it.  POOLFIX3.PRG will run every time you boot your
+machine, so the bug will never ever bite you.
+
+You might get a message to the effect that it must run first in the
+AUTO folder.  If this happens, copy the programs from your AUTO folder
+to another place and erase them all from the AUTO folder.  Now copy
+POOLFIX3.PRG into your AUTO folder, and then all the other programs
+which were there.
+
+(A version of this patch was released January 10; it didn't work, and
+shouldn't be used.  Another was released January 18; it didn't work
+either. (Look, I'm only human!)  This is Take 3.)
+
+**********************************************************************
+
+If you are interested in the technical details of why this program
+is necessary and what it does, read on:
+
+The bug doesn't bite very often.  You probably haven't ever seen it. 
+It happens when programs use Malloc a lot and you have a lot of folders
+in your system.  (Yes, this bug was introduced as part of the code
+which got rid of the 40-folder limit.)
+
+The OS pool is the internal memory used by GEMDOS to keep track of
+directories, files, handles, and internal memory.  Sometimes, GEMDOS
+uses only part of a block.  When there are two blocks that are only
+partly used, and the used parts would fit into one block, the space
+can be compacted to create one completely used block and one free
+block.
+
+Unfortunately, there's a bug in the compaction routine.  This patch
+prevents that compaction routine from being executed, by doing the
+compaction (with a bug-free routine) before GEMDOS has a chance to.
+
+This code runs before every GEMDOS call.  It uses a flag to tell
+whether it needs to run the compaction routine before it lets GEMDOS
+handle the call.  If the call is one of the Pterm calls, or an Mfree()
+call, it sets the flag so the compaction will run before the NEXT
+Gemdos call:
+
+	new gemdos entry point:
+
+		if (flag is set)
+			run compact;
+
+		if (call is Mfree or one of the Pterm calls)
+			set the flag;
+		else
+			clear the flag;
+
+		jump to the original gemdos entry point;
+
+
+The compaction routine runs through GEMDOS's internal memory using
+unpublished variables (don't you dare use them yourself!) and compacts
+empty space out of the memory blocks, so the routine inside GEMDOS
+never finds any space to compact, and the incorrect code never runs.
+

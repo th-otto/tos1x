@@ -47,13 +47,9 @@ L40:
         tst        d0
         bne        error_exit
         lea        bad_linkage_s(pc),a0
-        move.l     (_sysbase).w,a1
-        move.l     8(a1),a1
-        move.l     (_trap1vec).w,a2
-        move.l     a2,d0
-        sub.l      a1,d0
-        cmp.l      #$20000,d0
-        bhi        error_exit
+        bsr        find_os_gemdos
+        tst.l      d0
+        bmi        error_exit
         lea        strange_TOS_s(pc),a0
         cmpi       #$2EBC,pmd_offset(a2)
         bne        error_exit
@@ -65,13 +61,12 @@ L40:
         clr.l      -(sp)
         bsr        find_cookie             ;test for free 'cookie'
         addq.l     #4,sp
-        /* addi.l     #8,(a5) */
-        dc.w 0x0695,0,8 /* XXX */
+        addq.l     #8,(a5)
         move.l     (a5),-(sp)
         move.l     24(a6),d0
         add.l      28(a6),d0
         move.l     d0,-(sp)
-        move.l     #0,-(sp)
+        clr.l      -(sp)
         move.l     #'_OOL',-(sp)
         bsr        place_cookie
         adda       #16,sp
@@ -82,25 +77,23 @@ L40:
         move.l     (a5),d7
         asl.l      #3,d7
 LCE:
-        move.l     (_trap1vec).w,a1
+		bsr.s      find_os_gemdos
+		move.l     a2,a1
         move.l     pmd_offset+2(a1),a2
         move.l     a2,pmd
         move.l     a2,mds           /* mds[0] = &pmd.mp_mfl */
         addq.l     #4,a2
         move.l     a2,mds+4         /* mds[1] = &pmd.mp_mal */
-        move.l     ofd_offset+2(a1),a2
-        move.l     a2,ofdlist
+        move.l     ofd_offset+2(a1),ofdlist
         move.l     (_trap1vec).w,newgemdos-4
         move.l     #newgemdos,$84.w
-        move.l     #installed_s,-(a7)
-        move.w     #9,-(a7) ; Cconws
-        trap       #1
-        addq.w     #6,a7
+        lea        installed_s(pc),a0
+        bsr.s      Cconws_a0
         move.l     24(a6),d0
         add.l      28(a6),d0
         add.l      d7,d0
         sub.l      a6,d0
-        move.w     #0,-(a7)
+        clr.w      -(a7)
         move.l     d0,-(a7)
         move.w     #$0031,-(a7) ; Ptermres
         trap       #1
@@ -108,69 +101,86 @@ LCE:
 
 
 error_exit:
-        move.l     a0,-(sp)
-        move.w     #9,-(sp)
-        trap       #1
-        addq       #6,sp
-        move.l     #crnl,-(sp)
-        move.w     #9,-(sp)
-        trap       #1
-        addq       #6,sp
-        move.w     #1,-(sp)
-        move.w     #$4C,-(sp)
+        bsr.s      Cconws_a0
+        lea        crnl(pc),a0
+        bsr.s      Cconws_a0
+        pea        $4C0001.l
         trap       #1
         dc.w       $4AFC ; illegal
 
+Cconws_a0:
+        move.l     a0,-(a7)
+        move.w     #$0009,-(a7) ; Cconws
+        trap       #1
+        addq.w     #6,a7
+        rts
+
+find_os_gemdos:
+        movem.l    d1-d1/a1-a1,-(sp)
+        moveq      #0,d0
+        move.l     (_trap1vec).w,a2
+L130:
+        cmpi.l     #'XBRA',-12(a2)
+        bne.s      L140
+        move.l     -4(a2),a2
+        bra.s      L130
+L140:
+        move.l     a2,d1
+        and.l      #$FFFFFF,d1
+        move.l     (_sysbase).w,a1
+        move.l     8(a1),a1
+        sub.l      a1,d1
+        bmi.s      L15C
+        cmp.l      #$20000,d1
+        bmi.s      L15E
+L15C:
+        moveq      #-1,d0
+L15E:
+        movem.l    (sp)+,d1-d1/a1-a1
+        rts
 
 installed_s:
-        dc.b    'POOL PATCH OF 19-JAN-90 INSTALLED.'
+        dc.b    'POOL PATCH OF 19-JAN-90 INSTALLED.',13,10
+        dc.b    'Improved 27-MAR-90 by Claus Brod'
 crnl:
         dc.b    13,10,0
 already_in_s:
-        dc.b    'The pool patch is already installed.',0
+        dc.b    'Pool patch already installed.',0
 not_needed_s:
-        dc.b    'The pool patch is not needed in this TOS',0
+        dc.b    'Pool patch not needed in this TOS',0
 bad_linkage_s:
-        dc.b    'The pool patch must run first in the',13,10
-        dc.b    '\AUTO\ folder (before any program',13,10
-        dc.b    'links into the GEMDOS (trap 1) vector).',0
+        dc.b    'Something linked into the GEMDOS trap',13,10
+        dc.b    'without following XBRA rules.',13,10,0
 strange_TOS_s:
-        dc.b    'This GEMDOS needs the pool patch, but',13,10
-        dc.b    "this program doesn't recognize this TOS.",0
+        dc.b    "POOLFIX4 doesn't recognize this TOS.",0
 		.even
-
-
-basepage_p:     dc.l    0
-
 
         dc.l 0x58425241 /* 'XBRA' */
         dc.l 0x5f4f4f4c /* '_OOL' */
         dc.l 0
 newgemdos:
         tst.b      poolfix_flag
-        beq        L2A2
-        bsr        all_sub
+        beq.s      L2A2
+        bsr.s      all_sub
 L2A2:
         move.w     usp,a0
         btst       #5,(sp)
-        beq.b      L2B6
+        beq.s      L2B6
         lea        6(sp),a0
         tst        (_longframe).w
-        beq.b      L2B6
-        addq.l     #2,a0
+        beq.s      L2B6
+        addq.w     #2,a0
 L2B6:
         move.w     (a0),d0 ;Pterm0 ?
-        beq.b      L2CA
-        cmp        #$49,d0 ;Mfree ?
-        beq.b      L2CA
-        cmp        #$31,d0 ;Ptermres ?
-        beq.b      L2CA
-        cmp        #$4C,d0 ;Pterm ?
-* NB: Error of POOLFIX3: Mshrink is ignored !!!
-* NB: Yet, it too can free RAM for compaction
+        beq.s      L2CA
+        sub.w      #$31,d0 ;Ptermres ?
+        beq.s      L2CA
+        sub.w      #$18,d0 ;Mfree ?
+        beq.s      L2CA
+        subq.w     #3,d0 ;Pterm ?
 L2CA:
         seq        poolfix_flag
-        move.l     newgemdos-4,a0
+        move.l     newgemdos-4(pc),a0
         jmp        (a0)
 
 
@@ -178,43 +188,41 @@ all_sub:
         link       a6,#0
         movem.l    d2-d7/a3-a5,-(sp)
         suba.l     a5,a5
-        move.l     ofdlist,a0
+        move.l     ofdlist(pc),a0
         move.l     (a0),a4
         clr        d3
-        bra        L34A
+        bra.s      L34A
 
 L2F0:
         tst.b      4(a4)
-        ble        L348
+        ble.s      L348
         clr        d4
         clr        d5
         lea        6(a4),a3
-        bra        L328
+        bra.s      L328
 
 L304:
         cmpi.l     #1,12(a3)
-        bne        L31E
-        /* add        #1,d4 */
-        dc.w 0xd87c,1 /* XXX */
+        bne.s      L31E
+        addq.w     #1,d4
         move.l     a5,d0
-        bne        L31E
+        bne.s      L31E
         move.l     a4,a5
         move.w     d5,d6
 L31E:
-        /* add        #1,d5 */
-        dc.w 0xda7c,1 /* XXX */
-        adda.l     #16,a3
+        addq.w     #1,d5
+        adda.w     #16,a3
 L328:
         cmp        #4,d5
-        blt.b      L304
+        blt.s      L304
         cmp        #4,d4
-        bne        L346
+        bne.s      L346
         clr.b      4(a4)
         cmp.l      a4,a5
-        bne        L342
+        bne.s      L342
         suba.l     a5,a5
 L342:
-        bra        L348
+        bra.s      L348
 
 L346:
         add        d4,d3
@@ -222,149 +230,136 @@ L348:
         move.l     (a4),a4
 L34A:
         move.l     a4,d0
-        bne.b      L2F0
+        bne.s      L2F0
         cmp        #4,d3
         blt        L566
         move.l     a5,a4
         move.w     d6,d7
 L35A:
-        /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        addq.w     #1,d7
         cmp        #4,d7
-        beq        L36E
+        beq.s      L36E
         tst.b      4(a4)
-        bgt        L372
+        bgt.s      L372
 L36E:
         clr        d7
         move.l     (a4),a4
 L372:
         move.l     a4,d0
-        beq        L392
+        beq.s      L392
         tst.b      4(a4)
-        ble.b      L35A
+        ble.s      L35A
         move.w     d7,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a4,d0
         move.l     d0,a0
         cmpi.l     #1,18(a0)
-        beq.b      L35A
+        beq.s      L35A
 L392:
         bra        L55A
 
 L396:
-        bra        L41C
+        bra.s      L41C
 
 L39A:
         lea        6(a5),a3
         cmpi.l     #1,12(a3)
-        bne        L418
+        bne.s      L422
         cmpi.l     #1,28(a3)
-        bne        L418
+        bne.s      L422
         cmpi.l     #1,44(a3)
-        bne        L418
+        bne.s      L422
         cmpi.l     #1,60(a3)
-        bne        L418
+        bne.s      L422
         clr.b      4(a5)
-        move.w     #3,d6
+        moveq      #3,d6
 L3D6:
-        /* add        #1,d6 */
-        dc.w 0xdc7c,1 /* XXX */
+        addq.w     #1,d6
         cmp        #4,d6
-        beq        L3EA
+        beq.s      L3EA
         tst.b      4(a5)
-        bgt        L3EE
+        bgt.s      L3EE
 L3EA:
         clr        d6
         move.l     (a5),a5
 L3EE:
         move.l     a5,d0
-        beq        L40E
+        beq.s      L40E
         tst.b      4(a5)
-        ble.b      L3D6
+        ble.s      L3D6
         move.w     d6,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a5,d0
         move.l     d0,a0
         cmpi.l     #1,18(a0)
-        bne.b      L3D6
+        bne.s      L3D6
 L40E:
         move.l     a5,d0
         beq        L566
-        bra        L41C
-
-L418:
-        bra        L422
 
 L41C:
         tst        d6
-        beq        L39A
+        beq.s      L39A
 L422:
-        bra        L4A4
+        bra.s      L4A4
 
 L426:
         lea        6(a4),a3
         cmpi.l     #1,12(a3)
-        beq        L4A0
+        beq.s      L4AA
         cmpi.l     #1,28(a3)
-        beq        L4A0
+        beq.s      L4AA
         cmpi.l     #1,44(a3)
-        beq        L4A0
+        beq.s      L4AA
         cmpi.l     #1,60(a3)
-        beq        L4A0
-        move.w     #3,d7
+        beq.s      L4AA
+        moveq      #3,d7
 L45E:
-        /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        addq.w     #1,d7
         cmp        #4,d7
-        beq        L472
+        beq.s      L472
         tst.b      4(a4)
-        bgt        L476
+        bgt.s      L476
 L472:
         clr        d7
         move.l     (a4),a4
 L476:
         move.l     a4,d0
-        beq        L496
+        beq.s      L496
         tst.b      4(a4)
-        ble.b      L45E
+        ble.s      L45E
         move.w     d7,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a4,d0
         move.l     d0,a0
         cmpi.l     #1,18(a0)
-        beq.b      L45E
+        beq.s      L45E
 L496:
         move.l     a4,d0
         beq        L566
-        bra        L4A4
-
-L4A0:
-        bra        L4AA
 
 L4A4:
         tst        d7
-        beq        L426
+        beq.s      L426
 L4AA:
         cmp.l      a5,a4
-        beq        L522
+        beq.s      L522
         move.w     d6,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a5,d0
         move.l     d0,(sp)
-        /* addi.l     #6,(sp) */
-        dc.w 0x0697,0,6 /* XXX */
+        addq.l     #6,(sp)
         move.w     d7,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a4,d0
         move.l     d0,-(sp)
-        /* addi.l     #6,(sp) */
-        dc.w 0x0697,0,6 /* XXX */
-        jsr        block_sub
+        addq.l     #6,(sp)
+        bsr        block_sub
         addq.l     #4,sp
         move.w     d7,d0
         ext.l      d0
@@ -373,52 +368,50 @@ L4AA:
         move.l     d0,a0
         move.l     #1,18(a0)
 L4EA:
-        /* add        #1,d6 */
-        dc.w 0xdc7c,1 /* XXX */
+        addq.w     #1,d6
         cmp        #4,d6
-        beq        L4FE
+        beq.s      L4FE
         tst.b      4(a5)
-        bgt        L502
+        bgt.s      L502
 L4FE:
         clr        d6
         move.l     (a5),a5
 L502:
         move.l     a5,d0
-        beq        L522
+        beq.s      L522
         tst.b      4(a5)
-        ble.b      L4EA
+        ble.s      L4EA
         move.w     d6,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a5,d0
         move.l     d0,a0
         cmpi.l     #1,18(a0)
-        bne.b      L4EA
+        bne.s      L4EA
 L522:
-        /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        addq.w     #1,d7
         cmp        #4,d7
-        beq        L536
+        beq.s      L536
         tst.b      4(a4)
-        bgt        L53A
+        bgt.s      L53A
 L536:
         clr        d7
         move.l     (a4),a4
 L53A:
         move.l     a4,d0
-        beq        L55A
+        beq.s      L55A
         tst.b      4(a4)
-        ble.b      L522
+        ble.s      L522
         move.w     d7,d0
         ext.l      d0
         asl.l      #4,d0
         add.l      a4,d0
         move.l     d0,a0
         cmpi.l     #1,18(a0)
-        beq.b      L522
+        beq.s      L522
 L55A:
         move.l     a5,d0
-        beq        L566
+        beq.s      L566
         move.l     a4,d0
         bne        L396
 L566:
@@ -433,7 +426,7 @@ block_sub:
         movem.l    d6-d7/a3-a5,-(sp)
         move.l     8(a6),a5
         clr        d7
-        bra        L5AE
+        bra.s      L5AE
 
 L582:
         move.w     d7,a0
@@ -443,29 +436,28 @@ L582:
         move.l     (a0),-4(a6)
         move.l     -4(a6),a3
         move.l     (a3),a4
-        bra        L5A6
+        bra.s      L5A6
 
 L59C:
         cmp.l      a5,a4
-        beq        L5BC
+        beq.s      L5BC
         move.l     a4,a3
         move.l     (a3),a4
 L5A6:
         move.l     a4,d0
-        bne.b      L59C
-        /* add        #1,d7 */
-        dc.w 0xde7c,1 /* XXX */
+        bne.s      L59C
+        addq.w     #1,d7
 L5AE:
         cmp        #2,d7
-        blt.b      L582
+        blt.s      L582
         move.w     #1,d0
-        bra        L5F0
+        bra.s      L5F0
 
 L5BC:
-        move.l     pmd,a0
+        move.l     pmd(pc),a0
         cmp.l      8(a0),a5
-        bne        L5D6
-        move.l     pmd,a0
+        bne.s      L5D6
+        move.l     pmd(pc),a0
         move.l     12(a6),8(a0)
 L5D6:
         move.l     12(a6),a0
@@ -476,7 +468,6 @@ L5E0:
         dbf        d1,L5E0
         move.l     12(a6),(a3)
         clr        d0
-        bra.w      L5F0
 
 L5F0:
         tst.l      (sp)+
@@ -490,13 +481,13 @@ find_cookie:
         movem.l    d6-d7/a6-a6,-(sp)
         move.l     16(sp),d6
         move.l     20(sp),a6
-        clr.l      d7
+        moveq      #0,d7
         move.l     #1,-(sp)
         move.w     #$20,-(sp) ; Super
         trap       #1
         tst.l      d0
-        bne        L62A
-        move.l     #0,2(sp)
+        bne.s      L62A
+        clr.l      2(sp)
         move.w     #$20,(sp) ; Super
         trap       #1
         move.l     d0,d7
@@ -504,26 +495,26 @@ L62A:
         addq.l     #6,sp
         move.l     (_p_cookies).w,a0
         move.l     a0,d0
-        beq        L654
+        beq.s      L654
 L636:
         move.l     (a0),d0
         cmp.l      d0,d6
-        beq        L648
+        beq.s      L648
         tst.l      d0
-        beq        L654
+        beq.s      L654
         addq.l     #8,a0
-        bra.b      L636
+        bra.s      L636
 
 L648:
         move.l     a6,d0
-        beq        L652
+        beq.s      L652
         move.l     4(a0),(a6)
 L652:
         moveq      #1,d0
 L654:
         move.l     d0,d6
         tst.l      d7
-        beq        L666
+        beq.s      L666
         move.l     d7,-(sp)
         move.w     #$20,-(sp) ; Super
         trap       #1
@@ -537,13 +528,14 @@ L666:
 place_cookie:
         link       a6,#0
         move.l     d7,-(sp)
+        moveq      #1,d7
+        move.l     d7,-(sp)
         moveq      #0,d7
-        move.l     #1,-(sp)
         move.w     #$20,-(sp) ; Super
         trap       #1
         tst.l      d0
-        bne        L698
-        move.l     #0,2(sp)
+        bne.s      L698
+        clr.l      2(sp)
         move.w     #$20,(sp) ; Super
         trap       #1
         move.l     d0,d7
@@ -551,18 +543,18 @@ L698:
         addq.l     #6,sp
         move.l     (_p_cookies).w,a0
         move.l     a0,d0
-        beq        L6D4
+        beq.s      L6D4
         moveq      #0,d0
 L6A6:
         addq.l     #1,d0
         tst.l      (a0)
-        beq        L6B2
+        beq.s      L6B2
         addq.l     #8,a0
-        bra.b      L6A6
+        bra.s      L6A6
 
 L6B2:
         cmp.l      4(a0),d0
-        beq        L732
+        beq.s      L732
         move.l     4(a0),12(a0)
         clr.l      8(a0)
         move.l     8(a6),(a0)
@@ -572,9 +564,10 @@ L6B2:
 
 L6D4:
         cmpi.l     #2,20(a6)
-        blt        L766
-        move.l     (resvector).w,oldresvector
-        move.l     (resvalid).w,oldresvalid
+        blt.s      L766
+        lea        oldresvector(pc),a0
+        move.l     (resvector).w,(a0)+
+        move.l     (resvalid).w,(a0)
         move.l     #L71C,(resvector).w
         move.l     #$31415926,(resvalid).w
         move.l     16(a6),a0
@@ -584,16 +577,16 @@ L6D4:
         clr.l      (a0)+
         move.l     20(a6),(a0)
         moveq      #1,d0
-        bra        L768
+        bra.s      L768
 
 L71C:
         clr.l      (_p_cookies).w
-        move.l     oldresvalid,(resvalid).w
-        move.l     oldresvector,(resvector).w
+        move.l     oldresvalid(pc),(resvalid).w
+        move.l     oldresvector(pc),(resvector).w
         jmp        (a6)
 L732:
         cmp.l      20(a6),d0
-        ble        L766
+        ble.s      L766
         move.l     d0,d1
         subq.l     #2,d1
         move.l     (_p_cookies).w,a0
@@ -608,12 +601,12 @@ L74A:
         clr.l      (a1)+
         move.l     20(a6),(a1)
         moveq      #1,d0
-        bra        L768
+        bra.s      L768
 L766:
         moveq      #-1,d0
 L768:
         tst.l      d7
-        beq        L780
+        beq.s      L780
         move.l     d0,8(a6)
         move.l     d7,-(sp)
         move.w     #$20,-(sp) ; Super
@@ -628,6 +621,7 @@ L780:
 
         bss
 
+basepage_p:     ds.l    1
 mds:            ds.l    2
 pmd:            ds.l    1
 ofdlist:        ds.l    1

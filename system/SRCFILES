@@ -2,12 +2,14 @@ TOS14FIX_OBJS = tos14fix.o
 TOS14FX2_OBJS = tos14fx2.o
 TOS14FX5_OBJS = tos14fx5.o
 POOLFIX3_OBJS = poolfix3.o
+POOLFIX4_OBJS = poolfix4.o
 
 SRCS = \
 	tos14fix.S \
 	tos14fx2.S \
 	tos14fx5.S \
 	poolfix3.S \
+	poolfix4.S \
 	$(empty)
 
 EXTRA_DIST1 = \
