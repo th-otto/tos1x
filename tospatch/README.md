@@ -1,6 +1,6 @@
 # TOSPATCH
 
-This directory contains the [TOSPATCH](https://www.markusheiden.de/atari/tospatch.html) tool, along with
+This directory contains the [TOSPATCH](https://github.com/markusheiden/tospatch) tool, along with
 several useful patches. See the included documentation
 on how to use it.
 
