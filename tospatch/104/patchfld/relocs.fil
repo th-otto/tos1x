@@ -19,7 +19,7 @@ _SWITCH .NATION
 
   _CASE .FRA:
     .d1 = 1E
-    .d2 = 0
+    .d2 = 1E
     .RSC_TAB = 2BA5C
     .ROMTOP  = 2FF32
 
@@ -31,13 +31,13 @@ _SWITCH .NATION
 
   _CASE .SPA:
     .d1 = 2C
-    .d2 = 0
+    .d2 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FE84
 
   _CASE .ITA:
     .d1 = 0E
-    .d2 = 0
+    .d2 = 0E
     .RSC_TAB = 2BA4C
     .ROMTOP  = 2FDFE
 
@@ -49,13 +49,13 @@ _SWITCH .NATION
 
   _CASE .SWF:
     .d1 = 2C
-    .d2 = 0
+    .d2 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FF40
 
   _CASE .SWG:
     .d1 = 2C
-    .d2 = 0
+    .d2 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FC90
 

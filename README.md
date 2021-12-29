@@ -145,7 +145,7 @@ it yourself:
 - cd to the toplevel directory
 
 - make sure the bin directory from the archive is on your PATH:
-  PATH=$PWD\bin,$PATH
+  PATH=$PWD\bin,$PATH  
   (for gemini/mupfel; other shells might use ';' as path separator)
 
 - type "make"
@@ -153,11 +153,11 @@ it yourself:
   If the build succeeds, the final image will be found in the "glue" directory.
 
 - for building other configurations, you can say e.g.
-  make COUNTRY=us
+  make COUNTRY=us  
   Alternatively, you can edit config.mak in the toplevel directory.
   See there also for a list of valid configurations.
   Also, when switching configurations, always make sure to run
-  make clean
+  make clean  
   first.
   If you pass the configuration via commandline, be sure to always
   use the same command when having to restart make.
