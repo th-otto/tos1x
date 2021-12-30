@@ -27,7 +27,7 @@
 
 #define ASM_HACKS 0
 #ifdef __ALCYON__
-#if (TOSVERSION <= 0x104)
+#if (TOSVERSION <= 0x106)
 #undef ASM_HACKS
 #define ASM_HACKS 1
 #endif

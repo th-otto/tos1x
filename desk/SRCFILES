@@ -1,6 +1,6 @@
-DESK_OBJS1= desksupp.o deskact.o deskdir.o rainbow.o
+DESK_OBJS1= desksupp.o desksup2.o deskact.o deskdir.o rainbow.o
 DESK_OBJS2= deskapp1.o deskapp3.o deskdisk.o desktop.o deskfun.o
-DESK_OBJS3= deskinf.o deskpref.o deskins.o deskfpd.o deskwin.o deskobj.o
+DESK_OBJS3= deskinf.o deskinf2.o deskins.o deskfpd.o deskwin.o deskobj.o
 DESK_OBJS4= deskshow.o
 DESK_OBJS5= deskif.o
 
@@ -30,11 +30,14 @@ DESK_CSRCS=\
 	deskfpd.c \
 	deskfun.c \
 	deskinf.c \
+	deskinf2.c \
 	deskins.c \
 	deskobj.c \
 	deskpref.c \
 	deskshow.c \
 	desksupp.c \
+	desksup2.c \
+	desksup3.c \
 	desktop.c \
 	deskwin.c \
 	${empty}

@@ -829,10 +829,8 @@ _gsx_moff:
 gsx_moff:
 ig_moff: ds.b 0
 
-#if LINEF_HACK
 	xdef _gsx_fmoff
 _gsx_fmoff: ds.b 0
-#endif
 
 	tst.w	_gl_moff
 	bne	L35

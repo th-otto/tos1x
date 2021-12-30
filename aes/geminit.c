@@ -423,6 +423,16 @@ VOID gem_main(NOTHING)
 	rs_gaddr(ad_sysglo, R_TREE, SCREEN, (VOIDPTR *)&ad_stdesk);
 	tree = ad_stdesk;
 
+#if TOSVERSION >= 0x106
+	/* fix up the GEM rsc. file now that we have an open WS    */
+	/* This code is also in gemshlib, but it belongs here so that the correct
+	 * default GEM backdrop pattern is set for accessories and autoboot app.
+	 */
+	i = Getrez();
+	if (i != 2 && i != 4)				/* set solid pattern in color modes */
+		LLSET(ad_stdesk + 12, 0x00001173L);
+#endif
+
 	wm_start();
 
 	/* startup gem libs */
@@ -639,11 +649,17 @@ int16_t pred_dinf(NOTHING)
 					{
 						if (gl_rschange)	/* if we've been here before    */
 						{
+#if (TOSVERSION == 0x106)
+							save_2(temp, (res & 0xF0) | gl_restype);
+#else
 							save_2(temp, (res & 0xF0) | (gl_restype - 1));
+#endif
 						} else
 						{
 							res &= 0xF;
+#if (TOSVERSION != 0x106)
 							res += 1;
+#endif
 							gl_rschange = FALSE;
 							if (!app_reschange(res))
 								change = FALSE;	/* NO no res change     */
@@ -683,7 +699,9 @@ BOOLEAN gsx_malloc(NOTHING)
 	 */
 	gl_mlen = (int32_t)((gl_ws.ws_yres + 1) * (gl_ws.ws_xres + 1));
 	gl_mlen = (gl_nplanes * gl_mlen) / 32;
+#if TOSVERSION < 0x106
 	if (gl_mlen < 13312)
+#endif
 		gl_mlen = 13312;
 
 	gl_tmp.fd_addr = dos_alloc(gl_mlen);

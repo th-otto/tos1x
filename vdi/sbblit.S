@@ -81,6 +81,7 @@ OPAQUE	equ	-4
 /* 306de: 00e0d300 */
 /* 206de: 00e0dd2e */
 /* 104de: 00fd1e8e */
+/* 106de: 00e120ee */
 	xdef sb_bitblt
 sb_bitblt: ds.b 0
 

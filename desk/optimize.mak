@@ -15,3 +15,5 @@ deskwin_OPTIMIZE=1
 deskfun_OPTIMIZE=1
 deskif_OPTIMIZE=0
 desksupp_OPTIMIZE=1
+
+rainbow_ASFLAGS = -n

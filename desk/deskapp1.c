@@ -314,6 +314,7 @@ PP(register int16_t *py;)
  */
 
 /* 104de: 00fd5062 */
+/* 106de: 00e15508 */
 BOOLEAN read_inf(NOTHING)
 {
 	register int16_t i, tmp;
@@ -578,6 +579,7 @@ LINEF_STATIC VOID app_reverse(NOTHING)
 /* 206de: 00e28720 */
 /* 306de: 00e2c186 */
 /* 104de: 00fd55e8 */
+/* 106de: 00e15aee */
 VOID save_inf(P(BOOLEAN) todisk)
 PP(BOOLEAN todisk;)
 {

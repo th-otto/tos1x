@@ -1306,7 +1306,11 @@ _gr_fdragbox: ds.b 0
 	add.l	d0,d7
 	move.l	d7,-(sp)
 
+#if (TOSVERSION >= 0x106) & BINEXACT
+	bsr.w	_gr_clamp	;gr_clamp(sx+1, sy+1, 0, 0, &offx, &0ffy);
+#else
 	bsr.s	_gr_clamp	;gr_clamp(sx+1, sy+1, 0, 0, &offx, &0ffy);
+#endif
 
 *   get box's x,y from
 *   mouse's x,y then

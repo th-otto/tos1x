@@ -253,7 +253,9 @@ VOID disp(NOTHING)
 {
 	register PD *p;
 
+#if TOSVERSION <= 0x104
 	savestate(rlr->p_uda);
+#endif
 	rlr = (p = rlr)->p_link;
 	/* based on the state of the process p do something */
 	if (p->p_stat == 0)
@@ -307,7 +309,9 @@ VOID disp(NOTHING)
 	 * switch to the context of the appropriate process
 	 */
 	cda = rlr->p_cda;
+#if TOSVERSION <= 0x104
 	switchto(rlr->p_uda);
+#endif
 }
 
 /****************************************************************

@@ -113,12 +113,16 @@ linefhdl.o: linefhdl.S
 #
 # ugly hack for even more ugly assembly in gembind.c
 #
+ASMHACK_104 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+ASMHACK_106 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+ASMHACK = $(ASMHACK_$(TOSVERSION))
+
 gembind.o: gembind.c
 	$(AM_V_CC)${BIN}cp68${EXEEXT} ${CPPFLAGS} $< $*.i
 	$(AM_V_at)${BIN}c068${EXEEXT} $*.i $*.1 $*.2 $*.3 ${CFLAGS}
 	$(AM_V_at)${BIN}c168${EXEEXT} $*.1 $*.2 $*.s
 	$(AM_V_at)${RUN_OPTIMIZE_${$*_OPTIMIZE}}
-	$(AM_V_at)$(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+	$(AM_V_at)$(ASMHACK)
 	$(AM_V_at)${BIN}as68${EXEEXT} ${ASFLAGS} ${$*_ASFLAGS} -o $@ $*.s
 	$(AM_V_at)${RM} $*.s $*.i $*.1 $*.2 $*.3
 

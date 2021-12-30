@@ -1443,7 +1443,7 @@ blt_adj:
 	dc.b $a0
 	dc.b "di   "
 #else
-#if (OS_COUNTRY == CTRY_UK) | (OS_COUNTRY == CTRY_SE)
+#if ((OS_COUNTRY == CTRY_UK) & (TOSVERSION == 0x104)) | (OS_COUNTRY == CTRY_SE)
 	dc.w 0
 #else
 	move.l	-(a0),d0

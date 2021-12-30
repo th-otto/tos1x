@@ -63,6 +63,7 @@ O6 equ 6 /* WTF? why? */
 /* 306de: 00e0da98 */
 /* 206de: 00e0e45c */
 /* 104de: 00fd25bc */
+/* 106de: 00e1281c */
 		xdef sb_cell
 sb_cell:
 		move.w	LV((v_planes)+O6,a4),d1	/* d1 <- number of planes */
@@ -156,6 +157,7 @@ byte_i:		move.b	(a2),d5		/* d5 <- character byte */
 /* 306de: 00e0db90 */
 /* 206de: 00e0e4da */
 /* 104de: 00fd263a */
+/* 106de: 00e1289a */
 		xdef sb_scrup
 sb_scrup:
 	move.w	LV((v_celmy)+O6,a4),d3		/* d3 <- Ymax */
@@ -196,6 +198,7 @@ blank_up:
 /* 306de: 00e0dbd4 */
 /* 206de: 00e0e51e */
 /* 104de: 00fd267e */
+/* 106de: 00e128de */
 		xdef sb_scrdn
 sb_scrdn:
 	move.w	LV((v_celmy)+O6,a4),d3		/* d3 <- Ymax */

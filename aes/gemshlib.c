@@ -381,14 +381,14 @@ PP(char *ppath;)
 	while (*pname++)
 		;
 
-#if AESVERSION < 0x200
-	while (pname >= ppath && *pname != '\\' && *pname != ':')
-		--pname;
-#else
+#if TOSVERSION >= 0x106
 	do
 	{
 		--pname;
 	} while (pname >= ppath && *pname != '\\' && *pname != ':');
+#else
+	while (pname >= ppath && *pname != '\\' && *pname != ':')
+		--pname;
 #endif
 
 	return ++pname;

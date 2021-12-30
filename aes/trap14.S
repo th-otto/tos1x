@@ -91,7 +91,7 @@ _trp14int: ds.b 0
 
 
 /* 104de: 00fe75a2 */
-/* 106de: 00e29e96 */
+/* 106de: 00e29e94 */
 	xdef _getmouse
 _getmouse:
 	dc.w	$A000

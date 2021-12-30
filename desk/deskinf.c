@@ -584,3 +584,8 @@ PP(char drv_id;)
 	}
 	return TRUE;
 }
+
+
+#if TOSVERSION >= 0x106
+#include "deskpref.c"
+#endif

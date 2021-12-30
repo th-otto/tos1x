@@ -1,7 +1,8 @@
 #
 # TOS version
-# This must be the hexadecimal (bcd-encoded) number, but without any prefix
-# currently only 1.04 is supported
+# This must be the hexadecimal (bcd-encoded) number, but without any prefix.
+# Currently only 1.04 and 1.06 are supported.
+# Note that there is a different archive to build the 2.x/3.x versions.
 #
 TOSVERSION=104
 

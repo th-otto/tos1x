@@ -41,7 +41,7 @@ uint16_t crysbind PROTO((int16_t opcode, intptr_t pglobal, uint16_t *int_in, int
  */
 #define ASM_HACKS 0
 #ifdef __ALCYON__
-#if (TOSVERSION <= 0x104)
+#if (TOSVERSION <= 0x106)
 #undef ASM_HACKS
 #define ASM_HACKS 1
 #endif
@@ -1093,7 +1093,11 @@ PP(register VOIDPTR *addr_in;)
 		asm("move.l     (a0),-(a7)");
 		asm("jsr        _sh_get");
 		asm("move.w     d0,d6");
+#if (TOSVERSION >= 0x106) & BINEXACT
+		asm("bra.w      L9997");
+#else
 		asm("bra.s      L9997");
+#endif
 #else
 		ret = sh_get(SH_PBUFFER, SH_LEN);
 		break;
@@ -1181,7 +1185,7 @@ PP(register VOIDPTR *addr_in;)
 	return ret;
 }
 
-#if (TOSVERSION <= 0x104) & BINEXACT
+#if ASM_HACKS & BINEXACT
 asm("data");
 asm("dc.l Ldefault");
 asm("text");

@@ -15,12 +15,13 @@ AESDESK_OBJS = \
 	../desk/deskdir.o \
 	../desk/deskif.o \
 	../desk/deskinf.o \
-	../desk/deskpref.o \
+	../desk/deskinf2.o \
 	../desk/deskins.o \
 	../desk/deskfpd.o \
 	../desk/deskfun.o \
 	../desk/deskobj.o \
 	../desk/desksupp.o \
+	../desk/desksup2.o \
 	../desk/rainbow.o \
 	../desk/desktop.o \
 	../desk/deskwin.o \

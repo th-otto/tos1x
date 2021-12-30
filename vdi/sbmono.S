@@ -45,6 +45,7 @@ OF4 equ -FBASE-4
 /* 306de: 00e0e104 */
 /* 206de: 00e0e9ba */
 /* 104de: 00fd2b1a */
+/* 106de: 00e12d7a */
 		xdef	 sb_mono
 sb_mono:
 	move.l	a6,-(sp)	; save a6

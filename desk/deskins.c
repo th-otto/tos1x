@@ -272,6 +272,3 @@ retit:
 #endif
 	return change;
 }
-
-
-

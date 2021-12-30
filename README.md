@@ -1,6 +1,6 @@
 # What is this?
 
-These are the sources used to build orginal ROM versions of TOS 1.04,
+These are the sources used to build orginal ROM versions of TOS 1.04/1.06,
 the OS used by Atari ST (not TT).
 
 The goal of this project was to actually be able to
@@ -110,7 +110,7 @@ It is therefor mainly intended to be used as reference.
 
 # Supported versions
 
-BIOS, VDI, GEMDOS, AES, DESKTOP: only 1.04 for now
+BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04 and 1.06
 
 
 # Supported language versions

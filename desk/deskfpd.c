@@ -504,4 +504,3 @@ PP(register PNODE *thepath;)
 	fn_init();
 	return DOS_AX;
 }
-

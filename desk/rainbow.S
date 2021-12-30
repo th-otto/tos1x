@@ -7,6 +7,8 @@ timcvec   equ $0114
 mfpvec    equ $0118
 hblvec    equ $0120
 
+_longframe  equ $59e
+
 vblsave   equ $800
 mfpsave   equ $804
 hblsave   equ $808
@@ -84,11 +86,17 @@ vblintr:
 		move.w    #$2600,sr
 		moveq.l   #2,d0
 vblintr1:
-		pea.l     vblintr2(pc)
+#if TOSVERSION >= 0x106
+		tst.w     (_longframe).w
+		beq.w     vblintr2
+		move.w    #0,-(a7)
+vblintr2:
+#endif
+		pea.l     vblintr3(pc)
 		move.w    sr,-(a7)
 		move.l    (timcvec).w,-(a7)
 		rts
-vblintr2:
+vblintr3:
 		dbf       d0,vblintr1
 		move.w    (a7)+,sr
 		moveq.l   #78,d0

@@ -9,8 +9,6 @@
 /*      Copyright 1989,1990     All Rights Reserved                     */
 /************************************************************************/
 
-#include "desktop.h"
-#include "taddr.h"
 
 #undef Dfree
 #define Dfree(a,b)      trap(0x36,a,b)

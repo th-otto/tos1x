@@ -67,6 +67,7 @@ WORD ap_init(WORD *pglobal)
 }
 #endif
 /* 104de: 00fd7988 */
+/* 106de: 00e182ec */
 	xdef _ap_init
 _ap_init:
 		lea.l      _pglobal,a1

@@ -459,6 +459,13 @@ PP(long target_size;)
 		 */
 		banks = 4;
 		banksize = 0x1fffeL;
+	} else if (tos_version < 0x200 && target_size == 256L * 1024L)
+	{
+		/*
+		 * TOS 1.06/1.62: 2 128KB ROMs, without CRC
+		 */
+		banks = 0;
+		banksize = 0;
 	} else if (tos_version != 0 && target_size == 256L * 1024L)
 	{
 		/*

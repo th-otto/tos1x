@@ -50,6 +50,7 @@
 /* 306de: 00e0de24 */
 /* 206de: 00e0e6d2 */
 /* 104de: 00fd2832 */
+/* 106de: 00e12a92 */
 	xdef sb_hline
 sb_hline:
 
@@ -102,6 +103,7 @@ wrt_tbl:
 /* 306de: 00e0de5a */
 /* 206de: 00e0e708 */
 /* 104de: 00fd2868 */
+/* 106de: 00e12ac8 */
 		xdef	sb_rect
 sb_rect:
 

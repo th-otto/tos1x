@@ -311,6 +311,7 @@ ramlen		equ	-84
 /* 306de: 00e0e236 */
 /* 206de: 00e0eaec */
 /* 104de: 00fd2c4c */
+/* 106de: 00e12eac */
 	xdef	sb_text
 sb_text:	link	a5,#ramlen		; allocate local block of ram
 

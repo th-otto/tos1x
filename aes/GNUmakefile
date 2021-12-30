@@ -43,9 +43,13 @@ aes.o: $(VARS_OBJS) $(STARTUP) $(AES_OBJS) aesext.o $(top_srcdir)/common/section
 #
 # ugly hack for even more ugly assembly in gembind.c
 #
+ASMHACK_104 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+ASMHACK_106 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+ASMHACK = $(ASMHACK_$(TOSVERSION))
+
 gembind.o: gembind.c
 	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) ${RUN_OPTIMIZE_${$*_OPTIMIZE}} -c -S -o $*.s $<
-	$(AM_V_at)$(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+	$(AM_V_at)$(ASMHACK)
 	$(AM_V_at)$(AS) $(ASFLAGS) -c $(LINEF_FLAGS) $*.s
 	$(AM_V_at)$(RM) $*.s
 

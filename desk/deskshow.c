@@ -112,6 +112,11 @@
 #define CTLS 19
 #define SPACE 32
 
+#undef SILLY_ERROR_HANDLING
+#if (TOSVERSION <= 0x104) & BINEXACT
+#define SILLY_ERROR_HANDLING
+#endif
+
 
 LINEF_STATIC int doui PROTO((int mode, int *plinecount));
 LINEF_STATIC VOID bconws PROTO((const char *s));
@@ -140,10 +145,13 @@ PP(int mode;)
 
 	if (!(buf = (char *)Malloc((long) BUFSIZ)))
 	{
+#ifdef SILLY_ERROR_HANDLING
 		if (mode)						/* printer mode no memory */
 		{
+#endif
 			fun_alert(1, FCNOMEM, NULL);
 			goto allout;
+#ifdef SILLY_ERROR_HANDLING
 		} else							/* alpha mode */
 		{
 			/* silly error handling */
@@ -152,14 +160,18 @@ PP(int mode;)
 			bconws("\r\n");
 		}
 		goto allfin;
+#endif
 	}
 
 	if ((handle = Fopen(fname, 0)) < 0)
 	{
+#ifdef SILLY_ERROR_HANDLING
 		if (mode)						/* printer mode no file */
 		{
+#endif
 			form_error(~E_FILNF - 30);
 			goto allout;
+#ifdef SILLY_ERROR_HANDLING
 		} else
 		{
 			/* silly error handling */
@@ -169,6 +181,7 @@ PP(int mode;)
 			bconws("\r\n");
 		}
 		goto allfin;
+#endif
 	}
 
 	/* PRINTER MODE CODE */
@@ -279,6 +292,26 @@ alldone:
 
 
 /*
+ * This routine uses the global GEM variable gl_btrue to get the button
+ * state, and it shouldn't.  But it can't call graf_mkstate, because
+ * that causes a dispatch, which causes the AES to buffer keystrokes.
+ */
+/* 106de: 00e2911a */
+#if TOSVERSION >= 0x106
+static long uikey(NOTHING)
+{
+	if (gl_btrue & 1)
+		return SPACE;					/* left mouse button = next page    */
+	if (gl_btrue & 2)
+		return CTLC;					/* right mouse button quits         */
+	if (Bconstat(2))
+		return Bconin(2);				/* if there's a key, return it      */
+	return 0;							/* otherwise, return nullo          */
+}
+#endif
+
+
+/*
  * doui: get user I/O.  Mode is 0 for polling, ~0 for blocking (at --more--).
  *
  * Returns 1 if user wants to stop, or modifies *plinecount for next
@@ -294,9 +327,17 @@ PP(int *plinecount;)
 	long c;
 	int stop = 0;
 
+#if TOSVERSION >= 0x106
+	while ((c = uikey()) || mode || stop)
+#else
 	while (mode || Bconstat(2) || stop)
+#endif
 	{
+#if TOSVERSION >= 0x106
+		switch ((int) (c) & 0xff)
+#else
 		switch ((int) (c = Bconin(2)) & 0xff)
+#endif
 		{
 			/* ^D and d and D step 1/2 screen ahead */
 		case CTLD:

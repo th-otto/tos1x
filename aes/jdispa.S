@@ -45,8 +45,10 @@
 	even
 
 /* for savestate */
+#if TOSVERSION >= 0x106
 	xdef savea0
 	comm savea0,4
+#endif
 /* _cli and _sti */
 	xdef srsave
 	comm srsave,2
@@ -152,16 +154,23 @@ _hsti:
  * OR fix stack frame then push the sr if CPU uses long frames.  *
  *                                                               *
  *****************************************************************/
-#if TOSVERSION > 0x104
+#if TOSVERSION >= 0x106
 /* 306de: 00e258aa */
 /* 106de: 00e1e456 */
 	xdef	_dsptch
 _dsptch: ds.b 0
+	xdef	dsptch
+dsptch: ds.b 0
 	tas	_indisp			; be atomic
 	beq.b	dsp1			; if clear, enter with _indisp set
 	rts				; else just forget the whole thing
 
-dsp1:	tst.w	(longframe).w		; check what mode what are in
+dsp1: ds.b 0
+#if BINEXACT
+	tst.w	(longframe).l		; check what mode what are in
+#else
+	tst.w	(longframe).w		; check what mode what are in
+#endif
 	beq.b	dsp2			; 68000 mode !
 
 	subq	#2,sp			; bump up the stack pointer
@@ -250,8 +259,12 @@ _gotopgm:
 	ori	#$700,SR		; turn interrupts off
 	movea.l	_rlr,a0			; get pd
 	move.l	24(a0),a0		; pd->ldaddr is base page of program
-#if TOSVERSION > 0x104
+#if TOSVERSION >= 0x106
+#if BINEXACT
+	tst.w	(longframe).l		; if not on longframe CPU
+#else
 	tst.w	(longframe).w		; if not on longframe CPU
+#endif
 	beq.b	g_1			; do not need a format word
 	clr	-(sp)			; otherwise fake a format word
 g_1:
@@ -344,8 +357,12 @@ _psetup:
 	move.l	8(sp),d0		; val
 	move.l	8(a0),a1		; a1 = pd->uda
 	move.l	62(a1),a2		; a2 = uda->SUPSTK
-#if TOSVERSION > 0x104
+#if TOSVERSION >= 0x106
+#if BINEXACT
+	tst.w	(longframe).l		; if not on longframe CPU
+#else
 	tst.w	(longframe).w		; if it is not a longframe CPU
+#endif
 	beq.b	p_1			; do not need a format word
 	clr	-(a2)			; otherwise, fake a format word
 p_1:

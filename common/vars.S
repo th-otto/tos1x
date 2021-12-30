@@ -342,11 +342,14 @@ _endvdibss: ds.b 0
 
 	INT(_n_winsave)
 
+#if TOSVERSION >= 0x106
+	PTR(savea0)
+#endif
 	V(srsave,w,1)
 	V(savsr,w,1)
 	V(psetsr,w,1)
 	V(dspstk,l,161)
-	
+
 	LONG(retaddr)
 	LONG(tr_retsave)
 	
@@ -606,10 +609,6 @@ _endvdibss: ds.b 0
 	INT(_button)
 
 /* end AES+DESKTOP */
-
-#if TOSVERSION >= 0x106
-	ds.l 1
-#endif
 
 /* This label is referenced by the GEM_MUPB structure */
 	xdef _endgembss

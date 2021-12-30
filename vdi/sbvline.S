@@ -48,6 +48,7 @@ FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 /* 306de: 00e0e006 */
 /* 206de: 00e0e8b6 */
 /* 104de: 00fd2a16 */
+/* 106de: 00e12c76 */
 	xdef	sb_vline
 sb_vline:	lea	-FRAG_LEN(sp),sp  ; sp -> pixel fragment frame
 		move.w	LV(V_PLANES,a4),d3  ; d3 <- number of planes

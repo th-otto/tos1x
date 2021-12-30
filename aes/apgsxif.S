@@ -156,6 +156,7 @@ VOID gsx_sclip(GRECT *pt)
 #endif
 /* 306de: 00e24440 */
 /* 104de: 00fd4612 */
+/* 106de: 00e149d4 */
 	xdef _gsx_sclip
 _gsx_sclip:
 
@@ -1143,7 +1144,7 @@ L42:	lea	_ptsin,a0
  *       pnumchs =  number of characters
  */
 #if CCODE
-VOID gsx_tcalc(WORD font, const char *ptext, WORD ptextw, WORD ptexth, WORD pnumchs)
+VOID gsx_tcalc(WORD font, const char *ptext, WORD *ptextw, WORD *ptexth, WORD *pnumchs)
 {
 	REG WORD wc;
 	REG WORD hc;
