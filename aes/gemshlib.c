@@ -345,7 +345,7 @@ PP(char *lcmd;)
 /* 306de: 00e20d36 */
 /* 104de: 00fe411e */
 /* 106de: 00e26504 */
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+#if ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & BINEXACT
 	/* swedish/czech versions have the TOSFIX patch applied (from tos14fix.prg) */
 	asm("xdef _sh_name");
 	asm("_sh_name:");
@@ -381,7 +381,7 @@ PP(char *ppath;)
 	while (*pname++)
 		;
 
-#if TOSVERSION >= 0x106
+#if (TOSVERSION >= 0x106) | TP_73
 	do
 	{
 		--pname;

@@ -67,3 +67,19 @@
 #ifndef TP_72
 #define TP_72 1
 #endif
+
+/*
+ * TP_73: TOSFIX: Correct AES path (from TOS14FIX.PRG, ST computer 1/90).
+ * Only needed for 1.04; in 1.06 this has been fixed
+ */
+#ifndef TP_73
+#define TP_73 1
+#endif
+
+/*
+ * TP_74: STE_FIX: Fix the desktop resolution change bug.
+ * Only needed for 1.06; in 1.62 this has been fixed again.
+ */
+#ifndef TP_74
+#define TP_74 1
+#endif

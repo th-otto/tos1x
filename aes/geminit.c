@@ -561,6 +561,7 @@ PP(CDA *pcda;)
 /* 306de: 00e1e27e */
 /* 206de: 00e1a818 */
 /* 104de: 00fd4168 */
+/* 106de: 00e144a8 */
 int16_t pred_dinf(NOTHING)
 {
 	int16_t res;
@@ -649,7 +650,7 @@ int16_t pred_dinf(NOTHING)
 					{
 						if (gl_rschange)	/* if we've been here before    */
 						{
-#if (TOSVERSION == 0x106)
+#if (TOSVERSION == 0x106) & !TP_74
 							save_2(temp, (res & 0xF0) | gl_restype);
 #else
 							save_2(temp, (res & 0xF0) | (gl_restype - 1));
@@ -657,7 +658,7 @@ int16_t pred_dinf(NOTHING)
 						} else
 						{
 							res &= 0xF;
-#if (TOSVERSION != 0x106)
+#if (TOSVERSION != 0x106) | TP_74
 							res += 1;
 #endif
 							gl_rschange = FALSE;
