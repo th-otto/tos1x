@@ -144,20 +144,20 @@ it yourself:
 
 - cd to the toplevel directory
 
-- make sure the bin directory from the archive is on your PATH:
-  PATH=$PWD\bin,$PATH  
+- make sure the bin directory from the archive is on your PATH:  
+  ```PATH=$PWD\bin,$PATH```  
   (for gemini/mupfel; other shells might use ';' as path separator)
 
 - type "make"
   This should build the default configuration (german TOS 1.04).
   If the build succeeds, the final image will be found in the "glue" directory.
 
-- for building other configurations, you can say e.g.
-  make COUNTRY=us  
+- for building other configurations, you can say e.g.  
+  ```make COUNTRY=us```  
   Alternatively, you can edit config.mak in the toplevel directory.
   See there also for a list of valid configurations.
-  Also, when switching configurations, always make sure to run
-  make clean  
+  Also, when switching configurations, always make sure to run  
+  ```make clean```  
   first.
   If you pass the configuration via commandline, be sure to always
   use the same command when having to restart make.
@@ -170,3 +170,34 @@ directory. In that case, it is assumed that GNU make is used, and will pick
 up the GNUmakefile in each directory instead of the Makefile.
 With parallel makes that will give you compilation times of less than a second
 for the whole source tree.
+
+# Customizing TOS
+
+There are basically two methods to create a customized TOS, ie. one that
+contains some patches for known bugs, or small enhancements.
+
+- Use [TOSPATCH](https://github.com/markusheiden/tospatch). This is a command line tool that is able to
+  apply lots of patches to an existing TOS, using a configuration file.
+  Please read the included documentation on how to use it. The [TOSPATCH](tospatch)
+  directory in this repository contains an updated version of the configuration file
+  that should work for all languages in most cases.
+
+- Activate some patches while compiling TOS. To do this, you have to
+  edit the file `localcnf.mak` in the top level directory,
+  and add the following lines:
+  ```
+  BINEXACT:=0
+  COUNTRY:=de
+  RAMVERSION:=0
+  TOSVERSION:=104
+  ```
+  (adjust the language code to your needs).
+
+  Edit the file `common/localcnf.h`, and add eg. the following line:
+  ```
+  #define TP_13 1
+  ```
+  to activate the fix for the boot-device bug. See the file [common/patchdef.h](/common/patchdef.h)
+  for available options.
+
+  Then compile TOS as usual, and you will get a patched TOS ROM image.
