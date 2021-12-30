@@ -70,43 +70,33 @@
 _SWITCH .NATION
 
 _CASE .FRG:
-  .WINX        = 1    ;1: Include patch, 0: Do not include patch
   <tos104de.img	; Original TOS 1.04 german (MD5: f6a8fa31d0d1bac1a08d47502244408d)
 
 _CASE .USA:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104us.img	; Original TOS 1.04 american (MD5: 736adb2dc835df4d323191fdc8926cc9)
 
 _CASE .UK:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104uk.img	; Original TOS 1.04 british (MD5: 036c5ae4f885cbf62c9bed651c6c58a8)
 
 _CASE .FRA:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104fr.img	; Original TOS 1.04 french  (CRC: 0087e2707c57efa2106a0aa7576655c0)
 
 _CASE .SPA:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104es.img	; Original TOS 1.04 spanish (MD5: 06d90dde54145bffda79cdf89a711bd7)
 
 _CASE .ITA:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104it.img	; Original TOS 1.04 italian (MD5: d318051e0fcfd2e6a6a60f00724fef35)
 
 _CASE .SWF:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104sf.img	; Original TOS 1.04 Swiss (french)
 
 _CASE .SWG:
-  .WINX        = 1    ;1: Include patch, 0: Do not include patch
   <tos104sg.img	; Original TOS 1.04 Swiss (german) (MD5: 91fb61080d27d0376e1a3da409727468)
 
 _CASE .SWE:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104se.img	; Original TOS 1.04 Swedish (MD5: dbe7d4b5c561427e420a2287b7d79180)
 
 _CASE .HOL:
-  .WINX=0	; No German TOS: Always switch off WINX!
   <tos104nl.img	; Original TOS 1.04 Dutch (MD5: 52248cc70ae48b3050e197e270917130)
 
 _DEFAULT:
@@ -928,6 +918,19 @@ _ENDIF
 .CONT_SCROLL =            .40 ;Continous scroll delay in ms
 .CONT_CLOSE  =          .1000 ;Continous close delay in ms
 .CONT_FULL   =          .2000 ;Continous full delay in ms
+
+.WINX        = 1    ;1: Include patch, 0: Do not include patch
+
+_IF .WINX
+_SWITCH .NATION
+_CASE .FRG:
+_CASE .SWG:
+  ;
+
+_DEFAULT:
+  .WINX=0	; No German TOS: Always switch off WINX!
+_ENDSWITCH
+_ENDIF
 
 _IF .WINX
  +winx.fil          ;include WINX-Patch
