@@ -5,6 +5,7 @@
 
 #if OS_COUNTRY == CTRY_US
 /* 306us: 00e3673c */
+/* 104us: 00fe829c */
 /* 106us: 00e2a218 */
 /* 404: 00e49b96 */
 uint8_t const keytblnorm[128] = {
@@ -27,6 +28,7 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 306us: 00e367bc */
+/* 104us: 00fe831c */
 /* 106us: 00e2a298 */
 /* 404: 00e49c16 */
 uint8_t const keytblshift[128] = {
@@ -49,6 +51,7 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 306us: 00e3683c */
+/* 104us: 00fe839c */
 /* 106us: 00e2a318 */
 /* 404: 00e49c96 */
 uint8_t const keytblcaps[128] = {
@@ -149,6 +152,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_SG
 /* 206sg: 00e32be2 */
+/* 104sg: 00fe82fa */
+/* 106sg: 00e2a274 */
 /* 404: 00e4a616 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -170,6 +175,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 206sg: 00e32c62 */
+/* 104sg: 00fe837a */
+/* 106sg: 00e2a2f4 */
 /* 404: 00e4a696 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x2b, 0x22, 0x2a, 0x87, 0x25, 0x26,
@@ -191,6 +198,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 206sg: 00e32ce2 */
+/* 104sg: 00fe83fa */
+/* 106sg: 00e2a374 */
 /* 404: 00e4a716 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -215,6 +224,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_SF
 /* FIXME: not yet verified; tables are from 1.06 */
+/* 104sf: 00fe82fa */
+/* 106sf: 00e2a274 */
 /* 404: 00e4a796 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -235,6 +246,8 @@ uint8_t const keytblnorm[128] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+/* 104sf: 00fe837a */
+/* 106sf: 00e2a2f4 */
 /* 404: 00e4a816 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x2b, 0x22, 0x2a, 0x87, 0x25, 0x26,
@@ -255,6 +268,8 @@ uint8_t const keytblshift[128] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+/* 104sf: 00fe83fa */
+/* 106sf: 00e2a374 */
 /* 404: 00e4a896 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -279,6 +294,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_FR
 /* 306fr: 00e3678a */
+/* 104fr: 00fe82ec */
+/* 106fr: 00e2a266 */
 /* 404: 00e4a196 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x26, 0x82, 0x22, 0x27, 0x28, 0xdd,
@@ -300,6 +317,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 306fr: 00e3680a */
+/* 104fr: 00fe836c */
+/* 106fr: 00e2a2e6 */
 /* 404: 00e4a216 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -321,6 +340,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 306fr: 00e3688a */
+/* 104fr: 00fe83ec */
+/* 106fr: 00e2a366 */
 /* 404: 00e4a296 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x26, 0x90, 0x22, 0x27, 0x28, 0xdd,
@@ -345,6 +366,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_UK
 /* 306uk: 00e3673c */
+/* 104ks: 00fe829c */
+/* 106uk: 00e2a218 */
 /* 404: 00e49d16 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -366,6 +389,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 306uk: 00e367bc */
+/* 104ks: 00fe831c */
+/* 106uk: 00e2a298 */
 /* 404: 00e49d96 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x21, 0x22, 0x9c, 0x24, 0x25, 0x5e,
@@ -387,6 +412,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 306uk: 00e3683c */
+/* 104ks: 00fe839c */
+/* 106uk: 00e2a318 */
 /* 404: 00e49e16 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -411,6 +438,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_ES
 /* 205es: 00e30efa */
+/* 104es: 00fe82fa */
+/* 106es: 00e2a274 */
 /* 404: 00e4a016 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -432,6 +461,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 205es: 00e30f7a */
+/* 104es: 00fe837a */
+/* 106es: 00e2a2f4 */
 /* 404: 00e4a096 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0xad, 0xa8, 0x9c, 0x24, 0x25, 0x2f,
@@ -453,6 +484,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 205es: 00e30ffa */
+/* 104es: 00fe83fa */
+/* 106es: 00e2a374 */
 /* 404: 00e4a116 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -477,6 +510,8 @@ uint8_t const keytblcaps[128] = {
 
 #if OS_COUNTRY == CTRY_IT
 /* 205it: 00e30edc */
+/* 104it: 00fe82dc */
+/* 106it: 00e2a256 */
 /* 404: 00e4a496 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -498,6 +533,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 205it: 00e30f5c */
+/* 104it: 00fe835c */
+/* 106it: 00e2a2d6 */
 /* 404: 00e4a516 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x21, 0x22, 0x9c, 0x24, 0x25, 0x26,
@@ -519,6 +556,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 205it: 00e30fdc */
+/* 104it: 00fe83dc */
+/* 106it: 00e2a356 */
 /* 404: 00e4a596 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -542,7 +581,9 @@ uint8_t const keytblcaps[128] = {
 
 
 #if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_FI) | (OS_COUNTRY == CTRY_NO)
-/* 306sv: 00e3678a */
+/* 306se: 00e3678a */
+/* 104se: 00fe82ec */
+/* 106se: 00e2a266 */
 /* 404: 00e4a316 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -564,6 +605,8 @@ uint8_t const keytblnorm[128] = {
 };
 
 /* 306sv: 00e3680a */
+/* 104se: 00fe836c */
+/* 106se: 00e2a2e6 */
 /* 404: 00e4a396 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26,
@@ -585,6 +628,8 @@ uint8_t const keytblshift[128] = {
 };
 
 /* 306sv: 00e3688a */
+/* 104se: 00fe83ec */
+/* 106se: 00e2a366 */
 /* 404: 00e4a416 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -669,6 +714,8 @@ uint8_t const keytblcaps[128] = {
 #if OS_COUNTRY == CTRY_CZ
 /* 306cz: 00e3676c */
 /* 206cz: 00e32bb6 */
+/* 104cz: 00fe82ce */
+/* 106cz: 00e2a248 */
 /* 404: 00e49e96 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -691,6 +738,8 @@ uint8_t const keytblnorm[128] = {
 
 /* 306de: 00e367ec */
 /* 206de: 00e32c36 */
+/* 104cz: 00fe834e */
+/* 106cz: 00e2a2c8 */
 /* 404: 00e49f16 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x21, 0x22, 0xdd, 0x24, 0x25, 0x26,
@@ -713,6 +762,8 @@ uint8_t const keytblshift[128] = {
 
 /* 306de: 00e3686c */
 /* 206de: 00e32cb6 */
+/* 104cz: 00fe83ce */
+/* 106cz: 00e2a348 */
 /* 404: 00e49f96 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
@@ -736,7 +787,8 @@ uint8_t const keytblcaps[128] = {
 
 
 #if OS_COUNTRY == CTRY_NL
-/* 104nl: fe8298 */
+/* 104nl: 00fe8298 */
+/* 106nl: 00e2a218 */
 uint8_t const keytblnorm[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
     0x37, 0x38, 0x39, 0x30, 0x2d, 0x3d, 0x08, 0x09,
@@ -756,7 +808,8 @@ uint8_t const keytblnorm[128] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-/* 104nl: fe8318 */
+/* 104nl: 00fe8318 */
+/* 106nl: 00e2a298 */
 uint8_t const keytblshift[128] = {
     0x00, 0x1b, 0x21, 0x22, 0x9c, 0x24, 0x25, 0x5e,
     0x26, 0x2a, 0x28, 0x29, 0x5f, 0x2b, 0x08, 0x09,
@@ -776,7 +829,8 @@ uint8_t const keytblshift[128] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-/* 104nl: fe8398 */
+/* 104nl: 00fe8398 */
+/* 106nl: 00e2a318 */
 uint8_t const keytblcaps[128] = {
     0x00, 0x1b, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
     0x37, 0x38, 0x39, 0x30, 0x2d, 0x3d, 0x08, 0x09,

@@ -1,0 +1,14 @@
+~ $4c,ef,03,00,00,04            ; movem.l   4(a7),a0-a1
+~ $61,00,5b,0a                  ; bsr       $00FE4724
+~ $4c,ef,03,00,00,04            ; movem.l   4(a7),a0-a1
+~ $d0,fc,00,0c                  ; adda.w    #$000C,a0
+~ $72,07                        ; moveq.l   #7,d1
+~ $10,19                        ; move.b    (a1)+,d0
+~ $67,06                        ; beq.s     $00FDEC32
+~ $b0,3c,00,2e                  ; cmp.b     #$2E,d0
+~ $66,04                        ; bne.s     $00FDEC36
+~ $53,89                        ; subq.l    #1,a1
+~ $70,20                        ; moveq.l   #32,d0
+~ $10,c0                        ; move.b    d0,(a0)+
+~ $51,c9,ff,ee                  ; dbf       d1,$00FDEC28
+~ $4e,75                        ; rts

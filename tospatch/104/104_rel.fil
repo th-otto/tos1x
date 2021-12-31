@@ -343,7 +343,7 @@ _ENDIF
 _IF .NORM_BOOT
 1CDE
  ~ $BE,78,04,46             ; cmp.w     ($00000446).w,d7
- ~ $6F,2E                   ; ble       $00E05DD4
+ ~ $6F,2E                   ; ble       $00FC1D12
  ~ $70,01                   ; moveq.l   #1,d0
  ~ $3E,80                   ; move.w    d0,(a7)
  ~ $42,A7                   ; clr.l     -(a7)
@@ -363,7 +363,7 @@ _ENDIF
 .ALARM = 0          ;1: Include patch, 0: Do not include patch
 
 _IF .ALARM !A! (.CT_HD = 0)
- 1F70 uhrpatch.abs   ;1F70 - 1FC2 (.82)
++uhrpatch.fil   ;1F70 - 1FC2 (.82)
 _ENDIF
 
 ;*******************************************************************************
@@ -377,8 +377,7 @@ _ENDIF
 .CT_CLOCK = 0       ;1: Include patch, 0: Do not include patch
 
 _IF .CT_CLOCK !A! (.ALARM = 0)
- 1F70 ctuhrdrv.abs  ;1F70 - 215C (.492)
- !1F7A,20FC         ;Reloc corrections for the c't clock.
++ctuhrdrv.fil  ;1F70 - 215C (.492)
 _ENDIF
 
 ;*******************************************************************************
@@ -391,7 +390,7 @@ _ENDIF
 .CORRECT_DAY = 0    ;1: Include patch, 0: Do not include patch
 
 _IF .CORRECT_DAY !A! (.CT_CLOCK = 0)
- 2080 setwoch.abs   ;2080 - 215C (.220)
++setwoch.fil   ;2080 - 215C (.220)
 _ENDIF
 
 ;*******************************************************************************
@@ -404,12 +403,11 @@ _ENDIF
 .FASTPRN = 0        ;1: Include patch, 0: Do not include patch
 
 _IF .FASTPRN
- 278  $338C+.BASE.L ;Warteroutine auf neue Routine
- 998  $3372+.BASE.L ;bconin-Vector auf neue Routine
- 9B8  $338C+.BASE.L ;Warteroutine auf neue Routine
+ 278  $338C+.BASE.L ;new function for bcostat
+ 998  $3372+.BASE.L ;new function for bconin
+ 9B8  $338C+.BASE.L ;new function for bcostat
  
- 3300 fastpr4.abs   ;3300 - 33A6 (.172)
- !338E              ;Reloc-Correction
++fastpr4.fil   ;3300 - 33A6 (.172)
 
  35EC $61,00,FD,64  ;The routine to set the strobe has moved ... 
 _ENDIF
@@ -419,7 +417,7 @@ _ENDIF
 ;* Set printer timeout. Original value is 30s. The minimum value is 5s!
 ;* Goes in the pants with the Atari laser; since I have one, here the original value.
 
-.TIMEOUT = .30      ;Zeit kann hier ge„ndert werden (in Sekunden)
+.TIMEOUT = .30      ;Timeout can be changed here (in seconds)
 
 _IF .FASTPRN
  331E
@@ -427,7 +425,7 @@ _ELSE
  3322
 _ENDIF
 
-! ~ , ~ + 2         ;Damit Zeit nicht reloziert wird
+! ~ , ~ + 4         ;To prevent time from being relocated
 ~ $.TIMEOUT * .200.L
 
 ;*******************************************************************************
@@ -527,7 +525,7 @@ _ENDIF
 ;* Alex Esser, ST-Computer 10/90 (implementiert durch MRF):
 ;* This one patch makes POOLFIXx.PRG from Atari obsolete.
 
-.POOLFIX = 0        ;1: Include patch, 0: Do not include patch
+.POOLFIX = 1        ;1: Include patch, 0: Do not include patch
 
 _IF .POOLFIX
  9064+.d1 $4E,71,4E,71,4E,71,4E,71
@@ -537,10 +535,10 @@ _ENDIF
 ;* MRF:
 ;* VDI patch (new v_opnvwk() routine, replaces VDIFIX).
 
-.VDIFIX = 0         ;1: Include patch, 0: Do not include patch
+.VDIFIX = 1         ;1: Include patch, 0: Do not include patch
 
 _IF .VDIFIX
- E22A+.d1 vdi.abs       ;E22A - E2BC (.146)
++vdi.fil       ;E22A - E2BC (.146)
 _ENDIF
 
 ;*******************************************************************************
@@ -570,10 +568,10 @@ _ENDIF
 ;* MRF:
 ;* Correct AES path (from TOS14FIX.PRG, ST computer 1/90).
 
-.TOSFIX = 0         ;1: Include patch, 0: Do not include patch
+.TOSFIX = 1         ;1: Include patch, 0: Do not include patch
 
 _IF .TOSFIX
- 2411E+.d2 tosfix.abs   ;2411E - 2414A (.44)
++tosfix.fil   ;2411E - 2414A (.44)
 _ENDIF
 
 ;*******************************************************************************
@@ -617,7 +615,12 @@ _ENDIF
 
 _IF .NEW_KBD
  -demo.kbd                    ;Dsetpath("DEMO.KBD")
- 282CE+.d2 frg\german.kbd         ;Enter the desired keyboard table here
+_SWITCH .NATION
+_CASE .FRG:
+ 282CE+.d2 frg\german.kbd     ;Enter the desired keyboard table here
+_CASE .USA:
+ 282CE+.d2 usa\usa.kbd        ;Enter the desired keyboard table here
+_ENDSWITCH
  -..                          ;Dsetpath("..")
 _ENDIF
 
@@ -633,8 +636,11 @@ _ENDIF
 .NEW_SZ = 0         ;1: Include patch, 0: Do not include patch
 
 _IF .NEW_SZ
+_SWITCH .NATION
+_CASE .FRG:
  282DA+.d2 $E1
  283DA+.d2 $E1
+_ENDSWITCH
 _ENDIF
 
 ;*******************************************************************************
@@ -647,7 +653,7 @@ _ENDIF
 
 _IF .FONTS
  -fonts                   ;Dsetpath("FONTS")
- 28A78+.d2 6x6_font.abs       ;1152 Bytes (da 6x6 Font!)
+ 28A78+.d2 6x6_font.abs       ;1152 Bytes (6x6 Font)
  29154+.d2 8x8_font.abs       ;2048 Bytes (8x8 Font)
  29954+.d2 neu.abs            ;4096 Bytes (8x16 Font)
  -..                      ;Dsetpath("..")
@@ -679,8 +685,8 @@ _IF .ICONS
  .IMAGES1+ 80                   ;Question mark in form_alert()
  .IMAGES1+100                   ;Stop sign
  .IMAGES2                       ;Atari image in the info box of the desktop
- ;* die folgenden Icons bestehen jeweils auf 256 Bytes. 128 Bytes Maske, 128 Byte
- ;* Image fr das Icon
+ ;* the following icons are 256 bytes each. 128 bytes for the mask, and 128 byte
+ ;* for the data
  .IMAGES2+ 80 tosicons.img      ;Floppy drive
  .IMAGES2+180 ordner.img        ;Folder
  .IMAGES2+280                   ;Trashcan
@@ -721,7 +727,7 @@ _ENDIF
 ;* SV: (angepasst von MH)
 ;* Enter an individual text in the info menu.
 ;* To do this, the text can be entered using ASCII code, but may
-;* but not longer than 29 characters. 
+;* not be longer than 29 characters. 
 ;*
 ;* >>> BETTER: Create and integrate new RSC files straight away (see below)!
 ;* >>> This patch does not work with the RSC/DESKTOP patch! 
@@ -824,7 +830,7 @@ _ENDIF
 .HD_WAIT0 = 0       ;1: Include patch, 0: Do not include patch
 
 _IF .HD_WAIT0
- .HD_WAIT:      ~ hdwait.abs            ;length 212 Bytes
+ .HD_WAIT:      +hdwait0.fil            ;length 212 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
 
  438 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
@@ -841,7 +847,7 @@ _ENDIF
 .TIME     = .12     ;Wartezeit in s
 
 _IF .HD_WAIT1
- .HD_WAIT:      ~ hdwait1.abs           ;length 56 Bytes
+ .HD_WAIT:      +hdwait1.fil            ;length 56 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
  .HD_WAIT+A     |$.TIME*.200.L          ;Insert waiting time
 
@@ -858,15 +864,10 @@ _ENDIF
 .DEVICE   = 0       ;DMA device to be waited for (0-7)
 
 _IF .HD_WAIT2
- .HD_WAIT:      ~ hdwait2.abs           ;length 332 Bytes
+ .HD_WAIT:      +hdwait2.fil            ;length 332 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
 
  ;.HD_WAIT+E     |$4E,71                ;Only for RAM-TOS and> = 2 hard disks
-
- .HD_WAIT+1F    |$.TIME.B               ;Insert waiting time
- .HD_WAIT+86    |$.DEVICE*20.W          ;Insert device
- .HD_WAIT+92    |$.DEVICE*20.W
- .HD_WAIT+10A   |$.DEVICE+30.B
 
  438 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
  43E |$4E,71,4E,71                      ;fill with NOP
@@ -878,15 +879,12 @@ _ENDIF
 ;* used. For example, you get the message "Disc is write-protected,
 ;* N)ochmal, W)eiter, A)bbruch".
 
-.ETV_CRITIC = 0     ;1: Include patch, 0: Do not include patch
+.ETV_CRITIC = 1     ;1: Include patch, 0: Do not include patch
 
 _IF .ETV_CRITIC
-;* only for german TOS for now
-_SWITCH .NATION
-_CASE .FRG:
- .ADR:          ~ etvcritc.abs          ;Length 488 Bytes
+;* should work for all languages, but patch contains german messages
+ .ADR:          +etvcritc.fil           ;Length 488 Bytes
  36E            |$.ADR+.BASE.L          ;entry to new etv_critic()
-_ENDSWITCH
 _ENDIF
 
 ;*******************************************************************************

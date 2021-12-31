@@ -1,0 +1,140 @@
+;***************************************************************************
+;* Martin Osieka: (implementiert durch MH)
+;* Der WINX-Patch erlaubt mehr Fenster als je zuvor !!!
+
+;             ;Damit WINX richtig reloziert wird (evtl. 1CAFA)
+
+.WX_VERSION = 220
+.WX_DATE    = 1B51 ; 1993/10/17
+
+.WX_QUEUE_SIZE = 500
+
+.WINX01 = 17B7C
+.WINX05 = 1CA1A
+.WINX14 = 244EC
+
+!1CADC
+!.WINX14+246 ; 24732
+!.WINX14+250 ; 2473C
+!.WINX14+FDA ; 254C6
+!.WINX14+FDC ; 254C8
+!.WINX14+FDE ; 254CA
+!.WINX14+FE0 ; 254CC
+
+
+
+14A5C $61,00,57,EE ; bsr $FDA24C
+
+159AE $3E,BC,34,DB,4E,71
+17AB0 $4E,75
+
+; replace unused graf_handle by a helper function to initialize the window colors
+.WINX01
++winx01.fil   ; 17B7C - 17BA4 (.40)
+
+; crysbind: new address for wm_close()
+17CEC $41,F9,.WINX14+.BASE+E38.L  ; jsr $FE5324
+; crysbind: new address for wm_delete()
+17CF6 $41,F9,.WINX14+.BASE+E10.L  ; jsr $FE52FC
+; crysbind: new address for wm_find()
+17D00 $41,F9,.WINX14+.BASE+13D2.L ; jsr $FE58BE
+; crysbind: new address for wm_update()
+17D0A $41,F9,.WINX14+.BASE+1408.L ; jsr $FE58F4
+; crysbind: new address for wm_create()
+17D14 $41,F9,.WINX14+.BASE+C9C.L  ; jsr $FE5188
+; crysbind: new address for wm_open()
+17D2A $41,F9,.WINX14+.BASE+DAC.L  ; jsr $FE5298
+
+1A22C WINX02.ABS   ; 1A22C - 1A26A (.62)
+
+1B878 WINX03.ABS   ; 1B878 - 1B896 (.30)
+
+1B8CE WINX04.ABS   ; 1B8CE - 1B922 (.84)
+
+.WINX05 WINX05.ABS   ; 1CA1A - 1CB34 (.282)
+.WINX05+C2 $.GLOBAL.W
+
+1CBE0 WINX06.ABS   ; 1CBE0 - 1CC68 (.136)
+
+1D7CC $F7,7C,4E,71,4E,71,50,8F,4A,40
+~     $4E,71,4E,71,4E,71,4E,71,4E,71,4E,71,4E,71,4E,71
+
+1DC22 WINX07.ABS   ; 1DC22 - 1DC5E (.60)
+1DC8E WINX08.ABS   ; 1DC8E - 1DFCC (.830)
+
+1E0B4 $23,EE,00,08,00,00,70,52,F0,01,43,F9,00,00,6C,EA
+~     $4A,51,67,00,FC,0A,53,51,4E,75
+1E0F2 $61,00,6D,7E,4E,71,42,A7,2F,3C,01,02,03,00
+1E3F8 $61,00,03,B6
+1E5EA $4E,B9,00,FD,CB,1E
+1E748 $4E,B9,00,FE,5A,18
+1E798 $70,FF,60,0C,4E,71,4E,71
+1E7A8 $61,00,6C,00,60,00,00,1E,43,F9,00,FD,E7,30,20,55
+~     $20,11,B0,90,66,02,20,49,4E,D0
+
+1E826 WINX09.ABS   ; 1E826 - 1E862 (.60)
+
+1EABA WINX10.ABS   ; 1EABA - 1EB0A (.80)
+
+1EC12 WINX11.ABS   ; 1EC12 - 1EC3E (.44)
+
+1ECB8 $26,6B,00,32,D6,C0,4E,71,4E,71
+1ECCE $28,6C,00,32,D8,C6,4E,71
+1ED64 $30,3C,05,00
+
+1EE1E WINX12.ABS   ; 1EE1E - 1F0E6 (.712)
+
+1F894 WINX13.ABS   ; 1F894 - 1F934 (.160)
+
+208FC $61,00,42,46,60,00,00,08
+2187C $4E,B9,00,FE,5A,34
+224F6 $61,00,1F,FC,4E,71,4E,71
+24352 $4E,B9,00,FD,A2,52
+2435C $50,F9,00,00,6D,D6
+2439A $61,00,11,32
+
+;
+; replacements for all window manager functions
+;
+.WINX14 WINX14.ABS   ; 244EC - 25B9E (.5810)
+.WINX14+246 $.LOCAL.W
+.WINX14+250 $.DESKTOP.W
+.WINX14+FDA $.INIT_SCROLL.W
+.WINX14+FDC $.CONT_SCROLL.W
+.WINX14+FDE $.CONT_CLOSE.W
+.WINX14+FE0 $.CONT_FULL.W
+
+26514 $20,79,00,00,74,B8,D1,C0,30,28,55,50,81,F9,00,00
+~     $6E,18,48,C0,4E,75
+
+; Original
+;277C4  $30,2D,00,04           ; move.w    4(a5),d0
+;~      $4E,B9,.WINX05+6A.BASE.L    ; jsr       $00FDCA84
+; wegen NEWRSC
+277CA $20,40                 ; movea.l   d0,a0
+~      $4E,B9,.WINX05+6C+.BASE.L   ; jsr       $00FDCA86
+~      $21,C0,70,02          ; move.l    d0,($00007002).w
+~      $4A,B8,70,02          ; tst.l     ($00007002).w
+
+2798C $00FE55D4.L
+~     $00FE5754.L
+~     $00FE5972.L
+27A2C $00FE5188.L
+~     $00FE5298.L
+~     $00FE5324.L
+~     $00FE52FC.L
+~     $00FE58BE.L
+~     $00FE58F4.L
+~     $00FE5AA4.L
+27A70 $00FDF904.L
+27ABC $00FE58F4.L
+27AC8 $00FE58F4.L
+~     $00FE58F4.L
+27AE4 $00FE58F4.L
+28000 $00FDE0BE.L
+280D8 $00FE5472.L
+
+2B802 WINX15.ABS   ; 2B802 - 2B880 (.126)
+
+;***************************************************************************
+;* Ende des Winx-Patches

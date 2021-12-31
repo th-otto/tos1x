@@ -103,6 +103,8 @@ int16_t const off_8x8[257] =
 /* 206de: 00e33762 */
 /* 306de: 00e373aa */
 /* 306us: 00e3737a */
+/* 104de: 00fe9154 */
+/* 106de: 00e2b0ce */
 int16_t const dat_8x8[1024] =
 {
 #if OS_COUNTRY == CTRY_CZ

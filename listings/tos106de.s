@@ -325,6 +325,7 @@
 [00e00534] 4e73                      rte
 [00e00536] 4cdf 0101                 movem.l    (a7)+,d0/a0
 [00e0053a] 4ef9 08e0 0ca2            jmp        $08E00CA2
+_biosinit:
 [00e00540] 4e71                      nop
 [00e00542] 4eb9 00e0 97f4            jsr        $00E097F4
 [00e00548] 33f9 00e0 001e 0000 60fe  move.w     $00E0001E,$000060FE
@@ -392,6 +393,7 @@
 [00e0063a] 4700                      chk.l      d0,d3 ; 68020+ only
 [00e0063c] 0000                      dc.w       $0000
 [00e0063e] 8001                      or.b       d1,d0
+diskboot:
 [00e00640] 7003                      moveq.l    #3,d0
 [00e00642] 6100 0126                 bsr        $00E0076A
 [00e00646] 2079 0000 047a            movea.l    $0000047A,a0
@@ -401,6 +403,7 @@
 [00e00652] 41f9 0000 185c            lea.l      $0000185C,a0
 [00e00658] 4e90                      jsr        (a0)
 [00e0065a] 4e75                      rts
+dmaboot:
 [00e0065c] 7e00                      moveq.l    #0,d7
 [00e0065e] 2f39 0000 04ba            move.l     $000004BA,-(a7)
 [00e00664] 99cc                      suba.l     a4,a4
@@ -746,6 +749,8 @@ xbios_vecs:
 [00e00aee] 600a                      bra.s      $00E00AFA
 [00e00af0] 41ed 055e                 lea.l      1374(a5),a0
 [00e00af4] 6004                      bra.s      $00E00AFA
+
+_bbconout:
 [00e00af6] 41ed 057e                 lea.l      1406(a5),a0
 [00e00afa] 302f 0004                 move.w     4(a7),d0
 [00e00afe] e548                      lsl.w      #2,d0
@@ -2419,6 +2424,7 @@ getiword:
 [00e02142] 4e75                      rts
 [00e02144] 70ff                      moveq.l    #-1,d0
 [00e02146] 4e75                      rts
+checkRTC:
 [00e02148] 93c9                      suba.l     a1,a1
 [00e0214a] 307c fc20                 movea.w    #$FC20,a0
 [00e0214e] 2429 0008                 move.l     8(a1),d2
@@ -2440,6 +2446,7 @@ getiword:
 [00e02190] 2342 0008                 move.l     d2,8(a1)
 [00e02194] 003c 0001                 ori.b      #$01,ccr
 [00e02198] 4e75                      rts
+readRTCTime:
 [00e0219a] 61ac                      bsr.s      $00E02148
 [00e0219c] 6500 00b6                 bcs        $00E02254
 [00e021a0] 43f9 0000 0a94            lea.l      $00000A94,a1
@@ -2503,6 +2510,7 @@ getiword:
 [00e02252] 4e75                      rts
 [00e02254] 70ff                      moveq.l    #-1,d0
 [00e02256] 4e75                      rts
+writeRTCTime:
 [00e02258] 6100 feee                 bsr        $00E02148
 [00e0225c] 6500 00d2                 bcs        $00E02330
 [00e02260] 43f9 0000 0a94            lea.l      $00000A94,a1
@@ -3768,6 +3776,7 @@ prtstr:
 [00e034c6] 3141 0006                 move.w     d1,6(a0)
 [00e034ca] 46df                      move.w     (a7)+,sr
 [00e034cc] 4e75                      rts
+_bcon0out:
 [00e034ce] 082d 0004 0eec            btst       #4,3820(a5)
 [00e034d4] 6600 0124                 bne        $00E035FA
 [00e034d8] 242d 04ba                 move.l     1210(a5),d2
@@ -4277,6 +4286,8 @@ prtstr:
 [00e03bca] 0000                      dc.w       $0000
 [00e03bcc] 0cb0 0000 0cd2 0000       cmpi.l     #$00000CD2,0(a0,d0.w)
 [00e03bd4] 0de0                      bset       d6,-(a0)
+
+_rsconf:
 [00e03bd6] 0c6f fffe 0004            cmpi.w     #$FFFE,4(a7)
 [00e03bdc] 6608                      bne.s      $00E03BE6
 [00e03bde] 3039 0000 0aae            move.w     $00000AAE,d0
@@ -10676,6 +10687,7 @@ prtstr:
 [00e08e2c] 4cdf 2000                 movem.l    (a7)+,a5
 [00e08e30] 4e5e                      unlk       a6
 [00e08e32] 4e75                      rts
+xmfree:
 [00e08e34] 4e56 0000                 link       a6,#$0000
 [00e08e38] 48e7 010c                 movem.l    d7/a4-a5,-(a7)
 [00e08e3c] 287c 0000 536c            movea.l    #$0000536C,a4
@@ -16848,6 +16860,7 @@ J3:
 [00e0e23c] 4cdf 30c0                 movem.l    (a7)+,d6-d7/a4-a5
 [00e0e240] 4e5e                      unlk       a6
 [00e0e242] 4e75                      rts
+init_wk:
 [00e0e244] 4e56 0000                 link       a6,#$0000
 [00e0e248] 48e7 031c                 movem.l    d6-d7/a3-a5,-(a7)
 [00e0e24c] 2a79 0000 2b24            movea.l    $00002B24,a5
@@ -50677,6 +50690,7 @@ _ui_mupb:
 [00e2a3c2] 0000                      dc.w       $0000
 [00e2a3c4] 0000                      dc.w       $0000
 [00e2a3c6] 0000                      dc.w       $0000
+bellsnd:
 [00e2a3c8] 0034 0100 0200            ori.b      #$00,0(a4,d0.w*2) ; 68020+ only
 [00e2a3ce] 0300                      btst       d1,d0
 [00e2a3d0] 0400 0500                 subi.b     #$00,d0
@@ -51485,6 +51499,7 @@ f6x6:
 [00e2ae66] 0000                      dc.w       $0000
 [00e2ae68] 0033 0000 0000            ori.b      #$00,0(a3,d0.w)
 [00e2ae6e] 0800 0000                 btst       #0,d0
+f8x8:
 [00e2ae72] 0001 0009                 ori.b      #$09,d1
 [00e2ae76] 3878 3820                 movea.w    ($00003820).w,a4
 [00e2ae7a] 7379                      ???
@@ -54097,6 +54112,7 @@ f6x6:
 [00e2c8c8] 0000                      dc.w       $0000
 [00e2c8ca] 0000                      dc.w       $0000
 [00e2c8cc] 0000                      dc.w       $0000
+f8x16:
 [00e2c8ce] 0001 000a                 ori.b      #$0A,d1
 [00e2c8d2] 3878 3136                 movea.w    ($00003136).w,a4
 [00e2c8d6] 2073 7973 7465 6d20 666f  movea.l    ([$74656D20,a3],$666F6E74),a0 ; 68020+ only

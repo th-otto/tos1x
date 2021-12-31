@@ -42,6 +42,7 @@
  *
  */
 
+/* 106de: 00e2a3c8 */
 uint8_t const bellsnd[] = {
   0, 0x34,    /* channel A pitch */
   1, 0,

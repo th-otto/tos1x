@@ -1,0 +1,30 @@
+~ $70,0a                        ; moveq.l   #10,d0
+~ $60,02                        ; bra.s     $00FDB8D4
+~ $70,19                        ; moveq.l   #25,d0
+~ $3f,00                        ; move.w    d0,-(a7)
+~ $3f,2c,34,2c                  ; move.w    13356(a4),-(a7)
+~ $f4,b8                        ; cpusha    ic
+~ $f2,ec,20,40,20,1f            ; fb???.l   $213DD8FD
+~ $90,7c,00,14                  ; sub.w     #$0014,d0
+~ $90,6c,03,4c                  ; sub.w     844(a4),d0
+~ $6c,02                        ; bge.s     $00FDB8EE
+~ $70,ff                        ; moveq.l   #-1,d0
+~ $3f,00                        ; move.w    d0,-(a7)
+~ $3f,28,00,0a                  ; move.w    10(a0),-(a7)
+~ $2f,2c,5e,2c                  ; move.l    24108(a4),-(a7)
+~ $4e,71                        ; nop
+~ $4e,71                        ; nop
+~ $f6,a0                        ; dc.w      $F6A0 ; illegal
+~ $50,8f                        ; addq.l    #8,a7
+~ $f5,84                        ; plpar     (a4) ; 68060 only
+~ $2a,40                        ; movea.l   d0,a5
+~ $2e,8d                        ; move.l    a5,(a7)
+~ $f5,8c                        ; plpar     (a4) ; 68060 only
+~ $42,57                        ; clr.w     (a7)
+~ $3f,2d,00,06                  ; move.w    6(a5),-(a7)
+~ $f4,b0                        ; cpushp    ic,(a0)
+~ $54,8f                        ; addq.l    #2,a7
+~ $39,6d,00,06,35,9a            ; move.w    6(a5),13722(a4)
+~ $60,00,01,12                  ; bra       $00FDBA2C
+~ $61,00,11,4c                  ; bsr       $00FDCA6A
+~ $4e,71                        ; nop

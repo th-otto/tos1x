@@ -27,6 +27,8 @@ extern int16_t const off_8x8[];
 /* 206de: 00e33f62 */
 /* 306de: 00e37baa */
 /* 306us: 00e37b7a */
+/* 104de: 00fe9954 */
+/* 106de: 00e2b8ce */
 int16_t const dat_8x16[2048] =
 {
 #if OS_COUNTRY == CTRY_CZ

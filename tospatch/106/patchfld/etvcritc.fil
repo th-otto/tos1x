@@ -1,0 +1,119 @@
+~ $41,ef,00,04               ; lea.l      4(a7),a0
+~ $48,e7,13,18               ; movem.l    d3/d6-d7/a3-a4,-(a7)
+~ $3e,18                     ; move.w     (a0)+,d7
+~ $6a,00,00,86               ; bpl        $00FE0092
+~ $3c,10                     ; move.w     (a0),d6
+~ $21,cf,66,ba               ; move.l     a7,(errsave).w
+~ $4f,f8,6a,be               ; lea.l      (errstkend).w,a7
+~ $32,07                     ; move.w     d7,d1
+~ $46,41                     ; not.w      d1
+~ $b2,7c,00,11               ; cmp.w      #17,d1
+~ $6e,3e                     ; bgt.s      $00FE0060
+~ $43,f9,2D280+.d2+.BASE.L   ; lea.l      _err_tbl,a1
+~ $16,31,10,00               ; move.b     0(a1,d1.w),d3
+~ $48,83                     ; ext.w      d3
+~ $d6,43                     ; add.w      d3,d3
+~ $49,fa,00,9c               ; lea.l      .ETV_MSG(pc),a4
+~ $d8,f4,30,00               ; adda.w     0(a4,d3.w),a4
+~ $61,62                     ; bsr.s      $00FE009C
+~ $b6,7c,00,0c               ; cmp.w      #12,d3
+~ $67,24                     ; beq.s      $00FE0064
+;FE0040:
+~ $49,fa,01,7a               ; lea.l      .ETV_QUEST(pc),a4
+~ $61,56                     ; bsr.s      $00FE009C
+~ $61,7a                     ; bsr.s      $00FE00C2
+~ $08,80,00,05               ; bclr       #5,d0
+~ $b0,3c,00,41               ; cmp.b      #'A',d0
+~ $67,1e                     ; beq.s      $00FE0070
+~ $b0,3c,00,49               ; cmp.b      #'I',d0
+~ $67,24                     ; beq.s      $00FE007C
+~ $b0,3c,00,4e               ; cmp.b      #'N',d0
+~ $67,18                     ; beq.s      $00FE0076
+~ $60,e0                     ; bra.s      $00FE0040
+;FE0060:
+~ $70,ff                     ; moveq.l    #-1,d0
+~ $60,2e                     ; bra.s      $00FE0092
+;FE0064:
+~ $49,fa,01,78               ; lea.l      .ETV_KEY(pc),a4
+~ $61,32                     ; bsr.s      $00FE009C
+~ $61,56                     ; bsr.s      $00FE00C2
+~ $76,00                     ; moveq.l    #0,d3
+~ $60,1a                     ; bra.s      $00FE008A
+;FE0070:
+~ $36,07                     ; move.w     d7,d3
+~ $48,c3                     ; ext.l      d3
+~ $60,08                     ; bra.s      $00FE007E
+;FE0076:
+~ $76,01                     ; moveq.l    #1,d3
+~ $48,43                     ; swap       d3
+~ $60,02                     ; bra.s      $00FE007E
+;FE007C:
+~ $76,00                     ; moveq.l    #0,d3
+;FE007E:
+~ $3f,00                     ; move.w     d0,-(a7)
+~ $2f,3c,00,03,00,02         ; move.l     #$00030002,-(a7)
+~ $4e,4d                     ; trap       #13
+~ $5c,8f                     ; addq.l     #6,a7
+;FE008A:
+~ $47,fa,01,2d               ; lea.l      .ETV_CRNL(pc),a3
+~ $61,14                     ; bsr.s      $00FE00A4
+~ $20,03                     ; move.l     d3,d0
+;FE0092:
+~ $2e,78,66,76               ; movea.l    (errsave).w,a7
+~ $4c,df,18,c8               ; movem.l    (a7)+,d3/d6-d7/a3-a4
+~ $4e,75                     ; rts
+;FE009C:
+~ $47,fa,00,3e               ; lea.l      .ETV_ESC(pc),a3
+~ $61,02                     ; bsr.s      $00FE00A4
+~ $26,4c                     ; movea.l    a4,a3
+;FE00A4:
+~ $10,1b                     ; move.b     (a3)+,d0
+~ $67,18                     ; beq.s      $00FE00C0
+~ $b0,3c,00,25               ; cmp.b      #'%',d0
+~ $66,04                     ; bne.s      $00FE00B2
+~ $70,41                     ; moveq.l    #'A',d0
+~ $d0,06                     ; add.b      d6,d0
+;FE00B2:
+~ $3f,00                     ; move.w     d0,-(a7)
+~ $2f,3c,00,03,00,02         ; move.l     #$00030002,-(a7)
+~ $4e,4d                     ; trap       #13
+~ $5c,8f                     ; addq.l     #6,a7
+~ $60,e4                     ; bra.s      $00FE00A4
+;FE00C0:
+~ $4e,75                     ; rts
+;FE00C2:
+~ $2f,3c,00,02,00,02         ; move.l     #$00020002,-(a7)
+~ $4e,4d                     ; trap       #13
+~ $58,8f                     ; addq.l     #4,a7
+~ $4e,75                     ;rts
+;.ETV_MSG:
+~ $0012.W ; $.ETV_MSG1-.ETV_MSG.W
+~ $003e.W ; $.ETV_MSG2-.ETV_MSG.W
+~ $0061.W ; $.ETV_MSG3-.ETV_MSG.W
+~ $007e.W ; $.ETV_MSG4-.ETV_MSG.W
+~ $00a4.W ; $.ETV_MSG5-.ETV_MSG.W
+~ $00c4.W ; $.ETV_MSG6-.ETV_MSG.W
+~ $00c5.W ; $.ETV_MSG7-.ETV_MSG.W
+;.ETV_ESC:
+~ $1b,6c,20,00
+;.ETV_MSG1:
+~ $'Disk in Laufwerk %: ist schreibgeschÅtzt.',0D,0A,00
+;.ETV_MSG2:
+~ $'Floppy %: antwortet nicht (?)...',0D,0A,00
+;.ETV_MSG3:
+~ $'Daten auf Disk %: defekt? ',0D,0A,00
+;.ETV_MSG4:
+~ $'Anwendung kann Disk %: nicht lesen.',0D,0A,00
+;.ETV_MSG5:
+~ $'AusgabegerÑt antwortet nicht!',0D,0A,00
+;.ETV_MSG6:
+~ $00 
+;.ETV_MSG7:
+~ $'Bitte Disk %: in Laufwerk A: einlegen!'
+;.ETV_CRNL:
+~ $0D,0A,00
+;.ETV_QUEST:
+~ $'A)bbruch, N)ochmal, I)gnorieren? ',00
+;.ETV_KEY:
+~ $'Taste...',00
+_EVEN $00

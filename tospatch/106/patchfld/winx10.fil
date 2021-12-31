@@ -1,0 +1,28 @@
+~ $22,6f,00,0a                  ; movea.l   10(a7),a1
+~ $30,29,00,1c                  ; move.w    28(a1),d0
+~ $32,00                        ; move.w    d0,d1
+~ $45,e9,00,32                  ; lea.l     50(a1),a2
+~ $24,12                        ; move.l    (a2),d2
+~ $5d,82                        ; subq.l    #6,d2
+~ $b5,c2                        ; cmpa.l    d2,a2
+~ $66,12                        ; bne.s     $00FDEAE2
+~ $c1,fc,05,00                  ; muls.w    #$0500,d0
+~ $d0,b9,00,00,74,b8            ; add.l     $000074B8,d0
+~ $d0,bc,00,00,2d,50            ; add.l     #$00002D50,d0
+~ $24,80                        ; move.l    d0,(a2)
+~ $20,2f,00,04                  ; move.l    4(a7),d0
+~ $67,18                        ; beq.s     $00FDEB00
+~ $20,40                        ; movea.l   d0,a0
+~ $43,e9,00,0c                  ; lea.l     12(a1),a1
+~ $70,07                        ; moveq.l   #7,d0
+~ $b1,09                        ; cmpm.b    (a1)+,(a0)+
+~ $66,12                        ; bne.s     $00FDEB06
+~ $51,c8,ff,fa                  ; dbf       d0,$00FDEAF0
+~ $4a,10                        ; tst.b     (a0)
+~ $66,0a                        ; bne.s     $00FDEB06
+~ $70,01                        ; moveq.l   #1,d0
+~ $4e,75                        ; rts
+~ $b2,6f,00,08                  ; cmp.w     8(a7),d1
+~ $67,f6                        ; beq.s     $00FDEAFC
+~ $70,00                        ; moveq.l   #0,d0
+~ $4e,75                        ; rts

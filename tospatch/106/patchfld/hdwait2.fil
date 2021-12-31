@@ -1,0 +1,102 @@
+~ $31,f9,.BASE+1E.l,60,FE    ; move.w     $00E0001E,($000060FE).w
+~ $0c,78,00,02,04,46         ; cmpi.w     #2,($00000446).w
+~ $64,48                     ; bcc.s      $00FE0058
+~ $61,66                     ; bsr.s      $00FE0078
+~ $67,44                     ; beq.s      $00FE0058
+~ $41,fa,00,df               ; lea.l      $00FE00F5(pc),a0
+~ $61,42                     ; bsr.s      $00FE005C
+~ $2a,38,04,ba               ; move.l     ($000004BA).w,d5
+~ $7c,.TIME.B                ; moveq.l    #20,d6
+;FE0020:
+~ $da,bc,00,00,00,c8         ; add.l      #200,d5
+~ $41,fa,00,c8               ; lea.l      $00FE00F0(pc),a0
+~ $61,30                     ; bsr.s      $00FE005C
+~ $28,06                     ; move.l     d6,d4
+~ $88,fc,00,0a               ; divu.w     #10,d4
+~ $61,34                     ; bsr.s      $00FE0068
+~ $48,44                     ; swap       d4
+~ $61,30                     ; bsr.s      $00FE0068
+;FE0038:
+~ $2f,3c,00,0b,ff,ff         ; move.l     #$000BFFFF,-(a7)
+~ $4e,4d                     ; trap       #13
+~ $58,8f                     ; addq.l     #4,a7
+~ $c0,3c,00,03               ; and.b      #3,d0
+~ $57,00                     ; subq.b     #3,d0
+~ $67,0e                     ; beq.s      $00FE0058
+~ $61,2c                     ; bsr.s      $00FE0078
+~ $67,0a                     ; beq.s      $00FE0058
+~ $ba,b8,04,ba               ; cmp.l      ($000004BA).w,d5
+~ $62,e4                     ; bhi.s      $00FE0038
+~ $53,46                     ; subq.w     #1,d6
+~ $6a,c8                     ; bpl.s      $00FE0020
+;FE0058:
+~ $41,fa,00,ee               ; lea.l      $00FE0148(pc),a0
+;FE005C:
+~ $2f,08                     ; move.l     a0,-(a7)
+~ $3f,3c,00,09               ; move.w     #9,-(a7) ; Cconws
+~ $4e,41                     ; trap       #1
+~ $5c,8f                     ; addq.l     #6,a7
+~ $4e,75                     ; rts
+;FE0068:
+~ $70,30                     ; moveq.l    #48,d0
+~ $d0,44                     ; add.w      d4,d0
+~ $3f,00                     ; move.w     d0,-(a7)
+~ $3f,3c,00,02               ; move.w     #2,-(a7) ; Cconout
+~ $4e,41                     ; trap       #1
+~ $58,8f                     ; addq.l     #4,a7
+~ $4e,75                     ; rts
+;FE0078:
+~ $50,f8,04,3e               ; st         ($0000043E).w
+~ $41,f8,86,04               ; lea.l      ($FFFF8604).w,a0
+~ $43,e8,00,02               ; lea.l      2(a0),a1
+~ $28,3c,.DEVICE*20.W,00,88  ; move.l     #$00800088,d4
+~ $24,3c,00,00,00,8a         ; move.l     #$0000008A,d2
+~ $20,3c,.DEVICE*20.W,00,8a  ; move.l     #$0080008A,d0
+~ $32,84                     ; move.w     d4,(a1)
+~ $20,84                     ; move.l     d4,(a0)
+~ $20,84                     ; move.l     d4,(a0)
+~ $08,38,00,05,fa,01         ; btst       #5,($FFFFFA01).w
+~ $67,24                     ; beq.s      $00FE00C8
+~ $20,80                     ; move.l     d0,(a0)
+~ $61,30                     ; bsr.s      $00FE00D8
+~ $66,1e                     ; bne.s      $00FE00C8
+~ $76,03                     ; moveq.l    #3,d3
+;FE00AC:
+~ $20,82                     ; move.l     d2,(a0)
+~ $61,28                     ; bsr.s      $00FE00D8
+~ $66,16                     ; bne.s      $00FE00C8
+~ $51,cb,ff,f8               ; dbf        d3,$00FE00AC
+~ $20,82                     ; move.l     d2,(a0)
+~ $20,3c,00,00,03,20         ; move.l     #800,d0
+~ $61,1a                     ; bsr.s      $00FE00DA
+~ $66,06                     ; bne.s      $00FE00C8
+~ $30,10                     ; move.w     (a0),d0
+~ $c0,7c,00,ff               ; and.w      #$00FF,d0
+;FE00C8:
+~ $32,84                     ; move.w     d4,(a1)
+~ $20,84                     ; move.l     d4,(a0)
+~ $32,bc,00,80               ; move.w     #$0080,(a1)
+~ $51,f8,04,3e               ; sf         ($0000043E).w
+~ $4a,40                     ; tst.w      d0
+~ $4e,75                     ; rts
+;FE00D8:
+~ $70,14                     ; moveq.l    #20,d0
+;FE00DA:
+~ $d0,b8,04,ba               ; add.l      ($000004BA).w,d0
+;FE00DE:
+~ $08,38,00,05,fa,01         ; btst       #5,($FFFFFA01).w
+~ $67,08                     ; beq.s      $00FE00EE
+~ $b0,b8,04,ba               ; cmp.l      ($000004BA).w,d0
+~ $62,f2                     ; bhi.s      $00FE00DE
+~ $70,ff                     ; moveq.l    #-1,d0
+;FE00EE:
+~ $4e,75                     ; rts
+;FE00F0:
+~ $1B,'H',0A,20,00
+;FE00F5:
+~ $1B,45,0A
+~ $' .. Warte auf DMA ',.DEVICE+30.B,0D,0A
+~ $' Platten-Warter ',bd,27,'92 by EWK',0D,0A,0A
+~ $20,1B,'p',' Shift+Shift = Abbruch ',1B,'q',0
+;FE0148:
+~ $1B,'E',00,00

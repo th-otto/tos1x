@@ -403,7 +403,8 @@ int main(int argc, char **argv)
 				size = glue.totalsize - glue.off_deskinf - 6; /* -6 because of bug in newglue.c */
 				write_file(deskinf, address + glue.off_deskinf, size);
 
-				printf(_("total size %u $%x\n"), glue.totalsize, glue.totalsize);
+				printf(_("total size: %u $%x\n"), glue.totalsize, glue.totalsize);
+				printf(_("end of ROM: $%lx $%lx\n"), offset + glue.totalsize, offset + glue.totalsize + osentry);
 
 				break;
 			}

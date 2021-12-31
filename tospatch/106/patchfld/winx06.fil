@@ -1,0 +1,55 @@
+~ $4e,56,ff,ec                  ; link      a6,#$FFEC
+~ $2e,ae,00,08                  ; move.l    8(a6),(a7)
+~ $f2,ec,4e,71,20,40            ; fb???.l   $4F6EEC2A
+~ $20,17                        ; move.l    (a7),d0
+~ $72,00                        ; moveq.l   #0,d1
+~ $43,e8,00,0c                  ; lea.l     12(a0),a1
+~ $08,80,00,02                  ; bclr      #2,d0
+~ $66,04                        ; bne.s     $00FDCC00
+~ $72,01                        ; moveq.l   #1,d1
+~ $54,89                        ; addq.l    #2,a1
+~ $34,11                        ; move.w    (a1),d2
+~ $58,89                        ; addq.l    #4,a1
+~ $57,40                        ; subq.w    #3,d0
+~ $67,12                        ; beq.s     $00FDCC1A
+~ $54,40                        ; addq.w    #2,d0
+~ $6e,0a                        ; bgt.s     $00FDCC16
+~ $67,04                        ; beq.s     $00FDCC12
+~ $94,51                        ; sub.w     (a1),d2
+~ $60,0a                        ; bra.s     $00FDCC1C
+~ $d4,51                        ; add.w     (a1),d2
+~ $60,06                        ; bra.s     $00FDCC1C
+~ $53,42                        ; subq.w    #1,d2
+~ $60,02                        ; bra.s     $00FDCC1C
+~ $52,42                        ; addq.w    #1,d2
+~ $3f,02                        ; move.w    d2,-(a7)
+~ $3f,01                        ; move.w    d1,-(a7)
+~ $2f,08                        ; move.l    a0,-(a7)
+~ $f6,b0                        ; dc.w      $F6B0 ; illegal
+~ $4e,71                        ; nop
+~ $50,8f                        ; addq.l    #8,a7
+~ $61,24                        ; bsr.s     $00FDCC4E
+~ $66,1e                        ; bne.s     $00FDCC4A
+~ $42,57                        ; clr.w     (a7)
+~ $f6,6c                        ; dc.w      $F66C ; illegal
+~ $4e,71                        ; nop
+~ $52,57                        ; addq.w    #1,(a7)
+~ $f1,80                        ; dc.w      $F180 ; illegal
+~ $4e,71                        ; nop
+~ $4e,71                        ; nop
+~ $2e,8f                        ; move.l    a7,(a7)
+~ $58,97                        ; addq.l    #4,(a7)
+~ $f1,10                        ; pflushan
+~ $4e,71                        ; nop
+~ $2d,6f,00,0a,00,08            ; move.l    10(a7),8(a6)
+~ $60,9a                        ; bra.s     $00FDCBE4
+~ $4e,5e                        ; unlk      a6
+~ $4e,75                        ; rts
+~ $20,79,00,00,a7,92            ; movea.l   $0000A792,a0
+~ $22,68,00,32                  ; movea.l   50(a0),a1
+~ $4a,68,00,36                  ; tst.w     54(a0)
+~ $67,06                        ; beq.s     $00FDCC64
+~ $0c,51,00,18                  ; cmpi.w    #$0018,(a1)
+~ $4e,75                        ; rts
+~ $70,01                        ; moveq.l   #1,d0
+~ $4e,75                        ; rts

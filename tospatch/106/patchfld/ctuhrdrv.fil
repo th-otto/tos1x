@@ -1,0 +1,134 @@
+2148
+;checkRTC:
+~ $42,80                     ; clr.l      d0
+~ $4E,75                     ; rts
+;FC1F74:
+~ $41,FA,01,BE               ; lea.l      $00FC2134(pc),a0
+~ $47,F9,00,FE,FF,00         ; lea.l      $00FEFF00,a3
+~ $43,EB,00,EE               ; lea.l      238(a3),a1
+~ $72,18                     ; moveq.l    #24,d1
+~ $78,0A                     ; moveq.l    #10,d4
+~ $46,FC,27,00               ; move.w     #$2700,sr
+~ $4A,11                     ; tst.b      (a1)
+~ $4A,11                     ; tst.b      (a1)
+~ $4A,11                     ; tst.b      (a1)
+~ $4E,75                     ; rts
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+;readRTCTime:
+~ $60,00,01,08               ; bra        $00FC20CC
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF
+~ $40,E7                     ; move.w     sr,-(a7)
+~ $48,E7,7C,70               ; movem.l    d1-d5/a1-a3,-(a7)
+~ $61,00,FE,EC               ; bsr        $00FC1F74
+~ $43,D3                     ; lea.l      (a3),a1
+~ $45,EB,00,60               ; lea.l      96(a3),a2
+;FC2090:
+~ $7A,00                     ; moveq.l    #0,d5
+~ $26,2F,00,26               ; move.l     38(a7),d3
+~ $1A,18                     ; move.b     (a0)+,d5
+~ $66,02                     ; bne.s      $00FC209C
+~ $E3,03                     ; asl.b      #1,d3
+;FC209C:
+~ $EA,AB                     ; lsr.l      d5,d3
+~ $C6,28,00,05               ; and.b      5(a0),d3
+~ $48,83                     ; ext.w      d3
+~ $48,C3                     ; ext.l      d3
+~ $86,C4                     ; divu.w     d4,d3
+~ $61,0A                     ; bsr.s      $00FC20B4
+~ $48,43                     ; swap       d3
+~ $61,06                     ; bsr.s      $00FC20B4
+~ $4A,41                     ; tst.w      d1
+~ $6A,DE                     ; bpl.s      $00FC2090
+~ $60,46                     ; bra.s      $00FC20FA
+;FC20B4;
+~ $B2,44                     ; cmp.w      d4,d1
+~ $66,04                     ; bne.s      $00FC20BC
+~ $86,3C,00,08               ; or.b       #8,d3
+;FC20BC:
+~ $E3,0B                     ; lsl.b      #1,d3
+~ $14,31,10,00               ; move.b     0(a1,d1.w),d2
+~ $14,32,10,00               ; move.b     0(a2,d1.w),d2
+~ $16,33,30,20               ; move.b     32(a3,d3.w),d3
+~ $60,56                     ; bra.s      $00FC2122
+;FC20CC:
+~ $40,E7                     ; move.w     sr,-(a7)
+~ $48,E7,7C,70               ; movem.l    d1-d5/a1-a3,-(a7)
+~ $61,00,FE,A0               ; bsr        $00FC1F74
+~ $43,EB,00,80               ; lea.l      128(a3),a1
+~ $45,EB,00,E0               ; lea.l      224(a3),a2
+~ $70,00                     ; moveq.l    #0,d0
+;FC20E0:
+~ $61,24                     ; bsr.s      $00FC2106
+~ $C4,C4                     ; mulu.w     d4,d2
+~ $76,00                     ; moveq.l    #0,d3
+~ $16,02                     ; move.b     d2,d3
+~ $61,1C                     ; bsr.s      $00FC2106
+~ $D4,03                     ; add.b      d3,d2
+~ $16,18                     ; move.b     (a0)+,d3
+~ $66,02                     ; bne.s      $00FC20F2
+~ $E2,0A                     ; lsr.b      #1,d2
+;FC20F2:
+~ $E7,AA                     ; lsl.l      d3,d2
+~ $80,82                     ; or.l       d2,d0
+~ $4A,41                     ; tst.w      d1
+~ $6A,E6                     ; bpl.s      $00FC20E0
+;FC20FA:
+~ $4A,39,00,FE,00,00         ; tst.b      $00FE0000
+~ $4C,DF,0E,3E               ; movem.l    (a7)+,d1-d5/a1-a3
+~ $4E,73                     ; rte
+;FC2106:
+~ $74,00                     ; moveq.l    #0,d2
+~ $14,31,10,00               ; move.b     0(a1,d1.w),d2
+~ $14,32,10,00               ; move.b     0(a2,d1.w),d2
+~ $14,2B,00,C0               ; move.b     192(a3),d2
+~ $14,2B,00,C0               ; move.b     192(a3),d2
+~ $46,02                     ; not.b      d2
+~ $B2,44                     ; cmp.w      d4,d1
+~ $66,04                     ; bne.s      $00FC2122
+~ $C4,3C,00,07               ; and.b      #7,d2
+;FC2122:
+~ $1A,29,00,1E               ; move.b     30(a1),d5
+~ $1A,2B,00,EE               ; move.b     238(a3),d5
+~ $55,41                     ; subq.w     #2,d1
+~ $0C,41,00,0C               ; cmpi.w     #12,d1
+~ $67,F0                     ; beq.s      $00FC2122
+~ $4E,75                     ; rts
+;FC2134:
+~ $19,15
+~ $10,0B
+~ $05,00
+~ $7F,0F
+~ $1F,1F
+~ $3F,1F
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF,FF,FF,FF,FF
+~ $FF,FF,FF,FF

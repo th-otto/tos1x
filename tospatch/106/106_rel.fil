@@ -1,0 +1,942 @@
+;* Patch file for TOS 1.06 (TosPatch V2.9.8 required)
+;*
+;* The format of this file can be seen in the lines themselves.
+;* Lines starting with ";" are comment lines.
+;* This allows to leave out individual patches very nicely. Most of the patches have
+;* but now a variable at the beginning that determines whether the patch will be included
+;* or not. In addition, in some cases with this - or also
+;* a subsequent variable - the patch can be configured.
+;*
+;* I hope that this patch program will finally allow you to change the TOS
+;* quite easily, because everyone can relatively publish patches
+;* and also inexperienced users can take them over.
+;*
+;* If you want to add your own patches, you should choose your own ID,
+;* and enter them in the following header. NEVER change patches from others!
+;* Maybe they thought something! If so, you should
+;* precisely document the change! It must be pointed out how
+;* the patch looked like before and what has been changed.
+;*
+;* Something else about distribution: Only those patches should be activated that have
+;* some benefit to EVERYONE. So ONLY ERROR CORRECTIONS. All "improvements" should
+;* better be left disabled. Anyone who wants it can still take it.
+;* 
+;* ID:      | Name of the author or the person who collected the patch 
+;* -------------------------------------------------------------------------
+;*   MRF    | Markus Fritze, ‰-soft
+;*  HUCKY   | ???
+;*   TFR    | JÅrgen Meyer
+;*   MH     | Markus Heiden
+;*   TRK    | Tracker
+;*   RB     | Ralf Biedermann
+;*   THO    | Thorsten Otto
+;*
+;* If you have any error messages or additions, please send a message to my
+;* Internet address:
+;*
+;* markus@markusheiden.de
+;*
+;* TosPatch: Ω 1990    ‰-soft, Markus Fritze (MRF)
+;*           Ω 1992-96 Markus Heiden (MH)
+;*
+;* Please do not turn to Markus Fritze if you have problems
+;* but exclusively to me (Markus Heiden) !!! 
+
+;*******************************************************************************
+;* MH:
+;* Define basic TOS data
+
+.BASE   = E00000    ;TOS-ROM-address (TOS 1.06: $E00000)
+.LENGTH =  30000    ;TOS-length      (TOS 1.06:  $40000)
+.WIDTH  =    .16    ;TOS-width       (TOS 1.06:     .16)
+
+.NATION = .FRG      ;TOS country code: Germany          <=== UNCOMMENT AS NEEDED
+;.NATION = .USA     ;TOS country code: US               <=== UNCOMMENT AS NEEDED
+;.NATION = .UK      ;TOS country code: UK               <=== UNCOMMENT AS NEEDED
+;.NATION = .FRA     ;TOS country code: France           <=== UNCOMMENT AS NEEDED
+;.NATION = .HOL     ;TOS country code: Netherlands      <=== UNCOMMENT AS NEEDED
+;.NATION = .SWE     ;TOS country code: Sweden           <=== UNCOMMENT AS NEEDED
+;.NATION = .SPA     ;TOS country code: Spain            <=== UNCOMMENT AS NEEDED
+;.NATION = .ITA     ;TOS country code: Italy            <=== UNCOMMENT AS NEEDED
+;.NATION = .SWG     ;TOS country code: Swiss (german)   <=== UNCOMMENT AS NEEDED
+;.NATION = .SWF     ;TOS country code: Swiss (french)   <=== UNCOMMENT AS NEEDED
+
+;*******************************************************************************
+;* MRF:
+;* Import format of the patch program 
+;* THO:
+;* Select image based on nation
+
+_SWITCH .NATION
+
+_CASE .FRG:
+  <tos106de.img	; Original TOS 1.06 german (MD5: 992bac38e01633a529121a2a65f0779e)
+
+_CASE .USA:
+  <tos106us.img	; Original TOS 1.06 american (MD5: f3f92cd4e2c331aef8970a156be03b7c)
+
+_CASE .UK:
+  <tos106uk.img	; Original TOS 1.06 british (MD5: 6033f2b9364edfed321c6931a8181fd2)
+
+_CASE .FRA:
+  <tos106fr.img	; Original TOS 1.06 french  (CRC: bc7b224d0dc3f0cc14c8897db89c5787)
+
+_CASE .SPA:
+  <tos106es.img	; Original TOS 1.06 spanish (MD5: 30f69d70fe7c210300ed83f991b12de9)
+
+_CASE .ITA:
+  <tos106it.img	; Original TOS 1.06 italian (MD5: b75c0e568cdc754c8389e272a18ab9d1)
+
+_CASE .SWF:
+  <tos106sf.img	; Original TOS 1.06 Swiss (french) (MD5: d5956da09f618400f855d3760b64d876)
+
+_CASE .SWG:
+  <tos106sg.img	; Original TOS 1.06 Swiss (german) (MD5: 7e32e918e961065940d5fbf02f742ffd)
+
+_CASE .SWE:
+  <tos106se.img	; Original TOS 1.06 Swedish (MD5: a6573347f0493b1cd3c50e98a242bd32)
+
+_CASE .HOL:
+  <tos106nl.img	; Original TOS 1.06 Dutch (MD5: f15b04e68af2d78c03eeff8fd6a9e2e7)
+
+_DEFAULT:
+  _ERROR "unsupported country"
+
+_ENDSWITCH
+
+;<*                 ;read from ROM (.LENGTH must match TOS-Length).
+
+;------------------------------------------------------------------------------
+=29.07.1989,.NATION ;Version and nationality must be correct (otherwise message!)
+
+;*******************************************************************************
+;* MRF:
+;* Output format of the patch program:
+;* >[Number of TOS-Files] [Upper RAM limit - .LENGTH]
+
+;>1 3D0000 ;   4MB-computer / 1 File
+;>1 2D0000 ;   3MB-computer / 1 File
+;>1 250000 ; 2.5MB-computer / 1 File
+;>1 1D0000 ;   2MB-computer / 1 File ;With less than 2MB of memory it does
+;>1 0D0000 ;   1MB-computer / 1 File ;hardly make sense to keep TOS 1.06 in the ram,
+;>1 050000 ; 0.5MB-computer / 1 File ;except maybe for testing the patches!
+
+;* Output file(s)
+>1         ; single TOS ROM image file (TOS.IMG)
+;>2        ; 2 TOS ROM image files files (TOS.LO/HI)
+
+
+;***************************************************************************
+
+-patchfld      ;Dsetpath("PATCHFLD")
+
+;* THO: get some addresses+offsets that depend on country
++relocs.fil
+
+;*******************************************************************************
+;* MH:
+;* Remove reset instructions for RAM-TOS on older STs
+
+.RESET = 0          ;1: Include patch, 0: Do not include patch
+
+_IF .RESET
+ 34 $4E,71
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* 60Hz when starting in color (original: $02 would be 50Hz) 
+
+.COLOR_60HZ = 0     ;1: Include patch, 0: Do not include patch
+
+_IF .COLOR_60HZ
+ AD $00
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Initialize memory from $100 and not from $400. So you have
+;* no more garbage in the ram.
+
+.MEM_INIT = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .MEM_INIT
+ 1A0 $0100.L
+_ENDIF
+
+;*******************************************************************************
+;* TFR:
+;* Sets the step rate of drives A: and B:
+;* $00 = 6 ms   $01 = 12 ms   $02 = 2 ms   $03 = 3 ms
+
+.SET_STEP  = 0      ;1: Include patch, 0: Do not include patch
+.STEP_RATE = 03     ;GewÅnschte Steprate hier eintragen.
+
+_IF .SET_STEP
+ 2B2 $.STEP_RATE.W
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* _shell_p is reset on RESET (as it should be).
+
+.SHELL_P = 0        ;1: Include patch, 0: Do not include patch
+
+_IF .SHELL_P
+ 3D4
+ ~ $42,B8,04,F6     ; clr.l      ($000004F6).w
+ ~ $41,F8,00,08     ; lea.l      ($00000008).w,a0
+ ~ $70,3D           ; moveq.l    #61,d0
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* On RESET read time from the keyboard processor,
+;* when reading from MSTE clock failed (see ST computer 1/90).
+
+.TIME_SAVE = 0      ;1: Include patch, 0: Do not include patch
+
+_IF .TIME_SAVE
+ 558 $6A
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Fix boot-device bug (see ST-Computer 1/90).
+
+.BOOT_DEV = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .BOOT_DEV
+ 5C8 $3039.W
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Boot routine for the "C't-Billiglîsung". This routine is from
+;* Wolfgang Schînrath.
+    
+.CT_HD = 0          ;1: Include patch, 0: Do not include patch
+
+_IF .CT_HD
+ 65C ct_hd.abs      ;65C - 738 (.220)
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Fix stackpointer for autoexec (see ST-Computer 1/90).
+
+.STACK_POINTER = 1  ;1: Include patch, 0: Do not include patch
+
+_IF .STACK_POINTER
+E18
+~       $DE,FC,00,0C     ; ADDA.W    #$C,A7        ; war ADDQ.W  #6,A7
+~       $4A,40           ; TST.W     D0
+~       $66,68           ; BNE.S     104(PC)
+~       $3F,3C,00,07     ; MOVE.W    #7,-(A7)
+~       $2F,38,09,C4     ; MOVE.L    $9C4.W,-(A7)  ; war MOVE.L  $9C4.L,-(A7)
+_ENDIF
+
+;*******************************************************************************
+;* Gerd Trudow, Umsetzung & Adresse SV:
+;* Replaces the Atari bombs with the original atomic mushrooms ...
+
+.PILZE = 0          ;1: Include patch, 0: Do not include patch
+
+_IF .PILZE
+F3E $07,C0,1F,F0,3B,F8,77,F4,B7,FA,BB,FA,DF,F6,66,FC ;Pilze
+~   $32,88,02,80,04,40,04,40,05,40,05,20,09,20,09,20
+_ELSE
+;F3E $06,00,29,00,00,80,48,40,11,F0,01,F0,07,FC,0F,FE ;Bomben
+;~   $0D,FE,1F,FF,1F,EF,0F,EE,0F,DE,07,FC,03,F8,00,E0
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* The mega clock can NO longer be adjusted with the TOS. You have to do that now
+;* with an external control program. This of course has the advantage that
+;* even other programs can no longer adjust the clock (if they
+;* - as usual - use the TOS). 
+
+.LOCK_CLOCK = 0     ;1: Include patch, 0: Do not include patch
+
+_IF .LOCK_CLOCK
+ FEA $232C+.BASE.L
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* The TOS denies the blitter and does not use it
+;* (e.g. for hardware speeder).
+
+.IGNORE_BLITTER = 0 ;1: Include patch, 0: Do not include patch
+
+_IF .IGNORE_BLITTER
+ 103A $70,00,4E,75   ;MOVEQ #$0,D0 / RTS
+_ENDIF
+
+;*******************************************************************************
+;* THO: SPEEDER patch not needed for 1.06
+
+;*******************************************************************************
+;* MRF:
+;* Fast load bit for faster loading (see ST-Computer 1/90).
+;* Produces errors on some drives, so here only as a comment.
+
+.FASTLOAD = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .FASTLOAD
+ 16DF $10
+_ENDIF
+
+;*******************************************************************************
+;* RB: (angepasst von MH)
+;* Disable search for drive 'B' -> faster booting.
+;*
+;* >>> Warning: does not work with 2 drives!
+
+.SKIP_B = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .SKIP_B
+ 1900 $0001.W
+_ENDIF
+
+;*******************************************************************************
+;* RB: (angepasst von MH)
+;* Prevent running the boot sector from the floppy
+;* (already no so radically included in the boot-device patch).
+
+.KILL_BOOT = 0      ;1: Include patch, 0: Do not include patch
+
+_IF .KILL_BOOT
+ 1EB2 $60
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* If _bootdev> = 2 (i.e. drive C), the boot sector of the floppy disk will
+;* no longer be executed after a warm start. This was also the case up to TOS 1.4,
+;* but since TOS 1.4 the boot sector is always executed. This costs
+;* with a RESET not only time, but also helps to spread
+;* Boot sector viruses. 
+
+.NORM_BOOT = 0      ;1: Include patch, 0: Do not include patch
+
+_IF .NORM_BOOT
+1EB6
+ ~ $BE,78,04,46             ; cmp.w     ($00000446).w,d7
+ ~ $6F,2E                   ; ble       $00E01EEA
+ ~ $70,01                   ; moveq.l   #1,d0
+ ~ $3E,80                   ; move.w    d0,(a7)
+ ~ $42,A7                   ; clr.l     -(a7)
+ ~ $3F,00                   ; move.w    d0,-(a7)
+ ~ $42,67                   ; clr.w     -(a7)
+ ~ $42,A7                   ; clr.l     -(a7)
+ ~ $2F,38,04,C6             ; move.l    ($000004C6).w,-(a7)
+ ~ $61,00,F206.w            ; bsr       floprd
+_ENDIF
+
+;*******************************************************************************
+;* ST-Computer 10/90
+;* The mega clock no longer adjusts the alarm register.
+;*
+;* Warning: Does _NOT_ work with the c't clock patch!
+
+.ALARM = 0          ;1: Include patch, 0: Do not include patch
+
+_IF .ALARM !A! (.CT_HD = 0)
++uhrpatch.fil   ;2148 - 219A (.82)
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Integration of the c't clock in TOS. You can then use the clock directly with the XBIOS
+;* (also with the GEMDOS of course ...)
+;* Patch by Stefan Tînnes - Tel .: 06897/764811 
+;*
+;* >>> Warning: Does _NOT_ work with the other clock patches!
+
+.CT_CLOCK = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .CT_CLOCK !A! (.ALARM = 0)
++ctuhrdrv.fil  ;2148 - 2334 (.492)
+_ENDIF
+
+;*******************************************************************************
+;* ST-Computer 10/90
+;* Settime() calculates the day of the week and correctly sets it in the mega-clock.
+;* Atari always set the weekday to Sunday. 
+;*
+;* >>> Warning: Does _NOT_ work with the c't clock patch!
+
+.CORRECT_DAY = 0    ;1: Include patch, 0: Do not include patch
+
+_IF .CORRECT_DAY !A! (.CT_CLOCK = 0)
++setwoch.fil   ;2258 - 2334 (.220)
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* Fast printer routines for the parallel port (Fastprint).
+;* Output, input and waiting routine are replaced.
+;* Corresponds to FASTPRN.PRG from Ecki from the c't.
+;* In addition, the input routine is replaced. 
+
+.FASTPRN = 0        ;1: Include patch, 0: Do not include patch
+
+_IF .FASTPRN
+ 26E  $3564+.BASE.L ;new function for bcostat
+ B26  $354A+.BASE.L ;new function for bconin
+ B46  $3564+.BASE.L ;new function for bcostat
+ 
++fastpr4.fil   ;34D8 - 357E (.172)
+
+ 37AC $61,00,FD,7C  ;The routine to set the strobe has moved ... 
+_ENDIF
+
+;*******************************************************************************
+;* MRF: (angepasst von MH)
+;* Set printer timeout. Original value is 30s. The minimum value is 5s!
+;* Goes in the pants with the Atari laser; since I have one, here the original value.
+
+.TIMEOUT = .30      ;Timeout can be changed here (in seconds)
+
+_IF .FASTPRN
+ 34F6
+_ELSE
+ 34FA
+_ENDIF
+
+! ~ , ~ + 4         ;To prevent time from being relocated
+~ $.TIMEOUT * .200.L
+
+;*******************************************************************************
+;* TRK: (angepasst von MH)
+;* conterm setzen: = Bit 3 set:Return "kbshift" for BIOS conin
+;*                   Bit 2 set:System bell
+;*                   Bit 1 set:Key repeat on
+;*                   Bit 0 set:Key click on
+
+.SET_CONTERM = 0    ;1: Include patch, 0: Do not include patch
+.CONTERM     = %110 ;Desired value for conterm, e.g.% 110 for key click off. 
+
+_IF .SET_CONTERM
+ 377D $.CONTERM
+_ENDIF
+
+;*******************************************************************************
+;* HUCKY: (modified by MH)
+;* 960 dpi hard copy by default.
+;*
+;* >>> Caution: This patch only works with the RSC/DESKTOP patch, if
+;*              the second line of this patch is removed! Then an
+;*              adapted DESKTOP.INF (960 dpi) must be integrated. 
+
+.HC_960 = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .HC_960
+379A
+  ~ $70,00          ; moveq.l    #0,d0
+  ~ $72,04          ; moveq.l    #4,d1
+  ~ $2B,40,0E,E6    ; move.l     d0,$0ee6(a5)
+  ~ $2B,41,0E,EA    ; move.l     d1,$0eea(a5)
+  ~ $2B,40,0E,E0    ; move.l     d0,$0ee0(a5)
+  ~ $4E,71          ; nop
+ _SWITCH .NATION
+ _CASE .FRG:
+  319C0   $31       ;960dpi-Default in DESKTOP.INF patchen.
+ _ENDSWITCH
+_ENDIF
+
+;*******************************************************************************
+;* THO: RSCONF1 bug was fixed in 1.06
+
+;*******************************************************************************
+;* MRF:
+;* Do not send a start bit when setting the baud rate (the 2nd error in Rsconf () ... )
+;* (Greetings to Switzerland for this tip ...).
+
+.RSCONF2 = 0        ;1: Include patch, 0: Do not include patch
+
+_IF .RSCONF2
+ 3C13 $04
+ 3C43 $05
+_ENDIF
+
+;*******************************************************************************
+;* ST-Computer 10/90:
+;* Baud rates 120 or 80, instead of 75 and 50.
+
+.CHANGE_BAUD = 0    ;1: Include patch, 0: Do not include patch
+
+_IF .CHANGE_BAUD
+ 3C8E $03,03
+_ENDIF
+
+;*******************************************************************************
+;* Karsten Isakovic (implementiert durch MRF):
+;* Corrects the error that caused the memory lists to be corrupted
+;* when an Mshrink (0) call was made
+
+.M_SHRINK = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .M_SHRINK
+8CA0+.d1
+~       $2F,2E,00,0A            ; MOVE.L    10(A6),-(A7)        
+~       $61,00,01,8E            ; BSR       $FC8C64
+~       $58,8F                  ; ADDQ.L    #4,A7               
+~       $4E,71                  ; NOP                           
+_ENDIF
+
+;*******************************************************************************
+;* Alex Esser, ST-Computer 10/90 (implementiert durch MRF):
+;* This one patch makes POOLFIXx.PRG from Atari obsolete.
+
+.POOLFIX = 1        ;1: Include patch, 0: Do not include patch
+
+_IF .POOLFIX
+ 9234+.d1 $4E,71,4E,71,4E,71,4E,71
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* VDI patch (new v_opnvwk() routine, replaces VDIFIX).
+
+.VDIFIX = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .VDIFIX
+ E454+.d1 vdi.abs       ;E454 - E4E6 (.146)
+_ENDIF
+
+;*******************************************************************************
+;* Karsten Isakovic (implementiert durch MRF):
+;* Patch, which now also allows screen widths that are not divisible by 16.
+;* Otherwise there is garbage when scrolling ... Necessary for overscan. 
+
+.OVERSCANFIX = 0    ;1: Include patch, 0: Do not include patch
+
+_IF .OVERSCANFIX
+ 128BE+.d1 $CE,C0,E8,4F  ; mulu.w     d0,d7; lsr.w      #4,d7
+ 12902+.d1 $CE,C0,E8,4F  ; mulu.w     d0,d7; lsr.w      #4,d7
+_ENDIF
+
+;*******************************************************************************
+;* RB: (angepasst von MH)
+;* Switch off grow and shrink boxes.
+
+.DRAW_BOXES = 0     ;1: Include patch, 0: Do not include patch
+
+_IF .DRAW_BOXES
+ 23580+.d2 $4E,75
+ 235C4+.d2 $4E,75
+_ENDIF
+
+;*******************************************************************************
+;* THO:
+;* Fix desktop resolution bug (obsoletes STE_FIX.PRG)
+
+.STE_FIX = 1         ;1: Include patch, 0: Do not include patch
+
+_IF .STE_FIX
+1463E+.d1
+ ~ $30,38,61,62      ; move.w    $00006162.w,d0
+ ~ $53,40            ; subq.w    #1,d0
+14652+.d1
+ ~ $02,66,00,0F      ; andi.w    #$000F,-(a6)
+ ~ $52,56            ; addq.w    #1,(a6)
+ ~ $54,4E            ; addq.w    #2,a6
+ ~ $42,78,61,64      ; clr.w     ($00006164).w
+_ENDIF
+
+;*******************************************************************************
+;* THO: AES path bug was fixed in 1.06
+
+;*******************************************************************************
+;* MRF:
+;* Correct MSDOS format (instead of $EB now $EB34904E as the first bytes
+;* in the boot sector).
+
+.MS_DOS = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .MS_DOS
+29786+.d2
+  ~ $4E,71            ; nop
+  ~ 2A,BC,EB,34,90,4E ; move.l     #$EB34904E,(a5)
+ 297A4+.d2 $00,16
+_ENDIF
+
+;*******************************************************************************
+;* ST-Computer 10/90:
+;* Changes the paper feed for the hard copy. Thus, both on one
+;* NEC P6, how a hardcopy can still be made on an EPSON.
+
+.NEC_P6 = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .NEC_P6
+ 2A235+.d2 $1B,41,07,FF
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* The default keyboard table (3 times 128 bytes for the scan code tables)
+;* were borrowed from the multi-acc JAMES (from: Pascal Fellerich,
+;* 45 rue des Genàts, L-3482 Dudelange, Luxembourg)
+;*
+;* The following keyboard tables are available:
+;* For German keyboards in the FRG folder (Original: GERMAN.KBD):
+;* AMERICAN.KBD, FRENCH.KBD, GERFRENC.KBD, GERMAN.KBD, HEXA.KBD, SWISSFR.KBD.
+;* For American keyboards in the USA folder (Original: USA.KBD):
+;* USA.KBD 
+
+.NEW_KBD = 0        ;1: Neue Keyboardtabelle einbinden, 0: Nichts einbinden
+
+_IF .NEW_KBD
+ -demo.kbd                    ;Dsetpath("DEMO.KBD")
+_SWITCH .NATION
+_CASE .FRG:
+ 2A248+.d2 frg\german.kbd     ;Enter the desired keyboard table here
+_CASE .USA:
+ 2A248+.d2 usa\usa.kbd        ;Enter the desired keyboard table here
+_ENDSWITCH
+ -..                          ;Dsetpath("..")
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Convert û to IBM-·. Damit wird kein Pesata, sondern ein Beta-"·"
+;* ausgegeben. Dies sieht nun mal auf den meisten Nadeldruckern besser aus.
+;* Dies wirkt natÅrlich nur bei Texten, welche mit dem gepachten TOS eingegeben
+;* werden. In den alten steht ja noch das û drin.
+;*
+;* HUCKY: Makes problems with script ... Therefore as a comment.
+
+.NEW_SZ = 0         ;1: Include patch, 0: Do not include patch
+
+_IF .NEW_SZ
+_SWITCH .NATION
+_CASE .FRG:
+ 282DA+.d2 $E1
+ 283DA+.d2 $E1
+_ENDSWITCH
+_ENDIF
+
+;*******************************************************************************
+;* HUCKY:
+;* Change font images (only the bit images !!!)
+;* Include Tempus or Stad fonts. However, these must be
+;* converted first.
+
+.FONTS = 0          ;1: Include fonts, 9: Do not include fonts
+
+_IF .FONTS
+ -fonts                   ;Dsetpath("FONTS")
+ 2A9F2+.d2 6x6_font.abs       ;1152 Bytes (6x6 Font)
+ 2B0CE+.d2 8x8_font.abs       ;2048 Bytes (8x8 Font)
+ 2B8CE+.d2 neu.abs            ;4096 Bytes (8x16 Font)
+ -..                      ;Dsetpath("..")
+_ENDIF
+
+;* Der Zeichensatz NEU.ABS, der diesem Archiv beiliegt, wurde von
+;* SkyVox erstellt. Danke.
+
+;*******************************************************************************
+;* HUCKY:
+;* Now something if you want to change the appearance of the AES ...
+;*
+;* >>> BETTER: Create and integrate new RSC files straight away (see below)!
+;* >>> This patch does not work with the RSC/DESKTOP patch! 
+
+.ICONS = 0          ;1: Include patch, 0: Do not include patch
+
+;* only for german TOS for now
+_SWITCH .NATION
+_CASE .FRG: .IMAGES1 = 2E176
+            .IMAGES2 = 2FECA
+_DEFAULT: .ICONS = 0
+_ENDSWITCH
+
+_IF .ICONS
+ -icons                         ;Dsetpatch("ICONS\")
+ ;* the images are each 128 bytes long (4 bytes = one line => 32 lines).
+ .IMAGES1     tosfaces.img      ;Exclamation mark
+ .IMAGES1+ 80                   ;Question mark in form_alert()
+ .IMAGES1+100                   ;Stop sign
+ .IMAGES2                       ;Atari image in the info box of the desktop
+ ;* the following icons are 256 bytes each. 128 bytes for the mask, and 128 byte
+ ;* for the data
+ .IMAGES2+ 80 tosicons.img      ;Floppy drive
+ .IMAGES2+180 ordner.img        ;Folder
+ .IMAGES2+280                   ;Trashcan
+ .IMAGES2+380 programm.img      ;Program
+ .IMAGES2+480 datei.img         ;File
+ -..                            ;Dsetpath("..")
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* The mouse shapes (structure according to the AES function "graf_handle").
+;*
+;* >>> BETTER: Create and integrate new RSC files straight away (see below)!
+;* >>> This patch does not work with the RSC/DESKTOP patch! 
+
+.MOUSE = 0          ;1: Include patch, 0: Do not include patch
+
+;* only for german TOS for now
+_SWITCH .NATION
+_CASE .FRG: .IMAGES = 2E2F6
+_DEFAULT: .MOUSE = 0
+_ENDSWITCH
+
+_IF .MOUSE
+ -mform                     ;Dsetpath("MFORM")
+ .IMAGES       mform0.abs   ;ARROW
+ .IMAGES+ 4A   mform1.abs   ;TEXT_CRSR
+ .IMAGES+ 94   mform2.abs   ;BUSY_BEE
+ .IMAGES+ DE   mform3.abs   ;POINT_HAND
+ .IMAGES+128   mform4.abs   ;FLAT_HAND
+ .IMAGES+172   mform5.abs   ;THIN_CROSS
+ .IMAGES+1BC   mform6.abs   ;THICK_CROSS
+ .IMAGES+206   mform7.abs   ;OUTL_CROSS
+ -..                        ;Dsetpath("..")
+_ENDIF
+
+;*******************************************************************************
+;* SV: (angepasst von MH)
+;* Enter an individual text in the info menu.
+;* To do this, the text can be entered using ASCII code, but may
+;* not be longer than 29 characters. 
+;*
+;* >>> BETTER: Create and integrate new RSC files straight away (see below)!
+;* >>> This patch does not work with the RSC/DESKTOP patch! 
+
+.INFO_TXT = 0       ;1: Include patch, 0: Do not include patch
+
+;* only for german TOS for now
+_SWITCH .NATION
+_CASE .FRG: .TOS_INFO = 2F14B
+_DEFAULT: .INFO_TXT = 0
+_ENDSWITCH
+
+_IF .INFO_TXT
+ .TOS_INFO '-----------------------------'
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* The default DESKTOP.INF and the resources for inclusion.
+;* Here now the ultimate possibility, the TOS according to your wishes
+;* to design. Original files: 106_1.RSC, 106_2.RSC, DESKTOP.INF.
+;*
+;* Caution: All 3 files can each be max.64kB long, because there
+;* pointers to the same words; however, in the TOS
+;* are only about 1.4kB free anyway, so you have to be careful, that
+;* TOS end not to be exceeded. But you can see the value of the
+;* Increase variable .LENGTH so that the TOS is longer
+;* (TOSPATCH then shows a message that the read TOS is closed
+;* be short, but then you can simply press SPACE).
+;* This only works if the TOS comes from a file
+;* and is not read from the ROM!
+;*
+;* You can now include new and more icons in your TOS (instead of
+;* DESKICON.RSC to be used). The icons can be found in the 2nd RSC file
+;* (106_2.RSC) in the 13th form (DESKICON). Here just new or different
+;* Enter icons. 
+
+.RSC = 0            ;1: Include patch, 0: Do not include patch
+
+_IF .RSC
+ _IF .ICONS !O! .INFO_TXT !O! .MOUSE
+  _ERROR "Either use the RSC/DESKTOP patch or just the other RSC patches"
+ _ENDIF
+
+ _SWITCH .NATION
+ _CASE .FRG: -rsc\de
+ _CASE .USA: -rsc\us
+ _CASE .FRG: -rsc\fr
+ _CASE .UK:  -rsc\uk
+ _CASE .SPA: -rsc\es
+ _CASE .ITA: -rsc\it
+ _CASE .SWE: -rsc\se
+ _CASE .SWF: -rsc\sf
+ _CASE .SWG: -rsc\sg
+ _CASE .CZE: -rsc\cz
+ _CASE .HOL: -rsc\nl
+ _ENDSWITCH
+ 
+ .RSC_TAB+A   aes.rsc            ;AES resource file
+ .RSC1_END: ~ desk.rsc           ;DESKTOP resource file
+ .RSC2_END: ~ desktop.inf        ;DESKTOP.INF
+ .INF_END:  _EVEN                ;So that the following code remains executable
+ .ROMTOP:                        ;save end of RSC/DESKTOP
+
+ _IF .INF_END-.RSC_TAB < 8000
+  .RSC_TAB          $.RSC1_END-.RSC_TAB.w
+  .RSC_TAB+2        $.RSC2_END-.RSC_TAB.w
+  .RSC_TAB+4        $.INF_END-.RSC_TAB.w
+  .RSC_TAB+6        $00,00,00,00   ;clear unused entries
+
+ _ELSE
+   /'Resourcen sind lÑnger als 32kB... (',.INF_END-.RSC_TAB,')'
+   .INSTALL_RSC ..\..\newrsc.abs   ;(.194)
+
+   .RSC_TAB         $.RSC1_END-(.RSC_TAB+A).w 
+   .RSC_TAB+2       $.RSC2_END-.RSC1_END.w
+   .RSC_TAB+4       $.INF_END-.RSC2_END.w
+   .RSC_TAB+6       $00,00,00,00   ;clear unused entries
+
+ _ENDIF
+
+ -..\..             ;back to normal patch directory
+
+!.RSC_TAB .. .ROMTOP              ;Im RSC/DESKTOP.INF nicht Relozieren
+
+_ENDIF
+
+.ROMTOP                           ;Ab Ende RSC/DESKTOP.INF geht es weiter.
+
+;*******************************************************************************
+;* MRF:
+;* Hard disk waiter (to switch on the computer and disk at the same time).
+;* Unfortunately I don't know who this routine came from, I have it in
+;* found a boot sector. You can also stop waiting with [ALTERNATE]
+;* cancel (e.g. if no disk is available).
+;*
+;* >>> Attention: The hard disk waiter only works with one disk. In addition
+;* I'm just sure that it works with my Megafile 60.
+
+.HD_WAIT0 = 0       ;1: Include patch, 0: Do not include patch
+
+_IF .HD_WAIT0
+ .HD_WAIT:      +hdwait0.fil            ;length 212 Bytes
+ !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
+
+ 548 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
+ 54E |$4E,71,4E,71                      ;fill with NOP
+_ENDIF
+
+;*******************************************************************************
+;* MRF:
+;* Alternative hard disk waiter. Waits for .TIME seconds on a
+;* Cold start on the disk. This works with all panels!
+;* The waiting can be canceled by pressing a button
+
+.HD_WAIT1 = 0       ;1: Include patch, 0: Do not include patch
+.TIME     = .12     ;Wartezeit in s
+
+_IF .HD_WAIT1
+ .HD_WAIT:      +hdwait1.fil            ;length 56 Bytes
+ !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
+ .HD_WAIT+A     |$.TIME*.200.L          ;Insert waiting time
+
+ 548 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
+ 54E |$4E,71,4E,71                      ;fill with NOP
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* Hardisk-Waiter von EWK.
+
+.HD_WAIT2 = 0       ;1: Include patch, 0: Do not include patch
+.TIME     = .30     ;max. waiting time in s (max. 99s !!!)
+.DEVICE   = 0       ;DMA device to be waited for (0-7)
+
+_IF .HD_WAIT2
+ .HD_WAIT:      ~ hdwait2.abs           ;length 332 Bytes
+ !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
+
+ ;.HD_WAIT+E     |$4E,71                ;Only for RAM-TOS and> = 2 hard disks
+
+ .HD_WAIT+1F    |$.TIME.B               ;Insert waiting time
+ .HD_WAIT+86    |$.DEVICE*20.W          ;Insert device
+ .HD_WAIT+92    |$.DEVICE*20.W
+ .HD_WAIT+10A   |$.DEVICE+30.B
+
+ 548 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
+ 54E |$4E,71,4E,71                      ;fill with NOP
+_ENDIF
+
+;*******************************************************************************
+;* Pascal Fellerich:
+;* TOS programs now have a special etv_critic handler (like the PC)
+;* used. For example, you get the message "Disc is write-protected,
+;* N)ochmal, W)eiter, A)bbruch".
+
+.ETV_CRITIC = 0     ;1: Include patch, 0: Do not include patch
+
+_IF .ETV_CRITIC
+;* should work for all languages, but patch contains german messages
+ .ADR:          +etvcritc.fil           ;Length 488 Bytes
+ 432            |$.ADR+.BASE.L          ;entry to new etv_critic()
+_ENDIF
+
+;*******************************************************************************
+;* MH:
+;* Termination when the TOS length is exceeded.
+
+_IF ~ > .LENGTH
+ _ERROR 'Patches longer than the TOS'
+_ENDIF
+
+;*******************************************************************************
+;* Martin Osieka: (implementiert durch MH)
+;* New window management. Original routines from WINX 2.2!
+;* Also contains the Arrowfix patch (see below).
+;* For further informaion see WINX. 
+;*
+;* Default values are:
+;* .GLOBAL = %1111111111111, .LOCAL = %111111111111, .DESKTOP = %111111111111,
+;* .INIT_SCROLL = .460, .CONT_SCROLL = .40, CONT_CLOSE = .1000,
+;* .CONT_FULL = .2000
+;*
+;* >>> Does not work with the Arrowfix patch!
+
+
+.GLOBAL      = %1111111111111 ;global settings (rechts: Schalter 1)
+.LOCAL       =  %111111111111 ;local settings  (rechts: Schalter 1)
+.DESKTOP     =  %111111111111 ;desktop settings (rechts: Schalter 1)
+.INIT_SCROLL =           .460 ;Initial scroll delay in ms
+.CONT_SCROLL =            .40 ;Continous scroll delay in ms
+.CONT_CLOSE  =          .1000 ;Continous close delay in ms
+.CONT_FULL   =          .2000 ;Continous full delay in ms
+
+.WINX        = 1    ;1: Include patch, 0: Do not include patch
+
+_IF .WINX
+_SWITCH .NATION
+_CASE .FRG:
+_CASE .SWG:
+  ;
+
+_DEFAULT:
+  .WINX=0	; No German TOS: Always switch off WINX!
+_ENDSWITCH
+_ENDIF
+
+_IF .WINX
+ +winx.fil          ;include WINX-Patch
+_ENDIF
+
+;*******************************************************************************
+;* Martin Osieka: (implementiert durch MH)
+;* New scroll routines for GEM. Original routines from ARROWFIX 1.5!
+;* For more information see ARROWFIX.
+;*
+;* .TIME contains the default response time up to the first repetition of a
+;* Scroll message in 0.125s. This response time can also be achieved with the
+;* Set ARROWFIX.CPX. Values from 0 to 9 for .TIME are permitted.
+;* Original default is .TIME = 3. 
+;*
+;* >>> This patch does not work with the Winx patch!
+
+.ARROWFIX = 1       ;1: Include patch, 0: Do not include patch
+
+.TIME     = .3      ;Initial delay in 0,125s.
+
+_IF .ARROWFIX !A! (.WINX = 0)
+ +arrow.fil         ;include ARROWFIX-Patch
+_ENDIF
+
+;*******************************************************************************
+;* End of file...
+
+-..             ;Dsetpath("..")
+

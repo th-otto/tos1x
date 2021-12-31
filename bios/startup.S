@@ -1019,6 +1019,7 @@ acsista2:
 /* 306de: 00e00bbc */
 /* 206de: 00e00b68 */
 /* 104de: 00fc0628 */
+/* 106de: 00e0076a */
 _run_cartridge_applications:
         lea     cart_base,a0
 cartext2:
@@ -1612,6 +1613,7 @@ _bbcostat:
 /* 306de: 00e00fee */
 /* 206de: 00e00efa */
 /* 104de: 00fc0968 */
+/* 106de: 00e00af6 */
 _bbconout:
         lea.l     ABSW(_bconout_vec),a0
 
@@ -1639,6 +1641,7 @@ doxconxx:
 /* 306de: 00e01024 */
 /* 206de: 00e00f30 */
 /* 104de: 00fc0978 */
+/* 106de: 00e00b06 */
 /* 404: 00e00e56 */
 tconstat:
         dc.l      bios_unimpl
@@ -2170,7 +2173,7 @@ autoscan:
         clr.w     -(a7)
         move.w    #$004A,-(a7)                  /* Mshrink to basepage only */
         trap      #1
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)
+#if TP_15
         /* swedish/czech versions have the STACK_POINTER patch applied */
 		adda.w    #12,a7
         tst.w     d0
