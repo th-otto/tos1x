@@ -8,23 +8,182 @@ _IF .TIME > 9
 _ENDIF
 
 ;* THO: make country-independant
+;* THO: include files instead of using precompiled *.abs,
+;* so we can adjust language dependant addresses
 
+.gl_dcindex = 6DAE
+.gl_ticktime = 6E18
+.TICKS = 6B1E
+.appl_msg = 701A
+.button = A84C
+.rlr = A792
+.gl_mowner = 7060
+.gl_dclick = 6D62
+
+.wind_update = 17D0A+.BASE+.d1
+.dsptch = 1CE42+.BASE+.d2
+.win_find = 1C3F4+.BASE+.d2
+.win_blt = 1C988+.BASE+.d2
+.wm_update = 25A92+.BASE+.d2
+.ev_mesag = 1FC98+.BASE+.d2
+.ev_mchk = 1FCE4+.BASE+.d2
+.ap_sendmsg = 24E6C+.BASE+.d2
+
+
+; ev_dclick call in gem_main
 13FE0+.d1 $.TIME+1.B,03
+; disable evnt_dclick call in desktop
 17AB0+.d1 $4E,75
-1CBE0+.d2 arrow1.abs   ;1CBE0 - 1CC68 (.136)
-1D7CC+.d2
-  ~ $F7,7C             ;dc.w       $F77C ; ev_mchk
-  ~ $4E,71,4E,71
+
+; fix win_arrow in desktop (was arrow1.abs)
+1CBE0+.d2   ;1CBE0 - 1CC68 (.136)
+;win_arrow:
+~ $4e,56,ff,ec               ; link       a6,#-20
+;FDCBE4:
+~ $2e,ae,00,08               ; move.l     8(a6),(a7)
+~ $61,00,.win_find-~.W       ; bsr        win_find
+~ $20,40                     ; movea.l    d0,a0
+~ $20,17                     ; move.l     (a7),d0
+~ $72,00                     ; moveq.l    #0,d1
+~ $43,e8,00,0c               ; lea.l      12(a0),a1
+~ $08,80,00,02               ; bclr       #2,d0
+~ $66,04                     ; bne.s      $00FDCC00
+~ $72,01                     ; moveq.l    #1,d1
+~ $54,89                     ; addq.l     #2,a1
+;FDCC00:
+~ $34,11                     ; move.w     (a1),d2
+~ $58,89                     ; addq.l     #4,a1
+~ $57,40                     ; subq.w     #3,d0
+~ $67,12                     ; beq.s      $00FDCC1A
+~ $54,40                     ; addq.w     #2,d0
+~ $6e,0a                     ; bgt.s      $00FDCC16
+~ $67,04                     ; beq.s      $00FDCC12
+~ $94,51                     ; sub.w      (a1),d2
+~ $60,0a                     ; bra.s      $00FDCC1C
+;FDCC12:
+~ $d4,51                     ; add.w      (a1),d2
+~ $60,06                     ; bra.s      $00FDCC1C
+;FDCC16:
+~ $53,42                     ; subq.w     #1,d2
+~ $60,02                     ; bra.s      $00FDCC1C
+;FDCC1A:
+~ $52,42                     ; addq.w     #1,d2
+;FDCC1C:
+~ $3f,02                     ; move.w     d2,-(a7)
+~ $3f,01                     ; move.w     d1,-(a7)
+~ $2f,08                     ; move.l     a0,-(a7)
+~ $61,00,.win_blt-~.W        ; bsr        win_blt
+~ $50,8f                     ; addq.l     #8,a7
+~ $61,24                     ; bsr.s      $00FDCC4E
+~ $66,1e                     ; bne.s      $00FDCC4A
+~ $42,57                     ; clr.w      (a7)
+~ $61,00,.wind_update-~.W    ; bsr        wind_update
+~ $52,57                     ; addq.w     #1,(a7)
+~ $4e,b9,.wm_update.L        ; jsr        wm_update
+~ $2e,8f                     ; move.l     a7,(a7)
+~ $58,97                     ; addq.l     #4,(a7)
+~ $61,00,.ev_mesag-~.W       ; bsr        ev_mesag
+~ $2d,6f,00,0a,00,08         ; move.l     10(a7),8(a6)
+~ $60,9a                     ; bra.s      $00FDCBE4
+;FDCC4A:
+~ $4e,5e                     ; unlk       a6
+~ $4e,75                     ; rts
+;FDCC4E:
+~ $20,79,.rlr.L              ; movea.l    _rlr,a0
+~ $22,68,00,32               ; movea.l    50(a0),a1
+~ $4a,68,00,36               ; tst.w      54(a0)
+~ $67,06                     ; beq.s      $00FDCC64
+~ $0c,51,00,18               ; cmpi.w     #24,(a1)
+~ $4e,75                     ; rts
+;FDCC64:
+~ $70,01                     ; moveq.l    #1,d0
+~ $4e,75                     ; rts
+
+; Fix in iasync()
+1D7CC+.d2 ; 1D7CC - 1D7E6 (1A)
+  ~ $4E,B9,.ev_mchk.L  ;jsr ev_mchk
   ~ $50,8F             ;addq.l     #8,a7
   ~ $4A,40             ;tst.w      d0
-  ~ $4E,71,4E,71,4E,71
-  ~ $4E,71,4E,71,4E,71,4E,71,4E,71
-1DF0E+.d2 arrow2.abs   ;1DF0E - 1DF64 (.86)
-1E826+.d2 arrow3.abs   ;1E826 - 1E862 (.60)
-;1FFE6+.d2 arrow4.abs   ;1FFE6 - 20020 (.58)
-1FFE6+.d2
-  +arrow4.fil
+  _FILL ~,~+10,$4E71.W
+
+; Fix in hctl_window ; 1DF0E - 1DF64 (56) (was arrow2.abs)
+1DF0E+.d2
+~ $76,00                     ; moveq.l    #0,d3
+~ $16,39,.gl_dcindex.L       ; move.b     gl_dcindex,d3
+~ $53,83                     ; subq.l     #1,d3
+~ $ef,83                     ; asl.l      #7,d3
+~ $87,f9,.gl_ticktime.L      ; divs.w     gl_ticktime,d3
+~ $48,c3                     ; ext.l      d3
+~ $d6,b9,.TICKS.L            ; add.l      TICKS,d3
+~ $2a,6d,00,02               ; movea.l    2(a5),a5
+;FDDF2C:
+~ $4a,6d,00,36               ; tst.w      54(a5)
+~ $6e,1c                     ; bgt.s      $00FDDF4E
+~ $42,67                     ; clr.w      -(a7)
+~ $42,a7                     ; clr.l      -(a7)
+~ $3f,2e,ff,ee               ; move.w     -18(a6),-(a7)
+~ $3f,07                     ; move.w     d7,-(a7)
+~ $3f,2d,00,1c               ; move.w     28(a5),-(a7)
+~ $3f,04                     ; move.w     d4,-(a7)
+~ $48,78,.appl_msg.W         ; pea.l      appl_msg.w
+~ $61,00,.ap_sendmsg-~.W     ; bsr        ap_sendmsg
+~ $de,fc,00,12               ; adda.w     #$0012,a7
+;FDDF4E:
+~ $61,00,.dsptch-~.W         ; bsr        dsptch
+~ $08,39,00,00,.button+1.L   ; btst       #0,button+1
+~ $67,08                     ; beq.s      $00FDDF64
+~ $b6,b8,.TICKS.W            ; cmp.l      TICKS,d3
+~ $64,ec                     ; bcc.s      $00FDDF4E
+~ $60,c8                     ; bra.s      $00FDDF2C
+;FDDF64:
+
+; replace downorup   ;1E826 - 1E862 (.3C) (was arrow3.abs)
+1E826+.d2
+~ $10,2f,00,09               ; move.b     9(a7),d0
+~ $12,2f,00,05               ; move.b     5(a7),d1
+~ $b3,00                     ; eor.b      d1,d0
+~ $c0,2f,00,08               ; and.b      8(a7),d0
+~ $57,c0                     ; seq        d0
+~ $c0,3c,00,01               ; and.b      #1,d0
+~ $b0,2f,00,06               ; cmp.b      6(a7),d0
+~ $56,c0                     ; sne        d0
+~ $c0,7c,00,01               ; and.w      #1,d0
+~ $67,1a                     ; beq.s      downoru1
+~ $20,57                     ; movea.l    (a7),a0
+~ $0c,68,2e,87,ff,f2         ; cmpi.w     #$2E87,-14(a0) ; called from gemaync?
+~ $66,10                     ; bne.s      downoru1
+~ $22,39,.rlr.L              ; move.l     _rlr,d1
+~ $b2,b9,.gl_mowner.L        ; cmp.l      _gl_mowner,d1
+~ $67,02                     ; beq.s      downoru1
+~ $70,00                     ; moveq.l    #0,d0
+;downoru1:
+~ $4e,75                     ; rts
+
+; replace ev_dclick in AES
+1FFE6+.d2   ;1FFE6 - 20020 (.58) (was arrow4.abs)
+ ~ $41,f9,.gl_dcindex+1.L      ; lea.l      _gl_dcindex+1,a0
+ ~ $42,40                      ; clr.w      d0
+ ~ $10,10                      ; move.b     (a0),d0
+ ~ $43,ef,00,06                ; lea.l      6(a7),a1
+ ~ $4a,51                      ; tst.w      (a1)
+ ~ $67,26                      ; beq.s      $00FE001E
+ ~ $10,21                      ; move.b     -(a1),d0
+ ~ $10,80                      ; move.b     d0,(a0)
+ ~ $4e,b9,26514+.d2+.BASE.l    ; jsr        $00FE6514
+ ~ $72,00                      ; moveq.l    #0,d1
+ ~ $12,00                      ; move.b     d0,d1
+ ~ $43,f9,2b578+.d2+.BASE.l    ; lea.l      $00FEB578,a1
+ ~ $d2,c1                      ; adda.w     d1,a1
+ ~ $d2,c1                      ; adda.w     d1,a1
+ ~ $32,11                      ; move.w     (a1),d1
+ ~ $83,f9,.gl_ticktime.L       ; divs.w     _gl_ticktime,d1
+ ~ $33,c1,.gl_dclick.L         ; move.w     d1,_gl_dclick
+ ~ $4e,75                      ; rts
+
+; fix in b_click
 263D2+.d2 $4E,71,4E,71,4E,71,4E,71
+
+; overwrite code of delay which is no longer used
 26514+.d2
   ~ $53,89             ; subq.l     #1,a1
   ~ $53,88             ; subq.l     #1,a0

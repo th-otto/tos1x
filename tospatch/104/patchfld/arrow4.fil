@@ -1,7 +1,7 @@
 ;* THO: disassembled & converted to *.fil
 ;* because country-dependant addresses are used
 
- ~ $41,f9,00,00,6d,af          ; lea.l      $00006DAF,a0
+ ~ $41,f9,.gl_dcindex+1.L      ; lea.l      $00006DAF,a0
  ~ $42,40                      ; clr.w      d0
  ~ $10,10                      ; move.b     (a0),d0
  ~ $43,ef,00,06                ; lea.l      6(a7),a1

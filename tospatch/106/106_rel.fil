@@ -47,7 +47,7 @@
 ;* Define basic TOS data
 
 .BASE   = E00000    ;TOS-ROM-address (TOS 1.06: $E00000)
-.LENGTH =  30000    ;TOS-length      (TOS 1.06:  $40000)
+.LENGTH =  40000    ;TOS-length      (TOS 1.06:  $40000)
 .WIDTH  =    .16    ;TOS-width       (TOS 1.06:     .16)
 
 .NATION = .FRG      ;TOS country code: Germany          <=== UNCOMMENT AS NEEDED
@@ -898,7 +898,7 @@ _ENDIF
 .CONT_CLOSE  =          .1000 ;Continous close delay in ms
 .CONT_FULL   =          .2000 ;Continous full delay in ms
 
-.WINX        = 1    ;1: Include patch, 0: Do not include patch
+.WINX        = 0    ;1: Include patch, 0: Do not include patch
 
 _IF .WINX
 _SWITCH .NATION
