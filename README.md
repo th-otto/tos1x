@@ -201,3 +201,37 @@ contains some patches for known bugs, or small enhancements.
   for available options.
 
   Then compile TOS as usual, and you will get a patched TOS ROM image.
+
+# Differences between TOS versions
+
+User visible differences between 1.06 and 1.04 that have been identified:
+
+### BIOS
+
+  * At places where the hardware video base is set/read, also the low byte is read/written.
+  * During boot, the microwire interface is initialized. Other than that, there is no support for that hardware.
+  * The ramtop/ramvalid system variables are set, but no attempt is made to probe for TT-RAM
+  * A small cookiejar is installed (with 8 entries), containing values for _CPU, _MCH, _SND and _SWI. Strangely, no _VDO cookie is set.
+  * the system variables kcl_hook and bell_hook are supported, to allow for custom sounds.
+  * The bios/xbios entry points are aware of the longframe variable, just like TOS 2.06
+  * A simple priviledge violation handler is installed, to catch "move SR,dn" in user mode. This is an allowed instruction on 68000, but gives an exception on 68010+. However unlike later TOS versions, the handler only catches move to data-register, changing that into a "move ccr,dn"
+  * The floppy routines use the hz_200 variable for timeouts instead of a fixed counter (again, that is also done in 2.06)
+  * The default palette includes the additional bit for all white values. Similarly, Setcolor() does not mask that out.
+  * The Rsconf() bug that prevents you from activating RTS/CTS control was fixed.
+
+### GEMDOS
+  * just like BIOS, the GEMDOS entry point checks for the _longframe variable. There is however a serious bug in the internal function that starts a new gemdos process, where that check is missing.
+  * A small fix in the function that checks for Ctrl-C. Same fix is also present in later GEMDOS versions (although it still reports version 0.15)
+  * When a process terminates, GEMDOS internalls updates the system time from BIOS. That is now done with a proper XBIOS call instead of calling the internal BIOS function directly.
+
+### VDI
+  * vs_color/vq_color handle the STE colors.
+
+### AES
+  * The linef trap is no longer used for internal functions.
+  * The internal AES entry has been slightly reorganized. Same version already as in TOS 2.x
+  * The rarely encounterd bug to look up an application name from a path has been fixed.
+
+### Desktop
+  * When viewing a text file, the mouse button can be used to scroll a page.
+  * A new bug has been introduced that prevents you from booting in medium resolution.
