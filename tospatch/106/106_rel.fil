@@ -898,7 +898,7 @@ _ENDIF
 .CONT_CLOSE  =          .1000 ;Continous close delay in ms
 .CONT_FULL   =          .2000 ;Continous full delay in ms
 
-.WINX        = 0    ;1: Include patch, 0: Do not include patch
+.WINX        = 1    ;1: Include patch, 0: Do not include patch
 
 _IF .WINX
 _SWITCH .NATION
