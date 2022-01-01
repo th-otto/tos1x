@@ -63,6 +63,7 @@
 
 /*
  * TP_72: POOLFIX: Make POOLFIX3 obsolete
+ * Only needed for 1.04/1.06; in 1.62 this has been fixed
  */
 #ifndef TP_72
 #define TP_72 1

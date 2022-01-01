@@ -207,7 +207,6 @@ contains some patches for known bugs, or small enhancements.
 User visible differences between 1.06 and 1.04 that have been identified:
 
 ### BIOS
-
   * At places where the hardware video base is set/read, also the low byte is read/written.
   * During boot, the microwire interface is initialized. Other than that, there is no support for that hardware.
   * The ramtop/ramvalid system variables are set, but no attempt is made to probe for TT-RAM
@@ -235,3 +234,15 @@ User visible differences between 1.06 and 1.04 that have been identified:
 ### Desktop
   * When viewing a text file, the mouse button can be used to scroll a page.
   * A new bug has been introduced that prevents you from booting in medium resolution.
+
+User visible differences between 1.62 and 1.06 that have been identified:
+
+### BIOS
+   * None. The BIOS is completely identical.
+
+### GEMDOS
+   * The Pexec function has been reorganized in order to catch I/O errors during program loading.
+   * The bug that was corrected by POOLFIX has been fixed
+   * Checks for the _longframe variable were removed from entry point again
+   * There is already a prototype version of Mxalloc(), but it is not used by the dispatcher
+   * Version reported is now 0.17

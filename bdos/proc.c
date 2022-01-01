@@ -230,7 +230,6 @@ PP(char *v;)								/* command, tail, environment   */
 	/*
 	 *   check validity of mode - 1,2 or >5 is not allowed
 	 */
-
 	if (mode != PE_LOADGO && (mode < PE_LOAD || mode > PE_BPFLAGS))
 		return E_INVFN;
 
@@ -251,7 +250,6 @@ PP(char *v;)								/* command, tail, environment   */
 	/*
 	 *   if we have to load, find the file
 	 */
-
 	if (mode == PE_LOADGO || mode == PE_LOAD)
 	{
 		/*
@@ -274,20 +272,18 @@ PP(char *v;)								/* command, tail, environment   */
 			else
 				return E_PLFMT;
 		}
-		goto donehdr;
-	}
-	
-	if (mode == PE_BPFLAGS)
-	{
-		hdr.h01_ldflags = (long)s;
 	} else
 	{
-		hdr.h01_ldflags = 0;
-	}
-
-	hdr.h01_tlen = hdr.h01_dlen = hdr.h01_blen = 0;
+		if (mode == PE_BPFLAGS)
+		{
+			hdr.h01_ldflags = (long)s;
+		} else
+		{
+			hdr.h01_ldflags = 0;
+		}
 	
-donehdr:
+		hdr.h01_tlen = hdr.h01_dlen = hdr.h01_blen = 0;
+	}	
 	
 	/* will we need memory and a psp ? */
 
@@ -342,7 +338,6 @@ donehdr:
 		/* 
 		 * now copy it 
 		 */
-
 #if 0 /* that would be too easy... */
 		xmovs(i, v, e);
 #else
@@ -527,7 +522,331 @@ donehdr:
 	return (ERROR) t;
 }
 
+#else
 
+#if GEMDOS >= 0x17
+static ERROR xpgmld PROTO((PGMHDR01 *hdr, FH fh, PD *p));
+#else
+static ERROR xpgmld PROTO((const char *s, PD *p));
+#endif
+
+/* 104de: 00fc8250 */
+/* 106de: 00e08420 */
+/* 162de: 00e08420 */
+ERROR xexec(P(int16_t) mode, P(char *) s, P(char *) t, P(char *) v)
+PP(int16_t mode;)								/*  0, 3, 4, or 5       */
+PP(char *s;)
+PP(char *t;)
+PP(char *v;)								/* command, tail, environment   */
+{
+	/*
+	 * the setjmp() routine used in GEMDOS does not save any registers,
+	 * so no register variables must be used here.
+	 */
+	PD *volatile b;
+	char *volatile ptr;
+	char *volatile e;
+	int volatile h;
+	int volatile i;
+	int volatile cnt;
+	ERROR volatile rc;
+	int32_t volatile max;
+	MD *volatile p;
+	MD *volatile env;
+	int32_t *volatile spl;
+	int16_t *spw;
+#if GEMDOS >= 0x17
+	long volatile unused;
+	ERROR volatile rc2;
+	FH volatile fh;
+	PGMHDR01 hdr;
+	MPB *ppmd;
+	char unused2[12];
+	
+	UNUSED(unused);
+#endif
+
+	p = env = 0;
+#if GEMDOS >= 0x17
+	fh = 0;
+#endif
+	
+	/*
+	 *   check validity of mode - 1,2 or >5 is not allowed
+	 */
+	if (mode != PE_LOADGO && (mode < PE_LOAD || mode > PE_GOTHENFREE))
+		return E_INVFN;
+
+#if GEMDOS >= 0x17
+	xmovs(sizeof(errbuf), errbuf, bakbuf);
+
+	if ((rc = xsetjmp(errbuf)) != 0)
+	{
+		/* Free any memory allocated to this program. */
+		if (fh)
+			xclose(fh);
+		if (p)
+			freeit(p, ppmd);
+		if (env)
+			freeit(env, &pmd);
+		xlongjmp(bakbuf, rc);
+	}
+#endif
+
+	/*
+	 *   if we have to load, find the file
+	 */
+	if (mode == PE_LOADGO || mode == PE_LOAD)
+	{
+#if GEMDOS >= 0x17
+		/*
+		 * This block formerly was in a separate function,
+		 * but we may have to close the filehandle in case
+		 * of critical errors
+		 */
+		 
+		/* open file for read */
+		if ((fh = rc2 = xopen(s, RO_MODE)) < 0)
+			return rc2;			/*  file not found  */
+
+		/* read file header */
+		rc2 = xread(fh, (long)sizeof(hdr), &hdr);
+		if (rc2 != sizeof(hdr) || hdr.h01_magic != 0x601a)
+		{
+			xclose(fh);
+			if (rc2 < 0)
+				return rc2;
+			else
+				return E_PLFMT;
+		}
+#else
+		if (ixsfirst(s, FA_ARCH|FA_SYSTEM|FA_HIDDEN|FA_RDONLY, NULL) != 0)
+			return E_FILNF;			/*  file not found  */
+#endif
+	} else
+	{
+#if GEMDOS >= 0x17
+		hdr.h01_ldflags = 0;
+#endif
+	}
+	
+#if GEMDOS < 0x17
+	xmovs(sizeof(errbuf), errbuf, bakbuf);
+
+	if ((rc = xsetjmp(errbuf)) != 0)
+	{
+		if (p)
+			freeit(p, &pmd);
+		if (env)
+			freeit(env, &pmd);
+		xlongjmp(bakbuf, rc);
+	}
+#endif
+
+	/* will we need memory and a psp ? */
+
+	if (mode != PE_GO && mode != PE_GOTHENFREE)
+	{									/* get largest memory partition available */
+		if (!v)
+			v = run->p_env;
+
+		/*
+		 *  envsize - determine size of env area
+		 *	counts bytes starting at 'env' upto and including the terminating
+		 *	double null.
+		 */
+	
+		e = v;
+		i = 0;
+		for (;;)
+		{
+			if (*e++ == '\0')
+			{
+				if (*e++ == '\0')
+					break;
+				i++;
+			}
+			i++;
+		}
+	
+		i += 2;					/*  count terminating double null  */
+
+		/*
+		 *   determine minimum
+		 */
+
+		cnt = 0;
+		if ((i + cnt) & 1)						/*  must be even    */
+			++cnt;
+		/*
+		 *  allocate environment
+		 */
+		if (!(env = ffit((long)(i + cnt + 2), &pmd)))
+		{
+#if	DBGPROC
+			kprintf("xexec: Not Enough Memory!\n");
+#endif
+			return E_NSMEM;
+		}
+
+		/* 
+		 * now copy it 
+		 */
+		e = (char *)env->m_start;
+#if 0 /* that would be too easy... */
+		xmovs(i, v, e);
+#else
+		while (i--)
+			*e++ = *v++;
+#endif
+
+		/* 
+		 *   allocate base page
+		 */
+
+#if GEMDOS >= 0x17
+		ppmd = &pmd;
+		max = (int32_t)ffit(-1L, ppmd);
+		if (max < sizeof(PD))
+#else
+		if ((max = (int32_t)ffit(-1L, &pmd)) < sizeof(PD))
+#endif
+		{								/*  not enough even for PD  */
+			freeit(env, &pmd);
+#if	DBGPROC
+			kprintf("xexec: No Room For Base Pg\n");
+#endif
+			return E_NSMEM; /* BUG: fh still open */
+		}
+
+		/*  allocate the base page.  The owner of it is either the
+		   new process being created, or the parent  */
+
+#if GEMDOS >= 0x17
+		p = (MD *)ffit(max, ppmd);
+#else
+		p = (MD *)ffit(max, &pmd);
+#endif
+		b = (PD *)p->m_start;
+		
+		/* set owner of environment & bp */
+		p->m_own = env->m_own = mode == PE_LOADGO ? b : run;
+		max = p->m_length;
+		
+		/*
+		 *   We know we have at least enough room for the PD (room 
+		 *  for the rest of the pgm checked for in pgmld)
+		 *   initialize the PD (first, by zero'ing it out)
+		 */
+
+		b->p_lowtpa = (int32_t) b;
+		b->p_hitpa = (int32_t) b + max;
+#if 0 /* that would be too easy... */
+		bzero((char *)b + 8, sizeof(PD) - 8);
+#else
+		for (i = 0, ptr = (char *)b + 8; i < sizeof(PD); i++)
+			*ptr++ = 0;
+#endif
+		b->p_xdta = (DTAINFO *)&b->p_cmdlin[0];	/* default p_xdta is p_cmdlin */
+#if GEMDOS >= 0x17
+		b->p_flags = hdr.h01_ldflags;
+#endif
+		b->p_env = (char *)env->m_start;
+
+		/* now inherit standard files from me */
+
+		for (i = 0; i < NUMSTD; i++)
+		{
+			if ((h = run->p_uft[i]) > 0)
+				ixforce(i, run->p_uft[i], b);
+			else
+				b->p_uft[i] = h;
+		}
+
+		/* and current directory set */
+
+		for (i = 0; i < NUMCURDIR; i++)
+			ixdirdup(i, run->p_curdir[i], b);
+
+		/* and current drive */
+
+		b->p_curdrv = run->p_curdrv;
+#if GEMDOS >= 0x17
+		b->p_lddrv = run->p_lddrv;
+#endif
+
+		/* copy tail */
+
+		ptr = &b->p_cmdlin[0];
+		for (i = 0; i < (PDCLSIZE - 3) && *t; i++)
+			*ptr++ = *t++;
+
+		*ptr++ = 0;
+		t = (char *) b;
+	}
+
+	/* 
+	 *   for 3 or 0, need to load, supply baspage containing: 
+	 *      tpa limits, filled in with start addrs,lens 
+	 */
+
+	if (mode == PE_LOADGO || mode == PE_LOAD)
+	{
+#if GEMDOS >= 0x17
+		if ((rc = xpgmld(&hdr, fh, (PD *)t)) != 0)
+#else
+		if ((rc = xpgmld(s, (PD *)t)) != 0)
+#endif
+		{
+#if	DBGPROC
+			kprintf("cmain: error returned from xpgmld = %lx\n", rc);
+#endif
+			ixterm((PD *)t);
+			return rc;
+		}
+	}
+	
+	if (mode == PE_LOADGO || mode == PE_GO || mode == PE_GOTHENFREE)
+	{
+		b = (PD *) t;
+		b->p_parent = run;
+		spl = (int32_t *) b->p_hitpa;
+		*--spl = (int32_t) b;
+		*--spl = 0L;					/* bogus retadd */
+
+		/* 10 regs (40 bytes) of zeroes  */
+
+		for (i = 0; i < 10; i++)
+			*--spl = 0L;
+
+		*--spl = b->p_tbase;			/* text start */
+		spw = (int16_t *) spl;
+		*--spw = 0;						/* startup status reg */
+		spl = (int32_t *) spw;
+		*--spl = (long) &supstk[SUPSIZ];
+		b->p_areg[6 - 3] = b->p_areg[7 - 3] = (long) spl;
+		b->p_areg[5 - 3] = b->p_dbase;
+		b->p_areg[4 - 3] = b->p_bbase;
+		run = b;
+
+		if (mode == PE_GOTHENFREE)
+		{
+			xmsetown(run, run);
+			xmsetown(run->p_env, run);
+		}
+		
+		gouser();
+	}
+
+	/* sub-func 3, 5 and 7 return here */
+
+	return (ERROR) t;
+}
+
+#endif /* ALTRAM_SUPPORT */
+
+
+#if ALTRAM_SUPPORT | (GEMDOS >= 0x17)
 /*
  *  xpgmld - oldest known gemdos load format - very similar to cp/m 68k
  *	load in the (open) program file with handle 'h' using load file
@@ -546,6 +865,7 @@ donehdr:
 
 /* 306de: 00e17dca */
 /* 306us: 00e17d70 */
+/* 162de: 00e08952 */
 static ERROR xpgmld(P(PGMHDR01 *) hdr, P(FH) fh, P(PD *) pdptr)
 PP(PGMHDR01 *hdr;)
 PP(FH fh;)
@@ -693,257 +1013,6 @@ PP(PD *pdptr;)
 }
 
 #else
-
-static ERROR xpgmld PROTO((const char *s, PD *p));
-
-/* 104de: 00fc8250 */
-/* 106de: 00e08420 */
-ERROR xexec(P(int16_t) mode, P(char *) s, P(char *) t, P(char *) v)
-PP(int16_t mode;)								/*  0, 3, 4, or 5       */
-PP(char *s;)
-PP(char *t;)
-PP(char *v;)								/* command, tail, environment   */
-{
-	/*
-	 * the setjmp() routine used in GEMDOS does not save any registers,
-	 * so no register variables must be used here.
-	 */
-	PD *volatile b;
-	char *volatile ptr;
-	char *volatile e;
-	int volatile h;
-	int volatile i;
-	int volatile cnt;
-	ERROR volatile rc;
-	int32_t volatile max;
-	MD *volatile p;
-	MD *volatile env;
-	int32_t *volatile spl;
-	int16_t *spw;
-	
-	p = env = 0;
-	
-	/*
-	 *   check validity of mode - 1,2 or >5 is not allowed
-	 */
-	if (mode != PE_LOADGO && (mode < PE_LOAD || mode > PE_GOTHENFREE))
-		return E_INVFN;
-
-	/*
-	 *   if we have to load, find the file
-	 */
-
-	if (mode == PE_LOADGO || mode == PE_LOAD)
-	{
-		if (ixsfirst(s, FA_ARCH|FA_SYSTEM|FA_HIDDEN|FA_RDONLY, NULL) != 0)
-			return E_FILNF;			/*  file not found  */
-	}
-	
-	xmovs(sizeof(errbuf), errbuf, bakbuf);
-
-	if ((rc = xsetjmp(errbuf)) != 0)
-	{
-		if (p)
-			freeit(p, &pmd);
-		if (env)
-			freeit(env, &pmd);
-		xlongjmp(bakbuf, rc);
-	}
-
-	if (mode != PE_GO && mode != PE_GOTHENFREE)
-	{									/* get largest memory partition available */
-		if (!v)
-			v = run->p_env;
-
-		/*
-		 *  envsize - determine size of env area
-		 *	counts bytes starting at 'env' upto and including the terminating
-		 *	double null.
-		 */
-	
-		e = v;
-		i = 0;
-		for (;;)
-		{
-			if (*e++ == '\0')
-			{
-				if (*e++ == '\0')
-					break;
-				i++;
-			}
-			i++;
-		}
-	
-		i += 2;					/*  count terminating double null  */
-
-		/*
-		 *   determine minimum
-		 */
-
-		cnt = 0;
-		if ((i + cnt) & 1)						/*  must be even    */
-			++cnt;
-		/*
-		 *  allocate environment
-		 */
-		if (!(env = ffit((long)(i + cnt + 2), &pmd)))
-		{
-#if	DBGPROC
-			kprintf("xexec: Not Enough Memory!\n");
-#endif
-			return E_NSMEM;
-		}
-
-		/* 
-		 * now copy it 
-		 */
-		e = (char *)env->m_start;
-#if 0 /* that would be too easy... */
-		xmovs(i, v, e);
-#else
-		while (i--)
-			*e++ = *v++;
-#endif
-
-		/* 
-		 *   allocate base page
-		 */
-
-		if ((max = (int32_t)ffit(-1L, &pmd)) < sizeof(PD))
-		{								/*  not enough even for PD  */
-			freeit(env, &pmd);
-#if	DBGPROC
-			kprintf("xexec: No Room For Base Pg\n");
-#endif
-			return E_NSMEM;
-		}
-
-		/*  allocate the base page.  The owner of it is either the
-		   new process being created, or the parent  */
-
-		p = (MD *)ffit(max, &pmd);
-		b = (PD *)p->m_start;
-		
-		/* set owner of environment & bp */
-		p->m_own = env->m_own = mode == PE_LOADGO ? b : run;
-		max = p->m_length;
-		
-		/*
-		 *   We know we have at least enough room for the PD (room 
-		 *  for the rest of the pgm checked for in pgmld)
-		 *   initialize the PD (first, by zero'ing it out)
-		 */
-
-		b->p_lowtpa = (int32_t) b;
-		b->p_hitpa = (int32_t) b + max;
-#if 0 /* that would be too easy... */
-		bzero((char *)b + 8, sizeof(PD) - 8);
-#else
-		for (i = 0, ptr = (char *)b + 8; i < sizeof(PD); i++)
-			*ptr++ = 0;
-#endif
-		b->p_xdta = (DTAINFO *)&b->p_cmdlin[0];	/* default p_xdta is p_cmdlin */
-		b->p_env = (char *)env->m_start;
-
-		/* now inherit standard files from me */
-
-		for (i = 0; i < NUMSTD; i++)
-		{
-			if ((h = run->p_uft[i]) > 0)
-				ixforce(i, run->p_uft[i], b);
-			else
-				b->p_uft[i] = h;
-		}
-
-		/* and current directory set */
-
-		for (i = 0; i < NUMCURDIR; i++)
-			ixdirdup(i, run->p_curdir[i], b);
-
-		/* and current drive */
-
-		b->p_curdrv = run->p_curdrv;
-
-		/* copy tail */
-
-		ptr = &b->p_cmdlin[0];
-		for (i = 0; i < (PDCLSIZE - 3) && *t; i++)
-			*ptr++ = *t++;
-
-		*ptr++ = 0;
-		t = (char *) b;
-	}
-
-	/* 
-	 *   for 3 or 0, need to load, supply baspage containing: 
-	 *      tpa limits, filled in with start addrs,lens 
-	 */
-
-	if (mode == PE_LOADGO || mode == PE_LOAD)
-	{
-		if ((rc = xpgmld(s, (PD *)t)) != 0)
-		{
-#if	DBGPROC
-			kprintf("cmain: error returned from xpgmld = %lx\n", rc);
-#endif
-			ixterm((PD *)t);
-			return rc;
-		}
-	}
-	
-	if (mode == PE_LOADGO || mode == PE_GO || mode == PE_GOTHENFREE)
-	{
-		b = (PD *) t;
-		b->p_parent = run;
-		spl = (int32_t *) b->p_hitpa;
-		*--spl = (int32_t) b;
-		*--spl = 0L;					/* bogus retadd */
-
-		/* 10 regs (40 bytes) of zeroes  */
-
-		for (i = 0; i < 10; i++)
-			*--spl = 0L;
-
-		*--spl = b->p_tbase;			/* text start */
-		spw = (int16_t *) spl;
-		*--spw = 0;						/* startup status reg */
-		spl = (int32_t *) spw;
-		*--spl = (long) &supstk[SUPSIZ];
-		b->p_areg[6 - 3] = b->p_areg[7 - 3] = (long) spl;
-		b->p_areg[5 - 3] = b->p_dbase;
-		b->p_areg[4 - 3] = b->p_bbase;
-		run = b;
-
-		if (mode == PE_GOTHENFREE)
-		{
-			xmsetown(run, run);
-			xmsetown(run->p_env, run);
-		}
-		
-		gouser();
-	}
-
-	/* sub-func 3, 5 and 7 return here */
-
-	return (ERROR) t;
-}
-
-
-/*
- *  xpgmld - oldest known gemdos load format - very similar to cp/m 68k
- *	load in the (open) program file with handle 'h' using load file
- *	strategy like cp/m 68k.  Specifically:
- *
- *		read in program header and determine format parameters
- *		seek past the symbol table to the start of the relo info
- *  		read in the first offset (it's different than the rest in that 
- *		  it is a longword instead of a byte).
- *  		make the first adjustment
- *  		until we run out of relocation info or we have an error
- *			read in relocation info into the bss area
- *			fix up the code using that info
- *		zero out the bss
- */
 
 /* 104de: 00fc86f4 */
 /* 106de: 00e088c4 */
@@ -1108,4 +1177,4 @@ PP(PD *pdptr;)
 	return E_OK;
 }
 
-#endif /* ALTRAM_SUPPORT */
+#endif

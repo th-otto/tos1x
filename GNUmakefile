@@ -43,7 +43,7 @@ check::
 	for i in $(SUBDIRS); do $(MAKE) --no-print-directory -C $$i $(FLAGSTOPASS) $@; done
 
 maps:
-	for version in 104 106; do \
+	for version in 104 106 162; do \
 		for lang in us de fr es it se sf sg; do \
 			$(MAKE) clean; \
 			$(MAKE) SYMBOLS=-s TOSVERSION=$${version} COUNTRY=$${lang} || exit 1; \

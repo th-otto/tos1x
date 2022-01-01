@@ -27,6 +27,12 @@
 cve     equ 5
 
 
+#if (GEMDOS == 0x17) & BINEXACT
+/* does not check fro _longframe here */
+#undef P68000
+#define P68000 1
+#endif
+
     page
 /******************************************************************************
  *
@@ -259,7 +265,9 @@ chkshort:
 #endif
     cmp.w   #$20,6(sp)  /* toggle/inquire state? */
 checksup:
+#if BINEXACT
 	nop
+#endif
 #endif
     beq x20_sup     /* yes, go perform function */
 
@@ -276,8 +284,10 @@ enter_2:
     beq     noadj
 #endif
     tst.w      (a7)+
-noadj:
+noadj: ds.b 0
+#if BINEXACT
 	nop
+#endif
 #endif
     btst    #13,d0      /* if he is in system state, use his stack */
     bne systk
@@ -335,7 +345,7 @@ gousr: ds.b 0
 	beq     noclr
 #endif
     clr.w   -(a7)
-noclr:
+noclr: ds.b 0
 #endif
     move.l  a3,-(sp)
     move.w  d0,-(sp)
@@ -430,7 +440,7 @@ supnolong:
     move.w  (sp)+,d0    /* pop SR */
     move.l  (sp)+,-(a1)    /* pop and transfer the return address */
 supcont:
-#if TOSVERSION >= 0x106
+#if (TOSVERSION == 0x106) & BINEXACT
 	nop
 #endif
 #endif

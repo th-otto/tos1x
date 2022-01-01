@@ -339,16 +339,21 @@ PP(MPB *mp;)
 /* 206de: 00e147b6 */
 /* 306de: 00e1821c */
 /* 306us: 00e181c2 */
+/* 162de: 00e08c9a */
 ERROR xsetblk(P(int16_t) n, P(VOIDPTR) blk, P(int32_t) len)
 PP(int16_t n;)									/*  dummy, not used         */
 PP(VOIDPTR blk;)								/*  addr of block to free   */
-#if GEMDOS >= 0x18 | !BINEXACT
+#if GEMDOS >= 0x17 | !BINEXACT
 PP(register int32_t len;)								/*  length of block to free */
 #else
 PP(int32_t len;)								/*  length of block to free */
 #endif
 {
-	register MD *m, *p;
+	register MD *m;
+	register MD *p;
+#if (GEMDOS == 0x17)
+	MD *ppmd;
+#endif
 
 	UNUSED(n);
 	/*
@@ -358,6 +363,19 @@ PP(int32_t len;)								/*  length of block to free */
 #if ALTRAM_SUPPORT
 	for (p = pmd.mp_mal; p; p = p->m_link)
 		if ((intptr_t) blk == (p->m_start & ~M_ALTFLAG))
+			goto found;
+
+	/*
+	 * If block address doesn't match any memory descriptor, then abort.
+	 */
+
+	return E_IMBA;
+
+found:
+#else
+#if GEMDOS == 0x17
+	for (p = (ppmd = &pmd)->mp_mal; p; p = p->m_link)
+		if ((intptr_t) blk == p->m_start)
 			goto found;
 
 	/*
@@ -379,11 +397,12 @@ found:
 	if (p == NULL)
 		return E_IMBA;
 #endif
+#endif
 
 	/*
 	 *  Always shrink to an even word length.
 	 */
-#if GEMDOS >= 0x18 | !BINEXACT
+#if GEMDOS >= 0x17 | !BINEXACT
 	len++;
 	len &= ~1L;
 #else
@@ -402,7 +421,11 @@ found:
 
 	if (len == 0)
 	{
+#if GEMDOS == 0x17
+		freeit(p, ppmd);
+#else
 		freeit(p, &pmd);
+#endif
 		return E_OK;
 	}
 	
@@ -424,7 +447,11 @@ found:
 	m->m_start = p->m_start + len;
 	m->m_length = p->m_length - len;
 	p->m_length = len;
+#if GEMDOS == 0x17
+	freeit(m, ppmd);
+#else
 	freeit(m, &pmd);
+#endif
 
 	return E_OK;
 }
@@ -588,6 +615,58 @@ PP(int16_t mode;)
 #endif
 
 
+#if GEMDOS == 0x17
+/* 162de: 00e08e22 */
+int32_t xmxalloc(P(int32_t) amount, P(int16_t) mode)
+PP(int32_t amount;)
+PP(int16_t mode;)
+{
+	register MD *x;
+	register MD *m;
+
+	x = m = NULL;
+	if (amount != -1L && (amount & 1))
+		amount++;
+
+	if (amount == -1 && mode > MX_TTRAM)
+	{
+		x = NULL;
+		m = ffit(-1L, &pmd);
+		if (x > m)
+		{
+			return x;
+		} else
+		{
+			return m;
+		}
+	}
+
+	switch (mode)
+	{
+	case MX_STRAM:
+	case MX_TTRAM:
+	case MX_PSTRAM:
+	case MX_PTTRAM:
+		m = ffit(amount, &pmd);
+		break;
+	default:
+		return NULL;
+	}
+	if (amount != -1 && m)
+		return m->m_start;
+	else
+		return (int32_t)m;
+}
+
+/* 162de: 00e08ede */
+int32_t xmalloc(P(int32_t) amount)
+PP(int32_t amount;)
+{
+	return xmxalloc(amount, MX_STRAM);
+}
+
+#else
+
 /*
  *  xmalloc - 
  *
@@ -599,7 +678,6 @@ PP(int16_t mode;)
 /* 306de: 00e183cc */
 /* 306us: 00e18372 */
 /* 104de: 00fc8c10 */
-/* 106de: 00e08de0 */
 int32_t xmalloc(P(int32_t) amount)
 PP(int32_t amount;)
 {
@@ -613,6 +691,7 @@ PP(int32_t amount;)
 
 	if (amount != -1L && (amount & 1))
 		amount++;
+
 	/*
 	 *  Pass the request on to the internal routine.  If it was not able 
 	 *  to grant the request, then abort.
@@ -625,6 +704,8 @@ PP(int32_t amount;)
 	return m->m_start;
 #endif
 }
+
+#endif /* GEMDOS == 0x17 */
 
 
 /*
@@ -650,6 +731,16 @@ PP(int32_t addr;)
 
 found:
 #else
+#if GEMDOS == 0x17
+	register MD *ppmd;
+	ppmd = &pmd;
+	for (p = *(q = &pmd.mp_mal); p; p = *(q = &p->m_link))
+		if (addr == p->m_start)
+			goto found;
+
+	return E_IMBA;
+found:
+#else
 	for (p = *(q = &pmd.mp_mal); p; p = *(q = &p->m_link))
 		if (addr == (p->m_start))
 			break;
@@ -657,8 +748,13 @@ found:
 		return E_IMBA;
 
 #endif
+#endif
 	*q = p->m_link;
+#if GEMDOS == 0x17
+	freeit(p, ppmd);
+#else
 	freeit(p, &pmd);
+#endif
 
 	return E_OK;
 }
