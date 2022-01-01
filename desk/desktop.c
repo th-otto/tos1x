@@ -712,7 +712,12 @@ VOID cnx_put(NOTHING)
 	d->cdele_save = d->g_cdelepref;
 	d->cbit_save = d->s_bitblt;
 	d->covwr_save = d->g_covwrpref;
+#if TOSVERSION >= 0x162
+	d->ccache_save = d->g_ccachepref;
+	d->pref_save = gl_restype;
+#else
 	d->pref_save = gl_restype - 1;
+#endif
 
 	for (iwin = 0; iwin < NUM_WNODES; iwin++)
 	{
@@ -765,6 +770,9 @@ VOID cnx_get(NOTHING)
 	d->g_cdelepref = d->cdele_save;
 	d->s_bitblt = d->cbit_save;
 	d->g_covwrpref = d->covwr_save;
+#if TOSVERSION >= 0x162
+	d->g_ccachepref = d->ccache_save;
+#endif
 	evnt_dclick(3, 1);
 
 	for (nw = 0; nw < NUM_WNODES; nw++)

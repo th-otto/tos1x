@@ -563,11 +563,15 @@ PP(char *v;)								/* command, tail, environment   */
 	MPB *ppmd;
 	char unused2[12];
 	
+	UNUSED(unused2);
 	UNUSED(unused);
 #endif
 
 	p = env = 0;
 #if GEMDOS >= 0x17
+#ifdef __GNUC__
+	ppmd = 0;
+#endif
 	fh = 0;
 #endif
 	

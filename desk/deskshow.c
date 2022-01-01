@@ -276,7 +276,9 @@ PP(int mode;)
 		bconws(alert);
 	}
 
+#ifdef SILLY_ERROR_HANDLING
 allfin:
+#endif
 	doui(1, &linecount);
 
 alldone:

@@ -352,7 +352,7 @@ PP(int32_t len;)								/*  length of block to free */
 	register MD *m;
 	register MD *p;
 #if (GEMDOS == 0x17)
-	MD *ppmd;
+	MPB *ppmd;
 #endif
 
 	UNUSED(n);
@@ -634,10 +634,10 @@ PP(int16_t mode;)
 		m = ffit(-1L, &pmd);
 		if (x > m)
 		{
-			return x;
+			return (int32_t)x;
 		} else
 		{
-			return m;
+			return (int32_t)m;
 		}
 	}
 
@@ -650,7 +650,7 @@ PP(int16_t mode;)
 		m = ffit(amount, &pmd);
 		break;
 	default:
-		return NULL;
+		return 0;
 	}
 	if (amount != -1 && m)
 		return m->m_start;
@@ -732,7 +732,7 @@ PP(int32_t addr;)
 found:
 #else
 #if GEMDOS == 0x17
-	register MD *ppmd;
+	register MPB *ppmd;
 	ppmd = &pmd;
 	for (p = *(q = &pmd.mp_mal); p; p = *(q = &p->m_link))
 		if (addr == p->m_start)

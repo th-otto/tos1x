@@ -45,6 +45,32 @@ BOOLEAN desk_pref(NOTHING)
 	LWSET(OB_STATE(SPCCYES), cyes);
 	LWSET(OB_STATE(SPCCNO), !cyes);
 	
+#if (TOSVERSION >= 0x162)
+	for (i = SPLOW; i <= SPHIGH; i++)	/* hopefully they are in order  */
+		LWSET(OB_STATE(i), NORMAL);
+	switch (gl_restype)
+	{
+	case 1:
+		flag = SPLOW;
+		goto disable_high;
+	case 2:
+		flag = SPMEDIUM;
+	disable_high:
+		LWSET(OB_STATE(SPHIGH), DISABLED);
+		break;
+	case 3:
+		flag = SPHIGH;
+		LWSET(OB_STATE(SPLOW), DISABLED);
+		LWSET(OB_STATE(SPMEDIUM), DISABLED);
+		break;
+#ifdef __GNUC__
+	default:
+		__builtin_unreachable();
+		break;
+#endif
+	}
+	LWSET(OB_STATE(flag), SELECTED);
+#else
 	for (i = 0; i < 3; i++)	/* hopefully they are in order  */
 		LWSET(OB_STATE(i + SPLOW), NORMAL);
 	flag = Getrez();
@@ -59,6 +85,7 @@ BOOLEAN desk_pref(NOTHING)
 
 	flag = gl_restype - 2;
 	LWSET(OB_STATE(flag + SPLOW), SELECTED);
+#endif
 
 	if (xform_do((OBJECT *)tree, ROOT) == SPOK)
 	{
@@ -66,8 +93,11 @@ BOOLEAN desk_pref(NOTHING)
 		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);
 		d->g_covwrpref = !inf_what((OBJECT *)tree, YWRITE, NWRITE);
 
+#if (TOSVERSION >= 0x162)
+		flag = inf_gindex(tree, SPLOW, 3) + 1;
+#else
 		flag = inf_gindex(tree, SPLOW, 3) + 2;
-
+#endif
 		if (app_reschange(flag))
 			return TRUE;
 	}

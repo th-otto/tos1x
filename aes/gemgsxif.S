@@ -383,7 +383,7 @@ L15:	move.w	#1,(a1)+
 
 	move.w	#2,(a1)			; intin[10] <- 2
 
-#if AESVERSION >= 0x200
+#if (AESVERSION >= 0x200) | (TOSVERSION == 0x162)
 	lea	restable,a0		; look for the driver handle 
 	lea	restype,a1		; load in res table
 L209:
@@ -415,7 +415,7 @@ L209:
 
 L20:	
 	
-#if AESVERSION >= 0x200
+#if (AESVERSION >= 0x200) | (TOSVERSION == 0x162)
 	move.w	#5,(a2)		; default to 1280 x 960 
 
 	cmp.w	#639,(a1)	; check for x = 640 ?
@@ -1256,7 +1256,7 @@ vdi_list:
 	dc.b	000,001,016		; VSL_WID	vsl_width
 
 
-#if AESVERSION >= 0x200
+#if (AESVERSION >= 0x200) | (TOSVERSION == 0x162)
 /* driver id to use in v_opnwk() call */
 restable:
 	dc.w	0

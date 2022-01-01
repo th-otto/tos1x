@@ -7,8 +7,6 @@ timcvec   equ $0114
 mfpvec    equ $0118
 hblvec    equ $0120
 
-_longframe  equ $59e
-
 vblsave   equ $800
 mfpsave   equ $804
 hblsave   equ $808

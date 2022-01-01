@@ -948,7 +948,7 @@ _gsxsta2:
 	divs	d0,d5			; d5 <- gl_wbox
 	move.w	d5,_gl_wbox
 
-#if 0
+#if TOSVERSION >= 0x162
 	move.w	d5,d0			; d0 <- gl_wbox
 	sub.w	#2,d0
 	cmp.w	_gl_wchar,d0		; gl_wbox must >= gl_wchar + 2

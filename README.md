@@ -250,3 +250,9 @@ User visible differences between 1.62 and 1.06 that have been identified:
 ### VDI
    * None. The VDI is completely identical.
 
+### AES
+   * A check has been added to ensure that window elements are at least gl_wchar + 2 pixel wide
+
+### Desktop
+   * The resolution change bug has been fixed
+

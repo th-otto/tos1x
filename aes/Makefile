@@ -115,6 +115,7 @@ linefhdl.o: linefhdl.S
 #
 ASMHACK_104 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
 ASMHACK_106 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
+ASMHACK_162 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
 ASMHACK = $(ASMHACK_$(TOSVERSION))
 
 gembind.o: gembind.c

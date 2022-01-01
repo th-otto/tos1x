@@ -41,7 +41,7 @@ uint16_t crysbind PROTO((int16_t opcode, intptr_t pglobal, uint16_t *int_in, int
  */
 #define ASM_HACKS 0
 #ifdef __ALCYON__
-#if (TOSVERSION <= 0x106)
+#if (TOSVERSION <= 0x162)
 #undef ASM_HACKS
 #define ASM_HACKS 1
 #endif

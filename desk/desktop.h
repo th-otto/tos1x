@@ -271,6 +271,9 @@ typedef struct {
 	/* 13730 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
 	/* 13732 */ int16_t s_bitblt;
 	/* 13734 */ int16_t g_covwrpref;	/* curr. overwrite pref.*/
+#if TOSVERSION >= 0x162
+	int16_t g_ccachepref;				/* only a guess; not written to DESKTOP.INF */
+#endif
 	/* 13736 */ char *p_cartname;
 	/* 13740 */ int16_t g_icw;
 	/* 13742 */ int16_t g_ich;
@@ -297,6 +300,9 @@ typedef struct {
 	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
 	/* 23560 */ int16_t pref_save;		/* screen pref */
 	/* 23562 */ BOOLEAN covwr_save;		/* write ? */
+#if TOSVERSION >= 0x162
+	int16_t ccache_save;				/* only a guess; not written to DESKTOP.INF */
+#endif
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
 	/* 24108 */ OBJECT *g_pscreen;
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */

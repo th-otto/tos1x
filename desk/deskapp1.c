@@ -483,7 +483,11 @@ BOOLEAN read_inf(NOTHING)
 			d->covwr_save = envr & 0x01;
 			pcurr = scan_2(pcurr, &envr);
 			d->cbit_save = (envr & 0xf0) >> 4;
+#if TOSVERSION >= 0x162
+			d->pref_save = gl_restype;
+#else
 			d->pref_save = gl_restype - 1;
+#endif
 			break;
 		}
 	}

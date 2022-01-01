@@ -650,15 +650,15 @@ int16_t pred_dinf(NOTHING)
 					{
 						if (gl_rschange)	/* if we've been here before    */
 						{
-#if (TOSVERSION == 0x106) & !TP_74
-							save_2(temp, (res & 0xF0) | gl_restype);
-#else
+#if (TOSVERSION == 0x104) | ((TOSVERSION == 0x106) & TP_74)
 							save_2(temp, (res & 0xF0) | (gl_restype - 1));
+#else
+							save_2(temp, (res & 0xF0) | gl_restype);
 #endif
 						} else
 						{
 							res &= 0xF;
-#if (TOSVERSION != 0x106) | TP_74
+#if (TOSVERSION == 0x104) | ((TOSVERSION == 0x106) & TP_74)
 							res += 1;
 #endif
 							gl_rschange = FALSE;
@@ -685,6 +685,7 @@ int16_t pred_dinf(NOTHING)
  */
 /* 306de: 00e1e4e6 */
 /* 104de: 00fd430c */
+/* 106de: 00e14712 */
 BOOLEAN gsx_malloc(NOTHING)
 {
 #ifdef __ALCYON__ /* sigh... */
