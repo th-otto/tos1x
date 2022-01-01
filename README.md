@@ -242,7 +242,11 @@ User visible differences between 1.62 and 1.06 that have been identified:
 
 ### GEMDOS
    * The Pexec function has been reorganized in order to catch I/O errors during program loading.
-   * The bug that was corrected by POOLFIX has been fixed
-   * Checks for the _longframe variable were removed from entry point again
+   * The bug that was corrected by POOLFIX has been fixed.
+   * Checks for the _longframe variable were removed from entry point again.
    * There is already a prototype version of Mxalloc(), but it is not used by the dispatcher
    * Version reported is now 0.17
+
+### VDI
+   * None. The VDI is completely identical.
+

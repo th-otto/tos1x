@@ -504,7 +504,7 @@ _ENDIF
 .VDIFIX = 0         ;1: Include patch, 0: Do not include patch
 
 _IF .VDIFIX
- E454+.d1 vdi.abs       ;E454 - E4E6 (.146)
++vdi.fil       ;E454 - E4E6 (.146)
 _ENDIF
 
 ;*******************************************************************************

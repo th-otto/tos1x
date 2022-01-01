@@ -5,36 +5,36 @@ E22A+.d1
 ~ $4E,41                     ; trap       #1
 ~ $5C,8F                     ; addq.l     #6,a7
 ~ $4A,80                     ; tst.l      d0
-~ $66,0A                     ; bne.s      $00FCE244
-~ $20,78,2A,E0               ; movea.l    ($00002AE0).w,a0
+~ $66,0A                     ; bne.s      _d_opnvwk1
+~ $20,78,2A,E0               ; movea.l    (_CONTRL).w,a0
 ~ $42,68,00,0C               ; clr.w      12(a0)
 ~ $4E,75                     ; rts
-;FCE244:
+;_d_opnvwk1:
 ~ $22,40                     ; movea.l    d0,a1
 ~ $70,01                     ; moveq.l    #1,d0
 ~ $74,00                     ; moveq.l    #0,d2
-~ $45,F8,3B,AA               ; lea.l      ($00003BAA).w,a2
-~ $60,0C                     ; bra.s      $00FCE25C
-;FCE250:
+~ $45,F8,3B,AA               ; lea.l      (_virt_work).w,a2
+~ $60,0C                     ; bra.s      _d_opnvwk3
+;_d_opnvwk2:
 ~ $52,40                     ; addq.w     #1,d0
 ~ $24,0A                     ; move.l     a2,d2
 ~ $22,2A,00,40               ; move.l     64(a2),d1
-~ $67,0E                     ; beq.s      $00FCE268
+~ $67,0E                     ; beq.s      _d_opnvwk4
 ~ $24,41                     ; movea.l    d1,a2
-;FCE25C:
+;_d_opnvwk3:
 ~ $B0,6A,00,28               ; cmp.w      40(a2),d0
-~ $67,EE                     ; beq.s      $00FCE250
+~ $67,EE                     ; beq.s      _d_opnvwk2
 ~ $4A,82                     ; tst.l      d2
-~ $67,02                     ; beq.s      $00(FCE268
+~ $67,02                     ; beq.s      _d_opnvwk4
 ~ $24,42                     ; movea.l    d2,a2
-;FCE268:
+;_d_opnvwk4:
 ~ $23,6A,00,40,00,40         ; move.l     64(a2),64(a1)
 ~ $25,49,00,40               ; move.l     a1,64(a2)
-~ $21,C9,29,0C               ; move.l     a1,($0000290C).w
-~ $20,78,2A,E0               ; movea.l    ($00002AE0).w,a0
+~ $21,C9,29,0C               ; move.l     a1,(_cur_work).w
+~ $20,78,2A,E0               ; movea.l    (_CONTRL).w,a0
 ~ $31,40,00,0C               ; move.w     d0,12(a0)
 ~ $33,40,00,28               ; move.w     d0,40(a1)
-~ $60,00,FD,96               ; bra        $00FCE01A ; init_wk
+~ $60,00,FD,96               ; bra        init_wk
 ~ $FF,FF,FF,FF,FF,FF,FF,FF
 ~ $FF,FF,FF,FF,FF,FF,FF,FF
 ~ $FF,FF,FF,FF,FF,FF,FF,FF
