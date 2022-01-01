@@ -55,6 +55,22 @@ bdoslmul  equ BDOSTBASE+$5150
 #endif
 
 
+#if TOSVERSION == 0x162
+line1010    equ VDITBASE+$08AA
+_SETBLT     equ VDITBASE+$1318
+_GETBLT     equ VDITBASE+$1340
+esc_init    equ VDITBASE+$1236
+resetdev    equ VDITBASE+$12C0
+blink       equ VDITBASE+$0402
+_cursconf   equ VDITBASE+$0434
+_bcon5out   equ VDITBASE+$006C
+_bcon2out   equ VDITBASE+$0078
+
+_osinit   equ BDOSTBASE+$52F4
+bdoslmul  equ BDOSTBASE+$51BE
+#endif
+
+
 /* from AES */
 		xdef gemstart
 

@@ -310,6 +310,10 @@ ringbell  equ $341E-(VDITBASE-BIOSTBASE)
 ringbell  equ $442C+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
 #endif
 
+#if TOSVERSION == 0x162
+ringbell  equ $442C+(BIOSTLEN-BTLEN_US)-(VDITBASE-BIOSTBASE)
+#endif
+
 	dc.w $6000,ringbell
 
 #else

@@ -499,13 +499,6 @@
 #define DESKTLEN    DTLEN_US
 #define DESKDLEN    $000009DA
 #define GLUELEN     $000043CC
-/*
- * only version which is 4 bytes shorter,
- * due to 2 small differences in vdi/monout.c
- * and vdi/text.c
- */
-#undef VDITLEN
-#define VDITLEN     $000098D4
 #endif
 
 #if OS_COUNTRY == CTRY_CZ
@@ -520,11 +513,34 @@
 
 #if TOSVERSION == 0x162
 
+#define BIOSTBASE   $00E00000
+
+/*
+ * these are identical in almost all language versions
+ */
+#define BIOSDLEN    $00000256
+#define VDITLEN     $000098D6
+#define VDIDLEN     $00002846
+#define BDOSTLEN    $00006018
+#define BDOSDLEN    $0000039E
+#define AESTLEN     $00000000 /* included in desk */
+#define AESDLEN     $00000000 /* included in desk */
+
+
+#define BTLEN_US    $00004514
+#define DTLEN_US    $00016464
+
 #if OS_COUNTRY == CTRY_US
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    DTLEN_US
+#define DESKDLEN    $000009DA
 #define GLUELEN     $000041C4
 #endif
 
 #if OS_COUNTRY == CTRY_DE
+#define BIOSTLEN    BTLEN_US+$5A
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6
 #define GLUELEN     $00004226
 #endif
 
