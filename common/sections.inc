@@ -342,7 +342,7 @@
 #if OS_COUNTRY == CTRY_FR
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009FA
+#define DESKDLEN    $000009DC
 #define GLUELEN     $000044D6
 #endif
 
@@ -377,7 +377,7 @@
 #if OS_COUNTRY == CTRY_SF
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009FA /* to be checked */
+#define DESKDLEN    $000009DC /* to be checked */
 #define GLUELEN     $000044D6
 #endif
 
@@ -448,7 +448,7 @@
 #if OS_COUNTRY == CTRY_FR
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009F4
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000044D6
 #endif
 
@@ -462,28 +462,28 @@
 #if OS_COUNTRY == CTRY_ES
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009BE
+#define DESKDLEN    $000009D6
 #define GLUELEN     $0000441A
 #endif
 
 #if OS_COUNTRY == CTRY_IT
 #define BIOSTLEN    BTLEN_US+$68
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009B0
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000043B2
 #endif
 
 #if OS_COUNTRY == CTRY_SG
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009D6 /* to be checked */
-#define GLUELEN     $00004266
+#define DESKDLEN    $000009D6
+#define GLUELEN     $00004226
 #endif
 
 #if OS_COUNTRY == CTRY_SF
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009F6 /* to be checked */
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000044D6
 #endif
 
@@ -491,7 +491,7 @@
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    DTLEN_US-$2A
 #define DESKDLEN    $000009D6
-#define GLUELEN     $00004226
+#define GLUELEN     $000042DA
 #endif
 
 #if OS_COUNTRY == CTRY_NL
@@ -499,6 +499,12 @@
 #define DESKTLEN    DTLEN_US
 #define DESKDLEN    $000009DA
 #define GLUELEN     $000043CC
+/*
+ * only version which is 2 bytes shorter,
+ * due to a difference in vdi/text.c
+ */
+#undef VDITLEN
+#define VDITLEN     $000098D4
 #endif
 
 #if OS_COUNTRY == CTRY_CZ
@@ -547,7 +553,7 @@
 #if OS_COUNTRY == CTRY_FR
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009F4
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000044D6
 #endif
 
@@ -561,28 +567,28 @@
 #if OS_COUNTRY == CTRY_ES
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009BE
+#define DESKDLEN    $000009D6
 #define GLUELEN     $0000441A
 #endif
 
 #if OS_COUNTRY == CTRY_IT
 #define BIOSTLEN    BTLEN_US+$68
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009B0
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000043B2
 #endif
 
 #if OS_COUNTRY == CTRY_SG
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009D6 /* to be checked */
-#define GLUELEN     $00004266
+#define DESKDLEN    $000009D6
+#define GLUELEN     $00004226
 #endif
 
 #if OS_COUNTRY == CTRY_SF
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009F6 /* to be checked */
+#define DESKDLEN    $000009D6
 #define GLUELEN     $000044D6
 #endif
 
@@ -590,7 +596,7 @@
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    DTLEN_US-$2A
 #define DESKDLEN    $000009D6
-#define GLUELEN     $00004226
+#define GLUELEN     $000042DA
 #endif
 
 #if OS_COUNTRY == CTRY_NL
@@ -598,6 +604,12 @@
 #define DESKTLEN    DTLEN_US
 #define DESKDLEN    $000009DA
 #define GLUELEN     $000043CC
+/*
+ * only version which is 2 bytes shorter,
+ * due to a difference in vdi/text.c
+ */
+#undef VDITLEN
+#define VDITLEN     $000098D4
 #endif
 
 #if OS_COUNTRY == CTRY_CZ

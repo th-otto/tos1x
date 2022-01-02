@@ -345,7 +345,8 @@ PP(char *lcmd;)
 /* 306de: 00e20d36 */
 /* 104de: 00fe411e */
 /* 106de: 00e26504 */
-#if ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & BINEXACT
+/* 162de: 00e265f0 */
+#if ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162) & BINEXACT
 	/* swedish/czech versions have the TOSFIX patch applied (from tos14fix.prg) */
 	asm("xdef _sh_name");
 	asm("_sh_name:");
@@ -371,6 +372,15 @@ PP(char *lcmd;)
 	asm("	nop");
 	asm("	nop");
 	asm("	nop");
+#if TOSVERSION >= 0x106
+	/*
+	 * original routine in 1.06 is 6 bytes longer than 1.04,
+	 * because 1.04 uses linef opcodes
+	 */
+	asm("	nop");
+	asm("	nop");
+	asm("	nop");
+#endif
 #else
 char *sh_name(P(char *) ppath)
 PP(char *ppath;)

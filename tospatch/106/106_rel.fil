@@ -60,6 +60,7 @@
 ;.NATION = .ITA     ;TOS country code: Italy            <=== UNCOMMENT AS NEEDED
 ;.NATION = .SWG     ;TOS country code: Swiss (german)   <=== UNCOMMENT AS NEEDED
 ;.NATION = .SWF     ;TOS country code: Swiss (french)   <=== UNCOMMENT AS NEEDED
+;.NATION = .CZE     ;TOS country code: Czech republic   <=== UNCOMMENT AS NEEDED
 
 ;*******************************************************************************
 ;* MRF:
@@ -94,10 +95,13 @@ _CASE .SWG:
   <tos106sg.img	; Original TOS 1.06 Swiss (german) (MD5: 7e32e918e961065940d5fbf02f742ffd)
 
 _CASE .SWE:
-  <tos106se.img	; Original TOS 1.06 Swedish (MD5: a6573347f0493b1cd3c50e98a242bd32)
+  <tos106se.img	; Original TOS 1.06 Swedish (MD5: 770a597ae8c38b21a445cc69b391e24c)
 
 _CASE .HOL:
   <tos106nl.img	; Original TOS 1.06 Dutch (MD5: f15b04e68af2d78c03eeff8fd6a9e2e7)
+
+_CASE .CZE:
+  <tos106cz.img	; Original TOS 1.06 Czech (MD5: afbdbbaadcdb94e6b342d11748285827)
 
 _DEFAULT:
   _ERROR "unsupported country"

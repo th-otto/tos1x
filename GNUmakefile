@@ -44,7 +44,7 @@ check::
 
 maps:
 	for version in 104 106 162; do \
-		for lang in us de fr es it se sf sg; do \
+		for lang in us de fr es it se sf sg nl; do \
 			$(MAKE) clean; \
 			$(MAKE) SYMBOLS=-s TOSVERSION=$${version} COUNTRY=$${lang} || exit 1; \
 			cnm glue/tos.img | sort | uniq > glue/tos$${version}$${lang}.map; \

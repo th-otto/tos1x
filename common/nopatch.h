@@ -112,9 +112,9 @@
 #define TP_10 0
 #define TP_11 0
 #define TP_12 0
-#define TP_13 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
+#define TP_13 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_14 0
-#define TP_15 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
+#define TP_15 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_16 0
 #define TP_17 0
 #define TP_18 0
@@ -164,11 +164,11 @@
 #define TP_66 0
 #define TP_67 0
 #define TP_68 0
-#define TP_69 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
-#define TP_70 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
+#define TP_69 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
+#define TP_70 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_71 0
 #define TP_72 0
-#define TP_73 ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ))
+#define TP_73 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_74 0
 
 #endif
