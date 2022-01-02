@@ -213,7 +213,7 @@ User visible differences between 1.06 and 1.04 that have been identified:
   * A small cookiejar is installed (with 8 entries), containing values for _CPU, _MCH, _SND and _SWI. Strangely, no _VDO cookie is set.
   * the system variables kcl_hook and bell_hook are supported, to allow for custom sounds.
   * The bios/xbios entry points are aware of the longframe variable, just like TOS 2.06
-  * A simple priviledge violation handler is installed, to catch "move SR,dn" in user mode. This is an allowed instruction on 68000, but gives an exception on 68010+. However unlike later TOS versions, the handler only catches move to data-register, changing that into a "move ccr,dn"
+  * A simple priviledge violation handler is installed, to catch "move SR,<ea>" in user mode. This is an allowed instruction on 68000, but gives an exception on 68010+.
   * The floppy routines use the hz_200 variable for timeouts instead of a fixed counter (again, that is also done in 2.06)
   * The default palette includes the additional bit for all white values. Similarly, Setcolor() does not mask that out.
   * The Rsconf() bug that prevents you from activating RTS/CTS control was fixed.
