@@ -110,7 +110,7 @@ It is therefor mainly intended to be used as reference.
 
 # Supported versions
 
-BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04 and 1.06
+BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04, 1.06 & 1.62
 
 
 # Supported language versions
@@ -123,11 +123,14 @@ BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04 and 1.06
  - it - Italy (no ROM yet found to verify)
  - se - Sweden (the ROM has some patches applied)
  - fi - Finland (uses swedish keyboard and resources)
- - no - Norway (uses swedish keyboard and resources)
  - sf - Switzerland (French) (uses french keyboard and resources)
  - sg - Switzerland (German) (uses german keyboard and resources)
  - nl - Netherlands
  - cz - Czech (originally was a patched german version)
+
+The images in the roms/ directory for the swedish & czech version use
+consistent resources & keyboard tables, and may be slightly different
+than others versions found on the net.
 
 # How to compile
 

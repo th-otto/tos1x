@@ -7,7 +7,7 @@ _SWITCH .NATION
 
   _CASE .USA:
     .d1 = -5A
-    .d2 = -32
+    .d2 = -30
     .RSC_TAB = 2D986
     .ROMTOP  = 31B4A
 
@@ -25,7 +25,7 @@ _SWITCH .NATION
 
   _CASE .UK:
     .d1 = -5A
-    .d2 = -32
+    .d2 = -30
     .RSC_TAB = 2D986
     .ROMTOP  = 31B4A
 
@@ -85,8 +85,8 @@ _ENDSWITCH
 ;* The Reloc corrections support TOS lengths up to $40000.
 
 
-!00F5E .. 00F7E       ; bomb image
-!0B5CA+.d1 .. 0B5EA+.d1 ; color table
+!00F3E .. 00F5E       ; bomb image
+!0B5CA+.d1 .. 0B5F2+.d1 ; color table
 !0A69C+.d1 .. 0A6E2+.d1 ; offset table in vdi
 !0B22A+.d1 .. 0B24A+.d1 ; offset table in vdi
 

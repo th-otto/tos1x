@@ -28,7 +28,7 @@ _ENDIF
 .ev_mesag = 217E6+.BASE+.d2
 .ev_mchk = 2183c+.BASE+.d2
 .ap_sendmsg = 273E4+.BASE+.d2
-
+.delay = 28C46+.d2+.BASE
 
 ; ev_dclick call in gem_main
 1427A+.d1 $.TIME+1.B,03
@@ -170,7 +170,7 @@ _ENDIF
  ~ $67,26                      ; beq.s      $00FE001E
  ~ $10,21                      ; move.b     -(a1),d0
  ~ $10,80                      ; move.b     d0,(a0)
- ~ $4e,b9,28C52+.d2+.BASE.l    ; jsr        $00E28C52
+ ~ $4e,b9,.delay.l             ; jsr        delay
  ~ $72,00                      ; moveq.l    #0,d1
  ~ $12,00                      ; move.b     d0,d1
  ~ $43,f9,2D4F2+.d2+.BASE.l    ; lea.l      $00E2D4F2,a1
@@ -185,7 +185,7 @@ _ENDIF
 28B04+.d2 $4E,71,4E,71,4E,71,4E,71
 
 ; overwrite code of delay which is no longer used
-28C52+.d2
+.delay
   ~ $53,89             ; subq.l     #1,a1
   ~ $53,88             ; subq.l     #1,a0
   ~ $12,11             ; move.b     (a1),d1

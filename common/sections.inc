@@ -370,14 +370,14 @@
 #if OS_COUNTRY == CTRY_SG
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009DC /* to be checked */
+#define DESKDLEN    $000009DC
 #define GLUELEN     $00004266
 #endif
 
 #if OS_COUNTRY == CTRY_SF
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009DC /* to be checked */
+#define DESKDLEN    $000009DC
 #define GLUELEN     $000044D6
 #endif
 

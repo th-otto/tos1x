@@ -618,8 +618,8 @@ _ENDIF
 _IF .NEW_SZ
 _SWITCH .NATION
 _CASE .FRG:
- 282DA+.d2 $E1
- 283DA+.d2 $E1
+ 2A248+0C+.d2 $E1
+ 2A248+10C+.d2 $E1
 _ENDSWITCH
 _ENDIF
 
@@ -844,7 +844,7 @@ _ENDIF
 .DEVICE   = 0       ;DMA device to be waited for (0-7)
 
 _IF .HD_WAIT2
- .HD_WAIT:      ~ hdwait2.abs           ;length 332 Bytes
+ .HD_WAIT:      +hdwait2.fil            ;length 332 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
 
  ;.HD_WAIT+E     |$4E,71                ;Only for RAM-TOS and> = 2 hard disks
@@ -894,9 +894,9 @@ _ENDIF
 ;* >>> Does not work with the Arrowfix patch!
 
 
-.GLOBAL      = %1111111111111 ;global settings (rechts: Schalter 1)
-.LOCAL       =  %111111111111 ;local settings  (rechts: Schalter 1)
-.DESKTOP     =  %111111111111 ;desktop settings (rechts: Schalter 1)
+.GLOBAL      = %1111111111111 ;global settings (rightmost: flag G1)
+.LOCAL       =  %111111111111 ;local settings  (rightmost: flag L1)
+.DESKTOP     =  %111111111111 ;desktop settings (rightmost: flag D1)
 .INIT_SCROLL =           .460 ;Initial scroll delay in ms
 .CONT_SCROLL =            .40 ;Continous scroll delay in ms
 .CONT_CLOSE  =          .1000 ;Continous close delay in ms
@@ -914,6 +914,8 @@ _DEFAULT:
   .WINX=0	; No German TOS: Always switch off WINX!
 _ENDSWITCH
 _ENDIF
+
+.WINX=0	; WINX currently does not work for 1.06
 
 _IF .WINX
  +winx.fil          ;include WINX-Patch

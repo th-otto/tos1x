@@ -150,7 +150,7 @@ _ENDIF
 ~ $c0,7c,00,01               ; and.w      #1,d0
 ~ $67,1a                     ; beq.s      downoru1
 ~ $20,57                     ; movea.l    (a7),a0
-~ $0c,68,2e,87,ff,f2         ; cmpi.w     #$2E87,-14(a0) ; called from gemaync?
+~ $0c,68,2e,87,ff,f6         ; cmpi.w     #$2E87,-10(a0) ; called from gemaync?
 ~ $66,10                     ; bne.s      downoru1
 ~ $22,39,.rlr.L              ; move.l     _rlr,d1
 ~ $b2,b9,.gl_mowner.L        ; cmp.l      _gl_mowner,d1

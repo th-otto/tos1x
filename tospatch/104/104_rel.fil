@@ -642,8 +642,8 @@ _ENDIF
 _IF .NEW_SZ
 _SWITCH .NATION
 _CASE .FRG:
- 282DA+.d2 $E1
- 283DA+.d2 $E1
+ 282CE+0C+.d2 $E1
+ 282CE+10C+.d2 $E1
 _ENDSWITCH
 _ENDIF
 
@@ -913,9 +913,9 @@ _ENDIF
 ;* >>> Does not work with the Arrowfix patch!
 
 
-.GLOBAL      = %1111111111111 ;global settings (rechts: Schalter 1)
-.LOCAL       =  %111111111111 ;local settings  (rechts: Schalter 1)
-.DESKTOP     =  %111111111111 ;desktop settings (rechts: Schalter 1)
+.GLOBAL      = %1111111111111 ;global settings (rightmost: flag G1)
+.LOCAL       =  %111111111111 ;local settings  (rightmost: flag L1)
+.DESKTOP     =  %111111111111 ;desktop settings (rightmost: flag D1)
 .INIT_SCROLL =           .460 ;Initial scroll delay in ms
 .CONT_SCROLL =            .40 ;Continous scroll delay in ms
 .CONT_CLOSE  =          .1000 ;Continous close delay in ms
