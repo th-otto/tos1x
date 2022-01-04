@@ -1,6 +1,9 @@
+;win_arrow:
 ~ $4e,56,ff,ec                  ; link      a6,#$FFEC
+;FDCBE4:
 ~ $2e,ae,00,08                  ; move.l    8(a6),(a7)
-~ $f2,ec,4e,71,20,40            ; fb???.l   $4F6EEC2A
+~ $f2,ec,4e,71                  ; bsr       win_find
+~ $20,40                        ; movea.l    d0,a0
 ~ $20,17                        ; move.l    (a7),d0
 ~ $72,00                        ; moveq.l   #0,d1
 ~ $43,e8,00,0c                  ; lea.l     12(a0),a1
@@ -8,6 +11,7 @@
 ~ $66,04                        ; bne.s     $00FDCC00
 ~ $72,01                        ; moveq.l   #1,d1
 ~ $54,89                        ; addq.l    #2,a1
+;FDCC00:
 ~ $34,11                        ; move.w    (a1),d2
 ~ $58,89                        ; addq.l    #4,a1
 ~ $57,40                        ; subq.w    #3,d0
@@ -17,39 +21,41 @@
 ~ $67,04                        ; beq.s     $00FDCC12
 ~ $94,51                        ; sub.w     (a1),d2
 ~ $60,0a                        ; bra.s     $00FDCC1C
+;FDCC12:
 ~ $d4,51                        ; add.w     (a1),d2
 ~ $60,06                        ; bra.s     $00FDCC1C
+;FDCC16:
 ~ $53,42                        ; subq.w    #1,d2
 ~ $60,02                        ; bra.s     $00FDCC1C
+;FDCC1A:
 ~ $52,42                        ; addq.w    #1,d2
+;FDCC1C:
 ~ $3f,02                        ; move.w    d2,-(a7)
 ~ $3f,01                        ; move.w    d1,-(a7)
 ~ $2f,08                        ; move.l    a0,-(a7)
-~ $f6,b0                        ; dc.w      $F6B0 ; illegal
-~ $4e,71                        ; nop
+~ $f6,b0,4e,71                  ; bsr       win_blt
 ~ $50,8f                        ; addq.l    #8,a7
 ~ $61,24                        ; bsr.s     $00FDCC4E
 ~ $66,1e                        ; bne.s     $00FDCC4A
 ~ $42,57                        ; clr.w     (a7)
-~ $f6,6c                        ; dc.w      $F66C ; illegal
-~ $4e,71                        ; nop
+~ $f6,6c,4e,71                  ; bsr       wind_update
 ~ $52,57                        ; addq.w    #1,(a7)
-~ $f1,80                        ; dc.w      $F180 ; illegal
-~ $4e,71                        ; nop
-~ $4e,71                        ; nop
+~ $f1,80,4e,71,4e,71            ; jsr       wx_update
 ~ $2e,8f                        ; move.l    a7,(a7)
 ~ $58,97                        ; addq.l    #4,(a7)
-~ $f1,10                        ; pflushan
-~ $4e,71                        ; nop
+~ $f1,10,4e,71                  ; bsr       ev_mesag
 ~ $2d,6f,00,0a,00,08            ; move.l    10(a7),8(a6)
 ~ $60,9a                        ; bra.s     $00FDCBE4
+;FDCC4A:
 ~ $4e,5e                        ; unlk      a6
 ~ $4e,75                        ; rts
-~ $20,79,00,00,a7,92            ; movea.l   $0000A792,a0
-~ $22,68,00,32                  ; movea.l   50(a0),a1
-~ $4a,68,00,36                  ; tst.w     54(a0)
+;FDCC4E:
+~ $20,79,.rlr.L                 ; movea.l   _rlr,a0
+~ $22,68,.WX_QUEUE_OFFSET.W     ; movea.l   p_qaddr(a0),a1
+~ $4a,68,.WX_QUEUE_OFFSET+4.W   ; tst.w     p_qindex(a0)
 ~ $67,06                        ; beq.s     $00FDCC64
-~ $0c,51,00,18                  ; cmpi.w    #$0018,(a1)
+~ $0c,51,00,18                  ; cmpi.w    #24,(a1)
 ~ $4e,75                        ; rts
+;FDCC64:
 ~ $70,01                        ; moveq.l   #1,d0
 ~ $4e,75                        ; rts

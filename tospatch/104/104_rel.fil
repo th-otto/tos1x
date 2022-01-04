@@ -883,7 +883,7 @@ _ENDIF
 ;* used. For example, you get the message "Disc is write-protected,
 ;* N)ochmal, W)eiter, A)bbruch".
 
-.ETV_CRITIC = 1     ;1: Include patch, 0: Do not include patch
+.ETV_CRITIC = 0     ;1: Include patch, 0: Do not include patch
 
 _IF .ETV_CRITIC
 ;* should work for all languages, but patch contains german messages
@@ -922,17 +922,6 @@ _ENDIF
 .CONT_FULL   =          .2000 ;Continous full delay in ms
 
 .WINX        = 1    ;1: Include patch, 0: Do not include patch
-
-_IF .WINX
-_SWITCH .NATION
-_CASE .FRG:
-_CASE .SWG:
-  ;
-
-_DEFAULT:
-  .WINX=0	; No German TOS: Always switch off WINX!
-_ENDSWITCH
-_ENDIF
 
 _IF .WINX
  +winx.fil          ;include WINX-Patch

@@ -267,7 +267,7 @@
 #if OS_COUNTRY == CTRY_ES
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009c4
+#define DESKDLEN    $000009C4
 #define GLUELEN     $00007730
 #endif
 
@@ -356,14 +356,14 @@
 #if OS_COUNTRY == CTRY_ES
 #define BIOSTLEN    BTLEN_US+$86
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009C4
+#define DESKDLEN    $000009DC
 #define GLUELEN     $0000441A
 #endif
 
 #if OS_COUNTRY == CTRY_IT
 #define BIOSTLEN    BTLEN_US+$68
 #define DESKTLEN    DTLEN_US-$28
-#define DESKDLEN    $000009B6
+#define DESKDLEN    $000009DC
 #define GLUELEN     $000043B2
 #endif
 

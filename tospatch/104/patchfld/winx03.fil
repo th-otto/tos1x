@@ -5,6 +5,7 @@
 ~ $63,ec                        ; bls.s     $00FDB872
 ~ $b0,7c,00,0d                  ; cmp.w     #$000D,d0
 ~ $67,e6                        ; beq.s     $00FDB872
+;FDB88C:
 ~ $20,17                        ; move.l    (a7),d0
 ~ $b0,7c,00,21                  ; cmp.w     #$0021,d0
 ~ $67,00,00,3e                  ; beq.w     $00FDB8D2

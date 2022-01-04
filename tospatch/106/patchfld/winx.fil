@@ -8,6 +8,85 @@
 .WX_DATE    = 1B51 ; 1993/10/17
 
 .WX_QUEUE_SIZE = 500
+.WX_MAXWIN = .40
+
+; static BSS
+.gl_dcindex = 6DF2
+.gl_ticktime = 6E5C
+.TICKS = 6B62
+.appl_msg = 705E
+.button = A890
+.rlr = A7D6
+.gl_mowner = 70A4
+.gl_dclick = 6DA6
+.ad_stdesk = 6E0A
+.thedesk = A7CC
+.D = 74A2
+.gl_newdesk = 6E7C
+.gl_newroot = 707E
+.gl_wtop = 70d0
+.gl_rfull = 7052
+.gl_kowner = 7096
+.gl_fake = 6D2E
+.rul = A7DA
+.gl_bpend = 6E1A
+.gl_pglue = 7046
+.gl_rscreen = 7070
+.gl_awind = 6E8E
+.w_walkflag = 6E6A
+.wind_msg = 7086
+.gl_ws = 712E
+.gl_rzero = 70B8
+.ctl_pd = A810
+.gl_wbox = 709E
+.gl_hbox = 6F5C
+.ad_windspb = 6E14
+.xrat = 6D22
+.gl_mntree = 70A0
+.ml_ocnt = 706E
+.intin = 71A2
+
+
+; functions
+.wind_update = 186D8+.BASE+.d1
+.gsx_sclip = 149D4+.BASE+.d1
+.bb_screen = 14C50+.BASE+.d1
+.gsx_start = 14cbe+.BASE+.d1
+
+.dsptch = 1E456+.BASE+.d2
+.win_find = 1D8C2+.BASE+.d2
+.win_blt = 1DEF0+.BASE+.d2
+.wm_update = 28176+.BASE+.d2
+.ev_mesag = 217E6+.BASE+.d2
+.ev_mchk = 2183c+.BASE+.d2
+.ap_sendmsg = 273E4+.BASE+.d2
+.gr_dragbox = 238DC+.BASE+.d2
+.gr_slidebox = 239B0+.BASE+.d2
+.gr_stilldn = 2377A+.BASE+.d2
+.crysbind = 20A78+.BASE+.d2
+.rc_intersect = 2842A+.BASE+.d2
+.rc_union = 28494+.BASE+.d2
+.inside = 283DE+.BASE+.d2
+.ob_add = 2570A+.BASE+.d2
+.ob_actxywh = 25A7C+.BASE+.d2
+.gsx_moff = 23D22+.BASE+.d2
+.gsx_mon = 23D3E+.BASE+.d2
+.ob_draw = 25544+.BASE+.d2
+.ct_chgown = 1F7F6+.BASE+.d2
+.gsx_mret = 23A64+.BASE+.d2
+.tak_flag  = 1FDBA+.BASE+.d2
+.ev_block = 21730+.BASE+.d2
+.take_ownership = 1F9C2+.BASE+.d2
+.unsync = 1FE30+.BASE+.d2
+.gr_setup = 23838+.BASE+.d2
+.gr_wait = 237F8+.BASE+.d2
+.gsx_ncode = 23A7A+.BASE+.d2
+
+.delay = 28C46+.d2
+
+
+; offsets in desktop structure
+.g_pscreen = .24108
 
 .WINX01 = 17B7C
 .WINX05 = 1CA1A

@@ -3,71 +3,84 @@
 ;    and affects all addresses >= $00fc3e6a/03e6a
 ; .d2 is caused by different time/date formats in desktop,
 ;    and affects all addresses >= $00fd7dd0/17dd0
+; .d3 is caused by different length of desktop data segment,
+;    and affects all addresses >= $00feb116/2b116
 _SWITCH .NATION
 
   _CASE .USA:
     .d1 = -5A
     .d2 = -32
+    .d3 = -2E
     .RSC_TAB = 2BA10
     .ROMTOP  = 2FBD4
 
   _CASE .FRG:
     .d1 = 0
     .d2 = 0
+    .d3 = 0
     .RSC_TAB = 2BA3E
     .ROMTOP  = 2FC64
 
   _CASE .FRA:
     .d1 = 1E
     .d2 = 1E
+    .d3 = 1E
     .RSC_TAB = 2BA5C
     .ROMTOP  = 2FF32
 
   _CASE .UK:
     .d1 = -5A
     .d2 = -32
+    .d3 = -2E
     .RSC_TAB = 2BA10
     .ROMTOP  = 2FBD4
 
   _CASE .SPA:
     .d1 = 2C
     .d2 = 2C
+    .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FE84
 
   _CASE .ITA:
     .d1 = 0E
     .d2 = 0E
+    .d3 = 0E
     .RSC_TAB = 2BA4C
     .ROMTOP  = 2FDFE
 
   _CASE .SWE:
     .d1 = 1E
     .d2 = 1E
+    .d3 = 1E
     .RSC_TAB = 2BA5C
     .ROMTOP  = 2FD36
 
   _CASE .SWF:
     .d1 = 2C
     .d2 = 2C
+    .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FF40
 
   _CASE .SWG:
     .d1 = 2C
     .d2 = 2C
+    .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FC90
 
   _CASE .CZE:
     .d1 = 0
     .d2 = 0
+    .d3 = 0
     .RSC_TAB = 2BA3E
     .ROMTOP  = 2FC64
 
   _CASE .HOL:
-    .d1 = -5A
+    .d1 = -5E
     .d2 = -36
+    .d3 = -32
     .RSC_TAB = 2BA0C
     .ROMTOP  = 2FDD8
 

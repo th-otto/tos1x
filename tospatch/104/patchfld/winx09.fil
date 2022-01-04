@@ -9,10 +9,10 @@
 ~ $c0,7c,00,01                  ; and.w     #$0001,d0
 ~ $67,1a                        ; beq.s     $00FDE860
 ~ $20,57                        ; movea.l   (a7),a0
-~ $0c,68,2e,87,ff,f6            ; cmpi.w    #$2E87,-10(a0)
+~ $0c,68,2e,87,ff,f6            ; cmpi.w    #$2E87,-10(a0) ; called from gemaync?
 ~ $66,10                        ; bne.s     $00FDE860
-~ $22,39,00,00,a7,92            ; move.l    $0000A792,d1
-~ $b2,b9,00,00,70,60            ; cmp.l     $00007060,d1
+~ $22,39,.rlr.L                 ; move.l    $0000A792,d1
+~ $b2,b9,.gl_mowner.L           ; cmp.l     $00007060,d1
 ~ $67,02                        ; beq.s     $00FDE860
 ~ $70,00                        ; moveq.l   #0,d0
 ~ $4e,75                        ; rts

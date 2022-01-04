@@ -11,6 +11,8 @@ _ENDIF
 ;* THO: include files instead of using precompiled *.abs,
 ;* so we can adjust language dependant addresses
 
+.WX_QUEUE_OFFSET = 32 ; offsetof(struct PD, p_qaddr)
+
 .gl_dcindex = 6DAE
 .gl_ticktime = 6E18
 .TICKS = 6B1E
@@ -90,8 +92,8 @@ _ENDIF
 ~ $4e,75                     ; rts
 ;FDCC4E:
 ~ $20,79,.rlr.L              ; movea.l    _rlr,a0
-~ $22,68,00,32               ; movea.l    50(a0),a1
-~ $4a,68,00,36               ; tst.w      54(a0)
+~ $22,68,.WX_QUEUE_OFFSET.W  ; movea.l    p_qaddr(a0),a1
+~ $4a,68,.WX_QUEUE_OFFSET+4.W; tst.w      p_qindex(a0)
 ~ $67,06                     ; beq.s      $00FDCC64
 ~ $0c,51,00,18               ; cmpi.w     #24,(a1)
 ~ $4e,75                     ; rts
@@ -117,7 +119,7 @@ _ENDIF
 ~ $d6,b9,.TICKS.L            ; add.l      TICKS,d3
 ~ $2a,6d,00,02               ; movea.l    2(a5),a5
 ;FDDF2C:
-~ $4a,6d,00,36               ; tst.w      54(a5)
+~ $4a,6d,.WX_QUEUE_OFFSET+4.W ; tst.w      p_qindex(a5)
 ~ $6e,1c                     ; bgt.s      $00FDDF4E
 ~ $42,67                     ; clr.w      -(a7)
 ~ $42,a7                     ; clr.l      -(a7)
