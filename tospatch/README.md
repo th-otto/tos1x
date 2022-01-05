@@ -11,7 +11,8 @@ now new folders for versions 1.06 and 1.62.
 
 # Known BUGS
 
- * The WINX patch will only work with the german version.
+ * For 1.06 & 1.62, the WINX patch will only work with the german version.
+   For 1.04, it should work with all supported languages.
 
  * Some patches that replace single items in the resource files (like icons)
    will only work with the german version for now. Replacing the whole
