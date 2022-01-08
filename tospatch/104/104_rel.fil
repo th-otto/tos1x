@@ -1,4 +1,4 @@
-;* Patch file for the German TOS 1.04 (TosPatch V2.9.1 required)
+;* Patch file for TOS 1.04 (TosPatch V2.9.8 required)
 ;*
 ;* The format of this file can be seen in the lines themselves.
 ;* Lines starting with ";" are comment lines.
@@ -89,19 +89,19 @@ _CASE .ITA:
   <tos104it.img	; Original TOS 1.04 italian (MD5: d318051e0fcfd2e6a6a60f00724fef35)
 
 _CASE .SWF:
-  <tos104sf.img	; Original TOS 1.04 Swiss (french)
+  <tos104sf.img	; Original TOS 1.04 swiss (french) (MD5: e55de341a5dd7c9ddd485edd4de9c542)
 
 _CASE .SWG:
-  <tos104sg.img	; Original TOS 1.04 Swiss (german) (MD5: 91fb61080d27d0376e1a3da409727468)
+  <tos104sg.img	; Original TOS 1.04 swiss (german) (MD5: b8e101718c869a724ea60507f8c27897)
 
 _CASE .SWE:
-  <tos104se.img	; Original TOS 1.04 Swedish (MD5: dbe7d4b5c561427e420a2287b7d79180)
+  <tos104se.img	; Original TOS 1.04 swedish (MD5: dbe7d4b5c561427e420a2287b7d79180)
 
 _CASE .HOL:
-  <tos104nl.img	; Original TOS 1.04 Dutch (MD5: 52248cc70ae48b3050e197e270917130)
+  <tos104nl.img	; Original TOS 1.04 dutch (MD5: 52248cc70ae48b3050e197e270917130)
 
 _CASE .CZE:
-  <tos104cz.img	; Original TOS 1.04 Czech (MD5: 085aa41d32544a6b05b6acf4a53c7342)
+  <tos104cz.img	; Original TOS 1.04 czech (MD5: 085aa41d32544a6b05b6acf4a53c7342)
 
 _DEFAULT:
   _ERROR "unsupported country"
@@ -188,7 +188,10 @@ _ENDIF
 .SHELL_P = 0        ;1: Include patch, 0: Do not include patch
 
 _IF .SHELL_P
- 310 $42,B8,04,F6,41,F8,00,08,70,3D
+ 310
+ ~ $42,B8,04,F6     ; clr.l      ($000004F6).w
+ ~ $41,F8,00,08     ; lea.l      ($00000008).w,a0
+ ~ $70,3D           ; moveq.l    #61,d0
 _ENDIF
 
 ;*******************************************************************************
@@ -738,13 +741,7 @@ _ENDIF
 
 .INFO_TXT = 0       ;1: Include patch, 0: Do not include patch
 
-;* only for german TOS for now
-_SWITCH .NATION
-_CASE .FRG: .TOS_INFO = 2D1D7
-_DEFAULT: .INFO_TXT = 0
-_ENDSWITCH
-
-_IF .INFO_TXT
+_IF .INFO_TXT !A! .TOS_INFO
  .TOS_INFO '-----------------------------'
 _ENDIF
 

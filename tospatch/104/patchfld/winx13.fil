@@ -50,7 +50,7 @@
 ~ $42,58                        ; clr.w     (a0)+
 ~ $d2,7c,57,5b                  ; add.w     #$575B,d1
 ~ $30,81                        ; move.w    d1,(a0)
-~ $3f,7c,00,68,00,04            ; move.w    #104,4(a7)   /* change it into wind_get(0, 'WX' + 3 + opcode)
+~ $3f,7c,00,68,00,04            ; move.w    #104,4(a7)   /* change it into wind_get(0, 'WX' + 3 + opcode) */
 ;xif6:
 ~ $4e,f9,.crysbind.L            ; jmp       $00FDF10C
 ;xif7:

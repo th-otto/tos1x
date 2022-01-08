@@ -13,7 +13,7 @@
 ~ $24,5f                        ; movea.l   (a7)+,a2
 ~ $4e,75                        ; rts
 ;+20:
-;FDA24C:
+;wx_fills:
 ~ $4e,f9,.WINX14+.BASE+1602.L   ; jmp       wx_fill
 ;FDA252:
 ~ $2c,39,.ad_stdesk.L           ; move.l    ad_stdesk,d6

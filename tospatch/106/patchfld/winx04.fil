@@ -1,32 +1,33 @@
+;E1CBD6:
 ~ $70,0a                        ; moveq.l   #10,d0
-~ $60,02                        ; bra.s     $00FDB8D4
+~ $60,02                        ; bra.s     $00E1CBDC
 ~ $70,19                        ; moveq.l   #25,d0
+;E1CBDC:
 ~ $3f,00                        ; move.w    d0,-(a7)
 ~ $3f,2c,34,2c                  ; move.w    13356(a4),-(a7)
-~ $f4,b8                        ; jsr       wind_set
-~ $f2,ec                        ; jsr       win_find
+~ $4e,b9,.wind_set.L            ; jsr       wind_set
+~ $4e,b9,.win_find.L            ; jsr       win_find
 ~ $20,40                        ; movea.l   d0,a0
 ~ $20,1f                        ; move.l    (a7)+,d0
 ~ $90,7c,00,14                  ; sub.w     #$0014,d0
 ~ $90,6c,03,4c                  ; sub.w     844(a4),d0
-~ $6c,02                        ; bge.s     $00FDB8EE
+~ $6c,02                        ; bge.s     $00E1CBFE
 ~ $70,ff                        ; moveq.l   #-1,d0
+;E1CBFE:
 ~ $3f,00                        ; move.w    d0,-(a7)
 ~ $3f,28,00,0a                  ; move.w    10(a0),-(a7)
 ~ $2f,2c,.g_pscreen.W           ; move.l    24108(a4),-(a7)
-~ $4e,71                        ; nop
-~ $4e,71                        ; nop
-~ $f6,a0                        ; jsr       objc_order
+~ $4e,b9,.objc_order.L          ; jsr       objc_order
 ~ $50,8f                        ; addq.l    #8,a7
-~ $f5,84                        ; jsr       win_ontop
+~ $4e,b9,.win_ontop.L           ; jsr       win_ontop
 ~ $2a,40                        ; movea.l   d0,a5
 ~ $2e,8d                        ; move.l    a5,(a7)
-~ $f5,8c                        ; jsr       win_top
+~ $4e,b9,.win_top.L             ; jsr       win_top
 ~ $42,57                        ; clr.w     (a7)
 ~ $3f,2d,00,06                  ; move.w    6(a5),-(a7)
-~ $f4,b0                        ; jsr       desk_verify
+~ $4e,b9,.desk_verify.L         ; jsr       desk_verify
 ~ $54,8f                        ; addq.l    #2,a7
 ~ $39,6d,00,06,35,9a            ; move.w    6(a5),13722(a4)
-~ $60,00,1BA2C+.d2-~.W          ; bra       $00FDBA2C
-~ $61,00,.WINX05+50-~.W         ; bsr       $00FDCA6A
+~ $60,00,.WINX04+1A0-~.W        ; bra       $00E1CD76
+~ $4e,b9,.WINX05+50+.BASE.L     ; jsr       $00E1DFDE
 ~ $4e,71                        ; nop

@@ -505,7 +505,7 @@ _ENDIF
 ;* MRF:
 ;* VDI patch (new v_opnvwk() routine, replaces VDIFIX).
 
-.VDIFIX = 0         ;1: Include patch, 0: Do not include patch
+.VDIFIX = 1         ;1: Include patch, 0: Do not include patch
 
 _IF .VDIFIX
 +vdi.fil       ;E454 - E4E6 (.146)
@@ -538,7 +538,7 @@ _ENDIF
 ;* THO:
 ;* Fix desktop resolution bug (obsoletes STE_FIX.PRG)
 
-.STE_FIX = 1         ;1: Include patch, 0: Do not include patch
+.STE_FIX = 0         ;1: Include patch, 0: Do not include patch
 
 _IF .STE_FIX
 1463E+.d1
@@ -714,13 +714,7 @@ _ENDIF
 
 .INFO_TXT = 0       ;1: Include patch, 0: Do not include patch
 
-;* only for german TOS for now
-_SWITCH .NATION
-_CASE .FRG: .TOS_INFO = 2F14B
-_DEFAULT: .INFO_TXT = 0
-_ENDSWITCH
-
-_IF .INFO_TXT
+_IF .INFO_TXT !A! .TOS_INFO
  .TOS_INFO '-----------------------------'
 _ENDIF
 
@@ -849,11 +843,6 @@ _IF .HD_WAIT2
 
  ;.HD_WAIT+E     |$4E,71                ;Only for RAM-TOS and> = 2 hard disks
 
- .HD_WAIT+1F    |$.TIME.B               ;Insert waiting time
- .HD_WAIT+86    |$.DEVICE*20.W          ;Insert device
- .HD_WAIT+92    |$.DEVICE*20.W
- .HD_WAIT+10A   |$.DEVICE+30.B
-
  548 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
  54E |$4E,71,4E,71                      ;fill with NOP
 _ENDIF
@@ -905,19 +894,6 @@ _ENDIF
 .WINX        = 1    ;1: Include patch, 0: Do not include patch
 
 _IF .WINX
-_SWITCH .NATION
-_CASE .FRG:
-_CASE .SWG:
-  ;
-
-_DEFAULT:
-  .WINX=0	; No German TOS: Always switch off WINX!
-_ENDSWITCH
-_ENDIF
-
-.WINX=0	; WINX currently does not work for 1.06
-
-_IF .WINX
  +winx.fil          ;include WINX-Patch
 _ENDIF
 
@@ -931,11 +907,11 @@ _ENDIF
 ;* Set ARROWFIX.CPX. Values from 0 to 9 for .TIME are permitted.
 ;* Original default is .TIME = 3. 
 ;*
-;* >>> This patch does not work with the Winx patch!
+;* >>> This patch is not needed with the Winx patch!
 
 .ARROWFIX = 1       ;1: Include patch, 0: Do not include patch
 
-.TIME     = .3      ;Initial delay in 0,125s.
+.TIME     = 3       ;Initial delay in 0,125s.
 
 _IF .ARROWFIX !A! (.WINX = 0)
  +arrow.fil         ;include ARROWFIX-Patch

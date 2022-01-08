@@ -13,6 +13,7 @@ _SWITCH .NATION
     .d3 = -2E
     .RSC_TAB = 2BA10
     .ROMTOP  = 2FBD4
+    .TOS_INFO = 2D1A8
 
   _CASE .FRG:
     .d1 = 0
@@ -20,6 +21,7 @@ _SWITCH .NATION
     .d3 = 0
     .RSC_TAB = 2BA3E
     .ROMTOP  = 2FC64
+    .TOS_INFO = 2D1D7
 
   _CASE .FRA:
     .d1 = 1E
@@ -27,6 +29,7 @@ _SWITCH .NATION
     .d3 = 1E
     .RSC_TAB = 2BA5C
     .ROMTOP  = 2FF32
+    .TOS_INFO = 2D32A
 
   _CASE .UK:
     .d1 = -5A
@@ -34,6 +37,7 @@ _SWITCH .NATION
     .d3 = -2E
     .RSC_TAB = 2BA10
     .ROMTOP  = 2FBD4
+    .TOS_INFO = 2D1A8
 
   _CASE .SPA:
     .d1 = 2C
@@ -41,6 +45,7 @@ _SWITCH .NATION
     .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FE84
+    .TOS_INFO = 2D2FE
 
   _CASE .ITA:
     .d1 = 0E
@@ -48,6 +53,7 @@ _SWITCH .NATION
     .d3 = 0E
     .RSC_TAB = 2BA4C
     .ROMTOP  = 2FDFE
+    .TOS_INFO = 2D2B1
 
   _CASE .SWE:
     .d1 = 1E
@@ -55,6 +61,7 @@ _SWITCH .NATION
     .d3 = 1E
     .RSC_TAB = 2BA5C
     .ROMTOP  = 2FD36
+    .TOS_INFO = 2D257
 
   _CASE .SWF:
     .d1 = 2C
@@ -62,6 +69,7 @@ _SWITCH .NATION
     .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FF40
+    .TOS_INFO = 2D339
 
   _CASE .SWG:
     .d1 = 2C
@@ -69,6 +77,7 @@ _SWITCH .NATION
     .d3 = 2C
     .RSC_TAB = 2BA6A
     .ROMTOP  = 2FC90
+    .TOS_INFO = 2D203
 
   _CASE .CZE:
     .d1 = 0
@@ -76,6 +85,7 @@ _SWITCH .NATION
     .d3 = 0
     .RSC_TAB = 2BA3E
     .ROMTOP  = 2FC64
+    .TOS_INFO = 2D1AB
 
   _CASE .HOL:
     .d1 = -5E
@@ -83,6 +93,7 @@ _SWITCH .NATION
     .d3 = -32
     .RSC_TAB = 2BA0C
     .ROMTOP  = 2FDD8
+    .TOS_INFO = 2D22B
 
   _DEFAULT:
     _ERROR "unsupported country"

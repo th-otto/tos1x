@@ -79,6 +79,7 @@
 ~ $66,06                        ; bne.s     $00FDEED6
 ~ $26,4d                        ; movea.l   a5,a3
 ~ $60,00,00,90                  ; bra       $00FDEF64
+;FDEED6:
 ~ $76,01                        ; moveq.l   #1,d3
 ~ $30,2f,00,02                  ; move.w    2(a7),d0
 ~ $90,6d,00,06                  ; sub.w     6(a5),d0
@@ -87,6 +88,7 @@
 ~ $20,ed,00,04                  ; move.l    4(a5),(a0)+
 ~ $30,ed,00,08                  ; move.w    8(a5),(a0)+
 ~ $30,80                        ; move.w    d0,(a0)
+;FDEEF0:
 ~ $32,17                        ; move.w    (a7),d1
 ~ $92,6d,00,04                  ; sub.w     4(a5),d1
 ~ $6f,12                        ; ble.s     $00FDEF0A
@@ -133,6 +135,7 @@
 ;FDEF60:
 ~ $2a,8c                        ; move.l    a4,(a5)
 ~ $28,4d                        ; movea.l   a5,a4
+;FDEF64:
 ~ $2a,53                        ; movea.l   (a3),a5
 ~ $20,0d                        ; move.l    a5,d0
 ~ $66,00,ff,4e                  ; bne       $00FDEEB8
@@ -140,8 +143,8 @@
 ~ $20,0e                        ; move.l    a6,d0
 ~ $66,02                        ; bne.s     $00FDEF78
 ~ $20,03                        ; move.l    d3,d0
-~ $de,fc,00,0c                  ; adda.w    #12,a7
 ;FDEF78:
+~ $de,fc,00,0c                  ; adda.w    #12,a7
 ~ $4c,df,78,18                  ; movem.l   (a7)+,d3-d4/a3-a6
 ~ $4e,75                        ; rts
 ;FDEF82:
@@ -201,6 +204,7 @@
 ~ $4e,ba,fe,54                  ; jsr       $00FDEE58(pc)
 ;FDF006:
 ~ $28,6c,00,32                  ; movea.l   50(a4),a4
+;FDF00A:
 ~ $b6,6c,00,30                  ; cmp.w     48(a4),d3
 ~ $66,d6                        ; bne.s     $00FDEFE6
 ;FDF010:
@@ -255,6 +259,7 @@
 ~ $24,0c                        ; move.l    a4,d2
 ~ $67,3e                        ; beq.s     $00FDF0B8
 ~ $60,36                        ; bra.s     $00FDF0B2
+;FDF07C:
 ~ $32,03                        ; move.w    d3,d1
 ~ $30,04                        ; move.w    d4,d0
 ~ $22,4d                        ; movea.l   a5,a1
@@ -276,6 +281,7 @@
 ;FDF0A2:
 ~ $b9,d6                        ; cmpa.l    (a6),a4
 ~ $66,ea                        ; bne.s     $00FDF090
+;FDF0A6:
 ~ $20,54                        ; movea.l   (a4),a0
 ~ $28,90                        ; move.l    (a0),(a4)
 ~ $20,96                        ; move.l    (a6),(a0)
@@ -298,6 +304,7 @@
 ~ $60,14                        ; bra.s     $00FDF0DC
 ;FDF0C8:
 ~ $20,10                        ; move.l    (a0),d0
+;FDF0CA:
 ~ $67,fe                        ; beq.s     $00FDF0CA
 ~ $20,40                        ; movea.l   d0,a0
 ~ $21,69,00,04,00,04            ; move.l    4(a1),4(a0)

@@ -27,6 +27,6 @@
 ~ $f4,b0                        ; jsr       desk_verify
 ~ $54,8f                        ; addq.l    #2,a7
 ~ $39,6d,00,06,35,9a            ; move.w    6(a5),13722(a4)
-~ $60,00,1BA2C+.d2-~.W          ; bra       $00FDBA2C
+~ $60,00,.WINX04+15E-~.W        ; bra       $00FDBA2C
 ~ $61,00,.WINX05+50-~.W         ; bsr       $00FDCA6A
 ~ $4e,71                        ; nop

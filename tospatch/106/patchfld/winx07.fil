@@ -1,5 +1,6 @@
 ~ $20,4b                        ; movea.l   a3,a0
-~ $30,3c,04,58                  ; move.w    #$0458,d0
+~ $30,3c,04,58                  ; move.w    #(2226/2)-1,d0
+;FDCD28:
 ~ $42,58                        ; clr.w     (a0)+
 ~ $51,c8,ff,fc                  ; dbf       d0,$00FDCD28
 ~ $4e,71                        ; nop
@@ -9,7 +10,7 @@
 ~ $41,eb,08,02                  ; lea.l     2050(a3),a0
 ~ $2e,88                        ; move.l    a0,(a7)
 ~ $2f,0b                        ; move.l    a3,-(a7)
-~ $f7,0c                        ; dc.w      $F70C ; illegal
+~ $4e,b9,.pinit.L               ; jsr       pinit
 ~ $58,8f                        ; addq.l    #4,a7
 ~ $41,eb,00,b8                  ; lea.l     184(a3),a0
 ~ $27,48,00,08                  ; move.l    a0,8(a3)

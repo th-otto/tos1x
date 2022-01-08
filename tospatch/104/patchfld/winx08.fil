@@ -19,8 +19,8 @@
 ~ $2f,20                        ; move.l    -(a0),-(a7)
 ~ $2f,20                        ; move.l    -(a0),-(a7)
 ~ $3f,20                        ; move.w    -(a0),-(a7)
-~ $48,79,.appl_msg.L            ; pea.l     $0000701A
-~ $4e,b9,.WINX14+.BASE+12.L     ; jsr       ap_send0
+~ $48,79,.appl_msg.L            ; pea.l     .appl_msg
+~ $4e,b9,.WINX14+.BASE+12.L     ; jsr       .ap_send0
 ~ $de,fc,00,12                  ; adda.w    #18,a7
 ;ctmsg4:
 ~ $4e,75                        ; rts
@@ -28,7 +28,7 @@
 ~ $f0,84,4e,71,4e,71            ; jsr       dsptch
 ;ctmsg6:
 ~ $10,39,.D+6F.L                ; move.b    $000074CD,d0
-~ $01,39,.button+1.L            ; btst      d0,$0000A84D
+~ $01,39,.button+1.L            ; btst      d0,.button+1.L
 ~ $4e,75                        ; rts
 
 

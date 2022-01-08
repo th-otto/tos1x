@@ -181,7 +181,7 @@ _ENDIF
  ~ $33,c1,.gl_dclick.L         ; move.w     d1,_gl_dclick
  ~ $4e,75                      ; rts
 
-; fix in b_click
+; b_click(): remove test for gl_bpend
 28B04+.d2 $4E,71,4E,71,4E,71,4E,71
 
 ; overwrite code of delay which is no longer used
