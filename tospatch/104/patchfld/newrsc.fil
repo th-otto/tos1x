@@ -1,0 +1,75 @@
+.gl_pglue = 7002
+.gemptr   = a824
+.deskptr  = 7090
+.infptr   = a840
+.gemsize  = 7064
+.desksize = 708e
+.infsize  = 707e
+.nodesk   = a818
+.nogem    = 70e2
+.rsc_errmsg = 2ba20+.d3
+
+~ $4e,56,ff,ee               ; link       a6,#$FFEE
+~ $48,e7,01,04               ; movem.l    d7/a5,-(a7)
+~ $61,00,00,84               ; bsr        $00FE7844
+~ $4e,71                     ; nop
+~ $4e,71                     ; nop
+~ $4e,71                     ; nop
+~ $4e,71                     ; nop
+~ $2e,80                     ; move.l     d0,(a7)
+~ $f3,c0                     ; dc.w       $F3C0 ; dos_alloc
+~ $23,c0.gl_pglue.l          ; move.l     d0,gl_pglue.l
+~ $4a,b9.gl_pglue.l          ; tst.l      gl_pglue.l
+~ $66,1e                     ; bne.s      $00FE77FA
+~ $48,7a.rsc_errmsg-~.W      ; pea.l      rsc_errmsg(pc)
+~ $3f,3c,00,09               ; move.w     #9,-(a7) ; Cconws
+~ $f0,d8                     ; dc.w       $F0D8 ; trap
+~ $5c,8a                     ; addq.l     #6,a2
+;FE77E8:
+~ $3f,3c,00,02               ; move.w     #2,-(a7)
+~ $3f,3c,00,01               ; move.w     #1,-(a7)
+~ $f0,f0                     ; dc.w       $F0F0 ; trp13
+~ $58,8f                     ; addq.l     #4,a7
+~ $4a,40                     ; tst.w      d0
+~ $67,f0                     ; beq.s      $00FE77E8
+~ $60,48                     ; bra.s      $00FE7842
+;FE77FA:
+~ $22,40                     ; movea.l    d0,a1
+~ $61,46                     ; bsr.s      $00FE7844
+~ $41,fa.RSC_TAB-~.W         ; lea.l      tosrsc(pc),a0
+~ $2a,49                     ; movea.l    a1,a5
+;FE7804:
+~ $12,d8                     ; move.b     (a0)+,(a1)+
+~ $53,80                     ; subq.l     #1,d0
+~ $66,fa                     ; bne.s      $00FE7804
+~ $41,ed,00,0a               ; lea.l      10(a5),a0
+~ $23,c8.gemptr.l            ; move.l     a0,gemptr
+~ $d0,d5                     ; adda.w     (a5),a0
+~ $21,c8.deskptr.W           ; move.l     a0,(deskptr).w
+~ $d0,ed,00,02               ; adda.w     2(a5),a0
+~ $23,c8.infptr.l            ; move.l     a0,infptr.l
+~ $70,0a                     ; moveq.l    #10,d0
+~ $d0,55                     ; add.w      (a5),d0
+~ $31,c0.gemsize.W           ; move.w     d0,(gemsize).w
+~ $31,ed,00,02.desksize.W    ; move.w     2(a5),(desksize).w
+~ $31,ed,00,04.infsize.W     ; move.w     4(a5),(infsize).w
+~ $42,79.nodesk.L            ; clr.w      nodesk.L
+~ $42,78.nogem.W             ; clr.w      (nogem).w
+;FE7842:
+~ $f8,01                     ; dc.w       $F801 ; movem.l (a7)+,a5
+;FE7844:
+~ $4b,fa.RSC_TAB-~.W         ; lea.l      tosrsc(pc),a5
+~ $30,7c,00,0a               ; movea.w    #$000A,a0
+~ $d0,d5                     ; adda.w     (a5),a0
+~ $d0,ed,00,02               ; adda.w     2(a5),a0
+~ $d0,ed,00,04               ; adda.w     4(a5),a0
+~ $20,08                     ; move.l     a0,d0
+~ $4e,75                     ; rts
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff,00,ff
+~ $00,ff

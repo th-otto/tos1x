@@ -794,22 +794,10 @@ _IF .RSC
  .INF_END:  _EVEN                ;So that the following code remains executable
  .ROMTOP:                        ;save end of RSC/DESKTOP
 
- _IF .INF_END-.RSC_TAB < 8000
   .RSC_TAB          $.RSC1_END-.RSC_TAB.w
   .RSC_TAB+2        $.RSC2_END-.RSC_TAB.w
   .RSC_TAB+4        $.INF_END-.RSC_TAB.w
   .RSC_TAB+6        $00,00,00,00   ;clear unused entries
-
- _ELSE
-   /'Resourcen sind l„nger als 32kB... (',.INF_END-.RSC_TAB,')'
-   .INSTALL_RSC ..\..\newrsc.abs   ;(.194)
-
-   .RSC_TAB         $.RSC1_END-(.RSC_TAB+A).w 
-   .RSC_TAB+2       $.RSC2_END-.RSC1_END.w
-   .RSC_TAB+4       $.INF_END-.RSC2_END.w
-   .RSC_TAB+6       $00,00,00,00   ;clear unused entries
-
- _ENDIF
 
  -..\..             ;back to normal patch directory
 
