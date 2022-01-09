@@ -1,0 +1,95 @@
+~ $9d,ce                     ; suba.l     a6,a6
+~ $4b,f9,ff,ff,86,04         ; lea.l      $FFFF8604.l,a5
+~ $49,ed,00,02               ; lea.l      2(a5),a4
+~ $78,01                     ; moveq.l    #1,d4
+~ $7a,00                     ; moveq.l    #0,d5
+~ $3c,3c,00,c8               ; move.w     #$00C8,d6
+~ $3e,3c,00,ca               ; move.w     #$00CA,d7
+~ $50,ee,04,3e               ; st         1086(a6)
+~ $30,3c,00,64               ; move.w     #$0064,d0
+~ $38,87                     ; move.w     d7,(a4)
+~ $3a,bc,00,80               ; move.w     #$0080,(a5)
+;FC0572:
+~ $51,c8,ff,fe               ; dbf        d0,$00FC0572
+~ $3a,85                     ; move.w     d5,(a5)
+~ $38,86                     ; move.w     d6,(a4)
+;FC057A:
+~ $51,c8,ff,fe               ; dbf        d0,$00FC057A
+~ $24,6e,04,c6               ; movea.l    1222(a6),a2
+~ $d5,fc,00,00,02,00         ; adda.l     #$00000200,a2
+~ $61,20                     ; bsr.s      $00FC05AA
+~ $51,ee,04,3e               ; sf         1086(a6)
+~ $4a,40                     ; tst.w      d0
+~ $66,16                     ; bne.s      $00FC05A8
+~ $43,d2                     ; lea.l      (a2),a1
+~ $32,3c,00,ff               ; move.w     #$00FF,d1
+~ $70,00                     ; moveq.l    #0,d0
+;FC059A:
+~ $d0,5a                     ; add.w      (a2)+,d0
+~ $51,c9,ff,fc               ; dbf        d1,$00FC059A
+~ $0c,40,12,34               ; cmpi.w     #$1234,d0
+~ $66,02                     ; bne.s      $00FC05A8
+~ $4e,91                     ; jsr        (a1)
+;FC05A8:
+~ $4e,75                     ; rts
+;FC05AA:
+~ $61,64                     ; bsr.s      $00FC0610
+~ $41,fa,00,74               ; lea.l      $00FC0622(pc),a0
+~ $74,05                     ; moveq.l    #5,d2
+~ $76,00                     ; moveq.l    #0,d3
+;FC05B4:
+~ $61,36                     ; bsr.s      $00FC05EC
+~ $66,2c                     ; bne.s      $00FC05E4
+~ $16,18                     ; move.b     (a0)+,d3
+~ $3a,83                     ; move.w     d3,(a5)
+~ $51,ca,ff,f6               ; dbf        d2,$00FC05B4
+~ $22,3c,00,00,17,70         ; move.l     #$00001770,d1
+~ $61,26                     ; bsr.s      $00FC05EE
+~ $47,d2                     ; lea.l      (a2),a3
+~ $34,3c,01,ff               ; move.w     #$01FF,d2
+;FC05CE:
+~ $61,1c                     ; bsr.s      $00FC05EC
+~ $66,12                     ; bne.s      $00FC05E4
+~ $30,15                     ; move.w     (a5),d0
+~ $16,c0                     ; move.b     d0,(a3)+
+~ $51,ca,ff,f6               ; dbf        d2,$00FC05CE
+~ $61,10                     ; bsr.s      $00FC05EC
+~ $30,15                     ; move.w     (a5),d0
+~ $02,40,00,ff               ; andi.w     #$00FF,d0
+~ $4a,40                     ; tst.w      d0
+;FC05E4:
+~ $38,bc,00,80               ; move.w     #$0080,(a4)
+~ $4a,40                     ; tst.w      d0
+~ $4e,75                     ; rts
+;FC05EC:
+~ $72,7f                     ; moveq.l    #127,d1
+;FC05EE:
+~ $38,87                     ; move.w     d7,(a4)
+~ $3a,84                     ; move.w     d4,(a5)
+~ $38,86                     ; move.w     d6,(a4)
+~ $d2,ae,04,ba               ; add.l      1210(a6),d1
+;FC05F8:
+~ $30,15                     ; move.w     (a5),d0
+~ $c0,44                     ; and.w      d4,d0
+~ $66,0c                     ; bne.s      $00FC060A
+~ $b2,ae,04,ba               ; cmp.l      1210(a6),d1
+~ $66,f4                     ; bne.s      $00FC05F8
+~ $61,14                     ; bsr.s      $00FC061A
+~ $70,ff                     ; moveq.l    #-1,d0
+~ $4e,75                     ; rts
+;FC060A:
+~ $61,0e                     ; bsr.s      $00FC061A
+~ $70,00                     ; moveq.l    #0,d0
+~ $4e,75                     ; rts
+;FC0610:
+~ $38,87                     ; move.w     d7,(a4)
+~ $3a,bc,00,02               ; move.w     #$0002,(a5)
+~ $38,86                     ; move.w     d6,(a4)
+~ $3a,85                     ; move.w     d5,(a5)
+;FC061A:
+~ $38,87                     ; move.w     d7,(a4)
+~ $3a,85                     ; move.w     d5,(a5)
+~ $38,86                     ; move.w     d6,(a4)
+~ $4e,75                     ; rts
+;FC0622:
+~ $08,00,00,00,01,01

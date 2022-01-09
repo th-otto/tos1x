@@ -223,7 +223,8 @@ _ENDIF
 .CT_HD = 0          ;1: Include patch, 0: Do not include patch
 
 _IF .CT_HD
- 54C ct_hd.abs      ;54C - 628 (.220)
+54C
++ct_hd.fil          ;54C - 628 (.220)
 _ENDIF
 
 ;*******************************************************************************
