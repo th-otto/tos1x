@@ -9,7 +9,7 @@
 ~ $46,41                     ; not.w      d1
 ~ $b2,7c,00,11               ; cmp.w      #17,d1
 ~ $6e,3e                     ; bgt.s      $00FE0060
-~ $43,f9,2D280+.d2+.BASE.L   ; lea.l      _err_tbl,a1
+~ $43,f9,2D374+.d2+.BASE.L   ; lea.l      _err_tbl,a1
 ~ $16,31,10,00               ; move.b     0(a1,d1.w),d3
 ~ $48,83                     ; ext.w      d3
 ~ $d6,43                     ; add.w      d3,d3

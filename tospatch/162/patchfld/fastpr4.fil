@@ -1,0 +1,74 @@
+34D8
+~ $26,38,04,BA               ; move.l     ($000004BA).w,d3
+~ $24,03                     ; move.l     d3,d2
+~ $96,B8,0E,E0               ; sub.l      (lst_timeout).w,d3
+~ $0C,83,00,00,03,E8         ; cmpi.l     #1000,d3
+~ $65,12                     ; bcs.s      $00FC3324
+;FC3312:
+~ $61,78                     ; bsr.s      $00FC338C
+~ $6B,18                     ; bmi.s      $00FC332E
+~ $26,38,04,BA               ; move.l     ($000004BA).w,d3
+~ $96,82                     ; sub.l      d2,d3
+~ $0C,83,00,00,17,70         ; cmpi.l     #30*200,d3
+~ $6D,EE                     ; blt.s      $00FC3312
+;FC3324:
+~ $21,F8,04,BA,0E,E0         ; move.l     ($000004BA).w,(lst_timeout).w
+~ $70,00                     ; moveq.l    #0,d0
+~ $4E,75                     ; rts
+;FC332E:
+~ $40,C3                     ; move.w     sr,d3
+~ $00,7C,07,00               ; ori.w      #$0700,sr
+~ $41,F8,88,00               ; lea.l      ($FFFF8800).w,a0
+~ $72,07                     ; moveq.l    #7,d1
+~ $70,C0                     ; moveq.l    #-64,d0
+~ $61,1C                     ; bsr.s      $00FC335A
+~ $61,24                     ; bsr.s      $00FC3364
+~ $10,BC,00,0F               ; move.b     #$0F,(a0)
+~ $11,6F,00,07,00,02         ; move.b     7(a7),2(a0)
+~ $61,0C                     ; bsr.s      $00FC3358
+~ $46,C3                     ; move.w     d3,sr
+~ $70,FF                     ; moveq.l    #-1,d0
+~ $4E,75                     ; rts
+;new strobeoff:
+~ $41,F8,88,00               ; lea.l      ($FFFF8800).w,a0
+;FC3356:
+~ $72,0E                     ; moveq.l    #14,d1
+;FC3358:
+~ $70,20                     ; moveq.l    #32,d0
+;FC335A:
+~ $10,81                     ; move.b     d1,(a0)
+~ $80,10                     ; or.b       (a0),d0
+~ $11,40,00,02               ; move.b     d0,2(a0)
+~ $4E,75                     ; rts
+;FC3364:
+~ $72,0E                     ; moveq.l    #14,d1
+;FC3368:
+~ $70,DF                     ; moveq.l    #-33,d0
+~ $10,81                     ; move.b     d1,(a0)
+~ $C0,10                     ; and.b      (a0),d0
+~ $11,40,00,02               ; move.b     d0,2(a0)
+~ $4E,75                     ; rts
+; new bco0in:
+~ $41,F8,88,00               ; lea.l      ($FFFF8800).w,a0
+~ $72,07                     ; moveq.l    #7,d1
+~ $70,7F                     ; moveq.l    #127,d0
+~ $61,EC                     ; bsr.s      $00FC3368
+~ $61,D8                     ; bsr.s      $00FC3356
+;FC337E:
+~ $61,0C                     ; bsr.s      $00FC338C
+~ $6B,FC                     ; bmi.s      $00FC337E
+~ $61,E2                     ; bsr.s      $00FC3366
+~ $10,BC,00,0F               ; move.b     #$0F,(a0)
+~ $10,10                     ; move.b     (a0),d0
+~ $4E,75                     ; rts
+; new bco0stat:
+;FC338C:
+~ $02,38,00,FE,FA,05         ; andi.b     #$FE,($FFFFFA05).w
+!338E              ;Reloc-Correction
+~ $70,00                     ; moveq.l    #0,d0
+~ $01,38,FA,01               ; btst       d0,($FFFFFA01).w
+~ $66,02                     ; bne.s      $00FC339C
+;FC339C:
+~ $70,FF                     ; moveq.l    #-1,d0
+~ $4E,75                     ; rts
+~ $FF,FF,FF,FF,FF,FF,FF,FF

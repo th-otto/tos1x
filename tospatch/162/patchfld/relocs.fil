@@ -2,98 +2,98 @@
 ; .d1 is caused by different alt-key handling in bios,
 ;    and affects all addresses >= $00e04000/04000
 ; .d2 is caused by different time/date formats in desktop,
-;    and affects all addresses >= $00e1879c/1879c
+;    and affects all addresses >= $00e18820/18820
 ; .d3 is caused by different length of desktop data segment,
-;    and affects all addresses >= $00e2d090/2d090
+;    and affects all addresses >= $00e2d180/2d180
 _SWITCH .NATION
 
   _CASE .USA:
     .d1 = -5A
     .d2 = -30
     .d3 = -2C
-    .RSC_TAB = 2D986
-    .ROMTOP  = 31B4A
-    .TOS_INFO = 2F11E
+    .RSC_TAB = 2DA7A
+    .ROMTOP  = 31C3E
+    .TOS_INFO = 2F212
 
   _CASE .FRG:
     .d1 = 0
     .d2 = 0
     .d3 = 0
-    .RSC_TAB = 2D9B2
-    .ROMTOP  = 31BD8
-    .TOS_INFO = 2F14B
+    .RSC_TAB = 2DAA6
+    .ROMTOP  = 31CCC
+    .TOS_INFO = 2F23F
 
   _CASE .FRA:
     .d1 = 1E
     .d2 = 1E
     .d3 = 1E
-    .RSC_TAB = 2D9D0
-    .ROMTOP  = 31EA6
-    .TOS_INFO = 2F29F
+    .RSC_TAB = 2DAC4
+    .ROMTOP  = 31F9A
+    .TOS_INFO = 2F392
 
   _CASE .UK:
     .d1 = -5A
     .d2 = -30
     .d3 = -2C
-    .RSC_TAB = 2D986
-    .ROMTOP  = 31B4A
-    .TOS_INFO = 2F11E
+    .RSC_TAB = 2DA7A
+    .ROMTOP  = 31C3E
+    .TOS_INFO = 2F212
 
   _CASE .SPA:
     .d1 = 2C
     .d2 = 2C
     .d3 = 2C
-    .RSC_TAB = 2D9DE
-    .ROMTOP  = 31DF8
-    .TOS_INFO = 2F272
+    .RSC_TAB = 2DAD2
+    .ROMTOP  = 31EEC
+    .TOS_INFO = 2F366
 
   _CASE .ITA:
     .d1 = 0E
     .d2 = 0E
     .d3 = 0E
-    .RSC_TAB = 2D9C0
-    .ROMTOP  = 31D72
-    .TOS_INFO = 2F225
+    .RSC_TAB = 2DAB4
+    .ROMTOP  = 31E66
+    .TOS_INFO = 2F319
 
   _CASE .SWE:
     .d1 = 1E
     .d2 = 1E
     .d3 = 1E
-    .RSC_TAB = 2D9CA
-    .ROMTOP  = 31CA4
-    .TOS_INFO = 2F1CB
+    .RSC_TAB = 2DAC4
+    .ROMTOP  = 31D9E
+    .TOS_INFO = 2F2BF
 
   _CASE .SWF:
     .d1 = 2C
     .d2 = 2C
     .d3 = 2C
-    .RSC_TAB = 2D9DE
-    .ROMTOP  = 31EB4
-    .TOS_INFO = 2F2AD
+    .RSC_TAB = 2DAD2
+    .ROMTOP  = 31FA8
+    .TOS_INFO = 2F3A1
 
   _CASE .SWG:
     .d1 = 2C
     .d2 = 2C
     .d3 = 2C
-    .RSC_TAB = 2D9DE
-    .ROMTOP  = 31C04
-    .TOS_INFO = 2F177
+    .RSC_TAB = 2DAD2
+    .ROMTOP  = 31D38
+    .TOS_INFO = 2F26B
 
   _CASE .CZE:
     .d1 = 0
     .d2 = 0
     .d3 = 0
-    .RSC_TAB = 2D9AC
-    .ROMTOP  = 31BD2
-    .TOS_INFO = 2F11F
+    .RSC_TAB = 2DAA6
+    .ROMTOP  = 31CCC
+    .TOS_INFO = 2F213
 
   _CASE .HOL:
     .d1 = -5C
     .d2 = -32
     .d3 = -2E
-    .RSC_TAB = 2D984
-    .ROMTOP  = 31D50
-    .TOS_INFO = 2F1A3
+    .RSC_TAB = 2DA78
+    .ROMTOP  = 31E44
+    .TOS_INFO = 2F297
 
   _DEFAULT:
     _ERROR "unsupported country"
@@ -110,18 +110,18 @@ _ENDSWITCH
 
 
 !00F3E .. 00F5E       ; bomb image
-!0B5CA+.d1 .. 0B5F2+.d1 ; color table
-!0A69C+.d1 .. 0A6E2+.d1 ; offset table in vdi
-!0B22A+.d1 .. 0B24A+.d1 ; offset table in vdi
+!0B638+.d1 .. 0B660+.d1 ; color table
+!0A70A+.d1 .. 0A750+.d1 ; offset table in vdi
+!0B298+.d1 .. 0B2B8+.d1 ; offset table in vdi
 
-!2A3C8+.d2 .. 2A3E6+.d2 ; bell sound
-!2A3E6+.d2 .. 2A400+.d2 ; click sound
+!2A4B4+.d2 .. 2A4D2+.d2 ; bell sound
+!2A4D2+.d2 .. 2A4EC+.d2 ; click sound
 
-!2A248+.d2 .. 2A3C8+.d2 ; bios keyboard tables
-!2A7F0+.d2 .. 2A9F2+.d2 ; 6x6 font offsets
-!2A9F2+.d2 .. 2AE72+.d2 ; 6x6 font data
-!2AECC+.d2 .. 2B0CE+.d2 ; 8x8 font offsets
-!2B0CE+.d2 .. 2B8CE+.d2 ; 8x8 font data
-!2B8CE+.d2 .. 2C8CE+.d2 ; 8x16 font data
+!2A334+.d2 .. 2A4B4+.d2 ; bios keyboard tables
+!2A8E4+.d2 .. 2AAE6+.d2 ; 6x6 font offsets
+!2AAE6+.d2 .. 2AF66+.d2 ; 6x6 font data
+!2AFC0+.d2 .. 2B1C2+.d2 ; 8x8 font offsets
+!2B1C2+.d2 .. 2B9C2+.d2 ; 8x8 font data
+!2B9C2+.d2 .. 2C9C2+.d2 ; 8x16 font data
 !.RSC_TAB .. .ROMTOP ; resource data
 

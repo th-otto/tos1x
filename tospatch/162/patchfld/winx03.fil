@@ -1,0 +1,12 @@
+;E1CB76:
+~ $60,12                        ; bra.s     $00E1CB8A
+~ $2e,80                        ; move.l    d0,(a7)
+~ $90,7c,00,14                  ; sub.w     #$0014,d0
+~ $b0,7c,00,08                  ; cmp.w     #$0008,d0
+~ $63,e8                        ; bls.s     $00E1CB6C
+~ $b0,7c,00,0d                  ; cmp.w     #$000D,d0
+~ $67,e2                        ; beq.s     $00E1CB6C
+;E1CB8A:
+~ $20,17                        ; move.l    (a7),d0
+~ $b0,7c,00,21                  ; cmp.w     #$0021,d0
+~ $67,00,.WINX04+4-~.W          ; beq.w     $00E1CBDA

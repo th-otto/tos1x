@@ -111,6 +111,9 @@
 .WINX06 = 1CBE0+.d2
 .WINX07 = 1DC22+.d2
 .WINX08 = 1DC8E+.d2
+.WINX09 = 1E826+.d2
+.WINX10 = 1EABA+.d2
+.WINX11 = 1EC12+.d2
 .WINX12 = 1EE1E+.d2
 .WINX13 = 1F894+.d2
 .WINX14 = 244EC+.d2
@@ -145,6 +148,7 @@
 ; wind_open: new address for wm_open()
 17D2A+.d1 $41,F9,.WINX14+DAC+.BASE.L  ; lea wx_open,a0
 
+;optimize get_xywh() to make room for a small helper function
 .WINX02
 +winx02.fil   ; 1A22C - 1A26A (3E)
 
@@ -222,15 +226,15 @@
 ~ $4E,D0                       ; jmp        (a0)
 
 ; replace downorup()
-1E826+.d2    ; 1E826 - 1E862 (3C)
+.WINX09      ; 1E826 - 1E862 (3C)
  +winx09.fil
 
 ; replace fapd()
-1EABA+.d2    ; 1EABA - 1EB0A (50)
+.WINX10      ; 1EABA - 1EB0A (50)
  +winx10.fil
 
 ;p_nameit: optimized version to insert call to wx_nameit()
-1EC12+.d2    ; 1EC12 - 1EC3E (2C)
+.WINX11      ; 1EC12 - 1EC3E (2C)
   +winx11.fil
 
 ; doq: change access to appl specific message buffer
