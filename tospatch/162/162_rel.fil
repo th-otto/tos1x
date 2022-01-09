@@ -229,7 +229,7 @@ _ENDIF
 ;* MRF:
 ;* Fix stackpointer for autoexec (see ST-Computer 1/90).
 
-.STACK_POINTER = 0  ;1: Include patch, 0: Do not include patch
+.STACK_POINTER = 1  ;1: Include patch, 0: Do not include patch
 
 _IF .STACK_POINTER
 E18
@@ -498,7 +498,7 @@ _ENDIF
 ;* MRF:
 ;* VDI patch (new v_opnvwk() routine, replaces VDIFIX).
 
-.VDIFIX = 0         ;1: Include patch, 0: Do not include patch
+.VDIFIX = 1         ;1: Include patch, 0: Do not include patch
 
 _IF .VDIFIX
 +vdi.fil       ;E4C2 - E554 (.146)
