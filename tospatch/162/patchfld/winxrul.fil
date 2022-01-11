@@ -74,7 +74,7 @@
 ~ $22,d8                        ; move.l    (a0)+,(a1)+
 ~ $43,d7                        ; lea.l     (a7),a1
 ~ $20,6f,00,08                  ; movea.l   8(a7),a0
-~ $61,00,.WINX14+F6-~.W         ; bsr       $00FE45E2
+~ $61,00,.WINXWM+F6-~.W         ; bsr       $00FE45E2
 ~ $4a,40                        ; tst.w     d0
 ~ $66,06                        ; bne.s     $00FDEED6
 ~ $26,4d                        ; movea.l   a5,a3
@@ -139,7 +139,7 @@
 ~ $2a,53                        ; movea.l   (a3),a5
 ~ $20,0d                        ; move.l    a5,d0
 ~ $66,00,ff,4e                  ; bne       $00FDEEB8
-~ $23,cc,.rul.L                 ; move.l    a4,$0000A796
+~ $23,cc,.rul.L                 ; move.l    a4,rul
 ~ $20,0e                        ; move.l    a6,d0
 ~ $66,02                        ; bne.s     $00FDEF78
 ~ $20,03                        ; move.l    d3,d0

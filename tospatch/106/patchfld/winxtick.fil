@@ -1,0 +1,6 @@
+~ $20,79,.D+5A.L                ; movea.l   $0000AEFC,a0 /* winxvars.wx_mem */
+~ $d1,c0                        ; adda.l    d0,a0
+~ $30,28,55,50                  ; move.w    21840(a0),d0
+~ $81,f9,.gl_ticktime.L         ; divs.w    gl_ticktime.l,d0
+~ $48,c0                        ; ext.l     d0
+~ $4e,75                        ; rts

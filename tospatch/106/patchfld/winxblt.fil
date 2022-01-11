@@ -21,7 +21,7 @@
 ~ $41,e8,00,18                  ; lea.l     24(a0),a0
 ~ $30,2d,00,06                  ; move.w    6(a5),d0
 ~ $3e,ad,00,0a                  ; move.w    10(a5),(a7)
-~ $4e,b9,.WINX14+.BASE+886.L    ; jsr       $00FE4D72
+~ $4e,b9,.WINXWM+.BASE+886.L    ; jsr       $00FE4D72
 ~ $60,00,01,0a                  ; bra       $00E1E0E6 ; return
 ~ $3f,2c,34,2c                  ; move.w    13356(a4),-(a7)
 ~ $61,00,.win_find-~.W          ; bsr       win_find
@@ -58,7 +58,7 @@
 ~ $20,c0                        ; move.l    d0,(a0)+
 ~ $41,f9,.D+50.L                ; lea.l     $000074AE,a0  /* winxvars */
 ~ $70,01                        ; moveq.l   #1,d0
-~ $4e,b9,.WINX14+.BASE+258.L    ; jsr       wx_callfunc
+~ $4e,b9,.WINXWM+.BASE+258.L    ; jsr       wx_callfunc
 ~ $67,06                        ; beq.s     wx_alloc1
 ~ $33,c0,.D+58.L                ; move.w    d0,$000074B6 /* winxvars.global_flags */
 ;wx_alloc1:
@@ -82,7 +82,7 @@
 ~ $.gl_newdesk.L                ; dc.l gl_newdesk
 ~ $.gl_newroot.L                ; dc.l gl_newroot
 ~ $.ad_stdesk.L                 ; dc.l ad_stdesk
-~ $.WINX14+.BASE+BEE.L          ; dc.l .WINX14+BEE
+~ $.WINXWM+.BASE+BEE.L          ; dc.l .WINXWM+BEE
 
 ;getcookie:
 ~ $2f,08                        ; move.l    a0,-(a7)

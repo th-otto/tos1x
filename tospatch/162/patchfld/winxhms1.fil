@@ -9,4 +9,4 @@
 ;E1CB8A:
 ~ $20,17                        ; move.l    (a7),d0
 ~ $b0,7c,00,21                  ; cmp.w     #$0021,d0
-~ $67,00,.WINX04+4-~.W          ; beq.w     $00E1CBDA
+~ $67,00,.WINXHMSG+4-~.W        ; beq.w     $00E1CBDA

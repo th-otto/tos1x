@@ -13,7 +13,8 @@
 ~ $24,5f                        ; movea.l   (a7)+,a2
 ~ $4e,75                        ; rts
 ;+20:
-~ $4e,f9,.WINX14+.BASE+1602.L   ; jmp       wx_fill
+;wx_fills:
+~ $4e,f9,.WINXWM+.BASE+1602.L   ; jmp       wx_fill
 ;+26:
 ~ $2c,39,.ad_stdesk.L           ; move.l    ad_stdesk,d6
 ~ $70,05                        ; moveq.l   #5,d0

@@ -23,7 +23,7 @@
 ~ $3f,3c,00,02                  ; move.w    #2,-(a7)
 ~ $b4,6f,00,02                  ; cmp.w     2(a7),d2
 ~ $66,08                        ; bne.s     ap_send1
-~ $0c,6a,.WX_QUEUE_SIZE-10.W,.WX_QUEUE_OFFSET+4.W ; cmpi.w    #$04F0,p_qndex(a2)
+~ $0c,6a,.WX_QUEUE_SIZE-10.W,.WX_QUEUE_OFFSET+4.W ; cmpi.w    #$04F0,p_qindex(a2)
 ~ $6e,06                        ; bgt.s     ap_send2
 ;ap_send1:
 ~ $61,00,.ap_rdwr-~.W,4e,71     ; bsr       ap_rdwr
@@ -132,7 +132,7 @@
 
 ; a5: gr1
 ; a4: gr2
-;+106:
+;l_106:
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
 ~ $61,90                        ; bsr.s     wx_grect0
@@ -161,14 +161,14 @@
 ;wx_union:
 ~ $2f,09                        ; move.l    a1,-(a7)
 ~ $2f,08                        ; move.l    a0,-(a7)
-~ $61,00,.rc_union-~.W,4e,71    ; bsr rc_union
+~ $61,00,.rc_union-~.W,4e,71    ; bsr       rc_union
 ~ $50,8f                        ; addq.l    #8,a7
 ~ $4e,75                        ; rts
 
 ;wx_inside:
 ~ $2f,08                        ; move.l    a0,-(a7)
 ~ $2f,00                        ; move.l    d0,-(a7)
-~ $61,00,.inside-~.W,4e,71      ; bsr inside
+~ $61,00,.inside-~.W,4e,71      ; bsr       inside
 ~ $50,8f                        ; addq.l    #8,a7
 ~ $4e,75                        ; rts
 
@@ -200,7 +200,7 @@
 ~ $21,49,00,36                  ; move.l    a1,54(a0)
 ~ $4e,75                        ; rts
 
-;+1A0
+;l_1A0:
 ~ $3f,01                        ; move.w    d1,-(a7)
 ~ $61,00,.wx_unlink-~.W         ; bsr.w     wx_unlink
 ~ $22,48                        ; movea.l   a0,a1
@@ -211,23 +211,23 @@
 ;FE46A0:
 ~ $60,d4                        ; bra.s     $00FE4676
 
-;+1B6:
+;l_1B6:
 ~ $2f,00                        ; move.l    d0,-(a7)
 ~ $2f,08                        ; move.l    a0,-(a7)
-~ $61,00,.ob_add-~.W            ; bsr ob_add
+~ $61,00,.ob_add-~.W            ; bsr       ob_add
 ~ $50,8f                        ; addq.l    #8,a7
 ~ $4e,75                        ; rts
 
-;+1C2
+;l_1C2:
 ~ $2f,09                        ; move.l    a1,-(a7)
 ~ $3f,00                        ; move.w    d0,-(a7)
 ~ $2f,08                        ; move.l    a0,-(a7)
-~ $61,0,.ob_actxywh-~.W         ; bsr ob_actxywh
+~ $61,00,.ob_actxywh-~.W        ; bsr       ob_actxywh
 ~ $de,fc,00,0a                  ; adda.w    #10,a7
 ~ $4e,75                        ; rts
 
 ;wx_sclip:
-;+1D2
+;l_1D2:
 ~ $2f,08                        ; move.l    a0,-(a7)
 ~ $4e,b9,.gsx_sclip.L           ; jsr gsx_sclip
 ~ $58,8f                        ; addq.l    #4,a7
@@ -244,7 +244,7 @@
 ~ $48,80                        ; ext.w     d0
 ~ $4e,75                        ; rts
 
-;+1F4
+;l_1F4:
 ~ $c0,7c,00,04                  ; and.w     #$0004,d0
 ~ $67,08                        ; beq.s     $00FE46EE
 ~ $72,08                        ; moveq.l   #8,d1
@@ -275,7 +275,7 @@
 
 ;l_22C:
 ~ $2e,00                        ; move.l    d0,d7
-;+22E:
+;l_22E:
 ~ $43,fa,ff,fc                  ; lea.l     l_22C(pc),a1
 ~ $20,79,.rlr.L                 ; movea.l   rlr,a0
 
@@ -297,7 +297,7 @@
 ~ $4e,75                        ; rts
 
 ;wx_callfunc:
-~ $22,39,.D+62.L                ; move.l    $000074C0,d1 /* winxvars.winxfunc */
+~ $22,39,.D+62.L                ; move.l    winxvars+wv_winxfunc,d1
 ~ $67,12                        ; beq.s     wx_callfunc1
 ~ $2f,08                        ; move.l    a0,-(a7)
 ~ $3f,00                        ; move.w    d0,-(a7)
@@ -312,7 +312,7 @@
 ~ $72,00                        ; moveq.l   #0,d1
 ~ $4e,75                        ; rts
 
-;+276
+;l_276:
 ~ $4a,40                        ; tst.w     d0
 ~ $66,04                        ; bne.s     $00FE476A
 ~ $d2,fc,00,2e                  ; adda.w    #$002E,a1
@@ -331,21 +331,21 @@
 ~ $51,c8,ff,e4                  ; dbf       d0,$00FE476C
 ~ $4e,75                        ; rts
 
-;+2A0:
+;l_2A0:
 ~ $61,00,fd,ba                  ; bsr       wx_getwin
 ~ $30,10                        ; move.w    (a0),d0
-~ $20,79,.gl_awind.L            ; movea.l   gl_awind,a0
+~ $20,79,.gl_awind.L            ; movea.l   gl_awind.l,a0
 ~ $08,00,00,04                  ; btst      #4,d0
 ~ $67,04                        ; beq.s     $00FE47A2
 ~ $d0,fc,02,60                  ; adda.w    #$0260,a0
 ;FE47A2
 ~ $4e,75                        ; rts
 
-;+2B8:
+;l_2B8:
 ~ $4e,56,ff,ee                  ; link      a6,#-18
 ~ $48,e7,5f,1c                  ; movem.l   d1/d3-d7/a3-a5,-(a7)
 ~ $3c,01                        ; move.w    d1,d6
-~ $2d,79,.D+66.L,ff,ee          ; move.l    $000074C4,-18(a6)
+~ $2d,79,.D+66.L,ff,ee          ; move.l    winxvars+wv_wbox,-18(a6)
 ~ $47,ee,ff,f2                  ; lea.l     -14(a6),a3
 ~ $30,07                        ; move.w    d7,d0
 ~ $61,00,fd,8a                  ; bsr       wx_getwin
@@ -376,14 +376,14 @@
 ~ $20,d9                        ; move.l    (a1)+,(a0)+
 ~ $20,91                        ; move.l    (a1),(a0)
 ~ $20,6d,00,02                  ; movea.l   2(a5),a0
-~ $61,00,11,e0                  ; bsr       +14FE
+~ $61,00,11,e0                  ; bsr       l_14FE
 ~ $3a,00                        ; move.w    d0,d5
 ~ $48,40                        ; swap      d0
 ~ $38,00                        ; move.w    d0,d4
 ~ $43,ed,00,42                  ; lea.l     66(a5),a1
 ~ $30,2e,ff,fa                  ; move.w    -6(a6),d0
 ~ $20,4c                        ; movea.l   a4,a0
-~ $61,00,ff,44                  ; bsr       +276
+~ $61,00,ff,44                  ; bsr       l_276
 ~ $42,93                        ; clr.l     (a3)
 ~ $3e,2e,ff,f0                  ; move.w    -16(a6),d7
 ~ $53,47                        ; subq.w    #1,d7
@@ -495,7 +495,7 @@
 ~ $3f,13                        ; move.w    (a3),-(a7)
 ~ $2f,2e,ff,fc                  ; move.l    -4(a6),-(a7)
 ~ $45,fa,00,6c                  ; lea.l     $00E21694(pc),a2
-~ $61,00,00,ae                  ; bsr       +50E
+~ $61,00,00,ae                  ; bsr       l_50E
 ~ $5c,8f                        ; addq.l    #6,a7
 ;E21630:
 ~ $4a,44                        ; tst.w     d4
@@ -505,7 +505,7 @@
 ~ $42,67                        ; clr.w     -(a7)
 ~ $2f,2e,ff,fc                  ; move.l    -4(a6),-(a7)
 ~ $45,fa,00,38                  ; lea.l     $00E2167C(pc),a2
-~ $61,00,00,92                  ; bsr       +50E
+~ $61,00,00,92                  ; bsr       l_50E
 ~ $5c,8f                        ; addq.l    #6,a7
 ;E2164C:
 ~ $4a,07                        ; tst.b     d7
@@ -561,18 +561,18 @@
 ~ $ea,48                        ; lsr.w     #5,d0
 ~ $48,40                        ; swap      d0
 ~ $30,01                        ; move.w    d1,d0
-~ $c3,fc,00,18                  ; muls.w    #$0018,d1
+~ $c3,fc,00,18                  ; muls.w    #24,d1
 ~ $74,ff                        ; moveq.l   #-1,d2
 ~ $29,82,18,02                  ; move.l    d2,2(a4,d1.l)
 ~ $48,74,18,10                  ; pea.l     16(a4,d1.l)
 ~ $20,4c                        ; movea.l   a4,a0
-~ $61,00,fc,b8                  ; bsr       +1B6
+~ $61,00,fc,b8                  ; bsr       l_1B6
 ~ $20,5f                        ; movea.l   (a7)+,a0
 ~ $42,90                        ; clr.l     (a0)
-~ $21,79,.D+66.L,00,04          ; move.l    $000074C4,4(a0)
+~ $21,79,.D+66.L,00,04          ; move.l    winxvars+wv_wbox,4(a0)
 ~ $4e,75                        ; rts
 
-;+50E:
+;l_50E:
 ~ $48,e7,5e,1e                  ; movem.l   d1/d3-d6/a3-a6,-(a7)
 ~ $2c,4a                        ; movea.l   a2,a6
 ~ $3a,01                        ; move.w    d1,d5
@@ -660,7 +660,7 @@
 ~ $b2,7c,ff,ff                  ; cmp.w     #-1,d1
 ~ $67,08                        ; beq.s     $00E217D0
 ~ $30,05                        ; move.w    d5,d0
-~ $61,3e                        ; bsr.s     +63E
+~ $61,3e                        ; bsr.s     l_63E
 ~ $b0,44                        ; cmp.w     d4,d0
 ~ $6c,02                        ; bge.s     $00E217D2
 ;E217D0:
@@ -670,7 +670,7 @@
 ~ $32,05                        ; move.w    d5,d1
 ~ $92,40                        ; sub.w     d0,d1
 ~ $30,35,30,3a                  ; move.w    58(a5,d3.w),d0
-~ $61,2a                        ; bsr.s     +63E
+~ $61,2a                        ; bsr.s     l_63E
 ~ $37,80,30,70                  ; move.w    d0,112(a3,d3.w)
 ~ $72,19                        ; moveq.l   #25,d1
 ~ $30,33,30,5c                  ; move.w    92(a3,d3.w),d0
@@ -688,7 +688,7 @@
 ~ $4c,df,78,7a                  ; movem.l   (a7)+,d1/d3-d6/a3-a6
 ~ $4e,75                        ; rts
 
-;+63E:
+;l_63E:
 ~ $4a,42                        ; tst.w     d2
 ~ $67,12                        ; beq.s     $00E21820
 ~ $d0,40                        ; add.w     d0,d0
@@ -711,14 +711,14 @@
 ~ $54,68,00,04                  ; addq.w    #2,4(a0)
 ~ $54,68,00,06                  ; addq.w    #2,6(a0)
 ~ $70,00                        ; moveq.l   #0,d0
-;+666:
+;l_666:
 ~ $3f,00                        ; move.w    d0,-(a7)
 ~ $2f,08                        ; move.l    a0,-(a7)
-~ $61,00,00,86                  ; bsr       +6F2
+~ $61,00,00,86                  ; bsr       l_6F2
 ~ $20,5f                        ; movea.l   (a7)+,a0
 ~ $32,1f                        ; move.w    (a7)+,d1
 ~ $70,00                        ; moveq.l   #0,d0
-;+674:
+;l_674:
 ~ $34,01                        ; move.w    d1,d2
 ~ $48,e7,47,0c                  ; movem.l   d1/d5-d7/a4-a5,-(a7)
 ~ $3e,00                        ; move.w    d0,d7
@@ -749,11 +749,11 @@
 ~ $67,10                        ; beq.s     $00E2189E
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,06                        ; move.w    d6,d0
-~ $61,42                        ; bsr.s     +70A
+~ $61,42                        ; bsr.s     l_70A
 ~ $72,ff                        ; moveq.l   #-1,d1
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,06                        ; move.w    d6,d0
-~ $61,00,00,d2                  ; bsr       +7A2
+~ $61,00,00,d2                  ; bsr       l_7A2
 ;E2189E:
 ~ $be,46                        ; cmp.w     d6,d7
 ~ $67,10                        ; beq.s     $00E218B2
@@ -768,7 +768,7 @@
 ~ $4c,df,30,e2                  ; movem.l   (a7)+,d1/d5-d7/a4-a5
 ~ $4e,75                        ; rts
 
-;+6F2:
+;l_6F2:
 ~ $22,6f,00,04                  ; movea.l   4(a7),a1
 ~ $32,39,.gl_newroot.L          ; move.w    gl_newroot,d1
 ~ $20,79,.gl_newdesk.L          ; movea.l   gl_newdesk,a0
@@ -776,13 +776,14 @@
 ~ $42,67                        ; clr.w     -(a7)
 ~ $60,0c                        ; bra.s     $00E218E0
 
-;+708:
+;l_708:
 ~ $91,c8                        ; suba.l    a0,a0
-;+70A:
+;l_70A:
 ~ $72,00                        ; moveq.l   #0,d1
 .do_walks:
 ~ $22,48                        ; movea.l   a0,a1
 ~ $91,c8                        ; suba.l    a0,a0
+;l_710:
 ~ $3f,3c,ff,ff                  ; move.w    #-1,-(a7)
 ;E218E0:
 ~ $74,ff                        ; moveq.l   #-1,d2
@@ -807,7 +808,7 @@
 ~ $4b,ee,ff,f0                  ; lea.l     -16(a6),a5
 ;E2190C:
 ~ $72,fd                        ; moveq.l   #-3,d1
-~ $61,00,f9,c2                  ; bsr       +106
+~ $61,00,f9,c2                  ; bsr       l_106
 ~ $67,52                        ; beq.s     $00E21966
 ~ $49,ee,ff,f8                  ; lea.l     -8(a6),a4
 ~ $60,48                        ; bra.s     $00E21962
@@ -823,7 +824,7 @@
 ~ $67,34                        ; beq.s     $00E21962
 ~ $22,05                        ; move.l    d5,d1
 ~ $66,06                        ; bne.s     $00E21938
-~ $61,00,fb,50                  ; bsr       +2B8
+~ $61,00,fb,50                  ; bsr       l_2B8
 ~ $2a,08                        ; move.l    a0,d5
 ;E21938:
 ~ $4a,44                        ; tst.w     d4
@@ -852,7 +853,7 @@
 ~ $4e,5e                        ; unlk      a6
 ~ $4e,75                        ; rts
 
-;+7A2:
+;l_7A2:
 ~ $4e,56,ff,e8                  ; link      a6,#-24
 ~ $48,e7,01,1c                  ; movem.l   d7/a3-a5,-(a7)
 ~ $3e,00                        ; move.w    d0,d7
@@ -860,7 +861,7 @@
 ~ $4b,ee,ff,f8                  ; lea.l     -8(a6),a5
 ~ $28,48                        ; movea.l   a0,a4
 ~ $72,01                        ; moveq.l   #1,d1
-~ $61,00,f9,4e                  ; bsr       +106
+~ $61,00,f9,4e                  ; bsr       l_106
 ~ $67,24                        ; beq.s     $00E219AC
 ~ $60,1e                        ; bra.s     $00E219A8
 ;E2198A:
@@ -875,7 +876,7 @@
 ~ $67,08                        ; beq.s     $00E219A8
 ~ $41,ee,ff,f0                  ; lea.l     -16(a6),a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,0c                        ; bsr.s     +7E8
+~ $61,0c                        ; bsr.s     l_7E8
 ;E219A8:
 ~ $20,0b                        ; move.l    a3,d0
 ~ $66,de                        ; bne.s     $00E2198A
@@ -897,13 +898,13 @@
 ~ $de,fc,00,12                  ; adda.w    #$0012,a7
 ~ $4e,75                        ; rts
 
-;+810:
-~ $60,00,.WINX12+3A-~.W         ; bra       $00FDEE58
+;l_810:
+~ $60,00,.WINXRUL+3A-~.W         ; bra       $00FDEE58
 
-;+814:
-~ $60,00,.WINX12+20-~.W         ; bra       $00FDEE3E
+;l_814:
+~ $60,00,.WINXRUL+20-~.W         ; bra       $00FDEE3E
 
-;+818:
+;l_818:
 ~ $48,e7,47,1c                  ; movem.l   d1/d5-d7/a3-a5,-(a7)
 ~ $3e,00                        ; move.w    d0,d7
 ~ $26,48                        ; movea.l   a0,a3
@@ -946,13 +947,13 @@
 ~ $22,4c                        ; movea.l   a4,a1
 ~ $95,ca                        ; suba.l    a2,a2
 ~ $42,57                        ; clr.w     (a7)
-~ $61,00,00,0a                  ; bsr.w     +886
+~ $61,00,00,0a                  ; bsr.w     l_886
 ~ $70,00                        ; moveq.l   #0,d0
 ;E21A4C:
 ~ $4c,df,38,e2                  ; movem.l   (a7)+,d1/d5-d7/a3-a5
 ~ $4e,75                        ; rts
 
-;+886:
+;l_886:
 ~ $4e,56,ff,e4                  ; link      a6,#-28
 ~ $48,e7,47,1c                  ; movem.l   d1/d5-d7/a3-a5,-(a7)
 ~ $3e,00                        ; move.w    d0,d7
@@ -971,7 +972,7 @@
 ~ $61,00,f7,a8                  ; bsr       wx_getwin
 ~ $22,68,00,9e                  ; movea.l   158(a0),a1
 ~ $41,ee,ff,f0                  ; lea.l     -16(a6),a0
-~ $61,00,.WINX12+2A0-~.W        ; bsr       $00FDF0BE
+~ $61,00,.WINXRUL+2A0-~.W        ; bsr       $00FDF0BE
 ~ $4b,ee,ff,f4                  ; lea.l     -12(a6),a5
 ~ $42,95                        ; clr.l     (a5)
 ~ $60,2e                        ; bra.s     $00E21AC4
@@ -989,7 +990,7 @@
 ~ $dd,52                        ; add.w     d6,(a2)
 ~ $22,4d                        ; movea.l   a5,a1
 ~ $41,ee,ff,f0                  ; lea.l     -16(a6),a0
-~ $61,00,.WINX12+82-~.W         ; bsr       $00FDEEA0
+~ $61,00,.WINXRUL+82-~.W         ; bsr       $00FDEEA0
 ~ $2a,40                        ; movea.l   d0,a5
 ;E21AC2:
 ~ $28,54                        ; movea.l   (a4),a4
@@ -998,11 +999,11 @@
 ~ $66,ce                        ; bne.s     $00E21A96
 ~ $4b,ee,ff,f4                  ; lea.l     -12(a6),a5
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,ff,0c                  ; bsr       +810
+~ $61,00,ff,0c                  ; bsr       l_810
 ~ $32,05                        ; move.w    d5,d1
 ~ $30,06                        ; move.w    d6,d0
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,.WINX12+24C-~.W        ; bsr       $00FDF06A
+~ $61,00,.WINXRUL+24C-~.W        ; bsr       $00FDF06A
 ~ $20,4b                        ; movea.l   a3,a0
 ~ $61,00,f8,be                  ; bsr       wx_sclip
 ~ $28,55                        ; movea.l   (a5),a4
@@ -1024,10 +1025,10 @@
 ~ $20,0c                        ; move.l    a4,d0
 ~ $66,d8                        ; bne.s     $00E21AE6
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,fe,ce                  ; bsr       +814
+~ $61,00,fe,ce                  ; bsr       l_814
 ~ $4b,ee,ff,f0                  ; lea.l     -16(a6),a5
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,fe,c0                  ; bsr       +810
+~ $61,00,fe,c0                  ; bsr       l_810
 ~ $42,57                        ; clr.w     (a7)
 ~ $4a,ae,ff,ec                  ; tst.l     -20(a6)
 ~ $66,0c                        ; bne.s     $00E21B32
@@ -1035,7 +1036,7 @@
 ~ $22,15                        ; move.l    (a5),d1
 ~ $91,c8                        ; suba.l    a0,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fe,3e                  ; bsr       +7A2
+~ $61,00,fe,3e                  ; bsr       l_7A2
 ;E21B32:
 ~ $24,15                        ; move.l    (a5),d2
 ~ $22,4b                        ; movea.l   a3,a1
@@ -1044,17 +1045,17 @@
 ~ $30,07                        ; move.w    d7,d0
 ~ $61,00,fd,a6                  ; bsr       do_walk
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,fe,98                  ; bsr       +814
+~ $61,00,fe,98                  ; bsr       l_814
 ~ $4c,df,38,e2                  ; movem.l   (a7)+,d1/d5-d7/a3-a5
 ~ $4e,5e                        ; unlk      a6
 ~ $4e,75                        ; rts
 
-;+986:
+;l_986:
 ~ $20,5f                        ; movea.l   (a7)+,a0
 ~ $48,6e,ff,f4                  ; pea.l     -12(a6)
 ~ $2f,08                        ; move.l    a0,-(a7)
 ;wx_setactive:
-~ $4a,39,.D+6E.L                ; tst.b     $000074CC
+~ $4a,39,.D+6E.L                ; tst.b     winxvars+wv_AF10.l
 ~ $66,18                        ; bne.s     $00E21B7A
 ~ $30,39,.gl_wtop.L             ; move.w    gl_wtop,d0
 ~ $61,00,f6,be                  ; bsr       wx_getwin
@@ -1065,7 +1066,7 @@
 ;E21B7A:
 ~ $4e,75                        ; rts
 
-;+9B0:
+;l_9B0:
 ~ $2a,d8                        ; move.l    (a0)+,(a5)+
 ~ $2a,d8                        ; move.l    (a0)+,(a5)+
 ~ $51,8d                        ; subq.l    #8,a5
@@ -1095,7 +1096,7 @@
 ~ $48,e7,5f,1c                  ; movem.l   d1/d3-d7/a3-a5,-(a7)
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $4b,ee,ff,f0                  ; lea.l     -16(a6),a5
-~ $61,bc                        ; bsr.s     +9B0
+~ $61,bc                        ; bsr.s     l_9B0
 ~ $49,ee,ff,f8                  ; lea.l     -8(a6),a4
 ~ $20,4c                        ; movea.l   a4,a0
 ~ $30,07                        ; move.w    d7,d0
@@ -1111,18 +1112,17 @@
 ~ $67,00,00,98                  ; beq       $00E21C7A
 ;E21BE4:
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,f8,84                  ; bsr       +2A0
+~ $61,00,f8,84                  ; bsr       l_2A0
 ~ $21,55,00,10                  ; move.l    (a5),16(a0)
-~ $4e,71                        ; nop
-~ $4e,71                        ; nop
+~ $4e,71,4e,71                  ; nop
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,01,5e                  ; bsr       +B8A
+~ $61,00,01,5e                  ; bsr       l_B8A
 ~ $41,eb,00,9e                  ; lea.l     158(a3),a0
 ~ $47,ee,ff,ec                  ; lea.l     -20(a6),a3
 ~ $26,90                        ; move.l    (a0),(a3)
 ~ $42,90                        ; clr.l     (a0)
-~ $61,00,01,82                  ; bsr       +BBE
+~ $61,00,01,82                  ; bsr       l_BBE
 ~ $66,68                        ; bne.s     $00E21C74
 ~ $54,6d,00,04                  ; addq.w    #2,4(a5)
 ~ $54,6d,00,06                  ; addq.w    #2,6(a5)
@@ -1134,7 +1134,7 @@
 ~ $22,4c                        ; movea.l   a4,a1
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fd,ba                  ; bsr       +818
+~ $61,00,fd,ba                  ; bsr       l_818
 ~ $3c,00                        ; move.w    d0,d6
 ~ $60,24                        ; bra.s     $00E21C54
 ;E21C30:
@@ -1151,27 +1151,26 @@
 ~ $7c,01                        ; moveq.l   #1,d6
 ~ $60,04                        ; bra.s     $00E21C54
 ;E21C50:
-~ $4e,71                        ; nop
-~ $4e,71                        ; nop
+~ $4e,71,4e,71                  ; nop
 ;E21C54:
 ~ $e2,4e                        ; lsr.w     #1,d6
 ~ $64,08                        ; bcc.s     $00E21C60
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fc,78                  ; bsr       +70A
+~ $61,00,fc,78                  ; bsr       l_70A
 ;E21C60:
 ~ $e2,4e                        ; lsr.w     #1,d6
 ~ $64,08                        ; bcc.s     $00E21C6C
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,00,e2                  ; bsr       +B80
+~ $61,00,00,e2                  ; bsr       l_B80
 ;E21C6C:
 ~ $20,4c                        ; movea.l   a4,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fb,c0                  ; bsr       +666
+~ $61,00,fb,c0                  ; bsr       l_666
 ;E21C74:
 ~ $20,4b                        ; movea.l   a3,a0
-~ $61,00,fd,68                  ; bsr       +814
+~ $61,00,fd,68                  ; bsr       l_814
 ;E21C7A:
 ~ $4c,df,38,fa                  ; movem.l   (a7)+,d1/d3-d7/a3-a5
 ~ $4e,5e                        ; unlk      a6
@@ -1192,26 +1191,26 @@
 ~ $36,00                        ; move.w    d0,d3
 ~ $32,04                        ; move.w    d4,d1
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,f6,be                  ; bsr       +1A0
+~ $61,00,f6,be                  ; bsr       l_1A0
 ~ $4b,ee,ff,f8                  ; lea.l     -8(a6),a5
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $72,fd                        ; moveq.l   #-3,d1
 ~ $30,07                        ; move.w    d7,d0
 ~ $61,00,f5,ac                  ; bsr       wx_grect0
 ~ $30,04                        ; move.w    d4,d0
-~ $61,00,00,ca                  ; bsr       +BC0
+~ $61,00,00,ca                  ; bsr       l_BC0
 ~ $66,66                        ; bne.s     $00E21D2C
 ~ $ba,46                        ; cmp.w     d6,d5
 ~ $67,54                        ; beq.s     $00E21D1E
 ~ $30,06                        ; move.w    d6,d0
-~ $61,00,fc,06                  ; bsr       +708
+~ $61,00,fc,06                  ; bsr       l_708
 ~ $30,05                        ; move.w    d5,d0
-~ $61,00,fc,00                  ; bsr       +708
+~ $61,00,fc,00                  ; bsr       l_708
 ~ $30,05                        ; move.w    d5,d0
 ~ $61,00,f5,4e                  ; bsr       wx_getwin
 ~ $08,28,00,02,00,01            ; btst      #2,1(a0)
 ~ $67,06                        ; beq.s     $00E21CEA
-~ $61,00,00,58                  ; bsr.w     +B72
+~ $61,00,00,58                  ; bsr.w     l_B72
 ~ $66,06                        ; bne.s     $00E21CF0
 ;E21CEA:
 ~ $4a,44                        ; tst.w     d4
@@ -1226,7 +1225,7 @@
 ~ $30,03                        ; move.w    d3,d0
 ~ $61,00,f5,6a                  ; bsr       wx_grect0
 ~ $30,05                        ; move.w    d5,d0
-~ $61,00,00,48                  ; bsr.w     +B80
+~ $61,00,00,48                  ; bsr.w     l_B80
 ~ $30,03                        ; move.w    d3,d0
 ~ $61,00,f6,16                  ; bsr       wx_prev
 ~ $36,00                        ; move.w    d0,d3
@@ -1236,7 +1235,7 @@
 ;E21D14:
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,05                        ; move.w    d5,d0
-~ $61,00,00,32                  ; bsr.w     +B80
+~ $61,00,00,32                  ; bsr.w     l_B80
 ;E21D1C:
 ~ $36,05                        ; move.w    d5,d3
 ;E21D1E:
@@ -1244,19 +1243,19 @@
 ~ $61,00,f5,fe                  ; bsr       wx_prev
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $32,03                        ; move.w    d3,d1
-~ $61,00,fb,16                  ; bsr       +674
+~ $61,00,fb,16                  ; bsr       l_674
 ;E21D2C:
 ~ $4c,df,20,f8                  ; movem.l   (a7)+,d3-d7/a5
 ~ $4e,5e                        ; unlk      a6
 ~ $4e,75                        ; rts
 
-;+B68:
+;l_B68:
 ~ $3f,00                        ; move.w    d0,-(a7)
-~ $61,00,fb,9c                  ; bsr       +708
+~ $61,00,fb,9c                  ; bsr       l_708
 ~ $30,1f                        ; move.w    (a7)+,d0
 ~ $60,0c                        ; bra.s     $00E21D4A
 
-;+B72:
+;l_B72:
 ~ $72,03                        ; moveq.l   #3,d1
 ~ $30,05                        ; move.w    d5,d0
 ~ $61,00,f5,04                  ; bsr       wx_chkwin1
@@ -1265,14 +1264,14 @@
 ;E21D4A:
 ~ $91,c8                        ; suba.l    a0,a0
 
-;+B80:
+;l_B80:
 ~ $72,ff                        ; moveq.l   #-1,d1
-~ $61,00,fc,1e                  ; bsr       +7A2
+~ $61,00,fc,1e                  ; bsr       l_7A2
 ~ $70,00                        ; moveq.l   #0,d0
 ;l_B88:
 ~ $4e,75                        ; rts
 
-;+B8A:
+;l_B8A:
 ~ $22,48                        ; movea.l   a0,a1
 ~ $61,00,f4,ce                  ; bsr       wx_getwin
 ~ $45,e8,00,30                  ; lea.l     48(a0),a2
@@ -1290,9 +1289,9 @@
 ~ $de,fc,00,10                  ; adda.w    #$0010,a7
 ~ $4e,75                        ; rts
 
-;+BBE:
+;l_BBE:
 ~ $70,00                        ; moveq.l   #0,d0
-;+BC0:
+;l_BC0:
 ~ $61,00,f4,92                  ; bsr       wx_gmem
 ~ $20,68,00,36                  ; movea.l   54(a0),a0
 ~ $3a,28,00,30                  ; move.w    48(a0),d5
@@ -1303,32 +1302,33 @@
 ~ $67,02                        ; beq.s     $00E21DA8
 ~ $30,05                        ; move.w    d5,d0
 ;E21DA8:
-~ $61,22                        ; bsr.s     +C00
+~ $61,22                        ; bsr.s     l_C00
 ~ $61,00,fd,ae                  ; bsr       wx_setactive
 ~ $30,1f                        ; move.w    (a7)+,d0
-~ $61,2e                        ; bsr.s     +C14
+~ $61,2e                        ; bsr.s     l_C14
 ~ $4a,79,.w_walkflag.L          ; tst.w     w_walkflag
 ~ $4e,75                        ; rts
 
-;+BEE:
+;l_BEE:
+;wxs_start:
 ~ $23,c0,.gl_ws.L               ; move.l    d0,gl_ws
 ~ $4e,b9,.gsx_start.L           ; jsr       gsx_start
 ~ $61,00,f4,c4                  ; bsr       wx_get_globals
-;+BFE:
+;l_BFE:
 ~ $70,00                        ; moveq.l   #0,d0
 
-;+C00:
-~ $61,08                        ; bsr.s     +C08
+;l_C00:
+~ $61,08                        ; bsr.s     l_C08
 ~ $61,00,f5,50                  ; bsr       wx_prev
-~ $6e,f8                        ; bgt.s     +C00
+~ $6e,f8                        ; bgt.s     l_C00
 ~ $4e,75                        ; rts
-;+C08:
+;l_C08:
 ~ $3f,00                        ; move.w    d0,-(a7)
-~ $61,00,.WINX12+170-~.W        ; bsr       $00FDEF8E
+~ $61,00,.WINXRUL+170-~.W        ; bsr       $00FDEF8E
 ~ $30,1f                        ; move.w    (a7)+,d0
 ~ $4e,75                        ; rts
 
-;+C14:
+;l_C14:
 ~ $bc,45                        ; cmp.w     d5,d6
 ~ $67,3c                        ; beq.s     $00E21E20
 ~ $4a,00                        ; tst.b     d0
@@ -1415,20 +1415,20 @@
 ~ $3c,2e,00,08                  ; move.w    8(a6),d6
 ~ $30,06                        ; move.w    d6,d0
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,20                        ; bsr.s     +CF6
+~ $61,20                        ; bsr.s     l_CF6
 ~ $30,07                        ; move.w    d7,d0
 ~ $20,6e,00,0a                  ; movea.l   10(a6),a0
 ~ $43,f9,.gl_rzero.L            ; lea.l     gl_rzero,a1
 ~ $95,ca                        ; suba.l    a2,a2
 ~ $61,00,f3,ea                  ; bsr       wx_set_g0
-~ $61,00,00,3e                  ; bsr.w     +D28
+~ $61,00,00,3e                  ; bsr.w     l_D28
 ~ $30,07                        ; move.w    d7,d0
 ;E21EBA:
 ~ $4c,df,20,c2                  ; movem.l   (a7)+,d1/d6-d7/a5
 ~ $4e,5e                        ; unlk      a6
 ~ $4e,75                        ; rts
 
-;+CF6:
+;l_CF6:
 ~ $31,40,00,06                  ; move.w    d0,6(a0)
 ~ $21,79,.rlr.L,00,02           ; move.l    rlr,2(a0)
 ~ $30,bc,00,01                  ; move.w    #1,(a0)
@@ -1436,7 +1436,7 @@
 ~ $70,ff                        ; moveq.l   #-1,d0
 ~ $21,40,00,3e                  ; move.l    d0,62(a0)
 ~ $41,e8,00,42                  ; lea.l     66(a0),a0
-~ $22,79,.D+5A.L                ; movea.l   $000074B8,a1
+~ $22,79,.D+5A.L                ; movea.l   winxvars+wv_wx_mem,a1
 ~ $43,e9,55,58                  ; lea.l     21848(a1),a1
 ~ $70,16                        ; moveq.l   #22,d0
 ;E21EEC:
@@ -1444,20 +1444,20 @@
 ~ $51,c8,ff,fc                  ; dbf       d0,$00E21EEC
 ~ $4e,75                        ; rts
 
-;+D28:
+;l_D28:
 ~ $48,e7,1f,0c                  ; movem.l   d3-d7/a4-a5,-(a7)
-~ $2a,39,.D+66.L                ; move.l    $000074C4,d5
+~ $2a,39,.D+66.L                ; move.l    winxvars+wv_wbox,d5
 ~ $48,45                        ; swap      d5
 ~ $78,00                        ; moveq.l   #0,d4
 ~ $49,fa,00,62                  ; lea.l     $00E21F66(pc),a4
 ~ $74,00                        ; moveq.l   #0,d2
-~ $61,32                        ; bsr.s     +D70
+~ $61,32                        ; bsr.s     l_D70
 ~ $36,07                        ; move.w    d7,d3
 ~ $20,6d,00,02                  ; movea.l   2(a5),a0
-~ $61,00,07,b8                  ; bsr       +14FE
+~ $61,00,07,b8                  ; bsr       l_14FE
 ~ $28,00                        ; move.l    d0,d4
 ~ $34,3c,06,00                  ; move.w    #$0600,d2
-~ $61,20                        ; bsr.s     +D70
+~ $61,20                        ; bsr.s     l_D70
 ~ $be,43                        ; cmp.w     d3,d7
 ~ $6c,02                        ; bge.s     $00E21F22
 ~ $3e,03                        ; move.w    d3,d7
@@ -1466,20 +1466,20 @@
 ~ $48,44                        ; swap      d4
 ~ $48,45                        ; swap      d5
 ~ $34,3c,00,c0                  ; move.w    #$00C0,d2
-~ $61,0e                        ; bsr.s     +D70
+~ $61,0e                        ; bsr.s     l_D70
 ~ $74,07                        ; moveq.l   #7,d2
-~ $61,2a                        ; bsr.s     +D90
+~ $61,2a                        ; bsr.s     l_D90
 ~ $2b,47,00,a6                  ; move.l    d7,166(a5)
 ~ $4c,df,30,f8                  ; movem.l   (a7)+,d3-d7/a4-a5
 ~ $4e,75                        ; rts
 
-;+D70:
+;l_D70:
 ~ $3e,3c,00,02                  ; move.w    #$0002,d7
 ~ $4a,44                        ; tst.w     d4
 ~ $67,04                        ; beq.s     $00E21F48
 ~ $52,8c                        ; addq.l    #1,a4
 ;E21F46:
-~ $61,18                        ; bsr.s     +D94
+~ $61,18                        ; bsr.s     l_D94
 ;E21F48:
 ~ $10,1c                        ; move.b    (a4)+,d0
 ~ $67,06                        ; beq.s     $00E21F52
@@ -1492,10 +1492,10 @@
 ~ $61,00,f2,f2                  ; bsr       wx_chkpd0
 ~ $67,08                        ; beq.s     $00E21F64
 
-;+D90:
+;l_D90:
 ~ $c4,46                        ; and.w     d6,d2
 ~ $67,04                        ; beq.s     $00E21F64
-;+D94:
+;l_D94:
 ~ $de,45                        ; add.w     d5,d7
 ~ $53,47                        ; subq.w    #1,d7
 ;E21F64:
@@ -1523,19 +1523,19 @@
 ~ $61,00,f3,b2                  ; bsr       wx_link
 ~ $20,6f,00,22                  ; movea.l   34(a7),a0
 ~ $2a,4f                        ; movea.l   a7,a5
-~ $61,00,fb,d8                  ; bsr       +9B0
+~ $61,00,fb,d8                  ; bsr       l_9B0
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fd,aa                  ; bsr       +B8A
+~ $61,00,fd,aa                  ; bsr       l_B8A
 ~ $70,ff                        ; moveq.l   #-1,d0
-~ $61,00,fd,da                  ; bsr       +BC0
+~ $61,00,fd,da                  ; bsr       l_BC0
 ~ $66,0e                        ; bne.s     $00E21FC4
 ~ $30,06                        ; move.w    d6,d0
 ~ $6f,04                        ; ble.s     $00E21FBE
-~ $61,00,f9,18                  ; bsr       +708
+~ $61,00,f9,18                  ; bsr       l_708
 ;E21FBE:
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fd,72                  ; bsr       +B68
+~ $61,00,fd,72                  ; bsr       l_B68
 ;E21FC4:
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $72,02                        ; moveq.l   #2,d1
@@ -1594,26 +1594,26 @@
 ~ $61,00,f2,2a                  ; bsr       wx_grect0
 ~ $61,00,f2,ec                  ; bsr       wx_unlink
 ~ $30,07                        ; move.w    d7,d0
-~ $61,00,fd,8e                  ; bsr       +C08
+~ $61,00,fd,8e                  ; bsr       l_C08
 ~ $41,f9,.gl_rzero.L            ; lea.l     gl_rzero,a0
-~ $61,00,fd,04                  ; bsr       +B8A
-~ $61,00,fd,34                  ; bsr       +BBE
+~ $61,00,fd,04                  ; bsr       l_B8A
+~ $61,00,fd,34                  ; bsr       l_BBE
 ~ $66,24                        ; bne.s     $00E2207E
 ~ $4a,44                        ; tst.w     d4
 ~ $66,18                        ; bne.s     $00E22076
 ~ $38,05                        ; move.w    d5,d4
 ~ $6f,14                        ; ble.s     $00E22076
 ~ $30,05                        ; move.w    d5,d0
-~ $61,00,f8,6e                  ; bsr       +708
-~ $61,00,fc,d4                  ; bsr       +B72
+~ $61,00,f8,6e                  ; bsr       l_708
+~ $61,00,fc,d4                  ; bsr       l_B72
 ~ $67,08                        ; beq.s     $00E22076
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,05                        ; move.w    d5,d0
-~ $61,00,fc,d8                  ; bsr       +B80
+~ $61,00,fc,d8                  ; bsr       l_B80
 ;E22076:
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,04                        ; move.w    d4,d0
-~ $61,00,f7,b6                  ; bsr       +666
+~ $61,00,f7,b6                  ; bsr       l_666
 ;E2207E:
 ~ $61,00,05,50                  ; bsr       wx_endupdate
 ~ $4c,df,20,f2                  ; movem.l   (a7)+,d1/d4-d7/a5
@@ -1647,8 +1647,8 @@
 ;E220C6:
 ~ $4e,75                        ; rts
 
-;+EFA:
-~ $43,f9,.WINX15+.BASE.L        ; lea.l     $00FEB802,a1
+;l_EFA:
+~ $43,f9,.WINXTAB+.BASE.L       ; lea.l     $00FEB802,a1
 ~ $12,31,30,66                  ; move.b    102(a1,d3.w),d1
 ~ $67,f2                        ; beq.s     $00E220C6
 ~ $6b,06                        ; bmi.s     $00E220DC
@@ -1666,10 +1666,10 @@
 ~ $32,03                        ; move.w    d3,d1
 ~ $20,4c                        ; movea.l   a4,a0
 ~ $30,07                        ; move.w    d7,d0
-~ $60,00,f7,e4                  ; bra       +710
+~ $60,00,f7,e4                  ; bra       l_710
 
-;+F2E:
-~ $45,f9,.WINX15+.BASE.L        ; lea.l     $00FEB802,a2
+;l_F2E:
+~ $45,f9,.WINXTAB+.BASE.L       ; lea.l     $00FEB802,a2
 ~ $43,ea,00,18                  ; lea.l     24(a2),a1
 ~ $72,ff                        ; moveq.l   #-1,d1
 ~ $70,16                        ; moveq.l   #22,d0
@@ -1709,7 +1709,7 @@
 ~ $23,ee,00,04,.D+6A.L          ; move.l    4(a6),$000074C8  /* the return pc of gem_main() */
 ~ $41,fa,01,10                  ; lea.l     wx_exit(pc),a0 /* make gem_main() return here */
 ~ $2d,48,00,04                  ; move.l    a0,4(a6)
-~ $41,f9,.D+66.L                ; lea.l     $000074C4,a0
+~ $41,f9,.D+66.L                ; lea.l     winxvars+wv_wbox,a0
 ~ $30,f9,.gl_wbox.L             ; move.w    gl_wbox,(a0)+
 ~ $30,f9,.gl_hbox.L             ; move.w    gl_hbox,(a0)+
 ~ $4e,71                        ; nop
@@ -1725,9 +1725,9 @@
 ~ $42,67                        ; clr.w     -(a7)
 ~ $61,00,02,a4                  ; bsr       wx_set
 ~ $50,8f                        ; addq.l    #8,a7
-~ $20,79,.D+5A.L                ; movea.l   $000074B8,a0 /* winxvars.wx_mem */
-~ $4e,b9,.WINX01+.BASE.L        ; jsr       $00FD7B7C
-~ $61,00,f2,58                  ; bsr       +22E
+~ $20,79,.D+5A.L                ; movea.l   winxvars+wv_wx_mem,a0
+~ $4e,b9,.WINXCOL+.BASE.L       ; jsr       $00FD7B7C
+~ $61,00,f2,58                  ; bsr       l_22E
 ~ $60,0a                        ; bra.s     wx_start
 
 ;def_delay:
@@ -1741,7 +1741,7 @@
 ;wx_start:
 ~ $4e,56,00,00                  ; link      a6,#0
 ~ $48,e7,43,1c                  ; movem.l   d1/d6-d7/a3-a5,-(a7)
-~ $2a,79,.D+5A.L                ; movea.l   $000074B8,a5
+~ $2a,79,.D+5A.L                ; movea.l   winxvars+wv_wx_mem,a5
 ~ $20,4d                        ; movea.l   a5,a0
 ~ $30,3c,2d,4f                  ; move.w    #11600-1,d0
 ;E221C4:
@@ -1766,13 +1766,13 @@
 ~ $23,ca,.rul.L                 ; move.l    a2,rul
 ~ $70,00                        ; moveq.l   #0,d0
 ~ $20,4d                        ; movea.l   a5,a0
-~ $61,00,fc,c4                  ; bsr       +CF6
+~ $61,00,fc,c4                  ; bsr       l_CF6
 ~ $61,00,f0,8a                  ; bsr       wx_get_globals
 ~ $42,79,.gl_wtop.L             ; clr.w     gl_wtop
 ~ $00,55,00,08                  ; ori.w     #$0008,(a5)
 ~ $2b,4d,00,32                  ; move.l    a5,50(a5)
 ~ $2b,4d,00,36                  ; move.l    a5,54(a5)
-~ $61,00,fb,b2                  ; bsr       +BFE
+~ $61,00,fb,b2                  ; bsr       l_BFE
 ~ $47,f9,.gl_rfull.L            ; lea.l     gl_rfull,a3
 ~ $42,79,.gl_newroot.L          ; clr.w     gl_newroot
 ~ $24,79,.ad_stdesk.L           ; movea.l   ad_stdesk,a2
@@ -1790,7 +1790,7 @@
 ;E22250:
 ~ $49,ed,55,b4                  ; lea.l     21940(a5),a4
 ~ $23,cc,.gl_awind.L            ; move.l    a4,gl_awind
-~ $61,00,fe,9e                  ; bsr       +F2E
+~ $61,00,fe,9e                  ; bsr       l_F2E
 ~ $42,79,.w_walkflag.L          ; clr.w     w_walkflag
 ~ $4c,df,38,c2                  ; movem.l   (a7)+,d1/d6-d7/a3-a5
 ~ $4e,5e                        ; unlk      a6
@@ -1965,7 +1965,7 @@
 ;wx_get_returnss:
 ~ $60,9e                        ; bra.s     wx_get_returns
 ;wx_get_winx:
-~ $41,f9,.D+54.L                ; lea.l     $000074B2,a0
+~ $41,f9,.D+54.L                ; lea.l     winxvars+wv_version,a0
 ~ $2a,d0                        ; move.l    (a0),(a5)+
 ~ $2a,a8,00,0e                  ; move.l    14(a0),(a5)
 ;wx_get_winx1:
@@ -2002,7 +2002,7 @@
 ;wx_get_apg12_2:
 ~ $60,aa                        ; bra.s     wx_get_returnss
 ;wx_getset:
-~ $26,79,.D+5A.L                ; movea.l   $000074B8,a3 /* winxvars.wx_mem */
+~ $26,79,.D+5A.L                ; movea.l   winxvars+wv_wx_mem,a3
 ~ $70,19                        ; moveq.l   #25,d0
 ~ $ba,40                        ; cmp.w     d0,d5
 ~ $62,1c                        ; bhi.s     wx_get4
@@ -2314,9 +2314,9 @@
 ~ $7e,01                        ; moveq.l   #1,d7
 ~ $76,01                        ; moveq.l   #1,d3
 ~ $7a,01                        ; moveq.l   #1,d5
-~ $34,39,.D+66.L                ; move.w    $000074C4,d2
+~ $34,39,.D+66.L                ; move.w    winxvars+wv_wbox,d2
 ~ $53,42                        ; subq.w    #1,d2
-~ $32,39,.D+68.L                ; move.w    $000074C6,d1
+~ $32,39,.D+68.L                ; move.w    winxvars+wv_hbox,d1
 ~ $53,41                        ; subq.w    #1,d1
 ~ $30,06                        ; move.w    d6,d0
 ~ $c0,7c,00,07                  ; and.w     #7,d0
@@ -2327,7 +2327,7 @@
 ~ $67,02                        ; beq.s     wx_calc3
 ~ $de,41                        ; add.w     d1,d7
 ;wx_calc3:
-~ $61,3e                        ; bsr.s     +14FE
+~ $61,3e                        ; bsr.s     l_14FE
 ~ $4a,40                        ; tst.w     d0
 ~ $67,02                        ; beq.s     wx_calc4
 ~ $d6,42                        ; add.w     d2,d3
@@ -2361,7 +2361,7 @@
 
 ; a0 = AESPD
 ; d6 = window kind
-;+14FE:
+;l_14FE:
 ~ $3f,01                        ; move.w    d1,-(a7)
 ~ $61,00,eb,80                  ; bsr       wx_chkpd
 ~ $32,00                        ; move.w    d0,d1
@@ -2400,13 +2400,13 @@
 ~ $20,5f                        ; movea.l   (a7)+,a0
 ~ $70,01                        ; moveq.l   #1,d0
 ~ $e1,88                        ; lsl.l     #8,d0
-~ $10,39,.D+6F.L                ; move.b    $000074CD,d0
+~ $10,39,.D+6F.L                ; move.b    winxvars+wv_AF11,d0
 ~ $52,00                        ; addq.b    #1,d0
 ~ $e1,88                        ; lsl.l     #8,d0
 ~ $2f,00                        ; move.l    d0,-(a7)
 ~ $4e,d0                        ; jmp       (a0)
 
-;+155C:
+;l_155C:
 ~ $48,e7,46,0c                  ; movem.l   d1/d5-d6/a4-a5,-(a7)
 ~ $2a,48                        ; movea.l   a0,a5
 ~ $28,49                        ; movea.l   a1,a4
@@ -2462,13 +2462,13 @@
 ~ $70,01                        ; moveq.l   #1,d0
 ~ $4e,75                        ; rts
 
-;+15F2:
-~ $4e,b9,.delay+.BASE.L         ; jsr       delay ; code of delay was overwritten
+;l_15F2:
+~ $4e,b9,.WINXTICK+.BASE.L      ; jsr       delay ; code of delay was overwritten
 ~ $2a,00                        ; move.l    d0,d5
 ~ $da,b9,.TICKS.L               ; add.l     TICKS,d5
 ~ $4e,75                        ; rts
 
-;+1602:
+;l_1602:
 ;FE5AEE:
 ;wx_fill:
 ~ $0c,6b,34,db,00,0a            ; cmpi.w    #$34DB,10(a3)

@@ -1,6 +1,6 @@
 ;p_nameit:
 ~ $4c,ef,03,00,00,04            ; movem.l   4(a7),a0-a1
-~ $61,00,.WINX14+.BASE+238-~.W  ; bsr       wx_nameit
+~ $61,00,.WINXWM+.BASE+238-~.W  ; bsr       wx_nameit
 ~ $4c,ef,03,00,00,04            ; movem.l   4(a7),a0-a1
 ~ $d0,fc,00,0c                  ; adda.w    #12,a0
 ~ $72,07                        ; moveq.l   #7,d1

@@ -40,7 +40,7 @@
 ~ $42,57                        ; clr.w     (a7)
 ~ $61,00,.wind_update-~.W       ; bsr       wind_update
 ~ $52,57                        ; addq.w    #1,(a7)
-~ $4e,b9,.WINX14+1408+.BASE.L   ; jsr       wx_update
+~ $4e,b9,.WINXWM+1408+.BASE.L   ; jsr       wx_update
 ~ $2e,8f                        ; move.l    a7,(a7)
 ~ $58,97                        ; addq.l    #4,(a7)
 ~ $61,00,.ev_mesag-~.W          ; bsr       ev_mesag
