@@ -1,0 +1,16 @@
+tosp1.ttp
+.C[-A-]		; no ANSI, because we need to use cdecl keyword
+.C[-P-]		; Do not use absolute calls
+.C[-M]		; no string merging
+.C[-K-]		; default char signed
+.C[-G]		; size optimization
+.C[-Z-]		; register optimization
+.C[-J-]		; jump optimization
+.C[-C-]		; no nested comments please
+.C[-2-]		; no 68020 code
+.C[-8-]		; no 68881 fpu instructions
+.C[-L64]	; maximum identifier length
+
+.L[-S=0]
+=
+tosp1.s
