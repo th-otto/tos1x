@@ -1,0 +1,432 @@
+
+ Overview for TOSPATCH V2.9.8:
+===============================
+
+
+
+ Command line:
+===============
+
+TOSPATCH [-<switches>] [<batch.fil>]
+
+ Switches:
+-----------
+
+a:
+---
+ Print all patched addresses.
+
+l:
+---
+ Write all messages to logfile TOS.LOG.
+
+m:
+---
+ Do not ask.
+
+q:
+---
+ Suppress messages.
+
+
+
+ Command overview:
+===================
+
+;
+---
+ Comment (remainder of line will be ignored).
+
+<*
+---
+ Read TOS from ROM (TOS-data in the patchfile must match!)
+
+<FILE.EXT
+---------
+ Read TOS from <FILE.EXT>
+
+= DD.MM.YYYY [,NATION]
+----------------------
+ Check for correct TOS version (date, and optional
+ nation).
+
+>Count [Relocaddr] [,Machine]
+-----------------------------
+ Split TOS to <Count> files. Possible values for 'Count' are
+ 1,2,4,6 and 8. If <Relocaddr> is specified, the TOS will be relocated
+ to that address, and the value will be written to the variable
+ .RELOCADR. Otherwise .RELOCADR will be set to the value of .BASE.
+ Optionally, <Machine> can be specified to rename the output files.
+
+ Currently implemented machine types:
+ - PAK3 (for <Count> = 4: TOS.U10, TOS.U11, TOS.U12, TOS.U13)
+
+Ý
+---
+ Calculate and set CRC checksum after patching. The variable .CRC will
+ be set to 1.
+
+!Addr,Addr, ...
+-------------
+ Single exceptions when relocating.
+
+!Addr1..Addr2, ...
+----------------
+ Exclude the range from Addr1 to Addr2 from relocations. Can be used
+ together with single exceptions (s.a.)
+
+? Addr
+-----
+ Force <Addr> to be relocated (ie. for addresses that use the high byte,
+ and are therefor not detected by TOSPATCH).
+
+-Path
+-----
+ Change current directory to <Path>. <Path> = .. can be used to change
+ directory up one level again.
+
+Offset $Byte,Byte, ...
+----------------------
+ Starting from <Offset>, write the values to the TOS image, and update ~.
+ Instead of bytes you use arbitrary expressions (variables, #, operators etc.)
+ After each value you can also specify the desired width, ie. .B for
+ byte (default), .W for WORD and .L for LONG. ~ will be updated after
+ each value.
+
+Offset |$Byte,Byte, ...
+-----------------------
+ dito, but do not update ~.
+
+Offset FILE
+-----------
+ Starting from <Offset>, copy <FILE> into the TOS image. If <FILE> contains
+ code, it must be either relocatable, or be assembled for a start address
+ of .BASE + <offset>. ~ will be updated.
+
+Offset |FILE
+------------
+ dito, but do not update ~.
+
+#Value
+-----
+ <Value> will be written to an internal variable.
+
++FILE
+-----
+ Read another patch file <FILE> and process it. You can recursively
+ use up to 8 patch files.
+
+_IF <expression>
+----------------
+ If <expression> is true, process the following lines until encountering
+ an _ELSE or _ENDIF. If <expression> is false, skip the follwing lines
+ until encountering an _ELSE or _ENDIF.
+
+_IFDEF Variable
+----------------
+ Like _IF; condition is true, if <Variable> is defined.
+
+_IFNDEF Variable
+----------------
+ Like _IF; condition is true, if <Variable> is not defined.
+
+_ELSE
+-----
+ When the last _IF-condition was false, continue from here.
+
+_ENDIF
+------
+ Ends last _IF (/_ELSE) command.
+
+_DEFINE Variable
+----------------
+ Defines Variable.
+
+_UNDEF Variable
+---------------
+ Removes Variable.
+
+_SWITCH Value
+-------------
+ Sets reference value <Value> for _CASE.
+
+_CASE Value1[,Value2]:
+----------------------
+ Executes subsequent commands, if <Value1> or one of the following <Value2>
+ values matches the reference value specified in the _SWITCH command.
+
+_DEFAULT:
+---------
+ Executes subsequent commands, if there was no match in any _CASE.
+
+_ENDSWITCH
+----------
+ Terminates a _SWITCH command.
+
+_ERROR ['Text']
+---------------
+ Aborts patching, and optionally prints
+ 'Error: ',Text,' in line xxx'
+
+_EVEN [$Value]
+--------------
+ If ~ is even, does nothing. Otherwise increments ~ by 1, and
+ patches <Value> at the free location if it was specified.
+
+_FILL Start,End,X
+-----------------
+ Fills the range from <Start> to <End> wuth up 32 specified bytes,
+ and updates ~. Syntax of <X> is like in Offset.
+
+_FILL Start,End,|X
+------------------
+ dito, but do not update ~.
+
+.Variable = Value
+-----------------
+ Writes <Value> to the variable .Variable.
+
+.Variable:
+----------
+ Writes ~ to the variable .Variable. After the colon, patches may follow.
+
+/'Text',Number,$Number
+----------------------
+ The print command writes texts ('Text'), decimal numbers (Number) and
+ hexadecimal numbers ($Number), separated by comma, onto the csren.
+ Arbitrary expressions are allowed for numbers.
+
+
+
+ Special variables:
+====================
+
+.BASE = Addr        
+------------
+ Set the base address to which the loaded TOS was relocated.
+ $FC0000 for TOS <= 1.04, $E00000 for TOS >= 1.06.
+
+.LENGTH = Long
+--------------
+ Set the length of the TOS. $30000 for TOS <= 1.04, $40000 for
+ TOS 1.06/1.62/2.xx and $80000 for TOS 3.xx and TOS 4.xx.
+
+.WIDTH = Long
+-------------
+ Set the width of the TOS, for creating EPROM files. Specifies whether
+ the TOS is 16-bit (.16) or 32-bit (.32).
+ Normal values: TOS 1.xx: .16, TOS 2.xx: .16, TOS 3.xx: .32, TOS 4.xx: .8 .
+ Possible values: .8, .16, .32, .64 .
+
+.NATION = Nation
+----------------
+ Set the TOS country. For this purpose the following variables (their names
+ corresponds to the country code) are already predefined:
+ .USA, .FRG, .FRA, .UK, .SPA, .ITA, .SWE, .SWF, .SWG, .TUR, .FIN, .NOR,
+ .DEN, .SAU, .HOL, .CZE, .HUN.
+ e.g. .NATION = .FRG for the german TOS.
+
+.CRC
+----
+ .CRC will be set to 1 by the Ý-command. This variable indicates
+ whether the CRC checksum is calculated and set after patching.
+
+.RELOCADR
+---------
+ The variable .RELOCADR contains the address, to which the TOS will be
+ relocated after patching. If .RELOCADR is equal to .BASE, there is no
+ relocation.
+
+~
+---
+ ~ contains the address just after the last patched byte.
+
+#<Width>
+ This is an internal variable, which can be set using the #<Value> command,
+ but cannot be used in expressions. The following values are permitted for
+ <Width>: B for Byte, W for WORD, and L for LONG. <Width> must be specified.
+
+
+
+ Priorities:
+=============
+
+Following operators are supported (in descending order of priority):
+
+^
+---
+ power, e.g. 2^3.
+
+*,/
+---
+ Multiplication and division, e.g. 2*3/4.
+
++,-
+---
+ Addition and subtraction, e.g. 2+3-4.
+
+Value !IN! [Number,Number, ...]
+-------------------------------
+ Test whether <Value> is part of the set [Number,Number, ...],
+ e.g. 2 !IN! [1,2,3,4].
+
+ NOTE: Operations in the expression AFTER !IN! have a lower
+       priority. i.e. operators after !IN! are treated as if
+       !IN! has highest priority. Operators before !IN!
+       are treated normally.
+
+!N! or !NOT!
+------------
+ Bool'sches Not: !N! 1 = 0, !N! 0 = 1
+
+!A! or !AND!
+------------
+ and-operation, e.g. 7 !A! 3.
+
+!O! or !OR!
+-----------
+ or-operation, e.g. 3 !O! 4.
+
+!X! or !XOR!
+------------
+ exclusive-or-operation, e.g. 2 !X! 3.
+
+Following comparisons are possible:
+
+<>
+---
+ Not equal, e.g. 3 <> 4.
+
+<= 
+---
+ Less or equal, e.g. 3 <= 4.
+
+<
+---
+ Less, e.g. 3 < 4.
+
+>=
+---
+ Greater or equal, e.g. 3 >= 4.
+
+>
+---
+ Greater, e.g. 3 > 4.
+
+=
+---
+ Equal, e.g. 3 = 4.
+
+The operators can also be put into exclamaation marks,
+e.g. a<>b is equal to a!<>!b.
+
+Comparisons evaluate to 1 for true, and 0 for false, and
+all have the same, lowest priority.
+
+Brackets are possible up to a level of 8.
+
+
+
+ Splitting when saving:
+========================
+
+When splitting to multiple files, the TOS will be divided as follows:
+
+WIDTH = .16
+-----------
+ 1.Byte TOS.HIx
+ 2.Byte TOS.LOx
+ and then start again
+
+WIDTH = .32
+-----------
+ 1.Byte TOS.EEx
+ 2.Byte TOS.OEx
+ 3.Byte TOS.EOx
+ 4.Byte TOS.OOx
+ and then start again
+
+The TOS can be split into up to 16 banks, and a maximum of 32 files.
+<x> counts up from 0-9 and then continues with A-P. If there are no
+two files with the same extension, <x> is omitted.
+
+
+
+ Expressions and variables:
+============================
+
+From now on you can also use an expression for (almost) every number in
+the patch file. The width of this expression can be appended
+to the end of the expression: expression.B, expression.W or
+expression.L (Default: .B)
+
+If a number is to be decimal, it must have a dot as a prefix:
+.20 = decimal 20, 20 = hexadecimal 20! 
+
+All variables start with a period. Case sensitive does not matter. From
+the variable name after the dot only the first 16 characters are evaluated,
+i.e. variable names can be longer than 16 characters but only the first
+16 are used for comparison. 
+
+The following characters are permitted in variable names: A to Z, 0 to
+9 and _ , where 0 to 9 must not be in the first position of the
+variable name. 
+
+A special variable is ~. It contains the end of the last patch. There must
+be no period before it or #. This variable can e.g. can be used to load
+multiple patches in a row: e.g. 
+30000 PATCH1.ABS
+~     PATCH2.ABS
+~     PATCH3.ABS
+
+patches PATCH1.ABS, PATCH2.ABS and PATCH3.ABS one after the other
+starting at offset $30000 into TOS. 
+
+
+
+ General:
+==========
+
+TOSPATCH always generates TOS.IMG as the output file!
+
+So rename a possibly input file TOS if it should be retained,
+e.g. in STE_TOS.IMG or TT_TOS.IMG! 
+
+TOSPATCH accepts CRLF and LF as end-of-line identifiers.
+
+TABs are treated like spaces.
+
+
+
+ Additional tools:
+===================
+
+The program LOADTOS.PRG belongs to the AUTO folder. It loads TOS.IMG
+from the ROOT directory (the path can be patched in the program) to the
+address given in the TOS.IMG. But it can also be started from the
+desktop, then it loads either the default TOS.IMG or any TOS file if
+one was passed in the command line. 
+
+ATTENTION: LOADTOS deletes the reset pointer, i.e. programs that rely
+           on a reset routine to be executed, go for a swim, e.g.
+           disk caches with delayed write may have data loss if
+           not all data has been written yet! 
+
+LT_CONF.PRG is used to configure LOADTOS.PRG. With LT_CONF.PRG the
+hotkeys, the startup time and the TOS to be loaded can be changed in
+LOADTOS.PRG. 
+
+The RESETTOS.PRG program is used to reset the TOS, if it was made
+reset-resident, and remove it from memory without having to turn off
+the computer. When the PMMU is used e.g. through OUTSIDE or VRAM it is
+possible that RESETTOS crashes. Otherwise RESETTOS works without any
+problems with the PMMU.
+
+
+
+>>>  If you install new patches, please mail them to me !!!            <<<
+>>>  email: markus@markusheiden.de                                     <<<
+
+   Viel Spaž wnscht
+     Markus Heiden
+

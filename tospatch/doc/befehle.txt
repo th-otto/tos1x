@@ -149,7 +149,7 @@ _UNDEF Variable
 
 _SWITCH Wert
 ------------
- Setz Vergleichswert <Wert> fÅr _CASE.
+ Setzt Vergleichswert <Wert> fÅr _CASE.
 
 _CASE Wert1[,Wert2]:
 --------------------
@@ -170,7 +170,7 @@ _ERROR ['Text']
  'Fehler: ',Text,' in Zeile .xxx'
 
 _EVEN [$Wert]
-------------
+-------------
  Falls ~ gerade ist passiert garnichts, sonst wird ~ um 1 erhîht und falls
  <Wert> angegeben ist, wird <Wert> an die freie Stelle gepatcht.
 
@@ -207,18 +207,19 @@ _FILL Start,Ende,|X
 .BASE = Adr        
 -----------
  TOS-Basisadresse setzen, zu der das TOS reloziert ist.
- $FC0000 fÅr TOS 1.xx, $E00000 fÅr TOS 2.xx und 3.xx.
+ $FC0000 fÅr TOS <= 1.04, $E00000 fÅr TOS >= 1.06.
 
 .LENGTH = Long
 --------------
- TOS-LÑnge setzen. $30000 fÅr TOS 1.xx, $40000 fÅr TOS 2.xx und
- $80000 fÅr TOS 3.xx.
+ TOS-LÑnge setzen. $30000 fÅr TOS <= 1.04, $40000 fÅr TOS 1.06/1.62/2.xx und
+ $80000 fÅr TOS 3.xx und TOS 4.xx.
 
 .WIDTH = Long
 -------------
  Breite des TOS setzen. Gibt an, ob das TOS 16-bittig (.16) oder 32-bittig
  (.32) organisiert sein soll. Ist wichtig beim Abspeichern in mehreren
- Dateien zum Brennen. Normal: TOS 2.06: .16, TOS 3.06: .32.
+ Dateien zum Brennen.
+ Normal: TOS 1.xx: .16, TOS 2.xx: .16, TOS 3.xx: .32, TOS 4.xx: .8 .
  Mîgliche Werte: .8, .16, .32, .64 .
 
 .NATION = Nation
@@ -298,7 +299,7 @@ Als Vergleiche sind mîglich (auch als Operationen zu verwenden):
 
 <>
 ---
- Ungleicheit, z.B. 3 <> 4.
+ Ungleichheit, z.B. 3 <> 4.
 
 <= 
 ---
@@ -343,10 +344,10 @@ WIDTH = .16
 
 WIDTH = .32
 -----------
- 1.Byte TOS.HHx
- 2.Byte TOS.HLx
- 3.Byte TOS.LHx
- 4.Byte TOS.LLx
+ 1.Byte TOS.EEx
+ 2.Byte TOS.OEx
+ 3.Byte TOS.EOx
+ 4.Byte TOS.OOx
  und dann wieder von vorne
 
 Das  TOS  kann  dabei  in bis zu 16 BÑnke, aber max. 32 Dateien, gesplittet
@@ -358,11 +359,11 @@ zwei Dateien mit gleicher Extension, wird <x> weggelassen.
  AusdrÅcke und Variablen:
 ==========================
 
-Ab  jetzt  kann  man  auch  fÅr (fast) jede Zahl im Patchfile eine Ausdruck
+Ab jetzt  kann  man  auch  fÅr (fast) jede Zahl im Patchfile einen Ausdruck
 angeben. Die Breite diese Ausdruck kann an das Ende des Ausdrucks angehÑngt
 werden: Ausdruck.B, Ausdruck.W oder Ausdruck.L (Default: .B)
 
-Soll eine Zahl dezimal sein muû sie eine Punkt als PrÑfix haben:
+Soll eine Zahl dezimal sein muû sie einen Punkt als PrÑfix haben:
 .20 = dezimal 20, 20 = hexadezimal 20!
 
 Alle  Variablen  beginnen  mit  einem  Punkt. Groû- und Kleinschreibung ist
@@ -379,7 +380,7 @@ z.B. genutzt werden, um mehrere Patches hintereinander zu laden: z.B.
 30000 PATCH1.ABS
 ~     PATCH2.ABS
 ~     PATCH3.ABS
-patcht ab Offset 30000 PATCH1.ABS, PATCH2.ABS und PATCH3.ABS hintereinander
+patcht ab Offset $30000 PATCH1.ABS, PATCH2.ABS und PATCH3.ABS hintereinander
 ins TOS.
 
 
@@ -405,7 +406,7 @@ Das  Programm  LOADTOS.PRG  gehîrt in den AUTO-Ordner. Es lÑdt von dort ein
 TOS.IMG  aus dem ROOT-Directory (der Pfad kann im Programm gepatcht werden)
 an  die  im  TOS.IMG  angegebene  Adresse.  Es  kann  aber auch vom Desktop
 gestartet  werden,  dann  lÑdt  es  entweder  das Default-TOS.IMG oder eine
-beliege TOS-Datei, falls eine in der Commandline Åbergeben wurde.
+beliebige TOS-Datei, falls eine in der Commandline Åbergeben wurde.
 
 ACHTUNG: LOADTOS lîscht den Resetpointer, d.h. Programme die auf AusfÅhrung
          einer   Routine   vor   dem  Reset  bestehen,  gehen  baden,  z.B.
@@ -425,7 +426,7 @@ mit der PMMU problemlos.
 
 
 >>>  Wenn   Ihr   neue  Patches  einbaut,  mailt  sie  mir  bitte !!!  <<<
->>>  email: Markus_Heiden@public.uni-hamburg.de                        <<<
+>>>  email: markus@markusheiden.de                                     <<<
 
    Viel Spaû wÅnscht
      Markus Heiden
