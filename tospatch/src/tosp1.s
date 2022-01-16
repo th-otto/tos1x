@@ -1,5 +1,5 @@
 /********************************************************************************
- * TosPatch V2.9.8:                                                             *
+ * TosPatch V2.9.9:                                                             *
  * Dieses Programm dient zum Patchen des TOS mit einem einfachen ASCII-File.    *
  *                                                                              *
  * (C)1990    Sigma-soft, Markus Fritze                                         *
@@ -11,6 +11,7 @@ stack_size      EQU 4096        ;Stack fuer das Programm
                 TEXT
 
 init:           movea.l 4(SP),A6        ;Basepageadresse holen
+                move.l  a6,_BasPag
                 movea.w #$0100,A5       ;Groesse der Basepage
                 adda.l  12(A6),A5       ;+ Groesse des TEXT-Segments
                 adda.l  20(A6),A5       ;+ Groesse des DATA-Segments
@@ -23,6 +24,13 @@ init:           movea.l 4(SP),A6        ;Basepageadresse holen
 
                 lea     stack+stack_size,SP ;eigenen Stack setzen
 
+				lea     ARGV(pc),a0
+				bsr     getenv
+				move.l  a0,d0
+				bne.s   init1
+				st      wait_for_key
+
+init1:
                 bsr     getargs
                 
                 lea     init_text(pc),A0
@@ -59,6 +67,19 @@ init:           movea.l 4(SP),A6        ;Basepageadresse holen
 exit:           moveq.l #0,d7
 exit1:          bsr     setlog0
                 bsr     closelog
+
+                tst.b   quiet
+                bne.s   quit
+                tst.b   wait_for_key
+                beq.s   quit
+                pea     key_text(pc)    ;Taste...
+                move.w  #9,-(SP)        ;Cconws
+                trap    #1              ;GEMDOS 9
+                addq.l  #6,SP
+
+                move.w  #7,-(SP)
+                trap    #1              ;auf Taste warten
+                addq.l  #2,SP
 
 quit:           move.w    d7,-(a7)
                 move.w    #$004C,-(a7)
@@ -3347,6 +3368,44 @@ logmsg:
 				addq.l #4,a7
 				rts
 
+getenv:
+	move.l     a2,-(a7)
+	movea.l    _BasPag,a1
+	move.l     44(a1),d0
+	beq.s      getenv6
+	movea.l    d0,a1
+	move.b     (a0)+,d0
+	beq.s      getenv6
+getenv1:
+	move.b     (a1)+,d1
+	beq.s      getenv6
+	cmp.b      d0,d1
+	bne.s      getenv3
+	movea.l    a0,a2
+getenv2:
+	move.b     (a2)+,d2
+	beq.s      getenv4
+	move.b     (a1)+,d1
+	beq.s      getenv1
+	cmp.b      d1,d2
+	beq.s      getenv2
+getenv3:
+	tst.b      (a1)+
+	bne.s      getenv3
+	bra.s      getenv1
+getenv4:
+	move.b     (a1)+,d1
+	beq.s      getenv1
+	cmp.b      #'=',d1
+	bne.s      getenv3
+	movea.l    a1,a0
+getenv5:
+	movea.l    (a7)+,a2
+	rts
+getenv6:
+	suba.l     a0,a0
+	bra.s      getenv5
+
                 DATA
 
 fname:          DC.B 'TOS.'
@@ -3354,7 +3413,7 @@ fname_ext:      DC.B 'IMG',0
 logname:        DC.B 'TOS.LOG',0
 bfname:         DC.B 'PATCH.FIL',0
 
-init_text:      DC.B $1b,'v',10,$1b,'p TOS-Patch V2.9.8 (11.07.1999) ',$1b,'q',13,10,10
+init_text:      DC.B $1b,'v',10,$1b,'p TOS-Patch V2.9.9 (11.07.1999) ',$1b,'q',13,10,10
                 DC.B $bd,'1990      ',$e4,'-soft, Markus Fritze',13,10
                 DC.B $bd,'1992-1999 Markus Heiden',13,10,10,0
 path_text:      DC.B 'Setze Pfad auf "',0
@@ -3673,6 +3732,10 @@ w32_ext1:       DC.B 'U10',0,'U11',0,'U12',0,'U13',0,0
 w64_ext:        DC.B '0_',0,0,'1_',0,0,'2_',0,0,'3_',0,0,'4_',0,0,'5_',0,0,'6_',0,0,'7_',0,0,0
                 EVEN
 
+ARGV:           dc.b "ARGV"
+                dc.b 0
+                EVEN
+
 error_tab:      DC.L error0_t,error1_t,error2_t,error3_t
                 DC.L error4_t,error5_t,error6_t,error7_t
                 DC.L error8_t,error9_t,error10_t,error11_t
@@ -3756,6 +3819,7 @@ error57_t:      DC.B 0,'Unbekannter Maschinentyp',0
 
                 BSS
 
+_BasPag:        DS.L 1
 btchbuf:        DS.L 1          ;64kB Hauptbatchfilepuffer
 filenr:         DS.W 1
 buffer:         DS.L 1            ;Platz fuer das TOS
@@ -3783,6 +3847,7 @@ logflg:         ds.b 1
 adrflg:         ds.b 1
 dolog:          ds.b 1
 neednl:         ds.b 1
+wait_for_key:   ds.b 1
                 even
 number_puffer:  DS.B 32
 filename:       DS.B 256
