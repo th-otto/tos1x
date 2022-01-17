@@ -2,9 +2,9 @@
 BS=\${empty}
 QBS=\\${empty}
 
-BIN=..\bin\tos${BS}
-LIB=..\lib${BS}
-INC=..\common${BS}
+BIN=$(top_srcdir)\bin\tos${BS}
+LIB=$(top_srcdir)\lib${BS}
+INC=$(top_srcdir)\common${BS}
 EXEEXT=.ttp
 BUILD_EXEEXT=$(EXEEXT)
 ALNPATH=${LIB}
