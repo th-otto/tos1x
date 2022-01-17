@@ -1,0 +1,22 @@
+/*
+ * resource set indices for autoconf
+ *
+ * created by ORCS 2.18
+ */
+
+CONF     equ 0 /* form/dialog */
+CTRL     equ 1 /* BUTTON in CONF */
+LSHIFT   equ 2 /* BUTTON in CONF */
+ALT      equ 3 /* BUTTON in CONF */
+RSHIFT   equ 4 /* BUTTON in CONF */
+CAPS     equ 5 /* BUTTON in CONF */
+TOS_FILE equ 8 /* FBOXTEXT in CONF */
+CANCEL   equ 9 /* BUTTON in CONF */
+UNDO     equ 10 /* BUTTON in CONF */
+SAVE     equ 11 /* BUTTON in CONF */
+MSG      equ 12 /* BOXTEXT in CONF */
+LT_FILE  equ 14 /* FBOXTEXT in CONF */
+INCTIME  equ 16 /* BOXTEXT in CONF */
+TIME     equ 17 /* FTEXT in CONF */
+DECTIME  equ 18 /* BOXTEXT in CONF */
+

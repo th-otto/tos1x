@@ -13,7 +13,7 @@ LIBS =
 CPPFLAGS =
 CFLAGS = $(OPTS) $(WARN)
 
-PROGRAMS = cmprom$(BUILD_EXEEXT) newglue$(BUILD_EXEEXT) findrsc$(BUILD_EXEEXT) mkbininc$(BUILD_EXEEXT) mkrom$(BUILD_EXEEXT)
+PROGRAMS = cmprom$(BUILD_EXEEXT) newglue$(BUILD_EXEEXT) findrsc$(BUILD_EXEEXT) mkbininc$(BUILD_EXEEXT) mkrom$(BUILD_EXEEXT) bin2c$(BUILD_EXEEXT)
 
 all:: $(PROGRAMS)
 
@@ -35,6 +35,9 @@ mkbininc$(BUILD_EXEEXT): mkbininc.o
 	$(AM_V_LD)$(BUILD_CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 mkrom$(BUILD_EXEEXT): mkrom.o
+	$(AM_V_LD)$(BUILD_CC) $(CFLAGS) -o $@ $< $(LIBS)
+
+bin2c$(BUILD_EXEEXT): bin2c.o
 	$(AM_V_LD)$(BUILD_CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 check::
