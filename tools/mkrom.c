@@ -46,7 +46,7 @@
 #define  FALSE	0
 
 
-#define SIZE_ERROR ((size_t)-1)
+#define SIZE_ERROR ((long)-1)
 #undef MIN
 #define MIN(a, b) ((a)<=(b) ? (a) : (b))
 #define BUFFER_SIZE (16*1024)

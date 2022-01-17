@@ -1,4 +1,7 @@
 #define _GNU_SOURCE
+#ifdef __MINGW32__
+# define __USE_MINGW_ANSI_STDIO 1
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -89,6 +92,14 @@ typedef ssize_t xssize_t;
 #define EXIT_TROUBLE 2
 #define _(x) x
 #define N_(x) x
+
+#ifdef __ALCYON__
+#define NEED_rawmemchr
+#endif
+#ifdef __MINGW32__
+#define NEED_rawmemchr
+#endif
+
 
 
 /* The name of this program */
@@ -485,8 +496,8 @@ PP(word const *p1;)
 }
 
 
-#ifdef __ALCYON__
-VOIDPTR rawmemchr(P(const VOIDPTR) s, P(int) ucharwanted)
+#ifdef NEED_rawmemchr
+static const VOIDPTR rawmemchr(P(const VOIDPTR) s, P(int) ucharwanted)
 PP(const VOIDPTR s;)
 PP(register char ucharwanted;)
 {
@@ -510,7 +521,7 @@ PP(char *buf;)
 PP(xsize_t bufsize;)
 {
 	xsize_t count = 0;
-	char *p;
+	const char *p;
 	char *lim = buf + bufsize;
 
 	*lim = '\n';

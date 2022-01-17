@@ -36,6 +36,10 @@ It is therefor mainly intended to be used as reference.
   the usual unix cc switches, and translates them to call the various
   alcyon executables.
 
+- bin/win32:  
+  Same tools as above, but compiled for windows (32bit). Can be
+  used from an MSYS2 or cygwin environment.
+
 - include:  
   Include files for the C compiler. Only a few of them are actually
   needed for TOS itself, most of them are only needed to build the

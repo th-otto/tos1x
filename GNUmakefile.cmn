@@ -7,10 +7,16 @@ CROSS := $(shell $(EVAL_CROSS))
 ifeq ($(CROSS),yes)
 USE_CROSS_ALCYON=1
 endif
+EVAL_WIN32 := case `uname -s` in *MINGW*|CYGWIN*) echo 1;; *) echo 0; esac
+WIN32 := $(shell $(EVAL_WIN32))
 endif
 
 ifeq ($(USE_CROSS_ALCYON),1)
+ifeq ($(WIN32),1)
+BIN=../bin/win32/
+else
 BIN=../bin/linux/
+endif
 else
 BIN=../bin/tos/
 endif
@@ -39,7 +45,11 @@ QBS=\${empty}
 ifeq ($(USE_CROSS_ALCYON),1)
 
 EXEEXT=.ttp
+ifeq ($(WIN32),1)
+BUILD_EXEEXT=.exe
+else
 BUILD_EXEEXT=
+endif
 
 CROSSPREFIX=m68k-atari-mint-
 
@@ -62,7 +72,11 @@ ifeq ($(CROSS),yes)
 
 CROSSPREFIX=m68k-atari-mint-
 EXEEXT=.ttp
+ifeq ($(WIN32),1)
+BUILD_EXEEXT=.exe
+else
 BUILD_EXEEXT=
+endif
 
 else
 
