@@ -25,8 +25,8 @@ ASFLAGS += $(LINEF_AFLAGS_$(TOSVERSION))
 STARTUP =	gemjstrt.o
 
 aes.a: $(STARTUP) $(AES_OBJS) ${MAKEFILE}
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $(STARTUP) $(AES_OBJS)
+	$(AM_V_at)$(RM) $@
+	$(AM_V_AR)$(AR) $(ARFLAGS) $@ $(STARTUP) $(AES_OBJS)
 
 # sections.mak might have just been generated, make sure it is reread
 aes.o: $(VARS_OBJS) $(STARTUP) $(AES_OBJS) aesext.o $(top_srcdir)/common/sections.mak ${MAKEFILE}

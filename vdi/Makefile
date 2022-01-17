@@ -23,8 +23,8 @@ include SRCFILES
 CPPFLAGS +=
 
 vdi.a: tosvars.o $(top_srcdir)/common/config.h $(VDI_OBJS) ${MAKEFILE}
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $(VDI_$(TOSVERSION)_OBJS)
+	$(AM_V_at)$(RM) $@
+	$(AM_V_AR)$(AR) $(ARFLAGS) $@ $(VDI_OBJS)
 
 # sections.mak might have just been generated, make sure it is reread
 vdi.o: tosvars.o $(VARS_OBJS) vdiext.o $(top_srcdir)/common/config.h $(top_srcdir)/common/sections.mak $(VDI_OBJS) ${MAKEFILE}

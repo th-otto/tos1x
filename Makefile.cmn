@@ -2,7 +2,7 @@
 BS=\${empty}
 QBS=\\${empty}
 
-BIN=..\bin${BS}
+BIN=..\bin\tos${BS}
 LIB=..\lib${BS}
 INC=..\common${BS}
 EXEEXT=.ttp

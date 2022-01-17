@@ -13,9 +13,7 @@ include SRCFILES
 
 bdos.a: $(top_srcdir)/common/config.h $(BDOS_OBJS) ${MAKEFILE}
 	$(AM_V_at)$(RM) $@
-	$(AM_V_AR)$(AR) $(ARFLAGS) $@ $(BDOS_$(TOSVERSION)_OBJS1)
-	$(AM_V_at)$(AR) $(ARFLAGS) $@ $(BDOS_$(TOSVERSION)_OBJS2)
-	$(AM_V_at)$(AR) $(ARFLAGS) $@ $(BDOS_$(TOSVERSION)_OBJS3)
+	$(AM_V_AR)$(AR) $(ARFLAGS) $@ $(BDOS_OBJS)
 
 vdidsp.o: vdidsp.S $(top_srcdir)/common/config.h $(top_srcdir)/common/sections.inc
 	$(AM_V_AS)${BIN}cp68${EXEEXT} ${CPPFLAGS} -P $*.S $*.i

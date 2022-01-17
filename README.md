@@ -1,6 +1,6 @@
 # What is this?
 
-These are the sources used to build orginal ROM versions of TOS 1.04/1.06,
+These are the sources used to build orginal ROM versions of TOS 1.04/1.06/1.62,
 the OS used by Atari ST (not TT).
 
 The goal of this project was to actually be able to
@@ -15,7 +15,7 @@ It is therefor mainly intended to be used as reference.
 
 # Directory Structure
 
-- bin:  
+- bin/tos:  
   Prebuild binaries of tools used in the build process. These are
   essentially identical to the ones from the developer kit, with 
   a few modifications. Sources of almost all of these tools are found
@@ -30,7 +30,7 @@ It is therefor mainly intended to be used as reference.
   to save some ROM space. Without these, you won't get a binary exact
   image, nor a working ROM, since it will be too large to fit in 192k.
 
-- bin64:  
+- bin/linux:  
   Same tools as above, but compiled for linux-64bit. The cc68 executable
   in this directory is just a shell script that recognizes a few of
   the usual unix cc switches, and translates them to call the various

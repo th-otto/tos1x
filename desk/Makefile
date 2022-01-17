@@ -21,8 +21,8 @@ CFLAGS += $(LINEF_CFLAGS_$(TOSVERSION))
 ASFLAGS += $(LINEF_AFLAGS_$(TOSVERSION))
 
 desk.a: tosvars.o $(top_srcdir)/common/config.h $(DESK_OBJS) ${MAKEFILE}
-	$(RM) $@
-	$(AR) $(ARFLAGS) $@ $(DESK_OBJS)
+	$(AM_V_at)$(RM) $@
+	$(AM_V_AR)$(AR) $(ARFLAGS) $@ $(DESK_OBJS)
 
 #
 # need to repeat the default suffix rule here,

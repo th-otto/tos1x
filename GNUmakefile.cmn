@@ -10,9 +10,9 @@ endif
 endif
 
 ifeq ($(USE_CROSS_ALCYON),1)
-BIN=../bin64/
+BIN=../bin/linux/
 else
-BIN=../bin/
+BIN=../bin/tos/
 endif
 LIB=../lib/
 INC=../include
