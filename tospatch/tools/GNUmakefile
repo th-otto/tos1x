@@ -13,7 +13,9 @@ include $(top_srcdir)/Makefile.sil
 CPPFLAGS = -I../common -I$(INC)
 CFLAGS = $(OPTS) $(WARN)
 
-PROGRAMS = loadtos.prg resettos.prg
+BIN2C = $(top_srcdir)/tools/bin2c$(BUILD_EXEEXT)
+
+PROGRAMS = loadtos.prg resettos.prg lt_conf.prg
 
 all:: $(PROGRAMS)
 
@@ -40,6 +42,20 @@ else
 endif
 
 resettos.o: resettos.S GNUmakefile
+
+lt_conf.prg: lt_conf.o ${MAKEFILE}
+ifeq ($(USE_CROSS_ALCYON),1)
+	$(AM_V_LD)${LINK68} $(ASYMBOLS) '[PRGFLAGS[1]]' lt_conf.rel=lt_conf.o
+	$(AM_V_at)${RELMOD} lt_conf.rel $@
+	@$(RM) lt_conf.rel
+else
+	$(AM_V_LD)${LD} ${LDFLAGS} -nostdlib -nostartfiles -Wl,--mprg-flags,1 -s -o $@ lt_conf.o
+endif
+
+lt_conf.o: lt_conf.S autoconf.i GNUmakefile
+
+autoconf.i: autoconf.rsc $(BIN2C)
+	$(BIN2C) -a $< $@
 
 check::
 	@:
