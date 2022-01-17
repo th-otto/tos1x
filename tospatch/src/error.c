@@ -81,3 +81,10 @@ void illegal_offset(void)
 {
 	error_handler(0, illegal_offset_err);
 }
+
+/*** ---------------------------------------------------------------------- ***/
+
+void overflow(void)
+{
+	error_handler(ERR_CONTINUE, overflow_err);
+}

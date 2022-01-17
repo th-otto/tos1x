@@ -427,7 +427,7 @@ static bool handle_dot(char **batchptr)
 		if ((c = skip_space(batchptr)) == 0 || (c != '=' && c != ':'))
 		{
 			/* .VARIABLE is Patchoffset */
-			*batchptr = start;
+			*batchptr = start - 1;
 			return handle_patch(batchptr);
 		} else
 		{
@@ -619,6 +619,7 @@ static void handle_relocs(char **batchptr)
 			(*batchptr)++;
 			continue;
 		}
+		c = *(*batchptr)++;
 		if (c != '.')
 		{
 			illegal_delimiter();
@@ -982,7 +983,7 @@ static void handle_date(char **batchptr)
 	}
 	country = get_term(batchptr);
 	ptr2 = (uint16_t *)(tos_buffer + 28);
-	if (((be16_to_cpu(*ptr2) >> 1) & 0x7f) != country)
+	if ((((signed char)(be16_to_cpu(*ptr2) & 0xff)) >> 1) != country)
 	{
 		error_handler(ERR_QUEST|ERR_CONTINUE, wrong_country_err);
 	}
@@ -1042,7 +1043,7 @@ static void handle_forced(char **batchptr)
 static bool do_ifdef(char **batchptr, bool flag)
 {
 	char *start;
-	bool isnew;
+	VAR *var;
 	
 	if (cond_flag != 0)
 	{
@@ -1056,13 +1057,13 @@ static bool do_ifdef(char **batchptr, bool flag)
 		{
 			start = *batchptr + 1;
 			get_vname(batchptr);
-			search_var(start, &isnew);
+			var = search_var(start);
 			if (if_count >= MAX_IF)
 			{
 				error_handler(0, too_many_if_err);
 			} else
 			{
-				if (isnew != flag)
+				if ((var != NULL) == flag)
 				{
 					if_stack[if_count++] = COND_IF;
 				} else
@@ -1406,7 +1407,6 @@ static bool cmd_undef(char **batchptr)
 {
 	char *start;
 	VAR *var;
-	bool isnew;
 	
 	if (skip_space(batchptr) == 0)
 	{
@@ -1415,12 +1415,10 @@ static bool cmd_undef(char **batchptr)
 	{
 		start = *batchptr + 1;
 		get_vname(batchptr);
-		var = search_var(start, &isnew);
-		if (!isnew)
+		var = search_var(start);
+		if (var != NULL)
 		{
-			var->name[0] = '\0';
-			var->name[1] = -1; /* mark as unused slot */
-			var->value = 0;
+			del_var(start);
 		}
 	}
 	return false;

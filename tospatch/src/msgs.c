@@ -44,14 +44,18 @@ char const usage_error[] =
 	"Ung" ue "ltiger Schalter!\n\n"
 	"TOSPATCH [-qmK] patchfile\n"
 	" -q   Ausgaben unterdr" ue "cken\n"
-	" -m   nicht Nachfragen\n"
-	" -K   akustisches Signal bei Beendigung\n\0"
+	" -m   Nicht Nachfragen\n"
+	" -l   Alle Ausgaben ins Logfile TOS.LOG schreiben\n"
+	" -a   Alle gepatchten Adressen ausgeben\n"
+	" -K   Akustisches Signal bei Beendigung\n\0"
 	"\377"
 	"Illegal option!\n\n"
 	"TOSPATCH [-qmK] patchfile\n"
 	" -q   Suppress messages\n"
-	" -m   do not ask\n"
-	" -K   acoustic signal upon termination\n";
+	" -m   Do not ask\n"
+	" -l   Write all messages to logfile TOS.LOG\n"
+	" -a   Print all patched addresses\n"
+	" -K   Acoustic signal upon termination\n";
 
 char const init_text[] =
 	"\377"
@@ -68,7 +72,9 @@ char const init_text[] =
 #endif
 	"\n\n"
 	COPY_S "1990      " SIGMA_S "-soft, Markus Fritze\n"
-	COPY_S "1992-1999 Markus Heiden\n\n";
+	COPY_S "1992-1999 Markus Heiden\n"
+	COPY_S "2022      Thorsten Otto\n"
+	"\n";
 
 char const ok_text[] =
 	"\377"
@@ -208,12 +214,6 @@ char const enomem_text[] =
 	"Speicher voll!\0"
 	"\377"
 	"out of memory!";
-
-char const toomany_variables_err[] =
-	COUNTRY_DE_S COUNTRY_SG_S "\377"
-	"Zu viele Variablen\0"
-	"\377"
-	"too many variables";
 
 char const illegal_name_err[] =
 	COUNTRY_DE_S COUNTRY_SG_S "\377"
@@ -556,6 +556,12 @@ char const set_not_terminated_err[] =
 	"Menge nicht abgeschlossen\0"
 	"\377"
 	"set not terminated";
+
+char const overflow_err[] =
+	COUNTRY_DE_S COUNTRY_SG_S "\377"
+	Ue "berlauf\0"
+	"\377"
+	"overflow";
 
 
 

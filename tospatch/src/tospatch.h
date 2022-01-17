@@ -85,7 +85,6 @@ extern char const reloc_text[];
 extern char const cksum_text[];
 
 extern char const enomem_text[];
-extern char const toomany_variables_err[];
 extern char const illegal_name_err[];
 extern char const toomany_files_err[];
 extern char const missing_var_err[];
@@ -143,6 +142,7 @@ extern char const expression_too_complex_err[];
 extern char const div_by_zero_err[];
 extern char const missing_paren_err[];
 extern char const set_not_terminated_err[];
+extern char const overflow_err[];
 
 const char *translate_msg(const char *str);
 
@@ -176,15 +176,19 @@ extern char const var_reloc[];
 extern char const var_width[];
 
 #define MAX_VAR_LENGTH 16
-typedef struct {
-	char name[MAX_VAR_LENGTH];
+typedef struct _var VAR;
+struct _var
+{
+	VAR *next;
+	char name[MAX_VAR_LENGTH + 1];
 	long value;
-} VAR;
+};
 
-VAR *search_var(const char *name, bool *isnew);
+VAR *new_var(const char *name);
+void del_var(const char *name);
+VAR *search_var(const char *name);
 void get_vname(char **batchptr);
 void write_var(const char *name, long value);
-long read_var(const char *name, bool *isnew);
 long get_length(void);
 memaddr get_base(void);
 memaddr get_reloc_addr(void);
@@ -205,6 +209,7 @@ void user_error(const char *str);
 void unexpected_eof(void);
 void illegal_delimiter(void);
 void illegal_offset(void);
+void overflow(void);
 
 
 /*

@@ -1,7 +1,8 @@
 #include "tospatch.h"
 
+#define MAX_OPNAME 6
 struct prio {
-	char opname[8];
+	char opname[MAX_OPNAME];
 	short prio;
 };
 
@@ -75,9 +76,9 @@ static bool get_binbyte(char **batchptr, long *value)
 {
 	bool ok = false;
 	int c;
-	long val = 0;
+	unsigned long val = 0;
 	
-	if (*(*batchptr)++ == '.')
+	if (*(*batchptr)++ == '%')
 	{
 		for (;;)
 		{
@@ -90,7 +91,8 @@ static bool get_binbyte(char **batchptr, long *value)
 			{
 				break;
 			}
-			/* TODO: check for overflow */
+			if (val & 0x80000000UL)
+				overflow();
 			val = (val << 1) + c;
 		}
 	}
@@ -106,7 +108,7 @@ static bool get_dezbyte(char **batchptr, long *value)
 {
 	bool ok = false;
 	int c;
-	long val = 0;
+	unsigned long val = 0;
 	
 	if (*(*batchptr)++ == '.')
 	{
@@ -115,14 +117,14 @@ static bool get_dezbyte(char **batchptr, long *value)
 			c = *(*batchptr)++;
 			if (ISDIGIT(c))
 			{
-				/* TODO: check for overflow */
 				c = c - '0';
 				ok = true;
 			} else
 			{
 				break;
 			}
-			/* TODO: check for overflow */
+			if (val > 429496729UL)
+				overflow();
 			val = (val * 10) + c;
 		}
 	}
@@ -138,7 +140,7 @@ static bool get_hexbyte(char **batchptr, long *value)
 {
 	bool ok = false;
 	int c;
-	long val = 0;
+	unsigned long val = 0;
 	
 	for (;;)
 	{
@@ -157,7 +159,8 @@ static bool get_hexbyte(char **batchptr, long *value)
 		{
 			break;
 		}
-		/* TODO: check for overflow */
+		if (val & 0xf0000000UL)
+			overflow();
 		val = (val << 4) | c;
 	}
 	*value = val;
@@ -174,7 +177,7 @@ static int get_unsigned(char **batchptr, long *value)
 {
 	int c;
 	char *start;
-	bool isnew;
+	VAR *var;
 
 	if ((c = skip_space(batchptr)) == 0)
 	{
@@ -200,9 +203,15 @@ static int get_unsigned(char **batchptr, long *value)
 		{
 			start = *batchptr + 1;
 			get_vname(batchptr);
-			*value = read_var(start, &isnew);
-			if (isnew)
+			var = search_var(start);
+			if (var == NULL)
+			{
 				error_handler(0, undefined_variable_err);
+				*value = 0;
+			} else
+			{
+				*value = var->value;
+			}
 		}
 		break;
 	default:
@@ -230,7 +239,7 @@ static int get_number(char **batchptr, long *value)
 		{
 			src = upriority[i].opname;
 			ptr = *batchptr;
-			len = 8;
+			len = MAX_OPNAME;
 			for (;;)
 			{
 				c = *ptr++;
@@ -283,7 +292,7 @@ static int get_operator(char **batchptr)
 		{
 			src = priority[i].opname;
 			ptr = *batchptr;
-			len = 8;
+			len = MAX_OPNAME;
 			for (;;)
 			{
 				c = *ptr++;
@@ -344,8 +353,7 @@ long get_term(char **batchptr)
 	int prio2;
 	struct {
 		long value;
-		unsigned char prio;
-		signed char op;
+		short prio;
 	} stack[128];
 	int level = 0;
 	int c;
@@ -363,13 +371,12 @@ long get_term(char **batchptr)
 	if (prio == 0)
 	{
 		/* get first operand */
-		if (get_operator(batchptr) == 0)
+		if ((prio = get_operator(batchptr)) == 0)
 			return value;
 	}
 	/* save it on stack */
 	stack[0].value = value;
-	stack[0].prio = prio >> 8;
-	stack[0].op = prio & 0xff;
+	stack[0].prio = prio;
 	for (;;)
 	{
 		for (;;)
@@ -381,7 +388,7 @@ long get_term(char **batchptr)
 			{
 				if (prio < 0)
 				{
-					if (stack[level - 1].op < 0)
+					if (stack[level - 1].prio & 0x80)
 						break;
 					error_handler(0, no_set_operation_err);
 					return 0;
@@ -396,10 +403,9 @@ long get_term(char **batchptr)
 				return 0;
 			}
 			stack[level].value = value;
-			stack[level].prio = prio >> 8;
-			stack[level].op = prio & 0xff;
+			stack[level].prio = prio;
 		pop:
-			if (stack[level - 1].prio >= stack[level].prio)
+			if ((stack[level - 1].prio & 0xff00u) >= (stack[level].prio & 0xff00u))
 			{
 				value2 = stack[level].value;
 				prio2 = stack[level].prio;
@@ -516,11 +522,9 @@ long get_term(char **batchptr)
 			} else
 			{
 				stack[level - 1].value = value;
-				stack[level - 1].prio = prio >> 8;
-				stack[level - 1].op = prio & 0xff;
+				stack[level - 1].prio = prio;
 				stack[level].value = value2;
-				stack[level].prio = prio2 >> 8;
-				stack[level].op = prio2 & 0xff;
+				stack[level].prio = prio2;
 				continue;
 			}
 			break;
@@ -553,8 +557,7 @@ long get_term(char **batchptr)
 		/* put result and 2nd prio on stack again */
 		--level;
 		stack[level].value = value;
-		stack[level].prio = prio2 >> 8;
-		stack[level].op = prio2 & 0xff;
+		stack[level].prio = prio2;
 		if (level != 0)
 			goto pop;
 		if (stack[level].prio == 0)
