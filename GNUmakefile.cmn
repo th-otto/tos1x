@@ -13,15 +13,15 @@ endif
 
 ifeq ($(USE_CROSS_ALCYON),1)
 ifeq ($(WIN32),1)
-BIN=../bin/win32/
+BIN=$(top_srcdir)/bin/win32/
 else
-BIN=../bin/linux/
+BIN=$(top_srcdir)/bin/linux/
 endif
 else
-BIN=../bin/tos/
+BIN=$(top_srcdir)/bin/tos/
 endif
-LIB=../lib/
-INC=../include
+LIB=$(top_srcdir)/lib/
+INC=$(top_srcdir)/include
 
 DISTDIR1=../tmp/tos306de
 DISTDIR2=../tmp/alcyon
