@@ -13,7 +13,7 @@ include $(top_srcdir)/Makefile.sil
 CPPFLAGS = -I../common -I$(INC)
 CFLAGS = $(OPTS) $(WARN)
 
-PROGRAMS = loadtos.prg
+PROGRAMS = loadtos.prg resettos.prg
 
 all:: $(PROGRAMS)
 
@@ -29,6 +29,17 @@ else
 endif
 
 loadtos.o: loadtos.S GNUmakefile
+
+resettos.prg: resettos.o ${MAKEFILE}
+ifeq ($(USE_CROSS_ALCYON),1)
+	$(AM_V_LD)${LINK68} $(ASYMBOLS) '[PRGFLAGS[1]]' resettos.rel=resettos.o
+	$(AM_V_at)${RELMOD} resettos.rel $@
+	@$(RM) resettos.rel
+else
+	$(AM_V_LD)${LD} ${LDFLAGS} -nostdlib -nostartfiles -Wl,--mprg-flags,1 -s -o $@ resettos.o
+endif
+
+resettos.o: resettos.S GNUmakefile
 
 check::
 	@:
