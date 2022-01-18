@@ -14,6 +14,13 @@
 #endif
 
 /*
+ * TP_02: COLOR_60HZ: Switch to 60Hz on color monitors
+ */
+#ifndef TP_02
+#define TP_02 0
+#endif
+
+/*
  * TP_05: SHELL_P: Clear _shell_p
  * Clear the _shell_p system variable on reset.
  */
