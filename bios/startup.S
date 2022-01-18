@@ -2437,6 +2437,9 @@ braop:
 /* 104de: 00fc0e9e */
 /* 106de: 00e0103a */
 _blitmode:
+#if TP_18 /* IGNORE_BLITTER */
+		moveq     #0,d0
+#else
         bsr.s     blittest                      /* test if blitter is installed */
         move.w    d0,d4                         /* d4 = blitter status */
         move.w    d0,d5
@@ -2451,6 +2454,7 @@ _blitmode:
         jsr       _SETBLT                       /* disable/enable blitter */
 blitmod1:
         move.w    d3,d0
+#endif
         rts
 
 /*

@@ -105,6 +105,16 @@
 #endif
 
 /*
+ * TP_18: IGNORE_BLITTER: Ignore the blitter
+ *
+ * The blitter will be disavowed and ignored by TOS
+ * (e.g. for hardware speeder)
+ */
+#ifndef TP_18
+#define TP_18 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
