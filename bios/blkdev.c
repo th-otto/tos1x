@@ -54,6 +54,10 @@ VOID bhdv_init(NOTHING)
 	for (dev = curflop = nflops = 0; dev < NUMFLOPPIES; dev++)
 	{
 		drivechange[dev] = MEDIANOCHANGE;
+#if TP_24 /* SKIP_B */
+		if (dev >= 1)
+			break;
+#endif
 #if BINEXACT
 		/*
 		 * Another strange hack: parameters are wrong,
