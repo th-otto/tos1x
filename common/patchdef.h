@@ -173,6 +173,13 @@
 #endif
 
 /*
+ * TP_26: KILL_BOOT: Prevent execution of floppy boot sector
+ */
+#ifndef TP_26
+#define TP_26 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
