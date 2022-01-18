@@ -138,6 +138,20 @@
 #endif
 
 /*
+ * TP_21: SET_CONTERM: Set conterm
+ *
+ * Bit 2 set: bell on CNTRL-G
+ * Bit 1 set: key repeat on
+ * Bit 0 set: key click on
+ */
+#ifndef TP_21
+#define TP_21 0
+#endif
+#ifndef CONTERM
+#define CONTERM 6
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

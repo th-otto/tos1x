@@ -174,6 +174,19 @@
 #endif
 
 /*
+ * make sure the defaults are used for patches that are not activated
+ */
+#if !TP_07
+#undef STEP_RATE
+#endif
+#if !TP_20
+#undef PRNTIMEOUT
+#endif
+#if !TP_21
+#undef CONTERM
+#endif
+
+/*
  * These are the defaults that are used for patches that are not activated
  */
 #ifndef STEP_RATE
