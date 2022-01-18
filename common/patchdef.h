@@ -21,6 +21,16 @@
 #endif
 
 /*
+ * TP_04: MEM_INIT: Clear memory from $100-$400
+ * Clear the memory starting at $100 instead of $400 on reset,
+ * to remove any junk.
+ * This patch is disabled if the RAMRESET patch is also active.
+ */
+#ifndef TP_04
+#define TP_04 0
+#endif
+
+/*
  * TP_05: SHELL_P: Clear _shell_p
  * Clear the _shell_p system variable on reset.
  */
