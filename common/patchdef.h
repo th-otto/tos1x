@@ -152,6 +152,16 @@
 #endif
 
 /*
+ * TP_23: FASTLOAD: Set fastload-bit for floppy reads
+ *
+ * Produces errors with some drives, take care!
+ * (see ST-Computer 1/90)
+ */
+#ifndef TP_23
+#define TP_23 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

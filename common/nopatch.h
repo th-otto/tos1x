@@ -122,7 +122,7 @@
 #define TP_20 0
 #define TP_21 0
 #define TP_22 0
-#define TP_23 0
+#define TP_23 (OS_COUNTRY == CTRY_CZ)
 #define TP_24 0
 #define TP_25 0
 #define TP_26 0
