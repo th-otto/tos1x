@@ -39,6 +39,14 @@
 #endif
 
 /*
+ * TP_06: MSTE_CACHE_ON: Turn on 16Mhz for Mega-STE
+ * Turns on 16 MHz and cache on Mega-STE already when booting
+ */
+#ifndef TP_06
+#define TP_06 0
+#endif
+
+/*
  * TP_13: BOOT_DEV: Fix boot device error (see ST-Computer 1/90)
  */
 #ifndef TP_13
