@@ -1691,9 +1691,25 @@ VOID d_opnvwk(NOTHING)
 
 	/* Now find a free handle */
 
+#if TP_28 /* VDIFIX */
+	handle = 2;
+#else
 	handle = 1;
+#endif
 	work_ptr = &virt_work;
 
+#if TP_28 /* VDIFIX */
+	while (work_ptr->next_work != NULL && handle == work_ptr->next_work->handle)
+	{
+		handle++;
+		work_ptr = work_ptr->next_work;
+	}
+
+	/* slot found, Insert the workstation here */
+	LV(cur_work) = new_work;
+	new_work->next_work = work_ptr->next_work;
+	work_ptr->next_work = new_work;
+#else
 	while (handle == work_ptr->handle)
 	{
 		handle++;
@@ -1718,6 +1734,7 @@ VOID d_opnvwk(NOTHING)
 		LV(cur_work) = work_ptr->next_work = new_work;
 		new_work->next_work = tmp;
 	}
+#endif /* TP_28 */
 
 	new_work->handle = LV(CONTRL)[6] = handle;
 

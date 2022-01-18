@@ -435,7 +435,7 @@ int16_t bhdv_boot(NOTHING)
 #if !TP_26 /* KILL_BOOT */
 	if (nflops != 0
 #if TP_27 /* NORM_BOOT */
-		&& (_bootdev < NUMFLOPPIES)
+		&& (bootdev < NUMFLOPPIES)
 #endif
 	)
 	{
