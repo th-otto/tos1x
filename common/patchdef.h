@@ -115,6 +115,29 @@
 #endif
 
 /*
+ * TP_19: FASTPRN: Fast printer routines for the parallel port
+ *
+ * Output, Input- and wait functions will be replaced.
+ * Corresponds to FASTPRN.PRG from Ecki from the c't magazine.
+ */
+#ifndef TP_19
+#define TP_19 1
+#endif
+
+/*
+ * TP_20: TIMEOUT: Set printer timeout
+ *
+ * Original value is 30 seconds. Minimum value is 5 seconds.
+ * Does not work with the Atari Laser Printer.
+ */
+#ifndef TP_20
+#define TP_20 1
+#endif
+#ifndef PRNTIMEOUT
+#define PRNTIMEOUT 30
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

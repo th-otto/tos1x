@@ -426,8 +426,9 @@ _IF .FASTPRN
  278  $338C+.BASE.L ;new function for bcostat
  998  $3372+.BASE.L ;new function for bconin
  9B8  $338C+.BASE.L ;new function for bcostat
- 
-+fastpr4.fil   ;3300 - 33A6 (.172)
+
+3300   ;3300 - 33A6 (.172)
++fastpr4.fil
 
  35EC $61,00,FD,64  ;The routine to set the strobe has moved ... 
 _ENDIF
