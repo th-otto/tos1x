@@ -2386,7 +2386,11 @@ _gettime:
 /* 104de: 00fc0e4c */
 /* 106de: 00e00fe8 */
 _settime:
+#if TP_17 /* LOCK_CLOCK */
+        lea.l     retzero,a3
+#else
         lea.l     writeRTCTime,a3
+#endif
         lea.l     isetdt,a4
 gsettime:
         bsr       checkRTC

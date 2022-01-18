@@ -87,6 +87,7 @@ _bco3stat:
         move.b    ABSW(ACIA_MIDI_BASE+ACIA_CTRL),d2
         btst      #1,d2
         bne.s     bco3sret
+        xdef retzero
 retzero:
         moveq.l   #0,d0
 bco3sret:

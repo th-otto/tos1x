@@ -95,6 +95,16 @@
 #endif
 
 /*
+ * TP_17: LOCK_CLOCK: Lock Mega-ST clock
+ *
+ * Prevents the hardware clock from being set by TOS.
+ * A separate program is then needed to update it.
+ */
+#ifndef TP_17
+#define TP_17 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
