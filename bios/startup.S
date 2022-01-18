@@ -192,7 +192,7 @@ _main:
 /* but it matters for software reset */
         move    #$2700,sr
 
-#if TP_01 & !TP_50 /* KILL_RESET & !PAK */
+#if TP_01 /* KILL_RESET */
 		nop
 #else
         reset                  /* reset all hardware */
@@ -262,7 +262,11 @@ meminit:
         lea       ret_1b(pc),a6
         bra       waitvbl                   /* a short delay for PAL */
 ret_1b:
-        move.b    #2,ABSW(v_syncmod)          /* yes -- twiddle to 50hz */
+#if TP_02 /* COLOR_60HZ */
+        move.b    #0,(v_syncmod).w          /* yes -- twiddle to 60hz */
+#else
+        move.b    #2,ABSW(v_syncmod)        /* yes -- twiddle to 50hz */
+#endif
 notpal:
 
 /*
