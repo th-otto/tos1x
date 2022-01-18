@@ -217,6 +217,12 @@ bcon3i2:
         move.w    (a7)+,sr
         rts
 
+#if TP_19 /* FASTPRN */
+
+#include "../tospatch/patches/fastprn.S"
+
+#else
+
 /**************************************************************************
  *                                                                        *
  * Bconout function for device 0 (parallel i/o port)                      *
@@ -336,6 +342,8 @@ _bco0stat:
         moveq.l   #0,d0
 bco0st1:
         rts
+
+#endif /* TP_19 */
 
 /**************************************************************************
  *                                                                        *
@@ -709,7 +717,11 @@ initmfp2:
         move.b    d0,ABSW(_snddelay)            /* clear delay timer */
         move.b    d0,ABSW(_sndtmp)              /* clear temp value */
         move.l    d0,ABSW(lst_timeout)          /* init printer timeout to 0 */
+#if TP_19 /* FASTPRN */
+        bsr       strobeo0
+#else
         bsr       strobeoff                     /* init strobe to off (line high!) */
+#endif
         move.b    #$0F,ABSW(kb_initial)
         move.b    #$02,ABSW(kb_repeat)
 

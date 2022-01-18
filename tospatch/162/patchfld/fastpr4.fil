@@ -1,18 +1,17 @@
-34D8
-~ $26,38,04,BA               ; move.l     ($000004BA).w,d3
+~ $26,38,04,BA               ; move.l     (_hz_200).w,d3
 ~ $24,03                     ; move.l     d3,d2
-~ $96,B8,0E,E0               ; sub.l      (lst_timeout).w,d3
+~ $96,B8,0E,A0               ; sub.l      (lst_timeout).w,d3
 ~ $0C,83,00,00,03,E8         ; cmpi.l     #1000,d3
 ~ $65,12                     ; bcs.s      $00FC3324
 ;FC3312:
 ~ $61,78                     ; bsr.s      $00FC338C
 ~ $6B,18                     ; bmi.s      $00FC332E
-~ $26,38,04,BA               ; move.l     ($000004BA).w,d3
+~ $26,38,04,BA               ; move.l     (_hz_200).w,d3
 ~ $96,82                     ; sub.l      d2,d3
-~ $0C,83,00,00,17,70         ; cmpi.l     #30*200,d3
+~ $0C,83,TIMEOUT*200.L       ; cmpi.l     #PRNTIMEOUT*200,d3
 ~ $6D,EE                     ; blt.s      $00FC3312
 ;FC3324:
-~ $21,F8,04,BA,0E,E0         ; move.l     ($000004BA).w,(lst_timeout).w
+~ $21,F8,04,BA,0E,A0         ; move.l     (_hz_200).w,(lst_timeout).w
 ~ $70,00                     ; moveq.l    #0,d0
 ~ $4E,75                     ; rts
 ;FC332E:
@@ -64,7 +63,7 @@
 ; new bco0stat:
 ;FC338C:
 ~ $02,38,00,FE,FA,05         ; andi.b     #$FE,($FFFFFA05).w
-!338E              ;Reloc-Correction
+!~-4              ;Reloc-Correction
 ~ $70,00                     ; moveq.l    #0,d0
 ~ $01,38,FA,01               ; btst       d0,($FFFFFA01).w
 ~ $66,02                     ; bne.s      $00FC339C
