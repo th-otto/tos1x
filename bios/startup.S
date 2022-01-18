@@ -406,7 +406,11 @@ st_ramsize_done:                    /* bus error or bad ram  */
 
         /* Clear the memory */
 #if TOSVERSION >= 0x106
+#if TP_04 & !TP_03 /* MEM_INIT & !RAMRESET */
+        movea.w   #$100,a0
+#else
         move.l    #sysvars_start,a0
+#endif
         move.l    d5,d4
         moveq.l   #0,d0
 clrmem:
@@ -417,7 +421,11 @@ clrmem:
         cmpa.l    d4,a0
         bne.s     clrmem
 #else
+#if TP_04 & !TP_03 /* MEM_INIT & !RAMRESET */
+        move.l    #$100,d4
+#else
         move.l    #sysvars_start,d4
+#endif
         moveq.l   #0,d0
         moveq.l   #0,d1
         moveq.l   #0,d2
