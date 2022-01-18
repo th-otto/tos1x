@@ -190,9 +190,9 @@ char const read_rom_text[] =
 
 char const no_read_rom_text[] =
 	COUNTRY_DE_S COUNTRY_SG_S "\377"
-	"Lesen aus ROM nicht unterst" ue "tzt\n\0"
+	"Lesen aus ROM nicht unterst" ue "tzt\0"
 	"\377"
-	"Reading TOS from ROM unsupported\n";
+	"Reading TOS from ROM unsupported";
 
 char const reloc_text[] =
 	COUNTRY_DE_S COUNTRY_SG_S "\377"
