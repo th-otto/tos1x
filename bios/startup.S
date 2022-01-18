@@ -456,6 +456,10 @@ nomemchk:
 
 		SETBASEREG
 
+#if (TOSVERSION >= 0x106) & TP_06 /* MSTE_CACHE_ON */
+		ori.b     #3,($ffff8e21).w /* turn on 16MHz and cache */
+#endif
+
 /* clear the remainder of the BSS section */
 
         movea.l   #__sbss,a0
