@@ -251,7 +251,7 @@ static void save_tos(void)
 			for (i = length; --i >= 0; )
 			{
 				*dst++ = *src;
-				dst += width;
+				src += width;
 			}
 			offset += length;
 			write_file(fname, img_buffer, length);
