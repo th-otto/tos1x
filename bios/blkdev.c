@@ -432,6 +432,7 @@ int16_t bhdv_boot(NOTHING)
 	register int ret;
 	
 	chdv_init();
+#if !TP_26 /* KILL_BOOT */
 	if (nflops != 0)
 	{
 		ret = 2;   /* couldn't load */
@@ -448,6 +449,7 @@ int16_t bhdv_boot(NOTHING)
 			return 3;   /* unreadable */
 		}
 	} else
+#endif /* TP_26 */
 	{
 		ret = 1;   /* no floppy */
 	}
