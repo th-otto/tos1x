@@ -7,6 +7,13 @@
  */
  
 /*
+ * TP_01: KILL_RESET: Omit RESET instruction for RAM-TOS on older ST's
+ */
+#ifndef TP_01
+#define TP_01 (RAMVERSION)
+#endif
+
+/*
  * TP_05: SHELL_P: Clear _shell_p
  * Clear the _shell_p system variable on reset.
  */

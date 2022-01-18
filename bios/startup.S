@@ -192,7 +192,11 @@ _main:
 /* but it matters for software reset */
         move    #$2700,sr
 
+#if TP_01 & !TP_50 /* KILL_RESET & !PAK */
+		nop
+#else
         reset                  /* reset all hardware */
+#endif
 		SETBASEREG
 
 /*
