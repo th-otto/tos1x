@@ -246,15 +246,27 @@ _ENDIF
 ;* Gerd Trudow, Umsetzung & Adresse SV:
 ;* Replaces the Atari bombs with the original atomic mushrooms ...
 
-.PILZE = 0          ;1: Include patch, 0: Do not include patch
-
-_IF .PILZE
-DA2 $07,C0,1F,F0,3B,F8,77,F4,B7,FA,BB,FA,DF,F6,66,FC ;Pilze
-~   $32,88,02,80,04,40,04,40,05,40,05,20,09,20,09,20
-_ELSE
-;DA2 $06,00,29,00,00,80,48,40,11,F0,01,F0,07,FC,0F,FE ;Bomben
-;~   $0D,FE,1F,FF,1F,EF,0F,EE,0F,DE,07,FC,03,F8,00,E0
-_ENDIF
+.PILZE = 0          ;0: Bombs
+                    ;1: Mushrooms
+                    ;2: Atari logo
+                    ;3: Pfeifenkopf
+                    ;4: Stinkefinger
+                    ;5: Skull
+DA2
+_SWITCH .PILZE
+_CASE 0: ~ $06,00,29,00,00,80,48,40,11,F0,01,F0,07,FC,0F,FE ;Bomben
+         ~ $0D,FE,1F,FF,1F,EF,0F,EE,0F,DE,07,FC,03,F8,00,E0
+_CASE 1: ~ $07,C0,1F,F0,3B,F8,77,F4,B7,FA,BB,FA,DF,F6,66,FC ;Pilze
+         ~ $32,88,02,80,04,40,04,40,05,40,05,20,09,20,09,20
+_CASE 2: ~ $00,00,05,a0,05,a0,05,a0,05,a0,05,a0,05,a0,0d,b0 ;Atari logo
+         ~ $0d,b0,1d,b8,3d,bc,f9,9f,f9,9f,f1,8f,e1,87,00,00
+_CASE 3: ~ $07,f0,0f,f8,1f,ec,18,04,18,04,10,04,1e,3c,17,54 ;Pfeifenkopf
+         ~ $11,04,0b,28,0d,d8,06,28,07,d0,2e,10,39,e0,38,00
+_CASE 4: ~ $0c,00,12,00,11,00,09,00,09,f0,04,a8,1c,a4,26,54 ;Stinkefinger
+         ~ $22,04,28,04,3c,04,44,02,40,02,30,02,0e,02,01,01
+_CASE 5: ~ $07,E0,08,10,16,68,16,68,10,08,09,90,08,10,0B,D0 ;Skull
+         ~ $04,20,33,CC,2C,34,13,C8,0C,30,13,C8,2C,34,30,0C
+_ENDSWITCH
 
 ;*******************************************************************************
 ;* MRF:
