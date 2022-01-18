@@ -47,10 +47,29 @@
 #endif
 
 /*
+ * TP_07: SET_STEP: Set steprate for floppy drives A: and B:
+ * 0 = 6 ms
+ * 1 = 12 ms
+ * 2 = 2 ms
+ * 3 = 3 ms
+ */
+#ifndef TP_07
+#define TP_07 0
+#define STEP_RATE 3
+#endif
+
+/*
  * TP_13: BOOT_DEV: Fix boot device error (see ST-Computer 1/90)
  */
 #ifndef TP_13
 #define TP_13 1
+#endif
+
+/*
+ * TP_14: CT_HD: Boot function for c't "Billigloesung"
+ */
+#ifndef TP_14
+#define TP_14 0
 #endif
 
 /*
@@ -70,7 +89,8 @@
 #endif
 
 /*
- * TP_69: TIME_SAVE: Read system time from keyboard processor
+ * TP_69: TIME_SAVE: Read system time from keyboard processor,
+ * if reading the RTC fails
  * (see ST-Computer 1/90)
  */
 #ifndef TP_69

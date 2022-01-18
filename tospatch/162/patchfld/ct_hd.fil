@@ -5,7 +5,7 @@
 ~ $7a,00                     ; moveq.l    #0,d5
 ~ $3c,3c,00,c8               ; move.w     #$00C8,d6
 ~ $3e,3c,00,ca               ; move.w     #$00CA,d7
-~ $50,ee,04,3e               ; st         1086(a6)
+~ $50,ee,04,3e               ; st         _flock(a6)
 ~ $30,3c,00,64               ; move.w     #$0064,d0
 ~ $38,87                     ; move.w     d7,(a4)
 ~ $3a,bc,00,80               ; move.w     #$0080,(a5)
@@ -15,10 +15,10 @@
 ~ $38,86                     ; move.w     d6,(a4)
 ;FC057A:
 ~ $51,c8,ff,fe               ; dbf        d0,$00FC057A
-~ $24,6e,04,c6               ; movea.l    1222(a6),a2
+~ $24,6e,04,c6               ; movea.l    _dskbufp(a6),a2
 ~ $d5,fc,00,00,02,00         ; adda.l     #$00000200,a2
 ~ $61,20                     ; bsr.s      $00FC05AA
-~ $51,ee,04,3e               ; sf         1086(a6)
+~ $51,ee,04,3e               ; sf         _flock(a6)
 ~ $4a,40                     ; tst.w      d0
 ~ $66,16                     ; bne.s      $00FC05A8
 ~ $43,d2                     ; lea.l      (a2),a1
@@ -67,12 +67,12 @@
 ~ $38,87                     ; move.w     d7,(a4)
 ~ $3a,84                     ; move.w     d4,(a5)
 ~ $38,86                     ; move.w     d6,(a4)
-~ $d2,ae,04,ba               ; add.l      1210(a6),d1
+~ $d2,ae,04,ba               ; add.l      _hz_200(a6),d1
 ;FC05F8:
 ~ $30,15                     ; move.w     (a5),d0
 ~ $c0,44                     ; and.w      d4,d0
 ~ $66,0c                     ; bne.s      $00FC060A
-~ $b2,ae,04,ba               ; cmp.l      1210(a6),d1
+~ $b2,ae,04,ba               ; cmp.l      _hz_200(a6),d1
 ~ $66,f4                     ; bne.s      $00FC05F8
 ~ $61,14                     ; bsr.s      $00FC061A
 ~ $70,ff                     ; moveq.l    #-1,d0

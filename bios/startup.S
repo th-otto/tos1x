@@ -406,7 +406,7 @@ st_ramsize_done:                    /* bus error or bad ram  */
 
         /* Clear the memory */
 #if TOSVERSION >= 0x106
-#if TP_04 & !TP_03 /* MEM_INIT & !RAMRESET */
+#if TP_04 /* MEM_INIT & !RAMRESET */
         movea.w   #$100,a0
 #else
         move.l    #sysvars_start,a0
@@ -421,7 +421,7 @@ clrmem:
         cmpa.l    d4,a0
         bne.s     clrmem
 #else
-#if TP_04 & !TP_03 /* MEM_INIT & !RAMRESET */
+#if TP_04 /* MEM_INIT & !RAMRESET */
         move.l    #$100,d4
 #else
         move.l    #sysvars_start,d4
@@ -901,6 +901,10 @@ nodiskboot:
         rts
 
 
+#if TP_14 /* CT_HD */
+#include "../tospatch/patches/ct_hd.S"
+#else
+
 /* 306de: 00e009a2 */
 /* 206de: 00e0097a */
 /* 104de: 00fc054c */
@@ -1027,6 +1031,8 @@ acsista1:
 		moveq.l   #-1,d1
 acsista2:
 		rts
+
+#endif /* TP_14 */
 
 
 /*
