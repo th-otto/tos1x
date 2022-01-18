@@ -81,6 +81,20 @@
 #endif
 
 /*
+ * TP_16: PILZE: Alternative image for bombs
+ * Replaces the Atari bomb images with the original mushrooms
+ * 0: Original bombs
+ * 1: Mushrooms
+ * 2: Atari logo
+ * 3: Pfeifenkopf
+ * 4: Stinkefinger
+ * 5: Skull
+ */
+#ifndef TP_16
+#define TP_16 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
