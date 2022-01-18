@@ -1418,7 +1418,7 @@ static bool cmd_undef(char **batchptr)
 		var = search_var(start);
 		if (var != NULL)
 		{
-			del_var(start);
+			del_var(var->name);
 		}
 	}
 	return false;
