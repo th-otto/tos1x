@@ -191,6 +191,16 @@
 #endif
 
 /*
+ * TP_28: VDIFIX: New v_opnvwk() function
+ *
+ * Replace v_opnvwk() by a new function to fix a bug.
+ * Same functionality as VDIFIX.PRG autofolder program.
+ */
+#ifndef TP_28
+#define TP_28 1
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
