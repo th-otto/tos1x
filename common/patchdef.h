@@ -180,6 +180,17 @@
 #endif
 
 /*
+ * TP_27: NORM_BOOT: Normal boot
+ *
+ * Similar to above, but prevents execution of floppy bootsector
+ * only if system was already booted from harddisk. This was
+ * normal behaviour until TOS 1.4.
+ */
+#ifndef TP_27
+#define TP_27 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
