@@ -248,6 +248,46 @@
 #endif
 
 /*
+ * TP_37: ICONS: Set custom desktop icons
+ * TP_37_1: floppy
+ * TP_37_2: folder
+ * TP_37_3: trashcan
+ * TP_37_4: program
+ * TP_37_5: file
+ *
+ * These must set to a filename of an 32x32 monochrome ICO
+ * (windows icon) file in the icons folder.
+ * example: #define TP_37_1 "../tospatch/data/icons/floppy.ico"
+ */
+
+/*
+ * TP_38: ICONS: Set custom mouse cursors
+ * TP_38_0: Arrow
+ * TP_38_1: Text cursor
+ * TP_38_2: Busy bee
+ * TP_38_3: Point hand
+ * TP_38_4: Flat hand
+ * TP_38_5: Thin cross
+ * TP_38_6: Thick cross
+ * TP_38_7: Outline cross
+ *
+ * These must set to a filename of an 16x16 monochrome CUR
+ * (windows cursor) file in the mform folder.
+ * example: #define TP_38_0 "../tospatch/data/mform/mform0.cur"
+ */
+
+/*
+ * TP_39: MOUSE: Set custom alert icons
+ * TP_39_1: Note icon
+ * TP_39_2: Question icon
+ * TP_39_3: Stop icon
+ *
+ * These must set to a filename of an 32x32 monochrome ICO
+ * (windows icon) file in the icons folder.
+ * example: #define TP_39_1 "../tospatch/data/icons/note.ico"
+ */
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
