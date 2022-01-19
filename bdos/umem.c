@@ -421,10 +421,14 @@ found:
 
 	if (len == 0)
 	{
+#if TP_29 /* M_SHRINK */
+		xmfree(blk);
+#else
 #if GEMDOS == 0x17
 		freeit(p, ppmd);
 #else
 		freeit(p, &pmd);
+#endif
 #endif
 		return E_OK;
 	}
