@@ -355,18 +355,6 @@ _IF .NORM_BOOT
 _ENDIF
 
 ;*******************************************************************************
-;* ST-Computer 10/90
-;* The mega clock no longer adjusts the alarm register.
-;*
-;* Warning: Does _NOT_ work with the c't clock patch!
-
-.ALARM = 0          ;1: Include patch, 0: Do not include patch
-
-_IF .ALARM !A! (.CT_HD = 0)
-+uhrpatch.fil   ;2148 - 219A (.82)
-_ENDIF
-
-;*******************************************************************************
 ;* MRF:
 ;* Integration of the c't clock in TOS. You can then use the clock directly with the XBIOS
 ;* (also with the GEMDOS of course ...)
@@ -376,8 +364,21 @@ _ENDIF
 
 .CT_CLOCK = 0       ;1: Include patch, 0: Do not include patch
 
-_IF .CT_CLOCK !A! (.ALARM = 0)
+_IF .CT_CLOCK
 +ctuhrdrv.fil  ;2148 - 2334 (.492)
+_ENDIF
+
+;*******************************************************************************
+;* ST-Computer 10/90
+;* The mega clock no longer adjusts the alarm register.
+;*
+;* Warning: Does _NOT_ work with the c't clock patch!
+
+.ALARM = 0          ;1: Include patch, 0: Do not include patch
+
+_IF .ALARM !A! (.CT_CLOCK = 0)
+2148
++uhrpatch.fil   ;2148 - 219A (.82)
 _ENDIF
 
 ;*******************************************************************************
