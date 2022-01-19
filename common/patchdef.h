@@ -210,6 +210,13 @@
 #endif
 
 /*
+ * TP_30: DRAW_BOXES: Turn off grow- and shrinkboxes
+ */
+#ifndef TP_30
+#define TP_30 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

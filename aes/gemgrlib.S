@@ -49,6 +49,8 @@
 
 
 
+#if !TP_30 /* DRAW_BOXES */
+
 /*
  *  Local routine for gr_stepcalc to evaluate:
  *
@@ -154,6 +156,7 @@ ptrpsh:
 
 	adda.w	#28,sp
 	rts
+#endif /* TP_30 */
 
 
 /*
@@ -208,6 +211,7 @@ VOID gr_growbox(GRECT *po, GRECT *pt)
 /* 106de: 00e23580 */
 	xdef _gr_growbox
 _gr_growbox:
+#if !TP_30 /* DRAW_BOXES */
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 12 bytes & d5-d7/a4-a6
 	bsr	grshcalc
 
@@ -237,6 +241,7 @@ lab41:
 
 	adda.w	#24,sp			;+24			
 	movem.l	(sp)+,d5-d7/a4-a6	;+0
+#endif /* TP_30 */
 	rts
 
 
@@ -290,6 +295,7 @@ VOID gr_shrinkbox(GRECT *po, GRECT *pt)
 /* 106de: 00e235c4 */
 	xdef _gr_shrinkbox
 _gr_shrinkbox:
+#if !TP_30 /* DRAW_BOXES */
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 12 bytes & d5-d7/a4-a6
 	bsr	grshcalc		;call gr_stepcalc just like growbox
 
@@ -326,6 +332,7 @@ lab46:
 
 	adda.w	#24,sp			;+24
 	movem.l	(sp)+,d5-d7/a4-a6	;+0
+#endif /* TP_30 */
 	rts
 
 
