@@ -124,7 +124,7 @@ floprd2:
 		move.l    ABSW2(_hz_200),d7
 		add.l     #FLOP_TIMEOUT,d7
 #else
-        move.l    #$00040000,d7
+        move.l    #($00040000*SPEED),d7
 #endif
 /* --- Wait for read completion: */
 floprd3:
@@ -251,7 +251,7 @@ flopwrt2:
         move.l    ABSW2(_hz_200),d7
         add.l     #FLOP_TIMEOUT,d7              /* d7 = timeout timer */
 #else
-        move.l    #$00040000,d7
+        move.l    #($00040000*SPEED),d7
 #endif
 flopwrt3:
         btst      #5,ABSW(MFP_GPIP)             /* done yet? */
@@ -436,7 +436,7 @@ fmtrack6:
         move.l    ABSW2(_hz_200),d7
         add.l     #FLOP_TIMEOUT,d7              /* d7 = timeout timer */
 #else
-        move.l    #$00040000,d7
+        move.l    #($00040000*SPEED),d7
 #endif
 /* --- wait for 1770 complete: */
 fmtrack7:
@@ -554,7 +554,7 @@ verify3:
         move.l    ABSW2(_hz_200),d7
         add.l     #FLOP_TIMEOUT,d7              /* d7 = timeout timer */
 #else
-        move.l    #$00040000,d7
+        move.l    #($00040000*SPEED),d7
 #endif
 *--- wait for command completion
 verify4:
@@ -876,7 +876,7 @@ flopcmd:
         move.l    ABSW2(_hz_200),d7             /* setup timeout (assume short) */
         add.l     #FLOP_TIMEOUT,d7
 #else
-        move.l    #$00040000,d7
+        move.l    #($00040000*SPEED),d7
 #endif
         move.w    #$0080,(a6)                   /* select 1770 command register */
         bsr       rdfdcd0                       /* read it to clobber READY status */
@@ -886,7 +886,7 @@ flopcmd:
         move.l    ABSW2(_hz_200),d7             /* extra timeout for motor startup */
         add.l     #FLOP_TIMEOUT*2,d7
 #else
-        move.l    #$00060000,d7
+        move.l    #($00060000*SPEED),d7
 #endif
 flopcmd1:
         bsr       wrfdcd6                       /* write command (in d6) */

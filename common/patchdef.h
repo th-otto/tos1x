@@ -373,3 +373,21 @@
 #ifndef TP_74
 #define TP_74 1
 #endif
+
+/*
+ * TP75: SPEEDER: The following patch prevents the effect that when using Hypercache,
+ * Turbo 16 etc. with activated cache the floppy routines of the
+ * TOS always generate a timeout if the motor is not yet running.
+ * This effect should be particularly known to NEC 1037 (A) owners.
+ * The patch only increases the timeout values, so it also runs
+ * without hypercache etc. and / or NEC floppy ...
+ * Now the delay can be set instead of $ 40000 / $ 60000 as the default
+ * gain weight. Simply set .SPEED towards the MAXIMUM relative acceleration
+ * of a normal ST (8 MHz), e.g. .SPEED = 2 for 16MHz accelerator.
+ * Only relevant for 1.04; in 1.06 the hz_200 timer is used.
+ */
+#ifndef TP_75
+#define TP_75 0
+#define SPEED 2    /* Enter the maximum acceleration factor here */
+#endif
+
