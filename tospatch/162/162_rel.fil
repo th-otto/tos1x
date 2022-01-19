@@ -644,27 +644,23 @@ _ENDIF
 
 .ICONS = 0          ;1: Include patch, 0: Do not include patch
 
-;* only for german TOS for now
-_SWITCH .NATION
-_CASE .FRG: .IMAGES1 = 2E26A
-            .IMAGES2 = 2FFBE
-_DEFAULT: .ICONS = 0
-_ENDSWITCH
+.IMAGES1 = .RSC_TAB+7C4
+.IMAGES2 = .RSC_TAB+2518
 
 _IF .ICONS
- -icons                         ;Dsetpatch("ICONS\")
+ -icons                         ;Dsetpath("ICONS\")
  ;* the images are each 128 bytes long (4 bytes = one line => 32 lines).
- .IMAGES1     tosfaces.img      ;Exclamation mark
- .IMAGES1+ 80                   ;Question mark in form_alert()
- .IMAGES1+100                   ;Stop sign
- .IMAGES2                       ;Atari image in the info box of the desktop
+ .IMAGES1     note.img          ;Exclamation mark
+ .IMAGES1+ 80 quest.img         ;Question mark in form_alert()
+ .IMAGES1+100 stop.img          ;Stop sign
+ .IMAGES2     atari.img         ;Atari image in the info box of the desktop
  ;* the following icons are 256 bytes each. 128 bytes for the mask, and 128 byte
  ;* for the data
- .IMAGES2+ 80 tosicons.img      ;Floppy drive
- .IMAGES2+180 ordner.img        ;Folder
- .IMAGES2+280                   ;Trashcan
- .IMAGES2+380 programm.img      ;Program
- .IMAGES2+480 datei.img         ;File
+ .IMAGES2+ 80 floppy.img        ;Floppy drive
+ .IMAGES2+180 folder.img        ;Folder
+ .IMAGES2+280 trash.img         ;Trashcan
+ .IMAGES2+380 program.img       ;Program
+ .IMAGES2+480 file.img          ;File
  -..                            ;Dsetpath("..")
 _ENDIF
 
@@ -677,11 +673,7 @@ _ENDIF
 
 .MOUSE = 0          ;1: Include patch, 0: Do not include patch
 
-;* only for german TOS for now
-_SWITCH .NATION
-_CASE .FRG: .IMAGES = 2E3EA
-_DEFAULT: .MOUSE = 0
-_ENDSWITCH
+.IMAGES = .RSC_TAB+944
 
 _IF .MOUSE
  -mform                     ;Dsetpath("MFORM")
