@@ -822,10 +822,11 @@ _ENDIF
 ;* >>> Attention: The hard disk waiter only works with one disk. In addition
 ;* I'm just sure that it works with my Megafile 60.
 
-.HD_WAIT0 = 0       ;1: Include patch, 0: Do not include patch
+.HD_WAIT1 = 0       ;1: Include patch, 0: Do not include patch
+.HD_WAITTIME = .10  ;max. waiting time in s
 
-_IF .HD_WAIT0
- .HD_WAIT:      +hdwait0.fil            ;length 212 Bytes
+_IF .HD_WAIT1
+ .HD_WAIT:      +hdwait1.fil            ;length 212 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
 
  438 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
@@ -834,17 +835,16 @@ _ENDIF
 
 ;*******************************************************************************
 ;* MRF:
-;* Alternative hard disk waiter. Waits for .TIME seconds on a
+;* Alternative hard disk waiter. Waits for .HD_WAITTIME seconds on a
 ;* Cold start on the disk. This works with all panels!
 ;* The waiting can be canceled by pressing a button
 
-.HD_WAIT1 = 0       ;1: Include patch, 0: Do not include patch
-.TIME     = .12     ;Wartezeit in s
+.HD_WAIT2 = 0          ;1: Include patch, 0: Do not include patch
+.HD_WAITTIME = .12     ;max. waiting time in s
 
-_IF .HD_WAIT1
- .HD_WAIT:      +hdwait1.fil            ;length 56 Bytes
+_IF .HD_WAIT2
+ .HD_WAIT:      +hdwait2.fil            ;length 56 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
- .HD_WAIT+A     |$.TIME*.200.L          ;Insert waiting time
 
  438 |$4E,B9,.HD_WAIT+.BASE.L           ;Jsr to harddisk waiter
  43E |$4E,71,4E,71                      ;fill with NOP
@@ -854,12 +854,12 @@ _ENDIF
 ;* MH:
 ;* Hardisk-Waiter von EWK.
 
-.HD_WAIT2 = 0       ;1: Include patch, 0: Do not include patch
-.TIME     = .30     ;max. waiting time in s (max. 99s !!!)
-.DEVICE   = 0       ;DMA device to be waited for (0-7)
+.HD_WAIT3 = 0          ;1: Include patch, 0: Do not include patch
+.HD_WAITTIME = .30     ;max. waiting time in s (max. 99s !!!)
+.HD_WAITDEVICE = 0     ;DMA device to be waited for (0-7)
 
-_IF .HD_WAIT2
- .HD_WAIT:      +hdwait2.fil            ;length 332 Bytes
+_IF .HD_WAIT3
+ .HD_WAIT:      +hdwait3.fil            ;length 332 Bytes
  !.HD_WAIT+8 .. ~                       ;Do not relocate in this patch
 
  ;.HD_WAIT+E     |$4E,71                ;Only for RAM-TOS and> = 2 hard disks
@@ -928,7 +928,7 @@ _ENDIF
 ;* Set ARROWFIX.CPX. Values from 0 to 9 for .TIME are permitted.
 ;* Original default is .TIME = 3. 
 ;*
-;* >>> This patch does not work with the Winx patch!
+;* >>> This patch is not needed with the Winx patch!
 
 .ARROWFIX = 1       ;1: Include patch, 0: Do not include patch
 

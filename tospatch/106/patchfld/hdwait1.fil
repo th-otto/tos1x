@@ -1,18 +1,80 @@
-~ $31,f9,.BASE+1E.l,60,fe    ; move.w     $00E0001E,($000060FE).w
-~ $2c,3c,00,00,09,60         ; move.l     #$00000960,d6
-~ $bc,b8,04,ba               ; cmp.l      ($000004BA).w,d6
-~ $63,22                     ; bls.s      $00FE0036
-~ $dc,b8,04,ba               ; add.l      ($000004BA).w,d6
-;FE0018:
-~ $bc,b8,04,ba               ; cmp.l      ($000004BA).w,d6
-~ $63,18                     ; bls.s      $00FE0036
-~ $2f,3c,00,01,00,02         ; move.l     #$00010002,-(a7)
-~ $4e,4d                     ; trap       #13
-~ $58,8f                     ; addq.l     #4,a7
-~ $4a,40                     ; tst.w      d0
-~ $67,ec                     ; beq.s      $00FE0018
-~ $2f,3c,00,02,00,02         ; move.l     #$00020002,-(a7)
-~ $4e,4d                     ; trap       #13
-~ $58,8f                     ; addq.l     #4,a7
-;FE0036:
-~ $4e,75                     ; rts
+~ $31,F9,.BASE+1E.L,60FE.W   ; move.w     $00E0001E,(_date).w ; instruction that was patched out
+~ $41,FA,00,A4               ; lea.l      hd_waitm(pc),a0
+~ $61,2A                     ; bsr.s      hd_wait6
+~ $7A,13                     ; moveq.l    #19,d5
+;hd_wait1:
+~ $41,FA,00,AE               ; lea.l      hd_w16(pc),a0
+~ $61,22                     ; bsr.s      hd_wait6
+~ $78,05                     ; moveq.l    #5,d4
+;hd_wait2:
+~ $08,38,00,03,0EBD.W        ; btst       #3,(shifty).w
+~ $66,0E                     ; bne.s      hd_wait3
+~ $61,30                     ; bsr.s      hd_wait9
+~ $67,10                     ; beq.s      hd_wait4
+~ $61,1E                     ; bsr.s      hd_wait7
+~ $51,CC,FF,F0               ; dbf        d4,hd_wait2
+~ $51,CD,FF,E4               ; dbf        d5,hd_wait1
+;hd_wait3:
+~ $41,FA,00,97               ; lea.l      hd_w18(pc),a0
+~ $60,04                     ; bra.s      hd_wait6
+;hd_wait4:
+~ $41,FA,00,8C               ; lea.l      hd_w17(pc),a0
+;hd_wait6:
+~ $2F,08                     ; move.l     a0,-(a7)
+~ $3F,3C,00,09               ; move.w     #9,-(a7) ; Cconws
+~ $4E,41                     ; trap       #1
+~ $5C,8F                     ; addq.l     #6,a7
+~ $4E,75                     ; rts
+;hd_wait7:
+~ $70,32                     ; moveq.l    #50,d0
+~ $D0,B8,04,BA               ; add.l      ($000004BA).w,d0
+;hd_wait8:
+~ $B0,B8,04,BA               ; cmp.l      ($000004BA).w,d0
+~ $62,FA                     ; bhi.s      hd_wait8
+~ $4E,75                     ; rts
+;hd_wait9:
+~ $43,F8,86,06               ; lea.l      ($FFFF8606).w,a1
+~ $41,F8,86,04               ; lea.l      ($FFFF8604).w,a0
+~ $50,F8,04,3E               ; st         ($0000043E).w
+~ $32,BC,00,88               ; move.w     #$0088,(a1)
+~ $7C,04                     ; moveq.l    #4,d6
+;hd_w10:
+~ $20,3C,00,00,00,8A         ; move.l     #$0000008A,d0
+~ $61,28                     ; bsr.s      hd_w12
+~ $66,1A                     ; bne.s      hd_w11
+~ $51,CE,FF,F4               ; dbf        d6,hd_w10
+~ $70,0A                     ; moveq.l    #10,d0
+~ $20,80                     ; move.l     d0,(a0)
+~ $30,3C,.HD_WAITTIME*200.W  ; move.w     #(HD_WAITTIME*200),d0
+~ $61,1C                     ; bsr.s      hd_w13
+~ $66,0A                     ; bne.s      hd_w11
+~ $32,BC,00,8A               ; move.w     #$008A,(a1)
+~ $30,10                     ; move.w     (a0),d0
+~ $C0,7C,00,FF               ; and.w      #$00FF,d0
+;hd_w11:
+~ $32,BC,00,80               ; move.w     #$0080,(a1)
+~ $51,F8,04,3E               ; sf         ($0000043E).w
+~ $4A,40                     ; tst.w      d0
+~ $4E,75                     ; rts
+;hd_w12:
+~ $20,80                     ; move.l     d0,(a0)
+~ $70,0A                     ; moveq.l    #10,d0
+;hd_w13:
+~ $D0,B8,04,BA               ; add.l      ($000004BA).w,d0
+;hd_w14:
+~ $08,38,00,05,FA,01         ; btst       #5,($FFFFFA01).w
+~ $67,08                     ; beq.s      hd_w15
+~ $B0,B8,04,BA               ; cmp.l      ($000004BA).w,d0
+~ $66,F2                     ; bne.s      hd_w14
+~ $70,FF                     ; moveq.l    #-1,d0
+;hd_w15:
+~ $4E,75                     ; rts
+;hd_waitm:
+~ $'Warte auf Harddisk'
+;hd_w16:
+~ $2E,00
+;hd_w17:
+~ $'OK',0D,0A,00
+;hd_w18:
+~ $' keine da!',0D,0A,00
+_EVEN $00

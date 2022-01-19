@@ -288,6 +288,36 @@
  */
 
 /*
+ * TP_43: HD_WAIT: Harddisk waiter
+ *
+ * 0: do not use
+ * 1: Version 1
+ *    Unknown routine that may only work with 1 harddisk.
+ *    Can be aborted by pressing ALTERNATE.
+ *    Only tested with Megafile
+ * 2: Version 2
+ *    Simple version that just waits for 12sec
+ *    This should work in any case.
+ *    Can be aborted by pressing any key.
+ * 3: Version 3
+ *    New version written by EWK, can wait for any ACSI device.
+ *    Can be aborted by pressing Shift-Shift.
+ *
+ * TP_44: HD_WAITTIME: Waiting time in seconds
+ * TP_45: HD_WAITDEVICE: Device to wait for,
+ *        for version 3
+ */
+#ifndef HD_WAIT
+#define HD_WAIT 0
+#endif
+#ifndef HD_WAITTIME
+#define HD_WAITTIME 12
+#endif
+#ifndef HD_WAITDEVICE
+#define HD_WAITDEVICE 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
