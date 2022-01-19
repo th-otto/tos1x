@@ -238,6 +238,16 @@
 #endif
 
 /*
+ * TP_36: INFO_TXT: Set custom info text
+ *
+ * This string will be displayed in place of the hyphens in the About dialog
+ * (29 characters max., ASCII only)
+ */
+#ifndef TP_36
+#define TP_36 "-----------------------------"
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
