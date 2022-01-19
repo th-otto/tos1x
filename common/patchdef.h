@@ -217,6 +217,16 @@
 #endif
 
 /*
+ * TP_31: MS_DOS: Correct MS-DOS Format
+ *
+ * Writes $EB34904E into the first bytes of the boot sector
+ * when formatting floppy discs
+ */
+#ifndef TP_31
+#define TP_31 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
