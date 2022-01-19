@@ -201,6 +201,15 @@
 #endif
 
 /*
+ * TP_29: M_SHRINK: Mshrink fix
+ *
+ * Fixes a bug in Mshrink that can destroy the memory lists
+ */
+#ifndef TP_29
+#define TP_29 1
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */
