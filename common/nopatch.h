@@ -100,6 +100,7 @@
 #undef TP_73
 #undef TP_74
 #undef TP_75
+#undef TP_76
 
 #define TP_01 0
 #define TP_02 0
@@ -172,6 +173,7 @@
 #define TP_73 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_74 0
 #define TP_75 0
+#define TP_76 0
 
 #endif
 

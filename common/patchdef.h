@@ -391,3 +391,12 @@
 #define SPEED 2    /* Enter the maximum acceleration factor here */
 #endif
 
+/*
+ * TP_76: ALARM: ST-Computer 10/90
+ * The mega clock no longer adjusts the alarm register.
+ *
+ * Warning: Does _NOT_ work with the c't clock patch!
+ */
+#ifndef TP_76
+#define TP_76 0
+#endif

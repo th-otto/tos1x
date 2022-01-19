@@ -47,6 +47,9 @@ ngetdt2:
 /* 206de: 00e01aa8 */
 /* 104de: 00fc1f70 */
 checkRTC:
+#if TP_76 /* ALARM */
+#include "../tospatch/patches/uhrpatch.S"
+#else
 			SETBASEREG
 			movea.w   #rtc_sec,a0
             move.l    ABSW(_buserror),d2
@@ -69,6 +72,7 @@ chkRTC2:    movea.l   a2,sp
             move.l    d2,ABSW(_buserror)
 chkRTC3:    ori       #1,ccr                    /* RTC not available */
             rts
+#endif
 
 /* 206de: 00e01af8 */
 readRTCTime:bsr.s     checkRTC
