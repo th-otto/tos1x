@@ -99,6 +99,7 @@
 #undef TP_72
 #undef TP_73
 #undef TP_74
+#undef TP_75
 
 #define TP_01 0
 #define TP_02 0
@@ -170,6 +171,7 @@
 #define TP_72 0
 #define TP_73 (((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162))
 #define TP_74 0
+#define TP_75 0
 
 #endif
 
@@ -184,6 +186,9 @@
 #endif
 #if !TP_21
 #undef CONTERM
+#endif
+#if !TP_75
+#undef SPEED
 #endif
 
 /*
@@ -208,3 +213,7 @@
 #ifndef FLOPDELAY
 #define FLOPDELAY 281
 #endif
+#ifndef SPEED
+#define SPEED 1
+#endif
+

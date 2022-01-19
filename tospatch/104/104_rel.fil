@@ -305,7 +305,7 @@ _ENDIF
 ;* of a normal ST (8 MHz), e.g. .SPEED = 2 for 16MHz accelerator.
 
 .SPEEDER = 0        ;1: Include patch, 0: Do not include patch
-.SPEED = 2          ;Hier den max. Beschleunigungsfaktor eintragen
+.SPEED = 2          ;Enter the maximum acceleration factor here
 
 _IF .SPEEDER
  F78  $00040000*.SPEED.L
