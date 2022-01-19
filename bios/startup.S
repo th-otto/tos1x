@@ -780,6 +780,9 @@ biosinit: ds.b 0
 
 /* --- set the current system time and date */
         move.w    _os_dosdate,_date  /* use BIOS time as current time */
+#if (HD_WAIT == 1) | (HD_WAIT == 2) | (HD_WAIT == 3)
+		bsr       hd_wait
+#endif
         jsr       ngetdt             /* set current time to RTC time */
 #if TP_69 /* TIME_SAVE */
         /* swedish/czech versions have the TIME_SAVE patch applied */
@@ -2479,6 +2482,16 @@ noblitter:
         move.w    d1,sr
         movea.l   a2,a7
         rts
+
+#if HD_WAIT == 1
+#include "../tospatch/patches/hdwait1.S"
+#endif
+#if HD_WAIT == 2
+#include "../tospatch/patches/hdwait2.S"
+#endif
+#if HD_WAIT == 3
+#include "../tospatch/patches/hdwait3.S"
+#endif
 
 #if TP_64
 #include "ideboot/ideboot.S"
