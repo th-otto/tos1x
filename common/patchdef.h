@@ -227,6 +227,17 @@
 #endif
 
 /*
+ * TP_34: NEC_P6: Change printer line spacing
+ *
+ * Changes the line spacing for hardcopy. Enables use
+ * of hardcopies for NEC-P6, as well as EPSON printers
+ * (see ST-Computer 10/90)
+ */
+#ifndef TP_34
+#define TP_34 0
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

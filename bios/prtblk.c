@@ -44,7 +44,11 @@
 #define       CYAN      "\033\130\003\377"       /* set cyan */
 
 #define       PIXLS     "\033\063\001\377"       /* pixel line spacing */
+#if TP_34 /* NEC_P6 */
+#define       RASLS     "\033\101\007\377"       /* raster line spacing */
+#else
 #define       RASLS     "\033\061\377"           /* raster line spacing */
+#endif
 
 #define       RSTLS     "\033\062\377"           /* reset line spacing */
 #define       RSTCO     "\033\130\000\377"       /* reset color */
