@@ -1,7 +1,7 @@
 ~ $41,ef,00,04               ; lea.l      4(a7),a0
 ~ $48,e7,13,18               ; movem.l    d3/d6-d7/a3-a4,-(a7)
 ~ $3e,18                     ; move.w     (a0)+,d7
-~ $6a,00,00,86               ; bpl        $00FE0092
+~ $6a,00,00,8A               ; bpl        $00FE0096
 ~ $3c,10                     ; move.w     (a0),d6
 ~ $21,cf,66,76               ; move.l     a7,(errsave).w
 ~ $4f,f8,6a,7a               ; lea.l      (errstkend).w,a7
@@ -60,6 +60,7 @@
 ~ $20,03                     ; move.l     d3,d0
 ;FE0092:
 ~ $2e,78,66,76               ; movea.l    (errsave).w,a7
+;FE0096:
 ~ $4c,df,18,c8               ; movem.l    (a7)+,d3/d6-d7/a3-a4
 ~ $4e,75                     ; rts
 ;FE009C:

@@ -655,7 +655,11 @@ initauto:
         move.l    #_xbiostrap,ABSW(_trap14vec)
         move.l    #line1010,ABSW(_lineatrap)
         move.l    a4,ABSW(_etv_timer)          /* no timer yet */
+#if TP_83
+        move.l    #dos_etvcritic,ABSW(_etv_critic)   /* default critical error handler */
+#else
         move.l    #critret,ABSW(_etv_critic)   /* default critical error handler */
+#endif
         move.l    a4,ABSW(_etv_term)           /* no user defined function */
         lea.l     ABSW(_vbl_list),a0
         move.l    a0,ABSW(_vblqueue)
@@ -2491,6 +2495,10 @@ noblitter:
 #endif
 #if HD_WAIT == 3
 #include "../tospatch/patches/hdwait3.S"
+#endif
+
+#if TP_83
+#include "../tospatch/patches/etvcritc.S"
 #endif
 
 #if TP_64
