@@ -149,7 +149,11 @@ rdRTCMk2:   move.b    (a0,d1.w),d2
 rdRTCErr:   moveq  #-1,d0
             rts
 
-writeRTCTime:bsr      checkRTC
+writeRTCTime:
+#if TP_78 /* CORRECT_DAY */
+#include "../tospatch/patches/setwoch.S"
+#else
+            bsr       checkRTC
             bcs       no_RTC_found
             lea       ABSW2(rtcbufa),a1
             move.w    6(sp),d1
@@ -214,6 +218,8 @@ wrRTC2:     move.b    (a1,d0.w),(a0,d1.w)
 
 no_RTC_found:moveq    #-1,d0
             rts
+
+#endif /* TP_78 */
 
 #endif /* TP_77 */
 

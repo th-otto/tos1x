@@ -411,3 +411,14 @@
 #ifndef TP_77
 #define TP_77 0
 #endif
+
+/*
+ * TP_78: CORRECT_DAY: 
+ * Settime() calculates the day of the week and correctly sets it in the mega-clock.
+ * Atari always set the weekday to Sunday. 
+ *
+ * >>> Warning: Does _NOT_ work with the c't clock patch!
+ */
+#ifndef TP_78
+#define TP_78 0
+#endif
