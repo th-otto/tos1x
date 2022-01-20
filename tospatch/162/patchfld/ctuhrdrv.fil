@@ -1,10 +1,10 @@
-2148
 ;checkRTC:
 ~ $42,80                     ; clr.l      d0
 ~ $4E,75                     ; rts
 ;FC1F74:
 ~ $41,FA,01,BE               ; lea.l      $00FC2134(pc),a0
 ~ $47,F9,00,FE,FF,00         ; lea.l      $00FEFF00,a3
+!~-4
 ~ $43,EB,00,EE               ; lea.l      238(a3),a1
 ~ $72,18                     ; moveq.l    #24,d1
 ~ $78,0A                     ; moveq.l    #10,d4
@@ -45,6 +45,7 @@
 ~ $FF,FF,FF,FF,FF,FF,FF,FF
 ~ $FF,FF,FF,FF,FF,FF,FF,FF
 ~ $FF,FF
+;writeRTCTime:
 ~ $40,E7                     ; move.w     sr,-(a7)
 ~ $48,E7,7C,70               ; movem.l    d1-d5/a1-a3,-(a7)
 ~ $61,00,FE,EC               ; bsr        $00FC1F74
@@ -68,7 +69,7 @@
 ~ $4A,41                     ; tst.w      d1
 ~ $6A,DE                     ; bpl.s      $00FC2090
 ~ $60,46                     ; bra.s      $00FC20FA
-;FC20B4;
+;FC20B4:
 ~ $B2,44                     ; cmp.w      d4,d1
 ~ $66,04                     ; bne.s      $00FC20BC
 ~ $86,3C,00,08               ; or.b       #8,d3
@@ -102,6 +103,7 @@
 ~ $6A,E6                     ; bpl.s      $00FC20E0
 ;FC20FA:
 ~ $4A,39,00,FE,00,00         ; tst.b      $00FE0000
+!~-4
 ~ $4C,DF,0E,3E               ; movem.l    (a7)+,d1-d5/a1-a3
 ~ $4E,73                     ; rte
 ;FC2106:

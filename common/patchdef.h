@@ -400,3 +400,14 @@
 #ifndef TP_76
 #define TP_76 0
 #endif
+
+/*
+ * TP_77: CT_CLOCK: Integration of the c't clock in TOS. You can then use the clock directly with the XBIOS
+ * (also with the GEMDOS of course ...)
+ * Patch by Stefan Toennes
+ *
+ * >>> Warning: Does _NOT_ work with the other clock patches!
+ */
+#ifndef TP_77
+#define TP_77 0
+#endif

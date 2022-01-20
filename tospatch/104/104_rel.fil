@@ -385,6 +385,7 @@ _ENDIF
 .CT_CLOCK = 0       ;1: Include patch, 0: Do not include patch
 
 _IF .CT_CLOCK
+1F70
 +ctuhrdrv.fil  ;1F70 - 215C (.492)
 _ENDIF
 
