@@ -714,8 +714,13 @@ initmfp2:
 /* Sound routine initialization */
         moveq.l   #0,d0
         move.l    d0,ABSW(_sndtable)            /* clear sound ptr */
+#if TP_79 /* HC_960 */
+		moveq     #4,d1
+        move.l    d1,ABSW(_snddelay)            /* will clear delay timer, and write "4" to prtconfig */
+#else		
         move.b    d0,ABSW(_snddelay)            /* clear delay timer */
         move.b    d0,ABSW(_sndtmp)              /* clear temp value */
+#endif
         move.l    d0,ABSW(lst_timeout)          /* init printer timeout to 0 */
 #if TP_19 /* FASTPRN */
         bsr       strobeo0

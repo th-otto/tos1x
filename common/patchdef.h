@@ -413,7 +413,7 @@
 #endif
 
 /*
- * TP_78: CORRECT_DAY: 
+ * TP_78: CORRECT_DAY:
  * Settime() calculates the day of the week and correctly sets it in the mega-clock.
  * Atari always set the weekday to Sunday. 
  *
@@ -421,4 +421,12 @@
  */
 #ifndef TP_78
 #define TP_78 0
+#endif
+
+/*
+ * TP_79: HC_960: 
+ * 960 dpi hard copy by default.
+ */
+#ifndef TP_79
+#define TP_79 0
 #endif
