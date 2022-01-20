@@ -424,9 +424,17 @@
 #endif
 
 /*
- * TP_79: HC_960: 
+ * TP_79: HC_960:
  * 960 dpi hard copy by default.
  */
 #ifndef TP_79
 #define TP_79 0
+#endif
+
+/*
+ * TP_80: CHANGE_BAUD:
+ * Baud rates 120 or 80, instead of 75 and 50.
+ */
+#ifndef TP_80
+#define TP_80 0
 #endif
