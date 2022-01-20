@@ -461,3 +461,13 @@
 #ifndef TP_82
 #define TP_82 0
 #endif
+
+/*
+ * TP_83: ETV_CRITIC:
+ * TOS programs now have a special etv_critic handler (like the PC)
+ * used. For example, you get the message "Disc is write-protected,
+ * N)ochmal, W)eiter, A)bbruch".
+ */
+#ifndef TP_83
+#define TP_83 0
+#endif

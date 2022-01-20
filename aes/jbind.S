@@ -570,6 +570,7 @@ _far_draw:
 
         data
         even
+	xdef _err_tbl
 _err_tbl:
 		dc.b 4 /* -1 (ERROR) -> ALRT04CRT (Your output device is not receiving data) */
 		dc.b 1 /* -2 (EDRVNR) -> ALRT01CRT (drive is not responding) */
