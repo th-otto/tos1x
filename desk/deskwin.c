@@ -613,6 +613,22 @@ PP(BOOLEAN vertical;)
 }
 
 
+#if TP_48 /* ARROWFIX */
+/*
+ * WTF: messing with AES structures???
+ */
+static int is_arrowed(NOTHING)
+{
+	register PD *p;
+	
+	p = rlr;
+	if (p->p_qindex)
+		return *((int16_t *)p->p_qaddr) == WM_ARROWED;
+	return FALSE;
+}
+#endif /* TP_48 */
+
+
 /*
  *	Routine to change the current virtual row or column being viewed
  *	in the upper left corner based on a new slide amount.
@@ -624,6 +640,10 @@ PP(int16_t arrow_type;)
 	register DESKWIN *pw;
 	register BOOLEAN vertical;
 	register int16_t newcv;
+
+#if TP_48 /* ARROWFIX */
+again:;
+#endif
 
 	pw = win_find(wh);
 	vertical = TRUE;
@@ -663,6 +683,18 @@ PP(int16_t arrow_type;)
 #endif
 	}
 	win_blt(pw, vertical, newcv);
+#if TP_48 /* ARROWFIX */
+	if (is_arrowed())
+	{
+		int16_t msgbuff[8];
+		wind_update(END_UPDATE);
+		wm_update(BEG_UPDATE);
+		ev_mesag(msgbuff);
+		wh = msgbuff[3];
+		arrow_type = msgbuff[4];
+		goto again;
+	}
+#endif
 }
 
 

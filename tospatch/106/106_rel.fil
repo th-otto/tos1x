@@ -903,16 +903,16 @@ _ENDIF
 ;* New scroll routines for GEM. Original routines from ARROWFIX 1.5!
 ;* For more information see ARROWFIX.
 ;*
-;* .TIME contains the default response time up to the first repetition of a
+;* .ARROWTIME contains the default response time up to the first repetition of a
 ;* Scroll message in 0.125s. This response time can also be achieved with the
-;* Set ARROWFIX.CPX. Values from 0 to 9 for .TIME are permitted.
-;* Original default is .TIME = 3. 
+;* Set ARROWFIX.CPX. Values from 0 to 9 for .ARROWTIME are permitted.
+;* Original default is .ARROWTIME = 3. 
 ;*
 ;* >>> This patch is not needed with the Winx patch!
 
 .ARROWFIX = 1       ;1: Include patch, 0: Do not include patch
 
-.TIME     = 3       ;Initial delay in 0,125s.
+.ARROWTIME     = 3       ;Initial delay in 0,125s.
 
 _IF .ARROWFIX !A! (.WINX = 0)
  +arrow.fil         ;include ARROWFIX-Patch

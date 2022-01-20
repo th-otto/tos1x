@@ -417,6 +417,25 @@ int16_t ev_dclick(P(int16_t) rate, P(int16_t) setit)
 PP(int16_t rate;)
 PP(int16_t setit;)
 {
+#if TP_48 /* ARROWFIX */
+	register int16_t oldrate;
+	oldrate = gl_dcindex & 0xff;
+
+	if (setit)
+	{
+		oldrate = rate;
+		oldrate &= 0xff;
+		gl_dcindex = (gl_dcindex & 0xff00) | oldrate;
+		if ((rate & 0xff00) != 0)
+		{
+			if (rate > 0)
+				gl_dcindex = (gl_dcindex & 0xff) | (rate & 0xff00);
+			oldrate = gl_dcindex;
+		}		
+		gl_dclick = gl_dcrates[oldrate & 0xff] / gl_ticktime;
+	}	
+	return oldrate;
+#else
 	if (setit)
 	{
 		gl_dcindex = rate;
@@ -424,4 +443,5 @@ PP(int16_t setit;)
 	}
 
 	return gl_dcindex;
+#endif
 }

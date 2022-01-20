@@ -417,7 +417,11 @@ VOID gem_main(NOTHING)
 	sti();
 
 	/* set init. click rate */
+#if TP_48 /* ARROWFIX */
+	ev_dclick(((ARROWTIME + 1) << 8) + 3, TRUE);
+#else
 	ev_dclick(3, TRUE);
+#endif
 
 	/* get st_desk ptr */
 	rs_gaddr(ad_sysglo, R_TREE, SCREEN, (VOIDPTR *)&ad_stdesk);

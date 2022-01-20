@@ -224,7 +224,11 @@ PP(register intptr_t aparm;)
 
 		LBCOPY(&mob, (VOIDPTR)aparm, sizeof(MOBLK));
 		/* if already in (or out) signal immediately */
+#if TP_48 /* ARROWFIX */
+		if (ev_mchk(&mob))
+#else
 		if (mob.m_out != inside(xrat, yrat, (GRECT *)&mob.m_x))
+#endif
 		{
 			zombie(e);
 		} else
@@ -245,7 +249,11 @@ PP(register intptr_t aparm;)
 		if (mowner(button) != rlr)
 			goto mui;
 #endif
-		if (downorup(button, aparm))
+		if (downorup(button, aparm)
+#if TP_48 /* ARROWFIX */
+			&& rlr == gl_mowner
+#endif
+			)
 		{								/* changed */
 			e->e_return = HW(button);
 			zombie(e);					/* 'nuff said       */
