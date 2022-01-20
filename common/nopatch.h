@@ -105,6 +105,8 @@
 #undef TP_78
 #undef TP_79
 #undef TP_80
+#undef TP_81
+#undef TP_82
 
 #define TP_01 0
 #define TP_02 0
@@ -182,6 +184,8 @@
 #define TP_78 0
 #define TP_79 0
 #define TP_80 0
+#define TP_81 0
+#define TP_82 0
 
 #endif
 

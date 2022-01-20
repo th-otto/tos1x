@@ -175,8 +175,13 @@ sb_scrup:
 	adda.w	d0,a2			/* a2 -> scroll src: Ymin+1 */
 
 	move.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- bytes per line */
+#if TP_81
+	mulu	d0,d7			/* d7 <- total iterations */
+	lsr.w	#4,d7			/* d7 <- iterations per line */
+#else
 	lsr.w	#4,d0			/* d0 <- iterations per line */
 	mulu	d0,d7			/* d7 <- total iterations */
+#endif
 	subq.w	#1,d7			/* d7 <- dbra loop counter */
 
 loop_up:
@@ -217,8 +222,13 @@ sb_scrdn:
 	add.w	d0,a3			/* a3 -> scroll dst: 1st word of Ymax+1 */
 
 	move.w	LV((v_lin_wr)+O6,a4),d0	/* d0 <- bytes per line */
+#if TP_81
+	mulu	d0,d7			/* d7 <- total iterations */
+	lsr.w	#4,d7			/* d7 <- iterations per line */
+#else
 	lsr.w	#4,d0			/* d0 <- iterations per line */
 	mulu	d0,d7			/* d7 <- total iterations */
+#endif
 	subq.w	#1,d7			/* d7 <- dbra loop counter */
 
 loop_dn:

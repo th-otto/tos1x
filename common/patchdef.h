@@ -438,3 +438,26 @@
 #ifndef TP_80
 #define TP_80 0
 #endif
+
+/*
+ * TP_81: OVERSCANFIX:
+ * Karsten Isakovic (implementiert durch MRF):
+ * Patch, which now also allows screen widths that are not divisible by 16.
+ * Otherwise there is garbage when scrolling ... Necessary for overscan. 
+ */
+#ifndef TP_81
+#define TP_81 0
+#endif
+
+/*
+ * TP_82: NEW_SZ:
+ * Convert û to IBM-·. Damit wird kein Pesata, sondern ein Beta-"·"
+ * ausgegeben. Dies sieht nun mal auf den meisten Nadeldruckern besser aus.
+ * Dies wirkt natÅrlich nur bei Texten, welche mit dem gepachten TOS eingegeben
+ * werden. In den alten steht ja noch das û drin.
+ *
+ * HUCKY: Makes problems with script ... Therefore as a comment.
+ */
+#ifndef TP_82
+#define TP_82 0
+#endif
