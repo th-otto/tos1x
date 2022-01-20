@@ -318,6 +318,23 @@
 #endif
 
 /*
+ * TP_48: ARROWFIX: New scroll functions for GEM
+ *
+ * Original routines from ARROWFIX 1.5 by Martin Osieka.
+ * For more information, see ARROWFIX.
+ *
+ * ARROWTIME: default time delay until first
+ * repetition of scroll messages, in 0.125s. This time
+ * can also be set by the ARROWFIX.CPX. Valid values are 0-9.
+ */
+#ifndef TP_48
+#define TP_48 0
+#endif
+#ifndef ARROWTIME
+#define ARROWTIME 3
+#endif
+
+/*
  * TP_64: IDE_BOOT: Try to boot from IDE first
  * Uses ide autoboot patch from czietz (https://github.com/czietz/ideboot)
  */

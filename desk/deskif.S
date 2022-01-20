@@ -256,10 +256,14 @@ WORD evnt_dclick(WORD rate, WORD setit)
 /* 104de: 00fd7ab0 */
 	xdef _evnt_dclick
 _evnt_dclick:
+#if TP_48 /* ARROWFIX */
+	rts
+#else
 	move.l	4(sp),-(sp)
 	jsr	_ev_dclick
 	addq.l	#4,sp
 	bra	disp1
+#endif
 
 
 #if CCODE

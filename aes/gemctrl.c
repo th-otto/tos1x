@@ -255,6 +255,28 @@ PP(int16_t my;)
 			x = gl_wa[cpt - W_UPARROW];
 			wm_update(END_UPDATE);			/* give up the screen */
 
+#if TP_48 /* ARROWFIX */
+			{
+				register long end = ((((gl_dcindex >> 8) & 0xff) - 1) << 7) / gl_ticktime + TICKS;
+				register PD *p;
+
+				p = pwin->w_owner;
+				for (;;)
+				{
+					if (p->p_qindex <= 0)
+					{
+						ap_sendmsg(appl_msg, message, p->p_pid, w_handle, x, 0, 0, 0);
+					}
+					do
+					{
+						dsptch();
+						if (!(button & 1))
+							goto done;
+					} while (TICKS <= end);
+				}
+				done:;
+			}
+#else
 			cpt = TRUE;
 			do
 			{
@@ -277,6 +299,7 @@ PP(int16_t my;)
 				}
 
 			} while (button & 1);		/* button is global */
+#endif
 
 			wm_update(BEG_UPDATE);			/* take back the screen */
 			return;

@@ -773,7 +773,9 @@ VOID cnx_get(NOTHING)
 #if TOSVERSION >= 0x162
 	d->g_ccachepref = d->ccache_save;
 #endif
+#if !TP_48 /* ARROWFIX */
 	evnt_dclick(3, 1);
+#endif
 
 	for (nw = 0; nw < NUM_WNODES; nw++)
 	{

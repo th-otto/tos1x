@@ -203,6 +203,9 @@
 #if !TP_21
 #undef CONTERM
 #endif
+#if !TP_48
+#undef ARROWTIME
+#endif
 #if !TP_75
 #undef SPEED
 #endif
@@ -232,4 +235,3 @@
 #ifndef SPEED
 #define SPEED 1
 #endif
-

@@ -459,6 +459,7 @@ VOID disp PROTO((NOTHING));
  */
 extern int16_t gl_dclick;
 extern int16_t gl_ticktime;
+extern int16_t gl_dcindex;
 
 VOID ev_rets PROTO((int16_t *rets));
 int16_t ev_block PROTO((int16_t code, intptr_t lvalue));
@@ -946,6 +947,7 @@ int16_t pgmld PROTO((int16_t handle, const char *pname, intptr_t *ldaddr));
 extern VOIDPTR drwaddr;
 extern int32_t CMP_TICK;
 extern int32_t NUM_TICK;
+extern int32_t TICKS;
 
 VOID drawrat PROTO((int16_t x, int16_t y));
 VOID justretf PROTO((NOTHING));
