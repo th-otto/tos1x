@@ -32,7 +32,11 @@ rtc_sec         equ $fffffc20
 /* 106de: 00e02124 */
 ngetdt: bsr.s     checkRTC
         bcs.s     ngetdt2
+#if TP_77
+        bsr       readRTCTime
+#else
         bsr.s     readRTCTime
+#endif
         cmp.l     #-1,d0
         beq.s     ngetdt2
 		move.w    d0,_time
@@ -46,6 +50,9 @@ ngetdt2:
 
 /* 206de: 00e01aa8 */
 /* 104de: 00fc1f70 */
+#if TP_77 /* CT_CLOCK */
+#include "../tospatch/patches/ctuhrdrv.S"
+#else
 checkRTC:
 #if TP_76 /* ALARM */
 #include "../tospatch/patches/uhrpatch.S"
@@ -72,7 +79,7 @@ chkRTC2:    movea.l   a2,sp
             move.l    d2,ABSW(_buserror)
 chkRTC3:    ori       #1,ccr                    /* RTC not available */
             rts
-#endif
+#endif /* TP_76 */
 
 /* 206de: 00e01af8 */
 readRTCTime:bsr.s     checkRTC
@@ -207,6 +214,8 @@ wrRTC2:     move.b    (a1,d0.w),(a0,d1.w)
 
 no_RTC_found:moveq    #-1,d0
             rts
+
+#endif /* TP_77 */
 
         bss
 
