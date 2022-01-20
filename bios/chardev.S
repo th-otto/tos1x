@@ -1470,7 +1470,12 @@ rs6con11:
 #undef mfpareg
 
 /* baudrate table - control register setting */
-baudctrl: dc.b $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$02,$02
+baudctrl: dc.b $01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01,$01
+#if TP_80
+    dc.b $03,$03
+#else
+    dc.b $02,$02
+#endif
 /* baudrate table - data register setting */
 bauddata: dc.b $01,$02,$04,$05,$08,$0a,$0b,$10,$20,$40,$60,$80,$8f,$af,$40,$60
 

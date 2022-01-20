@@ -103,7 +103,8 @@
 #undef TP_76
 #undef TP_77
 #undef TP_78
-#undef TP_78
+#undef TP_79
+#undef TP_80
 
 #define TP_01 0
 #define TP_02 0
@@ -180,6 +181,7 @@
 #define TP_77 0
 #define TP_78 0
 #define TP_79 0
+#define TP_80 0
 
 #endif
 
