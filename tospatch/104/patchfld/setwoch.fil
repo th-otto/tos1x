@@ -1,4 +1,3 @@
-2080
 ;writeRTCTime:
 ~ $61,00,FE,EE               ; bsr        checkRTC
 ~ $65,F6                     ; bcs.s      $00FC207C

@@ -412,6 +412,7 @@ _ENDIF
 .CORRECT_DAY = 0    ;1: Include patch, 0: Do not include patch
 
 _IF .CORRECT_DAY !A! (.CT_CLOCK = 0)
+2080
 +setwoch.fil   ;2080 - 215C (.220)
 _ENDIF
 
