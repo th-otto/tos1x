@@ -637,13 +637,15 @@ _ENDIF
 
 .NEW_KBD = 0        ;1: Neue Keyboardtabelle einbinden, 0: Nichts einbinden
 
+.KBD_TAB = 282CE+.d2
+
 _IF .NEW_KBD
  -demo.kbd                    ;Dsetpath("DEMO.KBD")
 _SWITCH .NATION
 _CASE .FRG:
- 282CE+.d2 frg\german.kbd     ;Enter the desired keyboard table here
+ .KBD_TAB frg\german.kbd     ;Enter the desired keyboard table here
 _CASE .USA:
- 282CE+.d2 usa\usa.kbd        ;Enter the desired keyboard table here
+ .KBD_TAB usa\usa.kbd        ;Enter the desired keyboard table here
 _ENDSWITCH
  -..                          ;Dsetpath("..")
 _ENDIF
@@ -662,8 +664,8 @@ _ENDIF
 _IF .NEW_SZ
 _SWITCH .NATION
 _CASE .FRG:
- 282CE+0C+.d2 $E1
- 282CE+10C+.d2 $E1
+ .KBD_TAB+0C $E1
+ .KBD_TAB+10C $E1
 _ENDSWITCH
 _ENDIF
 
