@@ -547,7 +547,7 @@ static void handle_batch(char **batchptr)
 	++(*batchptr);
 	if (filenr > 256)
 		error_handler(0, toomany_batch_err);
-	print_line(read_2nd_text);
+	/* print_line(read_2nd_text); */
 	if (getfilename(filename, batchptr) == 0)
 	{
 		unexpected_eof();
@@ -569,7 +569,7 @@ static void handle_batch(char **batchptr)
 	xfree(ptr);
 	/* end of batch file */
 	prcrange();
-	print_line(batch_end_text);
+	/* print_line(batch_end_text); */
 	--filenr;
 	/* restore lineno and counters */
 	lineno = save_lineno;
