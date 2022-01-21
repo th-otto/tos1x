@@ -11,16 +11,12 @@ now new folders for versions 1.06 and 1.62.
 
 # Known BUGS
 
- * Some patches that replace single items in the resource files (like icons)
-   will only work with the german version for now. Replacing the whole
-   resource file should work though.
-
  * Creating relocated images for TOS versions 1.06 and 1.62 currently
    does not work. Do not use that feature.
 
 # Future
 
-Some of the patches that can be applied can also be activated when
-compiling the source. Others may follow.  See the file
+Most of the patches that can be applied can also be activated when
+compiling the source. See the file
 [patchdef.h](/common/patchdef.h) for available options.
 
