@@ -407,7 +407,7 @@ PP(int16_t *prets;)
 
 
 /*
- * AES #26 - evnt_dclick - Obtain or set the time delay between the two clicks of a double-elick.
+ * AES #26 - evnt_dclick - Obtain or set the time delay between the two clicks of a double-click.
  */
 /* 206de: 00e18752 */
 /* 306de: 00e1c1b8 */
