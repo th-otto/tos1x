@@ -1,0 +1,5 @@
+FROM c.o TFIXDEMO.O
+LIB lcg.lib lc.lib rpi.lib
+TO TFIXDEMO.PRG
+XADDSYM
+VERBOSE
