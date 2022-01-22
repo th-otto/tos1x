@@ -141,7 +141,7 @@
 +winxhms1.fil  ; 1CB76 - 1CB94 (1E)
 
 .WINXHMSG
-+WINXHMSG.fil  ; 1CBD6 - 1CC40 (6A)
++winxhmsg.fil  ; 1CBD6 - 1CC40 (6A)
 
 .WINXBLT
 +winxblt.fil   ; 1DF8E - 1E0A8 (11A)
@@ -200,15 +200,15 @@
 
 ; replace downorup()
 .WINXDOWN      ; 200A4 - 200F0 (3C)
- +winxdown.fil
++winxdown.fil
 
 ; replace fapd()
 .WINXFAPD      ; 20380 - 203D0 (50)
- +winxfapd.fil
++winxfapd.fil
 
 ;p_nameit: optimized version to insert call to wx_nameit()
 .WINXNAME      ; 204F6 - 20522 (2C)
-  +winxname.fil
++winxname.fil
 
 ; doq: change access to appl specific message buffer
 205B8+.d2
@@ -224,7 +224,7 @@
 2067C+.d2 $30,3C,.WX_QUEUE_SIZE.W    ;move.w #$0500,d0
 
 .WINXRUL   ; 2074E - 20A16 (2C8)
- +WINXRUL.fil
++winxrul.fil
 
 ;
 ; in ap_exit(), change parameter in call to ap_rdwr
@@ -234,8 +234,8 @@
 ;
 ; optimize xif(), to make room for appl_getinfo() check
 ;
-.WINXXIF
- +winxxif.fil   ; 2133A - 213DA (A0)
+.WINXXIF   ; 2133A - 213DA (A0)
++winxxif.fil
 
 ; fm_dial(): new address for w_drawdesk()
 225E4+.d2

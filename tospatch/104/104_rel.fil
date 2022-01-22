@@ -535,7 +535,7 @@ _ENDIF
 ;* Corrects the error that caused the memory lists to be corrupted
 ;* when an Mshrink (0) call was made
 
-.M_SHRINK = 0       ;1: Include patch, 0: Do not include patch
+.M_SHRINK = 1       ;1: Include patch, 0: Do not include patch
 
 _IF .M_SHRINK
 8AD0+.d1

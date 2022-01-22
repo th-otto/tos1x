@@ -239,13 +239,13 @@
 1ED64+.d2 $30,3C,.WX_QUEUE_SIZE.W    ;move.w #$0500,d0
 
 .WINXRUL   ; 1EE1E - 1F0E6 (2C8)
- +WINXRUL.fil
+ +winxrul.fil
 
 ;
 ; optimize xif(), to make room for appl_getinfo() check
 ;
 .WINXXIF
- +WINXXIF.fil   ; 1F894 - 1F934 (A0)
+ +winxxif.fil   ; 1F894 - 1F934 (A0)
 
 ; fm_dial(): new address for w_drawdesk()
 208FC+.d2
