@@ -62,18 +62,18 @@ checkRTC:
             move.l    ABSW(_buserror),d2
             movea.l   sp,a2
             move.l    #chkRTC2,ABSW(_buserror)
-            move.b    #9,27(a0)
+            move.b    #9,27(a0) /* select bank 1 */
 
             move.l    d2,ABSW(_buserror)
-            move.w    #$a05,d0
+            move.w    #$a05,d0 /* write to alarm time minutes */
             movep.w   d0,5(a0)
-            movep.w   5(a0),d1
+            movep.w   5(a0),d1 /* read value back */
             and.w     #$f0f,d1
-            cmp.w     d0,d1
-            bne.s     chkRTC3
-            move.b    #1,1(a0)
-            move.b    #8,27(a0)
-            move.b    #0,29(a0)
+            cmp.w     d0,d1    /* value ok? */
+            bne.s     chkRTC3  /* no -> */
+            move.b    #1,1(a0) /* set output frequency */
+            move.b    #8,27(a0) /* select bank 0 */
+            move.b    #0,29(a0) /* clear test register */
             rts
 chkRTC2:    movea.l   a2,sp
             move.l    d2,ABSW(_buserror)
@@ -86,58 +86,58 @@ readRTCTime:bsr.s     checkRTC
             bcs       rdRTCErr
             lea       ABSW2(rtcbufa),a1
             lea       ABSW2(rtcbufb),a2
-            bsr       rdRTCMask
+            bsr       rdRTCMask /* read all values to rtcbufa */
 rdRTC2:     exg       a1,a2
-            bsr       rdRTCMask
-            moveq     #$c,d0
+            bsr       rdRTCMask /* read all values to rtcbufb */
+            moveq     #13-1,d0
 rdRTC3:     move.b    (a1,d0.w),d1
             cmp.b     (a2,d0.w),d1
             bne.s     rdRTC2
             dbra      d0,rdRTC3
             moveq     #0,d0
-            move.b    $b(a1),d0
+            move.b    11(a1),d0 /* get seconds, tens */
             mulu.w    #10,d0
-            add.b     $c(a1),d0
-            asr.w     #1,d0
+            add.b     12(a1),d0 /* add seconds, units */
+            asr.w     #1,d0     /* shift into place for GEMDOS format */
             move.w    d0,d1
             moveq     #0,d0
-            move.b    9(a1),d0
+            move.b    9(a1),d0  /* get minutes, tens */
             mulu.w    #10,d0
-            add.b     $a(a1),d0
-            asl.w     #5,d0
+            add.b     10(a1),d0 /* add minutes, units */
+            asl.w     #5,d0     /* shift into place for GEMDOS format */
             add.w     d0,d1
             moveq     #0,d0
-            move.b    7(a1),d0
+            move.b    7(a1),d0  /* get hours, tens */
             mulu.w    #10,d0
-            add.b     8(a1),d0
-            asl.w     #8,d0
+            add.b     8(a1),d0  /* add hours, units */
+            asl.w     #8,d0     /* shift into place for GEMDOS format */
             asl.w     #3,d0
             add.w     d0,d1
-            swap      d1
+            swap      d1        /* save time in upper word */
             moveq     #0,d0
-            move.b    4(a1),d0
+            move.b    4(a1),d0  /* get day, tens */
             mulu.w    #10,d0
-            add.b     5(a1),d0
+            add.b     5(a1),d0  /* add day, units */
             move.w    d0,d1
             moveq     #0,d0
-            move.b    2(a1),d0
+            move.b    2(a1),d0  /* get month, tens */
             mulu.w    #10,d0
-            add.b     3(a1),d0
-            asl.w     #5,d0
+            add.b     3(a1),d0  /* add month, units */
+            asl.w     #5,d0     /* shift into place for GEMDOS format */
             add.w     d0,d1
             moveq     #0,d0
-            move.b    0(a1),d0
+            move.b    0(a1),d0  /* get year, tens */
             mulu.w    #10,d0
-            add.b     1(a1),d0
-            asl.w     #8,d0
+            add.b     1(a1),d0  /* add year, units */
+            asl.w     #8,d0     /* shift into place for GEMDOS format */
             asl.w     #1,d0
-            add.w     d0,d1
+            add.w     d0,d1     /* date in d1.w now */
             swap      d1
 
             move.l    d1,d0
             rts
 
-rdRTCMask:  moveq     #$c,d0
+rdRTCMask:  moveq     #13-1,d0
             moveq     #1,d1
 rdRTCMk2:   move.b    (a0,d1.w),d2
             and.b     #$f,d2
@@ -156,59 +156,60 @@ writeRTCTime:
             bsr       checkRTC
             bcs       no_RTC_found
             lea       ABSW2(rtcbufa),a1
-            move.w    6(sp),d1
+            move.w    6(sp),d1    /* get time */
             move.w    d1,d0
-            and.l     #$1f,d0
+            and.l     #$1f,d0     /* extract seconds */
             add.w     d0,d0
             divu.w    #10,d0
-            move.b    d0,11(a1)
+            move.b    d0,11(a1)   /* seconds, tens */
             swap      d0
-            move.b    d0,12(a1)
+            move.b    d0,12(a1)   /* seconds, units */
             move.w    d1,d0
             lsr.w     #5,d0
-            and.l     #$3f,d0
+            and.l     #$3f,d0     /* extract minutes */
             divu.w    #10,d0
-            move.b    d0,9(a1)
+            move.b    d0,9(a1)    /* minutes, tens */
             swap      d0
-            move.b    d0,10(a1)
+            move.b    d0,10(a1)   /* minutes, units */
             lsr.w     #8,d1
-            lsr.w     #3,d1
+            lsr.w     #3,d1       /* extract hour */
             ext.l     d1
             divu.w    #10,d1
-            move.b    d1,7(a1)
+            move.b    d1,7(a1)    /* hour, tens */
             swap      d1
-            move.b    d1,8(a1)
-            move.w    4(sp),d1
+            move.b    d1,8(a1)    /* hour, units */
+
+            move.w    4(sp),d1    /* get date */
             move.w    d1,d0
-            and.l     #$1f,d0
+            and.l     #$1f,d0     /* extract day */
             divu.w    #10,d0
-            move.b    d0,4(a1)
+            move.b    d0,4(a1)    /* day, tens */
             swap      d0
-            move.b    d0,5(a1)
+            move.b    d0,5(a1)    /* day, units */
             move.w    d1,d0
             lsr.w     #5,d0
-            and.l     #$f,d0
+            and.l     #$f,d0      /* extract month */
             divu.w    #10,d0
-            move.b    d0,2(a1)
+            move.b    d0,2(a1)    /* month, tens */
             swap      d0
-            move.b    d0,3(a1)
+            move.b    d0,3(a1)    /* month, units */
             lsr.w     #1,d1
-            lsr.w     #8,d1
+            lsr.w     #8,d1       /* extract year */
             ext.l     d1
             move.l    d1,d2
             divu.w    #10,d1
-            move.b    d1,0(a1)
+            move.b    d1,0(a1)    /* year, tens */
             swap      d1
-            move.b    d1,1(a1)
+            move.b    d1,1(a1)    /* year, units */
             divu.w    #4,d2
             swap      d2
-			clr.b     6(a1)
-			move.b    #$02,31(a0)
-			move.b    #$09,27(a0)
-            move.b    #1,21(a0) /* set 24h mode */
-            move.b    d2,$17(a0) /* set leapyear register */
-			move.b    #$08,27(a0)
-            moveq     #$c,d0
+			clr.b     6(a1)       /* set day of week to sunday */
+			move.b    #2,31(a0)   /* reset clock */
+			move.b    #9,27(a0)   /* select bank 1 */
+            move.b    #1,21(a0)   /* set 24h mode */
+            move.b    d2,23(a0)   /* set leapyear register */
+			move.b    #8,27(a0)   /* select bank 0, and start clock */
+            moveq     #13-1,d0
             moveq     #1,d1
 wrRTC2:     move.b    (a1,d0.w),(a0,d1.w)
             addq.w    #2,d1
