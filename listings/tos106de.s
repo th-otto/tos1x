@@ -13851,7 +13851,7 @@ J3:
 [00e0b56c] 70ff                      moveq.l    #-1,d0
 [00e0b56e] 2f00                      move.l     d0,-(a7)
 [00e0b570] 2f00                      move.l     d0,-(a7)
-[00e0b572] 3f3c 0005                 move.w     #$0005,-(a7) ; Setcreen
+[00e0b572] 3f3c 0005                 move.w     #$0005,-(a7) ; Setscreen
 [00e0b576] 4e4e                      trap       #14
 [00e0b578] 4fef 000c                 lea.l      12(a7),a7
 [00e0b57c] 4879 00e0 b5d2            pea.l      $00E0B5D2
@@ -13867,7 +13867,7 @@ J3:
 [00e0b596] 70ff                      moveq.l    #-1,d0
 [00e0b598] 2f00                      move.l     d0,-(a7)
 [00e0b59a] 2f00                      move.l     d0,-(a7)
-[00e0b59c] 3f3c 0005                 move.w     #$0005,-(a7) ; Setcreen
+[00e0b59c] 3f3c 0005                 move.w     #$0005,-(a7) ; Setscreen
 [00e0b5a0] 4e4e                      trap       #14
 [00e0b5a2] 4fef 000c                 lea.l      12(a7),a7
 [00e0b5a6] 4879 00e0 b5ca            pea.l      $00E0B5CA

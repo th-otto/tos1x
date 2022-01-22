@@ -161,7 +161,7 @@
 +winxproc.fil      ; 1F3A0 - 1F3E0 (40)
 
 ; replace ct_msg() & hctl_window()
-.WINXHTCL
+.WINXHCTL
 +winxhctl.fil      ; 1F418 - 1F778 (360)
 
 ; remove call to post_button() in ct_chgown()
@@ -199,15 +199,15 @@
 
 ; replace downorup()
 .WINXDOWN     ; 20132 - 2016E (3C)
- +winxdown.fil
++winxdown.fil
 
 ; replace fapd()
 .WINXFAPD      ; 2040E - 2045E (50)
- +winxfapd.fil
++winxfapd.fil
 
 ;p_nameit: optimized version to insert call to wx_nameit()
 .WINXNAME    ; 20584 - 205B0 (2C)
-  +winxname.fil
++winxname.fil
 
 ; doq: change access to appl specific message buffer
 20646+.d2
@@ -223,7 +223,7 @@
 2070A+.d2 $30,3C,.WX_QUEUE_SIZE.W    ;move.w #$0500,d0
 
 .WINXRUL   ; 207DC - 20AA4 (2C8)
- +winxrul.fil
++winxrul.fil
 
 ;
 ; in ap_exit(), change parameter in call to ap_rdwr
@@ -233,8 +233,8 @@
 ;
 ; optimize xif(), to make room for appl_getinfo() check
 ;
-.WINXXIF
- +winxxif.fil   ; 213C8 - 213DA (A0)
+.WINXXIF   ; 213C8 - 213DA (A0)
++winxxif.fil
 
 ; fm_dial(): new address for w_drawdesk()
 22672+.d2

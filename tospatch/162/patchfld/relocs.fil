@@ -125,5 +125,5 @@ _ENDSWITCH
 !2AFC0+.d2 .. 2B1C2+.d2 ; 8x8 font offsets
 !2B1C2+.d2 .. 2B9C2+.d2 ; 8x8 font data
 !2B9C2+.d2 .. 2C9C2+.d2 ; 8x16 font data
+!2CA1C+.d2 .. 2CE54+.d2 ; VDI patterns
 !.RSC_TAB .. .ROMTOP ; resource data
-

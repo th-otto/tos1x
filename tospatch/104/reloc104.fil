@@ -1,21 +1,23 @@
 ;*******************************************************************************
-;* TOS 1.04 an eine bestimmte Adresse relozieren
+;* Relocate TOS 1.04 to a certain address
 ;*
 ;* ½ 1990 ä-soft, Markus Fritze
 
-.BASE   = FC0000    ;TOS-Basisadresse
-.LENGTH =  30000    ;L„nge des TOS'
-.WIDTH  =    .16    ;Organisation des TOS (16-bittig)
+.BASE   = FC0000    ;TOS-ROM-address
+.LENGTH =  30000    ;TOS-length
+.WIDTH  =    .16    ;TOS-width (16-bit)
 
-<ST_TOS.IMG         ;TOS 1.04 lesen
-=06.04.1989         ;muž die Version vom 06.04.1989 sein! (sonst Message!)
+.NATION = .FRG      ;TOS country code: Germany
 
->1 3D0000 ;  4MB-Rechner / 1 File
-;>1 2D0000 ;  3MB-Rechner / 1 File
-;>1 250000 ;2.5MB-Rechner / 1 File
-;>1 1D0000 ;  2MB-Rechner / 1 File ;Mit weniger als 2MB Speicher macht es
-;>1 0D0000 ;  1MB-Rechner / 1 File ;kaum Sinn TOS 1.04 im Ram zu halten,
-;>1 050000 ;0.5MB-Rechner / 1 File ;aužer vielleicht zum Testen der Patches!
+<tos.img            ;Read TOS from file
+=06.04.1989,.NATION ;Version and nationality must be correct (otherwise message!)
+
+>1 3D0000 ;  4MB-computer / 1 File
+;>1 2D0000 ;  3MB-computer / 1 File
+;>1 250000 ;2.5MB-computer / 1 File
+;>1 1D0000 ;  2MB-computer / 1 File ;With less than 2MB of memory it does
+;>1 0D0000 ;  1MB-computer / 1 File ;hardly make sense to keep TOS 1.06 in the ram,
+;>1 050000 ;0.5MB-computer / 1 File ;except maybe for testing the patches!
 
 -patchfld      ;Dsetpath("PATCHFLD")
 +relocs.fil

@@ -111,6 +111,33 @@ _ENDSWITCH
 ;* The Reloc corrections support TOS lengths up to $40000.
 
 
+!04DE2+.d1 ; movem.l    (a7)+,d5-d7
+!0D22C+.d1 ; move.w     #$00E1,-(a7)
+!0D24E+.d1 ; move.w     #$00E1,-(a7)
+!13230+.d1 ; move.b     $E5(pc,d0.w),d0
+!1488C+.d1 ; movem.w    46(a7),d5-d7
+!18E74+.d2 ; adda.l     #$000000E2,a0
+!1966E+.d2 ; adda.l     #$000000E2,a0
+!1F72C+.d2 ; movem.l    (a7)+,d5-d7
+!21F84+.d2 ; movem.l    (a7)+,d5-d7
+!22424+.d2 ; movem.l    (a7)+,d5-d7
+!2259C+.d2 ; movem.l    (a7)+,d5-d7
+!2305C+.d2 ; movem.l    (a7)+,d5-d7
+!23664+.d2 ; movem.l    36(a7),d5-d7
+!23F3C+.d2 ; movem.l    (a7)+,d5-d7
+!25C98+.d2 ; movem.l    (a7)+,d5-d7
+!25EFE+.d2 ; movem.l    (a7)+,d5-d7
+!25FCC+.d2 ; movem.l    (a7)+,d5-d7
+!261F2+.d2 ; movem.l    (a7)+,d5-d7
+!26A32+.d2 ; movem.l    (a7)+,d5-d7
+!28AC8+.d2 ; movem.l    (a7)+,d5-d7
+!292D4+.d2 ; adda.l     #$000000E0,a0
+!293D8+.d2 ; adda.l     #$000000E0,a0
+!29404+.d2 ; adda.l     #$000000E0,a0
+!2978C+.d2 ; move.b     #$E9,(a5)
+
+?53C
+
 !00F3E .. 00F5E       ; bomb image
 !0B5CA+.d1 .. 0B5F2+.d1 ; color table
 !0A69C+.d1 .. 0A6E2+.d1 ; offset table in vdi
@@ -125,5 +152,6 @@ _ENDSWITCH
 !2AECC+.d2 .. 2B0CE+.d2 ; 8x8 font offsets
 !2B0CE+.d2 .. 2B8CE+.d2 ; 8x8 font data
 !2B8CE+.d2 .. 2C8CE+.d2 ; 8x16 font data
+!2C928+.d2 .. 2CD60+.d2 ; VDI patterns
 !.RSC_TAB .. .ROMTOP ; resource data
 

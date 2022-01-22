@@ -3,12 +3,14 @@
 ;*
 ;* ½ 1990 ä-soft, Markus Fritze
 
-.BASE   = FC0000    ;TOS-Basisadresse
-.LENGTH =  30000    ;L„nge des TOS'
-.WIDTH  =    .16    ;Organisation des TOS (16-bittig)
+.BASE   = FC0000    ;TOS-ROM-address
+.LENGTH =  30000    ;TOS-length
+.WIDTH  =    .16    ;TOS-width (16-bit)
 
-<ST_TOS.IMG         ;TOS 1.02 lesen
-=22.04.1987         ;muž die Version vom 22.4.1987 sein! (sonst Message!)
+.NATION = .FRG      ;TOS country code: Germany
+
+<tos.img            ;Read TOS from file
+=22.04.1987,.NATION ;Version and nationality must be correct (otherwise message!)
 
 >1 3D0000 ;  4MB-Rechner / 1 File
 ;>1 2D0000 ;  3MB-Rechner / 1 File
