@@ -111,6 +111,33 @@ _ENDSWITCH
 ;* The Reloc corrections support TOS lengths up to $40000.
 
 
+!04DE2+.d1 ; movem.l    (a7)+,d5-d7
+!0D29A+.d1 ; move.w     #$00E1,-(a7)
+!0D2BC+.d1 ; move.w     #$00E1,-(a7)
+!1329E+.d1 ; move.b     $E5(pc,d0.w),d0
+!148FA+.d1 ; movem.w    46(a7),d5-d7
+!18EF8+.d2 ; adda.l     #$000000E2,a0
+!196F4+.d2 ; adda.l     #$000000E2,a0
+!1F7BA+.d2 ; movem.l    (a7)+,d5-d7
+!22012+.d2 ; movem.l    (a7)+,d5-d7
+!224B2+.d2 ; movem.l    (a7)+,d5-d7
+!2262A+.d2 ; movem.l    (a7)+,d5-d7
+!230EA+.d2 ; movem.l    (a7)+,d5-d7
+!236F2+.d2 ; movem.l    36(a7),d5-d7
+!24028+.d2 ; movem.l    (a7)+,d5-d7
+!25D84+.d2 ; movem.l    (a7)+,d5-d7
+!25FEA+.d2 ; movem.l    (a7)+,d5-d7
+!260B8+.d2 ; movem.l    (a7)+,d5-d7
+!262DE+.d2 ; movem.l    (a7)+,d5-d7
+!26B1E+.d2 ; movem.l    (a7)+,d5-d7
+!28BB4+.d2 ; movem.l    (a7)+,d5-d7
+!293C0+.d2 ; adda.l     #$000000E0,a0
+!294C4+.d2 ; adda.l     #$000000E0,a0
+!294F0+.d2 ; adda.l     #$000000E0,a0
+!29878+.d2 ; move.b     #$E9,(a5)
+
+?53C
+
 !00F3E .. 00F5E       ; bomb image
 !0B638+.d1 .. 0B660+.d1 ; color table
 !0A70A+.d1 .. 0A750+.d1 ; offset table in vdi

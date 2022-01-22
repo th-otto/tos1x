@@ -11,8 +11,7 @@ now new folders for versions 1.06 and 1.62.
 
 # Known BUGS
 
- * Creating relocated images for TOS versions 1.06 and 1.62 currently
-   does not work. Do not use that feature.
+ * None :)
 
 # Future
 
