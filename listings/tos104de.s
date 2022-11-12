@@ -13777,6 +13777,8 @@ _CLC_FLIT:
 [00fcadde] d041                      add.w     d1,d0
 [00fcade0] 261f                      move.l    (a7)+,d3
 [00fcade2] 4e75                      rts
+
+concat:
 [00fcade4] 3f02                      move.w    d2,-(a7)
 [00fcade6] 3f03                      move.w    d3,-(a7)
 [00fcade8] c3f9 0000 2ada            muls.w    $00002ADA,d1
