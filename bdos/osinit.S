@@ -97,6 +97,7 @@ _trap14:
  */
 
 /* 104de: 00fc9278 */
+/* 102de: 00fc4f16 */
 ground_it:              
     tst.w   	d0						/* if D0 == 0x0000, Pterm0(). */
     beq			oterm					/* (bye bye) */

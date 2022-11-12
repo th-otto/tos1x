@@ -643,6 +643,7 @@ F_SAVWID	equ	1	/* saved line width:   0:word   1:longword */
 
 /* 306de: 00e0c694 */
 /* 206de: 00e0cae6 */
+/* 102de: 00fd01de */
 /* 104de: 00fd0d46 */
 /* 106de: 00e10f6a */
 		xdef cur_replace

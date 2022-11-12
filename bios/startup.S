@@ -1286,6 +1286,7 @@ vbl_no_palette:
 #if TOSVERSION >= 0x106
         move.b    ABSW(_v_bas_ad+3),ABSW(v_bas_l)
 #endif
+		/* BUG: writing any of those bytes will reset low byte to zero */
         move.b    ABSW(_v_bas_ad+2),ABSW(v_bas_m)
         move.b    ABSW(_v_bas_ad+1),ABSW(v_bas_h)
 vbl_no_screenpt:
