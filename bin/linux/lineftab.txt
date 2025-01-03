@@ -5,9 +5,9 @@
 #
 # The assembler will automatically translate
 # calls to these functions, if this file
-# is passed using -the -A switch
+# is passed using the -A switch
 #
-# Format: opcode funcnume [unused]
+# Format: opcode funcname [unused]
 #
 # The unused flag is used to mark certain functions that
 # have an entry in the table, but should not be translated
