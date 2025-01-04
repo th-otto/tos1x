@@ -24000,6 +24000,8 @@ J3:
 [00fd3d22] 4257                      clr.w      (a7)
 [00fd3d24] f180                      dc.w       $F180 ; wm_update
 [00fd3d26] f001                      dc.w       $F001 ; movem.l (a7)+,#0
+
+gem_main:
 [00fd3d28] 4e56 fff4                 link       a6,#$FFF4
 [00fd3d2c] 48e7 030c                 movem.l    d6-d7/a4-a5,-(a7)
 [00fd3d30] 2a7c 0000 745e            movea.l    #$0000745E,a5
