@@ -73,80 +73,99 @@ _gsx2:
  */
 	xdef	_mul_div
 _mul_div:
-	move.w	6(sp),d0	;	 m2
-	add.w	d0,d0		;      2*m2
-	muls	4(sp),d0	;   m1*2*m2
-	divs	8(sp),d0	;  (m1*2*m2)/d1
+    link    a6,#0
+	move.w	10(a6),d0	;	 m2
+	asl.w   #1,d0		;      2*m2
+	muls	8(a6),d0	;   m1*2*m2
+	divs	12(a6),d0	;  (m1*2*m2)/d1
 	bmi	md_1
-
 	addq.w	#1,d0		;  ((m1*2*m2)/d1)+1
-	asr.w	#1,d0		; (((m1*2*m2)/d1)+1)/2
-	rts
-
+	bra.s md_2
 md_1:	subq.w	#1,d0		;  ((m1*2*m2)/d1)-1
-	asr.w	#1,d0		; (((m1*2*m2)/d1)-1)/2
+
+md_2:
+	asr.w	#1,d0		; (((m1*2*m2)/d1)+1)/2
+	unlk    a6
 	rts
 
 
-#if 0
+#if AESVERSION < 0x140
+/* unused */
 	xdef	_umul_div
 _umul_div:
 
-	move.w	6(sp),d0	;         m2
-	add.w	d0,d0		;       2*m2
-	mulu	4(sp),d0	;    m1*2*m2
-	divu	8(sp),d0	;   (m1*2*m2)/d1
+    link    a6,#0
+	move.w	10(a6),d0	;         m2
+	asl.w   #1,d0		;      2*m2
+	mulu	8(a6),d0	;    m1*2*m2
+	divu	12(a6),d0	;   (m1*2*m2)/d1
 	addq.w	#1,d0		;  ((m1*2*m2)/d1)+1
 	asr.w	#1,d0		; (((m1*2*m2)/d1)+1)/2
+	unlk    a6
 	rts
 #endif
 
 	xdef	_i_ptsin
 _i_ptsin: ds.b 0
-
-	move.l	4(sp),pioff
+    link    a6,#0
+	move.l	8(a6),pioff
+	unlk    a6
 	rts
 
 
 	xdef	_i_intin
 _i_intin: ds.b 0
-
-	move.l	4(sp),iioff
+    link    a6,#0
+	move.l	8(a6),iioff
+	unlk    a6
 	rts
 
 
 	xdef	_i_ptsout
 _i_ptsout: ds.b 0
-
-	move.l	4(sp),pooff
+    link    a6,#0
+	move.l	8(a6),pooff
+	unlk    a6
 	rts
 
 
 	xdef	_i_intout
 _i_intout: ds.b 0
-
-	move.l	4(sp),iooff
+    link    a6,#0
+	move.l	8(a6),iooff
+	unlk    a6
 	rts
 
 
 	xdef	_i_lptr1
 _i_lptr1: ds.b 0
-
-	move.l	4(sp),_contrl+14
+    link    a6,#0
+	move.l	8(a6),_contrl+14
+	unlk    a6
 	rts
 
 
 	xdef	_i_ptr2
 _i_ptr2: ds.b 0
-
-	move.l	4(sp),_contrl+18
+    link    a6,#0
+	move.l	8(a6),_contrl+18
+	unlk    a6
 	rts
 
 
-/* 00e34414 */
+/* same as i_lptr1 */
+	xdef	_i_ptr
+_i_ptr: ds.b 0
+    link    a6,#0
+	move.l	8(a6),_contrl+14
+	unlk    a6
+	rts
+
+
 	xdef	_m_lptr2
 _m_lptr2: ds.b 0
-
-	move.l	4(sp),a0
+    link    a6,#0
+	move.l	8(a6),a0
 	move.l	_contrl+18,(a0)
+	unlk    a6
 	rts

@@ -51,6 +51,7 @@ uint16_t crysbind PROTO((int16_t opcode, intptr_t pglobal, uint16_t *int_in, int
 /* 306de: 00e1a2d2 */
 /* 104de: 00fdf10c */
 /* 106de: 00e20a78 */
+/* 100fr: 00fe54d6 */
 uint16_t crysbind(P(int16_t) opcode, P(intptr_t) pglobal, P(uint16_t *) int_in, P(int16_t *) int_out, P(VOIDPTR *) addr_in)
 PP(int16_t opcode;)
 PP(register intptr_t pglobal;)
@@ -757,7 +758,7 @@ PP(register VOIDPTR *addr_in;)
 		asm("bls.s      L9831");
 		asm("cmpi.w     #256,(a0)");
 		asm("bne.s      L9830");
-		asm("jsr         _gsx_fmoff");
+		asm("jsr         _gsx_moff");
 		asm("bra.s      L9834");
 		asm("L9830:");
 		asm("cmpi.w     #257,(a0)");
@@ -988,12 +989,14 @@ PP(register VOIDPTR *addr_in;)
 		break;
 #endif
 
+#if AESVERSION >= 0x140
 	case WIND_NEW:
 		ret = wm_new();
 #if ASM_HACKS
 		asm("bra        L9999")
 #else
 		break;
+#endif
 #endif
 
 	/* Resource Manager */

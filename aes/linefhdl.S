@@ -154,7 +154,7 @@ lineftab: ds.b 0
 		dc.l _wm_delete           ; F178
 		dc.l _wm_find             ; F17C
 		dc.l _wm_update           ; F180
-		dc.l _wm_new              ; F184
+		dc.l 0                    ; F184
 		dc.l _rs_load             ; F188
 		dc.l _rs_saddr            ; F18C
 		dc.l _rs_obfix            ; F190

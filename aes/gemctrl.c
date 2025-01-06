@@ -502,7 +502,7 @@ PP(BOOLEAN mon;)
 #endif
 		if (!gl_mouse)					/* if currently the mouse is    */
 		{
-			gsx_1acode(SHOW_CUR, 0);	/* off, then turn it on     */
+			gsx_1code(SHOW_CUR, 0);	/* off, then turn it on     */
 			gl_mouse = TRUE;			/* set the flag         */
 		}
 		gl_moff = 0;					/* reset the flag to make bbset */

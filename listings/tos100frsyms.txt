@@ -1,0 +1,2212 @@
+Name            Location        Type    Namespace       Source  Reference Count Offcut Ref Count
+buserror        00000008        Data Label      Global  User Defined    6       1
+zerodiv         00000014        Data Label      Global  User Defined    1       0
+lineatrap       00000028        Data Label      Global  User Defined    1       0
+lineftrap       0000002c        Data Label      Global  User Defined    2       0
+lvl2vec         00000068        Data Label      Global  User Defined    1       0
+lvl4vec         00000070        Data Label      Global  User Defined    1       0
+trap1vec        00000084        Data Label      Global  User Defined    1       0
+trap2vec        00000088        Data Label      Global  User Defined    7       0
+trap13vec       000000b4        Data Label      Global  User Defined    1       0
+trap14vec       000000b8        Data Label      Global  User Defined    1       0
+mfpvects        00000100        Data Label      Global  User Defined    1       0
+proc_lives      00000380        Data Label      Global  User Defined    1       0
+proc_dregs      00000384        Data Label      Global  User Defined    1       7
+proc_aregs      000003a4        Data Label      Global  User Defined    1       7
+proc_enum       000003c4        Data Label      Global  User Defined    2       0
+proc_usp        000003c8        Data Label      Global  User Defined    1       0
+proc_stk        000003cc        Data Label      Global  User Defined    2       1
+etv_timer       00000400        Data Label      Global  User Defined    2       0
+etv_critic      00000404        Data Label      Global  User Defined    2       0
+etv_term        00000408        Data Label      Global  User Defined    1       0
+etv_xtra        0000040c        Data Label      Global  User Defined    0       0
+memvalid        00000420        Data Label      Global  User Defined    2       0
+memctrl         00000424        Data Label      Global  User Defined    3       0
+resvalid        00000426        Data Label      Global  User Defined    1       0
+resvector       0000042a        Data Label      Global  User Defined    2       0
+phystop         0000042e        Data Label      Global  User Defined    5       0
+membot          00000432        Data Label      Global  User Defined    3       0
+memtop          00000436        Data Label      Global  User Defined    2       0
+memval2         0000043a        Data Label      Global  User Defined    2       0
+flock           0000043e        Data Label      Global  User Defined    5       0
+seekrate        00000440        Data Label      Global  User Defined    2       0
+timer_ms        00000442        Data Label      Global  User Defined    3       0
+fverify         00000444        Data Label      Global  User Defined    2       0
+bootdev         00000446        Data Label      Global  User Defined    5       0
+palmode         00000448        Data Label      Global  User Defined    0       0
+defshiftmod     0000044a        Data Label      Global  User Defined    1       0
+sshiftmod       0000044c        Data Label      Global  User Defined    8       0
+v_bas_ad        0000044e        Data Label      Global  User Defined    25      2
+vblsem          00000452        Data Label      Global  User Defined    5       0
+nvbls           00000454        Data Label      Global  User Defined    2       0
+vblqueue        00000456        Data Label      Global  User Defined    4       0
+colorptr        0000045a        Data Label      Global  User Defined    3       0
+screenpt        0000045e        Data Label      Global  User Defined    2       0
+vbclock         00000462        Data Label      Global  User Defined    1       0
+frclock         00000466        Data Label      Global  User Defined    4       0
+hdv_init        0000046a        Data Label      Global  User Defined    2       0
+swv_vec         0000046e        Data Label      Global  User Defined    3       0
+hdv_bpb         00000472        Data Label      Global  User Defined    1       0
+hdv_rw          00000476        Data Label      Global  User Defined    1       0
+hdv_boot        0000047a        Data Label      Global  User Defined    2       0
+hdv_mediach     0000047e        Data Label      Global  User Defined    1       0
+cmdload         00000482        Data Label      Global  User Defined    1       0
+conterm         00000484        Data Label      Global  User Defined    6       0
+trp14ret        00000486        Data Label      Global  User Defined    0       0
+criticret       0000048a        Data Label      Global  User Defined    0       0
+themd           0000048e        Data Label      Global  User Defined    1       0
+___md           0000049e        Data Label      Global  User Defined    0       0
+savptr          000004a2        Data Label      Global  User Defined    6       0
+nflops          000004a6        Data Label      Global  User Defined    8       0
+con_state       000004a8        Data Label      Global  User Defined    11      0
+save_row        000004ac        Data Label      Global  User Defined    2       0
+sav_context     000004ae        Data Label      Global  User Defined    0       0
+bufl            000004b2        Data Label      Global  User Defined    16      1
+hz_200          000004ba        Data Label      Global  User Defined    12      0
+the_env         000004be        Data Label      Global  User Defined    0       0
+drvbits         000004c2        Data Label      Global  User Defined    3       0
+dskbufp         000004c6        Data Label      Global  User Defined    4       0
+autopath        000004ca        Data Label      Global  User Defined    0       0
+vbl_list        000004ce        Data Label      Global  User Defined    3       1
+dumpflg         000004ee        Data Label      Global  User Defined    34      0
+prtabt          000004f0        Data Label      Global  User Defined    0       0
+sysbase         000004f2        Data Label      Global  User Defined    1       0
+shell_p         000004f6        Data Label      Global  User Defined    0       0
+end_os          000004fa        Data Label      Global  User Defined    2       0
+exec_os         000004fe        Data Label      Global  User Defined    2       0
+scr_dmp         00000502        Data Label      Global  User Defined    2       0
+prt_stat        00000506        Data Label      Global  User Defined    2       0
+prt_vec         0000050a        Data Label      Global  User Defined    2       0
+aux_stat        0000050e        Data Label      Global  User Defined    2       0
+aux_vec         00000512        Data Label      Global  User Defined    1       0
+pun_ptr         00000516        Data Label      Global  User Defined    0       0
+gem_env         00000840        Data Label      Global  User Defined    5       0
+save_beg        0000084c        Data Label      Global  User Defined    0       0
+__sbss          0000093a        Data Label      Global  User Defined    0       1
+savepc          0000093a        Data Label      Global  User Defined    6       1
+execpath        0000093e        Data Label      Global  User Defined    3       0
+execname        00000942        Data Label      Global  User Defined    2       0
+execdta         00000946        Data Label      Global  User Defined    1       2
+execfname       00000972        Data Label      Global  User Defined    3       2
+pbdef           00000992        Data Label      Global  User Defined    2       11
+fd_scount       000009b0        Data Label      Global  User Defined    7       0
+fd_wp           000009b2        Data Label      Global  User Defined    7       0
+fd_latch        000009b4        Data Label      Global  User Defined    8       0
+fd_lastacc      000009b6        Data Label      Global  User Defined    2       1
+fd_motoron      000009be        Data Label      Global  User Defined    3       0
+fd_desel        000009c0        Data Label      Global  User Defined    3       0
+fd_dev          000009c2        Data Label      Global  User Defined    5       0
+fd_track        000009c4        Data Label      Global  User Defined    6       1
+fd_sect         000009c6        Data Label      Global  User Defined    6       0
+fd_side         000009c8        Data Label      Global  User Defined    3       1
+fd_scount       000009ca        Data Label      Global  User Defined    4       0
+fd_buffer       000009cc        Data Label      Global  User Defined    7       3
+fd_buffer_endFIXME      000009d0        Data Label      Global  User Defined    1       0
+fd_spt          000009d4        Data Label      Global  User Defined    2       0
+fd_interlv      000009d6        Data Label      Global  User Defined    2       0
+fd_virgin       000009d8        Data Label      Global  User Defined    1       1
+lastacstm       000009da        Data Label      Global  User Defined    1       0
+fd_deferr       000009de        Data Label      Global  User Defined    4       0
+fd_curerr       000009e0        Data Label      Global  User Defined    11      0
+flopsregs       000009e2        Data Label      Global  User Defined    2       8
+dsb             00000a06        Data Label      Global  User Defined    2       3
+rs232ibuf       00000a0e        Data Label      Global  User Defined    1       0
+rs232obuf       00000b0e        Data Label      Global  User Defined    1       0
+ikbdbuf         00000c0e        Data Label      Global  User Defined    1       3
+midibuf         00000d0e        Data Label      Global  User Defined    1       0
+rs232iorec      00000d8e        Data Label      Global  User Defined    5       0
+rs232_flowFIXME 00000dae        Data Label      Global  User Defined    0       0
+ikbdiorec       00000db0        Data Label      Global  User Defined    6       0
+midiiorec       00000dbe        Data Label      Global  User Defined    4       0
+midivec         00000dcc        Data Label      Global  User Defined    3       0
+vkbderr         00000dd0        Data Label      Global  User Defined    2       0
+vmiderr         00000dd4        Data Label      Global  User Defined    2       0
+statvec         00000dd8        Data Label      Global  User Defined    2       0
+mousevec        00000ddc        Data Label      Global  User Defined    5       0
+clockvec        00000de0        Data Label      Global  User Defined    2       0
+joyvec          00000de4        Data Label      Global  User Defined    3       0
+midisys         00000de8        Data Label      Global  User Defined    2       0
+ikbdsys         00000dec        Data Label      Global  User Defined    2       0
+ikbdstate       00000df0        Data Label      Global  User Defined    7       0
+kbdlength       00000df1        Data Label      Global  User Defined    4       0
+kbdbuf          00000df2        Data Label      Global  User Defined    1       0
+mousebuf        00000df9        Data Label      Global  User Defined    2       0
+relmbuf         00000dfe        Data Label      Global  User Defined    3       0
+clockbuf        00000e01        Data Label      Global  User Defined    2       0
+joybuf          00000e07        Data Label      Global  User Defined    4       2
+iclkrtime       00000e0a        Data Label      Global  User Defined    2       0
+iclkwtime       00000e0e        Data Label      Global  User Defined    2       0
+iclkbuf         00000e12        Data Label      Global  User Defined    1       0
+buttonbuf       00000e18        Data Label      Global  User Defined    3       2
+shifty          00000e1b        Data Label      Global  User Defined    23      0
+curkeytbl       00000e1c        Data Label      Global  User Defined    4       2
+initmbuf        00000e28        Data Label      Global  User Defined    6       0
+kb_key_last     00000e39        Data Label      Global  User Defined    6       0
+kb_ticks        00000e3a        Data Label      Global  User Defined    5       0
+kb_delay        00000e3b        Data Label      Global  User Defined    5       0
+kb_initial      00000e3c        Data Label      Global  User Defined    4       0
+kb_repeat       00000e3d        Data Label      Global  User Defined    4       0
+lst_timeout     00000e3e        Data Label      Global  User Defined    2       0
+tim_c_sieve     00000e42        Data Label      Global  User Defined    2       0
+sndtable        00000e44        Data Label      Global  User Defined    7       0
+snddelay        00000e48        Data Label      Global  User Defined    8       0
+sndtmp          00000e49        Data Label      Global  User Defined    5       0
+prtconfig       00000e4a        Data Label      Global  User Defined    3       0
+iclk_ready      00000e4c        Data Label      Global  User Defined    3       0
+biosav          00000e50        Data Label      Global  User Defined    2       0
+savesr          00000e58        Data Label      Global  User Defined    2       0
+fstack          00000e5a        Data Label      Global  User Defined    0       13
+old_tik         00001672        Data Label      Global  User Defined    2       0
+old_2           00001676        Data Label      Global  User Defined    2       0
+dskbuf          0000167a        Data Label      Global  User Defined    20      0
+fill_buffer     0000167a        Data Label      Global  User Defined    0       0
+search_color    0000167c        Data Label      Global  User Defined    7       0
+oldy            00001688        Data Label      Global  User Defined    14      0
+xleft           00001692        Data Label      Global  User Defined    14      0
+width           000016a6        Data Label      Global  User Defined    51      0
+height          000016a8        Data Label      Global  User Defined    23      0
+FLIP_Y          000016be        Data Label      Global  User Defined    12      0
+deftxbu         00001766        Data Label      Global  User Defined    1       0
+ptsin_array     0000197a        Data Label      Global  User Defined    3       0
+linea_negative_variables        000025ac        Data Label      Global  User Defined    0       0
+angle           000025ac        Data Label      Global  User Defined    5       0
+beg_ang         000025ae        Data Label      Global  User Defined    7       0
+CUR_FONT        000025b0        Data Label      Global  User Defined    22      0
+del_ang         000025b4        Data Label      Global  User Defined    11      0
+deltay          000025b6        Data Label      Global  User Defined    0       0
+deltay1         000025b8        Data Label      Global  User Defined    0       0
+deltay2         000025ba        Data Label      Global  User Defined    0       0
+end_ang         000025bc        Data Label      Global  User Defined    7       0
+fil_intersect   000025be        Data Label      Global  User Defined    5       0
+fill_maxy       000025c0        Data Label      Global  User Defined    7       0
+fill_miny       000025c2        Data Label      Global  User Defined    9       0
+n_steps         000025c4        Data Label      Global  User Defined    20      0
+odeltay         000025c6        Data Label      Global  User Defined    0       0
+s_begsty        000025c8        Data Label      Global  User Defined    3       1
+s_endsty        000025ca        Data Label      Global  User Defined    3       1
+s_fil_col       000025cc        Data Label      Global  User Defined    2       0
+s_fill_per      000025ce        Data Label      Global  User Defined    2       0
+s_patmsk        000025d0        Data Label      Global  User Defined    0       0
+s_patptr        000025d2        Data Label      Global  User Defined    0       0
+start           000025d6        Data Label      Global  User Defined    2       0
+xc              000025d8        Data Label      Global  User Defined    15      0
+xrad            000025da        Data Label      Global  User Defined    22      0
+_Y              000025dc        Data Label      Global  User Defined    0       0
+yc              000025de        Data Label      Global  User Defined    14      0
+yrad            000025e0        Data Label      Global  User Defined    22      0
+m_poshx         000025e2        Data Label      Global  User Defined    1       0
+m_poshy         000025e4        Data Label      Global  User Defined    1       0
+m_planes        000025e6        Data Label      Global  User Defined    1       0
+m_cdb_bg        000025e8        Data Label      Global  User Defined    1       0
+m_cdb_fg        000025ea        Data Label      Global  User Defined    1       0
+mask_form       000025ec        Data Label      Global  User Defined    1       3
+INQ_TAB         0000262c        Data Label      Global  User Defined    3       6
+DEV_TAB         00002686        Data Label      Global  User Defined    15      8
+GCURX           000026e0        Data Label      Global  User Defined    7       0
+GCURY           000026e2        Data Label      Global  User Defined    7       0
+HIDE_CNT        000026e4        Data Label      Global  User Defined    9       0
+MOUSE_BT        000026e6        Data Label      Global  User Defined    3       0
+REQ_COL         000026e8        Data Label      Global  User Defined    5       3
+SIZ_TAB         00002748        Data Label      Global  User Defined    7       8
+TERM_CH         00002766        Data Label      Global  User Defined    16      0
+chc_mode        00002768        Data Label      Global  User Defined    4       0
+cur_work        0000276a        Data Label      Global  User Defined    73      0
+def_font        0000276e        Data Label      Global  User Defined    3       0
+font_ring       00002772        Data Label      Global  User Defined    10      3
+ini_font_count  00002782        Data Label      Global  User Defined    3       0
+line_cw         00002784        Data Label      Global  User Defined    3       0
+loc_mode        00002786        Data Label      Global  User Defined    4       0
+num_qc_lines    00002788        Data Label      Global  User Defined    6       0
+q_circle        0000278a        Data Label      Global  User Defined    15      2
+str_mode        000027da        Data Label      Global  User Defined    4       0
+val_mode        000027dc        Data Label      Global  User Defined    3       0
+cur_ms_stat     000027de        Data Label      Global  User Defined    8       0
+disab_cnt       000027e0        Data Label      Global  User Defined    6       0
+xydraw          000027e2        Data Label      Global  User Defined    5       1
+draw_flag       000027e6        Data Label      Global  User Defined    5       0
+mouse_flag      000027e7        Data Label      Global  User Defined    9       0
+retsav          000027e8        Data Label      Global  User Defined    2       0
+sav_cxy         000027ec        Data Label      Global  User Defined    4       1
+save_len        000027f0        Data Label      Global  User Defined    0       0
+save_addr       000027f2        Data Label      Global  User Defined    0       0
+save_stat       000027f6        Data Label      Global  User Defined    0       0
+save_area       000027f8        Data Label      Global  User Defined    0       3
+tim_addr        000028f8        Data Label      Global  User Defined    4       0
+tim_chain       000028fc        Data Label      Global  User Defined    3       0
+user_but        00002900        Data Label      Global  User Defined    4       0
+user_cur        00002904        Data Label      Global  User Defined    4       0
+user_mot        00002908        Data Label      Global  User Defined    4       0
+v_cel_ht        0000290c        Data Label      Global  User Defined    4       0
+v_celmx         0000290e        Data Label      Global  User Defined    13      0
+v_celmy         00002910        Data Label      Global  User Defined    14      0
+v_cel_wr        00002912        Data Label      Global  User Defined    8       0
+v_col_bg        00002914        Data Label      Global  User Defined    4       0
+v_col_fg        00002916        Data Label      Global  User Defined    3       0
+v_cur_ad        00002918        Data Label      Global  User Defined    10      0
+v_cur_off       0000291c        Data Label      Global  User Defined    3       0
+v_curcx         0000291e        Data Label      Global  User Defined    16      0
+v_curcy         00002920        Data Label      Global  User Defined    22      0
+vct_init        00002922        Data Label      Global  User Defined    4       0
+v_cur_tim       00002923        Data Label      Global  User Defined    4       0
+v_fnt_ad        00002924        Data Label      Global  User Defined    2       0
+v_fnt_nd        00002928        Data Label      Global  User Defined    2       0
+v_fnt_st        0000292a        Data Label      Global  User Defined    2       0
+v_fnt_wr        0000292c        Data Label      Global  User Defined    2       0
+v_hz_rez        0000292e        Data Label      Global  User Defined    2       0
+v_off_ad        00002930        Data Label      Global  User Defined    2       0
+V_STAT_0        00002934        Data Label      Global  User Defined    35      0
+v_delay         00002935        Data Label      Global  User Defined    0       0
+v_vt_rez        00002936        Data Label      Global  User Defined    2       0
+bytes_lin       00002938        Data Label      Global  User Defined    2       0
+lineavars       0000293a        Data Label      Global  User Defined    0       0
+v_planes        0000293a        Data Label      Global  User Defined    26      0
+v_lin_wr        0000293c        Data Label      Global  User Defined    14      0
+CONTRL          0000293e        Data Label      Global  User Defined    93      0
+INTIN           00002942        Data Label      Global  User Defined    60      0
+PTSIN           00002946        Data Label      Global  User Defined    47      0
+INTOUT          0000294a        Data Label      Global  User Defined    49      0
+PTSOUT          0000294e        Data Label      Global  User Defined    29      0
+FG_BP_1         00002952        Data Label      Global  User Defined    10      0
+FG_BP_2         00002954        Data Label      Global  User Defined    6       0
+FG_BP_3         00002956        Data Label      Global  User Defined    6       0
+FG_BP_4         00002958        Data Label      Global  User Defined    6       0
+LSTLIN          0000295a        Data Label      Global  User Defined    8       0
+LN_MASK         0000295c        Data Label      Global  User Defined    18      1
+WRT_MODE        0000295e        Data Label      Global  User Defined    17      0
+X1              00002960        Data Label      Global  User Defined    42      0
+Y1              00002962        Data Label      Global  User Defined    39      0
+X2              00002964        Data Label      Global  User Defined    33      0
+Y2              00002966        Data Label      Global  User Defined    22      0
+patptr          00002968        Data Label      Global  User Defined    7       0
+patmsk          0000296c        Data Label      Global  User Defined    6       0
+multifill       0000296e        Data Label      Global  User Defined    7       0
+CLIP            00002970        Data Label      Global  User Defined    12      0
+XMN_CLIP        00002972        Data Label      Global  User Defined    18      0
+YMN_CLIP        00002974        Data Label      Global  User Defined    20      0
+XMX_CLIP        00002976        Data Label      Global  User Defined    17      0
+YMX_CLIP        00002978        Data Label      Global  User Defined    19      0
+XACC_DDA        0000297a        Data Label      Global  User Defined    6       0
+DDA_INC         0000297c        Data Label      Global  User Defined    11      0
+T_SCLSTS        0000297e        Data Label      Global  User Defined    5       0
+MONO_STATUS     00002980        Data Label      Global  User Defined    4       0
+SOURCEX         00002982        Data Label      Global  User Defined    11      0
+SOURCEY         00002984        Data Label      Global  User Defined    9       0
+DESTX           00002986        Data Label      Global  User Defined    20      0
+DESTY           00002988        Data Label      Global  User Defined    19      0
+DELX            0000298a        Data Label      Global  User Defined    22      0
+DELY            0000298c        Data Label      Global  User Defined    25      0
+FBASE           0000298e        Data Label      Global  User Defined    6       0
+FWIDTH          00002992        Data Label      Global  User Defined    6       0
+STYLE           00002994        Data Label      Global  User Defined    12      0
+LITEMASK        00002996        Data Label      Global  User Defined    2       0
+SKEWMASK        00002998        Data Label      Global  User Defined    4       0
+WEIGHT          0000299a        Data Label      Global  User Defined    5       0
+R_OFF           0000299c        Data Label      Global  User Defined    3       0
+L_OFF           0000299e        Data Label      Global  User Defined    3       0
+SCALE           000029a0        Data Label      Global  User Defined    8       0
+CHUP            000029a2        Data Label      Global  User Defined    13      0
+TEXT_FG         000029a4        Data Label      Global  User Defined    4       0
+scrtchp         000029a6        Data Label      Global  User Defined    3       0
+scrpt2          000029aa        Data Label      Global  User Defined    2       0
+TEXT_BG         000029ac        Data Label      Global  User Defined    1       0
+COPYTRAN        000029ae        Data Label      Global  User Defined    3       0
+quitfill        000029b0        Data Label      Global  User Defined    2       0
+fd_mediach      000029b4        Data Label      Global  User Defined    2       0
+rseed           000029b8        Data Label      Global  User Defined    5       0
+prtbdev         000029bc        Data Label      Global  User Defined    2       0
+pbpar           000029be        Data Label      Global  User Defined    6       11
+bdos_mempool    000029dc        Data Label      Global  User Defined    0       1
+prtboch         0000414c        Data Label      Global  User Defined    5       0
+bdos_memusedw   0000414e        Data Label      Global  User Defined    2       0
+prtbbval        00004150        Data Label      Global  User Defined    9       0
+glbcolumn       00004152        Data Label      Global  User Defined    4       0
+oscnt           00004158        Data Label      Global  User Defined    2       0
+msec            0000415a        Data Label      Global  User Defined    3       0
+ram8x8          0000415c        Data Label      Global  User Defined    2       2
+prtbflg         000041b6        Data Label      Global  User Defined    4       0
+supstk          000045b8        Data Label      Global  User Defined    0       0
+supstk_end      00004db8        Data Label      Global  User Defined    0       0
+drivechange     00004db8        Data Label      Global  User Defined    9       0
+pbt_mask        00004dba        Data Label      Global  User Defined    3       0
+prtbwidth       00004dbc        Data Label      Global  User Defined    6       0
+bakbuf          00004dbe        Data Label      Global  User Defined    3       0
+fill            00004dca        Data Label      Global  User Defined    17      2
+blkdev          00004dce        Data Label      Global  User Defined    2       0
+time            00004e0e        Data Label      Global  User Defined    14      0
+prtbbytes       00004e10        Data Label      Global  User Defined    2       0
+rwerr           00004e12        Data Label      Global  User Defined    11      0
+prtbilow        00004e16        Data Label      Global  User Defined    2       0
+prtbihigh       00004e18        Data Label      Global  User Defined    2       0
+prtboval        00004e1a        Data Label      Global  User Defined    1       0
+secbuf          00004e22        Data Label      Global  User Defined    0       3
+prtbrval        00005624        Data Label      Global  User Defined    7       0
+prtbwords       00005626        Data Label      Global  User Defined    4       0
+prtbstrt        00005648        Data Label      Global  User Defined    5       0
+dirtbl          0000564c        Data Label      Global  User Defined    6       1
+pmd             000056ec        Data Label      Global  User Defined    10      1
+prtbplanes      000056f8        Data Label      Global  User Defined    10      0
+root            000056fa        Data Label      Global  User Defined    3       0
+prtbtcol        0000574a        Data Label      Global  User Defined    5       0
+prtboffset      0000574c        Data Label      Global  User Defined    2       0
+prtbp2          0000574e        Data Label      Global  User Defined    6       0
+errbuf          00005752        Data Label      Global  User Defined    4       0
+prtbacol        0000575e        Data Label      Global  User Defined    6       0
+prtbmaxval      00005760        Data Label      Global  User Defined    10      0
+prtbeps         00005780        Data Label      Global  User Defined    8       0
+prtbchunk       00005782        Data Label      Global  User Defined    3       0
+prtbobuf        00005784        Data Label      Global  User Defined    9       0
+virt_work       0000578c        Data Label      Global  User Defined    3       39
+fd_err          000058c0        Data Label      Global  User Defined    1       0
+diruse          000058c4        Data Label      Global  User Defined    4       1
+prtbp1          000058ec        Data Label      Global  User Defined    6       0
+sft             000058f0        Data Label      Global  User Defined    14      8
+drvtbl          00005bde        Data Label      Global  User Defined    11      0
+glbkbchar       00005c1e        Data Label      Global  User Defined    3       42
+bdos_memfreew   00005fde        Data Label      Global  User Defined    3       0
+prtbheight      00005fe0        Data Label      Global  User Defined    9       0
+drvsel          00005fe2        Data Label      Global  User Defined    3       0
+prtbmed         00005fe4        Data Label      Global  User Defined    2       0
+prtbmono        00005fe6        Data Label      Global  User Defined    8       0
+prtbgval        00005fe8        Data Label      Global  User Defined    9       0
+prtbend         00005fea        Data Label      Global  User Defined    6       0
+prtbmval        00005fee        Data Label      Global  User Defined    1       0
+prtbempty       00005ff6        Data Label      Global  User Defined    5       0
+prtblines       00005ff8        Data Label      Global  User Defined    11      0
+uptime          00005ffa        Data Label      Global  User Defined    1       0
+prtbprez        00005ffe        Data Label      Global  User Defined    6       0
+prtbodd         00006000        Data Label      Global  User Defined    4       0
+prtbminval      00006002        Data Label      Global  User Defined    11      0
+prtbdots        00006022        Data Label      Global  User Defined    7       0
+prtbpmsk        00006024        Data Label      Global  User Defined    6       0
+prtbomask       00006026        Data Label      Global  User Defined    4       0
+prtbbits        00006028        Data Label      Global  User Defined    10      0
+errdrv          0000602a        Data Label      Global  User Defined    17      0
+run             0000602c        Data Label      Global  User Defined    65      0
+prtbidx         00006030        Data Label      Global  User Defined    11      0
+ram8x16         00006032        Data Label      Global  User Defined    2       2
+prtbinvert      0000608c        Data Label      Global  User Defined    3       0
+beptr           0000608e        Data Label      Global  User Defined    8       2
+prtblow         0000609a        Data Label      Global  User Defined    3       0
+prtbamon        0000609c        Data Label      Global  User Defined    2       0
+date            0000609e        Data Label      Global  User Defined    17      0
+prtbbol         000060a0        Data Label      Global  User Defined    3       0
+prtbink         000060a2        Data Label      Global  User Defined    7       0
+bcbx            000060a4        Data Label      Global  User Defined    2       11
+buptr           000060f4        Data Label      Global  User Defined    11      2
+endvdibss       00006100        Data Label      Global  User Defined    0       0
+retsava         00006100        Data Label      Global  User Defined    4       0
+sh_doexec       00006104        Data Label      Global  User Defined    1       0
+autoexec        00006108        Data Label      Global  User Defined    8       0
+gl_restype      00006108
+gl_rschange     0000610a        Data Label      Global  User Defined    6       0
+sh_isgem        0000610c        Data Label      Global  User Defined    1       0
+ustak           0000610e        Data Label      Global  User Defined    0       6
+ustak_end       0000618e        Data Label      Global  User Defined    2       5
+diskin          00006192        Data Label      Global  User Defined    5       0
+srsave          00006194        Data Label      Global  User Defined    4       0
+savsr           00006196        Data Label      Global  User Defined    4       0
+dspstk          0000619a        Data Label      Global  User Defined    0       1
+crit_err        0000641e        Data Label      Global  User Defined    2       0
+SAV2TRP         00006422        Data Label      Global  User Defined    3       0
+savsup          00006426        Data Label      Global  User Defined    2       0
+drawaddr        0000642a        Data Label      Global  User Defined    1       0
+drawsp          0000642e        Data Label      Global  User Defined    2       0
+drawstk         00006432        Data Label      Global  User Defined    5       0
+errsave         0000643a        Data Label      Global  User Defined    2       0
+drwaddr         00006c72        Data Label      Global  User Defined    3       0
+ml_ocnt         00006C48
+ml_mnhold       00006c4a
+ml_ctrl         00006c4e
+pblock          00006c5e
+tikaddr         00006c76        Data Label      Global  User Defined    2       0
+tiksav          00006c82        Data Label      Global  User Defined    4       0
+trp13aret       00006d58        Data Label      Global  User Defined    2       0
+trp14aret       00006d5c        Data Label      Global  User Defined    2       0
+gl_xclip        00006d60        Data Label      Global  User Defined    1       0
+gl_wclip        00006d62        Data Label      Global  User Defined    1       0
+intin           00006d64        Data Label      Global  User Defined    10      1
+gl_awind        00006ea0
+gl_hbox         00006eac        Data Label      Global  User Defined    9       0
+intout          00006eb0
+gl_yclip        00006eae        Data Label      Global  User Defined    1       0
+gl_tcolor       00006ec4        Data Label      Global  User Defined    4       0
+gl_rmenu        00006ec6        Data Label      Global  User Defined    1       0
+W_TREE          00006ede
+gl_wschar       00006f9e        Data Label      Global  User Defined    12      0
+gl_width        00006fb0        Data Label      Global  User Defined    9       0
+gl_font         00006fb2        Data Label      Global  User Defined    3       0
+gl_patt         00007036        Data Label      Global  User Defined    3       0
+gl_rscreen      00007038        Data Label      Global  User Defined    2       0
+gl_rfull        00007040        Data Label      Global  User Defined    1       0
+ptsin           00007058
+DOS_ERR         00007080        Data Label      Global  User Defined    18      0
+W_ACTIVE        00007082
+gl_newroot      0000724a
+ptsout          00007250        Data Label      Global  User Defined    2       3
+gl_hptschar     00007266        Data Label      Global  User Defined    3       0
+gl_hsptschar    00007268        Data Label      Global  User Defined    3       0
+gl_wbox         0000726a        Data Label      Global  User Defined    5       0
+gl_fis          00007282        Data Label      Global  User Defined    3       0
+gl_mntree       000072bc
+gl_wtree        000072c2
+gl_rzero        000072c6        Data Label      Global  User Defined    1       0
+gl_nrows        00007336        Data Label      Global  User Defined    2       0
+gl_src          0000733c        Data Label      Global  User Defined    3       2
+gl_wtop         0000736e
+gl_dst          00007370        Data Label      Global  User Defined    4       0
+gl_wptschar     00007390        Data Label      Global  User Defined    2       0
+gl_wsptschar    00007392        Data Label      Global  User Defined    2       0
+gl_tmp          000073cc
+D               000073e0        Data Label      Global  User Defined    8       0
+gl_hchar        00009dfa        Data Label      Global  User Defined    11      0
+indisp          00009e02        Data Label      Global  User Defined    4       0
+gl_height       00009f12        Data Label      Global  User Defined    7       0
+rlr             00009f16        Data Label      Global  User Defined    38      0
+gl_aname        00009f28
+gl_ainfo        00009f44
+gl_hclip        00009f60        Data Label      Global  User Defined    1       0
+contrl          00009f62
+old_bcode       00009F80
+rul             00009fa8
+gl_wchar        00009fb6        Data Label      Global  User Defined    10      0
+gl_hschar       00009fc6        Data Label      Global  User Defined    2       0
+ad_intin        00009fc8        Data Label      Global  User Defined    2       0
+gl_mode         00009fcc        Data Label      Global  User Defined    3       0
+gl_rcenter      00009fe2        Data Label      Global  User Defined    1       0
+gl_moff         00009fea
+gl_ws           0000a010        Data Label      Global  User Defined    3       6
+gl_lcolor       0000a082        Data Label      Global  User Defined    3       0
+gl_graphic      0000a088
+gl_ncols        0000a08e        Data Label      Global  User Defined    2       0
+gl_mask         0000a092        Data Label      Global  User Defined    1       0
+DOS_AX          0000a094        Data Label      Global  User Defined    12      0
+gl_ticktime     0000a096        Data Label      Global  User Defined    2       0
+old_mcode       0000a09a
+gl_mlen         0000a09e
+ad_envrn        0000a0a2        Data Label      Global  User Defined    1       0
+gl_newdesk      0000a0c0
+w_walkflag      0000a0be
+
+os_entry        00fc0000        Data Label      Global  User Defined    2       6
+main            00fc0020        Function        Global  User Defined    8       0
+nodiag          00fc003c        Instruction Label       main    User Defined    2       0
+memcret         00fc0044        Instruction Label       Global  User Defined    1       0
+resetvec        00fc0050        Function        Global  User Defined    2       0
+noreset         00fc0074        Function        Global  User Defined    3       0
+ret_1b          00fc009e        Function        Global  User Defined    1       0
+notpal          00fc00a6        Instruction Label       Global  User Defined    1       0
+initpal         00fc00b4        Instruction Label       Global  User Defined    1       0
+memcret2        00fc00dc        Function        Global  User Defined    1       0
+chkpatloop      00fc00f6        Instruction Label       Global  User Defined    1       0
+chkmemloop      00fc010c        Instruction Label       Global  User Defined    1       0
+chkmem3         00fc011a        Instruction Label       Global  User Defined    1       0
+chkmem4         00fc0128        Instruction Label       Global  User Defined    1       0
+chkmem5         00fc0136        Instruction Label       Global  User Defined    1       0
+chkmem6         00fc013a        Instruction Label       Global  User Defined    1       0
+chkmem7         00fc013c        Instruction Label       Global  User Defined    2       0
+next_zone       00fc0166        Instruction Label       Global  User Defined    1       0
+store_mem       00fc016c        Instruction Label       Global  User Defined    1       0
+check_mem       00fc0178        Instruction Label       Global  User Defined    1       0
+st_ramsize_done 00fc0188        Instruction Label       Global  User Defined    2       0
+clrmem          00fc01a0        Instruction Label       Global  User Defined    1       0
+nomemchk        00fc01c2        Instruction Label       Global  User Defined    1       0
+clrbss          00fc01d0        Instruction Label       Global  User Defined    1       0
+clrscr          00fc01f8        Instruction Label       Global  User Defined    1       0
+gemok           00fc0214        Instruction Label       Global  User Defined    1       0
+cart_base       00fc02c4        Instruction Label       Global  User Defined    0       0
+initexc         00fc02e4        Instruction Label       Global  User Defined    1       0
+noexc           00fc02f6        Instruction Label       Global  User Defined    1       0
+initvbl         00fc033e        Instruction Label       Global  User Defined    1       0
+shfmodok        00fc0360        Instruction Label       Global  User Defined    1       0
+monchkret       00fc0376        Instruction Label       Global  User Defined    1       0
+nomonomon       00fc0386        Instruction Label       Global  User Defined    1       0
+nomed           00fc03a0        Instruction Label       Global  User Defined    1       0
+nocmd           00fc03fe        Instruction Label       Global  User Defined    1       0
+copyenv         00fc040a        Instruction Label       Global  User Defined    1       0
+nextenvc        00fc0412        Instruction Label       Global  User Defined    1       0
+dopexec         00fc045a        Instruction Label       Global  User Defined    1       0
+default_env     00fc046a        Data Label      Global  User Defined    3       1
+command_prg     00fc0476        Data Label      Global  User Defined    1       0
+emptystr        00fc0489        Data Label      Global  User Defined    11      0
+diskboot        00fc048c        Function        Global  User Defined    1       0
+nodiskboot      00fc04a6        Instruction Label       diskboot        User Defined    1       0
+dmaboot         00fc04a8        Function        Global  User Defined    1       0
+dmadev          00fc04aa        Instruction Label       dmaboot User Defined    1       0
+dmacrc          00fc04ba        Instruction Label       dmaboot User Defined    1       0
+nextdev         00fc04ce        Instruction Label       dmaboot User Defined    2       0
+dmaread         00fc04d6        Function        Global  User Defined    1       0
+dmaread2        00fc0532        Instruction Label       dmaread User Defined    1       0
+dmaread3        00fc0556        Instruction Label       dmaread User Defined    3       0
+dmaread4        00fc0558        Instruction Label       dmaread User Defined    1       0
+acmdtab         00fc0566        Data Label      Global  User Defined    2       0
+acsistat        00fc0576        Instruction Label       Global  User Defined    2       0
+acsista0        00fc057a        Instruction Label       Global  User Defined    1       0
+acsista0        00fc0580        Instruction Label       Global  User Defined    1       0
+acsista2        00fc0594        Instruction Label       Global  User Defined    1       0
+run_cartridge_applications      00fc0596        Function        Global  User Defined    4       0
+testtype        00fc05a4        Instruction Label       run_cartridge_applications      User Defined    1       0
+nextapp         00fc05b8        Instruction Label       run_cartridge_applications      User Defined    1       0
+cartover        00fc05be        Instruction Label       run_cartridge_applications      User Defined    1       0
+bios_unimpl     00fc05c0        Function        Global  User Defined    11      0
+memchk0         00fc05c2        Function        Global  User Defined    3       0
+memchk1         00fc05ca        Instruction Label       memchk0 User Defined    1       0
+memchk2         00fc05d6        Instruction Label       memchk0 User Defined    1       0
+memchk          00fc05d8        Function        Global  User Defined    2       0
+four_long_zero  00fc05ee        Data Label      Global  User Defined    1       0
+dflt_pal        00fc05fe        Data Label      Global  User Defined    1       0
+int_hbl         00fc061e        Instruction Label       Global  User Defined    1       0
+is_ipl          00fc0630        Instruction Label       Global  User Defined    1       0
+int_vbl         00fc0634        Instruction Label       Global  User Defined    1       0
+vblloop         00fc066e        Instruction Label       Global  User Defined    1       0
+vbl_wasmono     00fc0678        Instruction Label       Global  User Defined    1       0
+vbl_monchg      00fc068e        Instruction Label       Global  User Defined    2       0
+vbl_nomonchg    00fc069e        Instruction Label       Global  User Defined    2       0
+vbl_palette_loop        00fc06b8        Instruction Label       Global  User Defined    1       0
+vbl_no_palette  00fc06c2        Instruction Label       Global  User Defined    1       0
+vbl_no_screenpt 00fc06e2        Instruction Label       Global  User Defined    1       0
+vbl_loop        00fc06f6        Instruction Label       Global  User Defined    1       0
+vbl_next        00fc070a        Instruction Label       Global  User Defined    1       0
+vbl_no_queue    00fc070e        Instruction Label       Global  User Defined    1       0
+vbl_no_dump     00fc071a        Instruction Label       Global  User Defined    1       0
+vbl_end         00fc071e        Instruction Label       Global  User Defined    1       0
+just_rte        00fc0724        Instruction Label       Global  User Defined    2       0
+vsync           00fc0726        Function        Global  User Defined    2       0
+vsyncwait       00fc0732        Instruction Label       vsync   User Defined    1       0
+callcrit        00fc073e        Function        Global  User Defined    4       0
+critret         00fc0744        Function        Global  User Defined    1       0
+xbiostrap       00fc0748        Function        Global  User Defined    1       0
+biostrap        00fc074e        Function        Global  User Defined    1       0
+biosxbios       00fc0752        Instruction Label       biostrap        User Defined    1       0
+bx_sp_ok        00fc0770        Instruction Label       biostrap        User Defined    1       0
+bx_notindirect  00fc0782        Instruction Label       biostrap        User Defined    1       0
+bx_ret          00fc0786        Instruction Label       biostrap        User Defined    1       0
+bios_vecs       00fc079c        Data Label      Global  User Defined    2       0
+bios_vecs_array 00fc079e        Data Label      Global  User Defined    1       0
+xbios_vecs      00fc07ce        Data Label      Global  User Defined    2       0
+xbios_vecs_array        00fc07d0        Data Label      Global  User Defined    1       0
+supexec         00fc0870        Function        Global  User Defined    1       0
+bbconstat       00fc0876        Instruction Label       Global  User Defined    1       0
+bbconin         00fc087c        Instruction Label       Global  User Defined    1       0
+bbcostat        00fc0882        Instruction Label       Global  User Defined    1       0
+bbconout        00fc0888        Instruction Label       Global  User Defined    1       0
+doxconxx        00fc088c        Instruction Label       Global  User Defined    3       0
+_bconstat_vec   00fc0898        Data Label      Global  User Defined    2       0
+_bconin_vec     00fc08b0        Data Label      Global  User Defined    2       0
+_bcostat_vec    00fc08c8        Data Label      Global  User Defined    2       0
+_bconout_vec    00fc08e0        Data Label      Global  User Defined    2       0
+drvmap          00fc08f8        Instruction Label       Global  User Defined    1       0
+kbshift         00fc08fe        Function        Global  User Defined    1       0
+getmpb          00fc0910        Function        Global  User Defined    1       0
+setexc          00fc093c        Instruction Label       Global  User Defined    1       0
+tickcal         00fc0954        Function        Global  User Defined    1       0
+physbase        00fc095c        Function        Global  User Defined    1       0
+logbase         00fc0970        Function        Global  User Defined    1       0
+getrez          00fc0976        Function        Global  User Defined    1       0
+vsetscreen      00fc0982        Function        Global  User Defined    1       0
+setpalette      00fc09d0        Function        Global  User Defined    1       0
+setcolor        00fc09d8        Function        Global  User Defined    1       0
+puntaes         00fc09fe        Function        Global  User Defined    1       0
+puntaes1        00fc0a18        Instruction Label       puntaes User Defined    2       0
+any_vec         00fc0a1a        Instruction Label       Global  User Defined    1       0
+savp_2          00fc0a1e        Function        Global  User Defined    1       0
+any_vec1        00fc0a3e        Instruction Label       savp_2  User Defined    1       0
+drawbombs       00fc0a70        Function        Global  User Defined    1       0
+drawbo4         00fc0a9e        Instruction Label       drawbombs       User Defined    1       0
+drawbo5         00fc0aa2        Instruction Label       drawbombs       User Defined    1       0
+drawbo6         00fc0aa6        Instruction Label       drawbombs       User Defined    1       0
+bofftab         00fc0abe        Data Label      Global  User Defined    1       0
+dplanetab       00fc0ac6        Data Label      Global  User Defined    1       0
+dwidthtab       00fc0ace        Data Label      Global  User Defined    1       0
+cpy512          00fc0ad6        Function        Global  User Defined    2       0
+cpy512l         00fc0ae2        Instruction Label       cpy512  User Defined    1       0
+chdv_init       00fc0af8        Function        Global  User Defined    1       0
+autopath        00fc0b00        Data Label      Global  User Defined    2       1
+autoexec        00fc0b14        Function        Global  User Defined    2       0
+autoexe1        00fc0b70        Instruction Label       autoexec        User Defined    1       0
+autoscan        00fc0b78        Function        Global  User Defined    1       0
+autosca1        00fc0bb2        Instruction Label       autoscan        User Defined    1       0
+autosca2        00fc0bda        Instruction Label       autoscan        User Defined    1       0
+autosca3        00fc0be6        Instruction Label       autoscan        User Defined    1       0
+autosca4        00fc0c0c        Instruction Label       autoscan        User Defined    2       0
+scrdmp          00fc0c1a        Function        Global  User Defined    2       0
+bscr_dump       00fc0c2c        Function        Global  User Defined    1       0
+pbdeftab        00fc0cb0        Data Label      Global  User Defined    2       1
+pbprtype        00fc0cbc        Data Label      Global  User Defined    1       0
+bombimage       00fc0cc4        Data Label      Global  User Defined    1       0
+waitvbl         00fc0ce4        Function        Global  User Defined    2       0
+waitvbl2        00fc0d06        Instruction Label       waitvbl User Defined    1       0
+waitvbl3        00fc0d0c        Instruction Label       waitvbl User Defined    1       0
+waitvbl4        00fc0d12        Instruction Label       waitvbl User Defined    1       0
+run_reset_resident      00fc0d20        Function        Global  User Defined    1       0
+run_res1        00fc0d26        Instruction Label       run_reset_resident      User Defined    4       0
+run_res2        00fc0d48        Instruction Label       run_reset_resident      User Defined    1       0
+run_res3        00fc0d5e        Instruction Label       run_reset_resident      User Defined    1       0
+bhdv_init       00fc0d60        Function        Global  User Defined    1       0
+dbmsg           00fc0ddc        Function        Global  User Defined    1       0
+bhdv_getbpb     00fc0de6        Function        Global  User Defined    1       0
+bhdv_mediach    00fc0f96        Function        Global  User Defined    2       0
+ckmediach       00fc1000        Function        Global  User Defined    2       0
+bhdv_rwabs      00fc10d2        Function        Global  User Defined    1       0
+dorwabs         00fc115c        Function        Global  User Defined    1       0
+random          00fc132c        Function        Global  User Defined    2       0
+bhdv_boot       00fc137c        Function        Global  User Defined    1       0
+protobt         00fc1414        Function        Global  User Defined    1       0
+sectsum         00fc1500        Function        Global  User Defined    2       0
+getiword        00fc1530        Function        Global  User Defined    9       0
+flopini         00fc1556        Function        Global  User Defined    1       0
+flopini1        00fc1568        Instruction Label       flopini User Defined    1       0
+floprd          00fc159e        Function        Global  User Defined    5       0
+floprd6         00fc1642        Instruction Label       floprd  User Defined    3       0
+fdcerr          00fc165a        Function        Global  User Defined    4       0
+fdcerr1         00fc1676        Instruction Label       fdcerr  User Defined    3       0
+flopwrt         00fc167c        Function        Global  User Defined    2       0
+flopfmt         00fc1734        Function        Global  User Defined    1       0
+fmtrack         00fc17a4        Function        Global  User Defined    1       0
+wmult           00fc18c6        Function        Global  User Defined    9       0
+flopver         00fc18ce        Function        Global  User Defined    2       0
+verify1         00fc18ea        Function        Global  User Defined    2       0
+verify3         00fc190e        Instruction Label       verify1 User Defined    1       0
+verify6         00fc197e        Instruction Label       verify1 User Defined    1       0
+verify7         00fc1996        Instruction Label       verify1 User Defined    3       0
+verify8         00fc19a2        Instruction Label       verify1 User Defined    1       0
+flopvbl         00fc19b0        Function        Global  User Defined    1       0
+flopvbl4        00fc1a2e        Instruction Label       flopvbl User Defined    1       0
+floplock        00fc1a34        Function        Global  User Defined    5       0
+floploc1        00fc1a90        Instruction Label       floplock        User Defined    1       0
+flopfail        00fc1acc        Function        Global  User Defined    9       0
+flopok          00fc1ada        Function        Global  User Defined    5       0
+hardseek        00fc1b28        Function        Global  User Defined    1       0
+hardsee1        00fc1b2e        Function        Global  User Defined    2       0
+reseek          00fc1b46        Function        Global  User Defined    3       0
+go2track        00fc1b7a        Function        Global  User Defined    3       0
+restore         00fc1ba0        Function        Global  User Defined    5       0
+flopcmds        00fc1bb6        Function        Global  User Defined    5       0
+flopcmd1        00fc1bda        Instruction Label       flopcmds        User Defined    1       0
+flopcmd2        00fc1bde        Instruction Label       flopcmds        User Defined    1       0
+flopcmd3        00fc1bf4        Instruction Label       flopcmds        User Defined    1       0
+fd_curerr       00fc1bfa        Function        Global  User Defined    6       0
+select          00fc1c14        Function        Global  User Defined    6       0
+set_dma_TMP     00fc1c3c        Function        Global  User Defined    1       0
+setporta        00fc1c60        Function        Global  User Defined    4       0
+wrfdcd6         00fc1c86        Function        Global  User Defined    1       0
+wrfdcd7         00fc1c90        Function        Global  User Defined    16      0
+rdfdcd7         00fc1c9a        Function        Global  User Defined    2       0
+rdfdcd0         00fc1ca4        Function        Global  User Defined    6       0
+rwdelay         00fc1cac        Function        Global  User Defined    7       0
+fdchange        00fc1cbe        Function        Global  User Defined    4       0
+setdchg         00fc1cf6        Function        Global  User Defined    3       0
+clockvec_routine        00fc1d12        Instruction Label       Global  User Defined    1       0
+gettime         00fc1d5c        Function        Global  User Defined    1       0
+isetdt          00fc1d76        Function        Global  User Defined    1       0
+bcdput          00fc1de4        Function        Global  User Defined    6       0
+bcdget          00fc1dfc        Function        Global  User Defined    6       0
+bco3stat        00fc1e14        Function        Global  User Defined    1       0
+bcon3out        00fc1e26        Function        Global  User Defined    1       0
+bcon3o1         00fc1e2a        Function        Global  User Defined    1       0
+midiws          00fc1e40        Function        Global  User Defined    1       0
+midiws1         00fc1e4a        Instruction Label       midiws  User Defined    1       0
+bcon3stat       00fc1e54        Function        Global  User Defined    2       0
+bcon3in         00fc1e70        Function        Global  User Defined    2       0
+bcon0out        00fc1ea0        Function        Global  User Defined    2       0
+bcon0o3         00fc1edc        Instruction Label       Global  User Defined    1       0
+strobeoff       00fc1f08        Instruction Label       Global  User Defined    3       0
+strobeon        00fc1f0e        Instruction Label       Global  User Defined    3       0
+bcon0in         00fc1f14        Function        Global  User Defined    1       0
+bco0stat        00fc1f34        Function        Global  User Defined    4       0
+bcon6stat       00fc1f48        Function        Global  User Defined    2       0
+bcon6st2        00fc1f5c        Instruction Label       bcon6stat       User Defined    1       0
+bcon6in         00fc1f5e        Function        Global  User Defined    2       0
+bco6stat        00fc1f6e        Function        Global  User Defined    2       0
+bco6sret        00fc1f84        Instruction Label       bco6stat        User Defined    1       0
+bcon6out        00fc1f86        Function        Global  User Defined    4       0
+bco4stat        00fc1f92        Function        Global  User Defined    1       0
+bcon4out        00fc1fa4        Function        Global  User Defined    1       0
+ikbd_writeb     00fc1fa8        Function        Global  User Defined    5       0
+ikbdws          00fc1fbe        Function        Global  User Defined    1       0
+ikbdws1         00fc1fc8        Function        Global  User Defined    6       0
+bcon2stat       00fc1fd2        Function        Global  User Defined    2       0
+bcon2in         00fc1fe8        Function        Global  User Defined    2       0
+bco2stat        00fc2018        Function        Global  User Defined    1       0
+ringbell        00fc201c        Function        Global  User Defined    1       0
+soundir8        00fc2032        Instruction Label       ringbell        User Defined    1       0
+keytblnorm      00fc2034        Data Label      Global  User Defined    1       0
+keytblshift     00fc20b4        Data Label      Global  User Defined    1       0
+keytblcaps      00fc2134        Data Label      Global  User Defined    1       0
+initmfp         00fc21b4        Function        Global  User Defined    1       0
+dummyrts        00fc230a        Instruction Label       initmfp User Defined    1       0
+copymem         00fc230c        Function        Global  User Defined    4       0
+ikbd_init_commands      00fc2314        Data Label      Global  User Defined    1       0
+ikbdtable       00fc2318        Data Label      Global  User Defined    1       0
+ikbdtable2      00fc231c        Data Label      Global  User Defined    0       0
+miditable       00fc2326        Data Label      Global  User Defined    1       0
+miditable2      00fc232a        Data Label      Global  User Defined    0       0
+rs232table      00fc2334        Data Label      Global  User Defined    1       0
+rs232table1     00fc2338        Data Label      Global  User Defined    0       0
+rs232table2     00fc2342        Data Label      Global  User Defined    0       0
+rs232table3     00fc2346        Data Label      Global  User Defined    0       0
+rs232table4     00fc2350        Data Label      Global  User Defined    0       0
+mfpvectr        00fc2356        Data Label      Global  User Defined    2       1
+settimer        00fc2366        Function        Global  User Defined    4       0
+settim1         00fc23c4        Instruction Label       settimer        User Defined    1       0
+mskreg          00fc23d8        Function        Global  User Defined    5       0
+getmask         00fc23e0        Function        Global  User Defined    1       0
+iert            00fc23ee        Data Label      Global  User Defined    1       0
+iprt            00fc23f2        Data Label      Global  User Defined    1       0
+isrt            00fc23f6        Data Label      Global  User Defined    1       0
+imrt            00fc23fa        Data Label      Global  User Defined    1       0
+imrmt           00fc23fe        Data Label      Global  User Defined    4       0
+tcrtab          00fc2402        Data Label      Global  User Defined    2       0
+tcrmsk          00fc2406        Data Label      Global  User Defined    1       0
+tdrtab          00fc240a        Data Label      Global  User Defined    2       0
+mfpint          00fc240e        Function        Global  User Defined    1       0
+initint         00fc241c        Instruction Label       Global  User Defined    5       0
+jdisint         00fc2438        Function        Global  User Defined    1       0
+jdisint1        00fc2442        Instruction Label       Global  User Defined    1       0
+jenabint        00fc2472        Function        Global  User Defined    1       0
+jenabin1        00fc247c        Instruction Label       Global  User Defined    1       0
+bselect         00fc249c        Instruction Label       Global  User Defined    6       0
+lea_rs232iorec_mfp      00fc24b0        Function        Global  User Defined    8       0
+FUN_00fc24d2    00fc24d2        Function        Global  Default 2       0
+iorecout        00fc24e0        Function        Global  User Defined    3       0
+FUN_00fc253c    00fc253c        Function        Global  Default 1       0
+rcvrint         00fc2596        Function        Global  User Defined    1       0
+txrint          00fc2666        Function        Global  User Defined    1       0
+ctsint          00fc26b2        Function        Global  User Defined    1       0
+rxerror         00fc26fa        Function        Global  User Defined    1       0
+txerror         00fc2718        Function        Global  User Defined    1       0
+iorec           00fc2732        Function        Global  User Defined    1       0
+iorectab        00fc274e        Data Label      Global  User Defined    2       0
+rsconf          00fc275a        Function        Global  User Defined    1       0
+baudctrl        00fc27e4        Data Label      Global  User Defined    2       0
+bauddata        00fc27f4        Data Label      Global  User Defined    2       0
+wrapin          00fc2810        Instruction Label       Global  User Defined    5       0
+int_acia        00fc281c        Function        Global  User Defined    1       0
+_midisys        00fc284a        Instruction Label       Global  User Defined    1       0
+_ikbdsys        00fc285a        Instruction Label       Global  User Defined    1       0
+aciasys         00fc2868        Instruction Label       Global  User Defined    1       0
+aciasys1        00fc2882        Instruction Label       Global  User Defined    1       0
+aciasys2        00fc288e        Instruction Label       Global  User Defined    5       0
+aciaread        00fc2890        Function        Global  User Defined    1       0
+begin_p1        00fc28e4        Instruction Label       aciaread        User Defined    2       0
+begin_p2        00fc28ee        Instruction Label       aciaread        User Defined    1       0
+ikbd_state_table        00fc28f0        Data Label      Global  User Defined    2       0
+kbd_length_table        00fc28fa        Data Label      Global  User Defined    2       0
+in_packet       00fc2904        Instruction Label       aciaread        User Defined    1       0
+in_pack1        00fc2948        Instruction Label       aciaread        User Defined    1       0
+in_pack2        00fc2952        Instruction Label       aciaread        User Defined    1       0
+ikbdbaddr       00fc2954        Data Label      Global  User Defined    2       2
+kbd_joy         00fc2990        Instruction Label       aciaread        User Defined    1       0
+kbdvec          00fc29aa        Instruction Label       aciaread        User Defined    1       0
+kbdvec1         00fc29ba        Instruction Label       aciaread        User Defined    1       0
+kbdvec2         00fc29c6        Instruction Label       aciaread        User Defined    1       0
+kbdvec3         00fc29d2        Instruction Label       aciaread        User Defined    1       0
+kbdvec4         00fc29de        Instruction Label       aciaread        User Defined    1       0
+kbdvec5         00fc29ea        Instruction Label       aciaread        User Defined    1       0
+kbdvec6         00fc29f6        Instruction Label       aciaread        User Defined    1       0
+kbdvec7         00fc2a02        Instruction Label       aciaread        User Defined    1       0
+kbdvec8         00fc2a0e        Instruction Label       aciaread        User Defined    1       0
+kbdvec9         00fc2a2a        Instruction Label       aciaread        User Defined    1       0
+kbdvec10        00fc2a2e        Instruction Label       aciaread        User Defined    8       0
+kbdvec11        00fc2a34        Instruction Label       aciaread        User Defined    1       0
+kbdvec12        00fc2a64        Instruction Label       aciaread        User Defined    1       0
+kbdvec13        00fc2a78        Instruction Label       aciaread        User Defined    1       0
+kbdvec14        00fc2a86        Instruction Label       aciaread        User Defined    1       0
+kbdvec15        00fc2a90        Instruction Label       Global  User Defined    3       0
+kbdvec16        00fc2aa6        Instruction Label       Global  User Defined    1       0
+kbdvec17        00fc2ac0        Instruction Label       Global  User Defined    1       0
+kbdvec18        00fc2ad0        Instruction Label       Global  User Defined    1       0
+kbdvec19        00fc2ae6        Instruction Label       Global  User Defined    2       0
+kbdvec20        00fc2aea        Instruction Label       Global  User Defined    1       0
+kbdvec21        00fc2b00        Instruction Label       Global  User Defined    1       0
+kbdvec22        00fc2b0e        Instruction Label       Global  User Defined    1       0
+kbdvec23        00fc2b1c        Instruction Label       Global  User Defined    1       0
+kbdvec24        00fc2b2a        Instruction Label       Global  User Defined    2       0
+kbdvec25        00fc2b36        Instruction Label       Global  User Defined    1       0
+kbdvec26        00fc2b42        Instruction Label       Global  User Defined    1       0
+kbdvec27        00fc2b4e        Instruction Label       Global  User Defined    1       0
+kbdvec27        00fc2b56        Instruction Label       Global  User Defined    1       0
+kbdfr1          00fc2b7e        Instruction Label       Global  User Defined    1       0
+kbdfr2          00fc2b9c        Instruction Label       Global  User Defined    1       0
+kbdfr3          00fc2bba        Instruction Label       Global  User Defined    1       0
+kbdfr4          00fc2bd8        Instruction Label       Global  User Defined    1       0
+kbdvec33        00fc2be8        Instruction Label       Global  User Defined    1       0
+kbdvec34        00fc2bf0        Instruction Label       Global  User Defined    1       0
+kbdvec35        00fc2c1e        Instruction Label       Global  User Defined    1       0
+kbdvec36        00fc2c40        Instruction Label       Global  User Defined    1       0
+kbdvec37        00fc2c62        Instruction Label       Global  User Defined    1       0
+kbdvec38        00fc2c84        Instruction Label       Global  User Defined    1       0
+kbdvec39        00fc2c96        Instruction Label       Global  User Defined    2       0
+kbdvec40        00fc2ca2        Instruction Label       Global  User Defined    2       0
+kbdvec41        00fc2ca6        Instruction Label       Global  User Defined    2       0
+kbdvec44        00fc2cb4        Instruction Label       Global  User Defined    20      0
+kbdvec45        00fc2cc8        Instruction Label       Global  User Defined    1       0
+kbdvec46        00fc2cf0        Instruction Label       Global  User Defined    1       0
+kbdvec47        00fc2cf8        Instruction Label       Global  User Defined    4       0
+midiread        00fc2cfa        Function        Global  User Defined    1       0
+_midivec        00fc2d00        Instruction Label       Global  User Defined    1       0
+midivec1        00fc2d0e        Instruction Label       Global  User Defined    1       0
+midivec2        00fc2d20        Instruction Label       Global  User Defined    1       0
+keymouse        00fc2d22        Function        Global  User Defined    1       0
+keymous4        00fc2d40        Instruction Label       Global  User Defined    8       0
+mousekey        00fc2d66        Data Label      Global  User Defined    1       2
+giaccess        00fc2d6a        Function        Global  User Defined    1       0
+gientry         00fc2d72        Instruction Label       Global  User Defined    10      0
+giacces1        00fc2d92        Instruction Label       Global  User Defined    1       0
+rtson           00fc2da2        Instruction Label       Global  User Defined    3       0
+dtron           00fc2daa        Function        Global  User Defined    1       0
+ongibit         00fc2dae        Function        Global  User Defined    1       0
+onbit           00fc2db4        Instruction Label       Global  User Defined    3       0
+offgibit        00fc2dd4        Function        Global  User Defined    1       0
+offbit          00fc2dda        Function        Global  User Defined    3       0
+initmouse       00fc2dfa        Function        Global  User Defined    1       0
+initmou1        00fc2e26        Instruction Label       initmouse       User Defined    1       0
+initmou2        00fc2e36        Instruction Label       initmouse       User Defined    1       0
+initmou3        00fc2e50        Instruction Label       initmouse       User Defined    1       0
+initmou4        00fc2e92        Instruction Label       initmouse       User Defined    1       0
+initmou5        00fc2ea6        Instruction Label       initmouse       User Defined    3       0
+setmouse        00fc2eaa        Function        Global  User Defined    3       0
+xbtimer         00fc2ec4        Function        Global  User Defined    1       0
+imrts           00fc2efa        Instruction Label       xbtimer User Defined    2       0
+xbtimtab        00fc2efc        Data Label      Global  User Defined    2       0
+keytbl          00fc2f00        Function        Global  User Defined    1       0
+bioskeys        00fc2f2c        Function        Global  User Defined    2       0
+dosound         00fc2f46        Function        Global  User Defined    1       0
+setprt          00fc2f5a        Function        Global  User Defined    1       0
+kbrate          00fc2f6c        Function        Global  User Defined    1       0
+kbdvbase        00fc2f8e        Function        Global  User Defined    1       0
+timercint       00fc2f96        Instruction Label       Global  User Defined    1       0
+soundirq        00fc2ffc        Function        Global  User Defined    1       0
+bellsnd         00fc3094        Data Label      Global  User Defined    1       0
+clicksnd        00fc30b2        Data Label      Global  User Defined    2       0
+prtblk          00fc30cc        Function        Global  User Defined    2       0
+prtchar         00fc4076        Function        Global  User Defined    11      0
+prtstr          00fc40c2        Function        Global  User Defined    10      0
+plststat        00fc40f0        Function        Global  User Defined    0       0
+prtlst          00fc4102        Function        Global  User Defined    1       0
+pauxstat        00fc411e        Function        Global  User Defined    0       0
+prtaux          00fc4130        Function        Global  User Defined    1       0
+v_escape        00fc414c        Function        Global  User Defined    1       0
+esc_tbl         00fc416a        Data Label      Global  User Defined    1       0
+ce_more         00fc4192        Instruction Label       v_escape        User Defined    1       0
+v_offset        00fc41a2        Instruction Label       v_escape        User Defined    1       0
+asc_out         00fc41be        Function        Global  User Defined    1       0
+bcon5out        00fc41be        Function        asc_out User Defined    0       0
+con_out         00fc41ca        Function        Global  User Defined    1       0
+bcon2out        00fc41ca        Function        con_out User Defined    0       0
+gsx_conout      00fc41ce        Function        Global  User Defined    1       0
+normal_ascii    00fc41da        Function        Global  User Defined    5       0
+handle_control  00fc41f4        Instruction Label       normal_ascii    User Defined    1       0
+ctrl_tbl        00fc420c        Data Label      Global  User Defined    1       0
+exit_conout     00fc421a        Instruction Label       Global  User Defined    9       0
+caseD_67        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_68        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_69        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_6d        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_6e        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_72        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_73        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_74        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_75        00fc421a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+caseD_5         00fc421a        Instruction Label       switchD_00fc42a8        Analysis        0       0
+caseD_6         00fc421a        Instruction Label       switchD_00fc42a8        Analysis        0       0
+do_bell         00fc421c        Instruction Label       normal_ascii    User Defined    2       0
+caseD_7         00fc421c        Instruction Label       switchD_00fc420a        User Defined    0       0
+caseD_9         00fc4220        Instruction Label       switchD_00fc420a        Analysis        0       0
+do_tab          00fc4220        Instruction Label       normal_ascii    User Defined    1       0
+esc_ch1         00fc4236        Instruction Label       Global  User Defined    1       0
+get_row         00fc425e        Instruction Label       Global  User Defined    1       0
+get_column      00fc4274        Instruction Label       Global  User Defined    1       0
+check_low_case  00fc428e        Instruction Label       Global  User Defined    1       0
+range_A2M       00fc429c        Instruction Label       Global  User Defined    1       0
+range_b2w       00fc42aa        Instruction Label       Global  User Defined    1       0
+caseD_62        00fc42b8        Instruction Label       switchD_00fc42b6        Analysis        0       0
+get_fg_col      00fc42b8        Instruction Label       Global  User Defined    1       0
+set_fg_col      00fc42c4        Instruction Label       Global  User Defined    1       0
+caseD_63        00fc42d8        Instruction Label       switchD_00fc42b6        Analysis        0       0
+get_bg_col      00fc42d8        Instruction Label       Global  User Defined    1       0
+set_bg_col      00fc42e4        Instruction Label       Global  User Defined    1       0
+A2M_tbl         00fc42f8        Data Label      Global  User Defined    1       0
+b2w_tbl         00fc4312        Data Label      Global  User Defined    1       0
+caseD_1         00fc433e        Instruction Label       switchD_00fc4168        Analysis        0       0
+vq_chcells      00fc433e        Instruction Label       Global  User Defined    1       0
+caseD_0         00fc4366        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_esc_nop       00fc4366        Instruction Label       Global  User Defined    7       0
+esc_exit        00fc4366        Instruction Label       normal_ascii    User Defined    0       0
+caseD_11        00fc4368        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_hardcopy      00fc4368        Instruction Label       Global  User Defined    1       0
+caseD_3         00fc4372        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_enter_cur     00fc4372        Instruction Label       Global  User Defined    1       0
+caseD_2         00fc4378        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_exit_cur      00fc4378        Instruction Label       Global  User Defined    1       0
+escE            00fc437c        Instruction Label       Global  User Defined    2       0
+caseD_0         00fc4380        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escA            00fc4380        Instruction Label       Global  User Defined    2       0
+v_curup         00fc4380        Instruction Label       switchD_00fc4168        User Defined    0       0
+v_curup         00fc4380        Instruction Label       Global  User Defined    0       0
+up_cursor       00fc4388        Instruction Label       Global  User Defined    1       0
+caseD_5         00fc4394        Instruction Label       switchD_00fc4168        Analysis        0       0
+caseD_1         00fc4394        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escB            00fc4394        Instruction Label       Global  User Defined    3       0
+v_curdown       00fc4394        Instruction Label       normal_ascii    User Defined    0       0
+caseD_6         00fc43ae        Instruction Label       switchD_00fc4168        Analysis        0       0
+caseD_2         00fc43ae        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escC            00fc43ae        Instruction Label       Global  User Defined    2       0
+v_curright      00fc43ae        Instruction Label       Global  User Defined    0       0
+caseD_7         00fc43c8        Instruction Label       switchD_00fc4168        Analysis        0       0
+caseD_8         00fc43c8        Instruction Label       switchD_00fc420a        Analysis        0       0
+caseD_3         00fc43c8        Instruction Label       switchD_00fc42a8        Analysis        0       0
+v_curleft       00fc43c8        Instruction Label       Global  User Defined    0       0
+escD            00fc43c8        Instruction Label       Global  User Defined    3       0
+caseD_7         00fc43dc        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escH            00fc43dc        Instruction Label       Global  User Defined    4       0
+v_curhome       00fc43dc        Instruction Label       Global  User Defined    0       0
+escJ            00fc43e4        Function        Global  User Defined    3       0
+caseD_9         00fc43e4        Function        switchD_00fc42a8        Analysis        0       0
+caseD_9         00fc43e4        Function        escJ    Analysis        0       0
+v_eeos          00fc43e4        Function        Global  User Defined    0       0
+caseD_a         00fc4410        Instruction Label       switchD_00fc42a8        User Defined    0       0
+v_eeol          00fc4410        Instruction Label       Global  User Defined    0       0
+escK            00fc4410        Instruction Label       Global  User Defined    3       0
+caseD_b         00fc447a        Instruction Label       switchD_00fc4168        Analysis        0       0
+vs_curaddress   00fc447a        Instruction Label       Global  User Defined    1       0
+caseD_c         00fc448e        Instruction Label       switchD_00fc4168        Analysis        0       0
+vs_curtext      00fc448e        Instruction Label       Global  User Defined    1       0
+caseD_d         00fc44b4        Instruction Label       switchD_00fc4168        Analysis        0       0
+caseD_70        00fc44b4        Instruction Label       switchD_00fc42b6        Analysis        0       0
+v_rvon          00fc44b4        Instruction Label       Global  User Defined    2       0
+escp            00fc44b4        Instruction Label       Global  User Defined    0       0
+caseD_e         00fc44be        Instruction Label       switchD_00fc4168        Analysis        0       0
+caseD_71        00fc44be        Instruction Label       switchD_00fc42b6        Analysis        0       0
+v_rvoff         00fc44be        Instruction Label       Global  User Defined    2       0
+caseD_f         00fc44c8        Instruction Label       switchD_00fc4168        Analysis        0       0
+vq_curaddress   00fc44c8        Instruction Label       Global  User Defined    1       0
+caseD_10        00fc44f2        Instruction Label       switchD_00fc4168        Analysis        0       0
+vq_tabstatus    00fc44f2        Instruction Label       Global  User Defined    1       0
+caseD_12        00fc450a        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_dspcur        00fc450a        Instruction Label       Global  User Defined    1       0
+caseD_13        00fc451a        Instruction Label       switchD_00fc4168        Analysis        0       0
+v_rmcur         00fc451a        Instruction Label       Global  User Defined    1       0
+caseD_8         00fc4520        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escI            00fc4520        Instruction Label       Global  User Defined    1       0
+caseD_b         00fc453a        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escL            00fc453a        Instruction Label       Global  User Defined    2       0
+caseD_c         00fc4556        Instruction Label       switchD_00fc42a8        Analysis        0       0
+escM            00fc4556        Instruction Label       Global  User Defined    1       0
+set_v_col_fg    00fc4566        Instruction Label       Global  User Defined    1       0
+set_v_col_bg    00fc4572        Instruction Label       Global  User Defined    1       0
+escd            00fc457e        Instruction Label       Global  User Defined    1       0
+esce            00fc459a        Function        Global  User Defined    5       0
+FUN_00fc45b8    00fc45b8        Function        Global  Default 3       0
+show_cursor     00fc45ce        Function        Global  User Defined    7       0
+escf            00fc45e0        Function        Global  User Defined    13      0
+caseD_66        00fc45e0        Function        escf    Analysis        0       0
+escj            00fc4600        Function        Global  User Defined    3       0
+caseD_6a        00fc4600        Function        switchD_00fc42b6        User Defined    0       0
+esck            00fc461c        Function        Global  User Defined    3       0
+caseD_6b        00fc461c        Function        switchD_00fc42b6        User Defined    0       0
+caseD_6c        00fc4636        Instruction Label       switchD_00fc42b6        Analysis        0       0
+escl            00fc4636        Instruction Label       Global  User Defined    1       0
+esco            00fc4654        Function        Global  User Defined    2       0
+caseD_6f        00fc4654        Function        switchD_00fc42b6        User Defined    0       0
+caseD_76        00fc469a        Instruction Label       switchD_00fc42b6        Analysis        0       0
+escv            00fc469a        Instruction Label       Global  User Defined    1       0
+caseD_77        00fc46a4        Instruction Label       switchD_00fc42b6        Analysis        0       0
+escw            00fc46a4        Instruction Label       Global  User Defined    1       0
+caseD_d         00fc46ae        Instruction Label       switchD_00fc420a        Analysis        0       0
+ascii_cr        00fc46ae        Instruction Label       normal_ascii    User Defined    1       0
+caseD_a         00fc46ba        Instruction Label       switchD_00fc420a        Analysis        0       0
+caseD_b         00fc46ba        Instruction Label       switchD_00fc420a        Analysis        0       0
+caseD_c         00fc46ba        Instruction Label       switchD_00fc420a        Analysis        0       0
+ascii_lf        00fc46ba        Instruction Label       normal_ascii    User Defined    1       0
+blink           00fc46d8        Function        Global  User Defined    1       0
+bl_exit         00fc470e        Instruction Label       Global  User Defined    6       0
+cursconf        00fc4710        Function        Global  User Defined    1       0
+conf_tbl        00fc472a        Data Label      Global  User Defined    1       0
+caseD_0         00fc4736        Instruction Label       switchD_00fc4728        Analysis        0       0
+bra_escf        00fc4736        Instruction Label       Global  User Defined    2       0
+caseD_1         00fc473a        Instruction Label       switchD_00fc4728        Analysis        0       0
+bra_esce        00fc473a        Instruction Label       Global  User Defined    1       0
+caseD_2         00fc473e        Instruction Label       switchD_00fc4728        Analysis        0       0
+onblink         00fc473e        Instruction Label       Global  User Defined    1       0
+caseD_3         00fc474c        Instruction Label       switchD_00fc4728        Analysis        0       0
+offblink        00fc474c        Instruction Label       Global  User Defined    1       0
+caseD_4         00fc475a        Instruction Label       switchD_00fc4728        Analysis        0       0
+setrate         00fc475a        Instruction Label       Global  User Defined    1       0
+caseD_5         00fc4762        Instruction Label       switchD_00fc4728        Analysis        0       0
+getrate         00fc4762        Instruction Label       Global  User Defined    1       0
+out_of_bounds   00fc4796        Instruction Label       Global  User Defined    2       0
+ascii_out       00fc479a        Function        Global  User Defined    6       0
+erase_region    00fc4844        Function        Global  User Defined    6       0
+FUN_00fc48e4    00fc48e4        Function        Global  Default 4       0
+FUN_00fc492c    00fc492c        Function        Global  Default 1       0
+move_cursor     00fc4998        Function        Global  User Defined    12      0
+FUN_00fc4a16    00fc4a16        Function        Global  Default 5       0
+FUN_00fc4a50    00fc4a50        Function        Global  Default 1       0
+FUN_00fc4a88    00fc4a88        Function        Global  Default 3       0
+FUN_00fc4ad0    00fc4ad0        Function        Global  Default 1       0
+v_fontinit      00fc4b08        Instruction Label       v_escape        User Defined    1       0
+gl_f_init       00fc4b10        Function        Global  User Defined    1       0
+osinit          00fc4b78        Function        Global  User Defined    1       0
+FUN_00fc4c02    00fc4c02        Function        Global  Default 1       0
+_osinit         00fc4c56        Function        Global  User Defined    1       0
+trap13          00fc4ca4        Function        Global  User Defined    24      0
+ground_it       00fc4cb4        Instruction Label       Global  User Defined    1       0
+novdi           00fc4cc6        Instruction Label       Global  User Defined    1       0
+nodsp           00fc4cd4        Instruction Label       Global  User Defined    1       0
+oterm           00fc4cdc        Instruction Label       Global  User Defined    1       0
+tikhnd          00fc4cee        Instruction Label       Global  User Defined    1       0
+indcall         00fc4d02        Function        Global  User Defined    1       0
+swp68           00fc4d08        Function        Global  User Defined    18      0
+swp68l          00fc4d1a        Function        Global  User Defined    4       0
+xsetjmp         00fc4d30        Function        Global  User Defined    2       0
+xlongjmp        00fc4d4c        Function        Global  User Defined    7       0
+okrc            00fc4d5a        Instruction Label       xlongjmp        User Defined    1       0
+enter           00fc4d66        Instruction Label       Global  User Defined    1       0
+enter_1         00fc4d78        Instruction Label       Global  User Defined    1       0
+enter_2         00fc4d82        Instruction Label       Global  User Defined    1       0
+systk           00fc4dbc        Instruction Label       Global  User Defined    1       0
+callos          00fc4dd6        Instruction Label       Global  User Defined    1       0
+gouser          00fc4de0        Function        Global  User Defined    2       0
+gousr           00fc4e02        Instruction Label       gouser  User Defined    1       0
+retsys          00fc4e0e        Instruction Label       gouser  User Defined    1       0
+x20_usr         00fc4e14        Instruction Label       Global  User Defined    1       0
+xu_0            00fc4e22        Instruction Label       Global  User Defined    1       0
+x20_sup         00fc4e32        Instruction Label       Global  User Defined    1       0
+xs_usp          00fc4e52        Instruction Label       Global  User Defined    1       0
+xs_0            00fc4e56        Instruction Label       Global  User Defined    1       0
+xs_exit         00fc4e5a        Instruction Label       Global  User Defined    1       0
+xs_scram        00fc4e5c        Instruction Label       Global  User Defined    1       0
+x20_inq         00fc4e62        Instruction Label       Global  User Defined    2       0
+xi_exit         00fc4e6e        Instruction Label       Global  User Defined    1       0
+oscall          00fc4e70        Function        Global  User Defined    1       0
+UC              00fc4e8a        Function        Global  User Defined    8       0
+getdmd          00fc4eba        Function        Global  User Defined    1       0
+syshnd          00fc4f46        Function        Global  User Defined    1       0
+getofd          00fc4f80        Function        Global  User Defined    9       0
+ixdirdup        00fc4f9e        Function        Global  User Defined    1       0
+xdup            00fc4fd6        Function        Global  User Defined    1       0
+xforce          00fc509e        Function        Global  User Defined    1       0
+ixforce         00fc50b8        Function        Global  User Defined    2       0
+xlog2           00fc515a        Function        Global  User Defined    3       0
+login           00fc5180        Function        Global  User Defined    2       0
+FUN_00fc53a6    00fc53a6        Function        Global  Default 2       0
+xfr2usr         00fc53ba        Function        Global  User Defined    1       0
+usr2xfr         00fc53e2        Function        Global  User Defined    1       0
+xmovs           00fc540a        Function        Global  User Defined    14      0
+xcmps           00fc5432        Function        Global  User Defined    3       0
+xclose          00fc5486        Function        Global  User Defined    6       0
+ixclose         00fc55ae        Function        Global  User Defined    10      0
+flushbcb        00fc56ca        Function        Global  User Defined    3       0
+FUN_00fc57b2    00fc57b2        Function        Global  Default 3       0
+FUN_00fc5858    00fc5858        Function        Global  Default 4       0
+makofd          00fc59fc        Function        Global  User Defined    4       0
+match           00fc5a5a        Function        Global  User Defined    1       0
+builds          00fc5ae8        Function        Global  User Defined    4       0
+getpath         00fc5bc8        Function        Global  User Defined    1       0
+xread           00fc5c2a        Function        Global  User Defined    12      0
+ixread          00fc5c5c        Function        Global  User Defined    13      0
+xwrite          00fc5caa        Function        Global  User Defined    3       0
+ixwrite         00fc5cdc        Function        Global  User Defined    12      0
+clfix           00fc5d04        Function        Global  User Defined    3       0
+getcl           00fc5dfa        Function        Global  User Defined    6       0
+nextcl          00fc5eb4        Function        Global  User Defined    5       0
+FUN_00fc5f98    00fc5f98        Function        Global  Default 5       0
+xrw             00fc5fda        Function        Global  User Defined    2       0
+GetDnd          00fc6364        Function        Global  User Defined    2       0
+scan            00fc63fe        Function        Global  User Defined    9       0
+ckdrv           00fc65a0        Function        Global  User Defined    4       0
+dcrack          00fc669e        Function        Global  User Defined    1       0
+findit          00fc672e        Function        Global  User Defined    9       0
+FUN_00fc679c    00fc679c        Function        Global  Default 0       0
+xchdir          00fc6840        Function        Global  User Defined    1       0
+packit          00fc6928        Function        Global  User Defined    2       0
+dopath          00fc6994        Function        Global  User Defined    2       0
+xgetdir         00fc69dc        Function        Global  User Defined    1       0
+xgetdta         00fc6a5c        Function        Global  User Defined    1       0
+xsetdta         00fc6a6e        Function        Global  User Defined    1       0
+xsetdrv         00fc6a82        Function        Global  User Defined    2       0
+xgetdrv         00fc6aa2        Function        Global  User Defined    1       0
+xsfirst         00fc6ab8        Function        Global  User Defined    1       0
+ixsfirst        00fc6ad6        Function        Global  User Defined    3       0
+xsnext          00fc6bb6        Function        Global  User Defined    1       0
+makbuf          00fc6c7e        Function        Global  User Defined    2       0
+opnfil          00fc6d1e        Function        Global  User Defined    2       0
+makopn          00fc6d9e        Function        Global  User Defined    1       0
+dirinit         00fc6eb8        Function        Global  User Defined    2       0
+xcreat          00fc6f5c        Function        Global  User Defined    2       0
+ixcreat         00fc6f78        Function        Global  User Defined    2       0
+xmkdir          00fc7190        Function        Global  User Defined    1       0
+xopen           00fc73b4        Function        Global  User Defined    3       0
+ixopen          00fc73c8        Function        Global  User Defined    1       0
+xchmod          00fc743a        Function        Global  User Defined    1       0
+xgsdtof         00fc74f0        Function        Global  User Defined    1       0
+xunlink         00fc7574        Function        Global  User Defined    1       0
+ixdel           00fc75e6        Function        Global  User Defined    3       0
+xrmdir          00fc76ec        Function        Global  User Defined    2       0
+xgetfree        00fc782a        Function        Global  User Defined    1       0
+xrename         00fc78b2        Function        Global  User Defined    1       0
+xlseek          00fc7a90        Function        Global  User Defined    2       0
+ixlseek         00fc7aec        Function        Global  User Defined    21      0
+DIVMOD          00fc7be6        Function        Global  User Defined    4       0
+contains_dots   00fc7c14        Function        Global  User Defined    2       0
+ncmps           00fc7c56        Function        Global  User Defined    6       0
+bdos_walloc     00fc7c92        Function        Global  User Defined    1       0
+mgetofd         00fc7cdc        Function        Global  User Defined    10      0
+oftdel          00fc7d5e        Function        Global  User Defined    16      0
+xtermres        00fc7d9a        Function        Global  User Defined    1       0
+xterm           00fc7dea        Function        Global  User Defined    6       0
+x0term          00fc7e42        Function        Global  User Defined    1       0
+ixterm          00fc7e4e        Function        Global  User Defined    2       0
+FUN_00fc7ef6    00fc7ef6        Function        Global  Default 0       0
+xexec           00fc7f36        Function        Global  User Defined    1       0
+FUN_00fc8392    00fc8392        Function        Global  Default 0       0
+xpgmld          00fc83a6        Function        Global  User Defined    1       0
+ffit            00fc862a        Function        Global  User Defined    4       0
+xsetblk         00fc871a        Function        Global  User Defined    2       0
+freeit          00fc879c        Function        Global  User Defined    6       0
+xmalloc         00fc886e        Function        Global  User Defined    1       0
+xmfree          00fc88bc        Function        Global  User Defined    1       0
+constat         00fc8904        Function        Global  User Defined    3       0
+xconstat        00fc8930        Function        Global  User Defined    1       0
+xconostat       00fc894a        Function        Global  User Defined    1       0
+xprtostat       00fc896e        Function        Global  User Defined    1       0
+xauxistat       00fc8992        Function        Global  User Defined    1       0
+xauxostat       00fc89ae        Function        Global  User Defined    1       0
+conbrk          00fc89d2        Function        Global  User Defined    2       0
+buflush         00fc8b0e        Function        Global  User Defined    2       0
+conout          00fc8b56        Function        Global  User Defined    14      0
+xtabout         00fc8bdc        Function        Global  User Defined    1       0
+tabout          00fc8bfc        Function        Global  User Defined    4       0
+FUN_00fc8c48    00fc8c48        Function        Global  Default 2       0
+xauxout         00fc8c92        Function        Global  User Defined    1       0
+xprtout         00fc8cba        Function        Global  User Defined    1       0
+getch           00fc8ce2        Function        Global  User Defined    5       0
+x7in            00fc8d6a        Function        Global  User Defined    1       0
+conin           00fc8d86        Function        Global  User Defined    2       0
+xconin          00fc8db2        Function        Global  User Defined    1       0
+x8in            00fc8dcc        Function        Global  User Defined    1       0
+xauxin          00fc8dfe        Function        Global  User Defined    1       0
+rawconio        00fc8e22        Function        Global  User Defined    1       0
+xprt_line       00fc8e82        Function        Global  User Defined    1       0
+prt_line        00fc8ea2        Function        Global  User Defined    1       0
+FUN_00fc8ecc    00fc8ecc        Function        Global  Default 2       0
+FUN_00fc8f12    00fc8f12        Function        Global  Default 2       0
+readline        00fc8faa        Function        Global  User Defined    1       0
+cgets           00fc8fe6        Function        Global  User Defined    2       0
+ni              00fc90fe        Function        Global  User Defined    38      0
+xgetver         00fc9108        Function        Global  User Defined    1       0
+cinit           00fc9116        Function        Global  User Defined    1       0
+freetree        00fc91b4        Function        Global  User Defined    3       0
+offree          00fc9228        Function        Global  User Defined    1       0
+osif            00fc92a4        Function        Global  User Defined    2       0
+caseD_6         00fc956a        Instruction Label       switchD_00fc96bc        Analysis        2       0
+caseD_1         00fc9576        Instruction Label       switchD_00fc96bc        Analysis        5       0
+caseD_3         00fc9576        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_7         00fc9576        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_8         00fc9576        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_2         00fc959c        Instruction Label       switchD_00fc96bc        Analysis        5       0
+caseD_4         00fc959c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_5         00fc959c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_9         00fc95ba        Instruction Label       switchD_00fc96bc        Analysis        2       0
+caseD_a         00fc95ec        Instruction Label       switchD_00fc96bc        Analysis        2       0
+caseD_b         00fc969c        Instruction Label       switchD_00fc96bc        Analysis        6       0
+caseD_10        00fc969c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_11        00fc969c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_12        00fc969c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_13        00fc969c        Instruction Label       switchD_00fc96bc        Analysis        0       0
+switchD         00fc96bc        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_c         00fc96be        Instruction Label       switchD_00fc96bc        Analysis        8       0
+caseD_d         00fc96be        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_e         00fc96be        Instruction Label       switchD_00fc96bc        Analysis        0       0
+caseD_f         00fc96be        Instruction Label       switchD_00fc96bc        Analysis        0       0
+tikfrk          00fc9a80        Function        Global  User Defined    1       0
+xgetdate        00fc9bda        Function        Global  User Defined    1       0
+xsetdate        00fc9bea        Function        Global  User Defined    1       0
+xgettime        00fc9c5c        Function        Global  User Defined    1       0
+xsettime        00fc9c6c        Function        Global  User Defined    1       0
+line1010        00fc9cc0        Function        Global  User Defined    1       0
+la_out          00fc9ce6        Instruction Label       line1010        User Defined    1       0
+var_base        00fc9ce8        Function        Global  User Defined    1       0
+atab            00fc9cfe        Data Label      Global  User Defined    2       0
+fonts           00fc9d3e        Data Label      Global  User Defined    1       0
+retfalse        00fc9d4e        Function        Global  User Defined    1       0
+GSX_ENTRY       00fc9d52        Function        Global  User Defined    2       0
+vec_len         00fc9dc0        Function        Global  User Defined    1       0
+bds_lp          00fc9de2        Instruction Label       vec_len User Defined    2       0
+bds_end         00fc9dee        Instruction Label       vec_len User Defined    1       0
+srch_lp         00fc9dfc        Instruction Label       vec_len User Defined    3       0
+hi_adjust       00fc9e18        Instruction Label       vec_len User Defined    1       0
+lo_adjust       00fc9e1c        Instruction Label       vec_len User Defined    1       0
+srch_end        00fc9e20        Instruction Label       vec_len User Defined    1       0
+vl_out          00fc9e22        Instruction Label       vec_len User Defined    1       0
+CLC_FLIT        00fc9e24        Function        Global  User Defined    2       0
+flit_lp         00fc9e44        Instruction Label       CLC_FLIT        User Defined    1       0
+ld_fill_int     00fc9e7a        Instruction Label       CLC_FLIT        User Defined    1       0
+no_fill_int     00fc9e86        Instruction Label       CLC_FLIT        User Defined    2       0
+sfi_cont        00fc9e98        Instruction Label       CLC_FLIT        User Defined    1       0
+draw_lp         00fc9eb4        Instruction Label       CLC_FLIT        User Defined    1       0
+dr_clip         00fc9ed2        Instruction Label       CLC_FLIT        User Defined    2       0
+drc_1           00fc9efe        Instruction Label       CLC_FLIT        User Defined    1       0
+drc_2           00fc9f12        Instruction Label       CLC_FLIT        User Defined    1       0
+drc_end         00fc9f1e        Instruction Label       CLC_FLIT        User Defined    2       0
+bub_sort        00fc9f30        Function        Global  User Defined    1       0
+SMUL_DIV        00fc9f58        Function        Global  User Defined    31      0
+concat          00fc9f8c        Function        Global  User Defined    11      0
+ABLINE          00fc9fb8        Function        Global  User Defined    8       0
+wm_tbl          00fca0d6        Data Label      Global  User Defined    7       0
+ABLINE_jump_table       00fca0f6        Data Label      Global  User Defined    1       0
+FUN_00fca148    00fca148        Function        Global  Default 3       0
+FUN_00fca278    00fca278        Function        Global  Default 3       0
+FUN_00fca326    00fca326        Function        Global  Default 1       0
+FUN_00fca33e    00fca33e        Function        Global  Default 1       0
+HABLINE         00fca356        Function        Global  User Defined    3       0
+lf_tab          00fca3de        Data Label      Global  User Defined    9       2
+rf_tab          00fca3de        Data Label      Global  User Defined    0       2
+FUN_00fca460    00fca460        Function        Global  Default 2       0
+GSHIFT_S        00fca4fa        Function        Global  User Defined    1       0
+v_nop           00fca504        Function        Global  User Defined    4       0
+v_cellarray     00fca504        Function        v_nop   User Defined    0       0
+vq_cellarray    00fca504        Function        v_nop   User Defined    0       0
+v_clrwk         00fca506        Function        Global  User Defined    3       0
+v_clrwk_return  00fca518        Instruction Label       Global  User Defined    1       0
+INIT_G          00fca51a        Function        Global  User Defined    1       0
+vex_timv        00fca54e        Instruction Label       Global  User Defined    1       0
+FindDevice      00fca57e        Function        Global  User Defined    1       0
+paltab4         00fca620        Data Label      Global  User Defined    2       0
+paltab16        00fca628        Data Label      Global  User Defined    1       0
+tick_int        00fca648        Instruction Label       Global  User Defined    1       0
+DINIT_G         00fca660        Function        Global  User Defined    1       0
+GCHC_KEY        00fca680        Function        Global  User Defined    2       0
+GCHR_KEY        00fca68a        Function        Global  User Defined    2       0
+no_char         00fca6b2        Instruction Label       GCHR_KEY        User Defined    1       0
+mouse_init      00fca6b8        Function        Global  User Defined    1       0
+user_init       00fca734        Function        Global  User Defined    1       0
+dinit_mouse     00fca736        Function        Global  User Defined    1       0
+FUN_00fca756    00fca756        Function        Global  Default 2       0
+esc_init        00fca7e2        Function        Global  User Defined    2       0
+FUN_00fca878    00fca878        Function        Global  Default 1       0
+reztab0         00fca8ac        Data Label      Global  User Defined    1       0
+reztab1         00fca8af        Data Label      Global  User Defined    1       0
+reztab2         00fca8b2        Data Label      Global  User Defined    1       0
+reztab3         00fca8b8        Data Label      Global  User Defined    1       0
+SCREEN          00fca8be        Function        Global  User Defined    1       0
+Isin            00fcaa30        Function        Global  User Defined    5       0
+caseD_0         00fcaa5e        Instruction Label       switchD_00fcaaa0        Analysis        2       0
+caseD_1         00fcaa60        Instruction Label       switchD_00fcaaa0        Analysis        2       0
+caseD_2         00fcaa6e        Instruction Label       switchD_00fcaaa0        Analysis        2       0
+caseD_3         00fcaa76        Instruction Label       switchD_00fcaaa0        Analysis        2       0
+caseD_4         00fcaa84        Instruction Label       switchD_00fcaaa0        Analysis        2       0
+switchD         00fcaaa0        Instruction Label       switchD_00fcaaa0        Analysis        0       0
+caseD_5         00fcaaa2        Instruction Label       switchD_00fcaaa0        Analysis        8       0
+FUN_00fcab14    00fcab14        Function        Global  Default 4       0
+vsl_type        00fcab3e        Function        Global  User Defined    1       0
+vsl_width       00fcab88        Function        Global  User Defined    1       0
+vsl_ends        00fcabe8        Function        Global  User Defined    1       0
+vsl_color       00fcac44        Function        Global  User Defined    1       0
+vsm_height      00fcac94        Function        Global  User Defined    1       0
+vsm_type        00fcad20        Function        Global  User Defined    1       0
+vsm_color       00fcad70        Function        Global  User Defined    1       0
+vsf_interior    00fcadc6        Function        Global  User Defined    1       0
+vsf_style       00fcae12        Function        Global  User Defined    1       0
+vsf_color       00fcae7a        Function        Global  User Defined    1       0
+v_locator       00fcaeca        Function        Global  User Defined    1       0
+v_show_c        00fcafe8        Function        Global  User Defined    3       0
+v_hide_c        00fcb010        Function        Global  User Defined    2       0
+vq_mouse        00fcb01e        Function        Global  User Defined    1       0
+v_valuator      00fcb060        Function        Global  User Defined    1       0
+v_choice        00fcb068        Function        Global  User Defined    1       0
+v_string        00fcb0f2        Function        Global  User Defined    1       0
+vq_key_s        00fcb1d2        Function        Global  User Defined    1       0
+vswr_mode       00fcb1f6        Function        Global  User Defined    1       0
+vsin_mode       00fcb250        Function        Global  User Defined    1       0
+caseD_0         00fcb27c        Instruction Label       switchD_00fcb2b2        Analysis        2       0
+caseD_1         00fcb27e        Instruction Label       switchD_00fcb2b2        Analysis        2       0
+caseD_2         00fcb286        Instruction Label       switchD_00fcb2b2        Analysis        2       0
+caseD_3         00fcb28e        Instruction Label       switchD_00fcb2b2        Analysis        2       0
+caseD_4         00fcb296        Instruction Label       switchD_00fcb2b2        Analysis        2       0
+switchD         00fcb2b2        Instruction Label       switchD_00fcb2b2        Analysis        0       0
+caseD_5         00fcb2b4        Instruction Label       switchD_00fcb2b2        Analysis        8       0
+vqin_mode       00fcb2be        Function        Global  User Defined    1       0
+caseD_0         00fcb2e2        Instruction Label       switchD_00fcb318        Analysis        2       0
+caseD_1         00fcb2e4        Instruction Label       switchD_00fcb318        Analysis        2       0
+caseD_2         00fcb2ec        Instruction Label       switchD_00fcb318        Analysis        2       0
+caseD_3         00fcb2f4        Instruction Label       switchD_00fcb318        Analysis        2       0
+caseD_4         00fcb2fc        Instruction Label       switchD_00fcb318        Analysis        2       0
+switchD         00fcb318        Instruction Label       switchD_00fcb318        Analysis        0       0
+caseD_5         00fcb31a        Instruction Label       switchD_00fcb318        Analysis        8       0
+vsf_perimeter   00fcb324        Function        Global  User Defined    1       0
+vsl_udsty       00fcb36a        Function        Global  User Defined    1       0
+vs_clip         00fcb382        Function        Global  User Defined    1       0
+FUN_00fcb426    00fcb426        Function        Global  Default 7       0
+dro_cpyfm       00fcb472        Function        Global  User Defined    1       0
+drt_cpyfm       00fcb4a4        Function        Global  User Defined    1       0
+dr_recfl        00fcb4dc        Function        Global  User Defined    2       0
+v_opnwk         00fcb55c        Function        Global  User Defined    1       0
+vq_extnd        00fcb798        Function        Global  User Defined    1       0
+v_clswk         00fcb830        Function        Global  User Defined    1       0
+v_pline         00fcb878        Function        Global  User Defined    3       0
+v_pmarker       00fcb912        Function        Global  User Defined    1       0
+v_fillarea      00fcba58        Function        Global  User Defined    1       0
+v_gdp           00fcba64        Function        Global  User Defined    1       0
+caseD_1         00fcbaa2        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+caseD_2         00fcbb00        Instruction Label       switchD_00fcbc0a        Analysis        3       0
+caseD_3         00fcbb00        Instruction Label       switchD_00fcbc0a        Analysis        0       0
+caseD_4         00fcbb08        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+caseD_5         00fcbb60        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+caseD_6         00fcbbb6        Instruction Label       switchD_00fcbc0a        Analysis        3       0
+caseD_7         00fcbbb6        Instruction Label       switchD_00fcbc0a        Analysis        0       0
+caseD_8         00fcbbbc        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+caseD_9         00fcbbe8        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+caseD_a         00fcbbee        Instruction Label       switchD_00fcbc0a        Analysis        2       0
+switchD         00fcbc0a        Instruction Label       switchD_00fcbc0a        Analysis        0       0
+caseD_a         00fcbc0c        Instruction Label       switchD_00fcbc0a        Analysis        13      0
+vql_attributes  00fcbc16        Function        Global  User Defined    1       0
+vqm_attributes  00fcbc72        Function        Global  User Defined    1       0
+vqf_attributes  00fcbcd2        Function        Global  User Defined    1       0
+FUN_00fcbd24    00fcbd24        Function        Global  Default 4       0
+FUN_00fcbdae    00fcbdae        Function        Global  Default 5       0
+FUN_00fcbf2a    00fcbf2a        Function        Global  Default 2       0
+plygn           00fcbf82        Function        Global  User Defined    5       0
+FUN_00fcc11c    00fcc11c        Function        Global  Default 2       0
+FUN_00fcc4c6    00fcc4c6        Function        Global  Default 1       0
+clc_nsteps      00fcc572        Function        Global  User Defined    4       0
+gdp_ell         00fcc5d2        Function        Global  User Defined    1       0
+clc_arc         00fcc682        Function        Global  User Defined    4       0
+FUN_00fcc7f8    00fcc7f8        Function        Global  Default 3       0
+FUN_00fcc88a    00fcc88a        Function        Global  Default 3       0
+caseD_0         00fcc8a6        Instruction Label       switchD_00fcc956        Analysis        2       0
+caseD_1         00fcc8b0        Instruction Label       switchD_00fcc956        Analysis        2       0
+caseD_2         00fcc8ba        Instruction Label       switchD_00fcc956        Analysis        2       0
+caseD_3         00fcc8fa        Instruction Label       switchD_00fcc956        Analysis        2       0
+caseD_4         00fcc93a        Instruction Label       switchD_00fcc956        Analysis        2       0
+switchD         00fcc956        Instruction Label       switchD_00fcc956        Analysis        0       0
+caseD_5         00fcc958        Instruction Label       switchD_00fcc956        Analysis        8       0
+FUN_00fcc96a    00fcc96a        Function        Global  Default 1       0
+FUN_00fcca84    00fcca84        Function        Global  Default 2       0
+perp_off        00fccc76        Function        Global  User Defined    1       0
+quad_xform      00fccdba        Function        Global  User Defined    2       0
+FUN_00fcce32    00fcce32        Function        Global  Default 2       0
+s_fa_attr       00fccf3a        Function        Global  User Defined    2       0
+FUN_00fccfa6    00fccfa6        Function        Global  Default 2       0
+do_arrow        00fccfde        Function        Global  User Defined    2       0
+FUN_00fcd07a    00fcd07a        Function        Global  Default 2       0
+init_wk         00fcd2e6        Function        Global  User Defined    2       0
+d_opnvwk        00fcd4f6        Function        Global  User Defined    1       0
+d_clsvwk        00fcd588        Function        Global  User Defined    1       0
+dsf_udpat       00fcd5de        Function        Global  User Defined    1       0
+d_gtext         00fcd63a        Function        Global  User Defined    2       0
+caseD_0         00fcd814        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+caseD_1         00fcd826        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+caseD_2         00fcd850        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+caseD_3         00fcd878        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+caseD_4         00fcd888        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+caseD_5         00fcd8b0        Instruction Label       switchD_00fcd8d6        Analysis        2       0
+switchD         00fcd8d6        Instruction Label       switchD_00fcd8d6        Analysis        0       0
+caseD_6         00fcd8d8        Instruction Label       switchD_00fcd8d6        Analysis        9       0
+text_init       00fcdd80        Function        Global  User Defined    1       0
+dst_height      00fcdeb4        Function        Global  User Defined    2       0
+copy_name       00fcdfd2        Function        Global  User Defined    1       0
+make_header     00fcdffa        Function        Global  User Defined    2       0
+dst_point       00fce150        Function        Global  User Defined    2       0
+vst_effects     00fce296        Function        Global  User Defined    1       0
+dst_alignment   00fce2ca        Function        Global  User Defined    1       0
+dst_rotation    00fce326        Function        Global  User Defined    1       0
+dst_font        00fce360        Function        Global  User Defined    1       0
+dst_color       00fce444        Function        Global  User Defined    1       0
+dqt_attributes  00fce494        Function        Global  User Defined    1       0
+dqt_extent      00fce50e        Function        Global  User Defined    4       0
+dqt_width       00fce6d4        Function        Global  User Defined    1       0
+dqt_name        00fce7ae        Function        Global  User Defined    1       0
+dqt_fontinfo    00fce83e        Function        Global  User Defined    1       0
+d_justified     00fce8cc        Function        Global  User Defined    1       0
+dt_loadfont     00fcebea        Function        Global  User Defined    1       0
+dt_unloadfont   00fcec7e        Function        Global  User Defined    1       0
+CLC_DDA         00fcecb4        Function        Global  User Defined    1       0
+ACT_SIZ         00fcece6        Function        Global  User Defined    14      0
+TEXT_BLT        00fced38        Function        Global  User Defined    2       0
+norm_blt        00fcf2a0        Function        Global  User Defined    3       0
+do_rot          00fcf2b6        Instruction Label       norm_blt        User Defined    1       0
+get_mask        00fcf2cc        Instruction Label       norm_blt        User Defined    0       0
+doub_des        00fcf318        Instruction Label       norm_blt        User Defined    1       0
+mlt_dest        00fcf336        Instruction Label       norm_blt        User Defined    1       0
+do_ritem        00fcf348        Instruction Label       norm_blt        User Defined    2       0
+not_null        00fcf354        Instruction Label       norm_blt        User Defined    1       0
+msk_done        00fcf35c        Instruction Label       norm_blt        User Defined    1       0
+msk0            00fcf36c        Instruction Label       norm_blt        User Defined    1       0
+plane_lp        00fcf374        Instruction Label       norm_blt        User Defined    1       0
+sp1             00fcf386        Instruction Label       norm_blt        User Defined    0       0
+toptable        00fcf3ae        Data Label      Global  User Defined    1       0
+twoptble        00fcf3ce        Data Label      Global  User Defined    1       0
+wrmappin        00fcf3ee        Data Label      Global  User Defined    1       0
+blt_adj         00fcf43e        Data Label      Global  User Defined    0       0
+no_lite         00fcf492        Instruction Label       norm_blt        User Defined    1       0
+no_thick        00fcf4c0        Instruction Label       norm_blt        User Defined    1       0
+not_sngl        00fcf4ee        Instruction Label       norm_blt        User Defined    1       0
+no_specl        00fcf510        Instruction Label       norm_blt        User Defined    0       0
+no_skew         00fcf510        Instruction Label       norm_blt        User Defined    0       0
+mlt_skew        00fcf510        Instruction Label       norm_blt        User Defined    6       0
+more_pl         00fcf538        Instruction Label       norm_blt        User Defined    1       0
+sgl_lp          00fcf548        Instruction Label       Global  User Defined    2       0
+sgl_loop        00fcf570        Instruction Label       Global  User Defined    1       0
+dbl_lp          00fcf576        Function        Global  User Defined    1       0
+dbleft          00fcf584        Instruction Label       dbl_lp  User Defined    1       0
+dblendr         00fcf586        Instruction Label       dbl_lp  User Defined    1       0
+dbl_loop        00fcf5bc        Instruction Label       dbl_lp  User Defined    1       0
+mlt_left        00fcf5c2        Function        Global  User Defined    5       0
+mlt_rite        00fcf660        Function        Global  User Defined    5       0
+word_rit        00fcf690        Instruction Label       mlt_rite        User Defined    1       0
+rite_don        00fcf6c6        Instruction Label       mlt_rite        User Defined    1       0
+rdone           00fcf6fc        Instruction Label       mlt_rite        User Defined    1       0
+top0            00fcf6fe        Instruction Label       Global  User Defined    0       0
+top1            00fcf708        Instruction Label       Global  User Defined    0       0
+top2            00fcf712        Instruction Label       Global  User Defined    0       0
+top3            00fcf71c        Instruction Label       Global  User Defined    0       0
+top4            00fcf724        Instruction Label       Global  User Defined    0       0
+top5            00fcf72c        Instruction Label       Global  User Defined    0       0
+top6            00fcf730        Instruction Label       Global  User Defined    0       0
+top7            00fcf736        Instruction Label       Global  User Defined    0       0
+top8            00fcf73c        Instruction Label       Global  User Defined    0       0
+top9            00fcf744        Instruction Label       Global  User Defined    0       0
+topa            00fcf74c        Instruction Label       Global  User Defined    0       0
+topb            00fcf752        Instruction Label       Global  User Defined    0       0
+topc            00fcf75a        Instruction Label       Global  User Defined    0       0
+topd            00fcf764        Instruction Label       Global  User Defined    0       0
+tope            00fcf76c        Instruction Label       Global  User Defined    0       0
+topf            00fcf776        Instruction Label       Global  User Defined    0       0
+twop0           00fcf77c        Instruction Label       Global  User Defined    0       0
+twop1           00fcf780        Instruction Label       Global  User Defined    0       0
+twop2           00fcf784        Instruction Label       Global  User Defined    0       0
+twop3           00fcf78a        Instruction Label       Global  User Defined    0       0
+twop4           00fcf78c        Instruction Label       Global  User Defined    0       0
+twop5           00fcf792        Instruction Label       Global  User Defined    0       0
+twop6           00fcf796        Instruction Label       Global  User Defined    0       0
+twop7           00fcf79a        Instruction Label       Global  User Defined    0       0
+twop8           00fcf79e        Instruction Label       Global  User Defined    0       0
+twop9           00fcf7a4        Instruction Label       Global  User Defined    0       0
+twopa           00fcf7aa        Instruction Label       Global  User Defined    0       0
+twopb           00fcf7b0        Instruction Label       Global  User Defined    0       0
+twopc           00fcf7b6        Instruction Label       Global  User Defined    0       0
+twopd           00fcf7ba        Instruction Label       Global  User Defined    0       0
+twope           00fcf7c0        Instruction Label       Global  User Defined    0       0
+twopf           00fcf7c6        Instruction Label       Global  User Defined    0       0
+thknop          00fcf7ca        Instruction Label       Global  User Defined    0       0
+thk01           00fcf7e4        Instruction Label       Global  User Defined    1       0
+thk00           00fcf7e8        Instruction Label       Global  User Defined    1       0
+thk00           00fcf7f8        Instruction Label       Global  User Defined    2       0
+thk1            00fcf7fc        Instruction Label       Global  User Defined    1       0
+thkoplp         00fcf81a        Instruction Label       Global  User Defined    1       0
+thklpe          00fcf820        Instruction Label       Global  User Defined    1       0
+thknopw         00fcf830        Instruction Label       Global  User Defined    0       0
+thk2            00fcf83a        Instruction Label       Global  User Defined    1       0
+thkopwlp        00fcf846        Instruction Label       Global  User Defined    1       0
+thkopwe         00fcf84a        Instruction Label       Global  User Defined    1       0
+thknopwf        00fcf862        Instruction Label       Global  User Defined    0       0
+thk11           00fcf876        Instruction Label       Global  User Defined    1       0
+thk3            00fcf87c        Instruction Label       Global  User Defined    1       0
+thk4            00fcf880        Instruction Label       Global  User Defined    1       0
+thk5            00fcf882        Instruction Label       Global  User Defined    1       0
+thk33           00fcf8a2        Instruction Label       Global  User Defined    1       0
+thk34           00fcf8ac        Instruction Label       Global  User Defined    1       0
+thk31           00fcf8b8        Instruction Label       Global  User Defined    1       0
+thk35           00fcf8be        Instruction Label       Global  User Defined    1       0
+thk6            00fcf8c8        Instruction Label       Global  User Defined    1       0
+thk7            00fcf8ce        Instruction Label       Global  User Defined    1       0
+thkopwl         00fcf8da        Instruction Label       Global  User Defined    1       0
+thkopwfe        00fcf8de        Instruction Label       Global  User Defined    1       0
+liteop          00fcf8f8        Instruction Label       Global  User Defined    0       0
+liteopw         00fcf90c        Instruction Label       Global  User Defined    0       0
+liteopwf        00fcf918        Instruction Label       Global  User Defined    0       0
+skewop          00fcf924        Instruction Label       Global  User Defined    0       0
+ror_add         00fcf94a        Instruction Label       Global  User Defined    1       0
+new_shif        00fcf94c        Instruction Label       Global  User Defined    1       0
+no_shift        00fcf954        Instruction Label       Global  User Defined    2       0
+dec_rol         00fcf95c        Instruction Label       Global  User Defined    1       0
+begn_ror        00fcf964        Instruction Label       Global  User Defined    1       0
+nxt_word        00fcf968        Instruction Label       Global  User Defined    1       0
+skewopw         00fcf98a        Instruction Label       Global  User Defined    2       0
+rotation        00fcfa20        Instruction Label       Global  User Defined    1       0
+rot_nsrc        00fcfaee        Instruction Label       Global  User Defined    2       0
+rot_done        00fcfaf2        Instruction Label       Global  User Defined    0       0
+rot_nneg        00fcfb38        Instruction Label       Global  User Defined    1       0
+repexit         00fcfb3c        Instruction Label       Global  User Defined    1       0
+upsd_dwn        00fcfb4e        Function        Global  User Defined    1       0
+upsd_lp         00fcfb72        Instruction Label       Global  User Defined    1       0
+line_lp         00fcfb76        Instruction Label       Global  User Defined    1       0
+flip_lp         00fcfb7e        Instruction Label       Global  User Defined    1       0
+strtflip        00fcfb90        Instruction Label       Global  User Defined    1       0
+replicat        00fcfbc0        Instruction Label       Global  User Defined    1       0
+FUN_00fcfca2    00fcfca2        Function        Global  Default 3       0
+getdest         00fcfd04        Function        Global  User Defined    3       0
+outlin          00fcfd26        Function        Global  User Defined    1       0
+FUN_00fcfdc0    00fcfdc0        Function        Global  Default 1       0
+chk_clip        00fcfdde        Instruction Label       FUN_00fcfdc0    User Defined    1       0
+vtrap1          00fcff62        Function        Global  User Defined    3       0
+TRNSFONT        00fcff72        Function        Global  User Defined    2       0
+put_pix         00fcff94        Function        Global  User Defined    1       0
+ppx_loop        00fcffcc        Instruction Label       put_pix User Defined    2       0
+ppx_clr         00fcffd8        Instruction Label       put_pix User Defined    1       0
+get_pix         00fcffe0        Function        Global  User Defined    3       0
+fill_line       00fd0026        Function        Global  User Defined    2       0
+FUN_00fd0078    00fd0078        Function        Global  Default 2       0
+M_RECTFILL      00fd018c        Function        Global  User Defined    2       0
+mouse_rel       00fd02e0        Instruction Label       Global  User Defined    1       0
+FUN_00fd0394    00fd0394        Function        Global  Default 2       0
+MOV_CUR         00fd03c2        Instruction Label       Global  User Defined    1       0
+vb_draw         00fd03e2        Instruction Label       Global  User Defined    1       0
+vex_butv        00fd042c        Instruction Label       Global  User Defined    1       0
+vex_motv        00fd0444        Instruction Label       Global  User Defined    1       0
+vex_curv        00fd045c        Instruction Label       Global  User Defined    1       0
+cur_display     00fd0474        Function        Global  User Defined    3       0
+FUN_00fd05c2    00fd05c2        Function        Global  Default 1       0
+cur_replace     00fd0648        Function        Global  User Defined    3       0
+HIDE_CUR        00fd0718        Function        Global  User Defined    3       0
+FUN_00fd074a    00fd074a        Function        Global  Default 2       0
+vsc_form        00fd078e        Function        Global  User Defined    3       0
+COPY_RFM        00fd080a        Function        Global  User Defined    3       0
+pat_parm        00fd0836        Instruction Label       COPY_RFM        User Defined    1       0
+no_pattern      00fd0846        Instruction Label       COPY_RFM        User Defined    1       0
+src_calc        00fd0872        Instruction Label       COPY_RFM        User Defined    1       0
+dst_form        00fd087e        Instruction Label       COPY_RFM        User Defined    1       0
+dst_calc        00fd0898        Instruction Label       COPY_RFM        User Defined    1       0
+compare         00fd08a4        Instruction Label       COPY_RFM        User Defined    1       0
+new_ops         00fd08da        Instruction Label       COPY_RFM        User Defined    0       0
+col_0_ok        00fd08f8        Instruction Label       COPY_RFM        User Defined    1       0
+col_1_ok        00fd090c        Instruction Label       COPY_RFM        User Defined    1       0
+transparent_mode        00fd0942        Instruction Label       COPY_RFM        User Defined    1       0
+replace_mode    00fd0958        Instruction Label       COPY_RFM        User Defined    1       0
+xor_mode        00fd097a        Instruction Label       COPY_RFM        User Defined    1       0
+standard_ops    00fd098a        Instruction Label       COPY_RFM        User Defined    1       0
+the_clipper     00fd09a4        Instruction Label       COPY_RFM        User Defined    4       0
+dont_clip       00fd09c0        Instruction Label       COPY_RFM        User Defined    1       0
+clip_it         00fd0a08        Instruction Label       COPY_RFM        User Defined    1       0
+xmin_clipped    00fd0a20        Instruction Label       COPY_RFM        User Defined    1       0
+xmax_clipped    00fd0a3c        Instruction Label       COPY_RFM        User Defined    1       0
+ymin_clipped    00fd0a54        Instruction Label       COPY_RFM        User Defined    1       0
+ymax_clipped    00fd0a70        Instruction Label       COPY_RFM        User Defined    1       0
+max_save        00fd0a90        Instruction Label       COPY_RFM        User Defined    1       0
+bad_parameter   00fd0aa4        Instruction Label       COPY_RFM        User Defined    7       0
+KG_BLT          00fd0abc        Function        Global  User Defined    1       0
+bitblt          00fd0af8        Function        Global  User Defined    1       0
+std_blt         00fd0b36        Instruction Label       bitblt  User Defined    4       0
+act_shift       00fd0b54        Instruction Label       bitblt  User Defined    1       0
+start_addr      00fd0b62        Instruction Label       bitblt  User Defined    2       0
+b2t_r2l         00fd0b94        Instruction Label       bitblt  User Defined    1       0
+t2b_l2r         00fd0bb8        Instruction Label       bitblt  User Defined    2       0
+big_fringe      00fd0bbc        Instruction Label       bitblt  User Defined    1       0
+ssave_addr      00fd0bdc        Instruction Label       bitblt  User Defined    1       0
+solo_tab        00fd0c18        Data Label      Global  User Defined    1       0
+frag_tab        00fd0c28        Data Label      Global  User Defined    1       1
+pre_flight      00fd0ca8        Instruction Label       bitblt  User Defined    3       0
+first_index     00fd0cbe        Instruction Label       bitblt  User Defined    1       0
+next_plane      00fd0cc6        Instruction Label       bitblt  User Defined    3       0
+do_the_blt      00fd0d04        Instruction Label       bitblt  User Defined    1       0
+np_cont         00fd0d06        Instruction Label       bitblt  User Defined    2       0
+quit_blt        00fd0d36        Instruction Label       bitblt  User Defined    1       0
+log_op          00fd0d38        Data Label      Global  User Defined    1       0
+unary_blt       00fd0d78        Instruction Label       bitblt  User Defined    1       0
+call_unary      00fd0d98        Instruction Label       bitblt  User Defined    1       0
+get_fringe      00fd0da2        Function        Global  User Defined    2       0
+D_XMIN          00fd0db2        Instruction Label       get_fringe      User Defined    0       0
+fr_l_mask       00fd0dc4        Data Label      Global  User Defined    1       1
+fr_r_mask       00fd0dc6        Data Label      Global  User Defined    1       1
+s_xy2addr       00fd0de6        Function        Global  User Defined    4       0
+d_xy2addr       00fd0dfc        Function        Global  User Defined    4       0
+word_blt        00fd0e12        Function        Global  User Defined    1       0
+l2r_t2b         00fd0e5c        Instruction Label       word_blt        User Defined    1       0
+set_fringe      00fd0e60        Instruction Label       word_blt        User Defined    1       0
+fringe_ok       00fd0e72        Instruction Label       word_blt        User Defined    1       0
+sc_mp_f1        00fd0e84        Instruction Label       word_blt        User Defined    1       0
+sc_mp_loop      00fd0e94        Instruction Label       word_blt        User Defined    1       0
+sc_mp_f2        00fd0e9e        Instruction Label       word_blt        User Defined    0       0
+sc_mp_enter     00fd0eb2        Instruction Label       word_blt        User Defined    1       0
+sc_plane        00fd0ed6        Instruction Label       word_blt        User Defined    1       0
+p1_update       00fd0ede        Function        Global  User Defined    2       0
+f0_left         00fd0efa        Instruction Label       Global  User Defined    2       0
+f0_right        00fd0f02        Instruction Label       Global  User Defined    2       0
+f1_r2l_rt       00fd0f0a        Instruction Label       Global  User Defined    2       0
+f0_r2l_rt       00fd0f10        Instruction Label       Global  User Defined    2       0
+f1_r2l_lf       00fd0f1c        Instruction Label       Global  User Defined    2       0
+f0_r2l_lf       00fd0f22        Instruction Label       Global  User Defined    2       0
+f1_l2r_rt       00fd0f2e        Instruction Label       Global  User Defined    2       0
+f0_l2r_rt       00fd0f34        Instruction Label       Global  User Defined    2       0
+f1_l2r_lf       00fd0f40        Instruction Label       Global  User Defined    2       0
+f0_l2r_lf       00fd0f46        Instruction Label       Global  User Defined    2       0
+i1_r2l_rt       00fd0f52        Instruction Label       Global  User Defined    2       0
+i1_r2l_lf       00fd0f62        Instruction Label       Global  User Defined    2       0
+i1_l2r_rt       00fd0f72        Instruction Label       Global  User Defined    2       0
+i1_l2r_lf       00fd0f82        Instruction Label       Global  User Defined    2       0
+f2_r2l_rt       00fd0f92        Instruction Label       Global  User Defined    2       0
+f2_r2l_lf       00fd0fa0        Instruction Label       Global  User Defined    2       0
+f2_l2r_rt       00fd0fae        Instruction Label       Global  User Defined    2       0
+f2_l2r_lf       00fd0fbc        Instruction Label       Global  User Defined    2       0
+fl_r2l_rt       00fd0fca        Instruction Label       Global  User Defined    2       0
+fl_r2l_lf       00fd0fd0        Instruction Label       Global  User Defined    2       0
+fl_l2r_rt       00fd0fd6        Instruction Label       Global  User Defined    2       0
+fl_l2r_lf       00fd0fdc        Instruction Label       Global  User Defined    2       0
+f2_flush        00fd0fe0        Instruction Label       Global  User Defined    5       0
+f2_out          00fd0fe2        Instruction Label       Global  User Defined    2       0
+f2_rtn          00fd0fea        Instruction Label       Global  User Defined    12      0
+f2_update       00fd0ff0        Instruction Label       Global  User Defined    1       0
+f2_end          00fd1002        Instruction Label       Global  User Defined    2       0
+f1_dst          00fd1004        Instruction Label       Global  User Defined    2       0
+i1_dst          00fd1008        Instruction Label       Global  User Defined    1       0
+f2_dst          00fd100c        Instruction Label       Global  User Defined    1       0
+f2_drt          00fd1018        Instruction Label       Global  User Defined    3       0
+f1_drt          00fd101e        Instruction Label       Global  User Defined    1       0
+mode_00         00fd102e        Instruction Label       Global  User Defined    1       0
+f1op_00         00fd1036        Instruction Label       Global  User Defined    0       0
+f2op_00         00fd1044        Instruction Label       Global  User Defined    0       0
+mode_01         00fd104e        Instruction Label       Global  User Defined    1       0
+f1op_01         00fd1050        Instruction Label       Global  User Defined    0       0
+f2op_01         00fd1064        Instruction Label       Global  User Defined    0       0
+mode_02         00fd1072        Instruction Label       Global  User Defined    1       0
+f1op_02         00fd107a        Instruction Label       Global  User Defined    0       0
+f2op_02         00fd1088        Instruction Label       Global  User Defined    0       0
+mode_03         00fd1096        Instruction Label       Global  User Defined    1       0
+f1op_03         00fd109e        Instruction Label       Global  User Defined    0       0
+f2op_03         00fd10ac        Instruction Label       Global  User Defined    0       0
+mode_04         00fd10bc        Instruction Label       Global  User Defined    1       0
+f1op_04         00fd10c4        Instruction Label       Global  User Defined    0       0
+f2op_04         00fd10d2        Instruction Label       Global  User Defined    0       0
+mode_05         00fd10dc        Instruction Label       Global  User Defined    1       0
+mode_06         00fd10de        Instruction Label       Global  User Defined    1       0
+f1op_06         00fd10e6        Instruction Label       Global  User Defined    0       0
+f2op_06         00fd10f4        Instruction Label       Global  User Defined    0       0
+mode_07         00fd10fe        Instruction Label       Global  User Defined    1       0
+f1op_07         00fd1106        Instruction Label       Global  User Defined    0       0
+f2op_07         00fd1114        Instruction Label       Global  User Defined    0       0
+mode_08         00fd111e        Instruction Label       Global  User Defined    1       0
+f1op_08         00fd1126        Instruction Label       Global  User Defined    0       0
+f2op_08         00fd1134        Instruction Label       Global  User Defined    0       0
+mode_09         00fd1140        Instruction Label       Global  User Defined    1       0
+f1op_09         00fd1148        Instruction Label       Global  User Defined    0       0
+f2op_09         00fd1156        Instruction Label       Global  User Defined    0       0
+mode_10         00fd1162        Instruction Label       Global  User Defined    1       0
+f1op_10         00fd116a        Instruction Label       Global  User Defined    0       0
+f2op_10         00fd1178        Instruction Label       Global  User Defined    0       0
+mode_11         00fd1180        Instruction Label       Global  User Defined    1       0
+f1op_11         00fd1188        Instruction Label       Global  User Defined    0       0
+f2op_11         00fd1196        Instruction Label       Global  User Defined    0       0
+mode_12         00fd11a2        Instruction Label       Global  User Defined    1       0
+mode_12         00fd11aa        Instruction Label       Global  User Defined    0       0
+f2op_12         00fd11b8        Instruction Label       Global  User Defined    0       0
+mode_13         00fd11c4        Instruction Label       Global  User Defined    1       0
+f1op_13         00fd11cc        Instruction Label       Global  User Defined    0       0
+f2op_13         00fd11da        Instruction Label       Global  User Defined    0       0
+mode_14         00fd11e6        Instruction Label       Global  User Defined    1       0
+f1op_14         00fd11ee        Instruction Label       Global  User Defined    0       0
+f2op_14         00fd11fa        Instruction Label       Global  User Defined    0       0
+mode_15         00fd120a        Instruction Label       Global  User Defined    1       0
+f1op_15         00fd1212        Instruction Label       Global  User Defined    0       0
+f2op_15         00fd1220        Instruction Label       Global  User Defined    0       0
+d_contourfill   00fd1226        Function        Global  User Defined    1       0
+seedfill        00fd123a        Function        Global  User Defined    2       0
+crunch_Q        00fd170e        Function        Global  User Defined    2       0
+get_seed        00fd1768        Function        Global  User Defined    4       0
+v_get_pixel     00fd1924        Function        Global  User Defined    1       0
+vr_trnfm        00fd197e        Function        Global  User Defined    1       0
+FUN_00fd19cc    00fd19cc        Function        Global  Default 1       0
+FUN_00fd1a00    00fd1a00        Function        Global  Default 1       0
+vs_color        00fd1a1e        Function        Global  User Defined    1       0
+FUN_00fd1aba    00fd1aba        Function        Global  Default 3       0
+vq_color        00fd1ad0        Function        Global  User Defined    2       0
+pcnttab2        00fd1b6e        Data Label      Global  User Defined    1       0
+proto_data      00fd1b7e        Data Label      Global  User Defined    1       0
+pbt_mask        00fd1bca        Data Label      Global  User Defined    4       1
+YELLO           00fd1bdc        Data Label      Global  User Defined    1       0
+MAGTA           00fd1be1        Data Label      Global  User Defined    1       0
+CYAN            00fd1be6        Data Label      Global  User Defined    1       0
+EBMMO           00fd1beb        Data Label      Global  User Defined    1       0
+ABMMO           00fd1bef        Data Label      Global  User Defined    1       0
+PIXLS           00fd1bf3        Data Label      Global  User Defined    1       0
+PIXLS           00fd1bf8        Data Label      Global  User Defined    1       0
+RASLS           00fd1bfd        Data Label      Global  User Defined    1       0
+PIXLS           00fd1c01        Data Label      Global  User Defined    1       0
+RSTLS           00fd1c06        Data Label      Global  User Defined    1       0
+RSTCO           00fd1c0a        Data Label      Global  User Defined    1       0
+fstrtend        00fd1c10        Data Label      Global  User Defined    1       0
+logmsk          00fd1c14        Data Label      Global  User Defined    4       0
+negone          00fd1c34        Data Label      Global  User Defined    2       0
+dots            00fd1c38        Data Label      Global  User Defined    1       0
+dots2           00fd1c4e        Data Label      Global  User Defined    1       0
+cgets_cases     00fd1c64        Data Label      Global  User Defined    1       0
+cgets_jump_table        00fd1c88        Data Label      Global  User Defined    1       0
+nday            00fd1cac        Data Label      Global  User Defined    3       0
+funcs           00fd1cc6        Data Label      Global  User Defined    4       1
+switchdataD_00fd1ed6    00fd1ed6        Data Label      switchD_00fc96bc        Analysis        1       0
+MAX_VERT        00fd1f40        Data Label      Global  User Defined    1       0
+LINE_STYLE      00fd1f42        Data Label      Global  User Defined    5       0
+UDPATMSK        00fd1f4e        Data Label      Global  User Defined    0       0
+ROM_UD_PATRN    00fd1f50        Data Label      Global  User Defined    2       0
+OEMMSKPAT       00fd1f70        Data Label      Global  User Defined    1       0
+OEMPAT          00fd1f72        Data Label      Global  User Defined    1       0
+DITHRMSK        00fd2072        Data Label      Global  User Defined    1       0
+DITHER          00fd2074        Data Label      Global  User Defined    1       0
+HAT_0_MSK       00fd20b4        Data Label      Global  User Defined    1       0
+HATCH0          00fd20b6        Data Label      Global  User Defined    1       0
+HAT_1_MSK       00fd2116        Data Label      Global  User Defined    1       0
+HATCH1          00fd2118        Data Label      Global  User Defined    1       0
+HOLLOW          00fd21d8        Data Label      Global  User Defined    2       0
+SOLID           00fd21da        Data Label      Global  User Defined    2       0
+tplane_mask     00fd21dc        Data Label      Global  User Defined    2       0
+ROM_DEV_TAB     00fd21e4        Data Label      Global  User Defined    2       0
+ROM_SIZ_TAB     00fd223e        Data Label      Global  User Defined    2       0
+ROM_INQ_TAB     00fd2256        Data Label      Global  User Defined    2       0
+m_dot           00fd22b0        Data Label      Global  User Defined    1       0
+m_plus          00fd22bc        Data Label      Global  User Defined    1       0
+m_star          00fd22d2        Data Label      Global  User Defined    1       0
+m_square        00fd22f2        Data Label      Global  User Defined    1       0
+m_cross         00fd230a        Data Label      Global  User Defined    1       0
+m_dmnd          00fd2320        Data Label      Global  User Defined    1       0
+MAP_COL         00fd2338        Data Label      Global  User Defined    22      1
+REV_MAP_COL     00fd2358        Data Label      Global  User Defined    8       1
+jmptb1          00fd2378        Data Label      Global  User Defined    1       0
+jmptb2          00fd2414        Data Label      Global  User Defined    2       0
+sin_tbl         00fd2494        Data Label      Global  User Defined    4       0
+switchdataD_00fd254c    00fd254c        Data Label      switchD_00fcaaa0        Analysis        2       0
+switchdataD_00fd2560    00fd2560        Data Label      switchD_00fcb2b2        Analysis        1       0
+switchdataD_00fd2574    00fd2574        Data Label      switchD_00fcb318        Analysis        2       0
+markhead        00fd2588        Data Label      Global  User Defined    2       0
+switchdataD_00fd25a0    00fd25a0        Data Label      switchD_00fcbc0a        Analysis        1       0
+switchdataD_00fd25c8    00fd25c8        Data Label      switchD_00fcc956        Analysis        2       0
+switchdataD_00fd25dc    00fd25dc        Data Label      switchD_00fcd8d6        Analysis        1       0
+rel_pblock      00fd25f4        Data Label      Global  User Defined    1       0
+arrow_cdb       00fd25f8        Data Label      Global  User Defined    1       0
+f6x6            00fd2642        Data Label      Global  User Defined    9       9
+off_6x6         00fd269c        Data Label      Global  User Defined    1       0
+dat_6x6         00fd289e        Data Label      Global  User Defined    1       0
+f8x8            00fd2d1e        Data Label      Global  User Defined    3       0
+off_8x8         00fd2d78        Data Label      Global  User Defined    1       0
+dat_8x8         00fd2f7a        Data Label      Global  User Defined    1       0
+f8x16           00fd377a        Data Label      Global  User Defined    3       0
+off_8x16        00fd37d4        Data Label      Global  User Defined    1       0
+dat_8x16        00fd39d6        Data Label      Global  User Defined    1       0
+tosrsc          00fd49d6        Data Label      Global  User Defined    1       0
+gemrscROM       00fd49e0        Data Label      Global  User Defined    0       0
+deskrscROM      00fd5dfc        Data Label      Global  User Defined    0       0
+unknownrsc1ROM  00fd8550        Data Label      Global  User Defined    0       0
+infrscROM       00fd8b54        Data Label      Global  User Defined    0       0
+formatrscROM    00fd8d46        Data Label      Global  User Defined    0       0
+unkrsc4ROM      00fd916e        Data Label      Global  User Defined    0       0
+gemstart        00fd91d0        Function        Global  User Defined    1       0
+lop             00fd9256        Instruction Label       gemstart        User Defined    1       0
+nolinef         00fd9262        Instruction Label       gemstart        User Defined    1       0
+begin           00fd9272        Instruction Label       gemstart        User Defined    1       0
+beg1            00fd9280        Instruction Label       gemstart        User Defined    1       0
+trap            00fd92c6        Function        Global  User Defined    1       0
+oktrap          00fd92f4        Instruction Label       trap    User Defined    1       0
+FUN_00fd92fc    00fd92fc        Function        Global  Default 1       0
+gem_main        00fd9362        Function        Global  User Defined    1       0
+FUN_00fd96d4    00fd96d4        Function        Global  Default 1       0
+pred_dinf       00fd9708        Function        Global  User Defined    1       0
+FUN_00fd9862    00fd9862        Function        Global  Default 1       0
+FUN_00fd988a    00fd988a        Function        Global  Default 1       0
+FUN_00fd98d8    00fd98d8        Function        Global  Default 1       0
+FUN_00fd9950    00fd9950        Function        Global  Default 1       0
+FUN_00fd9d4a    00fd9d4a        Function        Global  Default 1       0
+FUN_00fd9e42    00fd9e42        Function        Global  Default 1       0
+ig_fix          00fd9fa2        Data Label      Global  User Defined    1       0
+FUN_00fda012    00fda012        Function        Global  Default 1       0
+gsx_trans       00fda12a        Function        Global  User Defined    1       0
+lineftab+190    00fda146        Data Label      Global  User Defined    0       0
+gsx_start       00fda188        Function        Global  User Defined    1       0
+FUN_00fda3ca    00fda3ca        Function        Global  Default 1       0
+FUN_00fda472    00fda472        Function        Global  Default 1       0
+FUN_00fda4ca    00fda4ca        Function        Global  Default 1       0
+FUN_00fda534    00fda534        Function        Global  Default 1       0
+FUN_00fdb2f8    00fdb2f8        Function        Global  Default 1       0
+FUN_00fdb322    00fdb322        Function        Global  Default 1       0
+FUN_00fdb34c    00fdb34c        Function        Global  Default 1       0
+caseD_3         00fdb4ec        Instruction Label       switchD_00fdb54a        Analysis        2       0
+caseD_2         00fdb4f2        Instruction Label       switchD_00fdb54a        Analysis        2       0
+caseD_4         00fdb4f8        Instruction Label       switchD_00fdb54a        Analysis        2       0
+caseD_0         00fdb4fe        Instruction Label       switchD_00fdb54a        Analysis        2       0
+caseD_1         00fdb532        Instruction Label       switchD_00fdb54a        Analysis        2       0
+switchD         00fdb54a        Instruction Label       switchD_00fdb54a        Analysis        0       0
+caseD_5         00fdb54c        Instruction Label       switchD_00fdb54a        Analysis        7       0
+FUN_00fdb6f2    00fdb6f2        Function        Global  Default 1       0
+FUN_00fdb712    00fdb712        Function        Global  Default 1       0
+evnt_multi      00fdd72c        Function        Global  User Defined    1       0
+FUN_00fdd7d6    00fdd7d6        Function        Global  Default 1       0
+FUN_00fddbb2    00fddbb2        Function        Global  Default 1       0
+FUN_00fddbca    00fddbca        Function        Global  Default 1       0
+FUN_00fddcf2    00fddcf2        Function        Global  Default 1       0
+FUN_00fddd32    00fddd32        Function        Global  Default 1       0
+dr_code         00fde0c2        Function        Global  User Defined    1       0
+FUN_00fe009e    00fe009e        Function        Global  Default 1       0
+FUN_00fe0134    00fe0134        Function        Global  Default 1       0
+FUN_00fe01c6    00fe01c6        Function        Global  Default 1       0
+deskmainMAYBE   00fe1e98        Function        Global  User Defined    1       0
+FUN_00fe2358    00fe2358        Function        Global  Default 1       0
+FUN_00fe2e9c    00fe2e9c        Function        Global  Default 1       0
+FUN_00fe2efa    00fe2efa        Function        Global  Default 1       0
+dsptch          00fe2f2a        Function        Global  User Defined    1       0
+dsp1            00fe2f34        Function        Global  User Defined    1       0
+cli             00fe2f3e        Function        Global  User Defined    6       0
+sti             00fe2f4a        Function        Global  User Defined    6       0
+hcli            00fe2f52        Function        Global  User Defined    1       0
+hsti            00fe2f58        Function        Global  User Defined    1       0
+gotopgm         00fe2f5e        Function        Global  User Defined    1       0
+savestate       00fe2f82        Function        Global  User Defined    1       0
+savest1         00fe2f9a        Function        Global  User Defined    1       0
+switchto        00fe2fde        Function        Global  User Defined    1       0
+FUN_00fe301e    00fe301e        Function        Global  Default 1       0
+FUN_00fe3028    00fe3028        Function        Global  Default 1       0
+isdrive         00fe3054        Function        Global  User Defined    1       0
+pgmld           00fe3060        Instruction Label       Global  User Defined    1       0
+chrout          00fe30ea        Instruction Label       Global  User Defined    1       0
+rawcon          00fe3112        Instruction Label       Global  User Defined    1       0
+dos_gdrv        00fe3138        Instruction Label       Global  User Defined    1       0
+dos_sdta        00fe3144        Instruction Label       Global  User Defined    1       0
+dos_sfirst      00fe3156        Instruction Label       Global  User Defined    1       0
+dos_snext       00fe319a        Function        Global  User Defined    1       0
+dos_open        00fe31d4        Function        Global  User Defined    1       0
+dos_close       00fe3212        Function        Global  User Defined    1       0
+dos_read        00fe3224        Instruction Label       Global  User Defined    1       0
+dos_write       00fe324a        Instruction Label       Global  User Defined    1       0
+dos_lseek       00fe3270        Instruction Label       Global  User Defined    1       0
+dos_chdir       00fe328a        Instruction Label       Global  User Defined    1       0
+dos_gdir        00fe32a4        Instruction Label       Global  User Defined    1       0
+dos_sdrv        00fe32ba        Instruction Label       Global  User Defined    1       0
+dos_create      00fe32cc        Instruction Label       Global  User Defined    1       0
+dos_mkdir       00fe32ea        Instruction Label       Global  User Defined    1       0
+dos_chmod       00fe3320        Instruction Label       Global  User Defined    1       0
+dos_set         00fe333a        Instruction Label       Global  User Defined    1       0
+dos_label       00fe3360        Instruction Label       Global  User Defined    1       0
+dos_delete      00fe33fc        Instruction Label       Global  User Defined    1       0
+dos_space       00fe340e        Instruction Label       Global  User Defined    1       0
+dos_rename      00fe346e        Instruction Label       Global  User Defined    1       0
+dos_rmdir       00fe3486        Instruction Label       Global  User Defined    1       0
+dos_alloc       00fe3498        Instruction Label       Global  User Defined    1       0
+al_1            00fe34a8        Instruction Label       Global  User Defined    1       0
+dos_avail       00fe34dc        Instruction Label       Global  User Defined    1       0
+dos_free        00fe34f0        Instruction Label       Global  User Defined    1       0
+givecpm         00fe3502        Instruction Label       Global  User Defined    1       0
+takecpm         00fe350e        Instruction Label       Global  User Defined    1       0
+retake          00fe3524        Instruction Label       Global  User Defined    1       0
+call_err        00fe3534        Function        Global  User Defined    3       0
+giveerr         00fe3544        Instruction Label       Global  User Defined    1       0
+takeerr         00fe354c        Instruction Label       Global  User Defined    1       0
+err_trap        00fe355e        Instruction Label       Global  User Defined    3       0
+err1            00fe3592        Instruction Label       Global  User Defined    1       0
+eok             00fe35a0        Instruction Label       Global  User Defined    2       0
+eabrt           00fe35c0        Instruction Label       Global  User Defined    1       0
+dos_exec        00fe35ce        Instruction Label       Global  User Defined    1       0
+exok            00fe3652        Instruction Label       Global  User Defined    1       0
+lmul            00fe3654        Function        Global  User Defined    3       0
+ldiv            00fe36a8        Function        Global  User Defined    0       0
+grptrp          00fe3746        Function        Global  User Defined    2       0
+back            00fe3760        Function        Global  User Defined    1       0
+gosuper         00fe376a        Function        Global  User Defined    2       0
+supret          00fe37a8        Function        Global  User Defined    1       0
+far_draw        00fe37de        Function        Global  User Defined    1       0
+FUN_00fe37fe    00fe37fe        Function        Global  Default 1       0
+caseD_1         00fe39f4        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_2         00fe3a00        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_3         00fe3a0e        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_4         00fe3a18        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_5         00fe3a22        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_6         00fe3a2c        Instruction Label       switchD_00fe3a54        Analysis        2       0
+caseD_7         00fe3a36        Instruction Label       switchD_00fe3a54        Analysis        2       0
+switchD         00fe3a54        Instruction Label       switchD_00fe3a54        Analysis        0       0
+caseD_7         00fe3a56        Instruction Label       switchD_00fe3a54        Analysis        9       0
+ldaccs          00fe3c26        Function        Global  User Defined    1       0
+FUN_00fe3d08    00fe3d08        Function        Global  Default 1       0
+FUN_00fe3d66    00fe3d66        Function        Global  Default 1       0
+FUN_00fe3dfc    00fe3dfc        Function        Global  Default 1       0
+FUN_00fe3e40    00fe3e40        Function        Global  Default 1       0
+caseD_2         00fe3ed8        Instruction Label       switchD_00fe40c6        Analysis        3       0
+caseD_4         00fe3ed8        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_3         00fe3f12        Instruction Label       switchD_00fe40c6        Analysis        2       0
+caseD_8         00fe3f8c        Instruction Label       switchD_00fe40c6        Analysis        2       0
+caseD_c         00fe403a        Instruction Label       switchD_00fe40c6        Analysis        3       0
+caseD_11        00fe403a        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_a         00fe407c        Instruction Label       switchD_00fe40c6        Analysis        7       0
+caseD_b         00fe407c        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_f         00fe407c        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_10        00fe407c        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_d         00fe4080        Instruction Label       switchD_00fe40c6        Analysis        3       0
+caseD_12        00fe4080        Instruction Label       switchD_00fe40c6        Analysis        0       0
+switchD         00fe40c6        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_5         00fe40c8        Instruction Label       switchD_00fe40c6        Analysis        11      0
+caseD_6         00fe40c8        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_7         00fe40c8        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_9         00fe40c8        Instruction Label       switchD_00fe40c6        Analysis        0       0
+caseD_e         00fe40c8        Instruction Label       switchD_00fe40c6        Analysis        0       0
+FUN_00fe42cc    00fe42cc        Function        Global  Default 3       0
+FUN_00fe4326    00fe4326        Function        Global  Default 2       0
+disp            00fe4558        Function        Global  User Defined    1       0
+FUN_00fe4616    00fe4616        Function        Global  Default 1       0
+FUN_00fe46fc    00fe46fc        Function        Global  Default 1       0
+FUN_00fe476c    00fe476c        Function        Global  Default 2       0
+super           00fe5f4a        Function        Global  User Defined    2       0
+eralert         00fe6fde        Function        Global  User Defined    2       0
+FUN_00fe83fc    00fe83fc        Function        Global  Default 1       0
+gsx_init        00fe8418        Instruction Label       Global  User Defined    1       0
+gsx_wsopen      00fe84c8        Instruction Label       Global  User Defined    1       0
+gsx_setmb       00fe86cc        Instruction Label       Global  User Defined    1       0
+gsx_tick        00fe873c        Instruction Label       Global  User Defined    1       0
+FUN_00fe8760    00fe8760        Function        Global  Default 1       0
+FUN_00fe878a    00fe878a        Function        Global  Default 1       0
+FUN_00fe87b0    00fe87b0        Function        Global  Default 1       0
+FUN_00fe87d0    00fe87d0        Function        Global  Default 1       0
+avst_height     00fe88b0        Data Label      Global  User Defined    1       0
+sh_main         00feb052        Function        Global  User Defined    1       0
+FUN_00fec39a    00fec39a        Function        Global  Default 1       0
+FUN_00fec3d4    00fec3d4        Function        Global  Default 1       0
+FUN_00fecb14    00fecb14        Function        Global  Default 4       0
+FUN_00fecb2a    00fecb2a        Function        Global  Default 1       0
+FUN_00fecb4a    00fecb4a        Function        Global  Default 0       0
+FUN_00fecb64    00fecb64        Function        Global  Default 1       0
+FUN_00fecb74    00fecb74        Function        Global  Default 1       0
+FUN_00fecb84    00fecb84        Function        Global  Default 1       0
+FUN_00fecb94    00fecb94        Function        Global  Default 1       0
+FUN_00fecba4    00fecba4        Function        Global  Default 1       0
+FUN_00fecbb4    00fecbb4        Function        Global  Default 1       0
+FUN_00fecbc4    00fecbc4        Function        Global  Default 1       0
+FUN_00fecbd4    00fecbd4        Function        Global  Default 1       0
+FUN_00fecbe6    00fecbe6        Function        Global  Default 1       0
+FUN_00fecbfa    00fecbfa        Function        Global  Default 1       0
+FUN_00fecc12    00fecc12        Function        Global  Default 0       0
+FUN_00fecc28    00fecc28        Function        Global  Default 0       0
+FUN_00fecc40    00fecc40        Function        Global  Default 1       0
+FUN_00fecc56    00fecc56        Function        Global  Default 0       0
+FUN_00fecc6c    00fecc6c        Function        Global  Default 1       0
+FUN_00fecca6    00fecca6        Function        Global  Default 1       0
+FUN_00feccd2    00feccd2        Function        Global  Default 1       0
+FUN_00fecd60    00fecd60        Function        Global  Default 1       0
+FUN_00feceea    00feceea        Function        Global  Default 1       0
+FUN_00fecf04    00fecf04        Function        Global  Default 1       0
+justretf        00fed684        Data Label      Global  User Defined    1       0
+tikcod          00fed686        Instruction Label       Global  User Defined    1       0
+FUN_00fed6d8    00fed6d8        Function        Global  Default 1       0
+FUN_00feda5a    00feda5a        Function        Global  Default 1       0
+FUN_00fee76a    00fee76a        Function        Global  Default 1       0
+trp13           00fee77c        Function        Global  User Defined    2       0
+trp14           00fee78c        Function        Global  User Defined    2       0
+FUN_00fee79c    00fee79c        Function        Global  Default 1       0
+size_theglo     00feeabe        Function        Global  User Defined    1       0
+FUN_00feeac8    00feeac8        Function        Global  Default 1       0
+FUN_00feeb20    00feeb20        Function        Global  Default 1       0
+linefhandler    00feeb6a        Instruction Label       Global  User Defined    2       0
+linefh1         00feeb8a        Instruction Label       Global  User Defined    1       0
+movinst         00feeb9e        Instruction Label       Global  User Defined    0       1
+linefh2         00feeba2        Instruction Label       Global  User Defined    1       0
+lineftab        00feeba8        Data Label      Global  User Defined    1       0
+switchdataD_00fef69a    00fef69a        Data Label      switchD_00fdb54a        Analysis        1       0
+err_tbl         00fef8d6        Data Label      Global  User Defined    2       0
+switchdataD_00fef8e8    00fef8e8        Data Label      switchD_00fe3a54        Analysis        2       0
+switchdataD_00fef928    00fef928        Data Label      switchD_00fe40c6        Analysis        1       0
+_ui_mupb        00fefff4        Data Label      Global  User Defined    4       2
+
+memconf         ffff8001        Data Label      Global  User Defined    3       0
+v_bas_h         ffff8201        Data Label      Global  User Defined    6       0
+v_bas_m         ffff8203        Data Label      Global  User Defined    6       0
+v_syncmod       ffff820a        Data Label      Global  User Defined    1       0
+palette         ffff8240        Data Label      Global  User Defined    3       2
+v_shf_mod       ffff8260        Data Label      Global  User Defined    7       0
+dma_data        ffff8604        Data Label      Global  User Defined    10      0
+dma_control     ffff8606        Data Label      Global  User Defined    10      0
+dma_addr_high   ffff8609        Data Label      Global  User Defined    5       0
+dma_addr_med    ffff860b        Data Label      Global  User Defined    5       0
+dma_addr_lo     ffff860d        Data Label      Global  User Defined    5       0
+psgsel          ffff8800        Data Label      Global  User Defined    11      0
+psgwr           ffff8802        Data Label      Global  User Defined    7       0
+MFP_REGS        fffffa01        Data Label      Global  User Defined    17      0
+MFP_LPT         fffffa01        Data Label      Global  User Defined    0       0
+MFP_GPIP        fffffa01        Data Label      Global  User Defined    0       0
+MFP_AER         fffffa03        Data Label      Global  User Defined    0       0
+MFP_DDR         fffffa05        Data Label      Global  User Defined    0       0
+MFP_IERA        fffffa07        Data Label      Global  User Defined    0       0
+MFP_IERB        fffffa09        Data Label      Global  User Defined    0       0
+MFP_IPRA        fffffa0b        Data Label      Global  User Defined    0       0
+MFP_IPRB        fffffa0d        Data Label      Global  User Defined    0       0
+MFP_ISRA        fffffa0f        Data Label      Global  User Defined    0       0
+MFP_ISRB        fffffa11        Data Label      Global  User Defined    2       0
+MFP_IMRA        fffffa13        Data Label      Global  User Defined    0       0
+MFP_IMRB        fffffa15        Data Label      Global  User Defined    0       0
+MFP_VR          fffffa17        Data Label      Global  User Defined    1       0
+MFP_TACR        fffffa19        Data Label      Global  User Defined    0       0
+MFP_TBCR        fffffa1b        Data Label      Global  User Defined    5       0
+MFP_TCDCR       fffffa1d        Data Label      Global  User Defined    0       0
+MFP_TADR        fffffa1f        Data Label      Global  User Defined    0       0
+MFP_TBDR        fffffa21        Data Label      Global  User Defined    5       0
+MFP_TCDR        fffffa23        Data Label      Global  User Defined    0       0
+MFP_TDDR        fffffa25        Data Label      Global  User Defined    0       0
+MFP_SCR         fffffa27        Data Label      Global  User Defined    0       0
+MFP_UCR         fffffa29        Data Label      Global  User Defined    0       0
+MFP_RSR         fffffa2b        Data Label      Global  User Defined    0       0
+MFP_TSR         fffffa2d        Data Label      Global  User Defined    0       0
+MFP_UDR         fffffa2f        Data Label      Global  User Defined    0       0
+IKBD_ACIA_CTRL  fffffc00        Data Label      Global  User Defined    8       0
+IKBD_ACIA_DATA  fffffc02        Data Label      Global  User Defined    2       0
+MIDI_ACIA_CTRL  fffffc04        Data Label      Global  User Defined    9       0
+MIDI_ACIA_DATA  fffffc06        Data Label      Global  User Defined    2       0
+
+ad_rso          0x006c44
+gl_rbuf         0x006e98
+gl_rlen         0x006ed2
+elinkoff        0x006fa0
+cda             0x006fa4
+rs_global       0x006fa8
+ad_sysglo       0x006fac
+gl_mowner       0x007290
+gl_wtree        0x0072c2
+xrat            0x007394
+yrat            0x007396
+pr_button       0x007398
+pr_xrat         0x00739a
+pr_yrat         0x0073a6
+eul             0x009dfe
+curpid          0x009e04
+gl_handle       0x009eea
+gl_recd         0x009f1c
+gl_bvhard       0x009fac
+mtrans          0x009fba
+gl_bvdisk       0x009fd4
+gl_moff         0x009fea
+gl_nplanes      0x00a090
+
+all_run         0xfd933e
+LWCOPY          0xfecc40
+crysbind        0xfe54d6
+xif             0xfe5e70 
+ap_rdwr         0xfe5f64
+ap_find         0xfe5f7a
+ap_tplay        0xfe5fb0
+ap_trecd        0xfe6062
+ev_keybd        0xfe61a6
+ev_button       0xfe61b6
+ev_mouse        0xfe61f6
+ev_mesag        0xfe6216
+ev_block        0xfe6186
+ev_timer        0xfe6236
+ev_multi        0xfe6298
+ev_dlick        0xfe6524
+inside          0xfece68
+do_chg          0xfe8a06
+mn_bar          0xfe8dfa
+mn_clsda        0xfe8f74
+mn_register     0xfe8fb6
+ob_center       0xfe9082
+instr           0xfe92de
+curfld          0xfe924a
+pxl_rect        0xfe91d8
+ob_delit        0xfe93f2
+ob_stfn         0xfe93ba
+check           0xfe931e
+ob_edit         0xfe9440
+ob_add          0xfea08e
+ob_delete       0xfea0f2
+ob_draw         0xfe9ef2
+ob_find         0xfe9f64
+ob_offset       0xfea45c
+ob_order        0xfea188
+ob_change       0xfea25c
+ob_actxywh      0xfea3c0
+ob_relxywh      0xfea410
+ob_setxywh      0xfea436
+get_prev        0xfea4b8
+fix_chpos       0xfea4fe
+rs_str          0xfea5c2
+rs_gaddr        0xfea966
+scan_to_end     0xfe910e
+ob_format       0xfe976e
+ob_user         0xfe9814
+just_draw       0xfe9868
+rs_load         0xfeab44
+rs_free         0xfea938
+rs_saddr        0xfea996
+rs_obfix        0xfea578
+sc_read         0xfeab68
+sc_write        0xfeab7c
+sh_read         0xfeab90
+sh_write        0xfeabbc
+sh_get          0xfeac50
+sh_put          0xfeac6a
+sh_find         0xfeaeec
+sh_envrn        0xfead64
+fm_keybd        0xfe6bdc
+fm_do           0xfe6df2
+fm_dial         0xfe6f3e
+fm_alert        0xfe68aa
+fm_error        0xfe7064
+fm_button       0xfe6c8a
+fs_input        0xfe76f8
+gr_rubbox       0xfe7f5a
+gr_dragbox      0xfe7f86
+gr_movebox      0xfe8054
+gr_growbox      0xfe80ea
+gr_shrinkbox    0xfe817e
+gr_watchbox     0xfe821a
+gr_slidebox     0xfe8288
+gr_mkstate      0xfe8318
+gsx_malloc      0xfe8346
+gsx_mfree       0xfe83a6
+ratinit         0xfe8564
+ratexit         0xfe857a
+gsx_1code       0xfe83fc
+gsx_setmb       0xfe86cc
+gsx_mxmy        0xfe878a
+gsx_moff        0xfe87b0
+gsx_mon         0xfe87d0
+gsx_mfset       0xfe8760
+bellout         0xfe30fc
+prt_chr         0xfe3126
+ins_char        0xfe913a
+find_pos        0xfe9196
+pinit           0xfd96d4
+gr_inside       0xfd9862
+gsx_fattr       0xfd9d4a
+gsx_fgclip      0xfd9c3a
+w_setup         0xfeb3ca
+wm_create       0xfec5b6
+wm_open         0xfec68e
+wm_close        0xfec6a4
+wm_delete       0xfec6ba
+wm_opcl         0xfec62a
+wm_get          0xfec6d6
+wm_set          0xfec7ec
+wm_find         0xfeca00
+wm_update       0xfeca22
+wm_calc         0xfeca66
+
+i_ptsin         0xfecb64
+i_intin         0xfecb74
+i_ptsout        0xfecb84
+i_intout        0xfecb94
+i_lptr1         0xfecba4
+i_ptr           0xfecbc4
+LSTCPY          0xfecbe6
+LBCOPY          0xfecc7e
+toupper         0xfecf3a
+
+fm_show         0xfe6f9e
+xstrpcpy        0xfed018
+
+gsx_fcline      0xfd9d34
+gr_just         0xfd98d8
+strlen          0xfecf84
+rc_copy         0xfecd60
+far_call        0xfdd71a
+ob_fs           0xfea38e
+bfill           0xfecf1e
+
+gr_rect         0xfd988a
+iasync          0xfe398c
+mwait           0xfe6186
+aret            0xfe3a5c
+ev_mchk         0xfe625c
+dq              0xfe4886
+downorup        0xfe4a1e
+
+gsx_sclip       0xfd9bae
+get_par         0xfed5d2
+ct_chgown       0xfe4206
+min             0xfeceea
+max             0xfecf04
+gsx_xbox        0xfd9e5c
+gsx_xcbox       0xfd9e76
+gsx_fix         0xfd9fa2
+gsx_start       0xfda188
+avro_cpyfm      0xfe8924

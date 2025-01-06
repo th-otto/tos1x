@@ -55,7 +55,7 @@ _LSTCPY:
 lst1:
 	addq.b	#1,d0
 	move.b	(a0)+,(a1)+	; get and store a byte
-	bne	lst1		; test for 0
+	bne.s	lst1		; test for 0
 	subq	#1,d0
 	rts
 
@@ -74,13 +74,71 @@ _LBWMOV:
 	clr.l	d1
 lbw1:
 	move.b	(a0)+,d1	; get a byte
-	beq	lbw2		; quit if null       **jde*10-may-85
+	beq.w	lbw2		; quit if null       **jde*10-may-85
 	move.w	d1,(a1)+	; store a word
 	addq.b	#1,d0		; count a character
-	bra	lbw1		; test for 0
+	bra.s	lbw1		; test for 0
 lbw2:
 	rts
 	
+
+#if AESVERSION < 0x140
+/* unused */
+/*
+ * ================================================
+ * ==	Word fill foreward at given address	==
+ *
+ * IN:	Address to start storing.
+ *	Number of words to store.
+ *	Word to store.
+ *
+ *OUT:	Word stored number of times given at given address.
+ *
+ * ==						==
+ * ================================================
+ */
+ 	xdef _LWFILL
+_LWFILL:
+	move.l	4(a7),a0		; Get starting address off stack.
+	move.w	10(a7),d1		; Get value of word to store.
+	move.w	8(a7),d0		; Get number of words to store.
+	beq.s	lwfend			; get out if 0
+lop103:
+	move.w	d1,(a0)+		; Store given word.
+	subq	#1,d0			; Decrement word counter.
+	bne.s	lop103
+lwfend:
+	rts
+#endif
+
+
+#if AESVERSION < 0x140
+/* unused */
+/*
+ * ================================================
+ * ==	Unpack Byte memory into Word Memory	==
+ *
+ * IN:	Address of Word memory (destination).
+ *	Address of Byte memory (source).
+ *	Number of bytes to unpack.
+ *
+ *OUT:	Unpacked data.
+ *
+ * ==						==
+ * ================================================
+ */
+_LBDSKIP:
+	move.l	4(a7),a0		; Get destination address.
+	move.l	8(a7),a1		; Get source address.
+	move.w	12(a7),d0		; Get number of bytes to unpack.
+	clr.w	d1
+lop104:
+	move.b	(a1)+,d1		; Get byte.
+	move.w	d1,(a0)+		; Storw byte as word.
+	subq	#1,d0			; Decrement byte counter.
+	bne.s	lop104
+	rts
+#endif
 
 
 /*
@@ -98,19 +156,79 @@ lbw2:
  */
 	xdef  _LWCOPY
 _LWCOPY:
-
 	move.l	4(a7),a0		; Get address of destination.
 	move.l	8(a7),a1		; Get address of source.
 	move.w	12(a7),d0		; Get number of words to copy.
-	beq	lwend			; get out if none
-
+	beq.s	lwend			; get out if none
 lop105:
 	move.w	(a1)+,(a0)+		; Copy word.
 	subq	#1,d0
-	bne	lop105
-
+	bne.s	lop105
 lwend:
 	rts
+
+
+#if AESVERSION < 0x140
+/* unused */
+/*
+ * ================================================
+ * ==	Fill block with given byte		==
+ *
+ * IN:	Address of destination block.
+ *	Number of bytes to store.
+ *	Byte to store.
+ *
+ *OUT:	Filled block with given byte.
+ *
+ * ==						==
+ * ================================================
+ */
+_LBFILL:
+	move.l	4(a7),a0		; Get address of destination.
+	move.w	8(a7),d0		; Get number of bytes to store.
+	move.w	10(a7),d1		; Get byte to store.
+	beq.s	lbend			; get out if 0
+lop106
+	move.w	d1,(a0)+		; Store given byte.
+	subq	#1,d0			; Decrement byte counter.
+	bne.s	lop106
+lbend:
+	rts
+#endif
+
+
+#if AESVERSION < 0x140
+/* only used once */
+/*
+ * ================================================
+ * ==		Get length of string		==
+ *
+ * IN: Address of first character in sting shall be on the stack just below
+ *	the return address.
+ *
+ *     The string will terminate with a zero.
+ *
+ *     String will always have at least a zero.
+ *
+ *OUT: Length will be returned in D0.
+ *
+ *     D0 will equal the number of characters in string.
+ *	EX:
+ *	    T 	= 1
+ *	    THE = 3
+ * ==						==
+ * ================================================
+ */
+_LSTRLEN:
+	move.l	4(a7),a0		; Get strings address off stack.
+	clr.w	d0			; Initialize character counter.
+lop100:
+	addq.w	#1,d0			; Increment character counter.
+	cmpi.b	#0,(a0)+		; Find first zero,
+	bne.s	lop100			;  loop until zero found.
+	subq.w	#1,d0			; Adjust character counter, always one too many.
+	rts
+#endif
 
 
 /*

@@ -442,7 +442,7 @@ _endvdibss: ds.b 0
 	INT(_gl_apid)
 
 	PTR(_ad_path)
-	PTR(old_bcode)
+	PTR(_old_bcode)
 	INT(_gl_hclip)
 	INT(_gl_bvhard)
 	PTR(_ad_shtail)
@@ -461,8 +461,8 @@ _endvdibss: ds.b 0
 	GRECT(_gl_rcenter)
 	INT(_gl_graphic)
 	INT(_gl_lcolor)
-	PTR(old_mcode)
 	INT(_gl_ticktime)
+	PTR(_old_mcode)
 	INT(_gl_nplanes)
 	LONG(_gl_mlen)
 	INT(_DOS_AX)

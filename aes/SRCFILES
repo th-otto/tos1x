@@ -67,7 +67,7 @@ AES_ASRCS=\
 	apgrlib.S \
 	apgsxif.S \
 	gemgrlib.S \
-	gemgsxif.S \
+	gemgsxif.c \
 	gsx2.S \
 	jbind.S \
 	jdispa.S \

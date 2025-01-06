@@ -262,8 +262,8 @@ BOOLEAN sh_tographic(NOTHING)
 	gsx_graphic(TRUE);					/* convert to graphic   */
 	gsx_sclip(&gl_rscreen);				/* set initial clip rect */
 	gsx_malloc();						/* allocate screen space BUG: not checked */
-	gsx_mfset(ad_hgmice);				/* put mouse to hourglass */
 	ratinit();							/* start up the mouse   */
+	gsx_mfset(ad_hgmice);				/* put mouse to hourglass */
 
 	return TRUE;
 }
@@ -304,18 +304,11 @@ PP(int16_t start;)
 PP(int16_t depth;)
 {
 	register LPTREE tree;
-	register int16_t c;
-	register char *cmdptr;
 
 	if (sh_gem)
 	{
-		gsx_sclip(&gl_rscreen);
-
-		cmdptr = lcmd;
-		while ((c = *cmdptr))
-			*cmdptr++ = toupper(c);
-
 		tree = ad_stdesk;
+		gsx_sclip(&gl_rscreen);
 		LLSET(LLGET(OB_SPEC(TITLE)), lcmd);
 		ob_draw(tree, start, depth);
 	}
@@ -737,7 +730,9 @@ VOID sh_main(NOTHING)
 
 			if (sh_gem)
 			{
+#if AESVERSION >= 0x140
 				wm_new();
+#endif
 				if (DOS_ERR && (DOS_AX < -32))
 					fm_error((~DOS_AX) - 30);
 			}

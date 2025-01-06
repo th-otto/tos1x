@@ -36,9 +36,6 @@
 #  endif
 #endif
 
-#if !LINEF_HACK
-#define _gsx_fmoff _gsx_moff
-#endif
 
 
 #define CCODE 0
@@ -383,7 +380,7 @@ _graf_mouse:
 	ble.s     grmo3
 	cmp.w     #256,d7
 	bne.s     grmo1
-	jsr       _gsx_fmoff
+	jsr       _gsx_moff
 grmo1:
 	cmp.w     #257,d7
 	bne.s     grmo2

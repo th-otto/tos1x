@@ -263,35 +263,7 @@ PP(GRECT *pt;)
 }
 
 
-#if AESVERSION >= 0x200
-/*
- * setcol() - set the color of an object.
- */
-/* 306de: 00e21412 */
-static VOID setcol(P(int16_t) ndx, P(WINDOW *) wp, P(BOOLEAN) topped)
-PP(int16_t ndx;)							/* index into object structure */
-PP(WINDOW *wp;)								/* pointer to window structure */
-PP(BOOLEAN topped;)							/* YES: top window color */
-{
-	register int16_t color;
-	register OBJECT *obj;
-	
-	if (topped)
-		color = wp->w_tcolor[ndx];
-	else
-		color = wp->w_bcolor[ndx];
-	obj = &W_ACTIVE[ndx];
-	if (obj->ob_type == G_BOXTEXT)
-	{
-		((TEDINFO *) (obj->ob_spec))->te_color = color;
-	} else
-	{
-		obj->ob_spec = (obj->ob_spec & 0xffff0000L) | ((int32_t)color & 0x0000ffffL);
-	}
-}
-#else
 #define setcol(a,b,c)
-#endif
 
 
 /* 306de: 00e21484 */
@@ -467,13 +439,10 @@ PP(register int16_t w_handle;)
 PP(register int16_t obj;)
 PP(register intptr_t pstring;)
 {
-	register WINDOW *pwin;
-	
-	pwin = srchwp(w_handle);
 	if (obj == W_NAME)
-		gl_aname.te_ptext = pwin->w_pname = (char *)pstring;
+		gl_aname.te_ptext = srchwp(w_handle)->w_pname = (char *)pstring;
 	else
-		gl_ainfo.te_ptext = pwin->w_pinfo = (char *)pstring;
+		gl_ainfo.te_ptext = srchwp(w_handle)->w_pinfo = (char *)pstring;
 
 	w_cpwalk(w_handle, obj, MAX_DEPTH, TRUE);
 }
@@ -907,7 +876,7 @@ PP(GRECT *prc;)
 	register int16_t sminus1, dminus1;
 
 	if (w_walkflag)
-#ifdef __ALCYON_
+#ifdef __ALCYON__
 		return;
 #else
 		return FALSE;
@@ -989,7 +958,7 @@ PP(BOOLEAN moved;)
 	
 	/* limit to screen */
 	rc_intersect(&gl_rfull, pt);
-	gsx_fmoff();
+	gsx_moff();
 
 	/* update windows from top to bottom */
 	if (bottom == DESK)
@@ -1324,6 +1293,19 @@ PP(register GRECT *pt;)
 	return TRUE;
 }
 
+/* init owner rectangles */
+VOID or_start(NOTHING)
+{
+	register int16_t i;
+
+	rul = NULL;
+	for (i = 0; i < NUM_ORECT; i++)
+	{
+		D.g_olist[i].o_link = rul;
+		rul = &D.g_olist[i];
+	}
+}
+
 
 /*
  *  Start the window manager up by initializing internal variables
@@ -1341,13 +1323,7 @@ BOOLEAN wm_start(NOTHING)
 	DGLO = &D;
 	
 	/* init owner rectangles */
-	/* or_start(): */
-	rul = NULL;
-	for (i = 0; i < NUM_ORECT; i++)
-	{
-		DGLO->g_olist[i].o_link = rul;
-		rul = &DGLO->g_olist[i];
-	}
+	or_start();
 	
 	/* init window extent objects */
 	memset(W_TREE, 0, NUM_MWIN * sizeof(OBJECT));
@@ -1934,6 +1910,7 @@ PP(int16_t *oh;)								/* output height of work/border area */
 }
 
 
+#if AESVERSION >= 0x140
 /*
  * AES #109 - wind_new - Close all windows.
  *
@@ -1996,3 +1973,4 @@ VOID wm_new(NOTHING)
 	return TRUE;
 #endif
 }
+#endif

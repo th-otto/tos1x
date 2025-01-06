@@ -733,20 +733,6 @@ PP(MFORM *pmfnew;)
 
 #if AESVERSION >= 0x200
 /* 306de: 00e1e5ae */
-VOID gsx_mfset(P(MFORM *) pmfnew)
-PP(MFORM *pmfnew;)
-{
-	gsx_moff();
-#if AESVERSION >= 0x320
-	gl_omform = gl_cmform;
-#endif
-	LWCOPY(ad_intin, pmfnew, sizeof(MFORM) / 2);
-	gsx_ncode(ST_CUR_FORM, 0, sizeof(MFORM) / 2);
-#if AESVERSION >= 0x320
-	gl_cmform = *pmfnew;
-#endif
-	gsx_mon();
-}
 #endif
 
 

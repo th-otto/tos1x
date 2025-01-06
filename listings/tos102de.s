@@ -48087,6 +48087,8 @@ gemstart:
 [00fe59fe] 588f                      addq.l     #4,a7
 [00fe5a00] 2b4c 0030                 move.l     a4,48(a5)
 [00fe5a04] fe01                      dc.w       $FE01 ; movem.l (a7)+,a3-a5
+
+crysbind:
 [00fe5a06] 4e56 ffec                 link       a6,#-20
 [00fe5a0a] 48e7 0700                 movem.l    d5-d7,-(a7)
 [00fe5a0e] 2e2e 000a                 move.l     10(a6),d7
@@ -48687,6 +48689,8 @@ gemstart:
 [00fe614a] 4a5f                      tst.w      (a7)+
 [00fe614c] 3006                      move.w     d6,d0
 [00fe614e] f031                      dc.w       $F031 ; movem.l (a7)+,d6-d7
+
+xif:
 [00fe6150] 4e56 ffbe                 link       a6,#-66
 [00fe6154] 3ebc 0004                 move.w     #$0004,(a7)
 [00fe6158] 206e 0008                 movea.l    8(a6),a0

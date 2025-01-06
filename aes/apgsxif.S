@@ -898,11 +898,7 @@ _gsxsta2:
 
 	clr.l	    -(sp)		; gsx_ncode(VQT_ATTRIBUTES, 0, 0)
 	move.w	#38,-(sp)		; inquire text attributes (vqt_attributes)
-#if LINEF_HACK
-	jsr	_gsx_acode
-#else
 	jsr	_gsx_ncode
-#endif
 
 	lea	_ptsout,a1
 	move.w	(a1)+,_gl_wptschar		; gl_wptschar  <- ptsout[0]

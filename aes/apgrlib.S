@@ -79,6 +79,7 @@ VOID gr_inside(GRECT *pt, WORD th)
 /* 306de: 00e2414c */
 /* 104de: 00fd4388 */
 /* 106de: 00e1471e */
+/* 100fr: 00fd9862 */
 	xdef	_gr_inside
 _gr_inside:
 	move.l	4(sp),a0		; a0 contains grect pointer

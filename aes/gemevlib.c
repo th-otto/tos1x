@@ -83,6 +83,7 @@ PP(int16_t *lrets;)
 /* 306de: 00e1bd12 */
 /* 104de: 00fdfbfc */
 /* 106de: 00e21730 */
+/* 100fr: 00fe6186 */
 int16_t ev_block(P(int16_t) code, P(intptr_t) lvalue)
 PP(int16_t code;)
 PP(intptr_t lvalue;)
