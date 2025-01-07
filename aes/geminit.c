@@ -499,7 +499,9 @@ VOID gem_main(NOTHING)
 
 	sh_main();
 
+#if AESVERSION >= 0x140
 	rsc_free();							/* free up resource */
+#endif
 
 	drawstk -= 0x00000400L;				/* reset to bottom  */
 	dos_free((VOIDPTR)drawstk);

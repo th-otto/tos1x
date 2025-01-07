@@ -276,7 +276,7 @@ PP(register intptr_t parm;)
 	
 	pb = &tmp;
 	LBCOPY(pb, parm, sizeof(*pb));
-	gsx_fgclip(&clipsave);
+	gsx_gclip(&clipsave);
 	gsx_sclip((GRECT *)&pb->pb_xc);
 	if ((pb->pb_prevstate ^ pb->pb_currstate) & SELECTED)
 	{
@@ -284,10 +284,10 @@ PP(register intptr_t parm;)
 	} else
 	{
 		bldstring(pb->pb_parm, thedesk->g_tmppth);
-		gsx_fattr(TRUE, MD_REPLACE, BLACK);
+		gsx_attr(TRUE, MD_REPLACE, BLACK);
 		len = LBWMOV(ad_intin, thedesk->g_tmppth);
-		gsx_ftblt(IBM, pb->pb_x, pb->pb_y, len);
-		gsx_fattr(FALSE, MD_XOR, BLACK);
+		gsx_tblt(IBM, pb->pb_x, pb->pb_y, len);
+		gsx_attr(FALSE, MD_XOR, BLACK);
 	}
 	gsx_sclip(&clipsave);
 	return pb->pb_currstate;

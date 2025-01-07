@@ -419,7 +419,7 @@ PP(BOOLEAN usetrue;)
 	} else
 	{
 		/* use global clip */
-		gsx_fgclip(&c);
+		gsx_gclip(&c);
 		/* add in drop shadow */
 #if DROP_SIZE
 		c.g_w += DROP_SIZE;
@@ -1078,7 +1078,7 @@ PP(register GRECT *pt;)
 	wm_calc(WC_WORK, srchwp(w_handle)->w_kind, pt->g_x, pt->g_y, pt->g_w, pt->g_h, &pw->g_x, &pw->g_y, &pw->g_w, &pw->g_h);
 
 	/* update rectangle lists */
-	feveryobj(gl_wtree, ROOT, NIL, (EVERYOBJ_CALLBACK)newrect, 0, 0, MAX_DEPTH);
+	everyobj(gl_wtree, ROOT, NIL, (EVERYOBJ_CALLBACK)newrect, 0, 0, MAX_DEPTH);
 
 	/* remember oldtop & set new one */
 	oldtop = gl_wtop;

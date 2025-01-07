@@ -830,7 +830,6 @@ BOOLEAN inf_disk PROTO((char drv_id));
 
 int32_t trap PROTO((short code, ...));
 int16_t trp14 PROTO((short code, ...));
-int16_t trp14int PROTO((short code, ...));
 int32_t trp13 PROTO((short code, ...));
 
 int mediach PROTO((int16_t drv));

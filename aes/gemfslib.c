@@ -318,7 +318,7 @@ bye2:
 	/* save the current dta   */
 	savedta = trap(0x2F);
 
-	gsx_fgclip(&clip);					/* get the clipping rect  */
+	gsx_gclip(&clip);					/* get the clipping rect  */
 	/* set the new one    */
 	gsx_sclip(&gl_rfs);
 	/* reset the height */

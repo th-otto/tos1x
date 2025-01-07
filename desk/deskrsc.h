@@ -47,3 +47,18 @@
 #include "../desk/rsc/104/deskcz.h"
 #endif
 #endif /* TOSVERSION == 0x104 */
+
+#if (TOSVERSION == 0x100)
+#if OS_COUNTRY == CTRY_US
+#include "../desk/rsc/104/deskus.h"
+#endif
+#if OS_COUNTRY == CTRY_UK
+#include "../desk/rsc/104/deskuk.h"
+#endif
+#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_SG)
+#include "../desk/rsc/104/deskde.h"
+#endif
+#if (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_SF)
+#include "../desk/rsc/104/deskfr.h"
+#endif
+#endif /* TOSVERSION == 0x100 */

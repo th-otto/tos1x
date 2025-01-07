@@ -396,7 +396,6 @@ buptr           000060f4        Data Label      Global  User Defined    11      
 endvdibss       00006100        Data Label      Global  User Defined    0       0
 retsava         00006100        Data Label      Global  User Defined    4       0
 sh_doexec       00006104        Data Label      Global  User Defined    1       0
-autoexec        00006108        Data Label      Global  User Defined    8       0
 gl_restype      00006108
 gl_rschange     0000610a        Data Label      Global  User Defined    6       0
 sh_isgem        0000610c        Data Label      Global  User Defined    1       0
@@ -427,8 +426,8 @@ gl_wclip        00006d62        Data Label      Global  User Defined    1       
 intin           00006d64        Data Label      Global  User Defined    10      1
 gl_awind        00006ea0
 gl_hbox         00006eac        Data Label      Global  User Defined    9       0
-intout          00006eb0
 gl_yclip        00006eae        Data Label      Global  User Defined    1       0
+intout          00006eb0
 gl_tcolor       00006ec4        Data Label      Global  User Defined    4       0
 gl_rmenu        00006ec6        Data Label      Global  User Defined    1       0
 W_TREE          00006ede
@@ -460,6 +459,7 @@ gl_tmp          000073cc
 D               000073e0        Data Label      Global  User Defined    8       0
 gl_hchar        00009dfa        Data Label      Global  User Defined    11      0
 indisp          00009e02        Data Label      Global  User Defined    4       0
+romdata         00009eee
 gl_height       00009f12        Data Label      Global  User Defined    7       0
 rlr             00009f16        Data Label      Global  User Defined    38      0
 gl_aname        00009f28
@@ -2157,8 +2157,8 @@ ins_char        0xfe913a
 find_pos        0xfe9196
 pinit           0xfd96d4
 gr_inside       0xfd9862
-gsx_fattr       0xfd9d4a
-gsx_fgclip      0xfd9c3a
+gsx_attr        0xfd9d4a
+gsx_gclip       0xfd9c3a
 w_setup         0xfeb3ca
 wm_create       0xfec5b6
 wm_open         0xfec68e
@@ -2170,7 +2170,6 @@ wm_set          0xfec7ec
 wm_find         0xfeca00
 wm_update       0xfeca22
 wm_calc         0xfeca66
-
 i_ptsin         0xfecb64
 i_intin         0xfecb74
 i_ptsout        0xfecb84
@@ -2179,34 +2178,38 @@ i_lptr1         0xfecba4
 i_ptr           0xfecbc4
 LSTCPY          0xfecbe6
 LBCOPY          0xfecc7e
+min             0xfeceea
+max             0xfecf04
+bfill           0xfecf1e
 toupper         0xfecf3a
+strlen          0xfecf84
+avro_cpyfm      0xfe8924
+xstrpcpy        0xfed018
+rc_copy         0xfecd60
+gr_rect         0xfd988a
+
+gsx_sclip       0xfd9bae
+gsx_xbox        0xfd9e5c
+gsx_xcbox       0xfd9e76
+gsx_fix         0xfd9fa2
+gsx_start       0xfda188
 
 fm_show         0xfe6f9e
-xstrpcpy        0xfed018
 
-gsx_fcline      0xfd9d34
+gsx_cline       0xfd9d34
 gr_just         0xfd98d8
-strlen          0xfecf84
-rc_copy         0xfecd60
 far_call        0xfdd71a
 ob_fs           0xfea38e
-bfill           0xfecf1e
 
-gr_rect         0xfd988a
 iasync          0xfe398c
-mwait           0xfe6186
+mwait           0xfe3952
 aret            0xfe3a5c
 ev_mchk         0xfe625c
 dq              0xfe4886
 downorup        0xfe4a1e
 
-gsx_sclip       0xfd9bae
-get_par         0xfed5d2
 ct_chgown       0xfe4206
-min             0xfeceea
-max             0xfecf04
-gsx_xbox        0xfd9e5c
-gsx_xcbox       0xfd9e76
-gsx_fix         0xfd9fa2
-gsx_start       0xfda188
-avro_cpyfm      0xfe8924
+
+inf_file        0xfde330
+pn_fcomp        0xfdf25e
+gr_plns         0xfdbcc8

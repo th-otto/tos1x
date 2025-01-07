@@ -73,8 +73,8 @@ DSB
 #undef Protobt
 #define Getbpb(devno) trp13(7, devno)
 #define Rwabs(a,b,c,d,e) trp13(4, a, b, c, d, e)
-#define Flopfmt(a,b,c,d,e,f,g,h,i) trp14int(10, a, b, c, d, e, f, g, h, i)
-#define Protobt(a,b,c,d) trp14int(18, a, b, c, d)
+#define Flopfmt(a,b,c,d,e,f,g,h,i) trp14(10, a, b, c, d, e, f, g, h, i)
+#define Protobt(a,b,c,d) trp14(18, a, b, c, d)
 
 
 STATIC int16_t w_inc;

@@ -219,7 +219,7 @@ _gr_growbox:
 	move.l	(a4)+,-(sp)		;+44 po->g_x, po->g_y
 	move.l	(a4),-(sp)		;+48 po->g_w, po->g_h
 
-	jsr	_gr_fmovebox
+	jsr	_gr_movebox
 
 	jsr	_gsx_moff
 
@@ -473,8 +473,6 @@ VOID gr_movebox(WORD w, WORD h, WORD srcx, WORD srcy, WORD dstx, WORD dsty)
 /* 106de: 00e2365c */
 	xdef _gr_movebox
 _gr_movebox: ds.b 0
-	xdef _gr_fmovebox
-_gr_fmovebox: ds.b 0
 gr_movebox: ds.b 0
 	movem.l	d1-d7/a5,-(sp)		;+32 8 bytes local space & d3-d7/a5
 	move.l	sp,a5			;a5 ->DUMMY
@@ -968,7 +966,7 @@ _gr_wait:
 ez_glr0:
 *		;note: immed "gl_rzero" ref'd elsewhere via ez_glr0+2(pc)
 	move.l	#_gl_rzero,-(sp)	;+28 parm 1 &gl_rzero
-	jsr	_rc_fequal		;
+	jsr	_rc_equal		;
 
 	bchg.l	#0,d0			;invert boolean result
 	move.w	d0,d7			;have2box = !rc_equal(&gl_zero, poff)
@@ -1272,8 +1270,6 @@ VOID gr_dragbox(WORD w, WORD h, WORD sx, WORD sy, GRECT *pc, WORD *pdx, WORD *pd
 /* 106de: 00e238dc */
 	xdef _gr_dragbox
 _gr_dragbox: ds.b 0
-	xdef _gr_fdragbox
-_gr_fdragbox: ds.b 0
 	movem.l	d2-d7/a4-a6,-(sp)	;+36 reserve 20 bytes & d6-d7/a4-a6 
 	movem.l	36+4(sp),d6-d7/a4-a6	;d6[31:16] = w; d6[15:00] = h
 *					;d7[31:16] = sx; d7[15:00] = sy
@@ -1346,7 +1342,7 @@ lab31:
 	move.l	a0,-(sp)	;+62 parm 2 &o
 
 	move.l	a4,-(sp)	;+66 parm 1 &pc
-	jsr	_rc_fconstrain	;rc_constrain(pc, &o)
+	jsr	_rc_constrain	;rc_constrain(pc, &o)
 
 	lea	66-36(sp),a0	;a0 => mx
 	move.l	(a0)+,-(sp)	;+70 parm 3 mx  parm 4 my
@@ -1501,7 +1497,7 @@ _gr_slidebox:
         add.w     (a6)+,d0
         move.l    d0,-(a7)
         move.l    (a5),-(a7)
-        bsr       _gr_fdragbox
+        bsr       _gr_dragbox
         moveq.l   #0,d0
         moveq.l   #0,d1
         tst.w     d6

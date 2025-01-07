@@ -4,7 +4,7 @@
 # Currently only 1.04 and 1.06 are supported.
 # Note that there is a different archive to build the 2.x/3.x versions.
 #
-TOSVERSION=104
+TOSVERSION=100
 
 #
 # Country definition
@@ -26,6 +26,8 @@ TOSVERSION=104
 # uk uses uk keyboard, and us resources
 # sg uses de keyboard and resources
 # sf uses fr keyboard and resources
+#
+# For TOSVERSION = 1.00, only us, de and fr are supported
 #
 COUNTRY=de
 
@@ -78,6 +80,7 @@ all:: tosversion_$(TOSVERSION) country_$(COUNTRY)
 	@:
 
 country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz country_nl:
+tosversion_100:
 tosversion_104:
 tosversion_106:
 tosversion_162:

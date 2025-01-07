@@ -83,8 +83,6 @@ PP(PARMBLK *fdata;)
 /* 306de: 00e232e4 */
 /* 104de: 00fe2ce2 */
 /* 106de: 00e24df0 */
-asm("    .globl _ob_fformat");
-asm("_ob_fformat: .text");
 VOID ob_format(P(int16_t) just, P(char *) raw_str, P(char *) tmpl_str, P(char *) fmtstr)
 PP(int16_t just;)
 PP(char *raw_str;)
@@ -796,7 +794,7 @@ PP(int16_t depth;)
 	asm("pea.l      -6(a6)");
 	asm("move.w     -4(a6),-(a7)");
 	asm("move.l     d7,-(a7)");
-	asm("jsr        _ob_foffset");
+	asm("jsr        _ob_offset");
 	asm("adda.l     #14,a7");
 	asm("bra.s      L9703");
 	asm("L9702:")
@@ -988,8 +986,6 @@ PP(register int16_t child;)
 /* 104de: 00fe355c */
 /* 106de: 00e25776 */
 /* BUG: doesnt return FALSE as documented */
-asm("  .globl _ob_fdelete");
-asm("_ob_fdelete: .text");
 VOID ob_delete(P(LPTREE) tree, P(int16_t) obj)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -1053,7 +1049,7 @@ PP(int16_t new_pos;)
 	else
 		return;
 
-	ob_fdelete(tree, mov_obj);
+	ob_delete(tree, mov_obj);
 	chg_obj = LWGET(phead = OB_HEAD(parent));
 	pmove = OB_NEXT(mov_obj);
 	if (new_pos == 0)
@@ -1148,7 +1144,7 @@ PP(int16_t redraw;)
 		asm("move.l     a5,-(a7)");
 		asm("move.w     d6,-(a7)");
 		asm("move.l     d7,-(a7)");
-		asm("jsr        _ob_foffset");
+		asm("jsr        _ob_offset");
 		asm("adda.l     #10,a7");
 #else
 		ob_offset(tree, obj, &pt->g_x, &pt->g_y);
@@ -1266,7 +1262,7 @@ PP(register GRECT *pt;)
 	asm("move.l     a5,-(a7)");
 	asm("move.w     d6,-(a7)");
 	asm("move.l     d7,-(a7)");
-	asm("bsr        _ob_foffset");
+	asm("bsr        _ob_offset");
 	asm("adda.l     #10,a7");
 #else
 	ob_offset(tree, obj, &pt->g_x, &pt->g_y);
@@ -1310,8 +1306,6 @@ PP(GRECT *pt;)
 /* 306de: 00e2409a */
 /* 104de: 00fe38c2 */
 /* 106de: 00e25b2e */
-asm("  .globl _ob_foffset");
-asm("_ob_foffset: .text");
 VOID ob_offset(P(LPTREE) tree, P(int16_t) obj, P(int16_t *) pxoff, P(int16_t *) pyoff)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)

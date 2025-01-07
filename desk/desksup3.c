@@ -1,7 +1,7 @@
 #define E_NOFILES 18
 
 #undef Drvmap
-#define Drvmap()        trp13int(10)
+#define Drvmap()        trp13(10)
 
 
 /*

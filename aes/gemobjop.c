@@ -58,26 +58,25 @@ PP(register intptr_t *pspec;)
 PP(int16_t *pstate;)
 PP(int16_t *ptype;)
 PP(register int16_t *pflags;)
-PP(GRECT *pt;)
+PP(register GRECT *pt;)
 PP(int16_t *pth;)
 {
 	register int16_t th;
-	register OBJECT *tmp;
+	OBJECT tmp;
 
-	tmp = (OBJECT *)OB_NEXT(obj);
+	LWCOPY(ADDR(&tmp), OB_NEXT(obj), sizeof(OBJECT)/2);
 
-	pt->g_w = tmp->ob_width;			/* set user grect width */
-	pt->g_h = tmp->ob_height;			/* set user grect height */
-	*pflags = tmp->ob_flags;			/* set user flags variable */
-	*pspec = tmp->ob_spec;				/* set user spec variable */
-	*pstate = tmp->ob_state;			/* set user state variable */
-
-	*ptype = tmp->ob_type & 0x00ff;		/* set user type variable */
-
+	pt->g_w = tmp.ob_width;			/* set user grect width */
+	pt->g_h = tmp.ob_height;			/* set user grect height */
+	*pflags = tmp.ob_flags;			/* set user flags variable */
+	*pspec = tmp.ob_spec;				/* set user spec variable */
 	/* IF indirect then get pointer */
 	if (*pflags & INDIRECT)
-		*pspec = LLGET(tmp->ob_spec);
+		*pspec = LLGET(tmp.ob_spec);
 
+	*pstate = tmp.ob_state;			/* set user state variable */
+
+	*ptype = tmp.ob_type & 0x00ff;		/* set user type variable */
 
 	th = 0;								/* border thickness */
 
@@ -126,8 +125,6 @@ PP(int16_t *pth;)
 /* 306de: 00e1fd18 */
 /* 104de: 00fe625c */
 /* 106de: 00e2897e */
-asm("  .globl _feveryobj");
-asm("_feveryobj: .text");
 VOID everyobj(P(LPTREE) tree, P(int16_t) this, P(int16_t) last, P(EVERYOBJ_CALLBACK) routine, P(int16_t) startx, P(int16_t) starty, P(int16_t) maxdep)
 PP(register LPTREE tree;)
 PP(register int16_t this;)
@@ -200,22 +197,30 @@ PP(int16_t maxdep;)
 /* 306de: 00e1fe24 */
 /* 104de: 00fe6360 */
 /* 106de: 00e28a8a */
-int16_t get_par(P(LPTREE) tree, P(int16_t) obj)
+int16_t get_par(P(LPTREE) tree, P(int16_t) obj, P(int16_t *) pnobj)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
+PP(int16_t *pnobj;)
 {
 	register int16_t pobj;
+	register int16_t nobj;
 
 	pobj = obj;
+	nobj = NIL;
 
 	if (obj == ROOT)
-		return NIL;
-
-	do
 	{
-		obj = pobj;
-		pobj = LWGET(OB_NEXT(obj));
-	} while (LWGET(OB_TAIL(pobj)) != obj);
-
+		pobj = NIL;
+	} else
+	{
+		do
+		{
+			obj = pobj;
+			pobj = LWGET(OB_NEXT(obj));
+			if (nobj == NIL)
+				nobj = pobj;
+		} while (LWGET(OB_TAIL(pobj)) != obj);
+	}
+	*pnobj = nobj;
 	return pobj;
 }

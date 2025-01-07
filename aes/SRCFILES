@@ -47,6 +47,7 @@ AES_104_OBJS = \
 
 AES_106_OBJS=${AES_104_OBJS}
 AES_162_OBJS=${AES_104_OBJS}
+AES_100_OBJS=${AES_104_OBJS}
 
 AES_OBJS=${AES_${TOSVERSION}_OBJS}
 
@@ -65,7 +66,7 @@ AES_HEADERS=\
 
 AES_ASRCS=\
 	apgrlib.S \
-	apgsxif.S \
+	apgsxif.c \
 	gemgrlib.S \
 	gemgsxif.c \
 	gsx2.S \

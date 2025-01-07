@@ -59,7 +59,6 @@
 	xdef _rom_ram
 	xdef _trap
 	xdef _trp14
-	xdef _trp14int
 	xdef _trp13
 	xdef _desknoerr
 	xdef _mediach
@@ -166,7 +165,6 @@ _wildcmp        equ AESTBASE+$C982
 _trp13          equ AESTBASE+$CB80
 _trp14          equ AESTBASE+$CB90
 _mediach        equ AESTBASE+$CBDC
-_trp14int       equ _trp14
 	
 _dsptch         equ AESTBASE+$C11A
 _wm_create      equ AESTBASE+$8FB2

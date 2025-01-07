@@ -521,6 +521,7 @@ _oscall:
 	xref _date
 	xref _time
 _xbgettime:
+#if TOSVERSION >= 0x104
 #if (GEMDOS >= 0x18) | !BINEXACT | (TOSVERSION >= 0x106)
 	move.w    #$0017,-(a7)
 	trap      #14
@@ -538,6 +539,7 @@ _xbgettime:
 	move.w    d0,_date
 	move.w    d1,sr
 _xbgett1:
+#endif
 	rts
 
 /******************************************************************************
@@ -550,12 +552,14 @@ _xbgett1:
 	xref _date
 	xref _time
 _xbsettime:
+#if TOSVERSION >= 0x104
     /* BUG: access must be made atomic, too */
 	move.w    _time,-(a7)
 	move.w    _date,-(a7)
 	move.w    #$0016,-(a7)
 	trap      #14
 	addq.w    #6,a7
+#endif
 	rts
 
 /******************************************************************************/

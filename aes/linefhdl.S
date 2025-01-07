@@ -333,7 +333,7 @@ lineftab: ds.b 0
 		dc.l _desk_clear          ; F444
 		dc.l _fc_format           ; F448
 		dc.l _fc_copy             ; F44C
-		dc.l _trp14int            ; F450
+		dc.l _trp14               ; F450
 		dc.l _fc_bar              ; F454
 		dc.l _fc_rwsec            ; F458
 		dc.l _max                 ; F45C
@@ -577,7 +577,7 @@ lineftab: ds.b 0
 		dc.l _gsx_tick            ; F814
 		dc.l _wm_start            ; F818
 		dc.l _sh_main             ; F81C
-		dc.l _rsc_free            ; F820
+		dc.l 0                    ; F820
 		dc.l _gsx_mfree           ; F824
 		dc.l _giveerr             ; F828
 		dc.l _free_accs           ; F82C

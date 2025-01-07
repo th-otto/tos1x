@@ -40,13 +40,19 @@
 #include "gemlib.h"
 #include "taddr.h"
 
+struct rominfo {
+	VOIDPTR data;
+	uint16_t size;
+};
+
+struct rominfo romdata[5];
+
 RSHDR *gemptr;		/* GEM's rsc pointer        */
 RSHDR *deskptr;		/* DESKTOP'S rsc pointer    */
 char *infptr;
 uint16_t infsize;
 uint16_t gemsize;
 uint16_t desksize;
-VOIDPTR gl_pglue;
 BOOLEAN nodesk;		/* desk.rsc already read in ? */
 BOOLEAN nogem;		/* gem.rsc already read in ? */
 
@@ -84,7 +90,7 @@ extern uint16_t const tosrsc[];
 /* 104de: 00fe76de */
 /* 106de: 00e29fd0 */
 int16_t rom_ram(P(int) which, P(intptr_t) pointer)
-PP(int which;)
+PP(register int which;)
 PP(register intptr_t pointer;)
 {
 	int16_t size;
@@ -140,6 +146,11 @@ PP(register intptr_t pointer;)
 /* 306de: 00e20316 */
 /* 104de: 00fe779c */
 /* 106de: 00e2a0a2 */
+/*
+ * BUG: not done before 1.04,
+ * leaking the data on resolution change
+ */
+#if AESVERSION >= 0x140
 VOID rsc_free(NOTHING)
 {
 	dos_free(gl_pglue);
@@ -147,7 +158,10 @@ VOID rsc_free(NOTHING)
 	deskptr = NULL;
 	/* infptr should also be nullified, just in case... */
 }
+#endif
 
+
+#define TOS_RSSIZE 0x47FA
 
 /*
  * Read in the resource file
@@ -158,45 +172,24 @@ VOID rsc_free(NOTHING)
 /* 106de: 00e2a0c2 */
 BOOLEAN rsc_read(NOTHING)
 {
-	register const uint16_t *intptr;
-	uint16_t size;
-	const char *a;
-	char *b;
-	int32_t value;
-	int16_t code;
-	short unused;
+	register uint16_t *intptr;
+	int i;
 	
 	/* copy rsc to ram */
-	intptr = tosrsc;
+	intptr = dos_alloc((int32_t) TOS_RSSIZE);
+	/* BUG: no malloc check */
+	/* BUG: leaked on resolution change */
 
-	gl_pglue = dos_alloc((int32_t) intptr[2]);
-	if (!gl_pglue)
+	LBCOPY(intptr, tosrsc, TOS_RSSIZE);
+
+	/* now fix the resource   */
+	gemptr = (RSHDR *) (intptr + 5);
+	gemsize = intptr[0] - 5;
+	for (i = 1; i < 4; i++)
 	{
-		Cconws("Unable to install resource !");
-		while (!Bconstat(2))
-			;
-#ifdef __ALCYON__
-		/* BUG: no return value here */
-		return;
-#else
-		return FALSE;
-#endif
 	}
-
-	LBCOPY(gl_pglue, tosrsc, intptr[2]);
-
-	UNUSED(size);
-	UNUSED(a);
-	UNUSED(b);
-	UNUSED(value);
-	UNUSED(code);
-	UNUSED(unused);
-	
-	intptr = (const uint16_t *)gl_pglue;
-	gemptr = (RSHDR *) ((char *)gl_pglue + 10);	/* now fix the resource   */
-	deskptr = (RSHDR *) ((char *)gl_pglue + (intptr_t)intptr[0]);
-	infptr = (char *) ((char *)gl_pglue + (intptr_t)intptr[1]);
-	gemsize = intptr[0];    /* BUG: that includes the size of the GLUE header */
+	deskptr = (RSHDR *) ((char *)intptr + (intptr_t)intptr[0]);
+	infptr = (char *) ((char *)intptr + (intptr_t)intptr[1]);
 	desksize = intptr[1] - intptr[0];
 	infsize = intptr[2] - intptr[1];
 

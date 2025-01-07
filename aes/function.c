@@ -7,20 +7,6 @@
 
 #if !MC68K /* MC68K has optimized versions of this in optimize.S */
 
-/* 	Returns a byte pointer pointing to the matched byte or
- *	the end of the string.
- */
-const char *scasb(P(const char *) p, P(char) b)
-PP(register const char *p;)
-PP(register char b;)
-{
-	for (; *p && *p != b; p++)
-		;
-	return p;
-}
-
-
-
 /* 	Routine to set the variables x,y,w,h to the values found
  *	in an x,y,w,h block (grect)
  */
@@ -87,11 +73,13 @@ BOOLEAN rc_equal(P(const GRECT *) prc1, P(const GRECT *) prc2)
 PP(const int16_t *prc1;)
 PP(const int16_t *prc2;)
 {
-	const int16_t *p1 = &prc1->g_x;
-	const int16_t *p2 = &prc2->g_x;
-	register int count = 4;
+	register const int16_t *p1;
+	register const int16_t *p2;
+	register int count;
 	
-	while (--count >= 0)
+	p1 = &prc1->g_x;
+	p2 = &prc2->g_x;
+	for (count = 0; count < 4; count++)
 	{
 		if (*p1++ != *p2++)
 			return FALSE;
@@ -207,14 +195,12 @@ PP(int16_t b;)
 VOID bfill(P(int16_t) num, P(char) bval, P(VOIDPTR) addr)
 PP(register int16_t num;)
 PP(register char bval;)
-PP(VOIDPTR addr;)
+PP(register char *addr;)
 {
-	register char *p = addr;
-	while (num)
+	do
 	{
 		*p++ = bval;
-		num--;
-	}
+	} while (--num != 0);
 }
 
 
@@ -228,6 +214,20 @@ PP(register char ch;)
 		return ch - 32;
 	return ch;
 }
+
+
+/* 	Returns a byte pointer pointing to the matched byte or
+ *	the end of the string.
+ */
+const char *scasb(P(const char *) p, P(char) b)
+PP(register const char *p;)
+PP(register char b;)
+{
+	for (; *p && *p != b; p++)
+		;
+	return p;
+}
+
 
 
 /*
@@ -258,6 +258,25 @@ PP(register const char *p2;)
 	if (*p2)
 		return FALSE;
 	return TRUE;
+}
+
+
+
+/* 	This is the true version of strcmp. Shall we remove the
+ *	other -we shall see!!!
+ *	Returns	- <0 if(str1<str2), 0 if(str1=str2), >0 if(str1>str2)
+ */
+int16_t strchk(P(const char *) s, P(const char *) t)
+PP(const char *s;)
+PP(const char *t;)
+{
+	register int16_t i;
+
+	i = 0;
+	while (s[i] == t[i])
+		if (s[i++] == 0)
+			return 0;
+	return (s[i] - t[i]);
 }
 
 
@@ -298,25 +317,6 @@ PP(register char *pd;)
 }
 
 
-/* 	This is the true version of strcmp. Shall we remove the
- *	other -we shall see!!!
- *	Returns	- <0 if(str1<str2), 0 if(str1=str2), >0 if(str1>str2)
- */
-int16_t strchk(P(const char *) s, P(const char *) t)
-PP(register const char *s;)
-PP(register const char *t;)
-{
-	register int16_t i;
-
-	i = 0;
-	while (s[i] == t[i])
-		if (s[i++] == 0)
-			return 0;
-	return (s[i] - t[i]);
-}
-
-
-
 /*
  *	Strip out period and turn into raw data.
  */
@@ -325,25 +325,21 @@ PP(register const char *in_str;)
 PP(register char *out_str;)
 {
 	int16_t i;
+	register char *p;
+	
+	p = in_str;
+	while (*p && *p!= '.')
+		*out_str++ = *p++;
 
-	for (i = 0; i < 8; i++)
+	if (*p)							/* must be a dot    */
 	{
-		if ((*in_str) && (*in_str != '.'))
-			*out_str++ = *in_str++;
-		else
-		{
-			if (*in_str)
-				*out_str++ = ' ';
-			else
-				break;
-		}
+		i = (int)(8 - (p - in_str));
+		while (i-- != 0)
+			*out_str++ = ' ';
+		p++;
+		while (*p)
+			*out_str++ = *p++;
 	}
-
-	if (*in_str)							/* must be a dot    */
-		in_str++;
-
-	while (*in_str)
-		*out_str++ = *in_str++;
 
 	*out_str = '\0';
 }
@@ -429,6 +425,14 @@ PP(char *pstr;)
 
 	ptext = (char *)LLGET(LLGET(OB_SPEC(obj)));
 	LSTCPY(pstr, ptext);
+}
+/* WTF? */
+VOID fs_ssget(P(OBJECT *) tree, P(int16_t) obj, P(char *) pstr)
+PP(OBJECT *tree;)
+PP(int16_t obj;)
+PP(char *pstr;)
+{
+	fs_sget(tree, obj, pstr);
 }
 
 

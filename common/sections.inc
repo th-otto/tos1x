@@ -622,6 +622,42 @@
 #endif /* TOSVERSION == 0x162 */
 
 
+#if TOSVERSION == 0x100
+
+#define BIOSTBASE   $00FC0000
+
+/*
+ * these are identical in almost all language versions
+ */
+#define BIOSDLEN    $00000256
+#define VDITLEN     $000098A2
+#define VDIDLEN     $00002846
+#define BDOSTLEN    $00005F64
+#define BDOSDLEN    $00000396
+#define AESTLEN     $00000000 /* included in desk */
+#define AESDLEN     $00000000 /* included in desk */
+
+
+#define BTLEN_US    $0000432E
+#define DTLEN_US    $000146CA
+
+#if OS_COUNTRY == CTRY_DE
+#define BIOSTLEN    BTLEN_US+$5A
+#define DESKTLEN    DTLEN_US-$28
+#define DESKDLEN    $000009DC
+#define GLUELEN     $00004226
+#endif
+
+#if OS_COUNTRY == CTRY_US
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    DTLEN_US
+#define DESKDLEN    $000009E0
+#define GLUELEN     $000041C4
+#endif
+
+#endif /* TOSVERSION == 0x100 */
+
+
 #ifndef BIOSTBASE
 #if RAMVERSION
 #define BIOSTBASE   $00380000

@@ -323,7 +323,7 @@ PP(const char *palstr;)
 	
 	/* save screen underneath the alert */
 	wm_update(BEG_UPDATE);
-	gsx_fgclip(&t);
+	gsx_gclip(&t);
 	bb_save(&d);
 
 	/* draw the alert   */

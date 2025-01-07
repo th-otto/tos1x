@@ -12,11 +12,6 @@
 
 nvram_rtc_year_offset equ 1980-1968
 
-        xdef ngetdt
-        xdef readRTCTime
-        xdef writeRTCTime
-        xdef checkRTC
-
         text
 
 /* NVRAM_ADDR_REG  equ $ffff8961 */
@@ -26,6 +21,11 @@ rtc_sec         equ $fffffc20
 
 
 #if MSTECLK
+
+        xdef ngetdt
+        xdef readRTCTime
+        xdef writeRTCTime
+        xdef checkRTC
 
 /* 206de: 00e01a96 */
 /* 104de: 00fc1f4c */

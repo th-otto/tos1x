@@ -592,7 +592,7 @@ int16_t ob_edit PROTO((LPTREE tree, int16_t obj, int16_t in_char, int16_t *idx, 
 char ob_sst PROTO((LPTREE tree, int16_t obj, intptr_t *pspec, int16_t *pstate, int16_t *ptype, int16_t *pflags, GRECT *pt, int16_t *pth));
 typedef VOID (*EVERYOBJ_CALLBACK) PROTO((LPTREE tree, int16_t obj, int16_t sx, int16_t sy));
 VOID everyobj PROTO((LPTREE tree, int16_t this, int16_t last, EVERYOBJ_CALLBACK routine, int16_t startx, int16_t starty, int16_t maxdep));
-int16_t get_par PROTO((LPTREE tree, int16_t obj));
+int16_t get_par PROTO((LPTREE tree, int16_t obj, int16_t *pnobj));
 
 
 /*
@@ -1005,44 +1005,6 @@ BOOLEAN app_reschange PROTO((int16_t res));
 char *g_name PROTO((const char *file));
 BOOLEAN deskmain PROTO((NOTHING));
 
-
-
-#if LINEF_HACK
-/* actually same functions, but with different opcode entries in linef dispatcher */
-VOID ob_fformat PROTO((int16_t just, char *raw_str, char *tmpl_str, char *fmt_str));
-VOID ob_foffset PROTO((LPTREE tree, int16_t obj, int16_t *pxoff, int16_t *pyoff));
-VOID gr_fmovebox PROTO((int16_t w, int16_t h, int16_t srcx, int16_t srcy, int16_t dstx, int16_t dsty));
-VOID gr_fdragbox PROTO((int16_t w, int16_t h, int16_t sx, int16_t sy, GRECT *pc, int16_t *pdx, int16_t *pdy));
-VOID gsx_fcline PROTO((uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2));
-VOID gsx_ftblt PROTO((int16_t tb_f, int16_t x, int16_t y, int16_t tb_nc));
-int dos_ffree PROTO((VOIDPTR ptr));
-VOID rc_fconstrain PROTO((const GRECT *pc, GRECT *pt));
-BOOLEAN rc_fequal PROTO((const GRECT *p1, const GRECT *p2));
-int16_t inf_fgindex PROTO((LPTREE tree, int16_t baseobj, int16_t numobj));
-VOID feveryobj PROTO((LPTREE tree, int16_t this, int16_t last, EVERYOBJ_CALLBACK routine, int16_t startx, int16_t starty, int16_t maxdep));
-int32_t trp13int PROTO((short code, ...));
-int32_t trp13int PROTO((short code, ...));
-VOID gsx_fgclip PROTO((GRECT *pt));
-VOID gsx_fattr PROTO((uint16_t text, uint16_t mode, uint16_t color));
-VOID ob_fdelete PROTO((LPTREE tree, int16_t obj));
-#else
-#define ob_fformat ob_format
-#define ob_foffset ob_offset
-#define gr_fmovebox gr_movebox
-#define gr_fdragbox gr_dragbox
-#define gsx_fcline gsx_cline
-#define gsx_ftblt gsx_tblt
-#define dos_ffree dos_free
-#define rc_fconstrain rc_constrain
-#define rc_fequal rc_equal
-#define inf_fgindex inf_gindex
-#define feveryobj everyobj
-#define trp13int trp13
-#define trp14int trp14
-#define gsx_fgclip gsx_gclip
-#define gsx_fattr gsx_attr
-#define ob_fdelete ob_delete
-#endif
 
 
 #if LINEF_HACK

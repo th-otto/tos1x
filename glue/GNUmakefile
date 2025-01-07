@@ -36,6 +36,7 @@ OBJS = $(STARTUP) vars.o tosvars.o $(addprefix ../bios/,$(BIOS_OBJS)) $(addprefi
 
 LINK_OBJS := $(shell echo $(OBJS) | tr ' ' ',')
 
+ROMSIZE_100 = 256k
 ROMSIZE_104 = 192k
 ROMSIZE_106 = 256k
 ROMSIZE_162 = 256k

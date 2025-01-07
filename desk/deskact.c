@@ -259,7 +259,7 @@ PP(register int16_t *pdobj;)
 	do
 	{
 		gsx_sclip(&gl_rscreen);
-		gsx_fattr(FALSE, MD_XOR, BLACK);
+		gsx_attr(FALSE, MD_XOR, BLACK);
 		
 		graf_mkstate(&in_mx, &in_my, &bstate, &keystate);
 		o.g_x = in_mx - offx;

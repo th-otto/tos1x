@@ -144,8 +144,6 @@ _inside:
  */
 	xdef _rc_equal
 _rc_equal: ds.b 0
-	xdef _rc_fequal
-_rc_fequal: ds.b 0
 	movem.l	4(sp),a0-a1	; a0 -> grect 1, a1 -> grect 2
 	cmpm.l	(a0)+,(a1)+	; are the x and y equal
 	bne	retfalse
@@ -262,8 +260,6 @@ uni4:
  */
 	xdef _rc_constrain
 _rc_constrain: ds.b 0
-	xdef _rc_fconstrain
-_rc_fconstrain: ds.b 0
 	movem.l	4(sp),a0-a1	; a0 -> x of constrain rect, a1 -> grect
 	move.w	(a0),d0		; d0 = const_x
 	cmp.w	(a1),d0		; If ( x < const_x )
@@ -696,8 +692,6 @@ inf1:
  */
 	xdef _inf_gindex
 _inf_gindex: ds.b 0
-	xdef _inf_fgindex
-_inf_fgindex: ds.b 0
 	movea.l	#OB_STATE+1,a0	; a0 = offset to byte to test
 	bsr	get_addr
 
@@ -731,7 +725,7 @@ _inf_what:
 	move.w	#2,-(sp)	; sp = 2
 	move.w	10(sp),-(sp)	; sp = ok
 	move.l	8(sp),-(sp)	; sp = tree
-	jsr	_inf_fgindex	; find selected object
+	jsr	_inf_gindex	; find selected object
 	addq.l	#8,sp
 
 	cmp.w	#-1,d0		; if (ret == -1)

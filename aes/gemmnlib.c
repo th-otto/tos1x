@@ -395,8 +395,8 @@ PP(int16_t showit;)
 		LWSET(OB_HEIGHT(gl_dabox), h);
 		gsx_sclip(&gl_rzero);
 		ob_draw(tree, THEBAR, MAX_DEPTH);
-		gsx_fattr(FALSE, MD_REPLACE, BLACK);	/* not xor mode! */
-		gsx_fcline(0, gl_hbox - 1, gl_width - 1, gl_hbox - 1);
+		gsx_attr(FALSE, MD_REPLACE, BLACK);	/* not xor mode! */
+		gsx_cline(0, gl_hbox - 1, gl_width - 1, gl_hbox - 1);
 	} else
 	{
 		gl_mntree = 0;

@@ -209,7 +209,7 @@ PP(int16_t junky;)
 	/* init. a global orect for use during mkrect calls */
 	gl_mkrect.o_link = NULL;
 	/* break other window's rects with our current rect */
-	feveryobj(tree, ROOT, wh, mkrect, 0, 0, MAX_DEPTH);
+	everyobj(tree, ROOT, wh, mkrect, 0, 0, MAX_DEPTH);
 	/* get an orect in this windows list */
 	new = get_orect();
 	new->o_link = NULL;

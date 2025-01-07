@@ -70,6 +70,7 @@ igetdt2:
 /* 206de: 00e01ef4 */
 /* 104de: 00fc31d2 */
 /* 106de: 00e033aa */
+/* 100fr: 00fc1d76 */ 
 	xdef isetdt
 isetdt:
         move.l    4(a7),ABSW(iclkwtime)
