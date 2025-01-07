@@ -58267,6 +58267,8 @@ gem_main:
 [00fee7f6] 4e4e                      trap       #14
 [00fee7f8] 2f39 0000 6d60            move.l     $00006D60,-(a7)
 [00fee7fe] 4e75                      rts
+
+rsc_read:
 [00fee800] 4e56 0000                 link       a6,#0
 [00fee804] 48e7 0704                 movem.l    d5-d7/a5,-(a7)
 [00fee808] 2ebc 0000 4850            move.l     #$00004850,(a7)
@@ -58337,6 +58339,8 @@ gem_main:
 [00fee8d8] 33fc 0001 0000 739c       move.w     #$0001,$0000739C
 [00fee8e0] 33fc 0001 0000 73c8       move.w     #$0001,$000073C8
 [00fee8e8] f831                      dc.w       $F831 ; movem.l (a7)+,d6-d7/a5
+
+rom_ram:
 [00fee8ea] 4e56 fff6                 link       a6,#-10
 [00fee8ee] 48e7 3f04                 movem.l    d2-d7/a5,-(a7)
 [00fee8f2] 3e2e 0008                 move.w     8(a6),d7

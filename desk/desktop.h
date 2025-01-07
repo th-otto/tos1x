@@ -822,7 +822,7 @@ BOOLEAN c_sfirst PROTO((const char *path));
 BOOLEAN cart_snext PROTO((NOTHING));
 int toupper PROTO((int ch));
 int isdrive PROTO((NOTHING));
-int16_t rom_ram PROTO((int which, intptr_t pointer));
+int16_t rom_ram PROTO((int which, intptr_t pointer, uint16_t len));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
 BOOLEAN inf_file PROTO((char *ppath, FNODE *info, BOOLEAN isdir));
 BOOLEAN inf_disk PROTO((char drv_id));

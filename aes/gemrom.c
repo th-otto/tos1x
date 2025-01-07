@@ -45,16 +45,19 @@ struct rominfo {
 	uint16_t size;
 };
 
-struct rominfo romdata[5];
+/*
+ * info about compiled in data
+ * - 0: aes rsc
+ * - 1: desktop rsc
+ * - 2: 
+ * - 3: desktop.inf
+ * - 4:
+ */
+struct rominfo romdata[6];
 
-RSHDR *gemptr;		/* GEM's rsc pointer        */
-RSHDR *deskptr;		/* DESKTOP'S rsc pointer    */
-char *infptr;
-uint16_t infsize;
-uint16_t gemsize;
-uint16_t desksize;
-BOOLEAN nodesk;		/* desk.rsc already read in ? */
-BOOLEAN nogem;		/* gem.rsc already read in ? */
+BOOLEAN havedesk;		/* desk.rsc already read in ? */
+BOOLEAN havegem;		/* gem.rsc already read in ? */
+BOOLEAN havefmt;		/* fmt.rsc already read in ? */
 
 #if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_IT) | (OS_COUNTRY == CTRY_ES) | (OS_COUNTRY == CTRY_SG) | (OS_COUNTRY == CTRY_SF) | (OS_COUNTRY == CTRY_MX) | (OS_COUNTRY == CTRY_TR) | (OS_COUNTRY == CTRY_DK) | (OS_COUNTRY == CTRY_CZ)
 #define EUROTIME 1		/*			European Style       */
@@ -82,99 +85,37 @@ extern uint16_t const tosrsc[];
 #define Bconstat(a) (int)trp13(1, a)
 
 
-/*
- * do this whenever the Gem or desktop is ready
- */
-/* 206de: 00e1c7de */
-/* 306de: 00e20244 */
-/* 104de: 00fe76de */
-/* 106de: 00e29fd0 */
-int16_t rom_ram(P(int) which, P(intptr_t) pointer)
-PP(register int which;)
-PP(register intptr_t pointer;)
-{
-	int16_t size;
-	register BOOLEAN doit;
-
-	if (which == 3)						/* read in desktop.inf      */
-	{
-		LBCOPY((VOIDPTR)pointer, infptr, infsize);
-		return infsize;
-	}
-
-	rs_global = pointer;
-	doit = TRUE;
-
-	if (!which)
-	{
-		/* read in gem rsc */
-		if (nogem)
-			doit = FALSE;
-		else
-			nogem = TRUE;				/* already read in      */
-
-		rs_hdr = gemptr;
-		size = gemsize;
-	} else
-	{
-		/* read in desktop rsc */
-		if (nodesk)
-			doit = FALSE;
-		else
-			nodesk = TRUE;
-
-		rs_hdr = deskptr;
-		size = desksize;
-	}
-
-
-	LLSET(pointer + 14, rs_hdr);
-	LWSET(pointer + 18, size);
-
-	if (doit)
-	{
-		do_rsfix((intptr_t)rs_hdr, size);
-		rs_fixit(pointer);
-	}
-#ifndef __ALCYON__
-	/* BUG: no return here */
-	return size;
-#endif
-}
-
-
-/* 306de: 00e20316 */
-/* 104de: 00fe779c */
-/* 106de: 00e2a0a2 */
-/*
- * BUG: not done before 1.04,
- * leaking the data on resolution change
- */
-#if AESVERSION >= 0x140
-VOID rsc_free(NOTHING)
-{
-	dos_free(gl_pglue);
-	gemptr = NULL;
-	deskptr = NULL;
-	/* infptr should also be nullified, just in case... */
-}
+#if OS_COUNTRY == CTRY_DE
+#define TOS_RSSIZE 0x44E0
 #endif
 
-
+#if OS_COUNTRY == CTRY_FR
 #define TOS_RSSIZE 0x47FA
+#endif
 
 /*
- * Read in the resource file
+ * Read in the resource data
  */
-/* 206de: 00e1c8d0 */
-/* 306de: 00e20336 */
-/* 104de: 00fe77b6 */
-/* 106de: 00e2a0c2 */
-BOOLEAN rsc_read(NOTHING)
+/* 100us: 00fee800 */
+/* 100fr: 00fee79c */
+/* 100de: 00fee4b0 */
+/*
+ * glue header is an array of 5 unsigned shorts.
+ * Each is an offset from the filestart.
+ *
+ * tosrsc[0] = offset to start of desktop resource header
+ * tosrsc[1] = offset to start of unknown resource
+ * tosrsc[2] = offset to start of desktop.inf
+ * tosrsc[3] = offset to start of format resource
+ * tosrsc[4] = offset to start of unknown data
+ * The gem resource header follows those fields.
+ * The total size is not part of the header, and hardcoded above.
+ */
+VOID rsc_read(NOTHING)
 {
 	register uint16_t *intptr;
 	int i;
-	
+
 	/* copy rsc to ram */
 	intptr = dos_alloc((int32_t) TOS_RSSIZE);
 	/* BUG: no malloc check */
@@ -182,22 +123,118 @@ BOOLEAN rsc_read(NOTHING)
 
 	LBCOPY(intptr, tosrsc, TOS_RSSIZE);
 
-	/* now fix the resource   */
-	gemptr = (RSHDR *) (intptr + 5);
-	gemsize = intptr[0] - 5;
+	/* now fix the resource */
+	/* first block (aes rsc) starts right after the header */
+	romdata[0].data = (RSHDR *) (intptr + 5);
+	romdata[0].size = intptr[0] - 5;
 	for (i = 1; i < 4; i++)
 	{
+		/* calculate start address */
+		romdata[i].data = intptr + intptr[i - 1] / 2;
+		/* size is difference between the 2 offsets */
+		romdata[i].size = intptr[i] - intptr[i - 1];
 	}
-	deskptr = (RSHDR *) ((char *)intptr + (intptr_t)intptr[0]);
-	infptr = (char *) ((char *)intptr + (intptr_t)intptr[1]);
-	desksize = intptr[1] - intptr[0];
-	infsize = intptr[2] - intptr[1];
+	romdata[4].data = romdata[2].data;
+	romdata[4].size = romdata[2].size;
+	romdata[5].data = intptr + intptr[3] / 2;
+	romdata[5].size = intptr[4] - intptr[3];
+	
+	havedesk = TRUE;
+	havefmt = TRUE;
+	havegem = TRUE;
 
-	nodesk = FALSE;
-	nogem = FALSE;
+	/* BUG: no return value here */
+}
+
+
+int16_t desk_global[15];
+int16_t fmt_global[15];
+int16_t gem_global[15];
+
+/*
+ * do this whenever the Gem or desktop is ready
+ */
+/* 206de: 00e1c7de */
+/* 306de: 00e20244 */
+/* 104de: 00fe76de */
+/* 106de: 00e29fd0 */
+int16_t rom_ram(P(int) which, P(intptr_t) pointer, P(uint16_t) offset)
+PP(register int which;)
+PP(register intptr_t pointer;)
+PP(register uint16_t offset;)
+{
+	register intptr_t data;
+	register int16_t size;
+	int doit;
+	
+	data = (intptr_t)romdata[which].data;
+	size = romdata[which].size;
+	
+	if (which == 3)						/* read in desktop.inf      */
+	{
+		LBCOPY((VOIDPTR)pointer, (VOIDPTR)data, size);
+		return size;
+	} else if (which == 2)
+	{
+		LBCOPY((VOIDPTR)pointer, (VOIDPTR)data, offset);
+		return offset;
+	} else if (which == 4)
+	{
+		LBCOPY((VOIDPTR)pointer, data + offset, size - offset);
+		return size - offset;
+	} else if (which < 2 || which == 5)
+	{
+		doit = FALSE;
+		if (which == 0 && havegem == TRUE)
+		{
+			doit = TRUE;
+			havegem = FALSE;
+		}
+		if (which == 1 && havedesk == TRUE)
+		{
+			doit = TRUE;
+			havedesk = FALSE;
+		}
+		if (which == 5 && havefmt == TRUE)
+		{
+			doit = TRUE;
+			havefmt = FALSE;
+		}
+		
+		if (doit)
+		{
+			rs_global = pointer;
+			rs_hdr = (RSHDR *)data;
+			do_rsfix(data, size);
+			
+			if (which == 1 || which == 5)
+			{
+				if (which == 1)
+					LWCOPY(desk_global, pointer, 15);
+				else
+					LWCOPY(fmt_global, pointer, 15);
+				rs_fixit(pointer);
+			} else
+			{
+				LWCOPY(gem_global, pointer, 15);
+			}
+		}
+		
+		if (which == 1)
+		{
+			LWCOPY(pointer, desk_global, 15);
+			/* ZZZ some code todo here */
+		} else if (which == 5)
+		{
+			LWCOPY(pointer, fmt_global, 15);
+		} else
+		{
+			LWCOPY(pointer, gem_global, 15);
+		}
+	}
 
 #ifndef __ALCYON__
-	/* BUG: no return value here */
-	return TRUE;
+	/* BUG: no return here */
+	return size;
 #endif
 }

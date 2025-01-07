@@ -24895,9 +24895,17 @@ oscall:
 [00fd49ce] 0000                      dc.w       $0000
 [00fd49d0] 0000                      dc.w       $0000
 [00fd49d2] 0000                      dc.w       $0000
-[00fd49d4] 0000 1426                 ori.b      #$26,d0
-[00fd49d8] 3b7a 417e 4370            move.w     $00FD8B58(pc),17264(a5)
-[00fd49de] 4798                      chk.w      (a0)+,d3
+[00fd49d4] 0000
+
+tosrsc:
+[00fd49d6] 1426     ;  5148 bytes
+[00fd49d8] 3b7a     ; 10068 bytes
+           417e     ;  1540 bytes
+           4370     ;   498 bytes
+[00fd49de] 4798     ;  1064 bytes
+                    ;+   98 bytes
+
+gemrsc:
 [00fd49e0] 0000 0030                 ori.b      #$30,d0
 [00fd49e4] 03c0                      bset       d1,d0
 [00fd49e6] 052c 054e                 btst       d2,1358(a4)
@@ -26648,6 +26656,8 @@ oscall:
 [00fd5df6] 0000                      dc.w       $0000
 [00fd5df8] 0000                      dc.w       $0000
 [00fd5dfa] 0000                      dc.w       $0000
+
+deskrsc:
 [00fd5dfc] 0000 005c                 ori.b      #$5C,d0
 [00fd5e00] 104c                      movea.l    b4,b0 ; apollo only
 [00fd5e02] 16d8                      move.b     (a0)+,(a3)+
@@ -29981,6 +29991,8 @@ oscall:
 [00fd854a] 0000                      dc.w       $0000
 [00fd854c] 0000                      dc.w       $0000
 [00fd854e] 0000                      dc.w       $0000
+
+unknowndata1:
 [00fd8550] 0000                      dc.w       $0000
 [00fd8552] 0000                      dc.w       $0000
 [00fd8554] 0000 0001                 ori.b      #$01,d0
@@ -30593,7 +30605,10 @@ oscall:
 [00fd8b4c] 0000                      dc.w       $0000
 [00fd8b4e] 0000                      dc.w       $0000
 [00fd8b50] 0000                      dc.w       $0000
-[00fd8b52] 0000 2361                 ori.b      #$61,d0
+[00fd8b52] 0000
+
+infdata:
+[00fd8b54] 2361                 ori.b      #$61,d0
 [00fd8b56] 3030 3030                 move.w     48(a0,d3.w),d0
 [00fd8b5a] 3030 0d0a 2362            move.w     ([a0,d0.l*4],$2362),d0 ; 68020+ only; reserved BD=0
 [00fd8b60] 3030 3030                 move.w     48(a0,d3.w),d0
@@ -30754,6 +30769,8 @@ oscall:
 [00fd8d3e] 400d                      negx.b     a5 ; apollo only
 [00fd8d40] 0a00 0000                 eori.b     #$00,d0
 [00fd8d44] 0000                      dc.w       $0000
+
+formatrsc:
 [00fd8d46] 0000 0028                 ori.b      #$28,d0
 [00fd8d4a] 0298 0000 0000            andi.l     #$00000000,(a0)+
 [00fd8d50] 0000 0308                 ori.b      #$08,d0
@@ -31103,7 +31120,9 @@ oscall:
 [00fd9166] 0000                      dc.w       $0000
 [00fd9168] 0000                      dc.w       $0000
 [00fd916a] 0000                      dc.w       $0000
-[00fd916c] 0000 fb6e                 ori.b      #$6E,d0
+[00fd916c] 0000
+
+[00fd916e] fb6e                 ori.b      #$6E,d0
 [00fd9170] 0001 fb75                 ori.b      #$75,d1
 [00fd9174] 0001 fb7e                 ori.b      #$7E,d1
 [00fd9178] 0001 fb85                 ori.b      #$85,d1
@@ -59416,9 +59435,10 @@ rsc_read:
 [00fee7ee] d081                      add.l      d1,d0
 [00fee7f0] 3206                      move.w     d6,d1
 [00fee7f2] c3fc 0006                 muls.w     #$0006,d1
-[00fee7f6] d2bc 0000 9eee            add.l      #$00009EEE,d1
+[00fee7f6] d2bc 0000 9eee            add.l      #$00009EEE,d1 9EEE 9EF4 9EFA 9F00 9F06 
 [00fee7fc] 2241                      movea.l    d1,a1
 [00fee7fe] 2280                      move.l     d0,(a1)
+
 [00fee800] 3046                      movea.w    d6,a0
 [00fee802] d1c8                      adda.l     a0,a0
 [00fee804] 4240                      clr.w      d0
@@ -59440,6 +59460,7 @@ rsc_read:
 
 [00fee832] 23f9 0000 9efa 0000 9f06  move.l     $00009EFA,$00009F06
 [00fee83c] 33f9 0000 9efe 0000 9f0a  move.w     $00009EFE,$00009F0A
+
 [00fee846] 200d                      move.l     a5,d0
 [00fee848] 322d 0006                 move.w     6(a5),d1
 [00fee84c] e249                      lsr.w      #1,d1
@@ -59452,6 +59473,7 @@ rsc_read:
 [00fee85e] 302d 0008                 move.w     8(a5),d0
 [00fee862] 906d 0006                 sub.w      6(a5),d0
 [00fee866] 33c0 0000 9f10            move.w     d0,$00009F10
+
 [00fee86c] 33fc 0001 0000 7354       move.w     #$0001,$00007354
 [00fee874] 33fc 0001 0000 739c       move.w     #$0001,$0000739C
 [00fee87c] 33fc 0001 0000 73c8       move.w     #$0001,$000073C8
@@ -59473,6 +59495,7 @@ rom_ram:
 [00fee8b0] d0bc 0000 9eee            add.l      #$00009EEE,d0
 [00fee8b6] 2040                      movea.l    d0,a0
 [00fee8b8] 3628 0004                 move.w     4(a0),d3
+
 [00fee8bc] be7c 0003                 cmp.w      #$0003,d7
 [00fee8c0] 6614                      bne.s      $00FEE8D6
 [00fee8c2] 3e83                      move.w     d3,(a7)
@@ -59483,6 +59506,7 @@ rom_ram:
 [00fee8cc] 3003                      move.w     d3,d0
 [00fee8ce] 6000 01ec                 bra        $00FEEABC
 [00fee8d2] 6000 01e8                 bra        $00FEEABC
+
 [00fee8d6] be7c 0002                 cmp.w      #$0002,d7
 [00fee8da] 6614                      bne.s      $00FEE8F0
 [00fee8dc] 3e85                      move.w     d5,(a7)
@@ -59493,6 +59517,7 @@ rom_ram:
 [00fee8e6] 3005                      move.w     d5,d0
 [00fee8e8] 6000 01d2                 bra        $00FEEABC
 [00fee8ec] 6000 01ce                 bra        $00FEEABC
+
 [00fee8f0] be7c 0004                 cmp.w      #$0004,d7
 [00fee8f4] 6622                      bne.s      $00FEE918
 [00fee8f6] 3e83                      move.w     d3,(a7)
@@ -59510,6 +59535,7 @@ rom_ram:
 [00fee90e] 9045                      sub.w      d5,d0
 [00fee910] 6000 01aa                 bra        $00FEEABC
 [00fee914] 6000 01a6                 bra        $00FEEABC
+
 [00fee918] be7c 0002                 cmp.w      #$0002,d7
 [00fee91c] 6d08                      blt.s      $00FEE926
 [00fee91e] be7c 0005                 cmp.w      #$0005,d7
@@ -59521,10 +59547,12 @@ rom_ram:
 [00fee936] 660c                      bne.s      $00FEE944
 [00fee938] 3d7c 0001 fffc            move.w     #$0001,-4(a6)
 [00fee93e] 4279 0000 73c8            clr.w      $000073C8
+
 [00fee944] be7c 0001                 cmp.w      #$0001,d7
 [00fee948] 6616                      bne.s      $00FEE960
 [00fee94a] 0c79 0001 0000 7354       cmpi.w     #$0001,$00007354
 [00fee952] 660c                      bne.s      $00FEE960
+
 [00fee954] 3d7c 0001 fffc            move.w     #$0001,-4(a6)
 [00fee95a] 4279 0000 7354            clr.w      $00007354
 [00fee960] be7c 0005                 cmp.w      #$0005,d7
@@ -59533,6 +59561,7 @@ rom_ram:
 [00fee96e] 660c                      bne.s      $00FEE97C
 [00fee970] 3d7c 0001 fffc            move.w     #$0001,-4(a6)
 [00fee976] 4279 0000 739c            clr.w      $0000739C
+
 [00fee97c] 4a6e fffc                 tst.w      -4(a6)
 [00fee980] 6762                      beq.s      $00FEE9E4
 [00fee982] 23c6 0000 6fa8            move.l     d6,$00006FA8
@@ -59545,6 +59574,7 @@ rom_ram:
 [00fee99a] 6706                      beq.s      $00FEE9A2
 [00fee99c] be7c 0005                 cmp.w      #$0005,d7
 [00fee9a0] 662e                      bne.s      $00FEE9D0
+
 [00fee9a2] be7c 0001                 cmp.w      #$0001,d7
 [00fee9a6] 6612                      bne.s      $00FEE9BA
 [00fee9a8] 3ebc 000f                 move.w     #$000F,(a7)
@@ -59567,6 +59597,7 @@ rom_ram:
 [00fee9dc] f130                      dc.w       $F130 ; LWCOPY
 [00fee9de] 508f                      addq.l     #8,a7
 [00fee9e0] 6000 00da                 bra        $00FEEABC
+
 [00fee9e4] be7c 0001                 cmp.w      #$0001,d7
 [00fee9e8] 6600 00aa                 bne        $00FEEA94
 [00fee9ec] 3ebc 000f                 move.w     #$000F,(a7)
@@ -59612,6 +59643,7 @@ rom_ram:
 [00feea8a] d3fc 0000 00be            adda.l     #$000000BE,a1
 [00feea90] 3280                      move.w     d0,(a1)
 [00feea92] 6028                      bra.s      $00FEEABC
+
 [00feea94] be7c 0005                 cmp.w      #$0005,d7
 [00feea98] 6612                      bne.s      $00FEEAAC
 [00feea9a] 3ebc 000f                 move.w     #$000F,(a7)

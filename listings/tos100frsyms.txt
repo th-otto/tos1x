@@ -451,14 +451,21 @@ gl_wtree        000072c2
 gl_rzero        000072c6        Data Label      Global  User Defined    1       0
 gl_nrows        00007336        Data Label      Global  User Defined    2       0
 gl_src          0000733c        Data Label      Global  User Defined    3       2
+havedesk        00007354
 gl_wtop         0000736e
 gl_dst          00007370        Data Label      Global  User Defined    4       0
 gl_wptschar     00007390        Data Label      Global  User Defined    2       0
 gl_wsptschar    00007392        Data Label      Global  User Defined    2       0
+havefmt         0000739c
+rs_hdr          000073c4
+havegem         000073c8
 gl_tmp          000073cc
 D               000073e0        Data Label      Global  User Defined    8       0
 gl_hchar        00009dfa        Data Label      Global  User Defined    11      0
 indisp          00009e02        Data Label      Global  User Defined    4       0
+desk_global     00009e0c
+fmt_global      00009e6e
+gem_global      00009e8c
 romdata         00009eee
 gl_height       00009f12        Data Label      Global  User Defined    7       0
 rlr             00009f16        Data Label      Global  User Defined    38      0

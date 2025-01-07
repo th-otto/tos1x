@@ -24744,11 +24744,14 @@ _main:
 [00fd49b6] 0000
 
 tosrsc:
-[00fd49b8] 1358                 ori.b      #$58,d0
-[00fd49ba] 3803                      move.w     d3,d4
-[00fd49bc] 3e05                      move.w     d5,d7
-[00fd49be] 401f                      negx.b     (a7)+
-[00fd49c0] 44a3                      neg.l      -(a3)
+[00fd49b8] 1358  FD5D10  ;  4942
+[00fd49ba] 3803  FD81BB  ;  9387
+[00fd49bc] 3e05  FD87BD  ;  1538
+[00fd49be] 401f  FD89D7  ;   538
+[00fd49c0] 44a3  FD8E5B  ;  1156
+                         ;    61
+
+gemrsc:
 [00fd49c2] 0000 0030                 ori.b      #$30,d0
 [00fd49c6] 03c0                      bset       d1,d0
 [00fd49c8] 052c 054e                 btst       d2,1358(a4)
@@ -26425,6 +26428,8 @@ tosrsc:
 [00fd5d0a] 0000                      dc.w       $0000
 [00fd5d0c] 0000                      dc.w       $0000
 [00fd5d0e] 0000                      dc.w       $0000
+
+deskrsc:
 [00fd5d10] 0000 005c                 ori.b      #$5C,d0
 [00fd5d14] 104c                      movea.l    b4,b0 ; apollo only
 [00fd5d16] 16d8                      move.b     (a0)+,(a3)+
@@ -29477,6 +29482,8 @@ tosrsc:
 [00fd81b4] 4b20                      chk.l      -(a0),d5 ; 68020+ only
 [00fd81b6] 205d                      movea.l    (a5)+,a0
 [00fd81b8] 0000                      dc.w       $0000
+
+unknowndata1:
 [00fd81ba] 0000                      dc.w       $0000
 [00fd81bc] 0000                      dc.w       $0000
 [00fd81be] 0000 0001                 ori.b      #$01,d0
@@ -30088,7 +30095,10 @@ tosrsc:
 [00fd87b4] 0000                      dc.w       $0000
 [00fd87b6] 0000                      dc.w       $0000
 [00fd87b8] 0000                      dc.w       $0000
-[00fd87ba] 0000 2361                 ori.b      #$61,d0
+[00fd87ba] 0000
+
+infdata:
+[00fd87bc] 2361                      
 [00fd87be] 3030 3030                 move.w     48(a0,d3.w),d0
 [00fd87c2] 3030 0d0a 2362            move.w     ([a0,d0.l*4],$2362),d0 ; 68020+ only; reserved BD=0
 [00fd87c8] 3030 3030                 move.w     48(a0,d3.w),d0
@@ -30267,7 +30277,10 @@ tosrsc:
 [00fd89ce] 5450                      addq.w     #2,(a0)
 [00fd89d0] 4020                      negx.b     -(a0)
 [00fd89d2] 400d                      negx.b     a5 ; apollo only
-[00fd89d4] 0a00 0000                 eori.b     #$00,d0
+[00fd89d4] 0a00
+
+formatrsc:
+[00fd89d6] 0000                 eori.b     #$00,d0
 [00fd89d8] 0028 0298 0000            ori.b      #$98,0(a0)
 [00fd89de] 0000                      dc.w       $0000
 [00fd89e0] 0000 0308                 ori.b      #$08,d0
@@ -30646,6 +30659,7 @@ tosrsc:
 [00fd8e4e] 023c 7500                 andi.b     #$00,ccr
 [00fd8e52] 023c 8800                 andi.b     #$00,ccr
 [00fd8e56] 023c 9f00                 andi.b     #$00,ccr
+
 [00fd8e5a] 023c ab00                 andi.b     #$00,ccr
 [00fd8e5e] 023c ac00                 andi.b     #$00,ccr
 [00fd8e62] 023c c300                 andi.b     #$00,ccr
@@ -57994,6 +58008,8 @@ rsc_read:
 [00fee588] 33fc 0001 0000 73a0       move.w     #$0001,$000073A0
 [00fee590] 33fc 0001 0000 73cc       move.w     #$0001,$000073CC
 [00fee598] f831                      dc.w       $F831 ; movem.l (a7)+,d6-d7/a5
+
+rom_ram:
 [00fee59a] 4e56 fff6                 link       a6,#-10
 [00fee59e] 48e7 3f04                 movem.l    d2-d7/a5,-(a7)
 [00fee5a2] 3e2e 0008                 move.w     8(a6),d7

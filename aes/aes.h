@@ -759,9 +759,9 @@ RLIST *genrlist PROTO((uint16_t handle, uint16_t area));
 /*
  * gemrom.c
  */
-int16_t rom_ram PROTO((int which, intptr_t pointer));
+int16_t rom_ram PROTO((int which, intptr_t pointer, uint16_t len));
 VOID rsc_free PROTO((NOTHING));
-BOOLEAN rsc_read PROTO((NOTHING));
+VOID rsc_read PROTO((NOTHING));
 
 
 /*
