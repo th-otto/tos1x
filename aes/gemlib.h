@@ -241,40 +241,38 @@ typedef struct window
 #define THEGLO struct glstr
 THEGLO
 {
-	UDA		g_uda;			/* must be first */
-	UDA2	g_2uda;
-	UDA3	g_3uda;
-	PD g_pd[NUM_PDS];
-	CDA	g_cda[NUM_PDS];
-	EVB	g_evb[NUM_EVBS];
+	/*    0 */ UDA	g_uda;			/* must be first */
+	/* 1866 */ UDA2	g_2uda;
+	/* 3140 */ UDA3	g_3uda;
+	/* 4614 */ PD g_pd[NUM_PDS];
+	/* 5166 */ CDA	g_cda[NUM_PDS];
+	/* 5274 */ EVB	g_evb[NUM_EVBS];
 
-	FPD	g_fpdx[NFORKS];
+	/* 5694 */ FPD	g_fpdx[NFORKS];
 
-	ORECT 	g_olist[NUM_ORECT];
+	/* 5950 */ ORECT 	g_olist[NUM_ORECT];
 
-	char	g_rawstr[MAX_LEN];	/* used in gemoblib.s	*/
-	char	g_tmpstr[MAX_LEN];	/* used in gemoblib.s	*/
-	char	g_valstr[MAX_LEN];	/* used in gembind.s	*/
-	char	g_fmtstr[MAX_LEN];	/* used in gemoblib.s	*/
+	/* 6910 */ char	g_rawstr[MAX_LEN];	/* used in gemoblib.s	*/
+	/* 6991 */ char	g_tmpstr[MAX_LEN];	/* used in gemoblib.s	*/
+	/* 7072 */ char	g_valstr[MAX_LEN];	/* used in gembind.s	*/
+	/* 7153 */ char	g_fmtstr[MAX_LEN];	/* used in gemoblib.s	*/
 
-	char	g_loc1[256];		/* MAX alert length	*/
-	char	g_loc2[256];
+	/* 7234 */ char	g_loc1[256];		/* MAX alert length	*/
+	/* 7490 */ char	g_loc2[256];
 
-	char    g_scrap[164];		/* was: WORD[82]... */
+	/* 7746 */ char    g_scrap[164];		/* was: WORD[82]... */
 
-	char	g_dir[CMDLEN];		/* changed from 82 to 128 */
+	/* 7910 */ char g_dir[82];
 
-	uint16_t g_sysglo[G_SIZE];
+	/* 7992 */ uint16_t g_sysglo[G_SIZE];
 
-	char	g_path[CMDLEN];		/* new element		*/
+	/* 8022 */ char	s_cmd[CMDLEN];
+	/* 8150 */ char	s_save[SIZE_AFILE];
+	/* 10198 */ char s_tail[CMDLEN];
 
-	char	s_cmd[CMDLEN];
-	char	s_save[SIZE_AFILE];
-	char	s_tail[CMDLEN];
-
-	WINDOW	w_win[NUM_WIN];
+	/* 10326 */ WINDOW	w_win[NUM_WIN];
 	
-	/* 13092 */
+	/* 10774 */
 };
 
 #endif /* GEMLIB_H */

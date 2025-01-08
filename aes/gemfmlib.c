@@ -73,6 +73,49 @@ static int16_t const ml_pwlv[] = { 0x0102, 0x0102, 0x0102, 0x0101, 0x0002, 0x000
 
 int16_t find_obj PROTO((LPTREE tree, int16_t start_obj, int16_t which));
 
+LPTREE ml_mnhold;
+GRECT ml_ctrl;
+PD *ml_pmown;
+PD *ml_pkown;
+
+
+
+
+/*	0 = end mouse control	*/
+/*	1 = mouse control	*/
+
+/* 306de: 00e1b846 */
+/* 106de: 00e1f9c2 */
+VOID take_ownership(P(BOOLEAN) beg_ownit)
+PP(BOOLEAN beg_ownit;)
+{
+	if (beg_ownit)
+	{
+		wm_update(BEG_UPDATE);
+		if (ml_ocnt == 0)
+		{
+			ml_mnhold = gl_mntree;		/* save the current menu   */
+			gl_mntree = 0;				/* no menu         */
+			/* save the control rect */
+			get_ctrl(&ml_ctrl);
+			/* save the mouse owner    */
+			get_mown(&ml_pmown, &ml_pkown);
+
+			ct_chgown(rlr, &gl_rscreen);	/* change mouse ownership  */
+		}								/* and the control rect    */
+		ml_ocnt++;
+	} else
+	{
+		ml_ocnt--;
+		if (ml_ocnt == 0)
+		{
+			ct_chgown(ml_pkown, &ml_ctrl);	/* restore mouse owner     */ /* BUG: ml_pkown is keyboard owner, not mouse */
+			gl_mntree = ml_mnhold;		/* restore menu tree       */
+		}
+		wm_update(END_UPDATE);
+	}
+}
+
 
 /************************************************************************/
 /* f i n d _ o b j                                                      */
@@ -129,6 +172,18 @@ PP(int16_t which;)
 	}
 
 	return start_obj;
+}
+
+
+
+LINEF_STATIC int16_t fm_inifld(P(LPTREE) tree, P(int16_t) start_fld)
+PP(LPTREE tree;)
+PP(int16_t start_fld;)
+{
+	/* position cursor on the starting field */
+	if (start_fld == 0)
+		start_fld = find_obj(tree, 0, FORWARD);
+	return start_fld;
 }
 
 
@@ -290,10 +345,7 @@ PP(int16_t start_fld;)
 
 
 	/* position cursor on the starting field */
-	if (start_fld == 0)
-		next_obj = find_obj(tree, 0, FORWARD);
-	else
-		next_obj = start_fld;
+	next_obj = fm_inifld(tree, start_fld);
 
 	edit_obj = 0;
 	/* interact with user   */

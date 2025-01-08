@@ -1145,26 +1145,9 @@ PP(register VOIDPTR *addr_in;)
 #endif
 
 	default:
-#if ASM_HACKS
-		asm("Ldefault:");
-		asm("move.l     #1,-(a7)");
-		asm("move.w     #0,-(a7)");
-		asm("move.w     _no_aes,-(a7)");
-		asm("jsr        _fm_show");
-		asm("addq.w     #8,a7");
-		ret = -1;
-		/*
-		 * Note: this break will generate a branch to the end of the switch,
-		 * which will be the first of the tst.w instructions below,
-		 * and thus be wrong. It is hacked in the Makefile by replacing
-		 * it to bra L9999
-		 */
-		break;
-#else
-		fm_show(ALRTNOFUNC, NULL, 1); /* why not use no_aes here? */
+		fm_show(ALRTNOFUNC, NULL, 1);
 		ret = -1;
 		break;
-#endif
 	}
 #if ASM_HACKS
 	asm("L9991:");
@@ -1187,12 +1170,6 @@ PP(register VOIDPTR *addr_in;)
 #endif
 	return ret;
 }
-
-#if ASM_HACKS & BINEXACT
-asm("data");
-asm("dc.l Ldefault");
-asm("text");
-#endif
 
 
 /*

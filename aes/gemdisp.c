@@ -55,14 +55,12 @@ PD *dpd;								/* critical error process   */
 PD *slr;
 #endif
 
-/****************************************************************/
-
 /* 306de: 00e1b8ea */
 /* 104de: 00fde286 */
 /* 106de: 00e1fa66 */
 asm("  .globl forkq");
 asm("forkq: .text");
-BOOLEAN forkq(P(FCODE) fcode, P(int32_t) fdata)
+VOID forkq(P(FCODE) fcode, P(int32_t) fdata)
 PP(FCODE fcode;)
 PP(int32_t fdata;)
 {
@@ -80,9 +78,8 @@ PP(int32_t fdata;)
 		f->f_data = fdata;
 
 		fpcnt++;
-		return TRUE;
+		xforkq = TRUE;
 	}
-	return FALSE;
 }
 
 
@@ -109,6 +106,7 @@ PP(register PD *p;)
 	q->p_link = p;
 }
 
+/****************************************************************/
 
 #if AESVERSION >= 0x200
 /*
@@ -126,6 +124,23 @@ PP(register PD *p;)
 	slr = p;
 }
 #endif
+
+
+LINEF_STATIC VOID mwait_act(P(PD *) p)
+PP(register PD *p;)
+{       
+    /* sleep on nrl if */
+	/* event flags are not set */
+	if (p->p_evwait & p->p_evflg)
+	{
+		disp_act(p);
+	} else
+	{ 
+		p->p_link = nrl;		/* good night, Mrs. */
+		nrl = p;				/* Calabash, wherever   */
+	}
+}
+
 
 
 /* 306de: 00e1b9aa */
@@ -150,7 +165,7 @@ VOID forker(NOTHING)
 		if (gl_recd)
 		{
 			/* check for stop key */
-			if ((f->f_code == kchange) && ((f->f_data & 0xffff0000L) == KEYSTOP))
+			if ((f->f_code == kchange) && ((f->f_data & 0xffffL) == KEYSTOP))
 				gl_recd = FALSE;
 			/* if still recording then handle event */
 			if (gl_recd)
@@ -242,6 +257,35 @@ VOID chkkbd(NOTHING)
  *                                                              *
  ****************************************************************/
 
+/* 
+ * schedule();
+ *
+ * run through lists until someone is on the rlr or the fork list
+ */
+static VOID schedule(NOTHING)
+{
+	register PD *p;
+
+	do
+	{
+		/* poll the keyboard */
+		chkkbd();
+		/* now move drl processes to rlr */
+
+		while (drl)
+		{
+			drl = (p = drl)->p_link;
+			disp_act(p);
+		}
+		/* check if there is something to run */
+#ifdef THROTTLE_CPU
+		if (rlr || fpcnt)
+			break;
+		idle(); /* Tell multitasking OS we're idle */
+#endif
+	} while (!rlr && !fpcnt);
+}
+
 /****************************************************************
  * Machine state is saved before this routine is entered!       *
  ****************************************************************/
@@ -258,51 +302,21 @@ VOID disp(NOTHING)
 #endif
 	rlr = (p = rlr)->p_link;
 	/* based on the state of the process p do something */
-	if (p->p_stat == 0)
+	switch (p->p_stat)
 	{
+	case 0:
 		disp_act(p);
-	} else if (p->p_stat == PS_MWAIT)		/* mwait_act( p );  */
-	{
-		if (p->p_evwait & p->p_evflg)
-		{
-			disp_act(p);
-		} else
-		{
-			{
-				p->p_link = nrl;		/* good night, Mrs. */
-				nrl = p;				/* Calabash, wherever   */
-			}
-		}
+		break;
+	case PS_MWAIT:
+		mwait_act(p);
+		break;
 	}
 
 	/* run through and execute all the fork processes */
 	do
 	{
 		forker();
-		/* 
-		 * schedule();
-		 *
-		 * run through lists until someone is on the rlr or the fork list
-		 */
-		do
-		{
-			/* poll the keyboard */
-			chkkbd();
-			/* now move drl processes to rlr */
-
-			while (drl)
-			{
-				drl = (p = drl)->p_link;
-				disp_act(p);
-			}
-			/* check if there is something to run */
-#ifdef THROTTLE_CPU
-			if (rlr || fpcnt)
-				break;
-			idle(); /* Tell multitasking OS we're idle */
-#endif
-		} while (!rlr && !fpcnt);
-
+		schedule();
 	} while (fpcnt);
 
 	/*

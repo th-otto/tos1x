@@ -89,44 +89,156 @@ int16_t gl_bdelay;
 
 
 
-#if AESVERSION >= 0x200
 /*
  * Check if the current click will transfer mouse ownership
  */
 /* 306de: 00e1e6fe */
-PD *mowner(P(int16_t) new)
-PP(int16_t new;)
+/* 100fr: 00fe46ac */
+LINEF_STATIC int16_t mowner(P(int16_t) mx, P(int16_t) my)
+PP(register int16_t mx;)
+PP(register int16_t my;)
 {
 	int16_t wh;
-	register int16_t mx, my;
-	PD *m;
 
-	m = gl_mowner;
-
-	if (new == MB_DOWN)
+	/* if inside ctrl rect then owned by active process */
+	if (inside(mx, my, &ctrl))
 	{
-		mx = xrat;
-		my = yrat;
-		/* if inside ctrl rect then owned by active process */
-		if (inside(mx, my, &ctrl))
+		return TRUE;
+	}
+	/* if in menu bar then owned by ctrl mgr    */
+	if (inside(mx, my, &gl_rmenu))
+	{							/* Hit any window? */
+		return NIL;
+	}
+	return wm_find(mx, my) ? NIL : 0;
+}
+
+
+/*
+ *       Button click code call that is from the button interrupt
+ *       code with interrupts off.
+ */
+VOID b_click(P(int16_t) state)
+PP(register int16_t state;)
+{
+	/* ignore it unless it  represents a change */
+	if (state != gl_btrue)
+	{
+		/* see if we've already set up a wait */
+		if (gl_bdelay)
 		{
-			m = gl_cowner;
-		} else							/* if in menu bar then  */
-		{								/* owned by ctrl mgr    */
-			if (inside(mx, my, &gl_rmenu))
-			{							/* Hit any window? */
-				wh = NIL;
+			/* if the change is into the desired state then increment cnt */
+			if (state == gl_bdesired)
+			{
+				gl_bclick++;
+				gl_bdelay += 3;
+			}
+		} else
+		{
+			/*
+			 * if someone cares about multiple clicks and this is
+			 * not a null mouse then set up delay else just fork it
+			 */
+			if (gl_bpend && state)
+			{
+				/*
+				 * start click cnt at 1 establish desired
+				 * state and set wait flag
+				 */
+				gl_bclick = 1;
+				gl_bdesired = state;
+				/* button delay set inev_dclick (5)      */
+				gl_bdelay = gl_dclick;
 			} else
 			{
-				wh = wm_find(mx, my) ? NIL : 0;
+				forkq((VOIDPTR) bchange, state, 1);
 			}
-			m = wh == NIL ? ctl_pd : srchwp(0)->w_owner;
+		}
+		/* update true state of the mouse */
+		gl_btrue = state;
+	}
+}
+
+
+/*
+ *       Button delay code that is called from the tick interrupt code with 
+ *       interrupts off.
+ */
+asm("  .globl b_delay");
+asm("b_delay: .text");
+VOID b_delay(P(int16_t) amnt)
+PP(int16_t amnt;)
+{
+	/* see if we have a delay for mouse click in progress  */
+	if (gl_bdelay)
+	{
+		/* see if decrementing delay cnt causes delay to be over  */
+		gl_bdelay -= amnt;
+		if (!gl_bdelay)
+		{
+			forkq((VOIDPTR)bchange, gl_bdesired, gl_bclick);
+			if (gl_bdesired != gl_btrue)
+			{
+				forkq((VOIDPTR)bchange, gl_btrue, 1);
+			}
 		}
 	}
-
-	return m;
 }
-#endif
+
+
+VOID set_ctrl(P(GRECT *) pt)
+PP(GRECT *pt;)
+{
+	rc_copy(pt, &ctrl);
+}
+
+
+VOID get_ctrl(P(GRECT *) pt)
+PP(GRECT *pt;)
+{
+	rc_copy(&ctrl, pt);
+}
+
+
+VOID get_mown(P(PD **) pmown, P(PD **) pkown)
+PP(PD **pmown;)
+PP(PD **pkown;)
+{
+	*pmown = gl_mowner;		/* save the mouse owner    */
+	*pkown = gl_kowner;		/* save the keyboard owner */
+}
+
+
+VOID set_mown(P(PD *) pmown, P(PD *) pkown)
+PP(PD *pmown;)
+PP(PD *pkown;)
+{
+	gl_cowner = gl_mowner = pmown;
+	/* pretend mouse moved to get the right form showing */
+	/* and get mouse event posted correctly */
+	post_mouse(gl_mowner, xrat, yrat);
+	/* post a button event in case the new owner was waiting */
+	post_button(gl_mowner, button, 1);
+
+	gl_kowner = pkown;
+}
+
+
+/*
+*       EnQueue a a character on a circular keyboard buffer.
+*/
+LINEF_STATIC VOID nq(P(uint16_t) ch, P(CQUEUE *) qptr)
+PP(register uint16_t ch;)
+PP(register CQUEUE *qptr;)
+{
+	if (qptr->c_cnt < KBD_SIZE)
+	{
+		qptr->c_buff[qptr->c_rear++] = ch;
+		if (qptr->c_rear == KBD_SIZE)
+			qptr->c_rear = 0;
+		qptr->c_cnt++ ;
+	}
+}
 
 
 /*
@@ -205,7 +317,6 @@ PP(uint16_t ch;)
 {
 	register CDA *c;
 	register EVB *e;
-	register CQUEUE *qptr;
 
 	c = p->p_cda;
 	/* if anyone waiting ?  */
@@ -216,17 +327,7 @@ PP(uint16_t ch;)
 	{
 		/* no one is waiting, just toss it in the buffer */
 
-		/* nq(ch, &c->c_q); */
-
-		qptr = &c->c_q;
-
-		if (qptr->c_cnt < KBD_SIZE)
-		{
-			qptr->c_buff[qptr->c_rear++] = ch;
-			if (qptr->c_rear == KBD_SIZE)
-				qptr->c_rear = 0;
-			qptr->c_cnt++;
-		}
+		nq(ch, &c->c_q);
 	}
 }
 
@@ -241,41 +342,23 @@ VOID bchange(P(int16_t) new, P(int16_t) clicks)
 PP(int16_t new;)
 PP(int16_t clicks;)
 {
-#if AESVERSION >= 0x200
-	/* if control mgr. does not own the mouse */
-#if AESVERSION < 0x330
-	if (gl_mowner != ctl_pd)
-#endif
-		gl_mowner = mowner(new);
-#else
-	/* inline version of mowner() above */
 	if (gl_mowner != ctl_pd)
 	{
 		int16_t wh;
-		register int16_t mx, my;
 	
 		if (new == MB_DOWN && button == 0)
 		{
-			mx = xrat;
-			my = yrat;
+			wh = mowner(xrat, yrat);
 			/* if inside ctrl rect then owned by active process */
-			if (inside(mx, my, &ctrl))
+			if (wh == 1)
 			{
 				gl_mowner = gl_cowner;
 			} else							/* if in menu bar then  */
 			{								/* owned by ctrl mgr    */
-				if (inside(mx, my, &gl_rmenu))
-				{							/* Hit any window? */
-					wh = NIL;
-				} else
-				{
-					wh = wm_find(mx, my) ? NIL : 0;
-				}
 				gl_mowner = wh == NIL ? ctl_pd : srchwp(0)->w_owner;
 			}
 		}
 	}
-#endif
 	/* see if this button event causes an ownership change */
 
 	/* if the button went down check to see if ownership should go to the control mgr. */
@@ -352,11 +435,7 @@ PP(register int16_t ry1;)
 	int16_t ry;
 
 	/* zero out button wait if mouse moves more then a little */
-#ifdef __ALCYON__ /* sigh */
-	gsx_ncode(MOUSE_ST, 0L);
-#else
 	gsx_ncode(MOUSE_ST, 0, 0);
-#endif
 	rx = ptsout[0];
 	ry = ptsout[1];
 
@@ -439,3 +518,6 @@ PP(register int16_t ry;)
 	mo.m_h = LLOWD(e->e_return);
 	return mo.m_out != inside(rx, ry, (GRECT *)&mo.m_x);
 }
+
+
+

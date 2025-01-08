@@ -188,7 +188,7 @@ _tikcod:
 
 tpollmb:
 	move.w	#1,-(a7)
-	bsr	b_delay
+	jsr	b_delay
 	addq.l	#2,a7
 /*
  * --- Interrupt processed, restore everything and return -----
@@ -201,35 +201,6 @@ tpollmb:
 	rts
 
 
-
-/*	b_delay( amnt ) */
-/* 306de: 00e262a4 */
-/* 104de: 00fe64be */
-	xdef	_b_delay
-_b_delay:
-b_delay:
-	move.w	4(sp),d0		; get the amnt
-	tst.w	_gl_bdelay
-	beq	bdout1
-
-	sub.w	d0,_gl_bdelay		; gl_bdelay -= amnt
-	bne	bdout1
-	move.w	_gl_bclick,-(sp)
-	move.w	_gl_bdesired,-(sp)
-	pea	_bchange
-	jsr	forkq
-	add.l	#8,sp
-	move.w	_gl_btrue,d0
-	cmp.w	_gl_bdesired,d0
-	beq	bdout1
-	move.w	#1,-(sp)
-	move.w	_gl_btrue,-(sp)
-	pea	_bchange
-	jsr	forkq
-	add.l	#8,sp
-
-bdout1:
-	rts
 
 /*
  *	delay( ticks )

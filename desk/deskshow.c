@@ -213,7 +213,7 @@ PP(int mode;)
 			doa2:
 				if (!Bconout(serial, *ptr))							/* device not present ?   */
 				{						/* retry ?      */
-					if (fm_show(er_num, NULL, 2) == 2)
+					if (fm_show(18 /* ALRT04CRT */, NULL, 2) == 2)
 						goto doa2;
 					else				/* cancel */
 					{

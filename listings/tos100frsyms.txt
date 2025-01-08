@@ -1,4 +1,4 @@
-Name            Location        Type    Namespace       Source  Reference Count Offcut Ref Count
+Name            Location        Type         Namespace  Source         Reference Count Offcut Ref Count
 buserror        00000008        Data Label      Global  User Defined    6       1
 zerodiv         00000014        Data Label      Global  User Defined    1       0
 lineatrap       00000028        Data Label      Global  User Defined    1       0
@@ -413,7 +413,8 @@ drawsp          0000642e        Data Label      Global  User Defined    2       
 drawstk         00006432        Data Label      Global  User Defined    5       0
 errsave         0000643a        Data Label      Global  User Defined    2       0
 drwaddr         00006c72        Data Label      Global  User Defined    3       0
-ml_ocnt         00006C48
+ad_rso          00006c44
+ml_ocnt         00006c48
 ml_mnhold       00006c4a
 ml_ctrl         00006c4e
 pblock          00006c5e
@@ -424,16 +425,26 @@ trp14aret       00006d5c        Data Label      Global  User Defined    2       
 gl_xclip        00006d60        Data Label      Global  User Defined    1       0
 gl_wclip        00006d62        Data Label      Global  User Defined    1       0
 intin           00006d64        Data Label      Global  User Defined    10      1
+gl_mkrect       00006e8c
+gl_rbuf         00006e98
 gl_awind        00006ea0
 gl_hbox         00006eac        Data Label      Global  User Defined    9       0
 gl_yclip        00006eae        Data Label      Global  User Defined    1       0
 intout          00006eb0
 gl_tcolor       00006ec4        Data Label      Global  User Defined    4       0
 gl_rmenu        00006ec6        Data Label      Global  User Defined    1       0
+sys_adacc       00006ece
+gl_rlen         00006ed2
+ad_fstree       00006ed4
+pr_mclick       00006ed8
 W_TREE          00006ede
 gl_wschar       00006f9e        Data Label      Global  User Defined    12      0
+elinkoff        00006fa0
+cda             00006fa4
+ad_sysglo       00006fac
 gl_width        00006fb0        Data Label      Global  User Defined    9       0
 gl_font         00006fb2        Data Label      Global  User Defined    3       0
+gl_cowner       0000702e
 gl_patt         00007036        Data Label      Global  User Defined    3       0
 gl_rscreen      00007038        Data Label      Global  User Defined    2       0
 gl_rfull        00007040        Data Label      Global  User Defined    1       0
@@ -442,55 +453,107 @@ DOS_ERR         00007080        Data Label      Global  User Defined    18      
 W_ACTIVE        00007082
 gl_newroot      0000724a
 ptsout          00007250        Data Label      Global  User Defined    2       3
+gl_btrue        00007264
 gl_hptschar     00007266        Data Label      Global  User Defined    3       0
 gl_hsptschar    00007268        Data Label      Global  User Defined    3       0
 gl_wbox         0000726a        Data Label      Global  User Defined    5       0
+gl_kowner       0000726c
 gl_fis          00007282        Data Label      Global  User Defined    3       0
+wind_spb        00007284
+mclick          0000728e
+gl_mowner       00007290
 gl_mntree       000072bc
 gl_wtree        000072c2
 gl_rzero        000072c6        Data Label      Global  User Defined    1       0
+ctl_pd          000072d0
+ctrl            000072d4
 gl_nrows        00007336        Data Label      Global  User Defined    2       0
 gl_src          0000733c        Data Label      Global  User Defined    3       2
+gl_dabase       00007352
 havedesk        00007354
+gl_adacc        00007356
 gl_wtop         0000736e
 gl_dst          00007370        Data Label      Global  User Defined    4       0
+fph             00007384
+gl_rfs          00007386
 gl_wptschar     00007390        Data Label      Global  User Defined    2       0
 gl_wsptschar    00007392        Data Label      Global  User Defined    2       0
+xrat            00007394
+yrat            00007396
+pr_button       00007398
+pr_xrat         0000739a
 havefmt         0000739c
+drl             0000739e
+dlr             000073a2
+pr_yrat         000073a6
 rs_hdr          000073c4
 havegem         000073c8
+xforkq          000073ca
 gl_tmp          000073cc
 D               000073e0        Data Label      Global  User Defined    8       0
 gl_hchar        00009dfa        Data Label      Global  User Defined    11      0
+eul             00009dfe
 indisp          00009e02        Data Label      Global  User Defined    4       0
+curpid          00009e04
+gl_naccs        00009e06
+gl_dacnt        00009e08
 desk_global     00009e0c
+thedesk         00009e2a
+infork          00009e32
+fpt             00009e34
+gl_pacc         00009e36
+gl_bdelay       00009e4e
+gl_fakemsg      00009e50
 fmt_global      00009e6e
 gem_global      00009e8c
+nrl             00009eaa
+gl_bclick       00009eb0
+gl_handle       00009eea
+gl_dclick       00009eec
 romdata         00009eee
 gl_height       00009f12        Data Label      Global  User Defined    7       0
 rlr             00009f16        Data Label      Global  User Defined    38      0
+gl_bdesired     00009f1a
+gl_recd         00009f1c
+ad_shcmd        00009f20
 gl_aname        00009f28
 gl_ainfo        00009f44
 gl_hclip        00009f60        Data Label      Global  User Defined    1       0
 contrl          00009f62
 old_bcode       00009F80
+ad_path         00009f84
+evx             00009f88
 rul             00009fa8
+gl_bvhard       00009fac
+ad_shtaiil      00009fae
+g_buffer        00009fb2
 gl_wchar        00009fb6        Data Label      Global  User Defined    10      0
+mtrans          00009fba
+ad_windspb      00009fc2
 gl_hschar       00009fc6        Data Label      Global  User Defined    2       0
 ad_intin        00009fc8        Data Label      Global  User Defined    2       0
 gl_mode         00009fcc        Data Label      Global  User Defined    3       0
+zlr             00009fce
+gl_pbend        00009fd2
+gl_bvdisk       00009fd4
+g_wlist         00009fde
 gl_rcenter      00009fe2        Data Label      Global  User Defined    1       0
 gl_moff         00009fea
 gl_ws           0000a010        Data Label      Global  User Defined    3       6
 gl_lcolor       0000a082        Data Label      Global  User Defined    3       0
+fpcnt           0000a084
+button          0000a086
 gl_graphic      0000a088
 gl_ncols        0000a08e        Data Label      Global  User Defined    2       0
+gl_nplanes      0000a090
 gl_mask         0000a092        Data Label      Global  User Defined    1       0
 DOS_AX          0000a094        Data Label      Global  User Defined    12      0
 gl_ticktime     0000a096        Data Label      Global  User Defined    2       0
 old_mcode       0000a09a
 gl_mlen         0000a09e
 ad_envrn        0000a0a2        Data Label      Global  User Defined    1       0
+
+desk_pid        0000a0ae
 gl_newdesk      0000a0c0
 w_walkflag      0000a0be
 

@@ -140,8 +140,6 @@ VOIDPTR ad_hgmice;
 LPTREE ad_stdesk;
 char *ad_fsel;
 intptr_t drawstk;
-int16_t er_num;						/* for output.s */
-int16_t no_aes;						/* gembind.s    */
 BOOLEAN sh_up;						/* is the sh_start being ran yet ? */ /* unused */
 BOOLEAN autoexec;					/* autoexec a file ?    */
 STATIC char g_autoboot[CMDLEN];
@@ -237,6 +235,23 @@ VOID accs_init(NOTHING)
 #endif	/* ACC_DELAY */
 
 
+LINEF_STATIC VOID ini_dlongs(NOTHING)
+{
+	register THEGLO *DGLO;
+
+	DGLO = &D;
+	ad_shcmd = &DGLO->s_cmd[0];
+	ad_shtail = &DGLO->s_tail[0];
+	ad_path = &DGLO->g_dir[0];
+
+	/* init. long pointer to global array   */
+	/* which is used by resource calls  */
+
+	ad_sysglo = (intptr_t)&DGLO->g_sysglo[0];
+	ad_windspb = &wind_spb;
+}
+
+
 /*
  * Give everyone a chance to run, at least once
  */
@@ -257,6 +272,7 @@ VOID all_run(NOTHING)
 /* 104de: 00fd3d0a */
 /* 106de: 00e13f48 */
 /* 404: 00e24a90 */
+/* 100fr: 00fd9362 */
 VOID gem_main(NOTHING)
 {
 	register int16_t i;
@@ -265,26 +281,19 @@ VOID gem_main(NOTHING)
 	register THEGLO *DGLO;
 	PD *lslr;
 	register char *apath;
-	DGLO = &D;
 
+	DGLO = &D;
 	UNUSED(lslr);
-	
-	er_num = ALRT04CRT;					/* output.s */ /* but not used there... */
-	no_aes = ALRTNOFUNC;				/* for gembind.s */ /* but not used there... */
 	
 	/****************************************/
 	/*      ini_dlongs();                   */
 	/****************************************/
 
-	ad_shcmd = &DGLO->s_cmd[0];
-	ad_shtail = &DGLO->s_tail[0];
-	ad_path = &DGLO->g_dir[0];
-
-	/* init. long pointer to global array   */
-	/* which is used by resource calls  */
-
-	ad_sysglo = (intptr_t)&DGLO->g_sysglo[0];
-	ad_windspb = &wind_spb;
+    ini_dlongs();               /* init longs */
+	/* no ticks during init */
+    hcli();                      /* no ticks during init */
+	/* take the 0efh int. ...erm trap #2  */
+    takecpm();
 
 	/****************************************/
 
@@ -294,12 +303,6 @@ VOID gem_main(NOTHING)
 	 */
 	drawstk = (intptr_t)dos_alloc(0x00000400L);	/* draw stack is 1K */
 	drawstk += 0x00000400L;			/* init to top */
-
-	/* no ticks during init */
-	hcli();
-
-	/* take the 0efh int. ...erm trap #2  */
-	takecpm();
 
 	/* init event recorder  */
 	gl_recd = FALSE;
@@ -318,13 +321,9 @@ VOID gem_main(NOTHING)
 	}
 	/* initialize list and unused lists   */
 
-	drl = 0;
-	nrl = 0;
-	zlr = 0;
-	dlr = 0;
-	fpcnt = 0;
-	fpt = 0;
-	fph = 0;
+	nrl = drl = 0;
+	dlr = zlr = 0;
+	fph = fpt = fpcnt = 0;
 	infork = 0;
 
 	/* initialize sync blocks */
@@ -332,10 +331,12 @@ VOID gem_main(NOTHING)
 	wind_spb.sy_owner = 0;
 	wind_spb.sy_wait = 0;
 
+/*
 	gl_btrue = 0x0;
 	gl_bdesired = 0x0;
 	gl_bdelay = 0x0;
 	gl_bclick = 0x0;
+*/
 
 	/* init initial process */
 	for (i = 0; i < NUM_PDS; i++)
@@ -440,7 +441,7 @@ VOID gem_main(NOTHING)
 	wm_start();
 
 	/* startup gem libs */
-	/* fs_start(); */
+	fs_start();
 
 	for (i = 0; i < 3; i++)
 		LWSET(OB_WIDTH(i), (gl_wchar * gl_ncols));

@@ -150,6 +150,18 @@ static VOID FXDeselect PROTO((OBJECT *tree, int16_t obj));
 
 
 
+VOID fs_start(NOTHING)
+{
+	OBJECT *tree;
+
+	/*
+	 *	Start up the file selector by initializing the fs_tree
+	 */
+	rs_gaddr(ad_sysglo, R_TREE, SELECTOR, &tree);
+	ad_fstree = tree;
+	ob_center((LPTREE)tree, &gl_rfs);
+}
+
 
 /*
  *	Routine to back off the end of a file string.

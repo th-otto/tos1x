@@ -145,9 +145,10 @@ PP(register SPB *sy;)
 	register EVB *p;
 
 	/* internal unsync must be in dispatcher context or NODISP count down */
+#if AESVERSION >= 0x140
 	if (sy->sy_tas > 0)
+#endif
 	{
-
 		sy->sy_tas--;
 		/* if it went to 0 then give up the sync to the next guy if there is one */
 		if (sy->sy_tas == 0)

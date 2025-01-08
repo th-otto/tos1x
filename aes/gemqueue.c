@@ -132,3 +132,131 @@ PP(intptr_t lm;)
 		evinsert(e, ppe);
 	}
 }
+
+
+VOID akbin(P(EVB *)e, P(int32_t) aparm)
+PP(register EVB *e;)
+PP(register int32_t aparm;)
+{
+	/* find vcb to input, point c at it */
+	if (cda->c_q.c_cnt)
+	{
+		/* another satisfied customer */
+		e->e_return = dq(&cda->c_q);
+		zombie(e);
+	} else							/* time to zzzzz... */
+	{
+		evinsert(e, &cda->c_iiowait);
+	}
+}
+
+
+VOID adelay(P(EVB *)e, P(int32_t) aparm)
+PP(register EVB *e;)
+PP(register int32_t aparm;)
+{
+	register EVB *p, *q;
+
+	if (aparm == 0x0L)				/* # of ticks to wait   */
+		aparm = 0x1L;
+
+	cli();
+	if (CMP_TICK)
+	{
+		/*
+		 * if already counting down then reset
+		 * CMP_TICK to the lower number but let NUM_TICK grow
+		 * from its accumulated value
+		 */
+		if (aparm <= CMP_TICK)
+			CMP_TICK = aparm;
+	} else
+	{
+		/*
+		 * if we aren't currently counting down for
+		 * someone else then start ticking
+		 */
+		CMP_TICK = aparm;
+		/* start NUM_TICK out at zero */
+		NUM_TICK = 0;
+	}
+
+
+	e->e_flag |= EVDELAY;
+	q = (EVB *)((char *) &dlr - elinkoff);
+
+	for (p = dlr; p; p = (q = p)->e_link)
+	{
+		if (aparm <= p->e_parm)
+			break;
+		aparm -= p->e_parm;
+	}
+
+	e->e_pred = q;
+	q->e_link = e;
+	e->e_parm = aparm;
+	e->e_link = p;
+
+	if (p)
+	{
+		aparm = p->e_parm - aparm;
+		p->e_pred = e;
+		p->e_parm = aparm;
+	}
+	sti();
+}
+
+
+VOID abutton(P(EVB *)e, P(int32_t) aparm)
+PP(register EVB *e;)
+PP(register int32_t aparm;)
+{
+	if (downorup(button, aparm)
+#if TP_48 /* ARROWFIX */
+		&& rlr == gl_mowner
+#endif
+		)
+	{								/* changed */
+		e->e_return = 1;
+		zombie(e);					/* 'nuff said       */
+	} else
+	{
+		/* increment counting semaphore to show someone cares about multiple clicks */
+#if 0
+	mui:
+#endif
+		if ((LHIWD(aparm) & 0x000000ffL) > 1)
+			gl_bpend++;
+
+		e->e_parm = aparm;
+		evinsert(e, &cda->c_bsleep);
+	}
+}
+
+
+VOID amouse(P(EVB *)e, P(int32_t) aparm)
+PP(register EVB *e;)
+PP(register int32_t aparm;)
+{
+	MOBLK mob;
+
+	LBCOPY(&mob, (VOIDPTR)aparm, sizeof(MOBLK));
+	/* if already in (or out) signal immediately */
+#if TP_48 /* ARROWFIX */
+	if (ev_mchk(&mob))
+#else
+	if (mob.m_out != inside(xrat, yrat, (GRECT *)&mob.m_x))
+#endif
+	{
+		zombie(e);
+	} else
+	{
+		if (mob.m_out)
+			e->e_flag |= EVMOUT;
+		else
+			e->e_flag &= ~EVMOUT;
+		e->e_parm = HW(mob.m_x) + mob.m_y;
+		e->e_return = HW(mob.m_w) + mob.m_h;
+		evinsert(e, &(cda->c_msleep));
+	}
+}

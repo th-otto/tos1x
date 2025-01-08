@@ -550,6 +550,8 @@ _endvdibss: ds.b 0
 	INT(_gl_mx)
 	INT(_gl_my)
 	INT(_fpcnt)
+	BYTE(_xforkq)
+	even
 	V(_gl_ws,w,57)   /* workout */
 
 	ds.b 2
@@ -580,14 +582,12 @@ _endvdibss: ds.b 0
 	INT(_sh_gem)
 	INT(_mclick)
 	INT(_gl_fis)
-	INT(_no_aes)
 	PTR(_ctl_pd)
 	MFDB(_gl_src)
 	GRECT(_gl_rfs)
 	MFDB(_gl_dst)
 	PTR(_rs_hdr)
 	MFDB(_gl_tmp)
-	INT(_er_num)
 	INT(_curpid)
 	BYTE(_indisp)
 	even

@@ -104,7 +104,8 @@ PD *getpd(NOTHING)
 		p->p_pid = NUM_PDS + gl_naccs++;
 	}
 	/* initialize his DS&SS registers so stproc works   */
-	/* setdsss(p->p_uda);   */
+#if TOSVERSION < 0x104
+	 setdsss(p->p_uda);
 /*	setdsss(puda)
 *		UDA	*puda;
 *
@@ -113,8 +114,9 @@ PD *getpd(NOTHING)
 *
 *	in 68k u_ssuper and u_ssuser do not exist
 */
-
+#else
 	p->p_uda->u_insuper = 1;
+#endif
 	/* return the pd we got */
 	return p;
 }

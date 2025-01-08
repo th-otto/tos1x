@@ -1,7 +1,8 @@
 #
 # table of opcode/function names used
 # for the linef dispatcher in TOS
-# versions <= 1.04
+#
+# This file is for version 1.04 only
 #
 # The assembler will automatically translate
 # calls to these functions, if this file

@@ -143,7 +143,10 @@ PP(int16_t acc;)
 	handle = dos_open(ad_shcmd, RMODE_RD);
 	if (!DOS_ERR)
 	{									/* allocate PD memory for accessory */
-		err_ret = (acc != 0) ? cre_aproc() : TRUE;
+		if (acc != 0)
+			err_ret = cre_aproc();
+		else
+			err_ret = TRUE;
 
 		if (err_ret)
 		{
@@ -166,9 +169,11 @@ PP(int16_t acc;)
 				return TRUE;
 			}
 		}
+		return FALSE;
+	} else
+	{
+		return FALSE;
 	}
-
-	return FALSE;
 }
 
 
@@ -214,7 +219,8 @@ VOID ldaccs(NOTHING)
 			dos_sdrv(0x02);				/* set the hard disk    */
 		/* search the file  */
 		dos_chdir("\\");				/* always at root   */
-		if (!dos_sfirst(stacc, 0))
+		ret = dos_sfirst(stacc, 0);
+		if (!ret)
 			dos_sdrv(defdrv);			/* if not at the hard   */
 		/* disk go back to defa */
 

@@ -258,8 +258,6 @@ extern VOIDPTR ad_hgmice;
 extern LPTREE ad_stdesk;
 extern char *ad_fsel;
 extern intptr_t drawstk;
-extern int16_t er_num;						/* for output.s */
-extern int16_t no_aes;						/* gembind.s    */
 extern BOOLEAN autoexec;					/* autoexec a file ?    */
 
 #if DOWARNING
@@ -387,6 +385,7 @@ extern char infork;
 extern int16_t fpt;
 extern int16_t fph;
 extern int16_t fpcnt;									/* forkq tail, head,    */
+extern int8_t xforkq; /* only set, otherwise unused */
 extern SPB wind_spb;
 extern CDA *cda;
 extern int16_t curpid;
@@ -446,7 +445,7 @@ extern PD *dpd;								/* critical error process   */
 extern PD *slr;
 #endif
 
-BOOLEAN forkq PROTO((FCODE f_code, int32_t f_data));
+VOID forkq PROTO((FCODE f_code, int32_t f_data));
 VOID disp_act PROTO((PD *p));
 VOID suspend_act PROTO((PD *p));
 VOID forker PROTO((NOTHING));
@@ -501,6 +500,7 @@ BOOLEAN fm_error PROTO((int16_t n));
 /*
  * gemfslib.c
  */
+VOID fs_start PROTO((NOTHING));
 int16_t fs_input PROTO((char *pipath, char *pisel, int16_t *pbutton, char *lstring));
 
 
@@ -541,7 +541,7 @@ extern int16_t gl_bdesired;
 extern int16_t gl_btrue;
 extern int16_t gl_bdelay;
 
-PD *mowner PROTO((int16_t new));
+int16_t mowner PROTO((int16_t mx, int16_t my));
 uint16_t dq PROTO((CQUEUE *qptr));
 VOID fq PROTO((NOTHING));
 VOID evremove PROTO((EVB *e, uint16_t ret));
@@ -553,6 +553,10 @@ VOID post_button PROTO((PD *p, int16_t new, int16_t clks));
 VOID mchange PROTO((int16_t rx1, int16_t ry1));
 VOID post_mouse PROTO((PD *p, int16_t grx, int16_t gry));
 int16_t inorout PROTO((EVB *e, int16_t rx, int16_t ry));
+VOID set_ctrl PROTO((GRECT *pt));
+VOID get_ctrl PROTO((GRECT *pt));
+VOID get_mown PROTO((PD **pmown, PD **pkown));
+VOID set_mown PROTO((PD *pmown, PD *pkown));
 
 
 /*
@@ -747,6 +751,11 @@ VOID insert_process PROTO((PD *pi, PD **root));
  * gemqueue.c
  */
 VOID aqueue PROTO((BOOLEAN isqwrite, EVB *e, int32_t lm));
+VOID adelay PROTO((EVB *e, int32_t aparm));
+VOID amutex PROTO((EVB *e, SPB *sy));
+VOID akbin PROTO((EVB *e, int32_t aparm));
+VOID amouse PROTO((EVB *e, int32_t aparm));
+VOID abutton PROTO((EVB *e, int32_t aparm));
 
 
 /*
@@ -938,6 +947,7 @@ VOID savestate PROTO((UDA *pd));
 VOID switchto PROTO((UDA *pd));
 VOID gotopgm PROTO((NOTHING));
 VOID psetup PROTO((PD *pd, VOIDPTR pcode));
+VOID setdsss PROTO((UDA *pd));
 int16_t pgmld PROTO((int16_t handle, const char *pname, intptr_t *ldaddr));
 
 

@@ -335,6 +335,26 @@ _switchto:
 	clr.b	_indisp			; Can enter dispatcher now
 	move.w  srsave,(a7)
 	rte
+
+#if TOSVERSION < 0x104
+/* unused */
+	movea.l    4(a7),a0
+	bset       #7,(a0)
+	beq.s      sw1
+	move.w     #$00FF,d0
+	rts
+sw1:
+	clr.w      d0
+	rts
+
+	xdef _setdsss
+_setdsss:
+	movea.l    4(a7),a1
+	move.w     #1,(a1)
+	rts
+
+#endif
+
 #endif
 
 

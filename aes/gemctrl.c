@@ -71,10 +71,6 @@ extern int16_t gl_mnpid;
 #define MBDOWN 0x0001
 #define BELL 0x07						/* bell         */
 
-LPTREE ml_mnhold;
-GRECT ml_ctrl;
-PD *ml_pmown;
-PD *ml_pkown;
 STATIC int16_t tmpmoff;
 STATIC int16_t tmpmon;
 MOBLK gl_ctwait;
@@ -373,11 +369,7 @@ PP(int16_t my;)
 			}
 		}
 		/* application menu item has been selected so send it */
-#ifdef __ALCYON__
-		ct_msgup(mesag, owner, title, item, NULL, 0);
-#else
 		ct_msgup(mesag, owner, title, item, 0, 0, 0);
-#endif
 	}
 }
 
@@ -393,18 +385,9 @@ PP(PD *ppd;)
 PP(GRECT *pr;)
 {
 	/* set_ctrl(pr), copy the rect into control */
-	rc_copy(pr, &ctrl);
-	/* set_mkown(ppd, ppd);     */
-
+	set_ctrl(pr);
 	/* change the owner */
-	gl_cowner = gl_mowner = ppd;
-	/* pretend mouse moved to get the right form showing */
-	/* and get mouse event posted correctly */
-	post_mouse(gl_mowner, xrat, yrat);
-	/* post a button event in case the new owner was waiting */
-	post_button(gl_mowner, button, 1);
-
-	gl_kowner = ppd;
+	set_mown(ppd, ppd);
 }
 
 
@@ -527,44 +510,5 @@ PP(BOOLEAN mon;)
 		}
 
 		gl_moff = tmpmoff;
-	}
-}
-
-
-
-/*	0 = end mouse control	*/
-/*	1 = mouse control	*/
-
-/* 306de: 00e1b846 */
-/* 106de: 00e1f9c2 */
-VOID take_ownership(P(BOOLEAN) beg_ownit)
-PP(BOOLEAN beg_ownit;)
-{
-	if (beg_ownit)
-	{
-		wm_update(BEG_UPDATE);
-		if (ml_ocnt == 0)
-		{
-			ml_mnhold = gl_mntree;		/* save the current menu   */
-			gl_mntree = 0;				/* no menu         */
-			rc_copy(&ctrl, &ml_ctrl);	/* get_ctrl(&ml_ctrl);     */
-			/* save the control rect */
-			/* get_mkown(&ml_pmown, &ml_pkown); */
-
-			ml_pmown = gl_mowner;		/* save the mouse owner    */
-			ml_pkown = gl_kowner;		/* save the keyboard owner */
-
-			ct_chgown(rlr, &gl_rscreen);	/* change mouse ownership  */
-		}								/* and the control rect    */
-		ml_ocnt++;
-	} else
-	{
-		ml_ocnt--;
-		if (ml_ocnt == 0)
-		{
-			ct_chgown(ml_pkown, &ml_ctrl);	/* restore mouse owner     */ /* BUG: ml_pkown is keyboard owner, not mouse */
-			gl_mntree = ml_mnhold;		/* restore menu tree       */
-		}
-		wm_update(END_UPDATE);
 	}
 }
