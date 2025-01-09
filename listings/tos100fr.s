@@ -10999,6 +10999,7 @@ oscall:
 [00fc9220] 4cdf 2080                 movem.l    (a7)+,d7/a5
 [00fc9224] 4e5e                      unlk       a6
 [00fc9226] 4e75                      rts
+
 [00fc9228] 4e56 0000                 link       a6,#0
 [00fc922c] 48e7 030c                 movem.l    d6-d7/a4-a5,-(a7)
 [00fc9230] 4247                      clr.w      d7
@@ -11036,6 +11037,8 @@ oscall:
 [00fc929c] 4cdf 3080                 movem.l    (a7)+,d7/a4-a5
 [00fc92a0] 4e5e                      unlk       a6
 [00fc92a2] 4e75                      rts
+
+osif:
 [00fc92a4] 4e56 ffca                 link       a6,#-54
 [00fc92a8] 4279 0000 4158            clr.w      $00004158
 [00fc92ae] 5279 0000 4158            addq.w     #1,$00004158
@@ -11568,6 +11571,7 @@ oscall:
 [00fc9a78] 202e ffd6                 move.l     -42(a6),d0
 [00fc9a7c] 4e5e                      unlk       a6
 [00fc9a7e] 4e75                      rts
+
 [00fc9a80] 4e56 0000                 link       a6,#0
 [00fc9a84] 48e7 0300                 movem.l    d6-d7,-(a7)
 [00fc9a88] 302e 0008                 move.w     8(a6),d0

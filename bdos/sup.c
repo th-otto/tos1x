@@ -39,7 +39,9 @@ VOID tikfrk PROTO((int n));
  *  globals
  */
 
+#if GEMDOS >= 0x15
 char osuser;
+#endif
 int oscnt;
 
 long uptime;
@@ -299,7 +301,9 @@ VOID cinit(NOTHING)
 	buptr[BFHAUX] = beptr[BFHAUX] = glbkbchar[BFHAUX];
 	buptr[BFHCON] = beptr[BFHCON] = glbkbchar[BFHCON];
 
+#if GEMDOS >= 0x15
 	osuser = 0;
+#endif
 	
 #if !GEMDOS
 	date_time(GET_DATE, &date);			/* allow bios to initialise date and */
@@ -408,6 +412,7 @@ PP(int16_t *pw;)
 /* 306us: 00e18c6c */
 /* 104de: 00fc9822 */
 /* 106de: 00e09a4e */
+/* 100fr: 00fc92a4 */
 /* 404: 00e1dc30 */
 int32_t osif2(P(int16_t *) pw)
 PP(int16_t *pw;)
@@ -434,7 +439,9 @@ PP(int16_t *pw;)
 	volatile long j;
 	volatile OFD *fd;
 	
+#if GEMDOS >= 0x15
 	osuser++;
+#endif
 	oscnt = 0;
   restrt:
 	oscnt++;
@@ -471,12 +478,13 @@ PP(int16_t *pw;)
 
 	if (typ && fn && (fn < 12 || (fn >= 16 && fn <= 19)))	/* std funcs */
 	{
+#if GEMDOS >= 0x15
 		if (fn == 6) /* Crawio */
 		{
 			typ = (pw[1] == 0xff ? 0 : 1) + 0x80;
 		}
-		h = run->p_uft[typ & 0x7f];
-		if (h > 0)
+#endif
+		if ((h = run->p_uft[typ & 0x7f]) > 0)
 		{								/* do std dev function from a file */
 			switch (fn)
 			{
