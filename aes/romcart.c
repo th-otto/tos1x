@@ -77,6 +77,49 @@ BOOLEAN cart_init(NOTHING)
 }
 
 
+/* ZZZ */
+typedef struct	app
+{
+	int16_t a_type; 		/* file type */
+	int16_t a_icon; 		/* icon number */
+	int16_t a_flags;
+	int16_t a_dicon;		/* document icon */
+	int16_t a_o8;
+	const char *a_name; 	/* app name */
+	long a_o14;
+	short a_o16;
+	short a_o18;
+	short a_o20;
+	short a_o22;
+	short a_o24;
+	short a_o26;
+} APP;
+
+APP *app_alloc PROTO((BOOLEAN atend));
+
+
+LINEF_STATIC VOID cart_alloc(P(CARTNODE *) pcart)
+PP(register CARTNODE *pcart;)
+{
+	register APP *app;
+	
+	app = app_alloc(TRUE);
+	app->a_name = pcart->c_name;
+	app->a_flags = 0x10;
+	if ((pcart->c_init, 0))
+		app->a_flags |= 0x08;
+	if (!(pcart->c_init, 0))
+		app->a_flags |= 0x03;
+	app->a_dicon = 0;
+	app->a_o18 = 3;
+	app->a_o20 = 255;
+	app->a_o24 = 0;
+	app->a_o26 = 0;
+	app->a_o22 = 0;
+	app->a_o14 = 0;
+}
+
+
 /* 306de: 00e230de */
 /* 104de: 00fe6562 */
 /* 106de: 00e28c96 */
@@ -94,6 +137,7 @@ PP(BOOLEAN fill;)
 			bfill(42, 0, pdta);		/* zero it out  */
 			pdta[21] = F_RDONLY;		/* fill time,date,size,name */
 			LBCOPY(&pdta[22], &cart_ptr->c_time, 21);
+			cart_alloc(cart_ptr);
 		}
 		pcart = cart_ptr;
 		cart_ptr = cart_ptr->c_next;	/* point to next    */
@@ -188,24 +232,3 @@ PP(const char *ptail;)
 	dos_free(psp);
 	return TRUE;
 }
-
-
-#if AESVERSION >= 0x200
-/* 306de: 00e23288 */
-BOOLEAN c_sfirst(P(const char *) path)
-PP(const char *path;)
-{
-	const char *file;
-	CARTNODE *pcart;
-
-	file = g_name(path);
-	cart_init();
-	while ((pcart = cart_find(FALSE)))
-	{
-		if (streq(file, pcart->c_name))
-			return TRUE;
-	}
-
-	return FALSE;
-}
-#endif

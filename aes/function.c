@@ -41,6 +41,25 @@ PP(int16_t h;)
 }
 
 
+/* 	Routine to constrain a box within another box.  This is done by
+ *	seting the x,y of the inner box to remain within the
+ *	constraining box.
+ */
+VOID rc_constrain(P(const GRECT *) pc, P(GRECT *) pt)
+PP(register const GRECT *pc;)
+PP(register GRECT *pt;)
+{
+	if (pt->g_x < pc->g_x)
+		pt->g_x = pc->g_x;
+	if (pt->g_y < pc->g_y)
+		pt->g_y = pc->g_y;
+	if ((pt->g_x + pt->g_w) > (pc->g_x + pc->g_w))
+		pt->g_x = (pc->g_x + pc->g_w) - pt->g_w;
+	if ((pt->g_y + pt->g_h) > (pc->g_y + pc->g_h))
+		pt->g_y = (pc->g_y + pc->g_h) - pt->g_h;
+}
+
+
 /*
  * Copy src xywh block to dest xywh block.
  */
@@ -49,6 +68,49 @@ PP(register const GRECT *src;)
 PP(register GRECT *dst;)
 {
 	*dst = *src;
+}
+
+
+/*
+ * Returns the union of two rectangles in ptr2.
+ *	Don't pass in 0s in x,y,w,h
+ */
+VOID rc_union(P(const GRECT *) p1, P(GRECT *) p2)
+PP(register const GRECT *p1;)
+PP(register GRECT *p2;)
+{
+	register int16_t tx, ty, tw, th;
+
+	tw = max(p1->g_x + p1->g_w, p2->g_x + p2->g_w);
+	th = max(p1->g_y + p1->g_h, p2->g_y + p2->g_h);
+	tx = min(p1->g_x, p2->g_x);
+	ty = min(p1->g_y, p2->g_y);
+	p2->g_x = tx;
+	p2->g_y = ty;
+	p2->g_w = tw - tx;
+	p2->g_h = th - ty;
+}
+
+
+/* 	Returns the intersection of two rectangles in ptr2.
+ *	Returns true if there was an intersection where the width
+ *	is greater than x and the height is greater than y.
+ */
+BOOLEAN rc_intersect(P(const GRECT *) p1, P(GRECT *) p2)
+PP(register const GRECT *p1;)
+PP(register GRECT *p2;)
+{
+	register int16_t tx, ty, tw, th;
+
+	tw = min(p2->g_x + p2->g_w, p1->g_x + p1->g_w);
+	th = min(p2->g_y + p2->g_h, p1->g_y + p1->g_h);
+	tx = max(p2->g_x, p1->g_x);
+	ty = max(p2->g_y, p1->g_y);
+	p2->g_x = tx;
+	p2->g_y = ty;
+	p2->g_w = tw - tx;
+	p2->g_h = th - ty;
+	return (tw > tx) && (th > ty);
 }
 
 
@@ -86,70 +148,6 @@ PP(const int16_t *prc2;)
 	}
 	return TRUE;
 }
-
-
-/* 	Returns the intersection of two rectangles in ptr2.
- *	Returns true if there was an intersection where the width
- *	is greater than x and the height is greater than y.
- */
-BOOLEAN rc_intersect(P(const GRECT *) p1, P(GRECT *) p2)
-PP(register const GRECT *p1;)
-PP(register GRECT *p2;)
-{
-	register int16_t tx, ty, tw, th;
-
-	tw = min(p2->g_x + p2->g_w, p1->g_x + p1->g_w);
-	th = min(p2->g_y + p2->g_h, p1->g_y + p1->g_h);
-	tx = max(p2->g_x, p1->g_x);
-	ty = max(p2->g_y, p1->g_y);
-	p2->g_x = tx;
-	p2->g_y = ty;
-	p2->g_w = tw - tx;
-	p2->g_h = th - ty;
-	return (tw > tx) && (th > ty);
-}
-
-
-/*
- * Returns the union of two rectangles in ptr2.
- *	Don't pass in 0s in x,y,w,h
- */
-VOID rc_union(P(const GRECT *) p1, P(GRECT *) p2)
-PP(register const GRECT *p1;)
-PP(register GRECT *p2;)
-{
-	register int16_t tx, ty, tw, th;
-
-	tw = max(p1->g_x + p1->g_w, p2->g_x + p2->g_w);
-	th = max(p1->g_y + p1->g_h, p2->g_y + p2->g_h);
-	tx = min(p1->g_x, p2->g_x);
-	ty = min(p1->g_y, p2->g_y);
-	p2->g_x = tx;
-	p2->g_y = ty;
-	p2->g_w = tw - tx;
-	p2->g_h = th - ty;
-}
-
-
-/* 	Routine to constrain a box within another box.  This is done by
- *	seting the x,y of the inner box to remain within the
- *	constraining box.
- */
-VOID rc_constrain(P(const GRECT *) pc, P(GRECT *) pt)
-PP(register const GRECT *pc;)
-PP(register GRECT *pt;)
-{
-	if (pt->g_x < pc->g_x)
-		pt->g_x = pc->g_x;
-	if (pt->g_y < pc->g_y)
-		pt->g_y = pc->g_y;
-	if ((pt->g_x + pt->g_w) > (pc->g_x + pc->g_w))
-		pt->g_x = (pc->g_x + pc->g_w) - pt->g_w;
-	if ((pt->g_y + pt->g_h) > (pc->g_y + pc->g_h))
-		pt->g_y = (pc->g_y + pc->g_h) - pt->g_h;
-}
-
-
 
 
 /*

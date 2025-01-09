@@ -52,7 +52,6 @@
 	xdef _strchk
 	xdef _cart_init
 	xdef _cart_sfirst
-	xdef _c_sfirst
 	xdef _cart_snext
 	xdef _toupper
 	xdef _isdrive
@@ -132,7 +131,6 @@ _trap           equ AESTBASE+$0186
 _rom_ram        equ AESTBASE+$6AB4
 _cart_init      equ AESTBASE+$9914
 _cart_sfirst    equ AESTBASE+$99BE
-_c_sfirst       equ AESTBASE+$9AF8
 _cart_snext     equ AESTBASE+$99D4
 _desknoerr      equ AESTBASE+$BE46
 _isdrive        equ AESTBASE+$C204

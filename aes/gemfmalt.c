@@ -280,7 +280,8 @@ PP(const char *palstr;)
 	VOIDPTR addr;
 	GRECT d, t;
 	int16_t ratalert;						/* CHANGED 5/10 LKW */
-
+	int16_t tmpmon;
+	
 	UNUSED(ratalert);
 	
 	/* 7/16/92        */
@@ -289,6 +290,13 @@ PP(const char *palstr;)
 	rs_gaddr(ad_sysglo, R_TREE, ALERT, &addr);
 	tree = (LPTREE) addr;
 
+	gsx_mfset(ad_armice);
+	if (gl_moff)
+	{
+		tmpmon = TRUE;
+		gsx_mon();
+	}
+	
 	LWSET(OB_TYPE(1), G_IMAGE);
 	rs_gaddr(ad_sysglo, R_BIPDATA, NOTEBB, &plong);
 	LLSET(OB_SPEC(1), plong);
@@ -329,17 +337,17 @@ PP(const char *palstr;)
 	/* draw the alert   */
 	gsx_sclip(&d);
 	ob_draw(tree, ROOT, MAX_DEPTH);
-	ctlmouse(TRUE);						/* turn on the mouse */
 	/* let user pick button */
 	i = fm_do(tree, 0) & 0x7FFF;
-
-	ctlmouse(FALSE);					/* back to the way it was */
 
 	/* restore saved screen */
 	gsx_sclip(&d);
 	bb_restore(&d);
 	gsx_sclip(&t);
 	wm_update(END_UPDATE);
+
+	if (tmpmon)
+		gsx_moff();
 
 	/* return selection */
 	return i - BUT_OFF + 1;

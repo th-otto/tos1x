@@ -572,14 +572,15 @@ PP(register SHFIND_PROC routine;)
 	register BOOLEAN found = FALSE;
 	register char *pname;
 	char tmpname[14];
-	intptr_t savedta;
 
-	savedta = trap(0x2F);				/* Fgetdta()        */
+	/* BUG: does not save old dta -> will change the DTA of running program */
 	dos_sdta(&D.g_loc1[0]);				/* use this     */
 
+	LSTCPY(ad_path, (char *) pspec);
 	pname = sh_name(pspec);				/* get the file name    */
-	strcpy(tmpname, pname);			/* copy it      */
+	strcpy(tmpname, pspec);  /* copy to local buffer */
 
+	/* ZZZ some code to here */	
 	pname = sh_name(ad_shcmd);			/* first look in program's dir  */
 	path = (int16_t) ((intptr_t)pname - (intptr_t)ad_shcmd);
 	pname = &tmpname[0];
@@ -604,8 +605,23 @@ PP(register SHFIND_PROC routine;)
 	if (found)							/* if file found    */
 		strcpy(pspec, ad_path);			/* return full filespec */
 
-	dos_sdta((VOIDPTR)savedta);					/* restore DTA      */
 	return found;
+}
+
+
+/* ZZZ */
+LINEF_STATIC VOID sh_strupr(NOTHING)
+{
+	register THEGLO *DGLO;
+	register int len;
+	
+	DGLO = &D;
+	len = DGLO->s_tail[0];
+	while (len > 0)
+	{
+		DGLO->s_tail[len] = toupper(DGLO->s_tail[len]);
+		len--;
+	}
 }
 
 
@@ -742,4 +758,10 @@ VOID sh_main(NOTHING)
 #endif
 		}
 	} while (!reschange);				/* resolution change    */
+}
+
+
+/* ZZZ */
+VOID sh_xxx(NOTHING)
+{
 }

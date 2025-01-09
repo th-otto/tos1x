@@ -71,8 +71,6 @@ extern int16_t gl_mnpid;
 #define MBDOWN 0x0001
 #define BELL 0x07						/* bell         */
 
-STATIC int16_t tmpmoff;
-STATIC int16_t tmpmon;
 MOBLK gl_ctwait;
 int16_t appl_msg[8];
 #if 0
@@ -460,55 +458,4 @@ PP(int16_t pid;)
 	ldaddr = LLCS() + ((int32_t) & ctlmgr);
 	/* create process to execute it */
 	return pstart(&ctlmgr, "SCRENMGR.LOC", ldaddr);
-}
-
-
-/*
- * New routine to force arrow mouse and show mouse when it is over
- * the menu bar or there is an alert box	3/05/86
- */
-/* 306de: 00e1b7aa */
-/* 104de: 00fde172 */
-/* 106de: 00e1f926 */
-VOID ctlmouse(P(BOOLEAN) mon)
-PP(BOOLEAN mon;)
-{
-	if (mon)							/* turn on and show the mouse   */
-	{
-		getmouse();
-		tmpmon = gl_mouse;				/* mouse on flag        */
-		tmpmoff = gl_moff;
-#if AESVERSION >= 0x320
-		gsx_xmfset(ad_armice);			/* change the mouse form    */
-#else
-		gsx_mfset(ad_armice);			/* change the mouse form    */
-#endif
-		if (!gl_mouse)					/* if currently the mouse is    */
-		{
-			gsx_1code(SHOW_CUR, 0);	/* off, then turn it on     */
-			gl_mouse = TRUE;			/* set the flag         */
-		}
-		gl_moff = 0;					/* reset the flag to make bbset */
-	} else
-	{
-#ifdef __ALCYON__ /* sigh */
-		gsx_ncode(HIDE_CUR, 0L);		/* turn off the mouse anyway    */
-#else
-		gsx_ncode(HIDE_CUR, 0, 0);		/* turn off the mouse anyway    */
-#endif
-		putmouse();						/* put the mouse back to the    */
-		gl_mouse = FALSE;				/* way it was           */
-
-		if (tmpmon)						/* the mouse was on     */
-		{
-#ifdef __ALCYON__
-			gsx_ncode(SHOW_CUR, 0L); /* sigh */
-#else
-			gsx_ncode(SHOW_CUR, 0, 0);
-#endif
-			gl_mouse = TRUE;
-		}
-
-		gl_moff = tmpmoff;
-	}
 }

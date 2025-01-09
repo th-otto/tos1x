@@ -143,7 +143,7 @@ lineftab: ds.b 0
 		dc.l _gr_movebox          ; F14C
 		dc.l _gr_watchbox         ; F150
 		dc.l _gr_slidebox         ; F154
-		dc.l _ctlmouse            ; F158
+		dc.l 0                    ; F158
 		dc.l _gr_mkstate          ; F15C
 		dc.l _sc_read             ; F160
 		dc.l _sc_write            ; F164
@@ -514,7 +514,7 @@ lineftab: ds.b 0
 		dc.l _w_getsize           ; F718
 		dc.l _r_get               ; F71C
 		dc.l _gr_rubwind          ; F720
-		dc.l _delay               ; F724
+		dc.l 0                    ; F724
 		dc.l _ct_msgup            ; F728
 		dc.l _hctl_window         ; F72C
 		dc.l _mn_do               ; F730
@@ -523,9 +523,9 @@ lineftab: ds.b 0
 		dc.l _w_setactive         ; F73C
 		dc.l _hctl_button         ; F740
 		dc.l _hctl_rect           ; F744
-		dc.l _getmouse            ; F748
+		dc.l 0                    ; F748
 		dc.l _gsx_1code           ; F74C
-		dc.l _putmouse            ; F750
+		dc.l 0                    ; F750
 		dc.l _ct_chgown           ; F754
 		dc.l _savestate           ; F758
 		dc.l _disp_act            ; F75C

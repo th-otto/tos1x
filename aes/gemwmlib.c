@@ -1293,20 +1293,6 @@ PP(register GRECT *pt;)
 	return TRUE;
 }
 
-/* init owner rectangles */
-VOID or_start(NOTHING)
-{
-	register int16_t i;
-
-	rul = NULL;
-	for (i = 0; i < NUM_ORECT; i++)
-	{
-		D.g_olist[i].o_link = rul;
-		rul = &D.g_olist[i];
-	}
-}
-
-
 /*
  *  Start the window manager up by initializing internal variables
  */

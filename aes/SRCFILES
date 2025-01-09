@@ -67,7 +67,7 @@ AES_HEADERS=\
 AES_ASRCS=\
 	apgrlib.S \
 	apgsxif.c \
-	gemgrlib.S \
+	gemgrlib.c \
 	gemgsxif.c \
 	gsx2.S \
 	jbind.S \

@@ -50,6 +50,20 @@ static VOID mkrect PROTO((LPTREE tree, int16_t wh, int16_t junkx, int16_t junky)
 
 
 
+/* init owner rectangles */
+VOID or_start(NOTHING)
+{
+	register int16_t i;
+
+	rul = NULL;
+	for (i = 0; i < NUM_ORECT; i++)
+	{
+		D.g_olist[i].o_link = rul;
+		rul = &D.g_olist[i];
+	}
+}
+
+
 /* 306de: 00e22d7a */
 /* 104de: 00fdee1e */
 /* 106de: 00e2074e */

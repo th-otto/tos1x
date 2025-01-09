@@ -86,31 +86,6 @@ _trp14: ds.b 0
 	rts
 
 
-/* 104de: 00fe75a2 */
-/* 106de: 00e29e94 */
-	xdef _getmouse
-_getmouse:
-	dc.w	$A000
-	suba.l	#$358,a0        ; M_POS_HX; WTF; will fail with Falcon VDI where mouse shape is stored somewhere else
-	move.l	a0,_maddr		; save the mouse block address
-	lea	mform,a1		; destination
-	move.w	#36,d0			; size ( - 1 for dbra )
-getmcp:
-	move.w	(a0)+,(a1)+
-	dbra	d0,getmcp
-	rts
-
-	xdef _putmouse
-_putmouse:
-	lea	mform,a0		; from our form
-	move.l	_maddr,a1		; back to the line-a
-	move.w	#36,d0			; size ( - 1 for dbra )
-putmcp:
-	move.w	(a0)+,(a1)+
-	dbra	d0,putmcp
-	clr.l	_maddr			; no longer in use...
-	rts
-
 /*
  * FIXME: remainder really belongs to DESKTOP
  */

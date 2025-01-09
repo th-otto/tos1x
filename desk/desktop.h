@@ -818,7 +818,6 @@ VOID LBCOPY PROTO((VOIDPTR dst, const VOIDPTR src, int cnt));
 int16_t strchk PROTO((const char *s, const char *t));
 BOOLEAN cart_init PROTO((NOTHING));
 BOOLEAN cart_sfirst PROTO((char *pdta, int16_t attr));
-BOOLEAN c_sfirst PROTO((const char *path));
 BOOLEAN cart_snext PROTO((NOTHING));
 int toupper PROTO((int ch));
 int isdrive PROTO((NOTHING));

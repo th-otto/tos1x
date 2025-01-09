@@ -226,8 +226,6 @@ PP(int16_t *pitem;)
 	buparm = 0x00010101L;
 	cur_title = cur_menu = cur_item = NIL;
 
-	ctlmouse(TRUE);
-
 #if !BINEXACT
 	rect = 0; /* quiet compiler */
 #endif
@@ -324,8 +322,6 @@ PP(int16_t *pitem;)
 			do_chg(tree, cur_title, SELECTED, FALSE, TRUE, TRUE);
 		}
 	}
-
-	ctlmouse(FALSE);					/* fixed 3/5/86     */
 
 	return flag;
 }

@@ -412,13 +412,14 @@ drawaddr        0000642a        Data Label      Global  User Defined    1       
 drawsp          0000642e        Data Label      Global  User Defined    2       0
 drawstk         00006432        Data Label      Global  User Defined    5       0
 errsave         0000643a        Data Label      Global  User Defined    2       0
-drwaddr         00006c72        Data Label      Global  User Defined    3       0
 ad_rso          00006c44
 ml_ocnt         00006c48
 ml_mnhold       00006c4a
 ml_ctrl         00006c4e
 pblock          00006c5e
+drwaddr         00006c72        Data Label      Global  User Defined    3       0
 tikaddr         00006c76        Data Label      Global  User Defined    2       0
+gstksave        00006c7a
 tiksav          00006c82        Data Label      Global  User Defined    4       0
 trp13aret       00006d58        Data Label      Global  User Defined    2       0
 trp14aret       00006d5c        Data Label      Global  User Defined    2       0
@@ -428,6 +429,7 @@ intin           00006d64        Data Label      Global  User Defined    10      
 gl_mkrect       00006e8c
 gl_rbuf         00006e98
 gl_awind        00006ea0
+cart_dta        00006ea4
 gl_hbox         00006eac        Data Label      Global  User Defined    9       0
 gl_yclip        00006eae        Data Label      Global  User Defined    1       0
 intout          00006eb0
@@ -452,6 +454,7 @@ ptsin           00007058
 DOS_ERR         00007080        Data Label      Global  User Defined    18      0
 W_ACTIVE        00007082
 gl_newroot      0000724a
+cart_ptr        0000724c
 ptsout          00007250        Data Label      Global  User Defined    2       3
 gl_btrue        00007264
 gl_hptschar     00007266        Data Label      Global  User Defined    3       0
@@ -486,6 +489,7 @@ havefmt         0000739c
 drl             0000739e
 dlr             000073a2
 pr_yrat         000073a6
+edblk           000073a8
 rs_hdr          000073c4
 havegem         000073c8
 xforkq          000073ca
@@ -499,6 +503,7 @@ gl_naccs        00009e06
 gl_dacnt        00009e08
 desk_global     00009e0c
 thedesk         00009e2a
+ad_hgmice       00009e2e
 infork          00009e32
 fpt             00009e34
 gl_pacc         00009e36
@@ -508,6 +513,9 @@ fmt_global      00009e6e
 gem_global      00009e8c
 nrl             00009eaa
 gl_bclick       00009eb0
+bi              00009eb6
+ib              00009ec4
+ad_armice       00009ee6
 gl_handle       00009eea
 gl_dclick       00009eec
 romdata         00009eee
@@ -552,7 +560,6 @@ gl_ticktime     0000a096        Data Label      Global  User Defined    2       
 old_mcode       0000a09a
 gl_mlen         0000a09e
 ad_envrn        0000a0a2        Data Label      Global  User Defined    1       0
-
 desk_pid        0000a0ae
 gl_newdesk      0000a0c0
 w_walkflag      0000a0be

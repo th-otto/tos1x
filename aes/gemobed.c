@@ -73,6 +73,23 @@ static TEDINFO edblk;
 
 
 
+LINEF_STATIC VOID ob_getsp(P(LPTREE) tree, P(int16_t) obj, P(TEDINFO *) pted)
+PP(LPTREE tree;)
+PP(int16_t obj;)
+PP(TEDINFO *pted;)
+{
+	int16_t flags;
+	register intptr_t spec;
+
+	flags = LWGET(OB_FLAGS(obj));
+	spec = LLGET(OB_SPEC(obj));
+	if (flags & INDIRECT)
+		spec = LLGET(spec);
+
+	LBCOPY(ADDR(pted), (VOIDPTR)spec, sizeof(TEDINFO));
+}
+
+
 /*
  * AES #54 - form_center - Centre an object on the screen.
  */
@@ -430,14 +447,7 @@ PP(int16_t kind;)
 		return TRUE;
 
 	/* copy TEDINFO struct to local struct  */
-/*	ob_getsp(tree, obj, &edblk);	*/
-
-	flags = LWGET(OB_FLAGS(obj));
-	spec = LLGET(OB_SPEC(obj));
-	if (flags & INDIRECT)
-		spec = LLGET(spec);
-
-	LBCOPY(&edblk, (VOIDPTR)spec, sizeof(TEDINFO));
+	ob_getsp(tree, obj, &edblk);
 
 	/* copy passed in strs to local strs */
 	LSTCPY(&DGLO->g_tmpstr[0], edblk.te_ptmplt);

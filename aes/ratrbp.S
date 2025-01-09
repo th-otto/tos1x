@@ -59,57 +59,11 @@ _far_bchange:
 	lea.l	gstack+23*4,a7
 	movem.l	d0-d2/a0-a2,-(sp)	; save regs that c will crunch
 
-#if 0
 	move.w	d0,-(sp)		; pass button state, only if tick in gsx
 	jsr	_b_click
-
-/*
- * b_click( state )
- * state in D0
- */
-#endif
-
-_b_click:
-#if AESVERSION >= 0x330
-	move.w	d0,_gl_button
-#endif
-	cmp.w	_gl_btrue,d0		; if state != gl_btrue
-	beq	bout1			; no change and exit
-	tst.w	_gl_bdelay		; do we have to wait
-	beq	bout2
-	cmp.w	_gl_bdesired,d0		; state == gl_bdesired
-	bne	bout3
-	addq.w	#1,_gl_bclick		; gl_bclick++
-	addq.w	#3,_gl_bdelay		; gl_bdelay += 3
-	bra	bout3
-
-bout2:
-#if !TP_48 /* ARROWFIX */
-	tst.w	_gl_bpend		; if ( gl_bpend && state )
-	beq	bout4
-#endif
-	tst.w	d0
-	beq	bout4
-	move.w	#1,_gl_bclick		; gl_bclick = 1
-	move.w	d0,_gl_bdesired		; gl_bdesired = state
-	move.w	_gl_dclick,_gl_bdelay	;
-	bra	bout3
-
-bout4:
-	move.w	d0,-(sp)		; save the d0
-	move.w	#1,-(sp)
-	move.w	d0,-(sp)
-	pea	_bchange
-	jsr	forkq
-	add.l	#8,sp
-	move.w	(sp)+,d0		; restore d0
-
-bout3:
-	move.w	d0,_gl_btrue		; gl_btrue = state
-
-bout1:
-	movem.l (sp)+,d0-d2/a0-a2
-	movea.l	gstksave,a7
+	addq.l     #2,a7
+	movem.l    (a7)+,d0-d2/a0-a2
+	move.l gstksave,17
 	rts
 
 /*

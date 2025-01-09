@@ -105,7 +105,7 @@ PD *getpd(NOTHING)
 	}
 	/* initialize his DS&SS registers so stproc works   */
 #if TOSVERSION < 0x104
-	 setdsss(p->p_uda);
+	setdsss(p->p_uda);
 /*	setdsss(puda)
 *		UDA	*puda;
 *
