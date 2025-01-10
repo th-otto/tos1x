@@ -35,9 +35,9 @@ bcon0o2:
 bcon0o3:
         bsr.s     gpipisr7
         moveq.l   #7,d1
-        moveq.l   #$c0,d0
+        moveq     #-64,d0
         bsr.s     ongib
-        move.b    #$0F,(a0)
+        move.b    #15,(a0)
         move.b    7(a7),(a1)
         bsr.s     strobeon
         move.w    (a0),d0
@@ -50,7 +50,7 @@ bcon0o3:
 strobeoff:
         moveq.l   #14,d1
 ongib0:
-        moveq.l   #$20,d0
+        moveq     #32,d0
 ongib:
         move.b    d1,(a0)
         or.b      (a0),d0
@@ -60,7 +60,7 @@ ongib:
 strobeon:
         moveq.l   #14,d1
 offgib0:
-        moveq.l   #$DF,d0
+        moveq     #-33,d0
 offgib:
         move.b    d1,(a0)
         and.b     (a0),d0
@@ -84,7 +84,7 @@ bcon0in1:
         bmi.s     bcon0in1
         bsr.s     gpipisr7
         bsr.s     offgib0
-        move.b    #$0F,(a0)
+        move.b    #15,(a0)
         move.b    (a0),d0
         move.w    d3,sr
         rts
@@ -96,7 +96,7 @@ bcon0in1:
 /* 206de: 00e020a0 */
 	xdef _bco0stat
 _bco0stat:
-        andi.b    #$FE,(MFP_DDR).w
+        andi.b    #-2,(MFP_DDR).w
         moveq.l   #0,d0
         btst      d0,(MFP_GPIP).w
         bne.s     bco0st1
@@ -114,6 +114,6 @@ gpipisr7:
         lea.l     (psgsel).w,a0
         lea.l     2(a0),a1
         move.w    sr,d3
-        ori.w     #$0700,sr
+        ori.w     #7*256,sr
         rts
 		dc.w -1

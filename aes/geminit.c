@@ -386,7 +386,7 @@ VOID gem_main(NOTHING)
 	/* do gsx open work station */
 	gsx_init();
 
-	rom_ram(0, ad_sysglo);
+	rom_ram(0, ad_sysglo, 0);
 
 	rs_gaddr(ad_sysglo, R_BIPDATA, MICE0, &ad_armice);
 	ad_armice = (VOIDPTR)LLGET((intptr_t)ad_armice);
@@ -589,12 +589,7 @@ int16_t pred_dinf(NOTHING)
 	 */
 	sh_get(pbuf, SIZE_AFILE);
 
-#if BINEXACT
-	/* BUG: extra parameter here */
 	rom_ram(3, (intptr_t)pbuf, 0);			/* res is default from ROM  */
-#else
-	rom_ram(3, (intptr_t)pbuf);				/* res is default from ROM  */
-#endif
 
 	if (isdrive() && diskin)			/* there is a disk  */
 	{
@@ -641,7 +636,7 @@ int16_t pred_dinf(NOTHING)
 				{
 					temp += 2;			/* get the flag     */
 					temp = scan_2(temp, &g_flag);
-					temp = escan_str(temp, &g_autoboot[0]);
+					temp = escan_str(temp, (char **)&g_autoboot[0]);
 				} else if (*temp == 'E')
 				{
 					temp += 5;

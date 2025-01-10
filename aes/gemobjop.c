@@ -64,7 +64,7 @@ PP(int16_t *pth;)
 	register int16_t th;
 	OBJECT tmp;
 
-	LWCOPY(ADDR(&tmp), OB_NEXT(obj), sizeof(OBJECT)/2);
+	LWCOPY(ADDR(&tmp), (VOIDPTR)OB_NEXT(obj), sizeof(OBJECT)/2);
 
 	pt->g_w = tmp.ob_width;			/* set user grect width */
 	pt->g_h = tmp.ob_height;			/* set user grect height */

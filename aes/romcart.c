@@ -31,6 +31,11 @@
 #include "gemlib.h"
 #include "dos.h"
 
+/*
+ * WTF, directly accesses some desktop structures
+ */
+#include "../desk/app.h"
+
 
 #define CART_BASE 0xFA0000L
 #define CART_START 0xFA0004L
@@ -77,25 +82,6 @@ BOOLEAN cart_init(NOTHING)
 }
 
 
-/* ZZZ */
-typedef struct	app
-{
-	int16_t a_type; 		/* file type */
-	int16_t a_icon; 		/* icon number */
-	int16_t a_flags;
-	int16_t a_dicon;		/* document icon */
-	int16_t a_o8;
-	const char *a_name; 	/* app name */
-	long a_o14;
-	short a_o16;
-	short a_o18;
-	short a_o20;
-	short a_o22;
-	short a_o24;
-	short a_o26;
-} APP;
-
-APP *app_alloc PROTO((BOOLEAN atend));
 
 
 LINEF_STATIC VOID cart_alloc(P(CARTNODE *) pcart)
@@ -104,19 +90,19 @@ PP(register CARTNODE *pcart;)
 	register APP *app;
 	
 	app = app_alloc(TRUE);
-	app->a_name = pcart->c_name;
-	app->a_flags = 0x10;
-	if ((pcart->c_init, 0))
-		app->a_flags |= 0x08;
-	if (!(pcart->c_init, 0))
-		app->a_flags |= 0x03;
-	app->a_dicon = 0;
-	app->a_o18 = 3;
-	app->a_o20 = 255;
-	app->a_o24 = 0;
-	app->a_o26 = 0;
-	app->a_o22 = 0;
-	app->a_o14 = 0;
+	app->a_pappl = pcart->c_name;
+	app->a_apptype = AF_ISFMEM;
+	if ((pcart->c_init))
+		app->a_apptype |= AF_ISPARM;
+	if (!(pcart->c_init))
+		app->a_apptype |= (AF_ISGRAF|AF_ISCRYS);
+	app->a_type = AT_ISFILE;
+	app->a_aicon = 3; /* IPRG - 1 */
+	app->a_dicon = 255;
+	app->a_x = 0;
+	app->a_y = 0;
+	app->a_char = 0;
+	app->a_pdata = 0;
 }
 
 

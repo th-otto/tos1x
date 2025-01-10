@@ -123,11 +123,12 @@ PP(register GRECT *pt;)
 /*
  *	Routine to draw a string of graphic text.
  */
-VOID gr_gtext(P(int16_t) just, P(int16_t) font, P(const char *) ptext, P(GRECT *) pt)
+VOID gr_gtext(P(int16_t) just, P(int16_t) font, P(const char *) ptext, P(GRECT *) pt, P(int16_t) mode)
 PP(int16_t just;)
 PP(int16_t font;)
 PP(const char *ptext;)
 PP(GRECT *pt;)
+PP(int16_t mode;)
 {
 	int16_t numchs;
 	GRECT t;

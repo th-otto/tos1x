@@ -762,6 +762,9 @@ VOID sh_main(NOTHING)
 
 
 /* ZZZ */
+VOID sh_xxx PROTO((NOTHING));
+
 VOID sh_xxx(NOTHING)
 {
+	(VOID)sh_strupr;
 }

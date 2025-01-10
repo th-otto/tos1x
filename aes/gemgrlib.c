@@ -56,7 +56,7 @@ PP(int16_t h;)
 	 * compiler had better put the values out, x, y, w, h in the 
 	 * right order on the stack to form a MOBLK WTF
 	 */
-	event = ev_multi(MU_BUTTON | MU_M1, &out, NULL, 0x0L, 0x00010100L, 0x0L, &rets[0]); /* 01ff00L */
+	event = ev_multi(MU_BUTTON | MU_M1, (MOBLK *)&out, NULL, 0x0L, 0x00010100L, 0x0L, &rets[0]); /* 01ff00L */
 
 	if (event & MU_BUTTON)			/* button up */
 		return FALSE;
@@ -109,7 +109,7 @@ PP(register int16_t *pystep;)
 	for (i = 0; dist; i++)
 		dist /= 2;
 
-	if (*pcnt = i)
+	if ((*pcnt = i))
 	{
 		*pxstep = max(1, xdist / i);
 		*pystep = max(1, ydist / i);
@@ -173,9 +173,9 @@ PP(int16_t dowdht;)
 	do
 	{
 		if (clipped)
-			gsx_xcbox(&cx);
+			gsx_xcbox((GRECT *)&cx);
 		else
-			gsx_xbox(&cx);
+			gsx_xbox((GRECT *)&cx);
 		cx -= xstep;
 		cy -= ystep;
 		if (dowdht)
@@ -264,7 +264,7 @@ PP(GRECT *poff;)
 PP(int16_t *pwend;)
 PP(int16_t *phend;)
 {
-	int16_t have2box, down;
+	int16_t down;
 	GRECT o;
 
 	wm_update(BEG_UPDATE);
@@ -460,13 +460,13 @@ PP(int16_t outstate;)
 	GRECT t;
 
 	gsx_sclip(&gl_rscreen);
-	ob_actxywh(tree, obj, &t);
+	ob_actxywh((LPTREE)tree, obj, &t);
 
 	out = FALSE;
 	do
 	{
 		state = out ? outstate : instate;
-		ob_change(tree, obj, state, TRUE);
+		ob_change((LPTREE)tree, obj, state, TRUE);
 		out = !out;
 	} while (gr_stilldn(out, t.g_x, t.g_y, t.g_w, t.g_h));
 
@@ -514,7 +514,7 @@ PP(int16_t isvert;)
 /*
  * AES #79 - graf_mkstate - Graphics mouse and keyboard status
  */
-VOID gr_mkstate(P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pmstat, P(int16_t *) pkstat)
+int16_t gr_mkstate(P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pmstat, P(int16_t *) pkstat)
 PP(int16_t *pmx;)
 PP(int16_t *pmy;)
 PP(int16_t *pmstat;)
@@ -524,4 +524,7 @@ PP(int16_t *pkstat;)
 	*pmy = yrat;
 	*pmstat = button;
 	*pkstat = kstate;
+#ifdef __GNUC__
+	return TRUE;
+#endif
 }

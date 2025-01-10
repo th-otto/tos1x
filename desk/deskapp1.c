@@ -21,6 +21,9 @@
 char const infdata[] = "DESKTOP.INF";
 
 
+LINEF_STATIC VOID set_infpath PROTO((NOTHING));
+LINEF_STATIC VOID rest_infpath PROTO((NOTHING));
+
 
 
 /* 104de: 00fd4cb0 */
@@ -161,28 +164,23 @@ PP(uint16_t wd;)
 
 /* 306de: 00e2b5f2 */
 /* 104de: 00fd4e14 */
-char *escan_str(P(const char *)pcurr, P(char *)ppstr)
+char *escan_str(P(const char *)pcurr, P(char **)ppstr)
 PP(register const char *pcurr;)
-PP(register char *ppstr;)
+PP(register char **ppstr;)
 {
+	register THEDSK *d;
+	
+	d = thedesk;
 	while (*pcurr == ' ')
 		pcurr++;
 
-	while (*pcurr != '@')
-		*ppstr++ = *pcurr++;
+	*ppstr = d->g_pbuff;
+	while (*d->g_pbuff != '@')
+		*(d->g_pbuff)++ = *pcurr++;
 
-	*ppstr = 0;
+	*d->g_pbuff++ = 0;
 	pcurr++;
 	return NO_CONST(pcurr);
-}
-
-
-/* 104de: 00fd4e40 */
-char *escani_str(P(const char *)pcurr, P(char **)ppstr)
-PP(register const char *pcurr;)
-PP(char **ppstr;)
-{
-	return escan_str(pcurr, *ppstr);
 }
 
 
@@ -195,7 +193,7 @@ char *save_sstr(P(char *)pcurr, P(const char *)pstr)
 PP(register char *pcurr;)
 PP(register const char *pstr;)
 {
-	while (*pstr && pstr) /* BUG: && pstr useless when first acessing it */
+	while (*pstr)
 		*pcurr++ = *pstr++;
 	*pcurr++ = '@';
 	*pcurr++ = ' ';
@@ -256,10 +254,55 @@ PP(register APP *app;)
 	app->a_char = *pcurr == ' ' ? 0 : *pcurr;
 	pcurr += 2;
 	
-	pcurr = escani_str(pcurr, &app->a_pappl);
-	pcurr = escani_str(pcurr, &app->a_pdata);
+	pcurr = escan_str(pcurr, &app->a_pappl);
+	pcurr = escan_str(pcurr, &app->a_pdata);
 	
 	return pcurr;
+}
+
+
+VOID app_tran(P(int16_t) bi_num)
+PP(int16_t bi_num;)
+{
+	BITBLK *lpbi;
+	BITBLK lb;
+
+	rsrc_gaddr(R_BITBLK, bi_num, (VOIDPTR *)&lpbi);
+
+	LBCOPY(ADDR(&lb), (VOIDPTR) lpbi, sizeof(BITBLK));
+	gsx_trans(lb.bi_pdata, lb.bi_wb, lb.bi_pdata, lb.bi_wb, lb.bi_hl);
+}
+
+
+int16_t app_getfh(P(BOOLEAN) openit, P(char *) pname, P(int16_t) attr)
+PP(BOOLEAN openit;)
+PP(register char *pname;)
+PP(register int16_t attr;)
+{
+	register int handle;
+	register THEDSK *d;
+	LPBYTE lp;
+
+	d = thedesk;
+	handle = 0;
+	strcpy(d->g_srcpth, pname);
+	lp = (LPBYTE)ADDR(&d->g_srcpth[0]);
+	if (openit)
+		handle = dos_open((char *)lp, attr);
+	else
+		handle = dos_create((char *)lp, attr);
+	if (DOS_ERR)
+	{
+		handle = 0;
+	}
+	return handle;
+}
+
+
+BOOLEAN app_rdicon(NOTHING)
+{
+	/* ZZZ TODO */
+	return TRUE;
 }
 
 
@@ -305,6 +348,14 @@ PP(register int16_t *py;)
 		*py += d->g_desk.g_h % h;
 	*py += d->g_desk.g_y;
 }
+
+
+BOOLEAN app_start(NOTHING)
+{
+	/* ZZZ TODO */
+	return TRUE;
+}
+
 
 
 /*
@@ -370,11 +421,7 @@ BOOLEAN read_inf(NOTHING)
 		} else
 		{
 		re_1:
-#if BINEXACT
-			d->size_afile = rom_ram(3, (intptr_t)d->afile, 0); /* BUG: extra parameter */
-#else
-			d->size_afile = rom_ram(3, (intptr_t)d->afile);
-#endif
+			d->size_afile = rom_ram(3, (intptr_t)d->afile, 0);
 		}
 
 		d->afile[d->size_afile] = 0; /* BUG: may write beyond end-of-buffer */
@@ -396,7 +443,7 @@ BOOLEAN read_inf(NOTHING)
 		{
 		case 'Z':					/* auto boot file */
 			pcurr += 2;
-			pcurr = escan_str(pcurr, d->autofile);
+			pcurr = escan_str(pcurr, (char **)d->autofile);
 			break;
 
 		case 'C':
@@ -546,10 +593,13 @@ BOOLEAN app_reschange(P(int16_t) res)
 PP(int16_t res;)
 {
 	if (res == gl_restype)
+	{
 		return FALSE;
-
-	gl_restype = res;
-	gl_rschange = TRUE;
+	} else
+	{
+		gl_restype = res;
+		gl_rschange = TRUE;
+	}
 	return TRUE;
 }
 
@@ -762,17 +812,43 @@ PP(BOOLEAN todisk;)
 }
 
 
+LINEF_STATIC VOID set_infpath(NOTHING)
+{
+	/* ZZZ TODO */
+}
+
+
+LINEF_STATIC VOID rest_infpath(NOTHING)
+{
+	/* ZZZ TODO */
+}
+
+
 /*
  * return TRUE if HARD DISK
  * Doesn't NEED to return anything -- 881109 kbad
  */
 /* 306de: 00e1e556 */
 /* 104de: 00fd598e */
-VOID set_defdrv(NOTHING)
+BOOLEAN set_defdrv(NOTHING)
 {
+#if 0
 	/* This fugly statement gets drvbits, masks drive C,
 	 *  and does a GEMDOS Setdrive to drive A (0) if C doesn't exist,
 	 *  or to C (2) if it does exist.  Don't ask.  It had to be shrunk.
 	 */
 	dos_sdrv((isdrive() & 0x04) >> 1);
+#else
+	if (isdrive() & 0x04)
+	{
+		dos_sdrv(2);
+		return TRUE;
+	} else
+	{
+		dos_sdrv(0);
+		return FALSE;
+	}
+#endif
+	UNUSED(rest_infpath);
+	UNUSED(set_infpath);
 }

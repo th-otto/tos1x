@@ -58,6 +58,7 @@ typedef struct pathnode PNODE;
  * files changes instead.
  */
 typedef intptr_t LPTREE;
+typedef intptr_t LPBYTE;
 
 #define CMD_BAT    0xFA
 #define CMD_COPY   0xFB
@@ -92,18 +93,6 @@ typedef intptr_t LPTREE;
 
 /*****  APPLICATION FILE TYPE DEFINES      ******/
 /*      -1 means match the type                 */
-
-#define AT_ISFILE   0 /* file                 */
-#define AT_ISFOLD   1 /* folder               */
-#define AT_ISDISK   2 /* disk or diskette     */
-#define AT_ISTRSH   3 /* Trash                */
-#define AT_ISCART   4 /* cartridge            */
-
-#define AF_ISCRYS 0x0001			/* is crystal appl.	*/
-#define AF_ISGRAF 0x0002			/* is graphic appl.	*/
-#define AF_ISDESK 0x0004			/* is placed on desk */
-#define AF_ISPARM 0x0008			/* is in need of input */
-#define AF_ISFMEM 0x0010			/* is in need of full memory */
 
 #define TOS     0
 #define PRG     (AF_ISGRAF|AF_ISCRYS)
@@ -161,22 +150,7 @@ typedef intptr_t LPTREE;
 #define E_NOPNODES 101
 #define E_NODNODES 102
 
-
-typedef struct app
-{
-	/*  0 */ struct app *a_next;    /* app pointer */
-	/*  4 */ int16_t a_apptype;
-	/*  6 */ int16_t a_type; 		/* file type */
-	/*  8 */ int16_t a_obid;		/* object # in desktop tree */
-	/* 10 */ char *a_pappl;         /* filename.ext of ap */
-	/* 14 */ char *a_pdata; 		/* wildcards of data file */
-	/* 18 */ int16_t a_aicon; 		/* application icon # */
-	/* 20 */ int16_t a_dicon;       /* data icon # */
-	/* 22 */ int16_t a_char;
-	/* 24 */ int16_t a_x;
-	/* 26 */ int16_t a_y;
-	/* 28 */
-} APP;
+#include "app.h"
 
 typedef struct _fnode FNODE;
 
@@ -242,7 +216,6 @@ typedef struct {
 	/* 10304 */ short g_ihspc;
 	/* 10306 */ short g_incol;              /* # of cols in full window */
 	/* 12308 */ int16_t g_isort;			/* current sort type */
-	/* 12310 */ char g_srcpth[PATHLEN];
 	/* 12438 */ char g_dstpth[PATHLEN];
 	/* 12566 */ char *g_xbuf;               /* data xfer buffer and */
 	/* 12570 */ long g_xlen;                /* length for copying */
@@ -254,8 +227,6 @@ typedef struct {
 	/* 13310 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 13350 */ int16_t g_rmsg[8];		    /* general AES message area */
 	/* 13366 */ int16_t *p_msgbuf;		
-	/* 13378 */ GRECT g_desk;
-	/* 13370 */ GRECT g_full;				/* full window size value */
 	/* 13386 */ char g_cmd[PATHLEN];
 	/* 13514 */ char *g_pcmd;
 	/* 13518 */ char g_tail[128];
@@ -289,7 +260,6 @@ typedef struct {
 	/* 22210 */ APP *appnode;			/* app buffer array */
 	/* 22214 */ APP app[NUM_ANODES];	/* app buffer array */
 	/* 23110 */ APP *appfree;			/* app buffer free list */
-	/* 23114 */ APP *applist;			/* app buffer list */
 	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
 	/* 23322 */ ICONBLK g_iblist[NUM_IB + 1];
 	/* 23526 */ int16_t g_ismask[(NUM_IB + 1) * 2];
@@ -300,11 +270,7 @@ typedef struct {
 	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
 	/* 23560 */ int16_t pref_save;		/* screen pref */
 	/* 23562 */ BOOLEAN covwr_save;		/* write ? */
-#if TOSVERSION >= 0x162
-	int16_t ccache_save;				/* only a guess; not written to DESKTOP.INF */
-#endif
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
-	/* 24108 */ OBJECT *g_pscreen;
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
 	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
@@ -319,6 +285,13 @@ typedef struct {
 	/* 30568 */ unsigned short g_fnnext;
 	/* 30570 */ unsigned short g_fnavail;
 	/* 30572 */
+	
+	/* 22628 */ char g_srcpth[PATHLEN];
+	/* 23686 */ GRECT g_desk;
+	/* 23694 */ GRECT g_full;				/* full window size value */
+	/* 28304 */ char *g_pbuff;
+	/* 29208 */ APP *applist;			/* app buffer list */
+	/* 30208 */ OBJECT *g_pscreen;
 	
 } THEDSK;
 
@@ -407,7 +380,9 @@ extern char const infdata[];
 
 BOOLEAN app_reschange PROTO((int16_t res)); /* also referenced by AES */
 VOID app_free PROTO((APP *app));
-APP *app_alloc PROTO((BOOLEAN atend));
+VOID app_tran PROTO((int16_t bi_num));
+int16_t app_getfh PROTO((BOOLEAN openit, char *pname, int16_t attr));
+BOOLEAN app_rdicon PROTO((NOTHING));
 
 
 /*
@@ -535,8 +510,7 @@ BOOLEAN newfolder PROTO((DESKWIN *win));
  */
 extern THEDSK *thedesk;
 
-char *escan_str PROTO((const char *pcurr, char *ppstr)); /* also referenced by AES */
-char *escani_str PROTO((const char *pcurr, char **ppstr));
+char *escan_str PROTO((const char *pcurr, char **ppstr)); /* also referenced by AES */
 char *scan_2 PROTO((const char *pcurr, int16_t *pwd)); /* also referenced by AES */
 char *save_2 PROTO((char *pcurr, uint16_t wd)); /* also referenced by AES */
 char *save_sstr PROTO((char *pcurr, const char *pstr));
@@ -545,6 +519,7 @@ VOID save_inf PROTO((BOOLEAN todisk));
 VOID app_posicon PROTO((int16_t colx, int16_t coly, int16_t *px, int16_t *py));
 VOID app_mtoi PROTO((int16_t newx, int16_t newy, int16_t *px, int16_t *py));
 VOID inf_setsize PROTO((const VOIDPTR p1, char *buf, OBJECT *tree, int16_t obj, BOOLEAN flag));
+BOOLEAN app_start PROTO((NOTHING));
 
 
 /*
@@ -632,7 +607,6 @@ VOID my_itoa PROTO((uint16_t number, char *pnumstr));
 VOID fmt_time PROTO((uint16_t time, char *ptime));
 VOID fmt_date PROTO((uint16_t date, char *pdate));
 long bldstring PROTO((intptr_t dir, char *dst));
-char *g_name PROTO((const char *file)); /* also referenced by AES */
 VOID save_ext PROTO((const char *path, char *buffer));
 VOID save_mid PROTO((char *path, char *buffer));
 BOOLEAN chk_par PROTO((const char *srcptr, const char *dstptr));
@@ -837,7 +811,7 @@ VOID gsx_attr PROTO((uint16_t text, uint16_t mode, uint16_t color));
 VOID gsx_xline PROTO((int16_t ptscount, int16_t *ppoints));
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));
 VOID av_hardcopy PROTO((NOTHING));
-int16_t wind_grget PROTO((short handle, short field, GRECT *gr));
+int16_t wind_grget PROTO((int16_t handle, int16_t field, GRECT *gr));
 int16_t ap_bvset PROTO((int16_t bvdisk, int16_t bvhard));
 
 

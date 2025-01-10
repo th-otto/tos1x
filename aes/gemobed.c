@@ -440,7 +440,9 @@ PP(int16_t kind;)
 	UNUSED(oc);
 	UNUSED(c);
 	UNUSED(t);
-	
+	UNUSED(flags);
+	UNUSED(spec);
+
 	DGLO = &D;
 
 	if ((kind == EDSTART) || (obj <= 0))

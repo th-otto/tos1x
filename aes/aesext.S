@@ -29,7 +29,6 @@
 	xdef _escan_str
 	xdef _save_2
 	xdef _app_reschange
-	xdef _g_name
 	xdef _deskmain
 	xdef _xbios
 	xdef _bios

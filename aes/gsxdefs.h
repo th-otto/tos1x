@@ -184,10 +184,12 @@ int16_t gsx_tick PROTO((intptr_t tcode, intptr_t *ptsave));
 int16_t gsx_button PROTO((NOTHING));
 VOID gsx_moff PROTO((NOTHING));
 VOID gsx_mon PROTO((NOTHING));
+int16_t gsx_setmb PROTO((VOIDPTR boff, VOIDPTR moff, VOIDPTR *pdrwaddr));
+
 
 int16_t av_opnwk PROTO((int16_t *pwork_in, int16_t *phandle, int16_t *pwork_out));
 VOID av_pline PROTO((int16_t count, int16_t *pxyarray));
-VOID avst_clip PROTO((int16_t clip_flag, int16_t pxyarray));
+VOID avst_clip PROTO((int16_t clip_flag, int16_t *pxyarray));
 VOID avst_height PROTO((int16_t height, int16_t *pchr_width, int16_t *pchr_height, int16_t *pcell_width, int16_t *pcell_height));
 VOID avr_recfl PROTO((int16_t *pxyarray, FDB *pdesMFDB)); /* ??? why MFDB ??? */
 VOID avro_cpyfm PROTO((int16_t wr_mode, int16_t *pxyarray, FDB *psrcMFDB, FDB *pdesMFDB));

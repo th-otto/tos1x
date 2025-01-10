@@ -44,7 +44,9 @@
 #define EXTENSION  6
 
 /* size of DESKTOP.INF file */
-#define SIZE_AFILE ((NUM_ANODES*PATH_LEN)+(NUM_ANODES*EXTENSION)+SAVE_ATARI)
+/* #define SIZE_AFILE ((NUM_ANODES*PATH_LEN)+(NUM_ANODES*EXTENSION)+SAVE_ATARI) */
+#define SIZE_AFILE 2048
+
 
 /***********************************************************************/
 

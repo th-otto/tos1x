@@ -426,6 +426,7 @@ trp14aret       00006d5c        Data Label      Global  User Defined
 gl_xclip        00006d60        Data Label      Global  User Defined
 gl_wclip        00006d62        Data Label      Global  User Defined
 intin           00006d64        Data Label      Global  User Defined
+pglobal         00006e64        Data Label      Global  User Defined
 gl_mkrect       00006e8c        Data Label      Global  User Defined
 gl_rbuf         00006e98        Data Label      Global  User Defined
 gl_awind        00006ea0        Data Label      Global  User Defined
@@ -522,6 +523,7 @@ gl_handle       00009eea        Data Label      Global  User Defined
 gl_dclick       00009eec        Data Label      Global  User Defined
 romdata         00009eee        Data Label      Global  User Defined
 gl_height       00009f12        Data Label      Global  User Defined
+gl_apid         00009f14        Data Label      Global  User Defined
 rlr             00009f16        Data Label      Global  User Defined
 gl_bdesired     00009f1a        Data Label      Global  User Defined
 gl_recd         00009f1c        Data Label      Global  User Defined
@@ -2056,7 +2058,7 @@ gotopgm         00fe2f5e        Function        Global  User Defined
 savestate       00fe2f82        Function        Global  User Defined
 savest1         00fe2f9a        Function        Global  User Defined
 switchto        00fe2fde        Function        Global  User Defined
-FUN_00fe301e    00fe301e        Function        Global  Default
+setdsss         00fe301e        Function        Global  User Defined
 psetup          00fe3028        Function        Global  User Defined
 isdrive         00fe3054        Function        Global  User Defined
 pgmld           00fe3060        Instruction Label       Global  User Defined
@@ -2108,8 +2110,9 @@ back            00fe3760        Function        Global  User Defined
 gosuper         00fe376a        Function        Global  User Defined
 supret          00fe37a8        Function        Global  User Defined
 far_draw        00fe37de        Function        Global  User Defined
-FUN_00fe37fe    00fe37fe        Function        Global  Default
+signal          00fe37fe        Function        Global  User Defined
 zombie          00fe385a        Function        Global  User Defined
+get_evb         fe38a2          Function        Global  User Defined
 evinsert        00fe38d0        Function        Global  User Defined
 takeoff         00fe3902        Function        Global  User Defined
 mwait           00fe3952        Function        Global  User Defined
@@ -2124,6 +2127,7 @@ caseD_7         00fe3a36        Instruction Label       switchD_00fe3a54        
 switchD         00fe3a54        Instruction Label       switchD_00fe3a54        Analysis
 caseD_7         00fe3a56        Instruction Label       switchD_00fe3a54        Analysis
 aret            00fe3a5c        Function        Global  User Defined
+acancel         00fe3b0c        Function        Global  User Defined
 sndcli          00fe3b7a        Function        Global  User Defined
 ldaccs          00fe3c26        Function        Global  User Defined
 free_accs       00fe3d08        Function        Global  User Defined
@@ -2160,8 +2164,11 @@ forker          00fe4378        Function        Global  User Defined
 chkkbd          00fe448a        Function        Global  User Defined
 schedule        00fe451e        Function        Global  User Defined
 disp            00fe4558        Function        Global  User Defined
-FUN_00fe4616    00fe4616        Function        Global  Default
+tchange         00fe45be        Function        Global  User Defined
+tak_flag        00fe4616        Function        Global  User Defined
+amutex          00fe464a        Function        Global  User Defined
 unsync          00fe4674        Function        Global  User Defined
+mowner          00fe46ac        Function        Global  User Defined
 b_click         00fe46fc        Function        Global  User Defined
 b_delay         00fe476c        Function        Global  User Defined
 set_ctrl        00fe47c4        Function        Global  User Defined
@@ -2191,6 +2198,7 @@ p_nameit        00fe4f8c        Function        Global  User Defined
 pstart          00fe4fbe        Function        Global  User Defined
 doq             00fe4ff8        Function        Global  User Defined
 aqueue          00fe50c0        Function        Global  User Defined
+or_start        00fe519a        Function        Global  User Defined
 get_orect       00fe51e4        Function        Global  User Defined
 mkpiece         00fe5204        Function        Global  User Defined
 brkrct          00fe52e0        Function        Global  User Defined
@@ -2683,8 +2691,8 @@ trp14           00fee78c        Function        Global  User Defined
 rsc_read        00fee79c        Function        Global  User Defined
 rom_ram         00fee886        Function        Global  User Defined
 size_theglo     00feeabe        Function        Global  User Defined
-FUN_00feeac8    00feeac8        Function        Global  Default
-FUN_00feeb20    00feeb20        Function        Global  Default
+desk_alloc      00feeac8        Function        Global  User Defined
+desk_free       00feeb20        Function        Global  User Defined
 linefhandler    00feeb6a        Instruction Label       Global  User Defined
 linefh1         00feeb8a        Instruction Label       Global  User Defined
 movinst         00feeb9e        Instruction Label       Global  User Defined

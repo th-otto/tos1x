@@ -17,11 +17,11 @@ DESK_HEADERS=\
 	${empty}
 
 DESK_ASRCS=\
-	deskif.S \
 	rainbow.S \
 	${empty}
 
 DESK_CSRCS=\
+	deskif.c \
 	deskact.c \
 	deskapp1.c \
 	deskapp3.c \

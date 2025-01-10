@@ -175,7 +175,7 @@ VOID gsx_wsopen(NOTHING)
 		intin[i] = 1;
 	intin[10] = 2;
 	intin[0] = gl_restype;
-	av_opnwk(intin, &gl_handle, &gl_ws);
+	av_opnwk(intin, &gl_handle, (int16_t *)&gl_ws);
 	if (gl_ws.ws_xres == 320 - 1)
 		gl_restype = 2;
 	else if (gl_ws.ws_yres == 400 - 1)
@@ -264,17 +264,29 @@ PP(VOIDPTR boff;)
 PP(VOIDPTR moff;)
 PP(VOIDPTR *pdrwaddr;)
 {
-	i_ptr(boff, 0x0);
+#ifdef __ALCYON__
+	i_ptr(boff, 0x0); /* BUG: extra argument */
+#else
+	i_ptr(boff);
+#endif
 	gsx_ncode(BUT_VECX, 0, 0);
 	m_lptr2(&old_bcode);
 
-	i_ptr(moff, 0x0);
+#ifdef __ALCYON__
+	i_ptr(moff, 0x0); /* BUG: extra argument */
+#else
+	i_ptr(moff);
+#endif
 	gsx_ncode(MOT_VECX, 0, 0);
 	m_lptr2(&old_mcode);
 
 /*	i_ptr(justretf, 0x0);	
 	gsx_ncode(CUR_VECX, 0, 0);
 	m_lptr2( pdrwaddr );		don't intercept draw vector */
+	/* BUG: no return value */
+#ifdef __GNUC__
+	return 0;
+#endif
 }
 
 
@@ -296,9 +308,9 @@ int16_t gsx_tick(P(intptr_t) tcode, P(intptr_t *) ptsave)
 PP(intptr_t tcode;)
 PP(intptr_t *ptsave;)
 {
-	i_ptr(tcode);
+	i_ptr((VOIDPTR)tcode);
 	gsx_ncode(TIM_VECX, 0, 0);
-	m_lptr2(ptsave);
+	m_lptr2((VOIDPTR *)ptsave);
 	return intout[0];
 }
 
@@ -412,6 +424,10 @@ PP(int16_t *pwork_out;)
 	i_intout(intout);
 	i_ptsin(ptsin);
 	i_ptsout(ptsout);
+	/* BUG: no return value */
+#ifdef __GNUC__
+	return 0;
+#endif
 }
 
 
@@ -427,12 +443,13 @@ PP(int16_t *pxyarray;)
 
 
 
-VOID avst_clip(P(int16_t) clip_flag, P(int16_t) pxyarray)
-PP(int16_t clip_flag;)
-PP(int16_t pxyarray;)
+VOID avst_clip(P(int16_t) clip_flag, P(int16_t *) pxyarray)
+PP(register int16_t clip_flag;)
+PP(int16_t *pxyarray;)
 {
 	int16_t tmp, value;
 
+	UNUSED(tmp);
 	value = (clip_flag != 0) ? 2 : 0;
 	i_ptsin(pxyarray);
 	intin[0] = clip_flag;
@@ -476,11 +493,11 @@ PP(FDB *pdesMFDB;)
 
 
 
-VOID avro_cpyfm(P(int16_t) wr_mode, P(int16_t *) pxyarray, P(int16_t *) psrcMFDB, P(int16_t *) pdesMFDB)
+VOID avro_cpyfm(P(int16_t) wr_mode, P(int16_t *) pxyarray, P(FDB *) psrcMFDB, P(FDB *) pdesMFDB)
 PP(int16_t wr_mode;)
 PP(int16_t *pxyarray;)
-PP(int16_t *psrcMFDB;)
-PP(int16_t *pdesMFDB;)
+PP(FDB *psrcMFDB;)
+PP(FDB *pdesMFDB;)
 {
 	intin[0] = wr_mode;
 	i_lptr1(psrcMFDB);

@@ -63,6 +63,10 @@
 
 #define CMDLEN 128
 
+#ifdef __GNUC__
+#define LINEF_HACK 0
+#else
 #define LINEF_HACK (TOSVERSION <= 0x104)
+#endif
 
 #endif /* AESDEFS_H */

@@ -273,7 +273,7 @@ PP(int16_t *pnew_obj;)
 		if (flags & RBUTTON)
 		{
 			/* check siblings to find and turn off the old RBUTTON */
-			parent = get_par(tree, new_obj);
+			parent = get_par(tree, new_obj, NULL);
 			tobj = LWGET(OB_HEAD(parent));
 			while (tobj != parent)
 			{

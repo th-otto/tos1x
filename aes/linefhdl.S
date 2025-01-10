@@ -260,7 +260,7 @@ lineftab: ds.b 0
 		dc.l _uhex_dig            ; F320
 		dc.l _escan_str           ; F324
 		dc.l _scan_2              ; F328
-		dc.l _escani_str          ; F32C
+		dc.l  0                   ; F32C
 		dc.l _min                 ; F330
 		dc.l _shel_get            ; F334
 		dc.l _isdrive             ; F338

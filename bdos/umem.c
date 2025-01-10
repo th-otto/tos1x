@@ -422,7 +422,7 @@ found:
 	if (len == 0)
 	{
 #if TP_29 /* M_SHRINK */
-		xmfree(blk);
+		xmfree((intptr_t) blk);
 #else
 #if GEMDOS == 0x17
 		freeit(p, ppmd);

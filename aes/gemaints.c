@@ -82,3 +82,16 @@ PP(register EVB *e;)
 	e->e_flag = COMPLETE;
 	signal(e);
 }
+
+
+EVB *get_evb(NOTHING)
+{
+	register EVB *e;
+	
+	if ((e = eul) != NULL)
+	{
+		eul = eul->e_nextp;
+		bfill(sizeof(EVB), 0, e);
+	}
+	return e;
+}

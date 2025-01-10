@@ -859,7 +859,7 @@ BOOLEAN deskmain(NOTHING)
 	desk_wait(TRUE);
 
 	/* initialize resources */
-	rom_ram(1, (intptr_t)pglobal);
+	rom_ram(1, (intptr_t)pglobal, 0);
 
 	/* initialize menus and dialogs */
 	rsrc_gaddr(R_STRING, STCART, (VOIDPTR *)&d->p_cartname);

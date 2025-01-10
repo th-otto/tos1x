@@ -117,14 +117,8 @@ PP(int16_t afunc;)
 PP(register intptr_t aparm;)
 {
 	register EVB *e;
-	register EVB *p, *q;
 
-	/* e = get_evb();   */
-	if ((e = eul) != NULL)
-	{
-		eul = eul->e_nextp;
-		bfill(sizeof(EVB), 0, e);
-	}
+	e = get_evb();
 
 	e->e_nextp = rlr->p_evlist;			/* link the EVB to the  */
 	rlr->p_evlist = e;					/* PD evlist        */

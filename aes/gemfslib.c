@@ -157,7 +157,7 @@ VOID fs_start(NOTHING)
 	/*
 	 *	Start up the file selector by initializing the fs_tree
 	 */
-	rs_gaddr(ad_sysglo, R_TREE, SELECTOR, &tree);
+	rs_gaddr(ad_sysglo, R_TREE, SELECTOR, (VOIDPTR *)&tree);
 	ad_fstree = tree;
 	ob_center((LPTREE)tree, &gl_rfs);
 }
@@ -211,11 +211,10 @@ PP(register char *pstr;)
 /* 306de: 00e1cef2 */
 /* 104de: 00fe0a8a */
 /* 106de: 00e227b4 */
-int16_t fs_input(P(char *) pipath, P(char *) pisel, P(int16_t *) pbutton, P(char *) lstring)
+int16_t fs_input(P(char *) pipath, P(char *) pisel, P(int16_t *) pbutton)
 PP(char *pipath;)
 PP(char *pisel;)
 PP(int16_t *pbutton;)
-PP(char *lstring;)
 {
 	register uint16_t i, j;
 	int16_t dummy;
@@ -306,7 +305,6 @@ bye2:
 	lgptr = (intptr_t **)OB_SPEC(FDIRECTORY);		/* change the buffer pointer */
 	**lgptr = (intptr_t)dirbuffer; /* tree[FDIRECTORY].ob_spec.tedinfo->te_ptext = dirbuffer */
 
-	fs_sset(tree, FLABEL, lstring, &addr, (int16_t *)&addr); /* WTF */
 	fs_sset(tree, FDIRECTORY, "", &ad_fpath, (int16_t *)&addr); /* WTF */
 	fs_sset(tree, FTITLE, "", &ad_title, (int16_t *)&addr);
 	fs_sset(tree, FSELECTION, "", &ad_select, (int16_t *)&addr);

@@ -109,7 +109,7 @@ PP(register APP *app;)
 		if (!streq(newlabel, label))
 			redraw = TRUE;
 		newlabel[(int)strlen(newlabel)] = '@';
-		escani_str(newlabel, &app->a_pappl);
+		escan_str(newlabel, &app->a_pappl);
 		return redraw;
 	}
 }
@@ -231,7 +231,7 @@ PP(register APP *app;)
 					newapp->a_type = AT_ISFILE;
 					newapp->a_obid = NIL;
 					path[(int)strlen(path)] = '@';
-					*(escani_str(path, &newapp->a_pappl) - 1) = '\0';
+					*(escan_str(path, &newapp->a_pappl) - 1) = '\0';
 					newapp->a_aicon = IPRG - 1;
 					newapp->a_dicon = IFILE - 1;
 					newapp->a_char = 0;
@@ -254,7 +254,7 @@ PP(register APP *app;)
 				filetype[0] = '\0';
 			}
 			filetype[(int)strlen(filetype)] = '@';
-			escani_str(filetype, &app->a_pdata);
+			escan_str(filetype, &app->a_pdata);
 		}
 		if (LWGET(OB_STATE(AUTOBOX)) & SELECTED)
 		{

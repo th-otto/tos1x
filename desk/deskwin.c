@@ -177,11 +177,7 @@ PP(register DESKWIN *thewin;)
 	thewin->w_id = 0;
 	thewin->w_obid = 0;
 	objc_order(thedesk->g_pscreen, thewin->w_root, 1);
-#ifdef __ALCYON__
-	obj_wfree(thewin->w_root, 0L, 0L);
-#else
 	obj_wfree(thewin->w_root, 0, 0, 0, 0);
-#endif
 	n_winsave--;
 	LBCOPY(&g_winsave[n_winsave], &thewin->w_curr, sizeof(GRECT));
 }

@@ -121,7 +121,7 @@ VOID rsc_read(NOTHING)
 	/* BUG: no malloc check */
 	/* BUG: leaked on resolution change */
 
-	LBCOPY(intptr, tosrsc, TOS_RSSIZE);
+	LBCOPY(intptr, (const VOIDPTR)tosrsc, TOS_RSSIZE);
 
 	/* now fix the resource */
 	/* first block (aes rsc) starts right after the header */
@@ -180,7 +180,7 @@ PP(register uint16_t offset;)
 		return offset;
 	} else if (which == 4)
 	{
-		LBCOPY((VOIDPTR)pointer, data + offset, size - offset);
+		LBCOPY((VOIDPTR)pointer, (const VOIDPTR)(data + offset), size - offset);
 		return size - offset;
 	} else if (which < 2 || which == 5)
 	{
@@ -210,26 +210,26 @@ PP(register uint16_t offset;)
 			if (which == 1 || which == 5)
 			{
 				if (which == 1)
-					LWCOPY(desk_global, pointer, 15);
+					LWCOPY(desk_global, (const VOIDPTR)pointer, 15);
 				else
-					LWCOPY(fmt_global, pointer, 15);
+					LWCOPY(fmt_global, (const VOIDPTR)pointer, 15);
 				rs_fixit(pointer);
 			} else
 			{
-				LWCOPY(gem_global, pointer, 15);
+				LWCOPY(gem_global, (const VOIDPTR)pointer, 15);
 			}
 		}
 		
 		if (which == 1)
 		{
-			LWCOPY(pointer, desk_global, 15);
+			LWCOPY((VOIDPTR)pointer, desk_global, 15);
 			/* ZZZ some code todo here */
 		} else if (which == 5)
 		{
-			LWCOPY(pointer, fmt_global, 15);
+			LWCOPY((VOIDPTR)pointer, fmt_global, 15);
 		} else
 		{
-			LWCOPY(pointer, gem_global, 15);
+			LWCOPY((VOIDPTR)pointer, gem_global, 15);
 		}
 	}
 

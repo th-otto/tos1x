@@ -423,7 +423,7 @@ PP(int16_t depth;)
 	int16_t sx, sy;
 
 	last = (obj == ROOT) ? NIL : LWGET(OB_NEXT(obj));
-	pobj = get_par(tree, obj);
+	pobj = get_par(tree, obj, 0);
 
 	if (pobj != NIL)
 		ob_offset(tree, pobj, &sx, &sy);
@@ -473,7 +473,7 @@ PP(int16_t my;)
 		r_set(&o, 0, 0, 0, 0);
 	} else
 	{
-		parent = get_par(tree, currobj);
+		parent = get_par(tree, currobj, 0);
 		ob_actxywh(tree, parent, &o);
 	}
 
@@ -580,7 +580,7 @@ PP(register int16_t obj;)
 	if (obj != ROOT)
 	{
 		nextsib = LWGET(OB_NEXT(obj));
-		parent = get_par(tree, obj);
+		parent = get_par(tree, obj, 0);
 	} else
 		return;
 
@@ -628,7 +628,7 @@ PP(int16_t new_pos;)
 	register int32_t phead, pnext, pmove;
 
 	if (mov_obj != ROOT)
-		parent = get_par(tree, mov_obj);
+		parent = get_par(tree, mov_obj, 0);
 	else
 		return;
 
@@ -808,7 +808,7 @@ PP(register int16_t *pyoff;)
 		/* have our parent-- add in his x, y */
 		*pxoff += LWGET(OB_X(obj));
 		*pyoff += LWGET(OB_Y(obj));
-		obj = get_par(tree, obj);
+		obj = get_par(tree, obj, 0);
 	} while (obj != NIL);
 }
 

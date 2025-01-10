@@ -43,8 +43,8 @@
 
 
 
-VOID gsx_sclip(P(GRECT *) pt)
-PP(GRECT *pt;)
+BOOLEAN gsx_sclip(P(const GRECT *) pt)
+PP(const GRECT *pt;)
 {
 	register int16_t *ppts;
 
@@ -351,14 +351,12 @@ PP(int16_t sch;)
 }
 
 
-VOID gsx_trans(P(int16_t *) saddr, P(uint16_t) swb, P(int16_t *) daddr, P(uint16_t) dwb, P(uint16_t) h, P(int16_t) fg, P(int16_t) bg)
+VOID gsx_trans(P(int16_t *) saddr, P(uint16_t) swb, P(int16_t *) daddr, P(uint16_t) dwb, P(uint16_t) h)
 PP(int16_t *saddr;)
 PP(uint16_t swb;)
 PP(int16_t *daddr;)
 PP(uint16_t dwb;)
 PP(uint16_t h;)
-PP(int16_t fg;)
-PP(int16_t bg;)
 {
 	gsx_fix(&gl_dst, daddr, dwb, h);
 
@@ -554,9 +552,6 @@ PP(register int16_t x;)
 PP(register int16_t y;)
 PP(int16_t tb_nc;)
 {
-	int16_t i;
-	register int16_t pts_height;
-
 	if (tb_f == IBM)
 	{
 		if (tb_f != gl_font)

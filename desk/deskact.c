@@ -41,11 +41,7 @@ PP(register int16_t my;)
 
 	sobj = objc_find(tree, root, 2, mx, my);
 	if (sobj != root && sobj != NIL)
-#ifdef __ALCYON__ /* hmpf */
-		sobj = act_chkobj(tree, root, sobj, mx, my, 0x10001L);
-#else
 		sobj = act_chkobj(tree, root, sobj, mx, my, 1, 1);
-#endif
 	return sobj;
 }
 

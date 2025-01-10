@@ -57,6 +57,21 @@ PP(const char *path;)
 }
 
 
+int16_t pro_exec(P(int16_t) isgraf, P(int16_t) isover, P(char *) pcmd, P(char *) ptail)
+PP(int16_t isgraf;)
+PP(int16_t isover;)
+PP(char *pcmd;)
+PP(char *ptail;)
+{
+	int16_t ret;
+
+	graf_mouse(HOURGLASS, NULL);
+
+	ret = shel_write(TRUE, isgraf, isover, pcmd, ptail);
+	return ret;
+}
+
+
 /* 104de: 00fda066 */
 /* 106de: 00e1af28 */
 int pro_run(P(int16_t) isgraf, P(int16_t) iscr, P(int16_t) wh, P(int16_t) curr)

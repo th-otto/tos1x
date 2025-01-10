@@ -98,8 +98,6 @@ LINEF_STATIC int16_t mowner(P(int16_t) mx, P(int16_t) my)
 PP(register int16_t mx;)
 PP(register int16_t my;)
 {
-	int16_t wh;
-
 	/* if inside ctrl rect then owned by active process */
 	if (inside(mx, my, &ctrl))
 	{
@@ -151,7 +149,11 @@ PP(register int16_t state;)
 				gl_bdelay = gl_dclick;
 			} else
 			{
+#ifdef __GNUC__
+				forkq((VOIDPTR) bchange, ((int32_t)state << 16) | 1);
+#else
 				forkq((VOIDPTR) bchange, state, 1);
+#endif
 			}
 		}
 		/* update true state of the mouse */
@@ -176,10 +178,18 @@ PP(int16_t amnt;)
 		gl_bdelay -= amnt;
 		if (!gl_bdelay)
 		{
+#ifdef __GNUC__
+			forkq((VOIDPTR)bchange, ((int32_t)gl_bdesired << 16) | gl_bclick);
+#else
 			forkq((VOIDPTR)bchange, gl_bdesired, gl_bclick);
+#endif
 			if (gl_bdesired != gl_btrue)
 			{
+#ifdef __GNUC__
+				forkq((VOIDPTR)bchange, ((int32_t)gl_btrue << 16) | 1);
+#else
 				forkq((VOIDPTR)bchange, gl_btrue, 1);
+#endif
 			}
 		}
 	}

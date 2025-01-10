@@ -269,7 +269,7 @@ VOID setres PROTO((NOTHING));
 VOID pinit PROTO((PD *ppd, CDA *pcda));
 int16_t pred_dinf PROTO((NOTHING));
 BOOLEAN gsx_malloc PROTO((NOTHING));
-VOID set_defdrv PROTO((NOTHING));
+BOOLEAN set_defdrv PROTO((NOTHING));
 VOID gsx_xmfset PROTO((MFORM *pmfnew));
 VOID gsx_mfset PROTO((MFORM *pmfnew));
 VOID gr_mouse PROTO((int16_t mkind, MFORM *grmaddr));
@@ -501,7 +501,11 @@ BOOLEAN fm_error PROTO((int16_t n));
  * gemfslib.c
  */
 VOID fs_start PROTO((NOTHING));
+#if AESVERSION >= 0x140
 int16_t fs_input PROTO((char *pipath, char *pisel, int16_t *pbutton, char *lstring));
+#else
+int16_t fs_input PROTO((char *pipath, char *pisel, int16_t *pbutton));
+#endif
 
 
 /*
@@ -541,7 +545,6 @@ extern int16_t gl_bdesired;
 extern int16_t gl_btrue;
 extern int16_t gl_bdelay;
 
-int16_t mowner PROTO((int16_t mx, int16_t my));
 uint16_t dq PROTO((CQUEUE *qptr));
 VOID fq PROTO((NOTHING));
 VOID evremove PROTO((EVB *e, uint16_t ret));
@@ -648,17 +651,11 @@ VOID gr_box PROTO((int16_t x, int16_t y, int16_t w, int16_t h, int16_t th));
 /*
  * gemgrlib.[cS]
  */
-VOID gr_stepcalc PROTO((int16_t orgw, int16_t orgh, GRECT *pt, int16_t *pcx, int16_t *pcy, int16_t *pcnt, int16_t *pxstep, int16_t *pystep));
 VOID gr_growbox PROTO((GRECT *po, GRECT *pt));
 VOID gr_shrinkbox PROTO((GRECT *po, GRECT *pt));
-VOID gr_xor PROTO((int16_t clipped, int16_t cnt, int16_t cx, int16_t cy, int16_t cw, int16_t ch, int16_t xstep, int16_t ystep, int16_t dowdht));
 VOID gr_movebox PROTO((int16_t w, int16_t h, int16_t srcx, int16_t srcy, int16_t dstx, int16_t dsty));
-VOID gr_scale PROTO((int16_t xdist, int16_t ydist, int16_t *pcnt, int16_t *pxstep, int16_t *pystep));
 int16_t gr_watchbox PROTO((OBJECT *tree, int16_t obj, int16_t instate, int16_t outstate));
 BOOLEAN gr_stilldn PROTO((int16_t out, int16_t x, int16_t y, int16_t w, int16_t h));
-VOID gr_draw PROTO((int16_t have2box, GRECT *po, GRECT *poff));
-int16_t gr_wait PROTO((GRECT *po, GRECT *poff, int16_t mx, int16_t my));
-VOID gr_setup PROTO((int16_t color));
 VOID gr_rubbox PROTO((int16_t xorigin, int16_t yorigin, int16_t wmin, int16_t hmin, int16_t *pwend, int16_t *phend));
 VOID gr_rubwind PROTO((int16_t xorigin, int16_t yorigin, int16_t wmin, int16_t hmin, GRECT *poff, int16_t *pwend, int16_t *phend));
 VOID gr_dragbox PROTO((int16_t w, int16_t h, int16_t sx, int16_t sy, GRECT *pc, int16_t *pdx, int16_t *pdy));
@@ -710,7 +707,7 @@ extern GRECT gl_rzero;
 extern GRECT gl_rcenter;
 extern GRECT gl_rmenu;
 
-VOID gsx_sclip PROTO((const GRECT *pt));
+BOOLEAN gsx_sclip PROTO((const GRECT *pt));
 VOID gsx_gclip PROTO((GRECT *pt));
 BOOLEAN gsx_chkclip PROTO((GRECT *pt));
 VOID gsx_pline PROTO((int16_t offx, int16_t offy, int16_t cnt, const int16_t *pts));
@@ -752,7 +749,6 @@ VOID insert_process PROTO((PD *pi, PD **root));
  */
 VOID aqueue PROTO((BOOLEAN isqwrite, EVB *e, int32_t lm));
 VOID adelay PROTO((EVB *e, int32_t aparm));
-VOID amutex PROTO((EVB *e, SPB *sy));
 VOID akbin PROTO((EVB *e, int32_t aparm));
 VOID amouse PROTO((EVB *e, int32_t aparm));
 VOID abutton PROTO((EVB *e, int32_t aparm));
@@ -863,6 +859,7 @@ VOID w_bldactive PROTO((int16_t w_handle));
 extern ORECT *rul;
 
 ORECT *get_orect PROTO((NOTHING));
+VOID or_start PROTO((NOTHING));
 VOID newrect PROTO((LPTREE tree, int16_t wh, int16_t junkx, int16_t junky));
 
 
@@ -963,6 +960,7 @@ VOID drawrat PROTO((int16_t x, int16_t y));
 VOID justretf PROTO((NOTHING));
 VOID b_delay PROTO((int16_t amnt));
 VOID delay PROTO((int32_t ticks));
+VOID b_click PROTO ((int16_t state));
 
 
 /*
@@ -974,6 +972,7 @@ VOID i_intin PROTO((int16_t *));
 VOID i_ptsout PROTO((int16_t *));
 VOID i_intout PROTO((int16_t *));
 VOID i_lptr1 PROTO((VOIDPTR, ...));
+VOID i_ptr PROTO((VOIDPTR));
 VOID i_ptr2 PROTO((VOIDPTR));
 VOID m_lptr2 PROTO((VOIDPTR *));
 int16_t mul_div PROTO((int16_t mul1, int16_t mul2, int16_t divis));
@@ -982,8 +981,6 @@ int16_t mul_div PROTO((int16_t mul1, int16_t mul2, int16_t divis));
 /*
  * trap14.S
  */
-VOID getmouse PROTO((NOTHING));
-VOID putmouse PROTO((NOTHING));
 int32_t trp13 PROTO((short code, ...));
 int16_t trp14 PROTO((short code, ...));
 int32_t gemdos PROTO((short code, ...));
@@ -1009,10 +1006,9 @@ extern BOOLEAN do_once; /* used by desktop only */
 VOID XDeselect PROTO((OBJECT *tree, int16_t obj));
 BOOLEAN getcookie PROTO((int32_t cookie, int32_t *val));
 char *scan_2 PROTO((const char *pcurr, int16_t *pwd));
-char *escan_str PROTO((const char *pcurr, char *ppstr));
+char *escan_str PROTO((const char *pcurr, char **ppstr));
 char *save_2 PROTO((char *pcurr, uint16_t wd));
 BOOLEAN app_reschange PROTO((int16_t res));
-char *g_name PROTO((const char *file));
 BOOLEAN deskmain PROTO((NOTHING));
 
 
@@ -1063,4 +1059,11 @@ VOID w_owns PROTO((int16_t w_handle, ORECT *po, GRECT *pt, GRECT *poutwds));
 VOID wm_opcl PROTO((int16_t wh, GRECT *pt, BOOLEAN isadd));
 int16_t ob_user PROTO((LPTREE tree, int16_t obj, GRECT *pt, intptr_t userblk, int16_t curr_state, int16_t new_state));
 VOID just_draw PROTO((LPTREE tree, int16_t obj, int16_t sx, int16_t sy));
+int16_t mowner PROTO((int16_t mx, int16_t my));
+VOID gr_setup PROTO((int16_t color));
+VOID gr_scale PROTO((int16_t xdist, int16_t ydist, int16_t *pcnt, int16_t *pxstep, int16_t *pystep));
+VOID gr_stepcalc PROTO((int16_t orgw, int16_t orgh, GRECT *pt, int16_t *pcx, int16_t *pcy, int16_t *pcnt, int16_t *pxstep, int16_t *pystep));
+VOID gr_xor PROTO((int16_t clipped, int16_t cnt, int16_t cx, int16_t cy, int16_t cw, int16_t ch, int16_t xstep, int16_t ystep, int16_t dowdht));
+VOID gr_draw PROTO((int16_t have2box, GRECT *po, GRECT *poff));
+int16_t gr_wait PROTO((GRECT *po, GRECT *poff, int16_t mx, int16_t my));
 #endif
