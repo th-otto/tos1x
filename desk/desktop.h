@@ -224,7 +224,6 @@ typedef struct {
 	/* 12974 */ int32_t g_ndirs;
 	/* 12978 */ int32_t g_size;
 	/* 12982 */ char g_tmppth[PATHLEN];
-	/* 13310 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 13350 */ int16_t g_rmsg[8];		    /* general AES message area */
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13386 */ char g_cmd[PATHLEN];
@@ -287,6 +286,7 @@ typedef struct {
 	/* 30572 */
 	
 	/* 22628 */ char g_srcpth[PATHLEN];
+	/* 23426 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 23686 */ GRECT g_desk;
 	/* 23694 */ GRECT g_full;				/* full window size value */
 	/* 28304 */ char *g_pbuff;
@@ -405,7 +405,7 @@ VOID dvs_clip PROTO((BOOLEAN clip_flag, const int16_t *pxyarray));
 
 
 /*
- * deskif.S
+ * deskif.[cS]
  */
 int16_t appl_bvset PROTO((int16_t bvdisk, int16_t bvhard));
 int16_t appl_write PROTO((int16_t rwid, int16_t length, int16_t *pbuff));
@@ -667,11 +667,6 @@ VOID xvq_chcells PROTO((int16_t *num));
 
 
 /*
- * deskpref.c
- */
-
-
-/*
  * desksele.c
  */
 BOOLEAN x_select PROTO((NOTHING));
@@ -705,7 +700,7 @@ VOID showfile PROTO((const char *fname, int mode));
 
 BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GRECT *pc, uint16_t chgvalue, int16_t dochg, int16_t dodraw, int16_t chkdisabled));
 VOID act_bsclick PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, int16_t keystate, GRECT *pc, int16_t dclick));
-int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, GRECT *pc, int16_t *pdobj));
+int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t *in_mx, int16_t *in_my, int16_t keystate, GRECT *pc, int16_t *pdobj));
 VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, BOOLEAN dochg, BOOLEAN dodraw, BOOLEAN dox));
 
 

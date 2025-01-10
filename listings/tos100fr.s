@@ -35472,12 +35472,13 @@ gr_obfind:
 [00fdb95c] 3f03                      move.w     d3,-(a7)
 [00fdb95e] 3f06                      move.w     d6,-(a7)
 [00fdb960] 2f07                      move.l     d7,-(a7)
-[00fdb962] f088                      dc.w       $F088
+[00fdb962] f088                      dc.w       $F088 ; act_chkobj
 [00fdb964] dffc 0000 000e            adda.l     #$0000000E,a7
 [00fdb96a] 3600                      move.w     d0,d3
 [00fdb96c] 3003                      move.w     d3,d0
 [00fdb96e] f03f                      dc.w       $F03F ; movem.l (a7)+,d3-d7
 
+gr_isdown:
 [00fdb970] 4e56 ffec                 link       a6,#-20
 [00fdb974] 3d7c 0006 fffe            move.w     #$0006,-2(a6)
 [00fdb97a] 2e8e                      move.l     a6,(a7)
@@ -35515,6 +35516,7 @@ gr_obfind:
 [00fdb9e4] 7001                      moveq.l    #1,d0
 [00fdb9e6] f001                      dc.w       $F001 ; movem.l (a7)+,#0
 
+gr_accobs:
 [00fdb9e8] 4e56 fffc                 link       a6,#-4
 [00fdb9ec] 48e7 1f0c                 movem.l    d3-d7/a4-a5,-(a7)
 [00fdb9f0] 3e2e 000c                 move.w     12(a6),d7
@@ -35578,6 +35580,7 @@ gr_obfind:
 [00fdba92] 3086                      move.w     d6,(a0)
 [00fdba94] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 
+move_drvicon:
 [00fdba96] 4e56 fffc                 link       a6,#-4
 [00fdba9a] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdba9e] 2679 0000 9e2a            movea.l    $00009E2A,a3
@@ -35656,7 +35659,7 @@ gr_obfind:
 [00fdbb7e] 3f2e fffc                 move.w     -4(a6),-(a7)
 [00fdbb82] 3f2e fffe                 move.w     -2(a6),-(a7)
 [00fdbb86] 4267                      clr.w      -(a7)
-[00fdbb88] f094                      dc.w       $F094
+[00fdbb88] f094                      dc.w       $F094 ; do_wredraw
 [00fdbb8a] 508f                      addq.l     #8,a7
 [00fdbb8c] 3eab 5e8c                 move.w     24204(a3),(a7)
 [00fdbb90] 3f2b 5e8a                 move.w     24202(a3),-(a7)
@@ -35667,7 +35670,7 @@ gr_obfind:
 [00fdbba0] c1fc 0018                 muls.w     #$0018,d0
 [00fdbba4] 3f35 0810                 move.w     16(a5,d0.l),-(a7)
 [00fdbba8] 4267                      clr.w      -(a7)
-[00fdbbaa] f094                      dc.w       $F094
+[00fdbbaa] f094                      dc.w       $F094 ; do_wredraw
 [00fdbbac] 508f                      addq.l     #8,a7
 [00fdbbae] 5247                      addq.w     #1,d7
 [00fdbbb0] 204d                      movea.l    a5,a0
@@ -35679,6 +35682,7 @@ gr_obfind:
 [00fdbbc0] 6e00 fefc                 bgt        $00FDBABE
 [00fdbbc4] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 
+gr_extent:
 [00fdbbc6] 4e56 fffe                 link       a6,#-2
 [00fdbbca] 48e7 3f0c                 movem.l    d2-d7/a4-a5,-(a7)
 [00fdbbce] 2a6e 000a                 movea.l    10(a6),a5
@@ -35758,6 +35762,7 @@ gr_obfind:
 [00fdbc7e] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fdbc84] fc3f                      dc.w       $FC3F ; movem.l (a7)+,d3-d7/a4-a5
 
+gr_obalign:
 [00fdbc86] 4e56 0000                 link       a6,#0
 [00fdbc8a] 48e7 3f04                 movem.l    d2-d7/a5,-(a7)
 [00fdbc8e] 3e2e 0008                 move.w     8(a6),d7
@@ -35826,6 +35831,7 @@ gr_plns:
 [00fdbd28] 548f                      addq.l     #2,a7
 [00fdbd2a] fc3f                      dc.w       $FC3F ; movem.l (a7)+,d3-d7/a4-a5
 
+gr_bwait:
 [00fdbd2c] 4e56 fff6                 link       a6,#-10
 [00fdbd30] 48e7 1f1c                 movem.l    d3-d7/a3-a5,-(a7)
 [00fdbd34] 2a6e 0008                 movea.l    8(a6),a5
@@ -35841,7 +35847,7 @@ gr_plns:
 [00fdbd56] 3f05                      move.w     d5,-(a7)
 [00fdbd58] 3f2d 0002                 move.w     2(a5),-(a7)
 [00fdbd5c] 3f15                      move.w     (a5),-(a7)
-[00fdbd5e] f0a0                      dc.w       $F0A0
+[00fdbd5e] f0a0                      dc.w       $F0A0 ; gr_plns
 [00fdbd60] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fdbd66] 2e8e                      move.l     a6,(a7)
 [00fdbd68] 5997                      subq.l     #4,(a7)
@@ -35856,7 +35862,7 @@ gr_plns:
 [00fdbd82] 3f06                      move.w     d6,-(a7)
 [00fdbd84] 3f07                      move.w     d7,-(a7)
 [00fdbd86] 3f3c 0001                 move.w     #$0001,-(a7)
-[00fdbd8a] f0a4                      dc.w       $F0A4
+[00fdbd8a] f0a4                      dc.w       $F0A4 ; gr_isdown
 [00fdbd8c] dffc 0000 0016            adda.l     #$00000016,a7
 [00fdbd92] 3d40 fffe                 move.w     d0,-2(a6)
 [00fdbd96] 2e8b                      move.l     a3,(a7)
@@ -35865,11 +35871,12 @@ gr_plns:
 [00fdbd9c] 3f05                      move.w     d5,-(a7)
 [00fdbd9e] 3f2d 0002                 move.w     2(a5),-(a7)
 [00fdbda2] 3f15                      move.w     (a5),-(a7)
-[00fdbda4] f0a0                      dc.w       $F0A0
+[00fdbda4] f0a0                      dc.w       $F0A0 ; gr_plns
 [00fdbda6] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fdbdac] 302e fffe                 move.w     -2(a6),d0
 [00fdbdb0] fe3d                      dc.w       $FE3D ; movem.l (a7)+,d4-d7/a3-a5
 
+gr_drgplns:
 [00fdbdb2] 4e56 ffc8                 link       a6,#-56
 [00fdbdb6] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdbdba] 3e2e 0010                 move.w     16(a6),d7
@@ -35880,13 +35887,13 @@ gr_plns:
 [00fdbdcc] 0697 ffff ffc8            addi.l     #$FFFFFFC8,(a7)
 [00fdbdd2] 2f2e 0012                 move.l     18(a6),-(a7)
 [00fdbdd6] 3f07                      move.w     d7,-(a7)
-[00fdbdd8] f0a8                      dc.w       $F0A8
+[00fdbdd8] f0a8                      dc.w       $F0A8 ; gr_extent
 [00fdbdda] 5c8f                      addq.l     #6,a7
 [00fdbddc] 2e8e                      move.l     a6,(a7)
 [00fdbdde] 0697 ffff ffd0            addi.l     #$FFFFFFD0,(a7)
 [00fdbde4] 2f2e 0018                 move.l     24(a6),-(a7)
 [00fdbde8] 3f06                      move.w     d6,-(a7)
-[00fdbdea] f0a8                      dc.w       $F0A8
+[00fdbdea] f0a8                      dc.w       $F0A8 ; gr_extent
 [00fdbdec] 5c8f                      addq.l     #6,a7
 [00fdbdee] 302e ffcc                 move.w     -52(a6),d0
 [00fdbdf2] d16e ffd4                 add.w      d0,-44(a6)
@@ -35896,7 +35903,7 @@ gr_plns:
 [00fdbe02] 3f2e ffd2                 move.w     -46(a6),-(a7)
 [00fdbe06] 3f2e ffd0                 move.w     -48(a6),-(a7)
 [00fdbe0a] 3f06                      move.w     d6,-(a7)
-[00fdbe0c] f0ac                      dc.w       $F0AC
+[00fdbe0c] f0ac                      dc.w       $F0AC ; gr_obalign
 [00fdbe0e] 5c8f                      addq.l     #6,a7
 [00fdbe10] 302e 0008                 move.w     8(a6),d0
 [00fdbe14] 906e ffd0                 sub.w      -48(a6),d0
@@ -35944,7 +35951,7 @@ gr_plns:
 [00fdbeaa] 3f2e 0008                 move.w     8(a6),-(a7)
 [00fdbeae] 2f0e                      move.l     a6,-(a7)
 [00fdbeb0] 0697 ffff ffd0            addi.l     #$FFFFFFD0,(a7)
-[00fdbeb6] f0bc                      dc.w       $F0BC
+[00fdbeb6] f0bc                      dc.w       $F0BC ; gr_bwait
 [00fdbeb8] dffc 0000 0010            adda.l     #$00000010,a7
 [00fdbebe] 3d40 ffe2                 move.w     d0,-30(a6)
 [00fdbec2] 3eae 000a                 move.w     10(a6),(a7)
@@ -35991,7 +35998,7 @@ gr_plns:
 [00fdbf56] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbf5a] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbf5e] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbf62] f0cc                      dc.w       $F0CC
+[00fdbf62] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbf64] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbf6a] 426e ffee                 clr.w      -18(a6)
 [00fdbf6e] 42ae fff8                 clr.l      -8(a6)
@@ -36012,7 +36019,7 @@ gr_plns:
 [00fdbfa4] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbfa8] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbfac] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbfb0] f0cc                      dc.w       $F0CC
+[00fdbfb0] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbfb2] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbfb8] 426e ffee                 clr.w      -18(a6)
 [00fdbfbc] 42ae fff8                 clr.l      -8(a6)
@@ -36056,7 +36063,7 @@ gr_plns:
 [00fdc052] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdc056] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdc05a] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdc05e] f0cc                      dc.w       $F0CC
+[00fdc05e] f0cc                      dc.w       $F0CC ; act_chg
 [00fdc060] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdc066] 4a6e ffe2                 tst.w      -30(a6)
 [00fdc06a] 6600 fdcc                 bne        $00FDBE38
@@ -36071,7 +36078,7 @@ gr_plns:
 [00fdc08a] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdc08e] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdc092] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdc096] f0cc                      dc.w       $F0CC
+[00fdc096] f0cc                      dc.w       $F0CC ; act_chg
 [00fdc098] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdc09e] 206e 001c                 movea.l    28(a6),a0
 [00fdc0a2] 30ae ffd0                 move.w     -48(a6),(a0)
@@ -36080,6 +36087,7 @@ gr_plns:
 [00fdc0ae] 3aae ffe8                 move.w     -24(a6),(a5)
 [00fdc0b2] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 
+act_chkobj:
 [00fdc0b4] 4e56 ffee                 link       a6,#-18
 [00fdc0b8] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdc0bc] 47ee ffee                 lea.l      -18(a6),a3
@@ -36199,6 +36207,7 @@ gr_plns:
 [00fdc236] 302e 000e                 move.w     14(a6),d0
 [00fdc23a] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 
+act_chg:
 [00fdc23c] 4e56 fff6                 link       a6,#-10
 [00fdc240] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdc244] 2a6e 0012                 movea.l    18(a6),a5
@@ -36271,11 +36280,12 @@ gr_plns:
 [00fdc30e] 3f2b 0002                 move.w     2(a3),-(a7)
 [00fdc312] 3f13                      move.w     (a3),-(a7)
 [00fdc314] 3f2e 0008                 move.w     8(a6),-(a7)
-[00fdc318] f094                      dc.w       $F094
+[00fdc318] f094                      dc.w       $F094 ; do_wredraw
 [00fdc31a] 508f                      addq.l     #8,a7
 [00fdc31c] 7001                      moveq.l    #1,d0
 [00fdc31e] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 
+act_allchg:
 [00fdc320] 4e56 ffec                 link       a6,#-20
 [00fdc324] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdc328] 49ee fff4                 lea.l      -12(a6),a4
@@ -36328,7 +36338,7 @@ gr_plns:
 [00fdc3c2] 3f07                      move.w     d7,-(a7)
 [00fdc3c4] 3f2e 000e                 move.w     14(a6),-(a7)
 [00fdc3c8] 2f2e 000a                 move.l     10(a6),-(a7)
-[00fdc3cc] f088                      dc.w       $F088
+[00fdc3cc] f088                      dc.w       $F088 ; act_chkobj
 [00fdc3ce] dffc 0000 000e            adda.l     #$0000000E,a7
 [00fdc3d4] b06e 000e                 cmp.w      14(a6),d0
 [00fdc3d8] 6700 0080                 beq        $00FDC45A ; possibly optimized to short
@@ -36399,10 +36409,11 @@ gr_plns:
 [00fdc48a] 3f2b 0002                 move.w     2(a3),-(a7)
 [00fdc48e] 3f13                      move.w     (a3),-(a7)
 [00fdc490] 3f2e 0008                 move.w     8(a6),-(a7)
-[00fdc494] f094                      dc.w       $F094
+[00fdc494] f094                      dc.w       $F094 ; do_wredraw
 [00fdc496] 508f                      addq.l     #8,a7
 [00fdc498] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 
+act_bsclick:
 [00fdc49a] 4e56 fffc                 link       a6,#-4
 [00fdc49e] 48e7 1f0c                 movem.l    d3-d7/a4-a5,-(a7)
 [00fdc4a2] 3e2e 0008                 move.w     8(a6),d7
@@ -36438,7 +36449,7 @@ gr_plns:
 [00fdc500] 3f05                      move.w     d5,-(a7)
 [00fdc502] 2f06                      move.l     d6,-(a7)
 [00fdc504] 3f07                      move.w     d7,-(a7)
-[00fdc506] f0e0                      dc.w       $F0E0
+[00fdc506] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc508] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc50e] 6000 0092                 bra        $00FDC5A2
 [00fdc512] 2846                      movea.l    d6,a4
@@ -36463,7 +36474,7 @@ gr_plns:
 [00fdc550] 3f05                      move.w     d5,-(a7)
 [00fdc552] 2f06                      move.l     d6,-(a7)
 [00fdc554] 3f07                      move.w     d7,-(a7)
-[00fdc556] f0e0                      dc.w       $F0E0
+[00fdc556] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc558] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc55e] 006e 0001 fffc            ori.w      #$0001,-4(a6)
 [00fdc564] 6016                      bra.s      $00FDC57C
@@ -36482,10 +36493,11 @@ gr_plns:
 [00fdc594] 3f05                      move.w     d5,-(a7)
 [00fdc596] 2f06                      move.l     d6,-(a7)
 [00fdc598] 3f07                      move.w     d7,-(a7)
-[00fdc59a] f0cc                      dc.w       $F0CC
+[00fdc59a] f0cc                      dc.w       $F0CC ; act_chg
 [00fdc59c] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdc5a2] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 
+act_bdown:
 [00fdc5a4] 4e56 ffe4                 link       a6,#-28
 [00fdc5a8] 48e7 0f1c                 movem.l    d4-d7/a3-a5,-(a7)
 [00fdc5ac] 3e2e 0008                 move.w     8(a6),d7
@@ -36534,7 +36546,7 @@ gr_plns:
 [00fdc642] 3f05                      move.w     d5,-(a7)
 [00fdc644] 2f06                      move.l     d6,-(a7)
 [00fdc646] 3f07                      move.w     d7,-(a7)
-[00fdc648] f0e0                      dc.w       $F0E0
+[00fdc648] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc64a] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc650] 6000 0100                 bra        $00FDC752
 [00fdc654] 2a46                      movea.l    d6,a5
@@ -36550,7 +36562,7 @@ gr_plns:
 [00fdc676] 5997                      subq.l     #4,(a7)
 [00fdc678] 3f05                      move.w     d5,-(a7)
 [00fdc67a] 2f06                      move.l     d6,-(a7)
-[00fdc67c] f0e8                      dc.w       $F0E8
+[00fdc67c] f0e8                      dc.w       $F0E8 ; gr_accobs
 [00fdc67e] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fdc684] 4a6e fffc                 tst.w      -4(a6)
 [00fdc688] 6700 00c8                 beq        $00FDC752
@@ -36584,7 +36596,7 @@ gr_plns:
 [00fdc6ee] 2f3c 0000 7040            move.l     #$00007040,-(a7)
 [00fdc6f4] 3f2e 0012                 move.w     18(a6),-(a7)
 [00fdc6f8] 3f2e 0010                 move.w     16(a6),-(a7)
-[00fdc6fc] f0ec                      dc.w       $F0EC
+[00fdc6fc] f0ec                      dc.w       $F0EC ; gr_drgplns
 [00fdc6fe] dffc 0000 0020            adda.l     #$00000020,a7
 [00fdc704] 4a6e fff8                 tst.w      -8(a6)
 [00fdc708] 671a                      beq.s      $00FDC724
@@ -36607,7 +36619,7 @@ gr_plns:
 [00fdc73c] 3f2e fff6                 move.w     -10(a6),-(a7)
 [00fdc740] 3f05                      move.w     d5,-(a7)
 [00fdc742] 2f06                      move.l     d6,-(a7)
-[00fdc744] f0f0                      dc.w       $F0F0
+[00fdc744] f0f0                      dc.w       $F0F0 ; move_drvicon
 [00fdc746] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fdc74c] 3d7c ffff fff8            move.w     #$FFFF,-8(a6)
 [00fdc752] 2e8e                      move.l     a6,(a7)
@@ -41666,7 +41678,7 @@ FUN_00fe01c6:
 [00fe03c2] 2079 0000 9e2a            movea.l    $00009E2A,a0
 [00fe03c8] 2f28 7600                 move.l     30208(a0),-(a7)
 [00fe03cc] 3f07                      move.w     d7,-(a7)
-[00fe03ce] f0e0                      dc.w       $F0E0
+[00fe03ce] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fe03d0] dffc 0000 0018            adda.l     #$00000018,a7
 [00fe03d6] f831                      dc.w       $F831 ; movem.l (a7)+,d6-d7/a5
 
@@ -41921,7 +41933,7 @@ FUN_00fe01c6:
 [00fe06c4] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe06c8] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe06cc] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe06d0] f0cc                      dc.w       $F0CC
+[00fe06d0] f0cc                      dc.w       $F0CC ; act_chg
 [00fe06d2] dffc 0000 0014            adda.l     #$00000014,a7
 [00fe06d8] 4a47                      tst.w      d7
 [00fe06da] 6716                      beq.s      $00FE06F2
@@ -42152,7 +42164,7 @@ FUN_00fe01c6:
 [00fe0994] 3f2c 0002                 move.w     2(a4),-(a7)
 [00fe0998] 3f14                      move.w     (a4),-(a7)
 [00fe099a] 3f2d 0006                 move.w     6(a5),-(a7)
-[00fe099e] f094                      dc.w       $F094
+[00fe099e] f094                      dc.w       $F094 ; do_wredraw
 [00fe09a0] 508f                      addq.l     #8,a7
 [00fe09a2] 4257                      clr.w      (a7)
 [00fe09a4] f1b8                      dc.w       $F1B8
@@ -43379,7 +43391,7 @@ FUN_00fe01c6:
 [00fe1826] 3f2e fffc                 move.w     -4(a6),-(a7)
 [00fe182a] 3f2e fffe                 move.w     -2(a6),-(a7)
 [00fe182e] 4267                      clr.w      -(a7)
-[00fe1830] f094                      dc.w       $F094
+[00fe1830] f094                      dc.w       $F094 ; do_wredraw
 [00fe1832] 508f                      addq.l     #8,a7
 [00fe1834] 6000 0072                 bra.w      $00FE18A8
 [00fe1838] 200d                      move.l     a5,d0
@@ -43469,7 +43481,7 @@ FUN_00fe01c6:
 [00fe191e] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe1922] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe1926] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe192a] f4c4                      dc.w       $F4C4
+[00fe192a] f4c4                      dc.w       $F4C4 ; act_bsclick
 [00fe192c] dffc 0000 0012            adda.l     #$00000012,a7
 [00fe1932] 2e8e                      move.l     a6,(a7)
 [00fe1934] 5997                      subq.l     #4,(a7)
@@ -43492,7 +43504,7 @@ FUN_00fe01c6:
 [00fe196c] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe1970] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe1974] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe1978] f4c8                      dc.w       $F4C8
+[00fe1978] f4c8                      dc.w       $F4C8 ; act_bdown
 [00fe197a] dffc 0000 0012            adda.l     #$00000012,a7
 [00fe1980] 3800                      move.w     d0,d4
 [00fe1982] b87c ffff                 cmp.w      #$FFFF,d4
@@ -43522,7 +43534,7 @@ FUN_00fe01c6:
 [00fe19c6] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe19ca] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe19ce] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe19d2] f4c4                      dc.w       $F4C4
+[00fe19d2] f4c4                      dc.w       $F4C4 ; act_bsclick
 [00fe19d4] dffc 0000 0012            adda.l     #$00000012,a7
 [00fe19da] 3ebc 0012                 move.w     #$0012,(a7)
 [00fe19de] f4d0                      dc.w       $F4D0
@@ -43629,7 +43641,7 @@ FUN_00fe01c6:
 [00fe1af8] 3f2c 5c7c                 move.w     23676(a4),-(a7)
 [00fe1afc] 3f2c 5c7a                 move.w     23674(a4),-(a7)
 [00fe1b00] 3f2c 5c78                 move.w     23672(a4),-(a7)
-[00fe1b04] f094                      dc.w       $F094
+[00fe1b04] f094                      dc.w       $F094 ; do_wredraw
 [00fe1b06] 508f                      addq.l     #8,a7
 [00fe1b08] 6000 017e                 bra        $00FE1C88
 [00fe1b0c] 4257                      clr.w      (a7)
@@ -44046,7 +44058,7 @@ deskmain:
 [00fe202e] 3f2d 5c88                 move.w     23688(a5),-(a7)
 [00fe2032] 3f2d 5c86                 move.w     23686(a5),-(a7)
 [00fe2036] 4267                      clr.w      -(a7)
-[00fe2038] f094                      dc.w       $F094
+[00fe2038] f094                      dc.w       $F094 ; do_wredraw
 [00fe203a] 508f                      addq.l     #8,a7
 [00fe203c] 4257                      clr.w      (a7)
 [00fe203e] 3f3c 0001                 move.w     #$0001,-(a7)
@@ -44974,7 +44986,7 @@ win_top:
 [00fe2ba2] 3f2c 0002                 move.w     2(a4),-(a7)
 [00fe2ba6] 3f14                      move.w     (a4),-(a7)
 [00fe2ba8] 3f2d 0006                 move.w     6(a5),-(a7)
-[00fe2bac] f094                      dc.w       $F094
+[00fe2bac] f094                      dc.w       $F094 ; do_wredraw
 [00fe2bae] 508f                      addq.l     #8,a7
 [00fe2bb0] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 
@@ -61124,32 +61136,32 @@ lineftab:
 [00feec24] 00fe cbfa                 dc.l 00fecbfa ; F07C ; LBWMOV
 [00feec28] 00fe ceea                 dc.l 00feceea ; F080 ; min
 [00feec2c] 00fd db0e                 dc.l 00fddb0e ; F084 ; objc_find
-[00feec30] 00fd c0b4                 dc.l 00fdc0b4 ; F088
+[00feec30] 00fd c0b4                 dc.l 00fdc0b4 ; F088 ; act_chkobj
 [00feec34] 00fd d72c                 dc.l 00fdd72c ; F08C ; evnt_multi
 [00feec38] 00fd acfa                 dc.l 00fdacfa ; F090 ; app_mtoi
-[00feec3c] 00fe 0448                 dc.l 00fe0448 ; F094
+[00feec3c] 00fe 0448                 dc.l 00fe0448 ; F094 ; do_wredraw
 [00feec40] 00fd d8ec                 dc.l 00fdd8ec ; F098 ; graf_mouse
 [00feec44] 00fd 9cd4                 dc.l 00fd9cd4 ; F09C ; gsx_pline
-[00feec48] 00fd bcc8                 dc.l 00fdbcc8 ; F0A0
-[00feec4c] 00fd b970                 dc.l 00fdb970 ; F0A4
-[00feec50] 00fd bbc6                 dc.l 00fdbbc6 ; F0A8
-[00feec54] 00fd bc86                 dc.l 00fdbc86 ; F0AC
+[00feec48] 00fd bcc8                 dc.l 00fdbcc8 ; F0A0 ; gr_plns
+[00feec4c] 00fd b970                 dc.l 00fdb970 ; F0A4 ; gr_isdown
+[00feec50] 00fd bbc6                 dc.l 00fdbbc6 ; F0A8 ; gr_extent
+[00feec54] 00fd bc86                 dc.l 00fdbc86 ; F0AC ; gr_obalign
 [00feec58] 00fd 9bae                 dc.l 00fd9bae ; F0B0 ; gsx_sclip
 [00feec5c] 00fd d9a2                 dc.l 00fdd9a2 ; F0B4 ; graf_mkstate
 [00feec60] 00fe ccf6                 dc.l 00feccf6 ; F0B8 ; rc_constrain
-[00feec64] 00fd bd2c                 dc.l 00fdbd2c ; F0BC
+[00feec64] 00fd bd2c                 dc.l 00fdbd2c ; F0BC ; gr_bwait
 [00feec68] 00fd dc80                 dc.l 00fddc80 ; F0C0 ; wind_find
 [00feec6c] 00fe 23b6                 dc.l 00fe23b6 ; F0C4
 [00feec70] 00fd b918                 dc.l 00fdb918 ; F0C8 ; gr_obfind
-[00feec74] 00fd c23c                 dc.l 00fdc23c ; F0CC
+[00feec74] 00fd c23c                 dc.l 00fdc23c ; F0CC ; act_chg
 [00feec78] 00fe 13d4                 dc.l 00fe13d4 ; F0D0
 [00feec7c] 00fe cdea                 dc.l 00fecdea ; F0D4 ; rc_intersect
 [00feec80] 00fd db84                 dc.l 00fddb84 ; F0D8 ; objc_change
 [00feec84] 00fe cd7a                 dc.l 00fecd7a ; F0DC ; rc_union
-[00feec88] 00fd c320                 dc.l 00fdc320 ; F0E0
+[00feec88] 00fd c320                 dc.l 00fdc320 ; F0E0 ; act_allchg
 [00feec8c] 00fd d97a                 dc.l 00fdd97a ; F0E4 ; graf_rubbox
-[00feec90] 00fd b9e8                 dc.l 00fdb9e8 ; F0E8
-[00feec94] 00fd bdb2                 dc.l 00fdbdb2 ; F0EC
+[00feec90] 00fd b9e8                 dc.l 00fdb9e8 ; F0E8 ; gr_accobs
+[00feec94] 00fd bdb2                 dc.l 00fdbdb2 ; F0EC ; gr_drgplns
 [00feec98] 00fd ba96                 dc.l 00fdba96 ; F0F0
 [00feec9c] 00fd d7d6                 dc.l 00fdd7d6 ; F0F4 ; evnt_button
 [00feeca0] 00fd a712                 dc.l 00fda712 ; F0F8 ; hex_dig
@@ -61395,8 +61407,8 @@ lineftab:
 [00fef060] 00fe 1c9c                 dc.l 00fe1c9c ; F4B8
 [00fef064] 00fd b34c                 dc.l 00fdb34c ; F4BC ; save_inf
 [00fef068] 00fe 84bc                 dc.l 00fe84bc ; F4C0 ; av_hardcopy
-[00fef06c] 00fd c49a                 dc.l 00fdc49a ; F4C4
-[00fef070] 00fd c5a4                 dc.l 00fdc5a4 ; F4C8
+[00fef06c] 00fd c49a                 dc.l 00fdc49a ; F4C4 ; act_bsclick
+[00fef070] 00fd c5a4                 dc.l 00fdc5a4 ; F4C8 ; act_bdown
 [00fef074] 00fd fee8                 dc.l 00fdfee8 ; F4CC
 [00fef078] 00fe 1620                 dc.l 00fe1620 ; F4D0
 [00fef07c] 00fe 1496                 dc.l 00fe1496 ; F4D4

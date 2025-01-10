@@ -469,7 +469,7 @@ PP(int16_t keystate;)
 		graf_mkstate(&junk, &junk, &bstate, &junk);
 		if (bstate & 1)
 		{
-			dest_wh = act_bdown(d->g_cwin, d->g_pscreen, d->g_croot, mx, my, pc, &dobj);
+			dest_wh = act_bdown(d->g_cwin, d->g_pscreen, d->g_croot, &mx, &my, keystate, pc, &dobj);
 
 			if (dest_wh != NIL)
 			{

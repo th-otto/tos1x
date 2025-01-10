@@ -20,17 +20,20 @@
 
 LINEF_STATIC int16_t act_chkobj PROTO((OBJECT *tree, int16_t root, int16_t obj, int16_t mx, int16_t my, int16_t w, int16_t h));
 #if LINEF_HACK
+LINEF_STATIC VOID gr_accobs PROTO((OBJECT *tree, int16_t root, int16_t *pnum, int16_t *pxypts));
 LINEF_STATIC int16_t gr_obfind PROTO((OBJECT *tree, int16_t root, int16_t mx, int16_t my));
 LINEF_STATIC VOID move_drvicon PROTO((OBJECT *tree, int16_t root, int16_t x, int16_t y, int16_t *pts));
 LINEF_STATIC VOID gr_extent PROTO((int16_t numpts, int16_t *xylnpts, GRECT *pt));
 LINEF_STATIC VOID gr_plns PROTO((int16_t x, int16_t y, int16_t numpts, int16_t *xylnpts, int16_t numobs, int16_t *xyobpts));
 LINEF_STATIC BOOLEAN gr_bwait PROTO((GRECT *po, int16_t mx, int16_t my, int16_t numpts, int16_t *xylnpts, int16_t numobs, int16_t *xyobpts));
 LINEF_STATIC VOID gr_drgplns PROTO((int16_t in_mx, int16_t in_my, GRECT *pc, int16_t numpts, int16_t *xylnpts, int16_t numobs, int16_t *xyobpts, int16_t *pdulx, int16_t *pduly, int16_t *pdwh, int16_t *pdobj));
+LINEF_STATIC VOID gr_obalign PROTO((int16_t numobs, nt16_t x, int16_t y, int16_t *xyobpts));
 #endif
 
 
 /* 104de: 00fd5bfe */
 /* 106de: 00e161a0 */
+/* 100fr: 00fdb918 */
 LINEF_STATIC int16_t gr_obfind(P(OBJECT *)tree, P(int16_t) root, P(int16_t) mx, P(int16_t) my)
 PP(OBJECT *tree;)
 PP(register int16_t root;)
@@ -43,6 +46,71 @@ PP(register int16_t my;)
 	if (sobj != root && sobj != NIL)
 		sobj = act_chkobj(tree, root, sobj, mx, my, 1, 1);
 	return sobj;
+}
+
+
+/*
+ *	Return TRUE as long as the mouse is down.  Block until the
+ *	mouse moves into or out of the specified rectangle.
+ */
+/* 100fr: 00fdb970 */
+BOOLEAN gr_isdown(P(int16_t) out, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(int16_t *) pmx, P(int16_t *) pmy, P(uint16_t *) pbutton, P(uint16_t *) pkstate)
+PP(int16_t out;)
+PP(int16_t x;)
+PP(int16_t y;)
+PP(int16_t w;)
+PP(int16_t h;)
+PP(int16_t *pmx;)
+PP(int16_t *pmy;)
+PP(uint16_t *pbutton;)
+PP(uint16_t *pkstate;)
+{
+	int16_t flags;
+	uint16_t ev_which;
+	uint16_t kret;
+	uint16_t bret;
+
+	flags = MU_BUTTON | MU_M1;
+	ev_which = evnt_multi(flags, 0x01, 0xff, 0x00, out, x, y, w, h,
+						  0, 0, 0, 0, 0, 0x0L, 0x0, 0x0, pmx, pmy, pbutton, pkstate, &kret, &bret);
+	if (ev_which & MU_BUTTON)
+		return FALSE;
+	return TRUE;
+}
+
+
+LINEF_STATIC VOID gr_accobs(P(OBJECT *) tree, P(int16_t) root, P(int16_t *) pnum, P(int16_t *) pxypts)
+PP(OBJECT *tree;)
+PP(register int16_t root;)
+PP(int16_t *pnum;)
+PP(register int16_t *pxypts;)
+{
+	register int16_t i;
+	register int16_t pi;
+	register OBJECT *olist;
+	register int16_t obj;
+	int16_t offx;
+	int16_t offy;
+
+	olist = tree;
+
+	offx = olist[root].ob_x;
+	offy = olist[root].ob_y;
+
+	i = 0;
+	for (obj = olist[root].ob_head; obj > root; obj = olist[obj].ob_next)
+	{
+		if (olist[obj].ob_state & SELECTED)
+		{
+			pi = i * 2;
+			pxypts[pi] = offx + olist[obj].ob_x;
+			pxypts[pi + 1] = offy + olist[obj].ob_y;
+			i++;
+			if (i >= MAX_OBS)
+				break;
+		}
+	}
+	*pnum = i;
 }
 
 
@@ -121,6 +189,24 @@ PP(register GRECT *pt;)
 }
 
 
+LINEF_STATIC VOID gr_obalign(P(int16_t) numobs, P(int16_t) x, P(int16_t) y, P(int16_t *) xyobpts)
+PP(register int16_t numobs;)
+PP(register int16_t x;)
+PP(register int16_t y;)
+PP(register int16_t *xyobpts;)
+{
+	register int16_t i;
+	register int16_t j;
+
+	for (i = 0; i < numobs; i++)
+	{
+		j = i * 2;
+		xyobpts[j] -= x;
+		xyobpts[j + 1] -= y;
+	}
+}
+
+
 /*
  *	Draw a list of polylines a number of times based on a list of
  *	x,y object locations that are all relative to a certain x,y
@@ -166,24 +252,11 @@ PP(register int16_t *xyobpts;)
 {
 	int16_t down;
 	int16_t ret[4];
-	int16_t kret, bret;
-	int16_t ev_which;
 
 	/* draw old */
 	gr_plns(po->g_x, po->g_y, numpts, &xylnpts[0], numobs, &xyobpts[0]);
 	/* wait for change  */
-	ev_which = evnt_multi(MU_BUTTON | MU_M1, 1,
-#ifdef __ALCYON__
-		0x10000L,
-#else
-		1, 0,
-#endif
-		TRUE, mx, my, 2, 2,
-		0, 0, 0, 0, 0,
-		NULL,
-		0, 0,
-		&ret[0], &ret[1], &ret[2], &ret[3], &kret, &bret);
-	down = ev_which & MU_BUTTON ? FALSE : TRUE;
+	down = gr_isdown(TRUE, mx, my, 2, 2, &ret[0], &ret[1], &ret[2], &ret[3]);
 	/* erase old */
 	gr_plns(po->g_x, po->g_y, numpts, &xylnpts[0], numobs, &xyobpts[0]);
 	/* return exit event */
@@ -238,12 +311,7 @@ PP(register int16_t *pdobj;)
 	o.g_h += ln.g_h;
 
 	/* inlined gr_obalign */
-	for (i = 0; i < numobs; i++)
-	{
-		j = i * 2;
-		xyobpts[j] -= o.g_x;
-		xyobpts[j + 1] -= o.g_y;
-	}
+	gr_obalign(numobs, o.g_x, o.g_y, &xyobpts[0]);
 
 	offx = in_mx - o.g_x;
 	offy = in_my - o.g_y;
@@ -592,12 +660,13 @@ PP(int16_t dclick;)
 
 /* 104de: 00fd66ba */
 /* 106de: 00e16d56 */
-int16_t act_bdown(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t) mx, P(int16_t) my, P(GRECT *)pc, P(int16_t *)pdobj)
+int16_t act_bdown(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t *) in_mx, P(int16_t *) in_my, P(int16_t) keystate, P(GRECT *)pc, P(int16_t *)pdobj)
 PP(register int16_t wh;)
 PP(register LPTREE tree;)
 PP(register int16_t root;)
-PP(int16_t mx;)
-PP(int16_t my;)
+PP(int16_t *in_mx;)
+PP(int16_t *in_my;)
+PP(int16_t keystate;)
 PP(GRECT *pc;)
 PP(int16_t *pdobj;)
 {
@@ -608,6 +677,7 @@ PP(int16_t *pdobj;)
 	int16_t bstate;
 	register OBJECT *olist;
 	int16_t dst_wh;
+	int16_t l_mx, l_my;
 	int16_t dulx, duly;
 	int16_t i;
 	int16_t j;
@@ -624,15 +694,13 @@ PP(int16_t *pdobj;)
 
 	dst_wh = NIL;
 	*pdobj = root;
-	sobj = gr_obfind(tree, root, mx, my);
+	l_mx = *in_mx;
+	l_my = *in_my;
+	sobj = gr_obfind(tree, root, l_mx, l_my);
 	/* rubber box to enclose a group of icons */
 	if (sobj == root || sobj == NIL)
 	{
-#ifdef __ALCYON__
-		r_set(pm, mx, my, 0x60006L);
-#else
-		r_set(pm, mx, my, 6, 6);
-#endif
+		r_set(pm, l_mx, l_my, 6, 6);
 		graf_rubbox(pm->g_x, pm->g_y, 6, 6, &pm->g_w, &pm->g_h);
 		act_allchg(wh, tree, root, sobj, pm, pc, SELECTED, TRUE, TRUE, TRUE);
 	} else
@@ -641,31 +709,7 @@ PP(int16_t *pdobj;)
 		olist = tree;
 		if (olist[sobj].ob_state & SELECTED)
 		{
-#if 0
 			gr_accobs(tree, root, &numobs, d->g_xyobpts);
-#else
-			/*
-			 * inlined gr_accobs
-			 */
-			pxypts = d->g_xyobpts;
-			olist = tree; /* FIXME: already done above */
-			offx = olist[root].ob_x;
-			offy = olist[root].ob_y;
-			i = 0;
-			for (obj = olist[root].ob_head; obj > root; obj = olist[obj].ob_next)
-			{
-				if (olist[obj].ob_state & SELECTED)
-				{
-					j = i * 2;
-					pxypts[j] = offx + olist[obj].ob_x;
-					pxypts[j + 1] = offy + olist[obj].ob_y;
-					i++;
-				}
-				if (i >= MAX_OBS)
-					break;
-			}
-			numobs = i;
-#endif
 			if (numobs)
 			{
 				view = root == DROOT ? V_ICON : d->g_iview;
@@ -678,7 +722,7 @@ PP(int16_t *pdobj;)
 					numpts = d->g_nmtext;
 					pxypts = d->g_xytext;
 				}
-				gr_drgplns(mx, my, &gl_rfull, numpts, pxypts, numobs, d->g_xyobpts,
+				gr_drgplns(l_mx, l_my, &gl_rfull, numpts, pxypts, numobs, d->g_xyobpts,
 						   &dulx, &duly, &dst_wh, pdobj);
 				if (dst_wh)
 				{
@@ -699,11 +743,7 @@ PP(int16_t *pdobj;)
 	}
 
 	evnt_button(
-#ifdef __ALCYON__
-		1, 0x10000L,
-#else
 		1, 1, 0,
-#endif
-		&mx, &my, &bstate, &gl_kstate);
+		&l_mx, &l_my, &bstate, &keystate);
 	return dst_wh;
 }

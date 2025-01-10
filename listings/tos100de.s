@@ -33743,11 +33743,12 @@ gem_main:
 [00fdb624] 3f03                      move.w     d3,-(a7)
 [00fdb626] 3f06                      move.w     d6,-(a7)
 [00fdb628] 2f07                      move.l     d7,-(a7)
-[00fdb62a] f088                      dc.w       $F088
+[00fdb62a] f088                      dc.w       $F088 ; act_chkobj
 [00fdb62c] dffc 0000 000e            adda.l     #$0000000E,a7
 [00fdb632] 3600                      move.w     d0,d3
 [00fdb634] 3003                      move.w     d3,d0
 [00fdb636] f03f                      dc.w       $F03F ; movem.l (a7)+,d3-d7
+
 [00fdb638] 4e56 ffec                 link       a6,#-20
 [00fdb63c] 3d7c 0006 fffe            move.w     #$0006,-2(a6)
 [00fdb642] 2e8e                      move.l     a6,(a7)
@@ -33784,6 +33785,7 @@ gem_main:
 [00fdb6aa] 6002                      bra.s      $00FDB6AE
 [00fdb6ac] 7001                      moveq.l    #1,d0
 [00fdb6ae] f001                      dc.w       $F001 ; movem.l (a7)+,#0
+
 [00fdb6b0] 4e56 fffc                 link       a6,#-4
 [00fdb6b4] 48e7 1f0c                 movem.l    d3-d7/a4-a5,-(a7)
 [00fdb6b8] 3e2e 000c                 move.w     12(a6),d7
@@ -33846,6 +33848,7 @@ gem_main:
 [00fdb756] 206e 000e                 movea.l    14(a6),a0
 [00fdb75a] 3086                      move.w     d6,(a0)
 [00fdb75c] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
+
 [00fdb75e] 4e56 fffc                 link       a6,#-4
 [00fdb762] 48e7 071c                 movem.l    d5-d7/a3-a5,-(a7)
 [00fdb766] 2679 0000 9e2e            movea.l    $00009E2E,a3
@@ -33924,7 +33927,7 @@ gem_main:
 [00fdb846] 3f2e fffc                 move.w     -4(a6),-(a7)
 [00fdb84a] 3f2e fffe                 move.w     -2(a6),-(a7)
 [00fdb84e] 4267                      clr.w      -(a7)
-[00fdb850] f094                      dc.w       $F094
+[00fdb850] f094                      dc.w       $F094 ; do_wredraw
 [00fdb852] 508f                      addq.l     #8,a7
 [00fdb854] 3eab 5e8c                 move.w     24204(a3),(a7)
 [00fdb858] 3f2b 5e8a                 move.w     24202(a3),-(a7)
@@ -33935,7 +33938,7 @@ gem_main:
 [00fdb868] c1fc 0018                 muls.w     #$0018,d0
 [00fdb86c] 3f35 0810                 move.w     16(a5,d0.l),-(a7)
 [00fdb870] 4267                      clr.w      -(a7)
-[00fdb872] f094                      dc.w       $F094
+[00fdb872] f094                      dc.w       $F094 ; do_wredraw
 [00fdb874] 508f                      addq.l     #8,a7
 [00fdb876] 5247                      addq.w     #1,d7
 [00fdb878] 204d                      movea.l    a5,a0
@@ -34104,7 +34107,7 @@ gem_main:
 [00fdba1e] 3f05                      move.w     d5,-(a7)
 [00fdba20] 3f2d 0002                 move.w     2(a5),-(a7)
 [00fdba24] 3f15                      move.w     (a5),-(a7)
-[00fdba26] f0a0                      dc.w       $F0A0
+[00fdba26] f0a0                      dc.w       $F0A0 ; gr_plns
 [00fdba28] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fdba2e] 2e8e                      move.l     a6,(a7)
 [00fdba30] 5997                      subq.l     #4,(a7)
@@ -34119,7 +34122,7 @@ gem_main:
 [00fdba4a] 3f06                      move.w     d6,-(a7)
 [00fdba4c] 3f07                      move.w     d7,-(a7)
 [00fdba4e] 3f3c 0001                 move.w     #$0001,-(a7)
-[00fdba52] f0a4                      dc.w       $F0A4
+[00fdba52] f0a4                      dc.w       $F0A4 ; gr_isdown
 [00fdba54] dffc 0000 0016            adda.l     #$00000016,a7
 [00fdba5a] 3d40 fffe                 move.w     d0,-2(a6)
 [00fdba5e] 2e8b                      move.l     a3,(a7)
@@ -34128,7 +34131,7 @@ gem_main:
 [00fdba64] 3f05                      move.w     d5,-(a7)
 [00fdba66] 3f2d 0002                 move.w     2(a5),-(a7)
 [00fdba6a] 3f15                      move.w     (a5),-(a7)
-[00fdba6c] f0a0                      dc.w       $F0A0
+[00fdba6c] f0a0                      dc.w       $F0A0 ; gr_plns
 [00fdba6e] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fdba74] 302e fffe                 move.w     -2(a6),d0
 [00fdba78] fe3d                      dc.w       $FE3D ; movem.l (a7)+,d4-d7/a3-a5
@@ -34142,13 +34145,13 @@ gem_main:
 [00fdba94] 0697 ffff ffc8            addi.l     #$FFFFFFC8,(a7)
 [00fdba9a] 2f2e 0012                 move.l     18(a6),-(a7)
 [00fdba9e] 3f07                      move.w     d7,-(a7)
-[00fdbaa0] f0a8                      dc.w       $F0A8
+[00fdbaa0] f0a8                      dc.w       $F0A8 ; gr_extent
 [00fdbaa2] 5c8f                      addq.l     #6,a7
 [00fdbaa4] 2e8e                      move.l     a6,(a7)
 [00fdbaa6] 0697 ffff ffd0            addi.l     #$FFFFFFD0,(a7)
 [00fdbaac] 2f2e 0018                 move.l     24(a6),-(a7)
 [00fdbab0] 3f06                      move.w     d6,-(a7)
-[00fdbab2] f0a8                      dc.w       $F0A8
+[00fdbab2] f0a8                      dc.w       $F0A8 ; gr_extent
 [00fdbab4] 5c8f                      addq.l     #6,a7
 [00fdbab6] 302e ffcc                 move.w     -52(a6),d0
 [00fdbaba] d16e ffd4                 add.w      d0,-44(a6)
@@ -34158,7 +34161,7 @@ gem_main:
 [00fdbaca] 3f2e ffd2                 move.w     -46(a6),-(a7)
 [00fdbace] 3f2e ffd0                 move.w     -48(a6),-(a7)
 [00fdbad2] 3f06                      move.w     d6,-(a7)
-[00fdbad4] f0ac                      dc.w       $F0AC
+[00fdbad4] f0ac                      dc.w       $F0AC ; gr_obalign
 [00fdbad6] 5c8f                      addq.l     #6,a7
 [00fdbad8] 302e 0008                 move.w     8(a6),d0
 [00fdbadc] 906e ffd0                 sub.w      -48(a6),d0
@@ -34206,7 +34209,7 @@ gem_main:
 [00fdbb72] 3f2e 0008                 move.w     8(a6),-(a7)
 [00fdbb76] 2f0e                      move.l     a6,-(a7)
 [00fdbb78] 0697 ffff ffd0            addi.l     #$FFFFFFD0,(a7)
-[00fdbb7e] f0bc                      dc.w       $F0BC
+[00fdbb7e] f0bc                      dc.w       $F0BC ; gr_bwait
 [00fdbb80] dffc 0000 0010            adda.l     #$00000010,a7
 [00fdbb86] 3d40 ffe2                 move.w     d0,-30(a6)
 [00fdbb8a] 3eae 000a                 move.w     10(a6),(a7)
@@ -34234,7 +34237,7 @@ gem_main:
 [00fdbbe2] 3f2e 0008                 move.w     8(a6),-(a7)
 [00fdbbe6] 3f2e fff2                 move.w     -14(a6),-(a7)
 [00fdbbea] 2f2e fffc                 move.l     -4(a6),-(a7)
-[00fdbbee] f0c8                      dc.w       $F0C8
+[00fdbbee] f0c8                      dc.w       $F0C8 ; gr_obfind
 [00fdbbf0] 508f                      addq.l     #8,a7
 [00fdbbf2] 3880                      move.w     d0,(a4)
 [00fdbbf4] 3014                      move.w     (a4),d0
@@ -34253,7 +34256,7 @@ gem_main:
 [00fdbc1e] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbc22] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbc26] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbc2a] f0cc                      dc.w       $F0CC
+[00fdbc2a] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbc2c] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbc32] 426e ffee                 clr.w      -18(a6)
 [00fdbc36] 42ae fff8                 clr.l      -8(a6)
@@ -34274,7 +34277,7 @@ gem_main:
 [00fdbc6c] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbc70] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbc74] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbc78] f0cc                      dc.w       $F0CC
+[00fdbc78] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbc7a] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbc80] 426e ffee                 clr.w      -18(a6)
 [00fdbc84] 42ae fff8                 clr.l      -8(a6)
@@ -34318,7 +34321,7 @@ gem_main:
 [00fdbd1a] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbd1e] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbd22] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbd26] f0cc                      dc.w       $F0CC
+[00fdbd26] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbd28] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbd2e] 4a6e ffe2                 tst.w      -30(a6)
 [00fdbd32] 6600 fdcc                 bne        $00FDBB00
@@ -34333,7 +34336,7 @@ gem_main:
 [00fdbd52] 3f2e ffec                 move.w     -20(a6),-(a7)
 [00fdbd56] 2f2e fff8                 move.l     -8(a6),-(a7)
 [00fdbd5a] 3f2e ffee                 move.w     -18(a6),-(a7)
-[00fdbd5e] f0cc                      dc.w       $F0CC
+[00fdbd5e] f0cc                      dc.w       $F0CC ; act_chg
 [00fdbd60] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdbd66] 206e 001c                 movea.l    28(a6),a0
 [00fdbd6a] 30ae ffd0                 move.w     -48(a6),(a0)
@@ -34531,7 +34534,7 @@ gem_main:
 [00fdbfd6] 3f2b 0002                 move.w     2(a3),-(a7)
 [00fdbfda] 3f13                      move.w     (a3),-(a7)
 [00fdbfdc] 3f2e 0008                 move.w     8(a6),-(a7)
-[00fdbfe0] f094                      dc.w       $F094
+[00fdbfe0] f094                      dc.w       $F094 ; do_wredraw
 [00fdbfe2] 508f                      addq.l     #8,a7
 [00fdbfe4] 7001                      moveq.l    #1,d0
 [00fdbfe6] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
@@ -34587,7 +34590,7 @@ gem_main:
 [00fdc08a] 3f07                      move.w     d7,-(a7)
 [00fdc08c] 3f2e 000e                 move.w     14(a6),-(a7)
 [00fdc090] 2f2e 000a                 move.l     10(a6),-(a7)
-[00fdc094] f088                      dc.w       $F088
+[00fdc094] f088                      dc.w       $F088 ; act_chkobj
 [00fdc096] dffc 0000 000e            adda.l     #$0000000E,a7
 [00fdc09c] b06e 000e                 cmp.w      14(a6),d0
 [00fdc0a0] 6700 0080                 beq        $00FDC122 ; possibly optimized to short
@@ -34658,7 +34661,7 @@ gem_main:
 [00fdc152] 3f2b 0002                 move.w     2(a3),-(a7)
 [00fdc156] 3f13                      move.w     (a3),-(a7)
 [00fdc158] 3f2e 0008                 move.w     8(a6),-(a7)
-[00fdc15c] f094                      dc.w       $F094
+[00fdc15c] f094                      dc.w       $F094 ; do_wredraw
 [00fdc15e] 508f                      addq.l     #8,a7
 [00fdc160] fe31                      dc.w       $FE31 ; movem.l (a7)+,d6-d7/a3-a5
 [00fdc162] 4e56 fffc                 link       a6,#-4
@@ -34679,7 +34682,7 @@ gem_main:
 [00fdc198] 3f2e 0010                 move.w     16(a6),-(a7)
 [00fdc19c] 3f05                      move.w     d5,-(a7)
 [00fdc19e] 2f06                      move.l     d6,-(a7)
-[00fdc1a0] f0c8                      dc.w       $F0C8
+[00fdc1a0] f0c8                      dc.w       $F0C8 ; gr_obfind
 [00fdc1a2] 508f                      addq.l     #8,a7
 [00fdc1a4] 3800                      move.w     d0,d4
 [00fdc1a6] b845                      cmp.w      d5,d4
@@ -34696,7 +34699,7 @@ gem_main:
 [00fdc1c8] 3f05                      move.w     d5,-(a7)
 [00fdc1ca] 2f06                      move.l     d6,-(a7)
 [00fdc1cc] 3f07                      move.w     d7,-(a7)
-[00fdc1ce] f0e0                      dc.w       $F0E0
+[00fdc1ce] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc1d0] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc1d6] 6000 0092                 bra        $00FDC26A
 [00fdc1da] 2846                      movea.l    d6,a4
@@ -34721,7 +34724,7 @@ gem_main:
 [00fdc218] 3f05                      move.w     d5,-(a7)
 [00fdc21a] 2f06                      move.l     d6,-(a7)
 [00fdc21c] 3f07                      move.w     d7,-(a7)
-[00fdc21e] f0e0                      dc.w       $F0E0
+[00fdc21e] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc220] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc226] 006e 0001 fffc            ori.w      #$0001,-4(a6)
 [00fdc22c] 6016                      bra.s      $00FDC244
@@ -34740,7 +34743,7 @@ gem_main:
 [00fdc25c] 3f05                      move.w     d5,-(a7)
 [00fdc25e] 2f06                      move.l     d6,-(a7)
 [00fdc260] 3f07                      move.w     d7,-(a7)
-[00fdc262] f0cc                      dc.w       $F0CC
+[00fdc262] f0cc                      dc.w       $F0CC ; act_chg
 [00fdc264] dffc 0000 0014            adda.l     #$00000014,a7
 [00fdc26a] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 [00fdc26c] 4e56 ffe4                 link       a6,#-28
@@ -34757,7 +34760,7 @@ gem_main:
 [00fdc29a] 3f2e 0010                 move.w     16(a6),-(a7)
 [00fdc29e] 3f05                      move.w     d5,-(a7)
 [00fdc2a0] 2f06                      move.l     d6,-(a7)
-[00fdc2a2] f0c8                      dc.w       $F0C8
+[00fdc2a2] f0c8                      dc.w       $F0C8 ; gr_obfind
 [00fdc2a4] 508f                      addq.l     #8,a7
 [00fdc2a6] 3d40 fffe                 move.w     d0,-2(a6)
 [00fdc2aa] ba6e fffe                 cmp.w      -2(a6),d5
@@ -34791,7 +34794,7 @@ gem_main:
 [00fdc30a] 3f05                      move.w     d5,-(a7)
 [00fdc30c] 2f06                      move.l     d6,-(a7)
 [00fdc30e] 3f07                      move.w     d7,-(a7)
-[00fdc310] f0e0                      dc.w       $F0E0
+[00fdc310] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fdc312] dffc 0000 0018            adda.l     #$00000018,a7
 [00fdc318] 6000 0100                 bra        $00FDC41A
 [00fdc31c] 2a46                      movea.l    d6,a5
@@ -34807,7 +34810,7 @@ gem_main:
 [00fdc33e] 5997                      subq.l     #4,(a7)
 [00fdc340] 3f05                      move.w     d5,-(a7)
 [00fdc342] 2f06                      move.l     d6,-(a7)
-[00fdc344] f0e8                      dc.w       $F0E8
+[00fdc344] f0e8                      dc.w       $F0E8 ; gr_accobs
 [00fdc346] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fdc34c] 4a6e fffc                 tst.w      -4(a6)
 [00fdc350] 6700 00c8                 beq        $00FDC41A
@@ -34841,7 +34844,7 @@ gem_main:
 [00fdc3b6] 2f3c 0000 7044            move.l     #$00007044,-(a7)
 [00fdc3bc] 3f2e 0012                 move.w     18(a6),-(a7)
 [00fdc3c0] 3f2e 0010                 move.w     16(a6),-(a7)
-[00fdc3c4] f0ec                      dc.w       $F0EC
+[00fdc3c4] f0ec                      dc.w       $F0EC ; gr_drgplns
 [00fdc3c6] dffc 0000 0020            adda.l     #$00000020,a7
 [00fdc3cc] 4a6e fff8                 tst.w      -8(a6)
 [00fdc3d0] 671a                      beq.s      $00FDC3EC
@@ -34864,7 +34867,7 @@ gem_main:
 [00fdc404] 3f2e fff6                 move.w     -10(a6),-(a7)
 [00fdc408] 3f05                      move.w     d5,-(a7)
 [00fdc40a] 2f06                      move.l     d6,-(a7)
-[00fdc40c] f0f0                      dc.w       $F0F0
+[00fdc40c] f0f0                      dc.w       $F0F0 ; move_drvicon
 [00fdc40e] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fdc414] 3d7c ffff fff8            move.w     #$FFFF,-8(a6)
 [00fdc41a] 2e8e                      move.l     a6,(a7)
@@ -39755,7 +39758,7 @@ pro_exec:
 [00fe008a] 2079 0000 9e2e            movea.l    $00009E2E,a0
 [00fe0090] 2f28 7600                 move.l     30208(a0),-(a7)
 [00fe0094] 3f07                      move.w     d7,-(a7)
-[00fe0096] f0e0                      dc.w       $F0E0
+[00fe0096] f0e0                      dc.w       $F0E0 ; act_allchg
 [00fe0098] dffc 0000 0018            adda.l     #$00000018,a7
 [00fe009e] f831                      dc.w       $F831 ; movem.l (a7)+,d6-d7/a5
 [00fe00a0] 4e56 fff8                 link       a6,#-8
@@ -40004,7 +40007,7 @@ pro_exec:
 [00fe038c] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe0390] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe0394] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe0398] f0cc                      dc.w       $F0CC
+[00fe0398] f0cc                      dc.w       $F0CC ; act_chg
 [00fe039a] dffc 0000 0014            adda.l     #$00000014,a7
 [00fe03a0] 4a47                      tst.w      d7
 [00fe03a2] 6716                      beq.s      $00FE03BA
@@ -40232,7 +40235,7 @@ pro_exec:
 [00fe065c] 3f2c 0002                 move.w     2(a4),-(a7)
 [00fe0660] 3f14                      move.w     (a4),-(a7)
 [00fe0662] 3f2d 0006                 move.w     6(a5),-(a7)
-[00fe0666] f094                      dc.w       $F094
+[00fe0666] f094                      dc.w       $F094 ; do_wredraw
 [00fe0668] 508f                      addq.l     #8,a7
 [00fe066a] 4257                      clr.w      (a7)
 [00fe066c] f1b8                      dc.w       $F1B8
@@ -41441,7 +41444,7 @@ pro_exec:
 [00fe14ee] 3f2e fffc                 move.w     -4(a6),-(a7)
 [00fe14f2] 3f2e fffe                 move.w     -2(a6),-(a7)
 [00fe14f6] 4267                      clr.w      -(a7)
-[00fe14f8] f094                      dc.w       $F094
+[00fe14f8] f094                      dc.w       $F094 ; do_wredraw
 [00fe14fa] 508f                      addq.l     #8,a7
 [00fe14fc] 6000 0072                 bra.w      $00FE1570
 [00fe1500] 200d                      move.l     a5,d0
@@ -41530,7 +41533,7 @@ pro_exec:
 [00fe15e6] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe15ea] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe15ee] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe15f2] f4c4                      dc.w       $F4C4
+[00fe15f2] f4c4                      dc.w       $F4C4 ; act_bsclick
 [00fe15f4] dffc 0000 0012            adda.l     #$00000012,a7
 [00fe15fa] 2e8e                      move.l     a6,(a7)
 [00fe15fc] 5997                      subq.l     #4,(a7)
@@ -41583,7 +41586,7 @@ pro_exec:
 [00fe168e] 3f2c 5e2a                 move.w     24106(a4),-(a7)
 [00fe1692] 2f2c 7600                 move.l     30208(a4),-(a7)
 [00fe1696] 3f2c 5e2c                 move.w     24108(a4),-(a7)
-[00fe169a] f4c4                      dc.w       $F4C4
+[00fe169a] f4c4                      dc.w       $F4C4 ; act_bsclick
 [00fe169c] dffc 0000 0012            adda.l     #$00000012,a7
 [00fe16a2] 3ebc 0012                 move.w     #$0012,(a7)
 [00fe16a6] f4d0                      dc.w       $F4D0
@@ -41592,6 +41595,7 @@ pro_exec:
 [00fe16b0] f4d4                      dc.w       $F4D4
 [00fe16b2] 302e fffe                 move.w     -2(a6),d0
 [00fe16b6] fe3d                      dc.w       $FE3D ; movem.l (a7)+,d4-d7/a3-a5
+
 [00fe16b8] 4e56 fff6                 link       a6,#-10
 [00fe16bc] 426e fffe                 clr.w      -2(a6)
 [00fe16c0] 0c6e 011b 0008            cmpi.w     #$011B,8(a6)
@@ -41687,7 +41691,7 @@ pro_exec:
 [00fe17c0] 3f2c 5c7c                 move.w     23676(a4),-(a7)
 [00fe17c4] 3f2c 5c7a                 move.w     23674(a4),-(a7)
 [00fe17c8] 3f2c 5c78                 move.w     23672(a4),-(a7)
-[00fe17cc] f094                      dc.w       $F094
+[00fe17cc] f094                      dc.w       $F094 ; do_wredraw
 [00fe17ce] 508f                      addq.l     #8,a7
 [00fe17d0] 6000 017e                 bra        $00FE1950
 [00fe17d4] 4257                      clr.w      (a7)
@@ -42100,7 +42104,7 @@ pro_exec:
 [00fe1cf6] 3f2d 5c88                 move.w     23688(a5),-(a7)
 [00fe1cfa] 3f2d 5c86                 move.w     23686(a5),-(a7)
 [00fe1cfe] 4267                      clr.w      -(a7)
-[00fe1d00] f094                      dc.w       $F094
+[00fe1d00] f094                      dc.w       $F094 ; do_wredraw
 [00fe1d02] 508f                      addq.l     #8,a7
 [00fe1d04] 4257                      clr.w      (a7)
 [00fe1d06] 3f3c 0001                 move.w     #$0001,-(a7)
@@ -43014,7 +43018,7 @@ pro_exec:
 [00fe286a] 3f2c 0002                 move.w     2(a4),-(a7)
 [00fe286e] 3f14                      move.w     (a4),-(a7)
 [00fe2870] 3f2d 0006                 move.w     6(a5),-(a7)
-[00fe2874] f094                      dc.w       $F094
+[00fe2874] f094                      dc.w       $F094 ; do_wredraw
 [00fe2876] 508f                      addq.l     #8,a7
 [00fe2878] fc3d                      dc.w       $FC3D ; movem.l (a7)+,d4-d7/a4-a5
 [00fe287a] 4e56 fff0                 link       a6,#-16
