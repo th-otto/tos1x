@@ -194,6 +194,7 @@ typedef struct idtype
 
 #define NUM_ADTREES 16 /* actually only 14 (NUM_TREE) */
 
+
 typedef struct {
 	/*     0 */ FNODE *g_favail;
 	/*     4 */ PNODE g_plist[NUM_PNODES];
@@ -201,21 +202,9 @@ typedef struct {
 	/*   708 */ PNODE *g_phead;
 	/*   712 */ char g_wdta[PATHLEN];
 	/*   840 */ DTA *a_wdta;
-	/*   844 */ short n_winalloc;
 	/*   846 */ ICONBLK gl_icons[NUM_SOBS];
 	/*  9686 */ int16_t g_index[NUM_SOBS];
 	/* 10206 */ USERBLK g_udefs[NUM_SOBS];
-	/* 10286 */ short g_num;                /* number of points */
-	/* 10288 */ int16_t *g_pxy;             /* outline pts to drag */
-	/* 10292 */ short g_iview;              /* current view type */
-	/* 10294 */ short g_iwext;              /* w,h of extent of a single item */
-	/* 10296 */ short g_ihext;
-	/* 10298 */ short g_iwint;              /* w,h of interval between items */
-	/* 10300 */ short g_ihint;
-	/* 10302 */ short g_iwspc;              /* w,h of space used by a single item */
-	/* 10304 */ short g_ihspc;
-	/* 10306 */ short g_incol;              /* # of cols in full window */
-	/* 12308 */ int16_t g_isort;			/* current sort type */
 	/* 12438 */ char g_dstpth[PATHLEN];
 	/* 12566 */ char *g_xbuf;               /* data xfer buffer and */
 	/* 12570 */ long g_xlen;                /* length for copying */
@@ -239,8 +228,10 @@ typedef struct {
 	/* 13726 */ int16_t g_csortitem;    /* curr. sort item chked */
 	/* 13728 */ int16_t g_ccopypref;	/* curr. copy pref.	*/
 	/* 13730 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
+#if TOSVERSION >= 0x104
 	/* 13732 */ int16_t s_bitblt;
 	/* 13734 */ int16_t g_covwrpref;	/* curr. overwrite pref.*/
+#endif
 #if TOSVERSION >= 0x162
 	int16_t g_ccachepref;				/* only a guess; not written to DESKTOP.INF */
 #endif
@@ -248,9 +239,7 @@ typedef struct {
 	/* 13740 */ int16_t g_icw;
 	/* 13742 */ int16_t g_ich;
 	/* 13744 */ int16_t g_nmicon;
-	/* 13746 */ int16_t g_nmtext;
 	/* 13748 */ int16_t g_xyicon[18];
-	/* 13784 */ int16_t g_xytext[18];
 	/* 13820 */ int16_t g_wicon;		/* desktop icon size */
 	/* 13822 */ int16_t g_hicon;
 	/* 13824 */ char afile[SIZE_AFILE];
@@ -262,13 +251,9 @@ typedef struct {
 	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
 	/* 23322 */ ICONBLK g_iblist[NUM_IB + 1];
 	/* 23526 */ int16_t g_ismask[(NUM_IB + 1) * 2];
-	/* 23550 */ int16_t sitem_save;		/* saved sort item */
-	/* 23552 */ int16_t vitem_save;		/* view item */
-	/* 23554 */ BOOLEAN ccopy_save;		/* copy ? */
-	/* 23556 */ BOOLEAN cdele_save;		/* delete ? */
-	/* 23558 */ BOOLEAN cbit_save;		/* bitblt */
-	/* 23560 */ int16_t pref_save;		/* screen pref */
+#if TOSVERSION >= 0x104
 	/* 23562 */ BOOLEAN covwr_save;		/* write ? */
+#endif
 	/* 23564 */ WSAVE win_save[NUM_WNODES];	/* window process structure */
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
@@ -279,19 +264,34 @@ typedef struct {
 	/* 24158 */ char ml_fstr[13];
 	/* 24171 */ char ml_ftmp[13];
 	/* 24184 */ char o24184[16];		/* unused */
-	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
 	/* 30570 */ unsigned short g_fnavail;
 	/* 30572 */
 	
+	/* 16970 */ short n_winalloc;
+	/* 22604 */ short g_num;                /* number of points */
+	/* 22606 */ int16_t *g_pxy;             /* outline pts to drag */
+	/* 22610 */ short g_iview;              /* current view type */
+	/* 22612 */ short g_iwext;              /* w,h of extent of a single item */
+	/* 22614 */ short g_ihext;
+	/* 22616 */ short g_iwint;              /* w,h of interval between items */
+	/* 22618 */ short g_ihint;
+	/* 22620 */ short g_iwspc;              /* w,h of space used by a single item */
+	/* 22622 */ short g_ihspc;
+	/* 22624 */ short g_incol;              /* # of cols in full window */
+	/* 22626 */ int16_t g_isort;			/* current sort type */
 	/* 22628 */ char g_srcpth[PATHLEN];
 	/* 23426 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 23686 */ GRECT g_desk;
 	/* 23694 */ GRECT g_full;				/* full window size value */
+	/* 24128 */ int16_t g_nmtext;
+	/* 24166 */ int16_t g_xytext[18];
 	/* 28304 */ char *g_pbuff;
 	/* 29208 */ APP *applist;			/* app buffer list */
+	/* 29646 */ CSAVE g_cnxsave;
 	/* 30208 */ OBJECT *g_pscreen;
+	/* 31900 */ OBJECT g_screen[NUM_SOBS];
 	
 } THEDSK;
 
@@ -310,7 +310,6 @@ extern int16_t gl_kstate;
 /*
  * deskwin.c
  */
-extern GRECT g_winsave[NUM_WNODES];
 extern DESKWIN *g_wlist;				/* head of window list      */
 
 VOID winfo PROTO((DESKWIN *win));
@@ -357,6 +356,8 @@ DESKWIN *win_find PROTO((int16_t wh));
 char *win_iname PROTO((int16_t curr));
 VOID men_update PROTO((LPTREE tree));
 VOID win_view PROTO((int16_t vtype, int16_t isort));
+VOID win_srtall PROTO((NOTHING));
+VOID win_shwall PROTO((NOTHING));
 
 
 /*
@@ -486,6 +487,7 @@ VOID add_path PROTO((char *path, const char *name));
  */
 extern OBJECT const gl_sampob[2];
 
+VOID obj_init PROTO((NOTHING));
 int16_t obj_walloc PROTO((int16_t x, int16_t y, int16_t w, int16_t h));
 VOID obj_wfree PROTO((int16_t obj, int16_t x, int16_t y, int16_t w, int16_t h));
 int16_t obj_ialloc PROTO((int16_t wparent, int16_t x, int16_t y, int16_t w, int16_t h));
@@ -541,6 +543,7 @@ PNODE *pn_open PROTO((int16_t drive, const char *path, const char *name, const c
 VOID pn_free PROTO((PNODE *thepath));
 FNODE *pn_sort PROTO((int16_t lstcnt, FNODE *pflist));
 int pn_folder PROTO((PNODE *thepath));
+VOID pn_close PROTO((PNODE *thepath));
 
 
 /*

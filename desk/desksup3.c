@@ -23,7 +23,7 @@ PP(register BOOLEAN changed;)
 		pw = win_find(wh);
 		if (changed)
 		{
-			wind_grget(wh, WF_WORKXYWH, &clip);
+			wind_get(wh, WF_WORKXYWH, &clip.g_x, &clip.g_y, &clip.g_w, &clip.g_h);
 			win_bldview(pw, clip.g_x, clip.g_y, clip.g_w, clip.g_h);
 		}
 		d->g_croot = pw->w_root;
@@ -63,7 +63,7 @@ PP(int16_t hc;)
 	}
 
 	graf_mouse(M_OFF, NULL);
-	wind_grget(w_handle, WF_FIRSTXYWH, pt);
+	wind_get(w_handle, WF_FIRSTXYWH, &pt->g_x, &pt->g_y, &pt->g_w, &pt->g_h);
 	while (pt->g_w && pt->g_h)
 	{
 		if (rc_intersect((GRECT *)&xc, pt)) /* FIXME: assuming parameters on stack */
@@ -73,7 +73,7 @@ PP(int16_t hc;)
 				objc_draw((OBJECT *)tree, root, MAX_DEPTH, pt->g_x, pt->g_y, pt->g_w, pt->g_h);
 			}
 		}
-		wind_grget(w_handle, WF_NEXTXYWH, pt);
+		wind_get(w_handle, WF_NEXTXYWH, &pt->g_x, &pt->g_y, &pt->g_w, &pt->g_h);
 	}
 	graf_mouse(M_ON, NULL);
 }
@@ -120,7 +120,7 @@ PP(register int16_t *py;)
 {
 	GRECT t;
 
-	wind_grget(0, WF_WORKXYWH, &t);
+	wind_get(0, WF_WORKXYWH, &t.g_x, &t.g_y, &t.g_w, &t.g_h);
 	t.g_x = *px;
 	*px = (t.g_x & 0x000f);
 	if (*px < 8)
@@ -185,7 +185,7 @@ PP(int16_t yicon;)
 	register THEDSK *d;
 	
 	d = thedesk;
-	wind_grget(w_id, WF_WORKXYWH, &rc);
+	wind_get(w_id, WF_WORKXYWH, &rc.g_x, &rc.g_y, &rc.g_w, &rc.g_h);
 	if (close)
 		wind_close(w_id);
 
@@ -206,9 +206,9 @@ PP(register int16_t wh;)
 	pcurr = &curr;
 	pprev = &prev;
 	pfull = &full;
-	wind_grget(wh, WF_CURRXYWH, pcurr);
-	wind_grget(wh, WF_PREVXYWH, pprev);
-	wind_grget(wh, WF_FULLXYWH, pfull);
+	wind_get(wh, WF_CURRXYWH, &pcurr->g_x, &pcurr->g_y, &pcurr->g_w, &pcurr->g_h);
+	wind_get(wh, WF_PREVXYWH, &pprev->g_x, &pprev->g_y, &pprev->g_w, &pprev->g_h);
+	wind_get(wh, WF_FULLXYWH, &pfull->g_x, &pfull->g_y, &pfull->g_w, &pfull->g_h);
 
 	if (rc_equal(pcurr, pfull))
 	{
@@ -478,7 +478,7 @@ PP(const char *pext;)
 
 	UNUSED(ok);
 	pt = &t;
-	wind_grget(pw->w_id, WF_WORKXYWH, pt);
+	wind_get(pw->w_id, WF_WORKXYWH, &pt->g_x, &pt->g_y, &pt->g_w, &pt->g_h);
 	desk_wait(TRUE);
 	if (pro_chroot(drv))
 	{
@@ -693,7 +693,7 @@ PP(const char *ext;)
 	UNUSED(res);
 	pc = &rc;
 	d = thedesk;
-	wind_grget(pw->w_id, WF_WORKXYWH, pc);
+	wind_get(pw->w_id, WF_WORKXYWH, &pc->g_x, &pc->g_y, &pc->g_w, &pc->g_h);
 	icx = pc->g_x + (pc->g_w / 2) - (d->g_wicon / 2);
 	icy = pc->g_y + (pc->g_h / 2) - (d->g_hicon / 2);
 	zoom_closed(0, pw->w_id, icx, icy);

@@ -114,7 +114,7 @@ PP(register int16_t wh;)
 	register int16_t root;
 
 	/* get current size */
-	wind_grget(wh, WF_WORKXYWH, &c);
+	wind_get(wh, WF_WORKXYWH, &c.g_x, &c.g_y, &c.g_w, &c.g_h);
 	/* find its tree of items */
 	if (wh != 0)
 	{

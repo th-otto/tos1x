@@ -415,6 +415,7 @@ PP(int16_t item;)
 			desk_wait(FALSE);
 		}
 		break;
+#if TOSVERSION >= 0x104
 	case BITBLT:
 		Blitmode(d->s_bitblt ? 0 : 1);
 		d->s_bitblt = !d->s_bitblt;
@@ -422,6 +423,7 @@ PP(int16_t item;)
 		/* BUG: not checked whether call enabled blitter */
 		/* BUG: BITBLT item not disabled if blitter not present */
 		break;
+#endif
 	}
 	return done;
 }
@@ -461,7 +463,7 @@ PP(int16_t keystate;)
 	desk_verify(wh, FALSE);
 
 	d->g_wlastsel = wh;
-	wind_grget(wh, WF_WORKXYWH, pc);
+	wind_get(wh, WF_WORKXYWH, &pc->g_x, &pc->g_y, &pc->g_w, &pc->g_h);
 
 	if (clicks == 1)
 	{
@@ -543,6 +545,7 @@ PP(register int16_t item;)
 	done = FALSE;
 	switch (title)
 	{
+#if TOSVERSION >= 0x104
 	case DESKMENU:
 		if (item == ABOUITEM)
 		{
@@ -555,6 +558,7 @@ PP(register int16_t item;)
 			rb_stop();
 		}
 		break;
+#endif
 	case FILEMENU:
 		done = do_filemenu(item);
 		break;
@@ -686,7 +690,9 @@ BOOLEAN hd_msg(NOTHING)
 	{
 		wind_get(d->g_rmsg[3], WF_CURRXYWH, &x, &y, &w, &h);
 		pw = win_find(d->g_rmsg[3]);
+#if TOSVERSION >= 0x104
 		r_set(&pw->w_curr, x, y, w, h);
+#endif
 	}
 	
 	d->g_rmsg[0] = 0;
@@ -706,23 +712,27 @@ VOID cnx_put(NOTHING)
 	register THEDSK *d;
 	
 	d = thedesk;
-	d->vitem_save = d->g_cviewitem - ICONITEM;
-	d->sitem_save = d->g_csortitem - NAMEITEM;
-	d->ccopy_save = d->g_ccopypref;
-	d->cdele_save = d->g_cdelepref;
-	d->cbit_save = d->s_bitblt;
-	d->covwr_save = d->g_covwrpref;
+	d->g_cnxsave.vitem_save = d->g_cviewitem - ICONITEM;
+	d->g_cnxsave.sitem_save = d->g_csortitem - NAMEITEM;
+	d->g_cnxsave.ccopy_save = d->g_ccopypref;
+	d->g_cnxsave.cdele_save = d->g_cdelepref;
+#if TOSVERSION >= 0x104
+	d->g_cnxsave.cbit_save = d->s_bitblt;
+	d->g_cnxsave.covwr_save = d->g_covwrpref;
+#endif
 #if TOSVERSION >= 0x162
 	d->ccache_save = d->g_ccachepref;
-	d->pref_save = gl_restype;
+	d->g_cnxsave.pref_save = gl_restype;
 #else
-	d->pref_save = gl_restype - 1;
+	d->g_cnxsave.pref_save = gl_restype - 1;
 #endif
 
+#if TOSVERSION >= 0x104
 	for (iwin = 0; iwin < NUM_WNODES; iwin++)
 	{
-		LBCOPY(&d->win_save[iwin].x_save, &g_winsave[iwin], sizeof(GRECT));
+		LBCOPY(&d->win_save[iwin].gr_save, &g_winsave[iwin], sizeof(GRECT));
 	}
+#endif
 	
 	nwin = 0;
 	for (iwin = 0; iwin < NUM_WNODES; iwin++)
@@ -733,8 +743,8 @@ VOID cnx_put(NOTHING)
 		{
 			pws = &d->win_save[nwin];
 			nwin++;
-			wind_get(pw->w_id, WF_CURRXYWH, &pws->x_save, &pws->y_save, &pws->w_save, &pws->h_save);
-			do_xyfix(&pws->x_save, &pws->y_save);
+			wind_get(pw->w_id, WF_CURRXYWH, &pws->gr_save.g_x, &pws->gr_save.g_y, &pws->gr_save.g_w, &pws->gr_save.g_h);
+			do_xyfix(&pws->gr_save.g_x, &pws->gr_save.g_y);
 			pws->hsl_save = pw->w_cvcol;
 			pws->vsl_save = pw->w_cvrow;
 			pws->obid_save = pw->w_obid;
@@ -764,12 +774,14 @@ VOID cnx_get(NOTHING)
 	register THEDSK *d;
 	
 	d = thedesk;
-	do_viewmenu(ICONITEM + d->vitem_save);
-	do_viewmenu(NAMEITEM + d->sitem_save);
-	d->g_ccopypref = d->ccopy_save;
-	d->g_cdelepref = d->cdele_save;
-	d->s_bitblt = d->cbit_save;
-	d->g_covwrpref = d->covwr_save;
+	do_viewmenu(ICONITEM + d->g_cnxsave.vitem_save);
+	do_viewmenu(NAMEITEM + d->g_cnxsave.sitem_save);
+	d->g_ccopypref = d->g_cnxsave.ccopy_save;
+	d->g_cdelepref = d->g_cnxsave.cdele_save;
+#if TOSVERSION >= 0x104
+	d->s_bitblt = d->g_cnxsave.cbit_save;
+	d->g_covwrpref = d->g_cnxsave.covwr_save;
+#endif
 #if TOSVERSION >= 0x162
 	d->g_ccachepref = d->ccache_save;
 #endif
@@ -787,11 +799,11 @@ VOID cnx_get(NOTHING)
 				pw->w_cvcol = pws->hsl_save;
 				pw->w_cvrow = pws->vsl_save;
 				fpd_parse(pws->pth_save, &drv, d->g_tmppth, fname, fext);
-				do_xyfix(&pws->x_save, &pws->y_save);
+				do_xyfix(&pws->gr_save.g_x, &pws->gr_save.g_y);
 				pro_chdir(drv, d->g_tmppth);
 				if (DOS_ERR == 0 && pro_chroot(drv))
 				{
-					do_diropen(pw, TRUE, pws->obid_save, drv, d->g_tmppth, fname, fext, (GRECT *)&pws->x_save);
+					do_diropen(pw, TRUE, pws->obid_save, drv, d->g_tmppth, fname, fext, &pws->gr_save);
 				} else
 				{
 					win_free(pw);
@@ -916,13 +928,14 @@ BOOLEAN deskmain(NOTHING)
 	cnx_get();
 	
 	tree = d->g_atree[ADMENU];
+#if TOSVERSION >= 0x104
 	blitter_present = Blitmode(-1);
 	if (blitter_present & 2)
 	{
 		LWSET(OB_TAIL(EXTRABOX), BITBLT);
 		LWSET(OB_NEXT(PRINTITEM), L6ITEM);
 		LWSET(OB_HEIGHT(EXTRABOX), gl_hchar * 8);
-		d->s_bitblt = d->cbit_save;
+		d->s_bitblt = d->g_cnxsave.cbit_save;
 		menu_icheck(d->g_atree[ADMENU], BITBLT, d->s_bitblt);
 		Blitmode(d->s_bitblt);
 	} else
@@ -931,6 +944,7 @@ BOOLEAN deskmain(NOTHING)
 		LWSET(OB_NEXT(PRINTITEM), EXTRABOX);
 		LWSET(OB_HEIGHT(EXTRABOX), gl_hchar * 6);
 	}
+#endif
 	
 	ii = 0;
 	while (TRUE)

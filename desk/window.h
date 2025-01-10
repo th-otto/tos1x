@@ -35,15 +35,30 @@ typedef	struct dta
 
 typedef struct window_save
 {
-	int16_t	x_save;
-	int16_t	y_save;
-	int16_t	w_save;
-	int16_t	h_save;
+	GRECT	gr_save;
 	int16_t	hsl_save;
 	int16_t	vsl_save;
 	int16_t	obid_save;
 	char	pth_save[LEN_ZFPATH];
+	/* 136 */
 } WSAVE;
+
+
+typedef struct context_save
+{
+	int16_t	sitem_save;		/* saved sort item */
+	int16_t	vitem_save;		/* view item */
+	int16_t	ccopy_save;		/* copy ? */
+	int16_t	cdele_save;		/* delete ? */
+#if TOSVERSION >= 0x104
+	BOOLEAN cbit_save;		/* bitblt */
+#endif
+	int16_t pref_save;		/* screen pref */
+#if TOSVERSION >= 0x104
+	BOOLEAN covwr_save;		/* write ? */
+#endif
+	WSAVE win_save[NUM_WNODES];
+} CSAVE;
 
 #define DROOT 1 /* desktop pseudo root */
 
@@ -63,6 +78,8 @@ struct deskwin {
 	PNODE	*w_path;
 	char	w_name[LEN_ZFPATH - 1];
 	char	w_info[81];
+#if TOSVERSION >= 0x104
 	GRECT   w_curr;
-	/* 238 */
+#endif
+	/* 230 */
 };

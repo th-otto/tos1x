@@ -137,7 +137,7 @@ PP(register DESKWIN *win;)
 	desk_verify(win->w_id, TRUE);
 	win_sinfo(win);
 	wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
-	wind_grget(win->w_id, WF_WORKXYWH, &gr);
+	wind_get(win->w_id, WF_WORKXYWH, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
 	send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
 }
 

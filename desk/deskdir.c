@@ -675,8 +675,10 @@ PP(uint16_t date;)
 				{
 					do
 					{
+#if TOSVERSION >= 0x104
 						if (d->g_covwrpref)
 							goto copyname;
+#endif
 						if (!(copyok = do_namecon(pdst_path, newname)))
 							goto closeit;
 						if (copyok == 2)

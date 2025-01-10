@@ -483,30 +483,30 @@ BOOLEAN read_inf(NOTHING)
 			pcurr = scan_2(pcurr, &pws->vsl_save);
 
 			/* window's x position */
-			pcurr = scan_2(pcurr, &pws->x_save);
-			if (pws->x_save >= gl_ncols)
-				pws->x_save /= 2;
+			pcurr = scan_2(pcurr, &pws->gr_save.g_x);
+			if (pws->gr_save.g_x >= gl_ncols)
+				pws->gr_save.g_x /= 2;
 
-			pws->x_save *= gl_wchar;
+			pws->gr_save.g_x *= gl_wchar;
 
 			/* window's y position */
-			pcurr = scan_2(pcurr, &pws->y_save);
+			pcurr = scan_2(pcurr, &pws->gr_save.g_y);
 
-			pws->y_save *= gl_hchar;
+			pws->gr_save.g_y *= gl_hchar;
 
 			/* window's width */
-			pcurr = scan_2(pcurr, &pws->w_save);
-			if (pws->w_save > gl_ncols)
-				pws->w_save /= 2;
-			pws->w_save *= gl_wchar;
-			if (pws->w_save < (7 * gl_wbox))
-				pws->w_save = 7 * gl_wbox;
+			pcurr = scan_2(pcurr, &pws->gr_save.g_w);
+			if (pws->gr_save.g_w > gl_ncols)
+				pws->gr_save.g_w /= 2;
+			pws->gr_save.g_w *= gl_wchar;
+			if (pws->gr_save.g_w < (7 * gl_wbox))
+				pws->gr_save.g_w = 7 * gl_wbox;
 
 			/* window's height  */
-			pcurr = scan_2(pcurr, &pws->h_save);
-			pws->h_save *= gl_hchar;
-			if (pws->h_save < (7 * gl_hbox))
-				pws->h_save = 7 * gl_hbox;
+			pcurr = scan_2(pcurr, &pws->gr_save.g_h);
+			pws->gr_save.g_h *= gl_hchar;
+			if (pws->gr_save.g_h < (7 * gl_hbox))
+				pws->gr_save.g_h = 7 * gl_hbox;
 
 			pcurr = scan_2(pcurr, &pws->obid_save);
 
@@ -523,17 +523,21 @@ BOOLEAN read_inf(NOTHING)
 			pcurr += 2;
 
 			pcurr = scan_2(pcurr, &envr);
-			d->vitem_save = (envr & 0x80) != 0;
-			d->sitem_save = (envr & 0x60) >> 5;
-			d->cdele_save = (envr & 0x10) != 0;
-			d->ccopy_save = (envr & 0x08) != 0;
-			d->covwr_save = envr & 0x01;
+			d->g_cnxsave.vitem_save = (envr & 0x80) != 0;
+			d->g_cnxsave.sitem_save = (envr & 0x60) >> 5;
+			d->g_cnxsave.cdele_save = (envr & 0x10) != 0;
+			d->g_cnxsave.ccopy_save = (envr & 0x08) != 0;
+#if TOSVERSION >= 0x104
+			d->g_cnxsave.covwr_save = envr & 0x01;
+#endif
 			pcurr = scan_2(pcurr, &envr);
-			d->cbit_save = (envr & 0xf0) >> 4;
+#if TOSVERSION >= 0x104
+			d->g_cnxsave.cbit_save = (envr & 0xf0) >> 4;
+#endif
 #if TOSVERSION >= 0x162
-			d->pref_save = gl_restype;
+			d->g_cnxsave.pref_save = gl_restype;
 #else
-			d->pref_save = gl_restype - 1;
+			d->g_cnxsave.pref_save = gl_restype - 1;
 #endif
 			break;
 		}
@@ -676,16 +680,20 @@ PP(BOOLEAN todisk;)
 	*pcurr++ = 'E';
 	*pcurr++ = ' ';
 	envr = 0x0;
-	envr |= d->covwr_save;
-	envr |= d->vitem_save ? 0x80 : 0x00;
-	envr |= (d->sitem_save << 5) & 0x60;
-	envr |= d->cdele_save ? 0x10 : 0x00;
-	envr |= d->ccopy_save ? 0x08 : 0x00;
+#if TOSVERSION >= 0x104
+	envr |= d->g_cnxsave.covwr_save;
+#endif
+	envr |= d->g_cnxsave.vitem_save ? 0x80 : 0x00;
+	envr |= (d->g_cnxsave.sitem_save << 5) & 0x60;
+	envr |= d->g_cnxsave.cdele_save ? 0x10 : 0x00;
+	envr |= d->g_cnxsave.ccopy_save ? 0x08 : 0x00;
 	pcurr = save_2(pcurr, envr);
 
 	envr = 0x0;							/* set resolution prefence  */
-	envr |= d->pref_save;
-	envr |= (d->cbit_save << 4);			/* High order bit       */
+	envr |= d->g_cnxsave.pref_save;
+#if TOSVERSION >= 0x104
+	envr |= (d->g_cnxsave.cbit_save << 4);			/* High order bit       */
+#endif
 	pcurr = save_2(pcurr, envr);
 
 	*pcurr++ = 0x0d;
@@ -703,10 +711,10 @@ PP(BOOLEAN todisk;)
 		win = &d->win_save[i];
 		pcurr = save_2(pcurr, win->hsl_save);	/* horizontal slide bar  */
 		pcurr = save_2(pcurr, win->vsl_save);
-		pcurr = save_2(pcurr, win->x_save / gl_wchar);
-		pcurr = save_2(pcurr, win->y_save / gl_hchar);
-		pcurr = save_2(pcurr, win->w_save / gl_wchar);
-		pcurr = save_2(pcurr, win->h_save / gl_hchar);
+		pcurr = save_2(pcurr, win->gr_save.g_x / gl_wchar);
+		pcurr = save_2(pcurr, win->gr_save.g_y / gl_hchar);
+		pcurr = save_2(pcurr, win->gr_save.g_w / gl_wchar);
+		pcurr = save_2(pcurr, win->gr_save.g_h / gl_hchar);
 		pcurr = save_2(pcurr, win->obid_save);
 	
 		ptmp = win->pth_save;

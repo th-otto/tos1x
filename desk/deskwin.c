@@ -21,8 +21,6 @@
 
 extern intptr_t drawaddr;
 
-short n_winsave;
-GRECT g_winsave[NUM_WNODES];
 DESKWIN *g_wlist;						/* head of window list      */
 
 LINEF_STATIC VOID win_ocalc PROTO((DESKWIN *pwin, int16_t wfit, int16_t hfit, FNODE **ppstart));
@@ -79,28 +77,12 @@ VOID win_start(NOTHING)
 	register int i;
 	OBJECT *tree;
 	register DESKWIN *pw;
-	register THEDSK *d;
 
-	d = thedesk;
 	/*
 	 *	Initialize all objects as children of the 0th root which is
 	 *	the parent of unused objects.
-	 * (inlined obj_init)
 	 */
-	tree = d->g_pscreen = d->g_screen;
-	for (i = 0; i < NUM_SOBS; i++)
-	{
-		d->g_screen[i].ob_head = NIL;
-		d->g_screen[i].ob_next = NIL;
-		d->g_screen[i].ob_tail = NIL;
-	}
-	movs(sizeof(OBJECT), &gl_sampob[0], &d->g_screen[ROOT]);
-	r_set((GRECT *) &d->g_screen[ROOT].ob_x, 0, 0, gl_width, gl_height);
-	for (i = 0; i < (NUM_WNODES + NUM_ROBS - 1); i++)
-	{
-		movs(sizeof(OBJECT), &gl_sampob[1], &d->g_screen[i + DROOT]);
-		objc_add(tree, ROOT, i + DROOT);
-	}
+	obj_init();
 	win_view(V_ICON, S_NAME);
 
 	for (i = 0; i < NUM_WNODES; i++)
@@ -108,10 +90,8 @@ VOID win_start(NOTHING)
 		pw = &g_wlist[i];
 		pw->w_obid = 0;
 		pw->w_id = 0;
-		LBCOPY(&g_winsave[i], &d->win_save[i].x_save, sizeof(GRECT));
 	}
 	thedesk->n_winalloc = 0;
-	n_winsave = 0;
 }
 
 
@@ -132,12 +112,11 @@ PP(int16_t obid;)
 	d = thedesk;
 	if (d->n_winalloc == NUM_WNODES)
 		return NULL;
-	pt = &g_winsave[n_winsave];
+	pt = &d->g_cnxsave.win_save[d->n_winalloc].gr_save;
+	d->n_winalloc++;
 	wob = obj_walloc(pt->g_x, pt->g_y, pt->g_w, pt->g_h);
 	if (wob)
 	{
-		d->n_winalloc++;
-		n_winsave++;
 		pw = &g_wlist[wob - NUM_ROBS];
 		pw->w_flags = 0;
 		pw->w_obid = obid;
@@ -149,7 +128,9 @@ PP(int16_t obid;)
 		pw->w_vncol = 0;
 		pw->w_vnrow = 0;
 		pw->w_id = wind_create(WKIND_FILE, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h);
+#if TOSVERSION >= 0x104
 		r_set(&pw->w_curr, pt->g_x, pt->g_y, pt->g_w, pt->g_h);
+#endif
 		if (pw->w_id != -1)
 		{
 			return pw;
@@ -178,8 +159,6 @@ PP(register DESKWIN *thewin;)
 	thewin->w_obid = 0;
 	objc_order(thedesk->g_pscreen, thewin->w_root, 1);
 	obj_wfree(thewin->w_root, 0, 0, 0, 0);
-	n_winsave--;
-	LBCOPY(&g_winsave[n_winsave], &thewin->w_curr, sizeof(GRECT));
 }
 
 
@@ -212,8 +191,10 @@ PP(register DESKWIN *thewin;)
 	
 	UNUSED(unused);
 	objc_order(thedesk->g_pscreen, thewin->w_root, NIL);
+#if TOSVERSION >= 0x104
 	if (!streq(thedesk->p_cartname, thewin->w_name))
 		pro_chdir(thewin->w_name[1], &thewin->w_name[4]);
+#endif
 }
 
 
@@ -233,8 +214,10 @@ DESKWIN *win_ontop(NOTHING)
 	if (d->g_screen[tail].ob_width != 0 && d->g_screen[tail].ob_height != 0)
 	{
 		pw = &g_wlist[tail - NUM_ROBS];
+#if TOSVERSION >= 0x104
 		if (!streq(d->p_cartname, pw->w_name))
 			pro_chdir(pw->w_name[1], &pw->w_name[4]);
+#endif
 		return pw;
 	} else
 	{
@@ -247,7 +230,7 @@ DESKWIN *win_ontop(NOTHING)
  *	Find the window node that is the ith from the bottom.  Where
  *	0 is the bottom (desktop surface) and 1-4 are windows.
  */
-DESKWIN *win_ith(P(int) level)
+LINEF_STATIC int win_cnt(P(int) level)
 PP(register int level;)
 {
 	register int16_t wob;
@@ -260,7 +243,14 @@ PP(register int level;)
 	{
 		wob = d->g_screen[wob].ob_next;
 	}
-	return &g_wlist[wob - NUM_ROBS];
+	return wob - NUM_ROBS;
+}
+
+
+DESKWIN *win_ith(P(int) level)
+PP(int level;)
+{
+	return &g_wlist[win_cnt(level)];
 }
 
 
@@ -333,7 +323,10 @@ PP(FNODE **ppstart;)
 LINEF_STATIC VOID win_icalc(P(FNODE *)pfnode)
 PP(register FNODE *pfnode;)
 {
-	pfnode->f_pa = app_afind(FALSE, pfnode->f_attr & FA_DIREC ? AT_ISFOLD : AT_ISFILE, -1, pfnode->f_name, &pfnode->f_isapp);
+	if (pfnode->f_attr & FA_DIREC)
+		pfnode->f_pa = app_afind(FALSE, AT_ISFOLD, -1, pfnode->f_name, &pfnode->f_isapp);
+	else
+		pfnode->f_pa = app_afind(FALSE, AT_ISFILE, -1, pfnode->f_name, &pfnode->f_isapp);
 }
 
 
@@ -431,38 +424,22 @@ PP(int16_t h;)
 	/* set slider size & position */
 	wh = pwin->w_id;
 	sl_size = mul_div(pwin->w_pncol, 1000, pwin->w_vncol);
-#ifdef __ALCYON__
-	wind_set(wh, WF_HSLSIZE, sl_size, 0L, 0);
-#else
 	wind_set(wh, WF_HSLSIZE, sl_size, 0, 0, 0);
-#endif
 	wind_get(wh, WF_HSLSIZE, &sl_size, &junk, &junk, &junk);
 	if (pwin->w_vncol > pwin->w_pncol)
 		sl_value = mul_div(pwin->w_cvcol, 1000, pwin->w_vncol - pwin->w_pncol);
 	else
 		sl_value = 0;
-#ifdef __ALCYON__
-	wind_set(wh, WF_HSLIDE, sl_value, 0L, 0);
-#else
 	wind_set(wh, WF_HSLIDE, sl_value, 0, 0, 0);
-#endif
 
 	sl_size = mul_div(pwin->w_pnrow, 1000, pwin->w_vnrow);
-#ifdef __ALCYON__
-	wind_set(wh, WF_VSLSIZE, sl_size, 0L, 0);
-#else
 	wind_set(wh, WF_VSLSIZE, sl_size, 0, 0, 0);
-#endif
 	wind_get(wh, WF_VSLSIZE, &sl_size, &junk, &junk, &junk);
 	if (pwin->w_vnrow > pwin->w_pnrow)
 		sl_value = mul_div(pwin->w_cvrow, 1000, pwin->w_vnrow - pwin->w_pnrow);
 	else
 		sl_value = 0;
-#ifdef __ALCYON__
-	wind_set(wh, WF_VSLIDE, sl_value, 0L, 0);
-#else
 	wind_set(wh, WF_VSLIDE, sl_value, 0, 0, 0);
-#endif
 }
 
 
@@ -492,7 +469,7 @@ PP(register int16_t newcv;)
 	register GRECT *pc;
 	
 	pc = &c;
-	newcv = newcv > 0 ? newcv : 0;
+	newcv = max(newcv, 0);
 
 	if (vertical)
 	{
@@ -514,7 +491,7 @@ PP(register int16_t newcv;)
 		return;
 #endif
 
-	wind_grget(pw->w_id, WF_WORKXYWH, pc);
+	wind_get(pw->w_id, WF_WORKXYWH, &pc->g_x, &pc->g_y, &pc->g_w, &pc->g_h);
 	win_bldview(pw, pc->g_x, pc->g_y, pc->g_w, pc->g_h);
 	/* see if any part is off the screen */
 	rc_copy(pc, &t);
@@ -695,6 +672,25 @@ again:;
 
 
 /*
+ *	Routine to sort all existing windows again
+ */
+VOID win_srtall(NOTHING)
+{
+	register THEDSK *d;
+	register int ii;
+
+	d = thedesk; /* FIXME: unused */
+	for (ii = 0; ii < NUM_WNODES; ii++)
+	{
+		if (g_wlist[ii].w_id != 0)
+		{
+			g_wlist[ii].w_path->p_flist = pn_sort(-1, g_wlist[ii].w_path->p_flist);
+		}
+	}
+}
+
+
+/*
  * Routine to build all existing windows again,
  * and redraw them.
  */
@@ -702,9 +698,8 @@ VOID win_bdall(void)
 {
 	register int ii;
 	register int16_t wh;
-	GRECT c;
+	int16_t xc, yc, wc, hc;
 	register THEDSK *d;
-	register DESKWIN *win;
 	
 	d = thedesk; /* FIXME: unused */
 	UNUSED(d);
@@ -713,18 +708,32 @@ VOID win_bdall(void)
 		wh = g_wlist[ii].w_id;
 		if (wh)
 		{
-			wind_grget(wh, WF_WORKXYWH, &c);
-			win_bldview(&g_wlist[ii], c.g_x, c.g_y, c.g_w, c.g_h);
+			wind_get(wh, WF_WORKXYWH, &xc, &yc, &wc, &hc);
+			win_bldview(&g_wlist[ii], xc, yc, wc, hc);
 		}
 	}
+#if TOSVERSION >= 0x104
 	/* draw all existing windows. */
+#endif
+}
+
+
+/*
+ *	Routine to draw all existing windows.
+ */
+VOID win_shwall(NOTHING)
+{
+	register int ii;
+	register DESKWIN *win;
+	int16_t xc, yc, wc, hc;
+
 	for (ii = NUM_WNODES; ii != 0; ii--)
 	{
 		win = win_ith(ii);
 		if (win->w_id != 0)
 		{
-			wind_grget(win->w_id, WF_WORKXYWH, &c);
-			send_msg(WM_REDRAW, gl_apid, win->w_id, c.g_x, c.g_y, c.g_w, c.g_h);
+			wind_get(win->w_id, WF_WORKXYWH, &xc, &yc, &wc, &hc);
+			send_msg(WM_REDRAW, gl_apid, win->w_id, xc, yc, wc, hc);
 		}
 	}
 }
@@ -810,6 +819,7 @@ PP(register DESKWIN *pw;)
 }
 
 
+#if TOSVERSION >= 0x104
 /*
  * wind_get for getting a GRECT
  * (renamed from wind_get_grect for alcyon limitation)
@@ -821,4 +831,4 @@ PP(GRECT *gr;)
 {
     return wind_get(w_handle, w_field, &gr->g_x, &gr->g_y, &gr->g_w, &gr->g_h);
 }
-
+#endif

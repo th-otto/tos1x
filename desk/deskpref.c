@@ -37,9 +37,11 @@ BOOLEAN desk_pref(NOTHING)
 	LWSET(OB_STATE(SPCDYES), cyes);
 	LWSET(OB_STATE(SPCDNO), !cyes);
 
+#if TOSVERSION >= 0x104
 	cyes = d->g_covwrpref;
 	LWSET(OB_STATE(YWRITE), !cyes);
 	LWSET(OB_STATE(NWRITE), cyes);
+#endif
 
 	cyes = d->g_ccopypref;
 	LWSET(OB_STATE(SPCCYES), cyes);
@@ -91,7 +93,9 @@ BOOLEAN desk_pref(NOTHING)
 	{
 		d->g_cdelepref = inf_what((OBJECT *)tree, SPCDYES, SPCDNO);
 		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);
+#if TOSVERSION >= 0x104
 		d->g_covwrpref = !inf_what((OBJECT *)tree, YWRITE, NWRITE);
+#endif
 
 #if (TOSVERSION >= 0x162)
 		flag = inf_gindex(tree, SPLOW, 3) + 1;

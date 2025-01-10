@@ -340,8 +340,6 @@ _endvdibss: ds.b 0
 	V(_do_srcname,b,16)
 	V(_cp_dst,b,122)
 
-	INT(_n_winsave)
-
 #if TOSVERSION >= 0x106
 	PTR(savea0)
 #endif
@@ -536,8 +534,6 @@ _endvdibss: ds.b 0
 	INT(_gl_wtop)
 	INT(_pr_xrat)
 	INT(_pr_button)
-	
-	V(_g_winsave,w,4*NUM_WNODES) /* GRECT[NUM_WNODES] */
 	
 	INT(_gl_wsptschar)
 	INT(_gl_wptschar)

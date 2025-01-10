@@ -289,6 +289,15 @@ PP(register PNODE *thepath;)
 
 
 /*
+ *	Close a particular path.
+ */
+VOID pn_close(P(PNODE *) thepath)
+PP(PNODE *thepath;)
+{
+	pn_free(thepath);
+}
+
+/*
  *	Compare file nodes pf1 & pf2, using a field
  *	determined by which
  */

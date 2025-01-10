@@ -24,6 +24,35 @@ OBJECT const gl_sampob[2] = {
 
 
 /*
+ *	Initialize all objects as children of the 0th root which is
+ *	the parent of unused objects.
+ * (inlined obj_init)
+ */
+VOID obj_init(NOTHING)
+{
+	register THEDSK *d;
+	register int i;
+	OBJECT *tree;
+
+	d = thedesk;
+	tree = d->g_pscreen = d->g_screen;
+	for (i = 0; i < NUM_SOBS; i++)
+	{
+		d->g_screen[i].ob_head = NIL;
+		d->g_screen[i].ob_next = NIL;
+		d->g_screen[i].ob_tail = NIL;
+	}
+	movs(sizeof(OBJECT), &gl_sampob[0], &d->g_screen[ROOT]);
+	r_set((GRECT *) &d->g_screen[ROOT].ob_x, 0, 0, gl_width, gl_height);
+	for (i = 0; i < (NUM_WNODES + NUM_ROBS - 1); i++)
+	{
+		movs(sizeof(OBJECT), &gl_sampob[1], &d->g_screen[i + DROOT]);
+		objc_add(tree, ROOT, i + DROOT);
+	}
+}
+
+
+/*
  *	Allocate a window object from the screen tree by looking for 
  *	the child of the parent with no size
  */

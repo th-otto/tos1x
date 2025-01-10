@@ -360,7 +360,7 @@ lineftab: ds.b 0
 		dc.l _desk_verify         ; F4B0
 		dc.l _win_sinfo           ; F4B4
 		dc.l _wind_set            ; F4B8
-		dc.l _wind_grget          ; F4BC
+		dc.l 0                    ; F4BC
 		dc.l _send_msg            ; F4C0
 		dc.l _xform_do            ; F4C4
 		dc.l _up_1win             ; F4C8
