@@ -30,35 +30,45 @@
 LINEF_STATIC VOID fn_init(NOTHING)
 {
 	register THEDSK *d;
+	register int i;
 	
 	d = thedesk;
-	d->g_favail = NULL;
-	d->g_fnnext = 0;
-	d->g_fnavail = 0;
+	for (i = NUM_FNODES - 2; i >= 0; i--)
+		d->g_flist[i].f_next = &d->g_flist[i + 1];
+	d->g_favail = &d->g_flist[0];
+	d->g_flist[NUM_FNODES - 1].f_next = NULL;
+}
+
+
+LINEF_STATIC VOID pn_init(NOTHING)
+{
+	register THEDSK *d;
+	register int i;
+
+	d = thedesk;
+	for (i = NUM_PNODES - 1; i >= 0; i--)
+	{
+		d->g_plist[i].p_next = &d->g_plist[i + 1];
+		/* d->g_plist[i].p_flist = NULL; BUG: missing */
+	}
+	d->g_pavail = d->g_plist;
+	d->g_phead = NULL;
+	d->g_plist[NUM_PNODES - 1].p_next = NULL;
 }
 
 
 /*
  *	Initialize the list of pnodes
  */
-/* 104de: 00fd8d90 */
-/* 106de: 00e199aa */
-VOID pn_init(NOTHING)
+VOID fpd_start(NOTHING)
 {
 	register THEDSK *d;
-	register int i;
 	
 	d = thedesk;
 	d->a_wdta = (DTA *)d->g_wdta;
+	d->a_wspec = d->g_wspec;
 	fn_init();
-	for (i = NUM_PNODES - 1; i >= 0; i--)
-	{
-		d->g_plist[i].p_next = &d->g_plist[i + 1];
-		d->g_plist[i].p_flist = NULL;
-	}
-	d->g_pavail = d->g_plist;
-	d->g_phead = NULL;
-	d->g_plist[NUM_PNODES - 1].p_next = NULL;
+	pn_init();
 }
 
 
@@ -167,15 +177,60 @@ PP(char *pext;)
 }
 
 
-/* 104de: 00fd8f32 */
-/* 106de: 00e19a14 */
-LINEF_STATIC VOID fn_pfree(P(VOIDPTR *) ptr)
-PP(register VOIDPTR *ptr;)
+/*
+ *	Find the file node that matches a particular object id.
+*/
+FNODE *fpd_ofind(P(FNODE *) pf, P(int16_t) obj)
+PP(register FNODE *pf;)
+PP(register int16_t obj;)
 {
-	if (*ptr != NULL)
+	while (pf)
 	{
-		dos_free(*ptr);
-		*ptr = NULL;
+		if (pf->f_obid == obj)
+			return pf;
+		pf = pf->f_next;
+	}
+	return NULL;
+}
+
+
+/*
+ *	Find the list item that is after start and points to stop item.
+ */
+FNODE *fpd_elist(P(FNODE *) pfpd, P(FNODE *) pstop)
+PP(register FNODE *pfpd;)
+PP(FNODE *pstop;)
+{
+	while (pfpd->f_next != pstop)
+		pfpd = pfpd->f_next;
+	return pfpd;
+}
+
+
+/*
+ *	Free a single file node
+ */
+LINEF_STATIC VOID fn_free(P(FNODE *) thefile)
+PP(register FNODE *thefile;)
+{
+	thefile->f_next = thedesk->g_favail;
+	thedesk->g_favail = thefile;
+}
+
+
+/*
+ *	Free a list of file nodes.
+ */
+VOID fl_free(P(FNODE *) pflist)
+PP(register FNODE *pflist;)
+{
+	register FNODE *thelast;
+
+	if (pflist)
+	{
+		thelast = fpd_elist(pflist, NULL);
+		thelast->f_next = thedesk->g_favail;
+		thedesk->g_favail = pflist;
 	}
 }
 
@@ -187,30 +242,17 @@ PP(register VOIDPTR *ptr;)
 /* 106de: 00e19b90 */
 LINEF_STATIC FNODE *fn_alloc(NOTHING)
 {
+	register FNODE *thefile;
 	register THEDSK *d;
 	register intptr_t size;
-	FNODE *p;
 	
 	d = thedesk;
-	if (d->g_favail == NULL)
+	if (d->g_favail)
 	{
-		size = dos_avail();
-		if (size >= sizeof(FNODE))
-		{
-			d->g_favail = dos_alloc(size);
-			d->g_fnnext = 0;
-			d->g_fnavail = size / sizeof(FNODE);
-		} else
-		{
-			goto error;
-		}
+		thefile = d->g_favail;
+		d->g_favail = d->g_favail->f_next;
+		return thefile;
 	}
-	if (d->g_fnnext < d->g_fnavail)
-	{
-		p = d->g_favail;
-		return &p[d->g_fnnext++];
-	}
-error:
 	return NULL;
 }
 
@@ -276,7 +318,7 @@ PP(register PNODE *thepath;)
 	register THEDSK *d;
 	
 	d = thedesk;
-	fn_pfree((VOIDPTR *)&thepath->p_flist);
+	fl_free(thepath->p_flist);
 	pp = &d->g_phead;
 	while (thepath != *pp)
 	{
@@ -457,7 +499,7 @@ PP(register PNODE *thepath;)
 	d = thedesk;
 	thepath->p_count = 0;
 	thepath->p_size = 0;
-	fn_pfree((VOIDPTR *)&thepath->p_flist);
+	fn_free(thepath->p_flist);
 	thefile = NULL;
 	if (iscart)
 	{
@@ -495,6 +537,7 @@ PP(register PNODE *thepath;)
 			found = dos_snext();
 	}
 	
+#if 0
 	if (thepath->p_count != 0)
 	{
 		thepath->p_flist = pn_sort(thepath->p_count, thepath->p_flist);
@@ -510,6 +553,7 @@ PP(register PNODE *thepath;)
 			dos_free(thepath->p_flist);
 		thepath->p_flist = NULL;
 	}
+#endif
 	fn_init();
 	return DOS_AX;
 }

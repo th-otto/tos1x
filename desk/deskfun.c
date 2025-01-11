@@ -422,7 +422,8 @@ PP(int16_t dobj;)
 	register PNODE *pn_src;
 	
 	ib_src = get_spec(thedesk->g_screen, sobj);
-	if (!pro_chroot(ib_src->ib_char))
+	pro_chroot(ib_src->ib_char);
+	if (DOS_ERR)
 		return FALSE;
 	pn_src = pn_open(ib_src->ib_char, "", "*", "*", FA_DIREC|FA_HIDDEN|FA_SYSTEM);
 #if !BINEXACT

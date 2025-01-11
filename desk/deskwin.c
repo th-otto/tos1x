@@ -75,7 +75,6 @@ PP(int16_t isort;)
 VOID win_start(NOTHING)
 {
 	register int i;
-	OBJECT *tree;
 	register DESKWIN *pw;
 
 	/*
@@ -680,6 +679,7 @@ VOID win_srtall(NOTHING)
 	register int ii;
 
 	d = thedesk; /* FIXME: unused */
+	UNUSED(d);
 	for (ii = 0; ii < NUM_WNODES; ii++)
 	{
 		if (g_wlist[ii].w_id != 0)

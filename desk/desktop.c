@@ -211,6 +211,24 @@ PP(register LPTREE tree;)
 }
 
 
+LINEF_STATIC BOOLEAN do_deskmenu(P(int16_t) item)
+PP(register int16_t item;)
+{
+	register BOOLEAN done;
+	register LPTREE tree;
+
+	done = FALSE;
+	if (item == ABOUITEM)
+	{
+		tree = (LPTREE)thedesk->g_atree[ADDINFO];
+		/* draw the form */
+		fmdodraw((OBJECT *)tree, ROOT);
+		LWSET(OB_STATE(DEOK), NORMAL);
+	}
+	return done;
+}
+
+
 /* 104de: 00fdb318 */
 /* 106de: 00e1c4f4 */
 BOOLEAN do_filemenu(P(int16_t) item)
@@ -245,16 +263,7 @@ PP(int16_t item;)
 	case OPENITEM:
 		if (curr)
 			done = open_item(curr);
-#if BINEXACT & LINEF_HACK
-		/*
-		 * branch was not optimized to short, because target
-		 * label is only in range after replacing function calls
-		 * with linef codes
-		 */
-		asm("dc.w 0x6000,L9000-*-2");
-#else
 		break;
-#endif
 	case SHOWITEM:
 		if (curr)
 			done = show_item(curr);
@@ -285,9 +294,6 @@ PP(int16_t item;)
 			done = do_format(curr);
 		break;
 	}
-#if BINEXACT & LINEF_HACK
-asm("L9000:");
-#endif
 	return done;
 }
 
@@ -502,12 +508,15 @@ BOOLEAN hd_keybd(P(uint16_t) key)
 PP(uint16_t key;)
 {
 	DESKWIN *pw;
-	int changed;
 	
 	if (key == 0x011b)
 	{
-		if ((pw = win_ontop()))
+		pw = win_ontop();
+		if (pw)
 		{
+#if TOSVERSION >= 0x104
+			int changed;
+
 			if (!streq(thedesk->p_cartname, pw->w_name))
 			{
 				if (pro_chroot(pw->w_path->p_spec[0]))
@@ -516,17 +525,16 @@ PP(uint16_t key;)
 					changed = mediach(pw->w_path->p_spec[0] - 'A');
 					desk_wait(FALSE);
 					if (changed)
-						goto retit;
-					goto doupdate;
+						return FALSE;
+					up_1win(pw);
 				}
 			} else
+#endif
 			{
-			doupdate:
 				up_1win(pw);
 			}
 		}
 	}
-retit:
 	return FALSE;
 }
 
@@ -557,8 +565,10 @@ PP(register int16_t item;)
 			fmdodraw(thedesk->g_atree[ADDINFO], DEOK);
 			rb_stop();
 		}
-		break;
+#else
+		do_deskmenu(item);
 #endif
+		break;
 	case FILEMENU:
 		done = do_filemenu(item);
 		break;
@@ -626,11 +636,7 @@ BOOLEAN hd_msg(NOTHING)
 		break;
 
 	case WM_TOPPED:
-#ifdef __ALCYON__
-		wind_set(d->g_rmsg[3], WF_TOP, 0L, 0L);
-#else
 		wind_set(d->g_rmsg[3], WF_TOP, 0, 0, 0, 0);
-#endif
 		wind_get(d->g_rmsg[3], WF_WORKXYWH, &x, &y, &w, &h);
 		pw = win_find(d->g_rmsg[3]);
 		win_top(pw);
@@ -718,8 +724,8 @@ VOID cnx_put(NOTHING)
 	d->g_cnxsave.cdele_save = d->g_cdelepref;
 #if TOSVERSION >= 0x104
 	d->g_cnxsave.cbit_save = d->s_bitblt;
-	d->g_cnxsave.covwr_save = d->g_covwrpref;
 #endif
+	d->g_cnxsave.covwr_save = d->g_covwrpref;
 #if TOSVERSION >= 0x162
 	d->ccache_save = d->g_ccachepref;
 	d->g_cnxsave.pref_save = gl_restype;
@@ -730,7 +736,7 @@ VOID cnx_put(NOTHING)
 #if TOSVERSION >= 0x104
 	for (iwin = 0; iwin < NUM_WNODES; iwin++)
 	{
-		LBCOPY(&d->win_save[iwin].gr_save, &g_winsave[iwin], sizeof(GRECT));
+		LBCOPY(&d->g_cnxsave.win_save[iwin].gr_save, &g_winsave[iwin], sizeof(GRECT));
 	}
 #endif
 	
@@ -741,7 +747,7 @@ VOID cnx_put(NOTHING)
 
 		if (pw->w_id != 0)
 		{
-			pws = &d->win_save[nwin];
+			pws = &d->g_cnxsave.win_save[nwin];
 			nwin++;
 			wind_get(pw->w_id, WF_CURRXYWH, &pws->gr_save.g_x, &pws->gr_save.g_y, &pws->gr_save.g_w, &pws->gr_save.g_h);
 			do_xyfix(&pws->gr_save.g_x, &pws->gr_save.g_y);
@@ -753,7 +759,7 @@ VOID cnx_put(NOTHING)
 	}
 	while (nwin < NUM_WNODES)
 	{
-		pws = &d->win_save[nwin];
+		pws = &d->g_cnxsave.win_save[nwin];
 		pws->pth_save[0] = '\0';
 		pws->obid_save = 0;
 		nwin++;
@@ -791,7 +797,7 @@ VOID cnx_get(NOTHING)
 
 	for (nw = 0; nw < NUM_WNODES; nw++)
 	{
-		pws = &d->win_save[nw];
+		pws = &d->g_cnxsave.win_save[nw];
 		if (pws->pth_save[0])
 		{
 			if ((pw = win_alloc(pws->obid_save)))
@@ -801,7 +807,8 @@ VOID cnx_get(NOTHING)
 				fpd_parse(pws->pth_save, &drv, d->g_tmppth, fname, fext);
 				do_xyfix(&pws->gr_save.g_x, &pws->gr_save.g_y);
 				pro_chdir(drv, d->g_tmppth);
-				if (DOS_ERR == 0 && pro_chroot(drv))
+				pro_chroot(drv);
+				if (DOS_ERR == 0)
 				{
 					do_diropen(pw, TRUE, pws->obid_save, drv, d->g_tmppth, fname, fext, &pws->gr_save);
 				} else
@@ -871,12 +878,12 @@ BOOLEAN deskmain(NOTHING)
 	desk_wait(TRUE);
 
 	/* initialize resources */
-	rom_ram(1, (intptr_t)pglobal, 0);
+	rsrc_init();
 
 	/* initialize menus and dialogs */
 	rsrc_gaddr(R_STRING, STCART, (VOIDPTR *)&d->p_cartname);
 	for (ii = 0; ii < NUM_ADTREES; ii++)
-		rsrc_gaddr(R_TREE, ii, (VOIDPTR *) &d->g_atree[ii]);
+		ini_tree(&d->g_atree[ii], ii);
 
 	if (!read_inf())
 	{
@@ -888,9 +895,9 @@ BOOLEAN deskmain(NOTHING)
 	win_start();
 
 	/* initialize folders, paths, and drives */
-	pn_init();
+	fpd_start();
 
-	/* show menu        */
+	/* show menu */
 	desk_verify(DESK, FALSE);				/* should this be here  */
 
 	menu_bar(d->g_atree[ADMENU], TRUE);
@@ -1026,7 +1033,8 @@ BOOLEAN deskmain(NOTHING)
 		set_defdrv();
 		if (isdrive() != 0)
 		{
-			diskin = pro_chroot(dos_gdrv() + 'A');
+			pro_chroot(dos_gdrv() + 'A');
+			diskin = DOS_ERR == 0;
 		}
 		obj = FALSE;
 	}

@@ -26,7 +26,6 @@ OBJECT const gl_sampob[2] = {
 /*
  *	Initialize all objects as children of the 0th root which is
  *	the parent of unused objects.
- * (inlined obj_init)
  */
 VOID obj_init(NOTHING)
 {

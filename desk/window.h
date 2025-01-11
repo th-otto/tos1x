@@ -53,11 +53,9 @@ typedef struct context_save
 #if TOSVERSION >= 0x104
 	BOOLEAN cbit_save;		/* bitblt */
 #endif
-	int16_t pref_save;		/* screen pref */
-#if TOSVERSION >= 0x104
 	BOOLEAN covwr_save;		/* write ? */
-#endif
-	WSAVE win_save[NUM_WNODES];
+	int16_t pref_save;		/* screen pref */
+	WSAVE win_save[NUM_WNODES];	/* window process structure */
 } CSAVE;
 
 #define DROOT 1 /* desktop pseudo root */

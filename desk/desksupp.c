@@ -25,50 +25,37 @@ BOOLEAN pro_chdir(P(int) drv, P(const char *) path)
 PP(int drv;)
 PP(const char *path;)
 {
-	register char *ptr;
-	register int i;
-
-	ptr = g_buffer;
-	if (drv == CHAR_FOR_CARTRIDGE)
-	{
-		DOS_ERR = 0;
-		return TRUE;
-	}
+	register THEDSK *d;
+	
+	d = thedesk;
 	/* change to directory that application is in */
-	if (drv != 0)
+	if (drv)
 	{
-		ptr[256] = '\\';
-		strcpy(ptr + 257, path);
-		for (i = 1; ptr[i + 256] != '\0'; )
-		{
-			if (ptr[i + 256] == ' ' || ptr[i + 256] == '*')
-			{
-				ptr[i + 256] = '\0';
-				break;
-			} else
-			{
-				i++;
-			}
-		}
-		do_cdir(drv - 'A', ptr + 256);
+		dos_sdrv(drv - 'A');
+		d->g_srcpth[0] = drv;
+		d->g_srcpth[1] = ':';
+		d->g_srcpth[2] = '\\';
+		strcpy(d->g_srcpth + 3, path);
+		dos_chdir(ADDR(&d->g_srcpth[0]));
 	}
 	return TRUE;
-	
 }
 
 
-int16_t pro_exec(P(int16_t) isgraf, P(int16_t) isover, P(char *) pcmd, P(char *) ptail)
-PP(int16_t isgraf;)
-PP(int16_t isover;)
-PP(char *pcmd;)
-PP(char *ptail;)
+BOOLEAN pro_cmd(P(char *) psubcmd, P(char *) psubtail, P(BOOLEAN) exitflag, P(int16_t) taillen)
+PP(char *psubcmd;)
+PP(char *psubtail;)
+PP(BOOLEAN exitflag;)
+PP(int16_t taillen;)
 {
-	int16_t ret;
-
-	graf_mouse(HOURGLASS, NULL);
-
-	ret = shel_write(TRUE, isgraf, isover, pcmd, ptail);
-	return ret;
+	register THEDSK *d;
+	
+	UNUSED(exitflag);
+	d = thedesk;
+	strcpy(d->g_cmd, psubcmd);
+	strcpy(&d->g_tail[1], psubtail);
+	d->g_tail[0] = taillen;
+	return TRUE;
 }
 
 
@@ -90,8 +77,7 @@ PP(int16_t curr;)
 		d->g_tail[0] = len = (int)strlen(d->g_tail + 1);
 		d->g_tail[len + 1] = '\r';
 	}
-	desk_wait(TRUE);
-	ret = shel_write(TRUE, isgraf, iscr, d->g_pcmd, d->g_ptail);
+	ret = pro_exec(isgraf, iscr, d->g_pcmd, d->g_ptail);
 	d->g_tail[0] = '\0';
 	if (wh != -1)
 	{
@@ -101,31 +87,18 @@ PP(int16_t curr;)
 }
 
 
-/*
- *	Clear out the selections for this particular window
- */
-/* 104de: 00fda0e0 */
-/* 106de: 00e1afba */
-VOID desk_clear(P(int16_t) wh)
-PP(register int16_t wh;)
+int16_t pro_exec(P(int16_t) isgraf, P(int16_t) isover, P(char *) pcmd, P(char *) ptail)
+PP(int16_t isgraf;)
+PP(int16_t isover;)
+PP(char *pcmd;)
+PP(char *ptail;)
 {
-	register DESKWIN *pw;
-	GRECT c;
-	register int16_t root;
+	int16_t ret;
 
-	/* get current size */
-	wind_get(wh, WF_WORKXYWH, &c.g_x, &c.g_y, &c.g_w, &c.g_h);
-	/* find its tree of items */
-	if (wh != 0)
-	{
-		pw = win_find(wh);
-		root = pw->w_root;
-	} else
-	{
-		root = DROOT;
-	}
-	/* clear all selections */
-	act_allchg(wh, thedesk->g_pscreen, root, 0, &gl_rfull, &c, SELECTED, FALSE, TRUE, TRUE);
+	graf_mouse(HOURGLASS, NULL);
+
+	ret = shel_write(TRUE, isgraf, isover, pcmd, ptail);
+	return ret;
 }
 
 

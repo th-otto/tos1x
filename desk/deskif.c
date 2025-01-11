@@ -134,7 +134,7 @@ PP(int16_t *pbr;)
 	tmcount = HW(thc);
 	tmcount += tlc;
 
-	which = ev_multi(flags, &m1flags, &m2flags, tmcount, buparm, mepbuff, &rets[0]);
+	which = ev_multi(flags, (MOBLK *)&m1flags, (MOBLK *)&m2flags, tmcount, buparm, mepbuff, &rets[0]);
 	dsptch();
 	*pmx = rets[0];
 	*pmy = rets[1];
@@ -187,7 +187,7 @@ PP(int16_t start;)
 	int16_t ret;
 
 	desk_wait(FALSE);
-	ret = fm_do(form, start);
+	ret = fm_do((LPTREE)form, start);
 	dsptch();
 	return ret;
 }
@@ -204,11 +204,17 @@ PP(int16_t y;)
 PP(int16_t w;)
 PP(int16_t h;)
 {
+#if BINEXACT
 	int16_t ret;
 
-	ret = fm_dial(dtype, &ix, &x);
+	ret = fm_dial(dtype, (GRECT *)&ix, (GRECT *)&x); /* BUG: fm_dial does not return anything */
 	dsptch();
 	return ret;
+#else
+	fm_dial(dtype, (GRECT *)&ix, (GRECT *)&x);
+	dsptch();
+	return TRUE;
+#endif
 }
 
 
@@ -245,7 +251,12 @@ PP(int16_t *pch;)
 	int16_t ret;
 	GRECT pt;
 
-	ret = ob_center(tree, &pt);
+#if BINEXACT
+	ret = ob_center((LPTREE)tree, &pt); /* BUG: ob_center does not return anything */
+#else
+	ob_center((LPTREE)tree, &pt);
+	ret = TRUE;
+#endif
 	*pcx = pt.g_x;
 	*pcy = pt.g_y;
 	*pcw = pt.g_w;
@@ -364,7 +375,7 @@ PP(int16_t normal;)
 {
 	int16_t ret;
 
-	ret = do_chg(mlist, dlist, SELECTED, !normal, TRUE, TRUE);
+	ret = do_chg((LPTREE)mlist, dlist, SELECTED, !normal, TRUE, TRUE);
 	dsptch();
 	return ret;
 }
@@ -376,7 +387,12 @@ PP(int16_t showit;)
 {
 	int16_t ret;
 
-	ret = mn_bar(tree, showit);
+#if BINEXACT
+ 	ret = mn_bar((LPTREE)tree, showit); /* BUG: mn_bar does not return anything */
+#else
+ 	mn_bar((LPTREE)tree, showit);
+ 	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -389,7 +405,7 @@ PP(int16_t check;)
 {
 	int16_t ret;
 
-	ret = do_chg(mlist, dlist, CHECKED, check, FALSE, FALSE);
+	ret = do_chg((LPTREE)mlist, dlist, CHECKED, check, FALSE, FALSE);
 	dsptch();
 	return ret;
 }
@@ -402,7 +418,7 @@ PP(int16_t enable;)
 {
 	int16_t ret;
 
-	ret = do_chg(mlist, (dlist & 0x7fff), DISABLED, !enable, ((dlist & 0x8000) != 0x0), FALSE);
+	ret = do_chg((LPTREE)mlist, (dlist & 0x7fff), DISABLED, !enable, ((dlist & 0x8000) != 0x0), FALSE);
 	dsptch();
 	return ret;
 }
@@ -416,7 +432,12 @@ PP(int16_t *poffy;)
 {
 	int16_t ret;
 
-	ret = ob_offset(tree, obj, poffx, poffy);
+#if BINEXACT
+	ret = ob_offset((LPTREE)tree, obj, poffx, poffy); /* BUG: ob_offset does not return anything */
+#else
+	ob_offset((LPTREE)tree, obj, poffx, poffy);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -429,7 +450,12 @@ PP(int16_t newpos;)
 {
 	int16_t ret;
 
-	ret = ob_order(tree, mov_obj, newpos);
+#if BINEXACT
+	ret = ob_order((LPTREE)tree, mov_obj, newpos); /* BUG: ob_order does not return anything */
+#else
+	ob_order((LPTREE)tree, mov_obj, newpos);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -444,7 +470,7 @@ PP(int16_t my;)
 {
 	int16_t ret;
 
-	ret = ob_find(tree, startob, depth, mx, my);
+	ret = ob_find((LPTREE)tree, startob, depth, mx, my);
 	dsptch();
 	return ret;
 }
@@ -457,7 +483,12 @@ PP(int16_t child;)
 {
 	int16_t ret;
 
-	ret = ob_add(tree, parent, child);
+#if BINEXACT
+	ret = ob_add((LPTREE)tree, parent, child); /* BUG: ob_add does not return anything */
+#else
+	ob_add((LPTREE)tree, parent, child);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -474,8 +505,13 @@ PP(int16_t hc;)
 {
 	int16_t ret;
 
-	gsx_sclip(&xc);
-	ret = ob_draw(tree, drawob, depth);
+	gsx_sclip((GRECT *)&xc);
+#if BINEXACT
+	ret = ob_draw((LPTREE)tree, drawob, depth); /* BUG: ob_draw does not return anything */
+#else
+	ob_draw((LPTREE)tree, drawob, depth);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -494,8 +530,13 @@ PP(int16_t redraw;)
 {
 	int16_t ret;
 
-	gsx_sclip(&xc);
-	ret = ob_change(tree, drawob, newstate, redraw);
+	gsx_sclip((GRECT *)&xc);
+#if BINEXACT
+	ret = ob_change((LPTREE)tree, drawob, newstate, redraw); /* BUG: ob_change does not return anything */
+#else
+	ob_change((LPTREE)tree, drawob, newstate, redraw);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -505,7 +546,7 @@ int16_t rsrc_free(NOTHING)
 {
 	int16_t ret;
 
-	ret = rs_free(pglobal);
+	ret = rs_free((intptr_t)pglobal);
 	dsptch();
 	return ret;
 }
@@ -518,13 +559,13 @@ PP(VOIDPTR *paddr;)
 {
 	int16_t ret;
 
-	ret = rs_gaddr(pglobal, rstype, rsid, paddr);
+	ret = rs_gaddr((intptr_t)pglobal, rstype, rsid, paddr);
 	dsptch();
 	return ret;
 }
 
 
-int16_t shel_write(P(int16_t) doex, P(int16_t) isgr, P(int16_t) iscr, P(char *) pcmd, P(char *) ptail)
+int16_t shel_write(P(int16_t) doex, P(int16_t) isgr, P(int16_t) iscr, P(const char *) pcmd, P(const char *) ptail)
 PP(int16_t doex;)
 PP(int16_t isgr;)
 PP(int16_t iscr;)
@@ -568,7 +609,12 @@ PP(int16_t handle;)
 {
 	int16_t ret;
 
-	ret = wm_close(handle);
+#if BINEXACT
+	ret = wm_close(handle); /* BUG: wm_close does not return anything */
+#else
+	wm_close(handle);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -579,7 +625,12 @@ PP(int16_t handle;)
 {
 	int16_t ret;
 
-	ret = wm_delete(handle);
+#if BINEXACT
+	ret = wm_delete(handle); /* BUG: wm_delete does not return anything */
+#else
+	wm_delete(handle);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -602,7 +653,12 @@ PP(int16_t beg_update;)
 {
 	int16_t ret;
 
-	ret = wm_update(beg_update);
+#if BINEXACT
+	ret = wm_update(beg_update); /* BUG: wm_update does not return anything */
+#else
+	wm_update(beg_update);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -632,7 +688,12 @@ PP(int16_t wh;)
 {
 	int16_t ret;
 
-	ret = wm_open(handle, (GRECT *)&wx);
+#if BINEXACT
+	ret = wm_open(handle, (GRECT *)&wx); /* BUG: wm_open does not return anything */
+#else
+	wm_open(handle, (GRECT *)&wx);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -649,7 +710,12 @@ PP(int16_t *pw4;)
 	int16_t wm_ox[4];
 	int16_t ret;
 
-	ret = wm_get(w_handle, w_field, wm_ox);
+#if BINEXACT
+	ret = wm_get(w_handle, w_field, wm_ox); /* BUG: wm_get does not return anything */
+#else
+	wm_get(w_handle, w_field, wm_ox);
+	ret = TRUE;
+#endif
 	dsptch();
 	*pw1 = wm_ox[0];
 	*pw2 = wm_ox[1];
@@ -669,7 +735,12 @@ PP(int16_t w5;)
 {
 	int16_t ret;
 
-	ret = wm_set(w_handle, w_field, &w2);
+#if BINEXACT
+	ret = wm_set(w_handle, w_field, &w2); /* BUG: wm_set does not return anything */
+#else
+	wm_set(w_handle, w_field, &w2);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }
@@ -689,7 +760,12 @@ PP(int16_t *ph;)
 {
 	int16_t ret;
 
-	ret = wm_calc(wctype, kind, x, y, w, h, px, py, pw, ph);
+#if BINEXACT
+	ret = wm_calc(wctype, kind, x, y, w, h, px, py, pw, ph); /* BUG: wm_calc does not return anything */
+#else
+	wm_calc(wctype, kind, x, y, w, h, px, py, pw, ph);
+	ret = TRUE;
+#endif
 	dsptch();
 	return ret;
 }

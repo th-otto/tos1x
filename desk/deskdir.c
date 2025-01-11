@@ -689,7 +689,7 @@ PP(uint16_t date;)
 					} while (newname[0] == '\0');
 				} else
 				{
-				copyname:
+				/* copyname: */
 					strcpy(newname, name);
 				}
 				ptr = r_slash(pdst_path);

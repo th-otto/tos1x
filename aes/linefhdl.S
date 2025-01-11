@@ -343,7 +343,7 @@ lineftab: ds.b 0
 		dc.l _dos_gdrv            ; F46C
 		dc.l _pn_alloc            ; F470
 		dc.l _fpd_bldspec         ; F474
-		dc.l _fn_pfree            ; F478
+		dc.l _fn_free             ; F478
 		dc.l _strchk              ; F47C
 		dc.l _scasb               ; F480
 		dc.l _pn_fcomp            ; F484

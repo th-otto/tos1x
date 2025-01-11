@@ -32,7 +32,9 @@ VOID app_blddesk(NOTHING)
 	uint16_t bvect;
 	register APP *pa;
 	register THEDSK *d;
+#if TOSVERSION >= 0x104
 	int rez;
+#endif
 	int unused;
 	
 	UNUSED(unused);
@@ -40,9 +42,11 @@ VOID app_blddesk(NOTHING)
 	/* kids and set size */
 	obj_wfree(DROOT, 0, 0, gl_width, gl_height);
 
+#if TOSVERSION >= 0x104
 	/* see also sh_main in AES */
 	rez = Getrez();
 	d->g_screen[DROOT].ob_spec = rez == 2 || rez == 4 ? 0x00001143L : 0x00001173L;
+#endif
 
 	bvdisk = bvhard = 0;
 

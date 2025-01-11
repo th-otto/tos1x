@@ -16,7 +16,12 @@
 /*
  * number of items in a folder window
  */
+#if TOSVERSION >= 0x104
 #define NUM_WOBS 254
+#else
+#define NUM_WOBS 127
+#endif
+
 /*
  * number of reserved items
  */

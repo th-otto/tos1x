@@ -41,6 +41,7 @@ single::
 
 endif
 
+desksupp.o: desksupp.c desksup3.c
 
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<

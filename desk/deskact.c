@@ -54,7 +54,7 @@ PP(register int16_t my;)
  *	mouse moves into or out of the specified rectangle.
  */
 /* 100fr: 00fdb970 */
-BOOLEAN gr_isdown(P(int16_t) out, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(int16_t *) pmx, P(int16_t *) pmy, P(uint16_t *) pbutton, P(uint16_t *) pkstate)
+LINEF_STATIC BOOLEAN gr_isdown(P(int16_t) out, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pbutton, P(int16_t *) pkstate)
 PP(int16_t out;)
 PP(int16_t x;)
 PP(int16_t y;)
@@ -67,8 +67,8 @@ PP(uint16_t *pkstate;)
 {
 	int16_t flags;
 	uint16_t ev_which;
-	uint16_t kret;
-	uint16_t bret;
+	int16_t kret;
+	int16_t bret;
 
 	flags = MU_BUTTON | MU_M1;
 	ev_which = evnt_multi(flags, 0x01, 0xff, 0x00, out, x, y, w, h,
@@ -287,8 +287,8 @@ PP(register int16_t *pdobj;)
 	DESKWIN *pw;
 	int16_t root;
 	int16_t state;
-	int i;
-	int j;
+	/* int i; */
+	/* int j; */
 	int16_t curr_wh;
 	int16_t curr_root;
 	int16_t curr_sel;
@@ -671,17 +671,15 @@ PP(GRECT *pc;)
 PP(int16_t *pdobj;)
 {
 	int16_t sobj;
-	int16_t offx;
-	int16_t offy;
 	int16_t numobs;
 	int16_t bstate;
 	register OBJECT *olist;
 	int16_t dst_wh;
 	int16_t l_mx, l_my;
 	int16_t dulx, duly;
-	int16_t i;
-	int16_t j;
-	register int16_t obj;
+	/* int16_t i; */
+	/* int16_t j; */
+	/* register int16_t obj; */
 	int16_t view;
 	int16_t numpts;
 	int16_t *pxypts;

@@ -476,7 +476,7 @@ BOOLEAN read_inf(NOTHING)
 			pcurr += 2;
 
 			/* BUG: no check for overflow here */
-			pws = &d->win_save[i++];
+			pws = &d->g_cnxsave.win_save[i++];
 			/* horizontal slide bar */
 			pcurr = scan_2(pcurr, &pws->hsl_save);
 			/* vertical slide bar */
@@ -708,7 +708,7 @@ PP(BOOLEAN todisk;)
 		*pcurr++ = 'W';
 		*pcurr++ = ' ';
 	
-		win = &d->win_save[i];
+		win = &d->g_cnxsave.win_save[i];
 		pcurr = save_2(pcurr, win->hsl_save);	/* horizontal slide bar  */
 		pcurr = save_2(pcurr, win->vsl_save);
 		pcurr = save_2(pcurr, win->gr_save.g_x / gl_wchar);
