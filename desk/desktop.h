@@ -307,13 +307,16 @@ typedef struct {
 	/* 24108 */ OBJECT *g_pscreen;
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
-	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
+	/* 24120 */ short ml_dlfi;			/* unused, but keep it because buffer above may overflow */
+	/* 24122 */ short ml_dlfo;			/* ^^ */
+	/* 24124 */ short ml_dlok;			/* ^^ */
+	/* 24126 */ short ml_dlcn;			/* ^^ */
 	/* 24128 */ BOOLEAN ml_havebox;
 	/* 24130 */ BOOLEAN ml_dlpr;
 	/* 24132 */ char printname[26];
 	/* 24158 */ char ml_fstr[13];
 	/* 24171 */ char ml_ftmp[13];
-	/* 24184 */ char o24184[16];		/* unused */
+	/* 24184 */ char ml_fdst[16];		/* unused */
 	/* 24200 */ OBJECT g_screen[NUM_SOBS];
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30568 */ unsigned short g_fnnext;
