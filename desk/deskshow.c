@@ -155,7 +155,9 @@ PP(int mode;)
 		} else							/* alpha mode */
 		{
 			/* silly error handling */
+#if 0 /* ZZZ */
 			rsrc_gaddr(R_STRING, STNOMEM, (VOIDPTR *)&alert);
+#endif
 			bconws(alert);
 			bconws("\r\n");
 		}
@@ -175,7 +177,9 @@ PP(int mode;)
 		} else
 		{
 			/* silly error handling */
+#if 0 /* ZZZ */
 			rsrc_gaddr(R_STRING, STCANTOPEN, (VOIDPTR *)&alert);
+#endif
 			bconws(alert);
 			bconws(fname);
 			bconws("\r\n");
@@ -249,7 +253,9 @@ PP(int mode;)
 				linecount++;
 				if (linecount >= MAXLINES)
 				{
+#if 0 /* ZZZ */
 					rsrc_gaddr(R_STRING, STMORE, (VOIDPTR *)&alert);
+#endif
 					bconws("\r");
 					bconws(alert);
 					if (doui(1, &linecount))
@@ -266,12 +272,16 @@ PP(int mode;)
 
 	if (len < 0)
 	{
+#if 0 /* ZZZ */
 		rsrc_gaddr(R_STRING, STREADERROR, (VOIDPTR *)&alert);
+#endif
 		bconws("\r\n");
 		bconws(alert);
 	} else
 	{
+#if 0 /* ZZZ */
 		rsrc_gaddr(R_STRING, STENDFILE, (VOIDPTR *)&alert);
+#endif
 		bconws("\r\n");
 		bconws(alert);
 	}

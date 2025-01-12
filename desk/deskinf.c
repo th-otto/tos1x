@@ -264,95 +264,78 @@ PP(register char *dst;)
 }
 
 
+LINEF_STATIC int16_t dr_fnode(P(OBJECT *)tree, P(int16_t) obj, P(uint16_t) last_state, P(uint16_t) curr_state, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(intptr_t) parm)
+PP(OBJECT *tree;)
+PP(int16_t obj;)
+PP(uint16_t last_state;)
+PP(uint16_t curr_state;)
+PP(int16_t x;)
+PP(int16_t y;)
+PP(int16_t w;)
+PP(int16_t h;)
+PP(intptr_t parm;)
+{
+	int16_t len;
+
+	UNUSED(tree);
+	UNUSED(obj);
+	if ((last_state ^ curr_state) & SELECTED)
+	{
+		bb_fill(MD_XOR, FIS_SOLID, IP_SOLID, x, y, w, h);
+	} else
+	{
+		bldstring(parm, thedesk->g_tmppth);
+		gsx_attr(TRUE, MD_REPLACE, BLACK);
+		len = LBWMOV(ad_intin, thedesk->g_tmppth);
+		gsx_tblt(IBM, x, y, len);
+		gsx_attr(FALSE, MD_XOR, BLACK);
+	}
+	return curr_state;
+}
+
+
 /* 104de: 00fd7fe6 */
 /* 106de: 00e18a04 */
 int16_t dr_code(P(PARMBLK *) parm)
 PP(register intptr_t parm;)
 {
-	register PARMBLK *pb;
-	PARMBLK tmp;
+	PARMBLK pb;
 	GRECT clipsave;
-	int16_t len;
+	int16_t state;
 	
-	pb = &tmp;
-	LBCOPY(pb, parm, sizeof(*pb));
+	LBCOPY(&pb, parm, sizeof(pb));
 	gsx_gclip(&clipsave);
-	gsx_sclip((GRECT *)&pb->pb_xc);
-	if ((pb->pb_prevstate ^ pb->pb_currstate) & SELECTED)
-	{
-		bb_fill(MD_XOR, FIS_SOLID, IP_SOLID, pb->pb_x, pb->pb_y, pb->pb_w, pb->pb_h);
-	} else
-	{
-		bldstring(pb->pb_parm, thedesk->g_tmppth);
-		gsx_attr(TRUE, MD_REPLACE, BLACK);
-		len = LBWMOV(ad_intin, thedesk->g_tmppth);
-		gsx_tblt(IBM, pb->pb_x, pb->pb_y, len);
-		gsx_attr(FALSE, MD_XOR, BLACK);
-	}
+	gsx_sclip((GRECT *)&pb.pb_xc);
+	state = dr_fnode(pb.pb_tree, pb.pb_obj, pb.pb_prevstate, pb.pb_currstate, pb.pb_x, pb.pb_y, pb.pb_w, pb.pb_h, pb.pb_parm);
 	gsx_sclip(&clipsave);
-	return pb->pb_currstate;
+	return state;
 }
 
 
-/* 306de: 00e2fb5a */
-/* 104de: 00fd80aa */
-/* 106de: 00e18af6 */
-int16_t xform_do(P(OBJECT *)tree, P(int16_t) which)
+/* Put up dialog box & call form_do. */
+BOOLEAN inf_show(P(OBJECT *) tree, P(int16_t) start)
 PP(OBJECT *tree;)
-PP(int16_t which;)
+PP(int16_t start;)
 {
-	short unused[4];
-	int16_t events;
-	int16_t dummy;
-	int16_t ret;
-	register int16_t *pdummy;
-	THEDSK *d;
-	
-	UNUSED(unused);
-	d = thedesk;
-	fm_draw((LPTREE)tree);
-	ret = form_do(tree, which) & 0x7FFF;
-	do_finish(tree);
-	pdummy = &dummy;
-	
-	do
-	{
-		events = evnt_multi(MU_MESAG | MU_TIMER,
-#ifdef __ALCYON__
-			0L, 0L,
-			0L, 0L,
-			0L, 0L, 0,
-#else
-			0, 0, 0,
-			0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0,
-#endif
-			d->p_msgbuf,
-			0, 0,
-			pdummy, pdummy, pdummy, pdummy, pdummy, pdummy);
-		if (events & MU_MESAG)
-			hd_msg();
-	} while (events & MU_MESAG);
-	LWSET(OB_STATE(ret), NORMAL);
-	
-	return ret;
+	int16_t xd, yd, wd, hd;
+
+	form_center(tree, &xd, &yd, &wd, &hd);
+	form_dial(FMD_START, 0, 0, 0, 0, xd, yd, wd, hd);
+	objc_draw(tree, ROOT, MAX_DEPTH, xd, yd, wd, hd);
+	form_do(tree, start);
+	form_dial(FMD_FINISH, 0, 0, 0, 0, xd, yd, wd, hd);
+	return TRUE;
 }
 
 
-/*
- * Form_do and draw
- */
-/* 306de: 00e2fb90 */
-/* 104de: 00fd813e */
-/* 106de: 00e18ba6 */
-VOID fmdodraw(P(OBJECT *) tree, P(int16_t) item)
+/* Routine for finishing off a simple ok-only dialog box */
+VOID inf_finish(P(OBJECT *) tree, P(int16_t) dl_ok)
 PP(OBJECT *tree;)
-PP(int16_t item;)
+PP(int16_t dl_ok;)
 {
-	xform_do(tree, 0);
-	LWSET(OB_STATE(item), NORMAL);
+	inf_show(tree, ROOT);
+	LWSET(OB_STATE(dl_ok), NORMAL);
 }
-
 
 
 /*
@@ -377,7 +360,6 @@ PP(char *ppath;)
 	d->g_nfiles = 0;
 	d->g_ndirs = 0;
 	d->g_size = 0;
-	desk_wait(TRUE);
 	more = d_doop(OP_COUNT, NULL, ppath, ppath, &dummy, &dummy);
 	desk_wait(FALSE);
 	if (more == FALSE)
@@ -476,21 +458,25 @@ PP(BOOLEAN isdir;)
 	{
 		inf_fldset(tree, FIRONLY, info->f_attr, FA_RDONLY, SELECTED, NORMAL);
 		inf_fldset(tree, FIRWRITE, info->f_attr, FA_RDONLY, NORMAL, SELECTED);
+#if 0 /* ZZZ */
 		inf_sset((OBJECT *)tree, FINFILES, "     ");
 		inf_sset((OBJECT *)tree, FINFOLDS, "     ");
 		strid = STFILEINFO;
+#endif
 		d->g_size = info->f_size;
 	} else
 	{
 		LWSET(OB_STATE(FIRONLY), DISABLED);
 		LWSET(OB_STATE(FIRWRITE), DISABLED);
 		add_path(d->g_srcpth, info->f_name);
+#if 0 /* ZZZ */
 		strid = STFOLDINFO;
 		if (inf_fifo((OBJECT *)tree, FINFILES, FINFOLDS, d->g_srcpth) == FALSE)
 #ifdef __ALCYON__
 			return; /* hmpf */
 #else
 			return FALSE;
+#endif
 #endif
 	}
 	
@@ -542,6 +528,44 @@ PP(BOOLEAN isdir;)
 }
 
 
+/* inf_folder */
+BOOLEAN inf_folder(P(char *) ppath, P(FNODE *) pf)
+PP(char *ppath;)
+PP(register FNODE *pf;)
+{
+	OBJECT *tree;
+	BOOLEAN more;
+	register char *pname;
+	char fname[LEN_ZFNAME];
+	register THEDSK *d;
+	char sizestr[10];
+
+	d = thedesk;
+	graf_mouse(HOURGLASS, NULL);
+
+	tree = d->g_atree[ADFOLDIN];
+
+	strcpy(&d->g_srcpth[0], ppath);
+	pname = &d->g_srcpth[0];
+	while (*pname != '*')
+		pname++;
+	pname = strcpy(pname, &pf->f_name[0]);
+	strcpy(pname - 1, "\\*.*");
+
+	more = inf_fifo(tree, FOLNFILE, FOLNFOLD, &d->g_srcpth[0]);
+
+	graf_mouse(ARROW, NULL);
+	if (more)
+	{
+		inf_setsize(&pf->f_size, sizestr, tree, FOLNAME, TRUE); /* hä? */
+
+		inf_dttmsz(tree, pf, FOLDATE, FOLTIME, FOLSIZE, &d->g_size);
+		inf_finish(tree, FOLOK);
+	}
+	return TRUE;
+}
+
+
 /************************************************************************/
 /* i n f _ d i s k                                                      */
 /************************************************************************/
@@ -586,6 +610,98 @@ PP(char drv_id;)
 }
 
 
+/* 306de: 00e2fb5a */
+/* 104de: 00fd80aa */
+/* 106de: 00e18af6 */
+int16_t xform_do(P(OBJECT *)tree, P(int16_t) which)
+PP(OBJECT *tree;)
+PP(int16_t which;)
+{
+	short unused[4];
+	int16_t events;
+	int16_t dummy;
+	int16_t ret;
+	register int16_t *pdummy;
+	THEDSK *d;
+	
+	UNUSED(unused);
+	d = thedesk;
+	fm_draw((LPTREE)tree);
+	ret = form_do(tree, which) & 0x7FFF;
+	do_finish(tree);
+	pdummy = &dummy;
+	
+	do
+	{
+		events = evnt_multi(MU_MESAG | MU_TIMER,
+#ifdef __ALCYON__
+			0L, 0L,
+			0L, 0L,
+			0L, 0L, 0,
+#else
+			0, 0, 0,
+			0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0,
+#endif
+			d->p_msgbuf,
+			0, 0,
+			pdummy, pdummy, pdummy, pdummy, pdummy, pdummy);
+		if (events & MU_MESAG)
+			hd_msg();
+	} while (events & MU_MESAG);
+	LWSET(OB_STATE(ret), NORMAL);
+	
+	return ret;
+}
+
+
+/* Open application icon */
+BOOLEAN opn_appl(P(char *) papname, P(char *) papparms, P(char *) pcmd, P(char *) ptail)
+PP(register char *papname;)
+PP(register char *papparms;)
+PP(char *pcmd;)
+PP(char *ptail;)
+{
+	register LPTREE tree;
+	char poname[LEN_ZFNAME];
+
+	tree = thedesk->g_atree[ADOPENAP];
+	fmt_str(papname, &poname[0]);
+	inf_sset(tree, APPLNAME, &poname[0]);
+	inf_sset(tree, APPLPARM, papparms);
+	inf_show(tree, APPLPARM);
+	/* now find out what happened   */
+	if (inf_what(tree, APPLOK, APPLCNCL))
+	{
+		fs_ssget(tree, APPLNAME, &poname[0]);
+		unfmt_str(&poname[0], pcmd);
+		fs_ssget(tree, APPLPARM, ptail);
+		return TRUE;
+	} else
+	{
+		return FALSE;
+	}
+}
+
+
+/*
+ * Form_do and draw
+ */
+/* 306de: 00e2fb90 */
+/* 104de: 00fd813e */
+/* 106de: 00e18ba6 */
+VOID fmdodraw(P(OBJECT *) tree, P(int16_t) item)
+PP(OBJECT *tree;)
+PP(int16_t item;)
+{
+	xform_do(tree, 0);
+	LWSET(OB_STATE(item), NORMAL);
+}
+
+
+
 #if TOSVERSION >= 0x106
 #include "deskpref.c"
 #endif
+
+

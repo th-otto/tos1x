@@ -22,6 +22,17 @@ int16_t gl_kstate;
 int16_t gl_apid;
 int16_t pglobal[15];
 
+/* ZZZ */
+#define SAVETOP 0
+#define PRINTTOP 0
+#define STCART 0
+#define L2ITEM 0
+#define L3ITEM 0
+#define L4ITEM 0
+#define L5ITEM 0
+#define L6ITEM 0
+#define CLSWITEM 0
+
 static int8_t const ILL_HDSK[] = { FORMITEM, IAPPITEM, 0 };
 static int8_t const ILL_ITEM[] = { L2ITEM, L3ITEM, L4ITEM, L5ITEM, 0 };
 static int8_t const ILL_FILE[] = { FORMITEM, IDSKITEM, 0 };
@@ -282,6 +293,7 @@ PP(int16_t item;)
 			close_window(pw, FALSE);
 		}
 		break;
+#if 0 /* ZZZ */
 	case CLSWITEM:
 		if (pw)
 		{
@@ -289,6 +301,7 @@ PP(int16_t item;)
 			close_window(pw, TRUE);
 		}
 		break;
+#endif
 	case FORMITEM:
 		if (curr)
 			done = do_format(curr);
@@ -924,7 +937,11 @@ BOOLEAN deskmain(NOTHING)
 
 	/* Take over the desktop */
 	do_wredraw(DESK, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h);
+#ifdef __GNUC__
+	wind_set(DESK, WF_NEWDESK, ((intptr_t)d->g_pscreen) >> 16, (intptr_t)d->g_pscreen, DROOT, FALSE);
+#else
 	wind_set(DESK, WF_NEWDESK, d->g_pscreen, DROOT, FALSE);
+#endif
 	
 	/* set up current parms */
 	desk_verify(DESK, FALSE);

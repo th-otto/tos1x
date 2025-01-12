@@ -15,18 +15,6 @@ typedef unsigned long long    undefined6;
 typedef unsigned long long    undefined8;
 typedef unsigned short    ushort;
 typedef unsigned int    word;
-#define __GLIBC_HAVE_LONG_LONG 1
-
-#define __WORDSIZE 32
-
-typedef long int32_t;
-
-typedef ushort uint16_t;
-
-typedef ulong uint32_t;
-
-typedef uchar uint8_t;
-
 typedef struct _DOSTIME _DOSTIME, *P_DOSTIME;
 
 struct _DOSTIME {
@@ -46,11 +34,17 @@ typedef struct EVB EVB, *PEVB;
 
 typedef short int16_t;
 
+typedef ushort uint16_t;
+
 typedef uint16_t EVSPEC;
+
+typedef ulong uint32_t;
 
 typedef struct CQUEUE CQUEUE, *PCQUEUE;
 
 typedef struct PD PD, *PPD;
+
+typedef long int32_t;
 
 typedef struct DTAINFO DTAINFO, *PDTAINFO;
 
@@ -232,6 +226,22 @@ struct AESPB {
     void **addrout;
 };
 
+typedef struct APP APP, *PAPP;
+
+struct APP {
+    struct APP *a_next;
+    short a_apptype;
+    short a_type;
+    short a_obid;
+    char *a_pappl;
+    char *a_pdata;
+    short a_aicon;
+    short a_dicon;
+    short a_achar;
+    short a_x;
+    short a_y;
+};
+
 typedef struct ATTRIBUTE ATTRIBUTE, *PATTRIBUTE;
 
 typedef struct FONT_HEAD FONT_HEAD, *PFONT_HEAD;
@@ -322,6 +332,17 @@ struct BCB { /* Buffer Control Block */
     char *b_bufr;
 };
 
+typedef struct BITBLK BITBLK, *PBITBLK;
+
+struct BITBLK {
+    void *bi_pdata;
+    short bi_wb;
+    short bi_hl;
+    short bi_x;
+    short bi_y;
+    short bi_color;
+};
+
 typedef struct BLKDEV BLKDEV, *PBLKDEV;
 
 typedef struct BPB BPB, *PBPB;
@@ -355,6 +376,64 @@ struct BLKDEV { /* Block Device */
     byte filler;
 };
 
+typedef struct DESKWIN DESKWIN, *PDESKWIN;
+
+typedef struct PNODE PNODE, *PPNODE;
+
+typedef struct FNODE FNODE, *PFNODE;
+
+struct FNODE { /* filenode in desktop */
+    struct FNODE *f_next;
+    struct FNODE *f_pfndx;
+    uchar f_junk;
+    uchar f_attr;
+    uint16_t f_time;
+    uint16_t f_date;
+    long f_size;
+    char f_name[14];
+    short f_obid;
+    struct APP *f_pa;
+    short f_isapp;
+};
+
+struct DESKWIN {
+    struct DESKWIN *w_next;
+    int16_t w_flags;
+    int16_t w_id;
+    int16_t w_obid;
+    int16_t w_root;
+    int16_t w_cvcol;
+    int16_t w_cvrow;
+    int16_t w_pncol;
+    int16_t w_pnrow;
+    int16_t w_vncol;
+    int16_t w_vnrow;
+    struct PNODE *w_path;
+    char w_name[121];
+    char w_info[81];
+};
+
+struct PNODE { /* pathnode in desktop */
+    struct PNODE *p_next;
+    uint16_t p_flags;
+    uint16_t p_attr;
+    char p_spec[122];
+    struct FNODE *p_flist;
+    uint16_t p_count;
+    long p_size;
+};
+
+typedef struct DIRFILE DIRFILE, *PDIRFILE;
+
+struct DIRFILE {
+    uchar d_junk;
+    char d_att;
+    uint16_t d_time;
+    uint16_t d_date;
+    long d_size;
+    char d_name[14];
+};
+
 typedef struct DISKINFO DISKINFO, *PDISKINFO;
 
 struct DISKINFO {
@@ -369,6 +448,13 @@ typedef struct dsb dsb, *Pdsb;
 struct dsb { /* disk... */
     ushort curtrack;
     ushort seekrate;
+};
+
+typedef struct DTA DTA, *PDTA;
+
+struct DTA {
+    char reserved[20];
+    struct DIRFILE dirfile;
 };
 
 typedef long ERROR;
@@ -485,6 +571,8 @@ struct MD {
 
 typedef struct MDBLOCK MDBLOCK, *PMDBLOCK;
 
+typedef uchar uint8_t;
+
 struct MDBLOCK { /* Memory Descriptor Block */
     struct MDBLOCK *o_link;
     uint8_t x_flag;
@@ -565,6 +653,24 @@ struct OSHEADER {
     ulong os_date;
     ushort os_conf;
     ushort os_dosdate;
+};
+
+typedef struct PARMBLK PARMBLK, *PPARMBLK;
+
+struct PARMBLK {
+    struct OBJECT *pb_tree;
+    short pb_obj;
+    short pb_prevstate;
+    short pb_currstate;
+    short pb_x;
+    short pb_y;
+    short pb_w;
+    short pb_h;
+    short pb_xc;
+    short pb_yc;
+    short pb_wc;
+    short pb_hc;
+    long pb_parm;
 };
 
 typedef struct PBDEF PBDEF, *PPBDEF;
@@ -661,6 +767,97 @@ struct TEDINFO {
     short te_tmplen;
 };
 
+typedef struct THEDSK THEDSK, *PTHEDSK;
+
+typedef struct WSAVE WSAVE, *PWSAVE;
+
+struct WSAVE {
+    struct GRECT gr_save;
+    short hsl_save;
+    short vsl_save;
+    short obid_save;
+    char pth_save[122];
+};
+
+struct THEDSK {
+    struct FNODE g_flist[400];
+    struct FNODE *g_favail;
+    struct PNODE g_plist[5];
+    struct PNODE *g_pavail;
+    struct PNODE *g_phead;
+    char g_wspec[122];
+    char *a_wspec;
+    char g_wdta[128];
+    struct DTA *a_wdta;
+    short n_winalloc;
+    char field10_0x424c[5632];
+    short g_num;
+    short *g_pxy;
+    short g_iview;
+    short g_iwext;
+    short g_ihext;
+    short g_iwint;
+    short g_ihint;
+    short g_iwspc;
+    short g_ihspc;
+    short g_incol;
+    short g_isort;
+    char g_srcpth[128];
+    char field23_0x58e4[134];
+    struct DTA g_fcbstk[8];
+    char field25_0x5aca[44];
+    long g_nfiles;
+    long g_ndirs;
+    long g_size;
+    char g_tmppath[128];
+    short g_xyobpts[120];
+    short g_rmsg[8];
+    char field32_0x5c82[4];
+    struct GRECT g_desk;
+    struct GRECT g_full;
+    char g_cmd[128];
+    char *g_pcmd;
+    char g_tail[128];
+    char *g_ptail;
+    char field39_0x5d9e[84];
+    struct OBJECT *g_atree[14];
+    short g_croot;
+    short g_cwin;
+    short g_wlastsel;
+    short g_cviewitem;
+    short g_csortitem;
+    short g_ccopypref;
+    short g_cdelepref;
+    short g_coverpref;
+    char field49_0x5e3a[6];
+    short g_nmtext;
+    char field51_0x5e42[36];
+    short g_xytext[18];
+    char field53_0x5e8a[4];
+    char afile[2048];
+    char field55_0x668e[2050];
+    char *g_pbuff;
+    char field57_0x6e94[900];
+    struct APP *applist;
+    char field59_0x721c[432];
+    short g_cnxsave.sitem_save;
+    short g_cnxsave.vitem_save;
+    short g_cnxsave.ccopy_save;
+    short g_cnxsave.cdele_save;
+    short g_cnxsave.covwr_save;
+    short g_cnxsave.pref_save;
+    struct WSAVE g_cnxsave.win_save[4];
+    char field67_0x75f8[8];
+    struct OBJECT *g_pscreen;
+    char field69_0x7604[18];
+    short ml_havebox;
+    char field71_0x7618[39];
+    char ml_ftmp[13];
+    char gl_lngstr[16];
+    struct FNODE *ml_pfndx[400];
+    struct OBJECT g_screen[133];
+};
+
 typedef struct THEGLO THEGLO, *PTHEGLO;
 
 typedef struct WINDOW WINDOW, *PWINDOW;
@@ -704,6 +901,13 @@ struct THEGLO {
     char s_save[2048];
     char s_tail[128];
     struct WINDOW w_win[8];
+};
+
+typedef struct USERBLK USERBLK, *PUSERBLK;
+
+struct USERBLK {
+    void *ub_code;
+    long ub_parm;
 };
 
 typedef struct VDIPB VDIPB, *PVDIPB;
@@ -761,15 +965,3 @@ struct WS {
 };
 
 typedef long xjmp_buf[3];
-
-typedef struct BITBLK BITBLK, *PBITBLK;
-
-struct BITBLK {
-    void *bi_pdata;
-    short bi_wb;
-    short bi_hl;
-    short bi_x;
-    short bi_y;
-    short bi_color;
-};
-

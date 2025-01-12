@@ -21,6 +21,7 @@ all:: desk.a
 include $(top_srcdir)/config.mak
 -include $(top_srcdir)/common/sections.mak
 
+# only TOS versions <= 1.04 have the linef hack
 ifeq ($(USE_CROSS_ALCYON),1)
 ifeq ($(TOSVERSION),104)
 CPPFLAGS += -A
@@ -42,6 +43,7 @@ single::
 endif
 
 desksupp.o: desksupp.c desksup3.c
+deskinf.o: deskinf.c deskinf2.c deskpref.c
 
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<

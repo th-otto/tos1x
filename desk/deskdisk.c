@@ -80,6 +80,15 @@ DSB
 STATIC int16_t w_inc;
 STATIC int16_t bar_max;					/* in case user copies disk > 80 tracks */
 
+/* ZZZ */
+#define FCCNCL 0
+#define FCCOPY 0
+#define FCFORMAT 0
+#define SRCDRA 0
+#define SRCDRB 0
+#define ADRIVE 0
+#define BDRIVE 0
+
 static int16_t const ttable[] = { FCCNCL, FCCOPY, FCFORMAT, SRCDRA, SRCDRB, ADRIVE, BDRIVE };
 
 static int16_t const skew2[MAXSPT] = { 3, 4, 5, 6, 7, 8, 9, 1, 2 };
@@ -102,6 +111,7 @@ VOID fc_start(P(const char *)source, P(int16_t) op)
 PP(const char *source;)
 PP(int16_t op;)
 {
+#if 0 /* ZZZ */
 	register BOOLEAN ret;
 	register int16_t width;
 	int16_t i, field;
@@ -212,6 +222,7 @@ PP(int16_t op;)
 
 		ret = form_do((OBJECT *)tree, field) & 0x7FFF;
 	}
+#endif
 }
 
 
@@ -274,6 +285,7 @@ PP(LPTREE tree;)
 	numside = 2;						/* assume double sided  */
 	disktype = 3;
 
+#if 0 /* ZZZ */
 	if (LWGET(OB_STATE(FCSINGLE)) & SELECTED)
 	{
 		numside = 1;					/* it is single sided   */
@@ -281,6 +293,7 @@ PP(LPTREE tree;)
 	}
 
 	devno = (LWGET(OB_STATE(ADRIVE)) & SELECTED) ? 0 : 1;
+#endif
 
 	ret = 0;							/* assume it is ok  */
 	badindex = 0;						/* bad sector table */
@@ -317,8 +330,10 @@ PP(LPTREE tree;)
 			{
 				if (trackno < 2 || ((badindex + MAXSPT) >= MAXBAD))
 				{
+#if 0 /* ZZZ */
 					while (do1_alert(FCFAIL) == 1)	/* too many bad sectors */
 						;
+#endif
 					ret = 1;
 					break;
 				} else
@@ -334,8 +349,10 @@ PP(LPTREE tree;)
 			/* if errror == 16 */
 			if (ret)					/* some other error */
 			{							/* retry        */
+#if 0 /* ZZZ */
 				if (do1_alert(FCFAIL) == 1)
 					goto fagain;
+#endif
 			}
 
 		}								/* sideno   */
@@ -381,7 +398,9 @@ PP(LPTREE tree;)
 		for (i = 0; i < j; i++)
 			fat[i] = 0;
 		/* get the label */
+#if 0 /* ZZZ */
 		fs_sget(tree, FCLABEL, label1);
+#endif
 
 		if (label1[0])
 		{
@@ -431,7 +450,9 @@ PP(LPTREE tree;)
 	if (!ret)
 	{
 		dos_space(devno + 1, &total, &avail);
+#if 0 /* ZZZ */
 		fun_alert(1, FCSIZE, &avail);
+#endif
 	}
 
 	dos_free(bufaddr);
@@ -467,14 +488,18 @@ errmem:
 		return;
 	}
 
+#if 0 /* ZZZ */
 	devnos = (LWGET(OB_STATE(SRCDRA)) & SELECTED) ? 0 : 1;
+#endif
 	devnod = devnos ? 0 : 1;
 
 chksrc:
 	if (!(dsbs = (DSB *)Getbpb(devnos)))
 	{
+#if 0 /* ZZZ */
 		if (do1_alert(FCFAIL) == 1)		/* retry */
 			goto chksrc;
+#endif
 		dos_free((VOIDPTR)bootbuf);
 		return;
 	}
@@ -561,15 +586,19 @@ chksrc:
 				fc_c1:
 					if (!(dsbd = (DSB *)Getbpb(devnod)))
 					{
+#if 0 /* ZZZ */
 						if (do1_alert(FCFAIL) == 1)	/* retry */
 							goto fc_c1;
+#endif
 						goto bailout;
 					}
 					if ((dsbs->sides != dsbd->sides) ||
 						(spc != dsbd->spc) || (dsbs->tracks != dsbd->tracks) || (bps != dsbd->b.recsiz))
 					{
+#if 0 /* ZZZ */
 						if (fun_alert(1, FCNOTYPE, NULL) != 1)
 							goto bailout;
+#endif
 
 						goto fc_c1;		/* try again    */
 					}
@@ -618,7 +647,9 @@ PP(int16_t dev;)
 
   rerw:
   	if ((ret = Rwabs(op, buf, nsect, sect, dev)))
+#if 0 /* ZZZ */
 		if ((ret = do1_alert(FCFAIL)) == 1)	/* retry */
+#endif
 			goto rerw;
 	return ret;						/* 0=>OK, 2=>error */
 }
@@ -681,10 +712,12 @@ PP(register int16_t which;)
 	register intptr_t *obspec;
 	register int16_t wid;
 
+#if 0 /* ZZZ */
 	if (which)
 		which = FCBARB;
 	else
 		which = FCBARA;
+#endif
 	width = (int16_t *)OB_WIDTH(which);
 	obspec = (intptr_t *)OB_SPEC(which);
 

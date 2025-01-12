@@ -101,7 +101,9 @@ PP(register APP *app;)
 				app = newapp;
 			} else
 			{
+#if 0 /* ZZZ */
 				fun_alert(1, NOICON, NULL);
+#endif
 				return FALSE;
 			}
 		}
@@ -152,6 +154,7 @@ PP(register APP *app;)
 	if (*src == '.')
 		src++;
 	strcpy(ext, src);
+	/* stuff in appl name */
 	inf_sset((OBJECT *)tree, APNAME, buffer);
 	inf_sset((OBJECT *)tree, APDFTYPE, ext);
 	apptype = app->a_apptype;
@@ -170,6 +173,7 @@ PP(register APP *app;)
 		strcat(path, filetype);
 	}
 	isauto = FALSE;
+#if 0 /* ZZZ */
 	LWSET(OB_STATE(AUTOBOX), NORMAL);
 	LWSET(OB_STATE(NORMALBOX), NORMAL);
 	if (streq(path, &d->autofile[3]))
@@ -180,6 +184,7 @@ PP(register APP *app;)
 	{
 		LWSET(OB_STATE(NORMALBOX), SELECTED);
 	}
+#endif
 	ret = xform_do((OBJECT *)tree, ROOT);
 	change = TRUE;
 	fs_sget(tree, APDFTYPE, newext);
@@ -205,6 +210,7 @@ PP(register APP *app;)
 	LWSET(OB_STATE(APGEM + field), NORMAL);
 	if (ret == APCANCEL)
 		return FALSE;
+#if 0 /* ZZZ */
 	if (ret == APREMOVE)
 	{
 		if (isauto)
@@ -218,6 +224,7 @@ PP(register APP *app;)
 		goto retit;
 #endif
 	} else
+#endif
 	{
 		if (apptype & AF_ISFMEM)
 			newapptype |= AF_ISFMEM;
@@ -232,15 +239,19 @@ PP(register APP *app;)
 					newapp->a_obid = NIL;
 					path[(int)strlen(path)] = '@';
 					*(escan_str(path, &newapp->a_pappl) - 1) = '\0';
+#if 0 /* ZZZ */
 					newapp->a_aicon = IPRG - 1;
 					newapp->a_dicon = IFILE - 1;
+#endif
 					newapp->a_char = 0;
 					newapp->a_x = 0;
 					newapp->a_y = 0;
 					app = newapp;
 				} else
 				{
+#if 0 /* ZZZ */
 					fun_alert(1, NOAPP, NULL);
+#endif
 					return FALSE;
 				}
 			}
@@ -256,6 +267,7 @@ PP(register APP *app;)
 			filetype[(int)strlen(filetype)] = '@';
 			escan_str(filetype, &app->a_pdata);
 		}
+#if 0 /* ZZZ */
 		if (LWGET(OB_STATE(AUTOBOX)) & SELECTED)
 		{
 			d->autofile[0] = '0';
@@ -266,6 +278,7 @@ PP(register APP *app;)
 		{
 			d->autofile[0] = '\0';
 		}
+#endif
 	}
 #if BINEXACT
 retit:

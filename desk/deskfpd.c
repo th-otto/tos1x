@@ -221,7 +221,7 @@ PP(register FNODE *thefile;)
 /*
  *	Free a list of file nodes.
  */
-VOID fl_free(P(FNODE *) pflist)
+LINEF_STATIC VOID fl_free(P(FNODE *) pflist)
 PP(register FNODE *pflist;)
 {
 	register FNODE *thelast;
@@ -244,7 +244,6 @@ LINEF_STATIC FNODE *fn_alloc(NOTHING)
 {
 	register FNODE *thefile;
 	register THEDSK *d;
-	register intptr_t size;
 	
 	d = thedesk;
 	if (d->g_favail)
@@ -257,25 +256,61 @@ LINEF_STATIC FNODE *fn_alloc(NOTHING)
 }
 
 
+/*
+ *	Allocate a path node.
+ */
 /* 104de: 00fd8fae */
 /* 106de: 00e19c04 */
 LINEF_STATIC PNODE *pn_alloc(NOTHING)
 {
-	register PNODE *pp;
+	register PNODE *thepath;
 	register THEDSK *d;
 	
 	d = thedesk;
 	if (d->g_pavail != NULL)
 	{
-		pp = d->g_pavail;
+		/* get up off the avail list */
+		thepath = d->g_pavail;
 		d->g_pavail = d->g_pavail->p_next;
-		pp->p_next = d->g_phead;
-		d->g_phead = pp;
-		pp->p_flags = 0;
-		pp->p_flist = NULL;
-		return pp;
+		/* put us on the active list */
+		thepath->p_next = d->g_phead;
+		d->g_phead = thepath;
+		/* init. and return */
+		thepath->p_flags = 0;
+		thepath->p_flist = NULL;
+		return thepath;
 	}
 	return NULL;
+}
+
+
+/*
+ *	Free a path node.
+ */
+/* 104de: 00fd9022 */
+/* 106de: 00e19c8a */
+VOID pn_free(P(PNODE *)thepath)
+PP(register PNODE *thepath;)
+{
+	register PNODE **pp;
+	register THEDSK *d;
+	
+	d = thedesk;
+	/* free our file list */
+	fl_free(thepath->p_flist);
+	/*
+	 * if first in list unlink by changing phead else
+	 * by finding and chang our previouse guy
+	 */
+	pp = &d->g_phead;
+	while (thepath != *pp)
+	{
+		pp = &(*pp)->p_next;
+	}
+	*pp = thepath->p_next;
+	/* put us on the avail list */
+	thepath->p_next = d->g_pavail;
+	d->g_pavail = thepath;
 }
 
 
@@ -300,33 +335,14 @@ PP(uint16_t attr;)
 		{
 			thepath->p_attr = attr;
 			return thepath;
+		} else
+		{
+			return NULL;
 		}
-	}
-	return NULL;
-}
-
-
-/*
- *	Free a path node.
- */
-/* 104de: 00fd9022 */
-/* 106de: 00e19c8a */
-VOID pn_free(P(PNODE *)thepath)
-PP(register PNODE *thepath;)
-{
-	register PNODE **pp;
-	register THEDSK *d;
-	
-	d = thedesk;
-	fl_free(thepath->p_flist);
-	pp = &d->g_phead;
-	while (thepath != *pp)
+	} else
 	{
-		pp = &(*pp)->p_next;
+		return NULL;
 	}
-	*pp = thepath->p_next;
-	thepath->p_next = d->g_pavail;
-	d->g_pavail = thepath;
 }
 
 
@@ -338,6 +354,7 @@ PP(PNODE *thepath;)
 {
 	pn_free(thepath);
 }
+
 
 /*
  *	Compare file nodes pf1 & pf2, using a field
@@ -399,27 +416,46 @@ PP(int which;)
 }
 
 
+/*
+ *	Routine to compare two fnodes to see which one is greater.
+ *	Folders always sort out first, and then it is based on
+ *	the G.g_isort parameter.  Return (-1) if pf1 < pf2, (0) if
+ *	pf1 == pf2, and (1) if pf1 > pf2.
+ */
+LINEF_STATIC int pn_comp(P(FNODE *) pf1, P(FNODE *) pf2)
+PP(register FNODE *pf1;)
+PP(register FNODE *pf2;)
+{
+	/* Folders always sort out first */
+	if ((pf1->f_attr ^ pf2->f_attr) & FA_DIREC)
+		return (pf1->f_attr & FA_DIREC) ? -1 : 1;
+	else
+		return pn_fcomp(pf1, pf2, thedesk->g_isort);
+}
+
+
 /* 104de: 00fd9118 */
 /* 106de: 00e19da6 */
 FNODE *pn_sort(P(int16_t) lstcnt, P(FNODE *) pflist)
-PP(register int16_t lstcnt;)
+PP(int16_t lstcnt;)
 PP(FNODE *pflist;)
 {
 	register FNODE *pf;
+	register FNODE *pftemp;
+	register THEDSK *d;
 	FNODE *newlist;
-	FNODE tmp;
 	register int16_t i;
 	register int16_t j;
 	register int16_t gap;
-	int chk;
 
+	d = thedesk;
 	/* build index array if necessary */
 	if (lstcnt == -1)
 	{
 		lstcnt = 0;
 		for (pf = pflist; pf; pf = pf->f_next)
 		{
-			pflist[lstcnt].f_pfndx = pf;
+			d->ml_pfndx[lstcnt] = pf;
 			lstcnt++;
 		}
 	}
@@ -433,19 +469,11 @@ PP(FNODE *pflist;)
 		{
 			for (j = i - gap; j >= 0; j -= gap)
 			{
-				/* Folders always sort out first */
-				if ((pflist[j].f_pfndx->f_attr ^ pflist[j + gap].f_pfndx->f_attr) & FA_DIREC)
-				{
-					chk = pflist[j].f_pfndx->f_attr & FA_DIREC ? -1 : 1;
-				} else
-				{	
-					chk = pn_fcomp(pflist[j].f_pfndx, pflist[j + gap].f_pfndx, thedesk->g_isort);
-				}
-				if (chk <= 0)
+				if (pn_comp(d->ml_pfndx[j], d->ml_pfndx[j + gap]) <= 0)
 					break;
-				pf = pflist[j].f_pfndx;
-				pflist[j].f_pfndx = pflist[j + gap].f_pfndx;
-				pflist[j + gap].f_pfndx = pf;
+				pftemp = d->ml_pfndx[j];
+				thedesk->ml_pfndx[j] = d->ml_pfndx[j + gap];
+				thedesk->ml_pfndx[j + gap] = pftemp;
 			}
 		}
 	}
@@ -455,23 +483,12 @@ PP(FNODE *pflist;)
 	pf = (FNODE *) &newlist;
 	for (i = 0; i < lstcnt; i++)
 	{
-		pf->f_next = pflist[i].f_pfndx;
-		pf = pflist[i].f_pfndx;
+		pf->f_next = d->ml_pfndx[i];
+		pf = d->ml_pfndx[i];
 	}
 	pf->f_next = NULL;
 	
-	movs(sizeof(tmp), newlist, &tmp);
-	movs(sizeof(tmp), pflist, newlist);
-	movs(sizeof(tmp), &tmp, pflist);
-	for (i = 0; i < lstcnt; i++)
-	{
-		if (pflist[i].f_next == pflist)
-			pflist[i].f_next = newlist;
-		else if (pflist[i].f_next == newlist)
-			pflist[i].f_next = pflist;
-	}
-		
-	return pflist;
+	return newlist;
 }
 
 
@@ -486,21 +503,19 @@ int pn_folder(P(PNODE *) thepath)
 PP(register PNODE *thepath;)
 {
 	register FNODE *thefile;
-	register THEDSK *d;
+	register FNODE **prevfile;
 	register int found;
-	register intptr_t size;
 	register BOOLEAN iscart;
-	FNODE *f;
 
 	if (thepath->p_spec[0] == CHAR_FOR_CARTRIDGE)
 		iscart = TRUE;
 	else
 		iscart = FALSE;
-	d = thedesk;
 	thepath->p_count = 0;
 	thepath->p_size = 0;
-	fn_free(thepath->p_flist);
+	fl_free(thepath->p_flist);
 	thefile = NULL;
+	prevfile = &thepath->p_flist;
 	if (iscart)
 	{
 		found = cart_sfirst((char *)thedesk->a_wdta, thepath->p_attr);
@@ -511,49 +526,38 @@ PP(register PNODE *thepath;)
 	}
 	while (found)
 	{
-		if ((thedesk->g_wdta[30] != '.' ||
-			 (thedesk->g_wdta[31] != '.' && thedesk->g_wdta[31] != '\0'))
-			  && ((thedesk->g_wdta[21] & (FA_SYSTEM|FA_HIDDEN)) == 0)
-			 )
+		if (!thefile)
 		{
 			/* make so each dir. has a available new folder */
 			thefile = fn_alloc();
-			if (thefile == NULL)
-			{
+		    if (!thefile )
+		    {	
 				found = FALSE;
 				DOS_AX = E_NOFNODES;
-				break;
+		    }
+		} else
+		{
+			if ((thedesk->g_wdta[30] != '.' ||
+				 (thedesk->g_wdta[31] != '.' && thedesk->g_wdta[31] != '\0'))
+				 )
+			{
+				/* if it is a real file or directory then save it */
+				movs(23, &thedesk->g_wdta[20], &thefile->f_junk);
+				thepath->p_size += thefile->f_size;
+				*prevfile = thedesk->ml_pfndx[thepath->p_count++] = thefile;
+				prevfile = &thefile->f_next;
+				thefile = NULL;
 			}
-			movs(23, &thedesk->g_wdta[20], &thefile->f_junk);
-			thepath->p_size += thefile->f_size;
-			thefile->f_pfndx = thefile;
-			if (thepath->p_count == 0)
-				thepath->p_flist = thefile;
-			thepath->p_count += 1;
+			if (iscart)
+				found = cart_snext();
+			else
+				found = dos_snext();
 		}
-		if (iscart)
-			found = cart_snext();
-		else
-			found = dos_snext();
 	}
 	
-#if 0
-	if (thepath->p_count != 0)
-	{
-		thepath->p_flist = pn_sort(thepath->p_count, thepath->p_flist);
-		f = d->g_favail;
-		size = d->g_fnnext;
-		size *= sizeof(FNODE);
-		size += (intptr_t)f;
-		size -= (intptr_t)d->g_favail;
-		Mshrink(d->g_favail, size);
-	} else
-	{
-		if (thepath->p_flist)
-			dos_free(thepath->p_flist);
-		thepath->p_flist = NULL;
-	}
-#endif
-	fn_init();
+	*prevfile = NULL;
+	if (thefile)
+		fn_free(thefile);
+	thepath->p_flist = pn_sort(thepath->p_count, thepath->p_flist);
 	return DOS_AX;
 }

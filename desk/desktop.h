@@ -192,15 +192,10 @@ typedef struct idtype
 #  define NUM_IB 5
 #endif
 
-#if TOSVERSION >= 0x104
-#define NUM_ADTREES 16 /* actually only 14 (NUM_TREE) */
-#else
 #define NUM_ADTREES 14
-#endif
 
 
 typedef struct {
-	/*     0 */ FNODE *g_favail;
 	/*   846 */ ICONBLK gl_icons[NUM_SOBS];
 	/*  9686 */ int16_t g_index[NUM_SOBS];
 	/* 10206 */ USERBLK g_udefs[NUM_SOBS];
@@ -208,10 +203,6 @@ typedef struct {
 	/* 12566 */ char *g_xbuf;               /* data xfer buffer and */
 	/* 12570 */ long g_xlen;                /* length for copying */
 	/* 12574 */ DTA g_dtastk[MAX_LEVEL + 1];
-	/* 12970 */ int32_t g_nfiles;
-	/* 12974 */ int32_t g_ndirs;
-	/* 12978 */ int32_t g_size;
-	/* 12982 */ char g_tmppth[PATHLEN];
 	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
 #if TOSVERSION >= 0x104
@@ -238,11 +229,9 @@ typedef struct {
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
 	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
-	/* 24128 */ BOOLEAN ml_havebox;
 	/* 24130 */ BOOLEAN ml_dlpr;
 	/* 24132 */ char printname[26];
 	/* 24158 */ char ml_fstr[13];
-	/* 24171 */ char ml_ftmp[13];
 	/* 24184 */ char o24184[16];		/* unused */
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30572 */
@@ -269,6 +258,11 @@ typedef struct {
 	/* 22624 */ short g_incol;              /* # of cols in full window */
 	/* 22626 */ int16_t g_isort;			/* current sort type */
 	/* 22628 */ char g_srcpth[PATHLEN];
+	/* 22890 */ DTA g_fcbstk[MAX_LEVEL];
+	/* 23286 */ int32_t g_nfiles;
+	/* 23290 */ int32_t g_ndirs;
+	/* 23294 */ int32_t g_size;
+	/* 23298 */ char g_tmppth[PATHLEN];
 	/* 23426 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 23666 */ int16_t g_rmsg[8];		    /* general AES message area */
 	/* 23686 */ GRECT g_desk;
@@ -293,7 +287,10 @@ typedef struct {
 	/* 29208 */ APP *applist;			/* app buffer list */
 	/* 29644 */ CSAVE g_cnxsave;
 	/* 30208 */ OBJECT *g_pscreen;
-	/* 30284 */ char gl_lngstr[256];
+	/* 30230 */ BOOLEAN ml_havebox;
+	/* 30271 */ char ml_ftmp[LEN_ZFNAME];
+	/* 30284 */ char gl_lngstr[16];		/* WTF? way too small */
+	/* 30300 */ FNODE *ml_pfndx[NUM_FNODES];
 	/* attention: must be last, because it makes the structure >32k */
 	/* 31900 */ OBJECT g_screen[NUM_SOBS];
 	/* 35092 */
@@ -542,7 +539,6 @@ BOOLEAN ins_app PROTO((char *name, APP *app));
 /*
  * deskfpd.c
  */
-VOID pn_init PROTO((NOTHING));
 VOID fpd_start PROTO((NOTHING));
 VOID fpd_parse PROTO((const char *pspec, int16_t *pdrv, char *ppath, char *pname, char *pext));
 PNODE *pn_open PROTO((int16_t drive, const char *path, const char *name, const char *ext, uint16_t attr));
@@ -625,6 +621,8 @@ int16_t fun_alert PROTO((int16_t button, int16_t item, VOIDPTR parms));
 BOOLEAN asctobin PROTO((char *ptr, int32_t *value));
 VOID wait_msg PROTO((NOTHING));
 VOID send_msg PROTO((int16_t type, int16_t whom, int16_t w3, int16_t w4, int16_t w5, int16_t w6, int16_t w7));
+BOOLEAN inf_show PROTO((OBJECT *tree, int16_t start));
+VOID inf_finish PROTO((OBJECT *tree, int16_t dl_ok));
 
 
 /*
@@ -784,9 +782,10 @@ BOOLEAN streq PROTO((const char *p1, const char *p2));
 VOID fmt_str PROTO((const char *instr, char *outstr));
 VOID unfmt_str PROTO((const char *instr, char *outstr));
 VOID inf_sset PROTO((OBJECT *tree, int16_t obj, const char *pstr));
-VOID fs_sget PROTO((LPTREE tree, int16_t obj, char *pstr));
-int16_t inf_gindex PROTO((LPTREE tree, int16_t baseobj, int16_t numobj));
-VOID merge_str PROTO((char *pdst, const char *ptmp, const VOIDPTR parms));
+VOID fs_sget PROTO((OBJECT *tree, int16_t obj, char *pstr));
+VOID fs_ssget PROTO((OBJECT *tree, int16_t obj, char *pstr));
+int16_t inf_gindex PROTO((OBJECT *tree, int16_t baseobj, int16_t numobj));
+VOID merge_str PROTO((char *pdst, const char *ptmp, const char *parms));
 int16_t wildcmp PROTO((const char *pwild, const char *ptest));
 VOID bfill PROTO((int16_t num, char bval, VOIDPTR addr));
 int16_t min PROTO((int16_t a, int16_t b));
@@ -808,7 +807,9 @@ int isdrive PROTO((NOTHING));
 int16_t rom_ram PROTO((int which, intptr_t pointer, uint16_t len));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
 BOOLEAN inf_file PROTO((char *ppath, FNODE *info, BOOLEAN isdir));
+BOOLEAN inf_folder PROTO((char *ppath, FNODE *pf));
 BOOLEAN inf_disk PROTO((char drv_id));
+BOOLEAN opn_appl PROTO((char *papname, char *papparms, char *pcmd, char *ptail));
 
 
 int32_t trap PROTO((short code, ...));
@@ -840,6 +841,5 @@ VOID fn_init PROTO((NOTHING));
 BOOLEAN fpd_bldspec PROTO((int16_t drive, const char *ppath, const char *pname, const char *pext, char *pspec));
 FNODE *fn_alloc PROTO((NOTHING));
 PNODE *pn_alloc PROTO((NOTHING));
-VOID fl_free PROTO((FNODE *pflist));
 int pn_fcomp PROTO((FNODE *pf1, FNODE *pf2, int which));
 #endif

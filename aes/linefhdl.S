@@ -326,7 +326,7 @@ lineftab: ds.b 0
 		dc.l _get_fname           ; F428
 		dc.l _fs_sget             ; F42C
 		dc.l _unfmt_str           ; F430
-		dc.l _splitpath           ; F434
+		dc.l 0                    ; F434
 		dc.l _drawclip            ; F438
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440

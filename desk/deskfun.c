@@ -80,7 +80,7 @@ PP(BOOLEAN dofull;)
 	register DESKWIN *win;
 	register int i;
 	
-	desk_wait(TRUE);
+	graf_mouse(HOURGLASS, NULL);
 	for (i = NUM_WNODES; i != 0; i--)
 	{
 		win = win_ith(i);
@@ -99,19 +99,22 @@ PP(BOOLEAN dofull;)
 			}
 		}
 	}
-	desk_wait(FALSE);
+	graf_mouse(ARROW, NULL);
 }
 
 
 /* 104de: 00fd9572 */
 /* 106de: 00e1a27c */
+/* Rebuild window path and pflist */
+/* aka fun_rebld */
 VOID up_1win(P(DESKWIN *) win)
 PP(register DESKWIN *win;)
 {
 	char *path;
 	register int i;
+	GRECT gr;
 	
-	desk_wait(TRUE);
+	graf_mouse(HOURGLASS, NULL);
 	path = win->w_path->p_spec;
 	for (i = NUM_WNODES; i != 0; i--)
 	{
@@ -119,10 +122,21 @@ PP(register DESKWIN *win;)
 		if (win->w_id != 0)
 		{
 			if (streq(win->w_path->p_spec, path))
-				up_win(win);
+			{
+				pn_folder(win->w_path);
+				desk_verify(win->w_id, TRUE);
+				win_sinfo(win);
+#ifdef __GNUC__
+				wind_set(win->w_id, WF_INFO, ((intptr_t)win->w_info) >> 16, (intptr_t)win->w_info, 0, 0);
+#else
+				wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
+#endif
+				wind_get(win->w_id, WF_WORKXYWH, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
+				send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
+			}
 		}
 	}
-	desk_wait(FALSE);
+	graf_mouse(ARROW, NULL);
 }
 
 
@@ -136,7 +150,11 @@ PP(register DESKWIN *win;)
 	pn_folder(win->w_path);
 	desk_verify(win->w_id, TRUE);
 	win_sinfo(win);
+#ifdef __GNUC__
+	wind_set(win->w_id, WF_INFO, ((intptr_t)win->w_info) >> 16, (intptr_t)win->w_info, 0, 0);
+#else
 	wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
+#endif
 	wind_get(win->w_id, WF_WORKXYWH, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
 	send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
 }
@@ -147,6 +165,7 @@ PP(register DESKWIN *win;)
  */
 /* 104de: 00fd9624 */
 /* 106de: 00e1a364 */
+/* aka fun_mkdir */
 BOOLEAN newfolder(P(DESKWIN *) win)
 PP(register DESKWIN *win;)
 {
@@ -188,7 +207,9 @@ PP(register DESKWIN *win;)
 
 	if (i > MAX_LEVEL)
 	{
+#if 0 /* ZZZ */
 		fun_alert(1, STFOF8DEE, NULL);
+#endif
 		return FALSE;
 	}
 
@@ -211,13 +232,17 @@ PP(register DESKWIN *win;)
 				if (dos_sfirst(thedesk->g_srcpth, FA_DIREC|FA_SYSTEM|FA_HIDDEN))
 				{
 					/* file exists */
+#if 0 /* ZZZ */
 					cont = fun_alert(1, STFOEXISTS, NULL) - 1 ? FALSE : TRUE;
+#endif
 				} else
 				{
 					dos_mkdir(thedesk->g_srcpth);
 					if (DOS_AX == ~E_ACCDN - 30)
 					{
+#if 0 /* ZZZ */
 						fun_alert(1, STDISKFULL, NULL);
+#endif
 					} else
 					{
 						if (dos_error())
@@ -265,7 +290,9 @@ PP(register PNODE *pspath;)
 				}
 				if (level > MAX_LEVEL + 1)
 				{
+#if 0 /* ZZZ */
 					fun_alert(1, STFOF8DEE, NULL);
+#endif
 					return FALSE;
 				}
 			} else
@@ -304,7 +331,9 @@ PP(int obid;)
 		switch (app->a_type)
 		{
 		case AT_ISCART:
+#if 0 /* ZZZ */
 			fun_alert(1, STNOROM, NULL);
+#endif
 			return FALSE;
 #if BINEXACT
 			break;
@@ -394,7 +423,9 @@ PP(int16_t obj;)
 		{
 		case AT_ISDISK:
 		case AT_ISCART:
+#if 0 /* ZZZ */
 			fun_alert(1, STNOROM, NULL);
+#endif
 			break;
 		case AT_ISTRSH:
 			form_error(~E_ACCDN - 30);
@@ -475,12 +506,16 @@ PP(register int16_t dobj;)
 		an_src = i_find(0, sobj, &fn_src, &isapp);
 		if (an_src->a_type == AT_ISTRSH)
 		{
+#if 0 /* ZZZ */
 			fun_alert(1, STNOBIN2, NULL);
+#endif
 			continue;
 		}
 		if (an_src->a_type == AT_ISCART)
 		{
+#if 0 /* ZZZ */
 			fun_alert(1, STNOROM, NULL);
+#endif
 			continue;
 		}
 		if (fun_f2any(sobj, wn_dest, an_dest, fn_dest, dobj))
@@ -521,7 +556,11 @@ PP(int16_t dobj;)
 
 		if (source == target)
 			continue;
-		if (source->a_type == AT_ISCART || source->a_type == AT_ISTRSH)
+		if (source->a_type == AT_ISTRSH)
+		{
+			fun_alert(1, STNODRAG, NULL);
+			return FALSE;
+		} else if (source->a_type == AT_ISCART)
 		{
 			fun_alert(1, STNODRAG, NULL);
 			return FALSE;
@@ -530,10 +569,13 @@ PP(int16_t dobj;)
 			switch (target->a_type)
 			{
 			case AT_ISTRSH:
+				src_icon = get_spec(d->g_screen, sobj);
+				src_name[0] = src_icon->ib_char & 255;
+				src_name[1] = '\0';
 				fun_alert(1, STNOBIN, NULL);
 				return FALSE;
 			case AT_ISCART:
-				fun_alert(1, STNOROM, NULL);
+				fun_alert(1, STROMRDONLY, NULL);
 				return FALSE;
 #if BINEXACT
 				break;
@@ -551,7 +593,9 @@ PP(int16_t dobj;)
 					dst_name[1] > 'B' ||
 					dst_name[1] < 'A')
 				{
+#if 0 /* ZZZ */
 					fun_alert(1, FCDISKONLY, NULL);
+#endif
 					return FALSE;
 				}
 				parms[0] = src_name;
@@ -595,7 +639,9 @@ PP(register int16_t dobj;)
 			if (streq(srcwin->w_name, thedesk->p_cartname) ||
 				streq(dstwin->w_name, thedesk->p_cartname))
 			{
+#if 0 /* ZZZ */
 				fun_alert(1, STNOROM, NULL);
+#endif
 			} else
 			{
 				app = i_find(dest_wh, dobj, &pf, &isapp);

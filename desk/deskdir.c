@@ -49,10 +49,11 @@ STATIC char do_srcname[LEN_ZFNAME + 2];
 LINEF_STATIC BOOLEAN dirop_init PROTO((int op, char *psrc_path, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt));
 LINEF_STATIC VOID sub_path PROTO((char *path));
 LINEF_STATIC BOOLEAN dirop_file PROTO((int op, char *psrc_path, char *pdst_path, const char *fname, int attr, uint16_t time, uint16_t date));
-LINEF_STATIC int do_namecon PROTO((char *dstpath, char *name));
+LINEF_STATIC VOID do_namecon PROTO((NOTHING));
 LINEF_STATIC BOOLEAN notsame_name PROTO((char *srcpath, char *dstpath));
-LINEF_STATIC BOOLEAN d_dofdel PROTO((char *path, BOOLEAN flag));
-LINEF_STATIC VOID splitpath PROTO((char *path, char *filename, char *dirname));
+LINEF_STATIC BOOLEAN d_dofdel PROTO((char *path));
+LINEF_STATIC VOID show_hide PROTO((OBJECT *tree));
+
 
 
 /* 306de: 00e2fc7c */
@@ -72,18 +73,6 @@ PP(register const char *path;)
 }
 
 
-/* 306de: 00e2fafe */
-/* 104de: 00fd691c */
-VOID do_finish(P(OBJECT *) obj)
-PP(OBJECT *obj;)
-{
-	int16_t x, y, w, h;
-
-	form_center(obj, &x, &y, &w, &h);
-	form_dial(FMD_FINISH, 0, 0, 0, 0, x, y, w, h);
-}
-
-
 /*
  *	Routine to DRAW a DIALog box centered on the screen
  */
@@ -96,10 +85,56 @@ PP(LPTREE tree;)
 	int16_t x, y, w, h;
 
 	form_center((OBJECT *)tree, &x, &y, &w, &h);
-	form_dial(FMD_START, 0, 0, 0, 0, x, y, w, h);
+	/* form_dial(FMD_START, 0, 0, 0, 0, x, y, w, h); */
 	objc_draw((OBJECT *)tree, ROOT, MAX_DEPTH, x, y, w, h);
 }
 
+
+VOID do_namecon(NOTHING)
+{
+	register THEDSK *d;
+	
+	d = thedesk;
+	desk_wait(TRUE);
+	if (d->ml_havebox)
+	{
+		fm_draw((LPTREE)d->g_atree[SAMENAME]);
+	} else
+	{
+		show_hide(d->g_atree[SAMENAME]);
+		d->ml_havebox = TRUE;
+	}
+	form_do(d->g_atree[CPBOX], 0);
+	if (d->ml_dlpr)
+	{
+		ob_change((LPTREE)d->g_atree[CPBOX], OKCP, SELECTED, TRUE);
+		fm_draw((LPTREE)d->g_atree[CPBOX]);
+		ob_change((LPTREE)d->g_atree[CPBOX], OKCP, NORMAL, FALSE);
+	}
+}
+
+
+/* 306de: 00e2fafe */
+/* 104de: 00fd691c */
+VOID do_finish(P(OBJECT *) obj)
+PP(OBJECT *obj;)
+{
+	int16_t x, y, w, h;
+
+	form_center(obj, &x, &y, &w, &h);
+	form_dial(FMD_FINISH, 0, 0, 0, 0, x, y, w, h);
+}
+
+
+LINEF_STATIC VOID show_hide(P(OBJECT *) tree)
+PP(OBJECT *tree;)
+{
+	int16_t xd, yd, wd, hd;
+
+	form_center(tree, &xd, &yd, &wd, &hd);
+	form_dial(FMD_START, 0, 0, 0, 0, xd, yd, wd, hd);
+	objc_draw(tree, ROOT, MAX_DEPTH, xd, yd, wd, hd);
+}
 
 /*
  * Draw a single field of a dialog box
@@ -118,17 +153,46 @@ PP(int16_t which;)
 }
 
 
-/* 104de: 00fd6a0a */
-/* 106de: 00e170f0 */
-VOID drawclip(P(OBJECT *)obj, P(int16_t) which)
-PP(OBJECT *obj;)
-PP(int16_t which;)
+/*
+ *	Add a new directory name to the end of an existing path.  This
+ *	includes appending a \*.*.
+ */
+/* 104de: 00fd75f2 */
+/* 106de: 00e17e9e */
+VOID add_path(P(char *)path, P(const char *)name)
+PP(register char *path;)
+PP(const char *name;)
 {
-	GRECT t;
-	RC_COPY((GRECT *)&obj[which].ob_x, &t);
-	ob_offset((LPTREE)obj, which, &t.g_x, &t.g_y);
-	gsx_sclip(&t);
-	ob_draw((LPTREE)obj, which, 0);
+	while (*path != '*')
+		path++;
+	strcpy(path, name);
+	strcat(path, "\\*.*");
+}
+
+
+/*
+ *	Remove the last directory in the path and replace it with
+ *	*.*.
+ */
+LINEF_STATIC VOID sub_path(P(char *)path)
+PP(register char *path;)
+{
+	/* scan to last slash */
+	while (*path)
+		path++;
+
+	/* now skip to previous directory in path */
+	while (*path != '\\')
+	{
+		path--;
+	}
+	path--;
+	while (*path != '\\')
+	{
+		path--;
+	}
+	/* append a *.* */
+	strcpy(path, "\\*.*");
 }
 
 
@@ -153,8 +217,12 @@ PP(const char *name;)
 VOID del_fname(P(char *) path)
 PP(register char *path;)
 {
-	path = r_slash(path);
-	strcpy(path, wilds);
+	/* scan to last slash */
+	while (*path)
+		path++;
+	while (*path != '\\')
+		path--;
+	strcpy(path, "\\*.*");
 }
 
 
@@ -170,7 +238,10 @@ PP(register char *newstr;)
 	register THEDSK *d;
 	
 	d = thedesk;
-	pstr = r_slash(pstr);
+	while (*pstr)
+		pstr++;
+	while (*pstr != '\\')
+		pstr--;
 	pstr++;
 	strcpy(d->ml_ftmp, pstr);
 	fmt_str(d->ml_ftmp, newstr);
@@ -179,17 +250,29 @@ PP(register char *newstr;)
 
 /* 104de: 00fd6ad0 */
 /* 106de: 00e171f4 */
+/* aka d_errmsg */
 BOOLEAN dos_error(NOTHING)
 {
 	if (DOS_ERR)
 	{
-		if (DOS_AX == E_ACCDN)
-			fun_alert(1, STILLCOPY, NULL);
-		else if (DOS_AX <= -32)
+		if (DOS_AX <= -32)
 			form_error(~DOS_AX - 30);
 		return FALSE;
 	}
 	return TRUE;
+}
+
+
+/*
+ *	Directory routine to DO File DELeting.
+ */
+/* 104de: 00fd7814 */
+/* 106de: 00e1812a */
+LINEF_STATIC BOOLEAN d_dofdel(P(char *)path)
+PP(char *path;)
+{
+	dos_delete(ADDR(path));
+	return dos_error();
 }
 
 
@@ -229,12 +312,16 @@ PP(uint16_t *pdcnt;)
 		d->g_size = 0;
 		break;
 	case OP_MOVE:
+#if 0 /* ZZZ */
 		strid = STMOVESTR;
+#endif
 		if (d->g_ccopypref || d->g_cdelepref)
 			d->ml_dlpr = TRUE;
 		goto copy;
 	case OP_COPY:
+#if 0 /* ZZZ */
 		strid = STCPYSTR;
+#endif
 		if (d->g_ccopypref)
 			d->ml_dlpr = TRUE;
 	copy:
@@ -247,7 +334,9 @@ PP(uint16_t *pdcnt;)
 		d->g_xbuf = dos_alloc(d->g_xlen);
 		break;
 	case OP_DELETE:
+#if 0 /* ZZZ */
 		strid = STDELSTR;
+#endif
 		if (d->g_cdelepref)
 			d->ml_dlpr = TRUE;
 		break;
@@ -257,11 +346,14 @@ PP(uint16_t *pdcnt;)
 	{
 		tree = (LPTREE)d->g_atree[CPBOX];
 		rsrc_gaddr(R_STRING, strid, (VOIDPTR *)&str);
+#if 0 /* ZZZ */
 		((TEDINFO *)(LLGET(OB_SPEC(TITLE))))->te_ptext = str;
+#endif
 		fcnt = *pfcnt;
 		dcnt = *pdcnt;
 		inf_setsize(&fcnt, d->ml_files, (OBJECT *)tree, NUMFILE, FALSE);
 		inf_setsize(&dcnt, d->ml_dirs, (OBJECT *)tree, NUMDIR, FALSE);
+#if 0 /* ZZZ */
 		inf_sset((OBJECT *)tree, CPFILE, "");
 		inf_sset((OBJECT *)tree, CPDIR, "");
 		LWSET(OB_FLAGS(CPFILE), HIDETREE);
@@ -269,6 +361,7 @@ PP(uint16_t *pdcnt;)
 		fm_draw(tree);
 		LWSET(OB_FLAGS(CPFILE), NONE);
 		LWSET(OB_FLAGS(CPDIR), NONE);
+#endif
 		form_do((OBJECT *)tree, NIL);
 		if (!inf_what((OBJECT *)tree, OKCP, CCANCEL))
 			return FALSE;
@@ -297,10 +390,9 @@ PP(uint32_t *psize;)
 	register LPTREE tree;
 	register int ret;
 	
-#ifndef __ALCYON__
-	tree = 0; /* BUG: used uninitialized below */
-#endif
 	d = thedesk;
+	tree = 0;
+	d->ml_havebox = FALSE;
 	strcpy(do_srcpath, psrc_path);
 	strcpy(do_dstpath, pdst_path);
 	op = (gl_kstate & K_CTRL) && op == OP_COPY ? OP_MOVE : op;
@@ -422,7 +514,9 @@ loop:
 	{
 		if (f_level > MAX_LEVEL)
 		{
+#if 0 /* ZZZ */
 			fun_alert(1, STFOF8DEE, NULL);
+#endif
 			ret = FALSE;
 			goto done;
 		}
@@ -453,7 +547,8 @@ loop:
 				{
 					do
 					{
-						more = do_namecon(d->g_dstpth, name);
+						do_namecon();
+						more = 0;
 						if (more == 0)
 							goto done;
 						if (more != 1)
@@ -481,7 +576,7 @@ loop:
 		l17:
 			d->g_ndirs++;
 			strcat(d->g_dstpth, wilds);
-			d_dofdel(d->g_dstpth, FALSE);
+			d_dofdel(d->g_dstpth);
 			ptr = r_slash(d->g_dstpth);
 			*ptr = '\0';
 			dos_mkdir(d->g_dstpth);
@@ -546,11 +641,11 @@ l29:
 	{
 	case OP_COPY:
 	case OP_MOVE:
-		if (!d_dofdel(d->g_dstpth, FALSE))
+		if (!d_dofdel(d->g_dstpth))
 			goto done;
 		break;
 	case OP_DELETE:
-		if (!d_dofdel(d->g_srcpth, FALSE))
+		if (!d_dofdel(d->g_srcpth))
 			goto done;
 		break;
 	}
@@ -578,6 +673,7 @@ done:
  */
 /* 104de: 00fd7316 */
 /* 106de: 00e17b2a */
+/* aka d_dofcopy */
 LINEF_STATIC BOOLEAN dirop_file(P(int) op, P(char *)psrc_path, P(char *)pdst_path, P(const char *)fname, P(int) attr, P(uint16_t) time, P(uint16_t) date)
 PP(int op;)
 PP(register char *psrc_path;)
@@ -616,7 +712,7 @@ PP(uint16_t date;)
 	switch (op)
 	{
 	case OP_DELETE:
-		if (!d_dofdel(psrc_path, TRUE))
+		if (!d_dofdel(psrc_path))
 			break;
 		dos_delete(psrc_path);
 		if (DOS_AX == E_ACCDN)
@@ -633,7 +729,7 @@ PP(uint16_t date;)
 	case OP_MOVE:
 		if (*psrc_path == *pdst_path)
 		{
-			if (!d_dofdel(pdst_path, TRUE))
+			if (!d_dofdel(pdst_path))
 				break;
 			dos_rename(psrc_path, pdst_path);
 			if (!DOS_ERR)
@@ -649,7 +745,7 @@ PP(uint16_t date;)
 		/* fall through */
 	
 	case OP_COPY:
-		if (!d_dofdel(pdst_path, TRUE))
+		if (!d_dofdel(pdst_path))
 			break;
 	copy:
 		srcfh = dos_open(psrc_path, FO_RDONLY);
@@ -679,7 +775,9 @@ PP(uint16_t date;)
 						if (d->g_covwrpref)
 							goto copyname;
 #endif
-						if (!(copyok = do_namecon(pdst_path, newname)))
+						do_namecon();
+						copyok = 0;
+						if (copyok)
 							goto closeit;
 						if (copyok == 2)
 						{
@@ -703,7 +801,7 @@ PP(uint16_t date;)
 					break;
 				strcpy(name, newname);
 			}
-			if (!d_dofdel(pdst_path, TRUE))
+			if (!d_dofdel(pdst_path))
 				goto closeit;
 			dstfh = dos_create(pdst_path, attr & ~FA_RDONLY);
 			if (!dos_error())
@@ -716,7 +814,9 @@ PP(uint16_t date;)
 					break;
 				if (amntrd != amntwr)
 				{
+#if 0 /* ZZZ */
 					fun_alert(1, STDISKFULL, NULL);
+#endif
 					dos_close(dstfh);
 					dos_delete(pdst_path);
 					dos_error();
@@ -770,69 +870,6 @@ done:
 }
 
 
-/*
- *	Add a new directory name to the end of an existing path.  This
- *	includes appending a \*.*.
- */
-/* 104de: 00fd75f2 */
-/* 106de: 00e17e9e */
-VOID add_path(P(char *)path, P(const char *)name)
-PP(register char *path;)
-PP(const char *name;)
-{
-	while (*path != '*')
-		path++;
-	strcpy(path, name);
-	strcat(path, wilds);
-}
-
-
-/* 104de: 00fd7620 */
-/* 106de: 00e17edc */
-LINEF_STATIC int do_namecon(P(char *)dstpath, P(char *)name)
-PP(char *dstpath;)
-PP(char *name;)
-{
-	register THEDSK *d;
-	register LPTREE tree;
-	register int butt;
-	GRECT gr;
-	char newname[LEN_ZFNAME + 2];
-	
-	d = thedesk;
-	desk_wait(FALSE);
-	tree = (LPTREE)d->g_atree[SAMENAME];
-	get_fname(dstpath, newname);
-	inf_sset((OBJECT *)tree, FNAME, newname);
-	inf_sset((OBJECT *)tree, EDFNAME, newname);
-	fm_draw(tree);
-	d->ml_havebox = TRUE;
-	butt = form_do((OBJECT *)tree, ROOT);
-	butt &= 0x7fff;
-	LWSET(OB_STATE(butt), NORMAL);
-	if (d->ml_dlpr)
-	{
-		tree = (LPTREE)d->g_atree[CPBOX];
-		if (butt == SKIP)
-			inf_sset((OBJECT *)tree, CPFILE, "");
-		LWSET(OB_STATE(OKCP), SELECTED);
-		form_center((OBJECT *)tree, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
-		objc_draw((OBJECT *)tree, ROOT, MAX_DEPTH, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
-		LWSET(OB_STATE(OKCP), NORMAL);
-	}
-	desk_wait(TRUE);
-	if (butt == COPY)
-		butt = 1;
-	else
-		butt = butt == QUIT ? 0 : 2;
-	fs_sget((LPTREE)d->g_atree[SAMENAME], EDFNAME, d->ml_fstr);
-	unfmt_str(d->ml_fstr, name);
-	return butt;
-}
-
-
-/* 104de: 00fd7730 */
-/* 106de: 00318020 */
 LINEF_STATIC BOOLEAN notsame_name(P(char *)srcpath, P(char *)dstpath)
 PP(register char *srcpath;)
 PP(register char *dstpath;)
@@ -854,6 +891,23 @@ PP(register char *dstpath;)
 		}
 	}
 	return FALSE;
+}
+
+
+LINEF_STATIC char *ret_path(P(char *) pcurr, P(char *) path)
+PP(register char *pcurr;)
+PP(register char *path;)
+{
+	/* find next level */
+	while (*pcurr != '\\' && *pcurr)
+		(VOID)*pcurr++; /* BUG: dereference */
+	(VOID)*pcurr++; /* BUG: dereference */
+	while (path != pcurr)
+		(VOID)*path++; /* BUG: dereference */
+	while (*path != '\\' && *path)
+		(VOID)*path++; /* BUG: dereference */
+	*path = '\0';
+	return pcurr;
 }
 
 
@@ -883,6 +937,7 @@ PP(char *pdst_path;)
 			strcpy(d->g_srcpth, psrc_path);
 			add_path(d->g_srcpth, pf->f_name);
 			strcpy(d->g_dstpth, pdst_path);
+			ret_path(0, 0); /* ZZZ */
 			if (!notsame_name(d->g_srcpth, d->g_dstpth))
 			{
 				fun_alert(1, STILLCOPY, NULL);
@@ -895,86 +950,15 @@ PP(char *pdst_path;)
 }
 
 
-/*
- *	Directory routine to DO File DELeting.
- */
-/* 104de: 00fd7814 */
-/* 106de: 00e1812a */
-LINEF_STATIC BOOLEAN d_dofdel(P(char *)path, P(BOOLEAN) flag)
-PP(char *path;)
-PP(BOOLEAN flag;)
+/* 104de: 00fd6a0a */
+/* 106de: 00e170f0 */
+VOID drawclip(P(OBJECT *)obj, P(int16_t) which)
+PP(OBJECT *obj;)
+PP(int16_t which;)
 {
-	register THEDSK *d;
-	register LPTREE tree;
-	int32_t nfiles;
-	int32_t ndirs;
-	char filename[LEN_ZFNAME + 2];
-	char dirname[LEN_ZFNAME + 2];
-	
-	d = thedesk;
-	if (Bconstat(2) && Bconin(2) == 0x610000L &&
-		fun_alert(1, ABORTCON, NULL) == 1)
-		return FALSE;
-	if (d->ml_dlpr)
-	{
-		tree = (LPTREE)d->g_atree[CPBOX];
-		splitpath(path, filename, dirname);
-		inf_sset((OBJECT *)tree, CPFILE, filename);
-		inf_sset((OBJECT *)tree, CPDIR, dirname);
-		if (flag)
-		{
-			nfiles = d->g_nfiles;
-			inf_setsize(&nfiles, d->ml_files, (OBJECT *)tree, NUMFILE, FALSE);
-			drawclip((OBJECT *)tree, NUMFILE);
-			d->g_nfiles--;
-		} else
-		{
-			inf_sset((OBJECT *)tree, CPFILE, "");
-			if (d->g_ndirs != 0)
-				d->g_ndirs--;
-			ndirs = d->g_ndirs;
-			inf_setsize(&ndirs, d->ml_dirs, (OBJECT *)tree, NUMDIR, FALSE);
-			drawclip((OBJECT *)tree, NUMDIR);
-		}
-		drawclip((OBJECT *)tree, CPFILE);
-		drawclip((OBJECT *)tree, CPDIR);
-	}
-	return TRUE;
-}
-
-
-LINEF_STATIC VOID splitpath(P(char *)path, P(char *)filename, P(char *)dirname)
-PP(register char *path;)
-PP(char *filename;)
-PP(char *dirname;)
-{
-	get_fname(path, filename);
-	path = r_slash(path);
-	if (path[-1] == ':')
-	{
-		*dirname = '\0';
-	} else
-	{
-		*path = '\0';
-		get_fname(path, dirname);
-		*path = '\\';
-	}
-}
-
-
-/*
- *	Remove the last directory in the path and replace it with
- *	*.*.
- */
-LINEF_STATIC VOID sub_path(P(char *)path)
-PP(register char *path;)
-{
-	/* scan to last slash */
-	path = r_slash(path);
-	/* now skip to previous directory in path */
-	path--;
-	while (*path != '\\')
-		path--;
-	/* append a *.* */
-	strcpy(path, wilds);
+	GRECT t;
+	RC_COPY((GRECT *)&obj[which].ob_x, &t);
+	ob_offset((LPTREE)obj, which, &t.g_x, &t.g_y);
+	gsx_sclip(&t);
+	ob_draw((LPTREE)obj, which, 0);
 }

@@ -5,7 +5,7 @@
 #include "obdefs.h"
 
 
-#if !MC68K /* MC68K has optimized versions of this in optimize.S */
+#if AESVERSION < 0x140 /* MC68K has optimized versions of this in optimize.S */
 
 /* 	Routine to set the variables x,y,w,h to the values found
  *	in an x,y,w,h block (grect)
@@ -153,14 +153,21 @@ PP(const int16_t *prc2;)
 /*
  * move bytes from source to dest for a count of N
  */
-VOID movs(P(int16_t) num, P(const char *) ps, P(char *) pd)
+VOID movs(P(int16_t) num, P(const void *) ps, P(void *) pd)
 PP(register int16_t num;)
 PP(register const char *ps;)
 PP(register char *pd;)
 {
 	do
+	{
+#ifdef __GNUC__
+		*(char *)pd = *(const char *)ps;
+		pd = (char *)pd + 1;
+		ps = (const char *)ps + 1;
+#else
 		*pd++ = *ps++;
-	while (--num);
+#endif
+	} while (--num);
 }
 
 
@@ -197,7 +204,12 @@ PP(register char *addr;)
 {
 	do
 	{
-		*p++ = bval;
+#ifdef __GNUC__
+		*(char *)addr = bval;
+		addr = (char *)addr + 1;
+#else
+		*addr++ = bval;
+#endif
 	} while (--num != 0);
 }
 
@@ -323,7 +335,7 @@ PP(register const char *in_str;)
 PP(register char *out_str;)
 {
 	int16_t i;
-	register char *p;
+	register const char *p;
 	
 	p = in_str;
 	while (*p && *p!= '.')
@@ -331,7 +343,7 @@ PP(register char *out_str;)
 
 	if (*p)							/* must be a dot    */
 	{
-		i = (int)(8 - (p - in_str));
+		i = (int)(8 - ((intptr_t)p - (intptr_t)in_str));
 		while (i-- != 0)
 			*out_str++ = ' ';
 		p++;
@@ -383,10 +395,10 @@ PP(register char *out_str;)
  *	to the callers ptxtlen.
  *  obj must reference a TEDINFO object.
  */
-VOID fs_sset(P(LPTREE) tree, P(int16_t) obj, P(char *) pstr, P(char **) ptext, P(int16_t *) ptxtlen)
+VOID fs_sset(P(LPTREE) tree, P(int16_t) obj, P(const char *) pstr, P(char **) ptext, P(int16_t *) ptxtlen)
 PP(LPTREE tree;)
 PP(int16_t obj;)
-PP(char *pstr;)
+PP(const char *pstr;)
 PP(register char **ptext;)
 PP(int16_t *ptxtlen;)
 {
@@ -406,7 +418,7 @@ PP(const char *pstr;)
 	char *text;
 	int16_t txtlen;
 
-	fs_sset(tree, obj, ADDR(pstr), &text, &txtlen);
+	fs_sset((LPTREE)tree, obj, ADDR(pstr), &text, &txtlen);
 }
 
 
@@ -494,7 +506,7 @@ PP(register int16_t cncl;)
 
 
 
-VOID merge_str(P(char *) pdst, P(const char *) ptmp, P(VOIDPTR) parms)
+VOID merge_str(P(char *) pdst, P(const char *) ptmp, P(const char *) parms)
 PP(register char *pdst;)
 PP(register const char *ptmp;)
 PP(VOIDPTR parms;)
@@ -522,7 +534,7 @@ PP(VOIDPTR parms;)
 				*pdst++ = '%';
 				break;
 			case 'L':
-				lvalue = *((int32_t *) & parms[num]);
+				lvalue = *((const int32_t *) & parms[num]);
 				num += 2;
 				do_value = TRUE;
 				break;

@@ -14,7 +14,7 @@ include SRCFILES
 
 CPPFLAGS += -I$(top_srcdir)/aes
 
-# only 1.04 has the linef hack
+# only TOS versions <= 1.04 have the linef hack
 LINEF_CFLAGS_104 = -A
 LINEF_AFLAGS_104 = -A${BIN}lineftab.txt
 CFLAGS += $(LINEF_CFLAGS_$(TOSVERSION))

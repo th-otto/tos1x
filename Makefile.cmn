@@ -63,7 +63,7 @@ MKROM    = $(top_srcdir)$(BS)tools$(BS)mkrom$(BUILD_EXEEXT)
 # for individual files.
 RUN_OPTIMIZE_0 = \#
 RUN_OPTIMIZE_1 = ${BIN}optimize${EXEEXT} -q $*.s
-RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_1}
+RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_0}
 
 .SUFFIXES: .c .S .s .o .oo
 

@@ -39,6 +39,8 @@
 #include "aesdefs.h"
 #include "asmdefs.h"
 
+#if AESVERSION >= 0x140 /* older versions use generic functions */
+
 #define CCODE 0
 
 
@@ -930,3 +932,4 @@ get_addr:
 	add.l	d0,a0		; a0 -> desired word or long
 	rts
 
+#endif

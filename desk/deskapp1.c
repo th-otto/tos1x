@@ -804,7 +804,9 @@ PP(BOOLEAN todisk;)
 			/* check for full disk */
 			if (size < d->size_afile)
 			{
+#if 0 /* ZZZ */
 				fun_alert(1, STDISKFULL, NULL);
+#endif
 				dos_delete(infname);
 			}
 			up_allwin(infname, FALSE);	/* rebuild any window on the INF drive */

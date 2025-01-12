@@ -313,13 +313,14 @@ char *strscn PROTO((const char *src, char *dst, char stp));
 int16_t strchk PROTO((const char *s, const char *t));
 VOID fmt_str PROTO((const char *instr, char *outstr));
 VOID unfmt_str PROTO((const char *instr, char *outstr));
-VOID fs_sset PROTO((LPTREE tree, int16_t obj, char *pstr, char **ptext, int16_t *ptxtlen));
+VOID fs_sset PROTO((LPTREE tree, int16_t obj, const char *pstr, char **ptext, int16_t *ptxtlen));
 VOID inf_sset PROTO((OBJECT *tree, int16_t obj, const char *pstr));
-VOID fs_sget PROTO((LPTREE tree, int16_t obj, char *pstr));
+VOID fs_sget PROTO((OBJECT *tree, int16_t obj, char *pstr));
+VOID fs_ssget PROTO((OBJECT *tree, int16_t obj, char *pstr));
 VOID inf_fldset PROTO((LPTREE tree, int16_t obj, uint16_t testfld, uint16_t testbit, uint16_t truestate, uint16_t falsestate));
-int16_t inf_gindex PROTO((LPTREE tree, int16_t baseobj, int16_t numobj));
+int16_t inf_gindex PROTO((OBJECT *tree, int16_t baseobj, int16_t numobj));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
-VOID merge_str PROTO((char *pdst, const char *ptmp, const VOIDPTR parms));
+VOID merge_str PROTO((char *pdst, const char *ptmp, const char *parms));
 int16_t wildcmp PROTO((const char *pwild, const char *ptest));
 
 

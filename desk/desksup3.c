@@ -303,7 +303,9 @@ PP(register GRECT *pt;)
 	tmp = pn_open(drv, ppath, pname, pext, FA_DIREC);
 	if (tmp == NULL)
 	{
+#if 0 /* ZZZ */
 		fun_alert(1, STFOF8DEE, NULL);
+#endif
 		pw = win_ontop();
 		thedesk->g_wlastsel = pw ? pw->w_id : 0;
 		desk_verify(thedesk->g_wlastsel, TRUE);
@@ -324,8 +326,13 @@ PP(register GRECT *pt;)
 		win_sname(pw);
 	}
 	win_sinfo(pw);
+#ifdef __GNUC__
+	wind_set(pw->w_id, WF_NAME, ((intptr_t)pw->w_name) >> 16, ((intptr_t)pw->w_name), 0, 0);
+	wind_set(pw->w_id, WF_INFO, ((intptr_t)pw->w_info) >> 16, ((intptr_t)pw->w_info), 0, 0);
+#else
 	wind_set(pw->w_id, WF_NAME, pw->w_name, 0, 0);
 	wind_set(pw->w_id, WF_INFO, pw->w_info, 0, 0);
+#endif
 
 	/* do actual wind_open */
 	if (curr_icon > 0)
@@ -418,7 +425,7 @@ PP(const char *pname;)
 				inf_setsize(pname, name, (OBJECT *)tree, APPLNAME, TRUE);
 				inf_sset((OBJECT *)tree, APPLPARM, "\0");
 				if ((ret = xform_do((OBJECT *)tree, APPLPARM) != APPLOK ? FALSE : TRUE))
-					fs_sget(tree, APPLPARM, ptail);
+					fs_sget((OBJECT *)tree, APPLPARM, ptail);
 			}
 			if (ret)
 			{
@@ -450,9 +457,13 @@ PP(const char *pname;)
 				return TRUE;
 			} else
 			{
+#if 0 /* ZZZ */
 				tree = (LPTREE)d->g_atree[PRINTFIL];
+#endif
 				fmt_str(pname, d->printname);
+#if 0 /* ZZZ */
 				inf_sset((OBJECT *)tree, PFILE, d->printname);
+#endif
 				desk_wait(TRUE);
 				fm_draw(tree);
 				showfile(pname, TRUE);
@@ -659,7 +670,9 @@ PP(register int16_t curr;)
 		switch (pa->a_type)
 		{
 		case AT_ISTRSH:
+#if 0 /* ZZZ */
 			fun_alert(1, TRSINFO, NULL);
+#endif
 			break;
 		case AT_ISFILE:
 		case AT_ISFOLD:
@@ -682,8 +695,6 @@ error:
 	return FALSE;
 }
 
-
-#define STTFORMAT 3 /* ZZZ */
 
 /* 104de: 00fdab74 */
 /* 106de: 00e1bc5e */
