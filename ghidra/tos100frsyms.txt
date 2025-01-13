@@ -1989,6 +1989,7 @@ gr_obalign      00fdbc86        Function        Global  User Defined
 gr_plns         00fdbcc8        Function        Global  User Defined
 gr_bwait        00fdbd2c        Function        Global  User Defined
 gr_drgplns      00fdbdb2        Function        Global  User Defined
+act_chkobj      00fdc0b4        Function        Global  User Defined
 act_chg         00fdc23c        Function        Global  User Defined
 act_allchg      00fdc320        Function        Global  User Defined
 act_bsclick     00fdc49a        Function        Global  User Defined
@@ -2024,6 +2025,7 @@ form_alert      00fdd87a        Function        Global  User Defined
 form_error      00fdd896        Function        Global  User Defined
 form_center     00fdd8ac        Function        Global  User Defined
 graf_mouse      00fdd8ec        Function        Global  User Defined
+graf_handle     00fdd946        Function        Global  User Defined
 graf_rubbox     00fdd97a        Function        Global  User Defined
 graf_mkstate    00fdd9a2        Function        Global  User Defined
 graf_growbox    00fdd9ca        Function        Global  User Defined
@@ -2051,6 +2053,7 @@ wind_create     00fddcb2        Function        Global  User Defined
 wind_open       00fddcd2        Function        Global  User Defined
 wind_get        00fddcf2        Function        Global  User Defined
 wind_set        00fddd32        Function        Global  User Defined
+wind_calc       00fddd56        Function        Global  User Defined
 my_itoa         00fddd96        Function        Global  User Defined
 fmt_time        00fddddc        Function        Global  User Defined
 fmt_date        00fdde28        Function        Global  User Defined
@@ -2248,47 +2251,47 @@ switchto        00fe2fde        Function        Global  User Defined
 setdsss         00fe301e        Function        Global  User Defined
 psetup          00fe3028        Function        Global  User Defined
 isdrive         00fe3054        Function        Global  User Defined
-pgmld           00fe3060        Instruction Label       Global  User Defined
-chrout          00fe30ea        Instruction Label       Global  User Defined
+pgmld           00fe3060        Function        Global  User Defined
+chrout          00fe30ea        Function        Global  User Defined
 bellout         00fe30fc        Function        Global  User Defined
 rawcon          00fe3112        Function        Global  User Defined
 prt_chr         00fe3126        Function        Global  User Defined
-dos_gdrv        00fe3138        Instruction Label       Global  User Defined
-dos_sdta        00fe3144        Instruction Label       Global  User Defined
-dos_sfirst      00fe3156        Instruction Label       Global  User Defined
+dos_gdrv        00fe3138        Function        Global  User Defined
+dos_sdta        00fe3144        Function        Global  User Defined
+dos_sfirst      00fe3156        Function        Global  User Defined
 dos_snext       00fe319a        Function        Global  User Defined
 dos_open        00fe31d4        Function        Global  User Defined
 dos_close       00fe3212        Function        Global  User Defined
-dos_read        00fe3224        Instruction Label       Global  User Defined
-dos_write       00fe324a        Instruction Label       Global  User Defined
-dos_lseek       00fe3270        Instruction Label       Global  User Defined
-dos_chdir       00fe328a        Instruction Label       Global  User Defined
-dos_gdir        00fe32a4        Instruction Label       Global  User Defined
-dos_sdrv        00fe32ba        Instruction Label       Global  User Defined
-dos_create      00fe32cc        Instruction Label       Global  User Defined
-dos_mkdir       00fe32ea        Instruction Label       Global  User Defined
+dos_read        00fe3224        Function        Global  User Defined
+dos_write       00fe324a        Function        Global  User Defined
+dos_lseek       00fe3270        Function        Global  User Defined
+dos_chdir       00fe328a        Function        Global  User Defined
+dos_gdir        00fe32a4        Function        Global  User Defined
+dos_sdrv        00fe32ba        Function        Global  User Defined
+dos_create      00fe32cc        Function        Global  User Defined
+dos_mkdir       00fe32ea        Function        Global  User Defined
 dos_chmod       00fe3320        Function        Global  User Defined
 dos_set         00fe333a        Function        Global  User Defined
-dos_label       00fe3360        Instruction Label       Global  User Defined
-dos_delete      00fe33fc        Instruction Label       Global  User Defined
-dos_space       00fe340e        Instruction Label       Global  User Defined
-dos_rename      00fe346e        Instruction Label       Global  User Defined
-dos_rmdir       00fe3486        Instruction Label       Global  User Defined
-dos_alloc       00fe3498        Instruction Label       Global  User Defined
+dos_label       00fe3360        Function        Global  User Defined
+dos_delete      00fe33fc        Function        Global  User Defined
+dos_space       00fe340e        Function        Global  User Defined
+dos_rename      00fe346e        Function        Global  User Defined
+dos_rmdir       00fe3486        Function        Global  User Defined
+dos_alloc       00fe3498        Function        Global  User Defined
 al_1            00fe34a8        Instruction Label       Global  User Defined
-dos_avail       00fe34dc        Instruction Label       Global  User Defined
-dos_free        00fe34f0        Instruction Label       Global  User Defined
-givecpm         00fe3502        Instruction Label       Global  User Defined
-takecpm         00fe350e        Instruction Label       Global  User Defined
-retake          00fe3524        Instruction Label       Global  User Defined
+dos_avail       00fe34dc        Function        Global  User Defined
+dos_free        00fe34f0        Function        Global  User Defined
+givecpm         00fe3502        Function        Global  User Defined
+takecpm         00fe350e        Function        Global  User Defined
+retake          00fe3524        Function        Global  User Defined
 call_err        00fe3534        Function        Global  User Defined
-giveerr         00fe3544        Instruction Label       Global  User Defined
+giveerr         00fe3544        Function        Global  User Defined
 takeerr         00fe354c        Instruction Label       Global  User Defined
 err_trap        00fe355e        Instruction Label       Global  User Defined
 err1            00fe3592        Instruction Label       Global  User Defined
 eok             00fe35a0        Instruction Label       Global  User Defined
 eabrt           00fe35c0        Instruction Label       Global  User Defined
-dos_exec        00fe35ce        Instruction Label       Global  User Defined
+dos_exec        00fe35ce        Function        Global  User Defined
 exok            00fe3652        Instruction Label       Global  User Defined
 lmul            00fe3654        Function        Global  User Defined
 ldiv            00fe36a8        Function        Global  User Defined
@@ -2527,6 +2530,7 @@ ev_multi        00fe6298        Function        Global  User Defined
 ev_dclick       00fe6524        Function        Global  User Defined
 fm_strbrk       00fe655e        Function        Global  User Defined
 fm_parse        00fe660e        Function        Global  User Defined
+fm_build        00fe6682        Function        Global  User Defined
 fm_alert        00fe68aa        Function        Global  User Defined
 take_ownership  00fe6ad0        Function        Global  User Defined
 find_obj        00fe6b56        Function        Global  User Defined
@@ -2548,6 +2552,7 @@ caseD_a         00fe7092        Instruction Label       switchD_00fe70aa        
 caseD_c         00fe7092        Instruction Label       switchD_00fe70aa        Analysis
 caseD_e         00fe7092        Instruction Label       switchD_00fe70aa        Analysis
 switchD         00fe70aa        Instruction Label       switchD_00fe70aa        Analysis
+fs_start        00fe70d4        Function        Global  User Defined
 fs_back         00fe7102        Function        Global  User Defined
 fs_pspec        00fe7142        Function        Global  User Defined
 fs_active       00fe717a        Function        Global  User Defined
@@ -2605,6 +2610,8 @@ gsx_escapes     00fe84a2        Function        Global  User Defined
 av_hardcopy     00fe84bc        Function        Global  User Defined
 gsx_wsopen      00fe84c8        Function        Global  User Defined
 gsx_wsclose     00fe8552        Function        Global  User Defined
+ratinit         00fe8564        Function        Global  User Defined
+ratexit         00fe857a        Function        Global  User Defined
 bb_set          00fe8582        Function        Global  User Defined
 bb_save         00fe8648        Function        Global  User Defined
 bb_restore      00fe868a        Function        Global  User Defined
@@ -2618,6 +2625,7 @@ gsx_moff        00fe87b0        Function        Global  User Defined
 gsx_mon         00fe87d0        Function        Global  User Defined
 av_opnwk        00fe87f0        Function        Global  User Defined
 av_pline        00fe884e        Function        Global  User Defined
+avst_clip       00fe8870        Function        Global  User Defined
 avst_height     00fe88b0        Function        Global  User Defined
 avr_recfl       00fe88fa        Function        Global  User Defined
 avro_cpyfm      00fe8924        Function        Global  User Defined
@@ -2734,6 +2742,7 @@ sh_show         00fead0a        Function        Global  User Defined
 sh_name         00fead32        Function        Global  User Defined
 sh_envrn        00fead64        Function        Global  User Defined
 sh_path         00feae4c        Function        Global  User Defined
+sh_find         00feaeec        Function        Global  User Defined
 sh_strupr       00feb014        Function        Global  User Defined
 sh_main         00feb052        Function        Global  User Defined
 sh_xxx          00feb24c        Function        Global  User Defined
@@ -2814,6 +2823,7 @@ LBDSKIP         00fecc28        Function        Global  User Defined
 LWCOPY          00fecc40        Function        Global  User Defined
 LBFILL          00fecc56        Function        Global  User Defined
 LSTRLEN         00fecc6c        Function        Global  User Defined
+LBCOPY          00fecc7e        Function        Global  User Defined
 r_get           00fecca6        Function        Global  User Defined
 r_set           00feccd2        Function        Global  User Defined
 rc_constrain    00feccf6        Function        Global  User Defined
@@ -2828,6 +2838,7 @@ max             00fecf04        Function        Global  User Defined
 bfill           00fecf1e        Function        Global  User Defined
 toupper         00fecf3a        Function        Global  User Defined
 scasb           00fecf64        Function        Global  User Defined
+strlen          00fecf84        Function        Global  User Defined
 streq           00fecf9e        Function        Global  User Defined
 strchk          00fecfc8        Function        Global  User Defined
 xstrpcpy        00fed018        Function        Global  User Defined
@@ -2867,12 +2878,31 @@ drawrat         00fed672        Function        Global  User Defined
 justretf        00fed684        Instruction Label       Global  User Defined
 tikcod          00fed686        Instruction Label       Global  User Defined
 cart_init       00fed6d8        Function        Global  User Defined
-cart_alloc      00fed70e        Function        Global  User Defined
+cart_alloc      00fed710        Function        Global  User Defined
 cart_find       00fed770        Function        Global  User Defined
 cart_sfirst     00fed7dc        Function        Global  User Defined
 ld_cartacc      00fed80e        Function        Global  User Defined
 cart_exec       00fed87c        Function        Global  User Defined
+f92c_show       00fed8d8        Function        Global  User Defined
+f930_show       00fed8ea        Function        Global  User Defined
+f9b4_show       00fed8fa        Function        Global  User Defined
+f9a4_show       00fed984        Function        Global  User Defined
 FUN_00feda5a    00feda5a        Function        Global  Default
+f9bc_show       00fedad4        Function        Global  User Defined
+f9b8_show       00fedb12        Function        Global  User Defined
+f9c0_show       00fedb46        Function        Global  User Defined
+f9c4_show       00fedbac        Function        Global  User Defined
+f9b0_show       00fedbcc        Function        Global  User Defined
+FUN_00fedc48    00fedc48        Function        Global  Default
+f934_show       00fedcd4        Function        Global  User Defined
+FUN_00fee0f6    00fee0f6        Function        Global  Default
+frm_f56c        00fee432        Function        Global  User Defined
+FUN_00fee502    00fee502        Function        Global  Default
+frm_f588        00fee560        Function        Global  User Defined
+frm_f584        00fee632        Function        Global  User Defined
+frm_f574        00fee664        Function        Global  User Defined
+frm_f57c        00fee6a8        Function        Global  User Defined
+frm_f580        00fee754        Function        Global  User Defined
 FUN_00fee76a    00fee76a        Function        Global  Default
 trp13           00fee77c        Function        Global  User Defined
 trp14           00fee78c        Function        Global  User Defined

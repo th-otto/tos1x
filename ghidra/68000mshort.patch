@@ -1,0 +1,329 @@
+--- Ghidra/Processors/68000/data/languages/68000.cspec.orig	2024-11-05 17:03:56.000000000 +0100
++++ Ghidra/Processors/68000/data/languages/68000.cspec	2025-01-03 09:15:21.117438874 +0100
+@@ -5,7 +5,7 @@
+ 	<absolute_max_alignment value="0" />
+ 	<machine_alignment value="8" />
+ 	<default_alignment value="1" />
+-	<default_pointer_alignment value="4" />
++	<default_pointer_alignment value="2" />
+ 	<pointer_size value="4" />
+ 	<wchar_size value="4" />
+ 	<short_size value="2" />
+@@ -18,8 +18,8 @@
+ 	<size_alignment_map>
+ 		<entry size="1" alignment="1" />
+ 		<entry size="2" alignment="2" />
+-		<entry size="4" alignment="4" />
+-		<entry size="8" alignment="4" />
++		<entry size="4" alignment="2" />
++		<entry size="8" alignment="2" />
+ 	</size_alignment_map>
+   </data_organization>
+   
+--- Ghidra/Processors/68000/data/languages/68000.ldefs.orig	2025-01-03 09:27:27.380832733 +0100
++++ Ghidra/Processors/68000/data/languages/68000.ldefs	2025-01-03 09:29:29.740278837 +0100
+@@ -22,6 +22,24 @@
+   <language processor="68000"
+             endian="big"
+             size="32"
++            variant="mshort"
++            version="1.1"
++            slafile="68000mshort.sla"
++            processorspec="68000.pspec"
++            manualindexfile="../manuals/68000.idx"
++            id="68000:BE:32:mshort">
++    <description>Motorola 32-bit 68040</description>
++    <compiler name="default" spec="68000mshort.cspec" id="default"/>
++    <external_name tool="gnu" name="m68k"/>
++    <external_name tool="IDA-PRO" name="68000"/>
++    <external_name tool="IDA-PRO" name="68040"/>
++    <external_name tool="IDA-PRO" name="68K"/>
++    <external_name tool="DWARF.register.mapping.file" name="68000.dwarf"/>
++    <external_name tool="qemu" name="qemu-m68k"/>
++  </language>
++  <language processor="68000"
++            endian="big"
++            size="32"
+             variant="MC68030"
+             version="1.1"
+             slafile="68030.sla"
+--- /dev/null	2024-05-09 08:50:50.324790801 +0200
++++ Ghidra/Processors/68000/data/languages/68000mshort.cspec	2025-01-03 09:40:58.310495121 +0100
+@@ -0,0 +1,165 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<compiler_spec>
++  <data_organization>
++	<absolute_max_alignment value="0" />
++	<machine_alignment value="8" />
++	<default_alignment value="1" />
++	<default_pointer_alignment value="2" />
++	<pointer_size value="4" />
++	<wchar_size value="4" />
++	<short_size value="2" />
++	<integer_size value="2" />
++	<long_size value="4" />
++	<long_long_size value="8" />
++	<float_size value="4" />
++	<double_size value="8" />
++	<long_double_size value="10" /> <!-- aligned-length=12 -->
++	<size_alignment_map>
++		<entry size="1" alignment="1" />
++		<entry size="2" alignment="2" />
++		<entry size="4" alignment="2" />
++		<entry size="8" alignment="2" />
++	</size_alignment_map>
++  </data_organization>
++  
++  <global>
++    <range space="ram"/>
++  </global>
++  
++  <stackpointer register="SP" space="ram"/>
++  
++  <default_proto>
++    <prototype name="__stdcall" extrapop="4" stackshift="4">
++      <input>
++        <pentry minsize="1" maxsize="500" align="2">
++          <addr offset="4" space="stack"/>
++        </pentry>
++      </input>
++      <output>
++        <pentry minsize="4" maxsize="10" metatype="float" >
++          <register name="FP0"/>
++        </pentry>
++        <pentry minsize="1" maxsize="4">
++          <register name="D0" />
++        </pentry>
++        <pentry minsize="5" maxsize="8">
++          <addr space="join" piece1="D0" piece2="D1"/>
++        </pentry>
++      </output>
++      <unaffected>
++        <register name="D2"/>
++        <register name="D3"/>
++        <register name="D4"/>
++        <register name="D5"/>
++        <register name="D6"/>
++        <register name="D7"/>
++        <register name="A2"/>
++        <register name="A3"/>
++        <register name="A4"/>
++        <register name="A5"/>
++        <register name="A6"/>
++        <register name="SP"/>
++        <register name="FP2"/>
++        <register name="FP3"/>
++        <register name="FP4"/>
++        <register name="FP5"/>
++        <register name="FP6"/>
++        <register name="FP7"/>
++      </unaffected>
++      <killedbycall>
++        <register name="D0"/>
++        <register name="D1"/>
++        <register name="A0"/>
++        <register name="A1"/>
++      </killedbycall>
++    </prototype>
++  </default_proto>
++  
++    <prototype name="__fastcall" extrapop="4" stackshift="4">
++      <input>
++        <pentry minsize="4" maxsize="4" metatype="ptr">
++          <register name="A0"/>
++        </pentry>
++        <pentry minsize="4" maxsize="4" metatype="ptr">
++          <register name="A1"/>
++        </pentry>
++        <pentry minsize="1" maxsize="4">
++          <register name="D0"/>
++        </pentry>
++        <pentry minsize="1" maxsize="4">
++          <register name="D1"/>
++        </pentry>
++        <pentry minsize="1" maxsize="4">
++          <register name="D2"/>
++        </pentry>
++        <pentry minsize="1" maxsize="500" align="2">
++          <addr offset="4" space="stack"/>
++        </pentry>
++      </input>
++      <output>
++        <pentry minsize="4" maxsize="4" metatype="ptr">
++          <register name="A0"/>
++        </pentry>
++        <pentry minsize="1" maxsize="4">
++          <register name="D0"/>
++        </pentry>
++        <pentry minsize="5" maxsize="8">
++          <addr space="join" piece1="D0" piece2="D1"/>
++        </pentry>
++      </output>
++      <killedbycall>
++        <register name="D0"/>
++        <register name="D1"/>
++        <register name="D2"/>
++        <register name="A0"/>
++        <register name="A1"/>
++      </killedbycall>
++      <unaffected>
++        <register name="D3"/>
++        <register name="D4"/>
++        <register name="D5"/>
++        <register name="D6"/>
++        <register name="D7"/>
++        <register name="A2"/>
++        <register name="A3"/>
++        <register name="A4"/>
++        <register name="A5"/>
++        <register name="A6"/>
++        <register name="SP"/>
++      </unaffected>
++    </prototype>
++    <prototype name="__m68k_trap" extrapop="4" stackshift="4">
++      <input>
++        <pentry minsize="1" maxsize="500" align="2">
++          <addr offset="4" space="stack"/>
++        </pentry>
++      </input>
++      <output>
++        <pentry minsize="1" maxsize="4">
++          <register name="D0"/>
++        </pentry>
++      </output>
++      <killedbycall>
++        <register name="D0"/>
++        <register name="D1"/>
++        <register name="D2"/>
++        <register name="A0"/>
++        <register name="A1"/>
++        <register name="A2"/>
++      </killedbycall>
++      <unaffected>
++        <register name="D3"/>
++        <register name="D4"/>
++        <register name="D5"/>
++        <register name="D6"/>
++        <register name="D7"/>
++        <register name="A3"/>
++        <register name="A4"/>
++        <register name="A5"/>
++        <register name="A6"/>
++        <register name="SP"/>
++      </unaffected>
++    </prototype>
++
++</compiler_spec>
+--- /dev/null	2024-05-09 08:50:50.324790801 +0200
++++ Ghidra/Processors/68000/data/languages/68000mshort.slaspec	2025-01-05 08:30:59.837557800 +0100
+@@ -0,0 +1,3 @@
++@define ATARI_ATRAP ""
++@define ATARI_FTRAP ""
++@include "68000.sinc"
+--- Ghidra/Processors/68000/data/languages/68000.sinc.orig	2025-01-03 10:49:55.595411543 +0100
++++ Ghidra/Processors/68000/data/languages/68000.sinc	2025-01-13 13:08:14.804394413 +0100
+@@ -82,10 +82,12 @@
+   copid = (9,11)
+   op    = (12,15)
+   opbig  = (8,15)
++  op00 = (0,0)
+   op01 = (0,1)
+   op02 = (0,2)
+   op03 = (0,3)
+   op08 = (0,8)
++  op011 = (1,11)
+   op015 = (0,15)
+   op34 = (3,4)
+   op35 = (3,5)
+@@ -341,6 +343,9 @@
+ define pcodeop restoreFPUStateFrame;
+ define pcodeop invalidateCacheLines;
+ define pcodeop pushInvalidateCaches;
++define pcodeop linefcall;
++define pcodeop linefreturn;
++define pcodeop lineatrap;
+ 
+ define pcodeop fetox;
+ define pcodeop fetoxm1;
+@@ -2363,6 +2368,71 @@
+ f_mem: e2d is ffmt=5; e2d { tmp:10 = float2float(e2d); export tmp; }
+ 
+ 
++@ifdef ATARI_FTRAP
++linefvector: is op=15 & op011 { local tmp:2 = op011 * 2; export tmp; }
++:linefreturn "#"t is (op=15 & op011 & op00=1) [t = op011 * 2; ] {
++	# op011 is the opcode shifted right 1,
++	# and we need to shift it 2 to the left
++	# to form a register mask
++	local vector:2 = op011 * 8;
++	# linefreturn(vector);
++        if (vector == 0) goto <norestore>;
++# if any registers were saved, the epilogue would contain a tst.l (a7)+ instruction
++        SP = SP+4;
++        if ((vector & 0x0008) == 0) goto <nod3>;
++        D3 = *SP; SP = SP + 4;
++<nod3>
++        if ((vector & 0x0010) == 0) goto <nod4>;
++        D4 = *SP; SP = SP + 4;
++<nod4>
++        if ((vector & 0x0020) == 0) goto <nod5>;
++        D5 = *SP; SP = SP + 4;
++<nod5>
++        if ((vector & 0x0040) == 0) goto <nod6>;
++        D6 = *SP; SP = SP + 4;
++<nod6>
++        if ((vector & 0x0080) == 0) goto <nod7>;
++        D7 = *SP; SP = SP + 4;
++<nod7>
++        if ((vector & 0x0100) == 0) goto <noa0>;
++        A0 = *SP; SP = SP + 4;
++<noa0>
++        if ((vector & 0x0200) == 0) goto <noa1>;
++        A1 = *SP; SP = SP + 4;
++<noa1>
++        if ((vector & 0x0400) == 0) goto <noa2>;
++        A2 = *SP; SP = SP + 4;
++<noa2>
++        if ((vector & 0x0800) == 0) goto <noa3>;
++        A3 = *SP; SP = SP + 4;
++<noa3>
++        if ((vector & 0x1000) == 0) goto <noa4>;
++        A4 = *SP; SP = SP + 4;
++<noa4>
++        if ((vector & 0x2000) == 0) goto <noa5>;
++        A5 = *SP; SP = SP + 4;
++<noa5>
++<norestore>
++	SP = A6; A6 = *SP; SP = SP+4;
++  	PC = *SP;
++  	SP = SP+4;
++  	return [PC];
++}
++:linefcall "#"t is op=15 & op011 & op01=0 [t = op011 * 2; ] {
++	local vector:4 = op011 * 2;
++	local address:4 = 0xf00000 + vector;
++	# linefcall(vector);
++	SP=SP-4;
++	*:4 SP = inst_next;
++	# actuall address will be fixed by script
++	call [address];
++	# goto inst_next;
++}
++@endif # ATARI_FTRAP
++
++
++@ifndef ATARI_FTRAP
++
+ :fabs.^fprec f_mem, fdst  is op=15 & $(FP_COP) & op68=0 & $(DAT_ALTER_ADDR_MODES); (frm=1 & f1515=0 & f1313=0 & fdst & fprec & fopmode=0x18) ... & f_mem
+ 											[ savmod2=savmod1; regtsan=regtfan; ] { fdst = abs(f_mem); } 
+ 
+@@ -2841,7 +2911,7 @@
+ 										[ savmod2=savmod1; regtsan=regtfan; ] { fdst = ftwotox(f_mem); }
+ :ftwotox.x		fsrc, fdst		is op=15 & $(FP_COP) & op68=0 & mode=0 & regan=0; frm=0 & f1515=0 & f1313=0 & fsrc & fdst & fopmode=0x11
+ 										{ fdst = ftwotox(fsrc); }
+-
++@endif # ATARI_FTRAP
+ 
+ @ifdef COLDFIRE
+ 
