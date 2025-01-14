@@ -131,7 +131,10 @@ _deftxbu	equ	_fill_buffer+236	; scratch buf for 8x16 (276 bytes)
 _vdivars: ds.b 910 ; space for negative linea vars
     xdef lineavars
 lineavars:
-	ds.b 172
+	ds.b 122
+#if BLITTER_SUPPORT
+	ds.b 4*12+2
+#endif
 
 #if LINEA_HACK
 
@@ -419,6 +422,7 @@ _TEXT_BG: equ lineavars+(TEXT_BG)
 _COPYTRAN: equ lineavars+(COPYTRAN)
 	xdef _quitfill
 _quitfill: equ lineavars+(quitfill)
+#if BLITTER_SUPPORT
 	xdef _LA_ROUTINES
 _LA_ROUTINES: equ lineavars+(LA_ROUTINES)
 	xdef _LA_HARDROUTINES
@@ -427,5 +431,6 @@ _LA_HARDROUTINES: equ lineavars+(LA_HARDROUTINES)
 _LA_SOFTROUTINES: equ lineavars+(LA_SOFTROUTINES)
 	xdef _BLT_MODE
 _BLT_MODE: equ lineavars+(BLT_MODE)
+#endif
 
 #endif /* LINEA_HACK */

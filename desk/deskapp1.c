@@ -19,6 +19,8 @@
 
 
 char const infdata[] = "DESKTOP.INF";
+STATIC char infpath[LEN_ZFPATH];
+STATIC int16_t infdrv;
 
 
 LINEF_STATIC VOID set_infpath PROTO((NOTHING));
@@ -387,7 +389,7 @@ BOOLEAN read_inf(NOTHING)
 
 	d = thedesk;
 	
-	d->appnode = (APP *)d->appbuf;
+	d->g_pbuff = d->appbuf;
 	ptr = d->appbuf;
 	
 	/* set up linked array */

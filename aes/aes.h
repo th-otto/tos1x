@@ -799,6 +799,7 @@ VOID sc_write PROTO((const char *pscrap));
  */
 
 extern int16_t sh_doexec;
+extern int16_t sh_dodef;
 extern int16_t sh_isgem;
 extern int16_t sh_gem;
 extern char *ad_envrn;
@@ -806,6 +807,7 @@ extern char *ad_shcmd;
 extern char *ad_shtail;
 extern BOOLEAN sh_iscart;
 extern char *ad_path;
+extern int16_t sh_9fc0;
 
 int16_t sh_read PROTO((char *pcmd, char *ptail));
 int16_t sh_write PROTO((int16_t doex, int16_t isgem, int16_t isover, const char *pcmd, const char *ptail));
@@ -993,6 +995,7 @@ int32_t bios PROTO((short code, ...));
  */
 extern BOOLEAN gl_rschange;
 extern int16_t gl_restype;
+extern int16_t gl_nextres;
 
 
 /*

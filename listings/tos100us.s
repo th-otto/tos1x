@@ -24722,10 +24722,17 @@ _main:
 [00fd4956] 0000                      dc.w       $0000
 [00fd4958] 0000                      dc.w       $0000
 [00fd495a] 0000                      dc.w       $0000
-[00fd495c] 0000 153c                 ori.b      #$3C,d0
-[00fd4960] 3c2c 422e                 move.w     16942(a4),d6
-[00fd4964] 4440                      neg.w      d0
-[00fd4966] 4844                      swap       d4
+[00fd495c] 0000
+
+tosrsc:
+[00fd495e] 153c     ;  5426 bytes
+[00fd4960] 3c2c     ;  9968 bytes
+           422e     ;  1538 bytes
+[00fd4964] 4440     ;   530 bytes
+[00fd4966] 4844     ;  1028 bytes
+          (4850)
+
+gemrsc:
 [00fd4968] 0000 0030                 ori.b      #$30,d0
 [00fd496c] 03c0                      bset       d1,d0
 [00fd496e] 052c 054e                 btst       d2,1358(a4)
@@ -26581,10 +26588,13 @@ _main:
 [00fd5e94] 0000                      dc.w       $0000
 [00fd5e96] 0000                      dc.w       $0000
 [00fd5e98] 0000                      dc.w       $0000
+
+deskrsc:
 [00fd5e9a] 0000 005c                 ori.b      #$5C,d0
 [00fd5e9e] 104c                      movea.l    b4,b0 ; apollo only
 [00fd5ea0] 16d8                      move.b     (a0)+,(a3)+
-[00fd5ea2] 1772 16fe 1324            move.b     -2(a2,d1.w*8),4900(a3) ; 68020+ only
+[00fd5ea2] 1772
+[00fd5ea4] 16fe 1324            move.b     -2(a2,d1.w*8),4900(a3) ; 68020+ only
 [00fd5ea8] 1780 16fa                 move.b     d0,-6(a3,d1.w*8) ; 68020+ only
 [00fd5eac] 0024 00aa                 ori.b      #$AA,-(a4)
 [00fd5eb0] 000e 001a                 ori.b      #$1A,a6 ; apollo only
@@ -29869,6 +29879,8 @@ _main:
 [00fd8584] 2020                      move.l     -(a0),d0
 [00fd8586] 5d00                      subq.b     #6,d0
 [00fd8588] 0000                      dc.w       $0000
+
+desktop icons:
 [00fd858a] 0000                      dc.w       $0000
 [00fd858c] 0000                      dc.w       $0000
 [00fd858e] 0000 0001                 ori.b      #$01,d0
@@ -30480,7 +30492,10 @@ _main:
 [00fd8b84] 0000                      dc.w       $0000
 [00fd8b86] 0000                      dc.w       $0000
 [00fd8b88] 0000                      dc.w       $0000
-[00fd8b8a] 0000 2361                 ori.b      #$61,d0
+[00fd8b8a] 0000
+
+infdata:
+[00fd8b8c] 2361                 ori.b      #$61,d0
 [00fd8b8e] 3030 3030                 move.w     48(a0,d3.w),d0
 [00fd8b92] 3030 0d0a 2362            move.w     ([a0,d0.l*4],$2362),d0 ; 68020+ only; reserved BD=0
 [00fd8b98] 3030 3030                 move.w     48(a0,d3.w),d0
@@ -30658,6 +30673,8 @@ _main:
 [00fd8d98] 4020                      negx.b     -(a0)
 [00fd8d9a] 401a                      negx.b     (a2)+
 [00fd8d9c] 0000                      dc.w       $0000
+
+formatrsc:
 [00fd8d9e] 0000 0028                 ori.b      #$28,d0
 [00fd8da2] 0298 0000 0000            andi.l     #$00000000,(a0)+
 [00fd8da8] 0000 0308                 ori.b      #$08,d0
@@ -30988,9 +31005,14 @@ _main:
 [00fd9196] 0017 0000                 ori.b      #$00,(a7)
 [00fd919a] 1f94 0000                 move.b     (a4),0(a7,d0.w)
 [00fd919e] 1fa0 0000                 move.b     -(a0),0(a7,d0.w)
+
+unkrsc4ROM:
 [00fd91a2] 1fbc 0003 0000            move.b     #$03,0(a7,d0.w)
 [00fd91a8] 0000 1100                 ori.b      #$00,d0
-[00fd91ac] 0000 2a4f                 ori.b      #$4F,d0
+[00fd91ac] 0000
+
+gemstart:
+[00fd91ae] 2a4f                      movea.l    a7,a5
 [00fd91b0] 2e7c 0000 618e            movea.l    #$0000618E,a7
 [00fd91b6] 2a6d 0004                 movea.l    4(a5),a5
 [00fd91ba] 202d 000c                 move.l     12(a5),d0
@@ -58263,6 +58285,7 @@ gem_main:
 [00fee7e6] 4e4d                      trap       #13
 [00fee7e8] 2f39 0000 6d5c            move.l     $00006D5C,-(a7)
 [00fee7ee] 4e75                      rts
+
 [00fee7f0] 23df 0000 6d60            move.l     (a7)+,$00006D60
 [00fee7f6] 4e4e                      trap       #14
 [00fee7f8] 2f39 0000 6d60            move.l     $00006D60,-(a7)

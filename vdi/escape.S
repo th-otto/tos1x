@@ -855,7 +855,11 @@ escI:
 	bne	up_cursor		; if not at top, move cursor up 1 line
 
 	bsr.w	hide_cursor
+#if BLITTER_SUPPORT
 	bsr	p_sc_dn			; scroll screen down 1 line and
+#else
+	bsr sb_scrdn
+#endif
 	bra	show_cursor		; blank the top line
 
 
@@ -868,7 +872,11 @@ escL:
 
 	bsr	hide_cursor
 	move.w	LV((v_curcy)+O6,a4),d1		; d1 <- Ymin of scroll region
+#if BLITTER_SUPPORT
 	bsr	p_sc_dn			; scroll down 1 line. insert blank line
+#else
+	bsr sb_scrdn
+#endif
 
 start_o_line:
 
@@ -887,7 +895,11 @@ escM:
 
 	bsr	hide_cursor		; hide cursor.
 	move.w	LV((v_curcy)+O6,a4),d1		; line to begin scrolling up.
+#if BLITTER_SUPPORT
 	bsr	p_sc_up			; scroll up 1 line & blank bottom line.
+#else
+	bsr sb_scrup
+#endif
 	bra	start_o_line
 
 
@@ -1031,7 +1043,11 @@ esco:
 erase_region:
 
 	bsr	hide_cursor		; hide cursor (if necessary)
+#if BLITTER_SUPPORT
 	bsr	blank_it		; clear it out
+#else
+	bsr sb_blank
+#endif
 	bra	show_cursor		; return from there
 
 
@@ -1086,7 +1102,11 @@ ascii_lf:
 
 	bsr	hide_cursor
 	clr.w	d1			; scroll region starts at top of screen
-	bsr	p_sc_up			; scroll up 1 line & blank current line
+#if BLITTER_SUPPORT
+	bsr	p_sc_up			; scroll up 1 line & blank bottom line.
+#else
+	bsr sb_scrup
+#endif
 	bra	show_cursor
 
 
@@ -1303,7 +1323,11 @@ end_o_line:
 	clr.w	d1			; scroll from top of screen.
 
 	pea	save_it(pc)		 ; return to "save_it"
+#if BLITTER_SUPPORT
 	bra	p_sc_up			 ; do the scroll.
+#else
+	bra sb_scrup
+#endif
 
 no_scroll:
 

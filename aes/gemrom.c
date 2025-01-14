@@ -49,9 +49,10 @@ struct rominfo {
  * info about compiled in data
  * - 0: aes rsc
  * - 1: desktop rsc
- * - 2: 
+ * - 2: desktop icons
  * - 3: desktop.inf
- * - 4:
+ * - 4: icon data
+ * - 5: format rsc
  */
 struct rominfo romdata[6];
 
@@ -81,9 +82,11 @@ BOOLEAN havefmt;		/* fmt.rsc already read in ? */
 
 extern uint16_t const tosrsc[];
 
-#define Cconws(a) trap(9, a)
-#define Bconstat(a) (int)trp13(1, a)
 
+
+#if OS_COUNTRY == CTRY_US
+#define TOS_RSSIZE 0x4850
+#endif
 
 #if OS_COUNTRY == CTRY_DE
 #define TOS_RSSIZE 0x44E0
@@ -104,10 +107,10 @@ extern uint16_t const tosrsc[];
  * Each is an offset from the filestart.
  *
  * tosrsc[0] = offset to start of desktop resource header
- * tosrsc[1] = offset to start of unknown resource
+ * tosrsc[1] = offset to start of desktop iconblks
  * tosrsc[2] = offset to start of desktop.inf
  * tosrsc[3] = offset to start of format resource
- * tosrsc[4] = offset to start of unknown data
+ * tosrsc[4] = offset to start of desktop icon data
  * The gem resource header follows those fields.
  * The total size is not part of the header, and hardcoded above.
  */
@@ -126,7 +129,7 @@ VOID rsc_read(NOTHING)
 	/* now fix the resource */
 	/* first block (aes rsc) starts right after the header */
 	romdata[0].data = (RSHDR *) (intptr + 5);
-	romdata[0].size = intptr[0] - 5;
+	romdata[0].size = intptr[0] - 5; /* BUG: should be -10 */
 	for (i = 1; i < 4; i++)
 	{
 		/* calculate start address */
@@ -170,16 +173,19 @@ PP(register uint16_t offset;)
 	data = (intptr_t)romdata[which].data;
 	size = romdata[which].size;
 	
-	if (which == 3)						/* read in desktop.inf      */
+	if (which == 3)
 	{
+		/* read in desktop.inf */
 		LBCOPY((VOIDPTR)pointer, (VOIDPTR)data, size);
 		return size;
 	} else if (which == 2)
 	{
+		/* read in desktop iconblks */
 		LBCOPY((VOIDPTR)pointer, (VOIDPTR)data, offset);
 		return offset;
 	} else if (which == 4)
 	{
+		/* read in desktop icon data */
 		LBCOPY((VOIDPTR)pointer, (const VOIDPTR)(data + offset), size - offset);
 		return size - offset;
 	} else if (which < 2 || which == 5)
@@ -218,18 +224,19 @@ PP(register uint16_t offset;)
 			{
 				LWCOPY(gem_global, (const VOIDPTR)pointer, 15);
 			}
-		}
-		
-		if (which == 1)
-		{
-			LWCOPY((VOIDPTR)pointer, desk_global, 15);
-			/* ZZZ some code todo here */
-		} else if (which == 5)
-		{
-			LWCOPY((VOIDPTR)pointer, fmt_global, 15);
 		} else
 		{
-			LWCOPY((VOIDPTR)pointer, gem_global, 15);
+			if (which == 1)
+			{
+				LWCOPY((VOIDPTR)pointer, desk_global, 15);
+				/* ZZZ some code todo here */
+			} else if (which == 5)
+			{
+				LWCOPY((VOIDPTR)pointer, fmt_global, 15);
+			} else
+			{
+				LWCOPY((VOIDPTR)pointer, gem_global, 15);
+			}
 		}
 	}
 

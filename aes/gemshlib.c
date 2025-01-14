@@ -117,6 +117,7 @@
 
 /* if TRUE then do an an exec on the current command else exit and return to DOS  */
 int16_t sh_doexec;
+int16_t sh_dodef;
 
 /* used to signal if the curren tly running appl is a GEM app */
 int16_t sh_isgem;
@@ -135,10 +136,11 @@ BOOLEAN sh_iscart;
 
 char *ad_path;
 
-char *ad_pfile; /* unused */
+char *ad_pfile;
 
 char temp[50]; /* WTF, unused */
 
+int16_t sh_9fc0; /* ZZZ */
 
 VOID sh_show PROTO((char *lcmd));
 BOOLEAN sh_path PROTO((int16_t whichone, char *dp, char *pname));
@@ -146,6 +148,7 @@ int16_t sh_search PROTO((SHFIND_PROC routine));
 
 #define Getrez() trp14(4)
 
+LINEF_STATIC VOID sh_strupr PROTO((NOTHING));
 
 
 
@@ -201,8 +204,21 @@ PP(const char *ptail;)
 	LBCOPY(ad_shcmd, pcmd, CMDLEN);
 	LBCOPY(ad_shtail, ptail, CMDLEN);
 
-	sh_doexec = doex;
-	sh_isgem = (isgem) ? TRUE : FALSE;	/* isgem may not = 1    */
+	if (isover)
+	{
+		sh_doexec = doex;
+		sh_9fc0 = FALSE;
+		sh_dodef = FALSE;
+		sh_isgem = !isgem ? FALSE : TRUE;	/* isgem may not = 1    */
+	} else
+	{
+		sh_strupr();
+		if (sh_find(ad_shcmd, NULL))
+		{
+			sh_draw(ad_shcmd, ROOT, 1);
+			dos_exec(ad_shcmd, 0, ad_shtail);
+		}
+	}
 
 	return TRUE;						/* for the future   */
 }
@@ -309,7 +325,7 @@ PP(int16_t depth;)
 	{
 		tree = ad_stdesk;
 		gsx_sclip(&gl_rscreen);
-		LLSET(LLGET(OB_SPEC(TITLE)), lcmd);
+		LLSET(ad_pfile, lcmd);
 		ob_draw(tree, start, depth);
 	}
 }

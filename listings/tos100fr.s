@@ -5926,6 +5926,17 @@ gl_f_init:
 [00fc4b66] 23e8 004c 0000 2924       move.l     76(a0),$00002924
 [00fc4b6e] 23e8 0048 0000 2930       move.l     72(a0),$00002930
 [00fc4b76] 4e75                      rts
+
+********************************************************************************
+********************************************************************************
+*
+* End BIOS text len 0x4b78
+*
+* Start GEMDOS
+*
+********************************************************************************
+********************************************************************************
+
 osinit:
 [00fc4b78] 4e56 fffc                 link       a6,#-4
 [00fc4b7c] 23fc 0000 60b8 0000 60a4  move.l     #$000060B8,$000060A4
@@ -26043,7 +26054,7 @@ tosrsc:
            417e     ;  1540 bytes
            4370     ;   498 bytes
 [00fd49de] 4798     ;  1064 bytes
-                    ;+   98 bytes
+          (47fa)    ;    98 bytes
 
 gemrsc:
 [00fd49e0] 0000 0030                 ori.b      #$30,d0
@@ -31132,75 +31143,97 @@ deskrsc:
 [00fd854c] 0000                      dc.w       $0000
 [00fd854e] 0000                      dc.w       $0000
 
-unknowndata1:
-[00fd8550] 0000                      dc.w       $0000
-[00fd8552] 0000                      dc.w       $0000
-[00fd8554] 0000 0001                 ori.b      #$01,d0
-[00fd8558] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd855a] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd855c] 1000                      move.b     d0,d0
-[00fd855e] 0005 000e                 ori.b      #$0E,d5
-[00fd8562] 0017 0000                 ori.b      #$00,(a7)
-[00fd8566] 0020 0020                 ori.b      #$20,-(a0)
-[00fd856a] 0000 0020                 ori.b      #$20,d0
-[00fd856e] 0048 000a                 ori.w      #$000A,a0 ; apollo only
-[00fd8572] 0000 0002                 ori.b      #$02,d0
-[00fd8576] 0000 0003                 ori.b      #$03,d0
-[00fd857a] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd857c] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd857e] 1000                      move.b     d0,d0
-[00fd8580] 0000                      dc.w       $0000
-[00fd8582] 0000 0017                 ori.b      #$17,d0
-[00fd8586] 0000 0020                 ori.b      #$20,d0
-[00fd858a] 0020 0000                 ori.b      #$00,-(a0)
-[00fd858e] 0020 0048                 ori.b      #$48,-(a0)
-[00fd8592] 000a 0000                 ori.b      #$00,a2 ; apollo only
-[00fd8596] 0004 0000                 ori.b      #$00,d4
-[00fd859a] 0005 ffff                 ori.b      #$FF,d5
-[00fd859e] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd85a0] 1000                      move.b     d0,d0
-[00fd85a2] 0000                      dc.w       $0000
-[00fd85a4] 0000 0017                 ori.b      #$17,d0
-[00fd85a8] 0000 0020                 ori.b      #$20,d0
-[00fd85ac] 0020 0000                 ori.b      #$00,-(a0)
-[00fd85b0] 0020 0048                 ori.b      #$48,-(a0)
-[00fd85b4] 000a 0000                 ori.b      #$00,a2 ; apollo only
-[00fd85b8] 0006 0000                 ori.b      #$00,d6
-[00fd85bc] 0007 ffff                 ori.b      #$FF,d7
-[00fd85c0] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd85c2] 1000                      move.b     d0,d0
-[00fd85c4] 0000                      dc.w       $0000
-[00fd85c6] 0000 0017                 ori.b      #$17,d0
-[00fd85ca] 0000 0020                 ori.b      #$20,d0
-[00fd85ce] 0020 0000                 ori.b      #$00,-(a0)
-[00fd85d2] 0020 0048                 ori.b      #$48,-(a0)
-[00fd85d6] 000a 0000                 ori.b      #$00,a2 ; apollo only
-[00fd85da] 0008 0000                 ori.b      #$00,a0 ; apollo only
-[00fd85de] 0009 ffff                 ori.b      #$FF,a1 ; apollo only
-[00fd85e2] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd85e4] 1000                      move.b     d0,d0
-[00fd85e6] 0000                      dc.w       $0000
-[00fd85e8] 0000 0017                 ori.b      #$17,d0
-[00fd85ec] 0000 0020                 ori.b      #$20,d0
-[00fd85f0] 0020 0000                 ori.b      #$00,-(a0)
-[00fd85f4] 0020 0048                 ori.b      #$48,-(a0)
-[00fd85f8] 000a ffff                 ori.b      #$FF,a2 ; apollo only
-[00fd85fc] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd85fe] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd8600] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd8602] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd8604] ffff                      dc.w       $FFFF ; movem.l (a7)+,d3-d7/a0-a5
-[00fd8606] 1000                      move.b     d0,d0
-[00fd8608] 0000                      dc.w       $0000
-[00fd860a] 0000                      dc.w       $0000
-[00fd860c] 0000                      dc.w       $0000
-[00fd860e] 0000                      dc.w       $0000
-[00fd8610] 0000                      dc.w       $0000
-[00fd8612] 0000                      dc.w       $0000
-[00fd8614] 0000                      dc.w       $0000
-[00fd8616] 0000                      dc.w       $0000
-[00fd8618] 0000                      dc.w       $0000
-[00fd861a] 0000                      dc.w       $0000
+desktop icons:
+[00fd8550] 00000000 ib_pmask
+[00fd8554] 00000001 ib_pdata
+[00fd8558] ffffffff ib_ptext
+[00fd855c] 1000     ib_char
+[00fd855e] 0005     ib_xchar
+           000e     ib_ychar
+[00fd8562] 0017     ib_xicon
+           0000     ib_yicon
+[00fd8566] 0020     ib_wicon
+           0020     ib_hicon
+[00fd856a] 0000     ib_xtext
+           0020     ib_ytext
+[00fd856e] 0048     ib_wtext
+           000a     ib_htext
+
+[00fd8572] 00000002
+[00fd8576] 00000003
+[00fd857a] ffffffff
+[00fd857e] 1000
+[00fd8580] 0000
+[00fd8582] 0000
+           0017
+[00fd8586] 0000
+           0020
+[00fd858a] 0020
+           0000
+[00fd858e] 0020
+           0048
+[00fd8592] 000a
+
+           00000004
+           00000005
+           ffffffff
+[00fd85a0] 1000
+[00fd85a2] 0000
+[00fd85a4] 0000
+           0017
+[00fd85a8] 0000
+           0020
+[00fd85ac] 0020
+           0000
+[00fd85b0] 0020
+           0048
+[00fd85b4] 000a
+
+           00000006
+           00000007
+           ffffffff
+[00fd85c2] 1000
+[00fd85c4] 0000
+[00fd85c6] 0000
+           0017
+[00fd85ca] 0000
+           0020
+[00fd85ce] 0020
+           0000
+[00fd85d2] 0020
+           0048
+[00fd85d6] 000a
+
+           00000008
+           00000009
+           ffffffff
+[00fd85e4] 1000
+[00fd85e6] 0000
+[00fd85e8] 0000
+           0017
+[00fd85ec] 0000
+           0020
+[00fd85f0] 0020
+           0000
+[00fd85f4] 0020
+           0048
+[00fd85f8] 000a
+
+           ffffffff
+[00fd85fe] ffffffff
+[00fd8602] ffffffff
+[00fd8606] 1000
+[00fd8608] 0000
+[00fd860a] 0000
+[00fd860c] 0000
+[00fd860e] 0000
+[00fd8610] 0000
+[00fd8612] 0000
+[00fd8614] 0000
+[00fd8616] 0000
+[00fd8618] 0000
+[00fd861a] 0000
+
 [00fd861c] 0000                      dc.w       $0000
 [00fd861e] 0000                      dc.w       $0000
 [00fd8620] 0000                      dc.w       $0000
@@ -60881,14 +60914,14 @@ frm_f57c:
 [00fee71e] 1d68 0001 ffff            move.b     1(a0),-1(a6)
 [00fee724] 2e8e                      move.l     a6,(a7)
 [00fee726] 5597                      subq.l     #2,(a7)
-[00fee728] f590                      dc.w       $F590 ; frm_f590
+[00fee728] f590                      dc.w       $F590 ; frm_swp68
 [00fee72a] 302e fffe                 move.w     -2(a6),d0
 [00fee72e] c06e fff8                 and.w      -8(a6),d0
 [00fee732] 806e 000a                 or.w       10(a6),d0
 [00fee736] 3d40 fffe                 move.w     d0,-2(a6)
 [00fee73a] 2e8e                      move.l     a6,(a7)
 [00fee73c] 5597                      subq.l     #2,(a7)
-[00fee73e] f590                      dc.w       $F590 ; frm_f590
+[00fee73e] f590                      dc.w       $F590 ; frm_swp68
 [00fee740] 206e fffa                 movea.l    -6(a6),a0
 [00fee744] 10ae fffe                 move.b     -2(a6),(a0)
 [00fee748] 206e fffa                 movea.l    -6(a6),a0
@@ -60904,7 +60937,7 @@ frm_f580;
 [00fee766] 5c8f                      addq.l     #6,a7
 [00fee768] f001                      dc.w       $F001 ; movem.l (a7)+,#0
 
-frm_f590:
+frm_swp68:
 [00fee76a] 4e56 0000                 link       a6,#0
 [00fee76e] 206e 0008                 movea.l    8(a6),a0
 [00fee772] 3010                      move.w     (a0),d0
@@ -61617,7 +61650,7 @@ lineftab:
 [00fef12c] 00fe e632                 dc.l 00fee632 ; F584 ; frm_f584
 [00fef130] 00fe e560                 dc.l 00fee560 ; F588 ; frm_f588
 [00fef134] 00fe 355e                 dc.l 00fe355e ; F58C ; err_trap
-[00fef138] 00fe e76a                 dc.l 00fee76a ; F590 ; frm_f590
+[00fef138] 00fe e76a                 dc.l 00fee76a ; F590 ; frm_swp68
 [00fef13c] 00fe acca                 dc.l 00feacca ; F594 ; sh_draw
 [00fef140] 00fe 37fe                 dc.l 00fe37fe ; F598 ; signal
 [00fef144] 00fe 6186                 dc.l 00fe6186 ; F59C ; ev_block

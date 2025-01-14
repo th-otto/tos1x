@@ -178,6 +178,17 @@ PP(int16_t *plenbut;)
 }
 
 
+/*
+ *	Routine to build the alert
+ *
+ *	Inputs are:
+ *		tree			the alert dialog
+ *		haveicon		boolean, 1 if icon specified
+ *		nummsg			number of message lines
+ *		mlenmsg 		length of longest line
+ *		numbut			number of buttons
+ *		mlenbut 		length of biggest button
+ */
 /* 306de: 00e1c492 */
 /* 104de: 00fe0178 */
 /* 106de: 00e21d54 */

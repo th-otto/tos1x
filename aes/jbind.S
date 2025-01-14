@@ -172,13 +172,15 @@ d_out:
 /* 106de: 00e1e836 */
         xdef  _err_trap
 _err_trap:
+#if AESVERSION >= 0x140
 #if AESVERSION >= 0x200
         move.w  #1,_crt_error           /* set flag for dispatcher */
 #endif
         move.l  _rlr,a0                 /* get the current rlr */
         move.l  8(a0),a0                /* get the UDA */
         move.l  62(a0),savestk          /* save the stack (u_spsuper) */
-        
+#endif
+
         move.w  4(a7),d0                /* error */
 #if AESVERSION >= 0x200
         cmp.w   #-15,d0

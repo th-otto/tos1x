@@ -24749,7 +24749,7 @@ tosrsc:
 [00fd49bc] 3e05  FD87BD  ;  1538
 [00fd49be] 401f  FD89D7  ;   538
 [00fd49c0] 44a3  FD8E5B  ;  1156
-                         ;    61
+          (44e0)         ;    61
 
 gemrsc:
 [00fd49c2] 0000 0030                 ori.b      #$30,d0
@@ -29483,7 +29483,7 @@ deskrsc:
 [00fd81b6] 205d                      movea.l    (a5)+,a0
 [00fd81b8] 0000                      dc.w       $0000
 
-unknowndata1:
+desktop icons:
 [00fd81ba] 0000                      dc.w       $0000
 [00fd81bc] 0000                      dc.w       $0000
 [00fd81be] 0000 0001                 ori.b      #$01,d0
@@ -30660,6 +30660,7 @@ formatrsc:
 [00fd8e52] 023c 8800                 andi.b     #$00,ccr
 [00fd8e56] 023c 9f00                 andi.b     #$00,ccr
 
+unkrsc4ROM:
 [00fd8e5a] 023c ab00                 andi.b     #$00,ccr
 [00fd8e5e] 023c ac00                 andi.b     #$00,ccr
 [00fd8e62] 023c c300                 andi.b     #$00,ccr
@@ -57905,14 +57906,14 @@ sh_main:
 [00fee3e6] 1d68 0001 ffff            move.b     1(a0),-1(a6)
 [00fee3ec] 2e8e                      move.l     a6,(a7)
 [00fee3ee] 5597                      subq.l     #2,(a7)
-[00fee3f0] f590                      dc.w       $F590 ; frm_f590
+[00fee3f0] f590                      dc.w       $F590 ; frm_swp68
 [00fee3f2] 302e fffe                 move.w     -2(a6),d0
 [00fee3f6] c06e fff8                 and.w      -8(a6),d0
 [00fee3fa] 806e 000a                 or.w       10(a6),d0
 [00fee3fe] 3d40 fffe                 move.w     d0,-2(a6)
 [00fee402] 2e8e                      move.l     a6,(a7)
 [00fee404] 5597                      subq.l     #2,(a7)
-[00fee406] f590                      dc.w       $F590 ; frm_f590
+[00fee406] f590                      dc.w       $F590 ; frm_swp68
 [00fee408] 206e fffa                 movea.l    -6(a6),a0
 [00fee40c] 10ae fffe                 move.b     -2(a6),(a0)
 [00fee410] 206e fffa                 movea.l    -6(a6),a0
@@ -58627,7 +58628,7 @@ lineftab:
 [00feee40] 00fe e2fa                 dc.l 00fee2fa ; F584 ; frm_f584
 [00feee44] 00fe e228                 dc.l 00fee228 ; F588 ; frm_f588
 [00feee48] 00fe 3226                 dc.l 00fe3226 ; F58C ; err_trap
-[00feee4c] 00fe e47e                 dc.l 00fee47e ; F590 ; frm_f590
+[00feee4c] 00fe e47e                 dc.l 00fee47e ; F590 ; frm_swp68
 [00feee50] 00fe a992                 dc.l 00fea992 ; F594 ; sh_draw
 [00feee54] 00fe 34c6                 dc.l 00fe34c6 ; F598 ; signal
 [00feee58] 00fe 5e4e                 dc.l 00fe5e4e ; F59C ; ev_block

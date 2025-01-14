@@ -88,5 +88,7 @@ tosversion_162:
 VARS_162_OBJS=vars.o
 VARS_106_OBJS=vars.o
 VARS_104_OBJS=vars.o
+VARS_102_OBJS=vars.o
+VARS_100_OBJS=vars.o
 
 VARS_OBJS=$(VARS_$(TOSVERSION)_OBJS)

@@ -545,7 +545,7 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF584, "frm_f584");
 		traptable.put(0xF588, "frm_f588");
 		traptable.put(0xF58C, "err_trap");
-		traptable.put(0xF590, "frm_f590");
+		traptable.put(0xF590, "frm_swp68");
 		traptable.put(0xF594, "sh_draw");
 		traptable.put(0xF598, "signal");
 		traptable.put(0xF59C, "ev_block");

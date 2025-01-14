@@ -47,7 +47,9 @@ name: ds.t size
 	V(save_beg,b,238)
 	V(_trap_save_area,b,0)         /* End of Save storage */
 
+#if TOSVERSION >= 0x104
 	V(oshdr,b,6+64)
+#endif
 
 #if TOSVERSION >= 0x106
 	V(cookies,l,NCOOKIES*2)
@@ -86,7 +88,6 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	INT(fd_deferr)
 	INT(fd_curerr)
 
-
 	V(flopsregs,l,9)
 
 	V(dsb,b,4*NUMFLOPPIES)
@@ -96,16 +97,19 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	V(rtcbufb,b,13)
 #endif
 
+#if TOSVERSION >= 0x104
 	INT(baudrate)
+#endif
 	V(rs232ibuf,b,SERIAL_BUFSIZE)
 	V(rs232obuf,b,SERIAL_BUFSIZE)
+	V(ikbdbuf,b,SERIAL_BUFSIZE)
+	V(midibuf,b,128)
+
 	V(rs232iorec,b,2*14+6)
 
 	V(ikbdiorec,b,14)
-	V(ikbdbuf,b,SERIAL_BUFSIZE)
 
 	V(midiiorec,b,14)
-	V(midibuf,b,128)
 
 	V(_kbdvecs,b,38)
 
@@ -150,97 +154,9 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	INT(_prtconfig)
 
 	INT(iclk_ready)
-
-	LONG(_rseed)
-
-	BYTE(_prtbdev)
-	even
-
-	BYTE(_prtboch)
-	even
-
-	INT(_prtbbval)
-
-	BYTE(_prtbflg)
-	even
-	
-	BYTE(_prtbdmask)
-	even
-	
-	V(_prtboval,w,4)
-	LONG(_fd_mediach)
-	
-	INT(_prtbwidth)
-
-	V(_drivechange,b,NUMFLOPPIES)
-	INT(_prtbbytes)
-
-	BYTE(_prtbilow)
-	even
-	BYTE(_prtbihigh)
-	even
-
-	INT(_curflop)
-
-	INT(_prtbwords)
-	PTR(_prtbstrt)
-	PTR(_prtbp2)
-	INT(_prtbchunk)
-
-	PTR(_prtbp1)
-	INT(_prtbgval)
-	PTR(_prtbend)
-	INT(_prtbpmsk)
-	INT(_prtbidx)
-	INT(_prtbinvert)
-	INT(_prtbink)
-	INT(_width)
-	INT(_prtbrval)
-	V(_pbpar,b,30)
-
-	V(_blkdev,b,32*NUMFLOPPIES)
-	INT(_height)
-	V(_prtbval,w,16)
-
-	INT(_prtbplanes)
-	INT(_prtboffset)
-
-	INT(_prtbtcol)
-
-	BYTE(_prtbacol)
-	even
-	V(_prtbmaxval,w,16)
-	BYTE(_prtbeps)
-	even
-	V(_prtbobuf,b,8)
-	V(_fd_err,w,NUMFLOPPIES)
-	INT(_prtbheight)
-	V(_prtbmval,w,4)
-	BYTE(_prtbmono)
-	even
-	BYTE(_prtbmed)
-	even
-	BYTE(_prtbempty)
-	even
-	INT(_prtblines)
-	INT(_prtbbits)
-	INT(_prtbomask)
-	INT(_prtbdots)
-	BYTE(_prtbodd)
-	even
-	V(_prtbminval,w,16)
-	BYTE(_prtbprez)
-	even
-	BYTE(_prtbamon)
-	even
-	BYTE(_prtblow)
-	even
-	BYTE(_prtbbol)
-	even
-
 	ds.b 2
-	PTR(biosav)
 
+	PTR(biosav)
 	ds.b 4
 	INT(savesr)
 
@@ -255,70 +171,140 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
  */
 #include "../vdi/vdivar.S"
 
-	INT(_msec)
+	LONG(_fd_mediach)
+	LONG(_rseed)
 
+	BYTE(_prtbdev)
+	even
+	V(_pbpar,b,30)
+	V(bdos_mempool,b,6000)
+
+	BYTE(_prtboch)
+	even
+
+	INT(_bdos_usedw)
+
+	INT(_prtbbval)
+
+	V(_glbcolumn,w,3)
+
+	INT(_oscnt)
+	INT(_msec)
+	V(_ram8x8,b,90)
+
+	BYTE(_prtbflg)
+	even
+	
 	ds.b 1024 /* unused */
 
 	V(_supstk,w,SUPSIZ)
+	V(_drivechange,b,NUMFLOPPIES)
 
+	BYTE(_prtbdmask)
+	even
+	
+	INT(_prtbwidth)
+
+	V(_bakbuf,l,3)
+	V(_fill,b,3)
+	even
+
+	V(_blkdev,b,32*NUMFLOPPIES)
 	INT(_time)
 
+	INT(_prtbbytes)
+	LONG(_rwerr)
+
+	BYTE(_prtbilow)
+	even
+
+	BYTE(_prtbihigh)
+	even
+
+	V(_prtboval,w,4)
+
+	V(_secbuf,b,4*SECTOR_SIZE)
+
+	ds.b 2 /* unused? */
+
+	INT(_prtbrval)
+	INT(_prtbwords)
+	V(_prtbval,w,16)
+	PTR(_prtbstrt)
+	V(_dirtbl,l,NCURDIR)
+
+	V(_pmd,l,3)
+	INT(_prtbplanes)
 	V(_root,l,MAXQUICK)
 
 	ds.b 60 /* unused? */
 
-	V(_glbkbchar,l,3*KBBUFSZ)
+	INT(_prtbtcol)
+	INT(_prtboffset)
 
-	PTR(_ofdlist)
-
-	V(_glbcolumn,w,3)
-	INT(_rrecno)
-
-	INT(_rwrtflg)
+	PTR(_prtbp2)
+	V(_errbuf,l,3)
+	BYTE(_prtbacol)
+	even
+	V(_prtbmaxval,w,16)
+	BYTE(_prtbeps)
+	even
+	INT(_prtbchunk)
+	V(_prtbobuf,b,8)
 
 	V(_virt_work,b,180+MU_PLANES*16*2)
 
-	PTR(_rdm)
-	INT(_dirlock)
-
-	V(_ofdbuf,b,70*80)
-	LONG(_ldivr)
-
-	INT(_oscnt)
-
-	V(_ram8x8,b,90)
-
-	LONG(_rwerr)
-	V(_pmd,l,3)
+	V(_fd_err,w,NUMFLOPPIES)
+	V(_diruse,b,NCURDIR)
+	PTR(_prtbp1)
 	V(_sft,b,OPNFILES*10-6*10)
+	V(_drvtbl,l,BLKDEVNUM)
+	V(_glbkbchar,l,3*KBBUFSZ)
+
+	INT(_bdos_freew)
+	INT(_prtbheight)
+
+	INT(_drvsel)
+
+	BYTE(_prtbmed)
+	even
+	BYTE(_prtbmono)
+	even
+	INT(_prtbgval)
+	PTR(_prtbend)
+	V(_prtbmval,w,4)
+	BYTE(_prtbempty)
+	even
+	INT(_prtblines)
+	LONG(_uptime)
+	BYTE(_prtbprez)
+	even
+	BYTE(_prtbodd)
+	even
+	V(_prtbminval,w,16)
+	INT(_prtbdots)
+	INT(_prtbpmsk)
+	INT(_prtbomask)
+	INT(_prtbbits)
+	INT(_errdrv)
 
 	PTR(_run)
 
+	INT(_prtbidx)
 	V(_ram8x16,b,90)
-    
-	V(_fill,b,3)
-	even
+	INT(_prtbinvert)
 
-	V(_bakbuf,l,3)
-
-	V(_secbuf,b,4*SECTOR_SIZE)
-
-	BYTE(_osuser)
-	PTR(_dirrec)
-	V(_dirtbl,l,NCURDIR)
-	V(_errbuf,l,3)
-	V(_diruse,b,NCURDIR)
-	V(_drvtbl,l,BLKDEVNUM)
-	INT(_drvsel)
-	LONG(_uptime)
-	INT(_errdrv)
-
-	V(_ospd,b,256)
-	V(_buptr,l,3)
-
-	INT(_date)
-	V(_bcbx,b,4*20) /* 4*sizeof(BCB) */
 	V(_beptr,l,3)
+	BYTE(_prtblow)
+	even
+	BYTE(_prtbamon)
+	even
+	INT(_date)
+	BYTE(_prtbbol)
+	even
+	INT(_prtbink)
+	V(_bcbx,b,4*20) /* 4*sizeof(BCB) */
+	V(_buptr,l,3)
 
 /* This label is referenced by the OSHEADER */
 	xdef _endvdibss
@@ -326,12 +312,268 @@ _endvdibss: ds.b 0
 
 /* start AES+DESKTOP */
 
-	ds.b 2
 	PTR(retsava)
+	PTR(_x6104_unused)
 	INT(_gl_restype)
 	INT(_gl_rschange)
+	INT(_gl_nextrez)
 	V(ustak,l,33)
 	INT(_diskin)
+	V(srsave,w,1)
+	ds.b 2
+	V(savsr,w,1)
+	V(dspstk,l,161)
+	LONG(_crit_err)
+	LONG(_SAV2TRP)
+	LONG(_savsup)
+	PTR(_drawaddr)
+	PTR(drawsp)
+	PTR(_drawstk)
+	LONG(_ldivr)
+	LONG(errsave)
+	ds.b 1024
+	V(errstk,l,257)
+	ds.b 2
+	PTR(_ad_rso)
+	INT(_ml_ocnt)
+	PTR(_ml_mnhold)
+	GRECT(_ml_ctrl)
+	PTR(_ml_pmown)
+	PTR(_ml_pkown)
+	V(pblock,l,5)
+	PTR(_drwaddr)
+	PTR(_tikaddr)
+	PTR(gstksave)
+	PTR(tstksave)
+	PTR(_tiksav)
+	LONG(_NUM_TICK)
+	LONG(_CMP_TICK)
+	V(gstack,l,24)
+	V(tstack,l,24)
+	INT(x6d4e)
+	ds.w 1 /* unused */
+	INT(x6d52)
+	ds.l 1 /* unused */
+	PTR(trp13aret)
+	PTR(trp14aret)
+	INT(_gl_xclip)
+	INT(_gl_wclip)
+	V(_intin,w,128)
+	V(_pglobal,w,15)
+	V(_gl_ctwait,w,5) /* MOBLK */
+	V(_gl_mkrect,b,12)  /* ORECT */
+	PTR(_gl_rbuf)
+	INT(_sh_dodef)
+	INT(_sh_isgem)
+	PTR(_gl_awind)
+	PTR(_cart_dta)
+	PTR(x6ea8)
+	INT(_gl_hbox)
+	INT(_gl_yclip)
+	V(_intout,w,10)
+	INT(_gl_tcolor)
+	GRECT(_gl_rmenu)
+	PTR(_sys_adacc)
+	INT(_gl_rlen)
+	PTR(_ad_fstree)
+	INT(_pr_mclick)
+	LONG(_gl_mnpid) /* BUG: should be int */
+	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
+	INT(_gl_wschar)
+	LONG(_elinkoff)
+	PTR(_cda)
+	PTR(_rs_global)
+	PTR(_ad_sysglo)
+	INT(_gl_width)
+	INT(_gl_font)
+	V(_infpath,b,122)
+	PTR(_gl_cowner)
+	INT(_sh_doexec)
+	INT(_x7034)
+	INT(_gl_patt)
+	GRECT(_gl_rscreen)
+	GRECT(_gl_rfull)
+	V(_appl_msg,w,8)
+	V(_ptsin,w,20)
+	INT(_DOS_ERR)
+	V(_W_ACTIVE,b,24*MAXOBJ)  /* OBJECT[MAXOBJ] */
+	INT(_gl_newroot)
+	PTR(_cart_ptr)
+	V(_ptsout,w,10)
+	INT(_gl_btrue)
+	INT(_gl_hptschar)
+	INT(_gl_hsptschar)
+	INT(_gl_wbox)
+	PTR(_gl_kowner)
+	INT(_INTER_WSPACE)
+	V(_wind_msg,w,8)
+	INT(_gl_fis)
+	V(_wind_spb,b,10)    /* sizeof(SPB) */
+	INT(_mclick)
+	PTR(_gl_mowner)
+	V(_gl_tmp1,b,40)
+	PTR(_gl_mntree)
+	INT(_sh_gem)
+	PTR(_gl_wtree)
+	GRECT(_gl_rzero)
+	INT(_infdrv)
+	PTR(_ctl_pd)
+	GRECT(_ctrl)
+	V(_gl_tmp2,b,40)
+	V(_gl_dta,b,50)
+	INT(_gl_nrows)
+	INT(_ajunk)
+	INT(_x733a)
+	MFDB(_gl_src)
+	INT(_INTER_HSPACE)
+	INT(_gl_dabase)
+	INT(_havedesk)
+	V(_gl_adacc,l,MAX_ACCS)
+	INT(_gl_wtop)
+	MFDB(_gl_dst)
+	INT(_fph)
+	GRECT(_gl_rfs)
+	INT(x738e)
+	INT(_gl_wptschar)
+	INT(_gl_wsptschar)
+	INT(_xrat)
+	INT(_yrat)
+	INT(_pr_button)
+	INT(_pr_xrat)
+	INT(_havefmt)
+	PTR(_drl)
+	PTR(_dlr)
+	INT(_pr_yrat)
+	TEDINFO(_edblk)
+	PTR(_rs_hdr)
+	INT(_havegem)
+	BYTE(_xforkq)
+	even
+	MFDB(_gl_tmp)
+	V(_D,b,10774) /* sizeof(THEGLO) */
+	ds.l 1 /* unused */
+	INT(_gl_hchar)
+	INT(_x9dfc)
+	PTR(_eul)
+	BYTE(_indisp)
+	even
+	INT(_curpid)
+	INT(_gl_naccs)
+	INT(_gl_dacnt)
+	INT(_gl_dabox)
+	V(_desk_global,w,15)
+	PTR(_thedesk)
+	PTR(_ad_hgmice)
+	BYTE(_infork)
+	even
+	INT(_fpt)
+	V(_gl_pacc,l,MAX_ACCS)
+	INT(_gl_bdelay)
+	INT(_gl_fakemsg)
+	V(_desk_acc,l,MAX_ACCS)
+	PTR(_x9e6a)
+	V(_fmt_global,w,15)
+	V(_gem_global,w,15)
+	PTR(_nrl)
+	INT(_kstate)
+	INT(_gl_bclick)
+	PTR(_ad_select)
+	V(_bi,b,14)      /* BITBLK */
+	V(_ib,b,34)      /* ICONBLK */
+	PTR(_ad_armice)
+	INT(_gl_handle)
+	INT(_gl_dclick)
+	V(_romdata,b,6*6)
+	INT(_gl_height)
+	INT(_gl_apid)
+	PTR(_rlr)
+	INT(_gl_bdesired)
+	INT(_gl_recd)
+	INT(_gl_dcindex)
+	PTR(_ad_shcmd)
+	PTR(_ad_stdesk)
+	TEDINFO(_gl_aname)
+	TEDINFO(_gl_ainfo)
+	INT(_gl_hclip)
+	V(_contrl,w,12)
+	INT(_x9f7a)
+	PTR(_x9f7c)
+	PTR(_old_bcode)
+	PTR(_ad_path)
+	V(_evx,b,28) /* sizeof(EVB) */
+	PTR(_ad_pfile)
+	PTR(_rul)
+	INT(_gl_bvhard)
+	PTR(_ad_shtail)
+	PTR(_g_buffer)
+	INT(_gl_wchar)
+	INT(_x9fb8)
+	INT(_mtrans)
+	PTR(_ad_fsdta)
+	INT(_sh_9fc0) /* sh_fullstep? */
+	PTR(_ad_windspb)
+	INT(_gl_hschar)
+	PTR(_ad_intin)
+	INT(_gl_mode)
+	PTR(_zlr)
+	INT(_gl_bpend)
+	INT(_gl_bvdisk)
+	ds.w 4 /* unused */
+	PTR(_g_wlist)
+	GRECT(_gl_rcenter)
+	INT(_gl_moff)
+	V(_hdr_buff,w,18)   /* RSHDR */
+	V(_gl_ws,w,57)   /* workout */
+	INT(_gl_lcolor)
+	INT(_fpcnt)
+	INT(_button)
+	INT(_gl_graphic)
+	INT(_xa08a)
+	INT(_xa08c)
+	INT(_gl_ncols)
+	INT(_gl_nplanes)
+	INT(_gl_mask)
+	INT(_DOS_AX)
+	INT(_gl_ticktime)
+	INT(_xa098)
+	PTR(_old_mcode)
+	LONG(_gl_mlen)
+	PTR(_ad_envrn)
+	GRECT(_gl_rmnactv)
+	V(_desk_pid,w,MAX_ACCS)
+	INT(_xa0ba)
+	INT(_liketop)
+	INT(_w_walkflag)
+	PTR(_gl_newdesk)
+	PTR(_xa0c4)
+	
+
+	/* ZZZ todo */
+
+	INT(_width)
+
+	INT(_height)
+
+	PTR(_ofdlist)
+
+	INT(_rrecno)
+
+	ds.b 4
+
+	INT(_rwrtflg)
+
+	PTR(_rdm)
+	INT(_dirlock)
+
+	V(_ofdbuf,b,70*80)
+
+	BYTE(_osuser)
+	PTR(_dirrec)
+
+	V(_ospd,b,256)
+
+	INT(_curflop)
+
 	V(_aautopath,b,CMDLEN)
 	V(_do_srcpath,b,PATHLEN)
 	V(_do_dstpath,b,PATHLEN)
@@ -343,46 +585,20 @@ _endvdibss: ds.b 0
 #if TOSVERSION >= 0x106
 	PTR(savea0)
 #endif
-	V(srsave,w,1)
-	V(savsr,w,1)
 	V(psetsr,w,1)
-	V(dspstk,l,161)
 
 	LONG(retaddr)
 	LONG(tr_retsave)
 	
-	LONG(_crit_err)
 	LONG(savestk)
-	LONG(_SAV2TRP)
-	LONG(_savsup)
-	PTR(_drawaddr)
-	PTR(drawsp)
 	LONG(_aesldivr)
-	LONG(errsave)
-	V(errstk,l,257)
-	PTR(_ml_mnhold)
-	GRECT(_ml_ctrl)
-	PTR(_ml_pmown)
-	PTR(_ml_pkown)
 	
-	ds.b 2
 	
-	PTR(_ad_rso)
 	V(_fsname,b,40)
 	V(_fcopy,b,40)
 	PTR(_pathcopy)
 	INT(_defdrv)
-	V(pblock,l,5)
-	PTR(_drwaddr)
-	PTR(_tikaddr)
-	PTR(gstksave)
-	PTR(tstksave)
-	PTR(_tiksav)
-	LONG(_NUM_TICK)
-	LONG(_CMP_TICK)
 	LONG(_TICKS)
-	V(gstack,l,24)
-	V(tstack,l,24)
 	INT(_w_inc)
 	INT(_bar_max)
 	V(fspec,b,8)
@@ -393,210 +609,42 @@ _endvdibss: ds.b 0
 	ds.l 1 /* unused */
 	PTR(_maddr)
 	V(mform,w,37)
-	PTR(trp13aret)
-	PTR(trp14aret)
-	V(_intout,w,10)
-	V(_ptsout,w,10)
-	GRECT(_ctrl)
 	
 	V(_temp,b,50)
 	
-	INT(_gl_dabase)
-	V(_gl_adacc,l,MAX_ACCS)
-
 	ds.b 12
 	
-	INT(_xrat)
-	INT(_yrat)
-	INT(_gl_hchar)
-	INT(_gl_naccs)
-	INT(_gl_dabox)
-	INT(_gl_dacnt)
-	INT(_gl_fakemsg)
-	INT(_gl_bdelay)
-	V(_gl_pacc,l,MAX_ACCS)
-	PTR(_ad_hgmice)
-	V(_desk_acc,l,MAX_ACCS)
-	V(_ib,b,34)      /* ICONBLK */
-	V(_bi,b,14)      /* BITBLK */
 	PTR(_ad_fsnames)
-	INT(_gl_bclick)
-	PTR(_ad_select)
-	INT(_gl_handle)
-	PTR(_ad_armice)
-	INT(_gl_dclick)
 	PTR(_ad_fsel)
-	TEDINFO(_gl_aname)
-
-	ds.b 4
 	
-	PTR(_ad_shcmd)
 	PTR(_ad_fpath)
-	INT(_gl_height)
-	TEDINFO(_gl_ainfo)
-	INT(_gl_dcindex)
-	INT(_gl_recd)
-	INT(_gl_bdesired)
-	INT(_gl_apid)
 
-	PTR(_ad_path)
-	PTR(_old_bcode)
-	INT(_gl_hclip)
-	INT(_gl_bvhard)
-	PTR(_ad_shtail)
-	PTR(_ad_stdesk)
-	PTR(_ad_fsdta)
-	INT(_gl_wchar)
-	PTR(_ad_windspb)
-	INT(_gl_bvdisk)
-	INT(_gl_bpend)
-	INT(_gl_mode)
-	PTR(_ad_intin)
-	INT(_gl_hschar)
 	INT(_sh_iscart)
-	V(_hdr_buff,w,18)   /* RSHDR */
-	INT(_gl_moff)
-	GRECT(_gl_rcenter)
-	INT(_gl_graphic)
-	INT(_gl_lcolor)
-	INT(_gl_ticktime)
-	PTR(_old_mcode)
-	INT(_gl_nplanes)
-	LONG(_gl_mlen)
-	INT(_DOS_AX)
-	INT(_gl_mask)
-	INT(_gl_ncols)
-	INT(_w_walkflag)
-	PTR(_ad_envrn)
-	V(_desk_pid,w,MAX_ACCS)
-	PTR(_gl_newdesk)
 	INT(_wasclr)
-	GRECT(_gl_rmnactv)
-	PTR(_cart_dta)
-	PTR(_gl_awind)
 	PTR(_ad_title)
-	PTR(_gl_rbuf)
-	V(_gl_mkrect,b,12)  /* ORECT */
-	V(_gl_ctwait,w,5) /* MOBLK */
-	V(_pglobal,w,15)
-	INT(_gl_wclip)
 	V(_g_autoboot,b,CMDLEN)
-	INT(_sh_isgem)
-	INT(_gl_xclip)
-	PTR(_ad_fstree)
-	INT(_gl_rlen)
-	INT(_gl_yclip)
-	INT(_gl_hbox)
-	PTR(_sys_adacc)
-	GRECT(_gl_rmenu)
-	INT(_gl_tcolor)
- 	V(_W_TREE,b,24*NUM_WIN)  /* OBJECT[NUM_WIN] */
-	LONG(_gl_mnpid) /* BUG: should be int */
-	INT(_pr_mclick)
 	INT(_g_wsend)
 
-	INT(_gl_wschar)
-	PTR(_rs_global)
 	INT(_gl_play)
-	LONG(_elinkoff)
-	PTR(_gl_cowner)
-	INT(_gl_font)
 	PTR(_gl_pglue)
-	INT(_sh_doexec)
-	INT(_gl_width)
-	PTR(_ad_sysglo)
-	GRECT(_gl_rfull)
-	INT(_gl_patt)
 	INT(_fs_first)
-	V(_appl_msg,w,8)
-	INT(_ml_ocnt)
-	GRECT(_gl_rscreen)
-	PTR(_cart_ptr)
 	INT(_fs_count)
-	INT(_gl_newroot)
 	LONG(_fs_fnum)
-	INT(_gl_btrue)
-	V(_wind_msg,w,8)
-	PTR(_gl_kowner)
-	INT(_gl_hsptschar)
-	INT(_gl_hptschar)
-	INT(_gl_wbox)
-	PTR(_gl_mntree)
-	PTR(_gl_mowner)
-	PTR(_gl_wtree)
-	V(_wind_spb,b,10)    /* sizeof(SPB) */
-	GRECT(_gl_rzero)
 	INT(_gl_mouse)
-	INT(_gl_nrows)
 	PTR(_gl_store)
 	INT(_fs_topptr)
 	INT(_autoexec)
-	INT(_gl_wtop)
-	INT(_pr_xrat)
-	INT(_pr_button)
 	
-	INT(_gl_wsptschar)
-	INT(_gl_wptschar)
-	PTR(_drawstk)
-	INT(_pr_yrat)
 	INT(_gl_kstate)
-	TEDINFO(_edblk)
 	INT(_tbutton)
 	INT(_gl_mx)
 	INT(_gl_my)
-	INT(_fpcnt)
-	BYTE(_xforkq)
-	even
-	V(_gl_ws,w,57)   /* workout */
 
 	ds.b 2
 	
-	V(_intin,w,128)
-	PTR(_cda)
- 	V(_W_ACTIVE,b,24*MAXOBJ)  /* OBJECT[MAXOBJ] */
-	INT(_DOS_ERR)
-	V(_ptsin,w,20)
-	INT(_fph)
-	PTR(_dlr)
-	PTR(_drl)
-
-	V(_D,b,13092) /* sizeof(THEGLO) */
-
-	PTR(_eul)
 	INT(_f_level)
-	PTR(_thedesk)
-	INT(_fpt)
-	PTR(_nrl)
-	PTR(_rlr)
-	PTR(_rul)
-	V(_evx,b,28) /* sizeof(EVB) */
-	PTR(_g_buffer)
-	PTR(_g_wlist)
-	PTR(_zlr)
 	INT(_g_flag)
-	INT(_sh_gem)
-	INT(_mclick)
-	INT(_gl_fis)
-	PTR(_ctl_pd)
-	MFDB(_gl_src)
-	GRECT(_gl_rfs)
-	MFDB(_gl_dst)
-	PTR(_rs_hdr)
-	MFDB(_gl_tmp)
-	INT(_curpid)
-	BYTE(_indisp)
-	even
-	BYTE(_infork)
-	even
-	INT(_kstate)
-	V(_contrl,w,12)
 	PTR(_pxpath)
-	INT(_mtrans)
-	INT(_button)
-	V(_romdata,B,6*6)
-	INT(_havedesk)
-	INT(_havegem)
-	INT(_havefmt)
 
 /* end AES+DESKTOP */
 

@@ -188,29 +188,14 @@ typedef struct idtype
 	char i_name[NAMELEN];
 } IDTYPE;
 
-#ifndef NUM_IB
-#  define NUM_IB 5
-#endif
+#undef NUM_IB
+#define NUM_IB 6
 
 #define NUM_ADTREES 14
 
 
 typedef struct {
-	/*   846 */ ICONBLK gl_icons[NUM_SOBS];
-	/*  9686 */ int16_t g_index[NUM_SOBS];
-	/* 10206 */ USERBLK g_udefs[NUM_SOBS];
-	/* 12438 */ char g_dstpth[PATHLEN];
-	/* 12566 */ char *g_xbuf;               /* data xfer buffer and */
-	/* 12570 */ long g_xlen;                /* length for copying */
-	/* 12574 */ DTA g_dtastk[MAX_LEVEL + 1];
-	/* 13366 */ int16_t *p_msgbuf;		
 	/* 13650 */ char *str;				/* rsrc_gaddr result */
-#if TOSVERSION >= 0x104
-	/* 13732 */ int16_t s_bitblt;
-#endif
-#if TOSVERSION >= 0x162
-	int16_t g_ccachepref;				/* only a guess; not written to DESKTOP.INF */
-#endif
 	/* 13736 */ char *p_cartname;
 	/* 13740 */ int16_t g_icw;
 	/* 13742 */ int16_t g_ich;
@@ -218,14 +203,9 @@ typedef struct {
 	/* 13748 */ int16_t g_xyicon[18];
 	/* 13820 */ int16_t g_wicon;		/* desktop icon size */
 	/* 13822 */ int16_t g_hicon;
-	/* 18016 */ int16_t size_afile;		/* length of recently read desktop.inf */
-	/* 18018 */ char appbuf[SIZE_AFILE];
-	/* 22210 */ APP *appnode;			/* app buffer array */
 	/* 22214 */ APP app[NUM_ANODES];	/* app buffer array */
 	/* 23110 */ APP *appfree;			/* app buffer free list */
-	/* 23118 */ ICONBLK iconaddr[NUM_IB + 1];	/* desktop icon dialogue address */
-	/* 23322 */ ICONBLK g_iblist[NUM_IB + 1];
-	/* 23526 */ int16_t g_ismask[(NUM_IB + 1) * 2];
+	/* 23526 */ int16_t g_ismask[NUM_IB * 2];
 	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
 	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
 	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
@@ -235,6 +215,10 @@ typedef struct {
 	/* 24184 */ char o24184[16];		/* unused */
 	/* 30440 */ char autofile[PATHLEN];
 	/* 30572 */
+
+	/* same as g_pbuff */
+	/* 28304 */ APP *appnode;			/* app buffer array */
+
 	
 	/*     0 */ FNODE g_flist[NUM_FNODES];
 	/* 16000 */ FNODE *g_favail;
@@ -246,6 +230,9 @@ typedef struct {
 	/* 16838 */ char g_wdta[PATHLEN];
 	/* 16966 */ DTA *a_wdta;
 	/* 16970 */ short n_winalloc;
+	/* 16972 */ ICONBLK gl_icons[NUM_WOBS + 1];
+	/* 21324 */ int16_t g_index[NUM_WOBS + 1];
+	/* 21580 */ USERBLK g_udefs[NUM_WOBS + 1];
 	/* 22604 */ short g_num;                /* number of points */
 	/* 22606 */ int16_t *g_pxy;             /* outline pts to drag */
 	/* 22610 */ short g_iview;              /* current view type */
@@ -258,19 +245,28 @@ typedef struct {
 	/* 22624 */ short g_incol;              /* # of cols in full window */
 	/* 22626 */ int16_t g_isort;			/* current sort type */
 	/* 22628 */ char g_srcpth[PATHLEN];
-	/* 22890 */ DTA g_fcbstk[MAX_LEVEL];
+	/* 22756 */ char g_dstpth[PATHLEN];
+	/* 22884 */ char *g_xbuf;               /* data xfer buffer and */
+	/* 22888 */ unsigned short g_xlen;      /* length for copying */
+	/* 22890 */ DTA g_dtastk[MAX_LEVEL + 1];
 	/* 23286 */ int32_t g_nfiles;
 	/* 23290 */ int32_t g_ndirs;
 	/* 23294 */ int32_t g_size;
 	/* 23298 */ char g_tmppth[PATHLEN];
 	/* 23426 */ int16_t g_xyobpts[MAX_OBS * 2];
 	/* 23666 */ int16_t g_rmsg[8];		    /* general AES message area */
+	/* 23682 */ int16_t *p_msgbuf;
 	/* 23686 */ GRECT g_desk;
 	/* 23694 */ GRECT g_full;				/* full window size value */
 	/* 23702 */ char g_cmd[PATHLEN];
 	/* 23830 */ char *g_pcmd;
 	/* 23834 */ char g_tail[128];
 	/* 23962 */ char *g_ptail;
+	/* 23966 */ char g_fcb1[36];        /* unused on Atari */
+	/* 24002 */ char *a_fcb1;           /* unused on Atari */
+	/* 24006 */ char g_fcb2[36];        /* unused on Atari */
+	/* 24042 */ char *a_fcb2;           /* unused on Atari */
+	/* 24046 */ char *a_alert;
 	/* 24050 */ OBJECT *g_atree[NUM_ADTREES];	/* resource trees */
 	/* 24106 */ int16_t g_croot;        /* current pseudo root */
 	/* 24108 */ int16_t g_cwin;         /* current window # */
@@ -283,9 +279,14 @@ typedef struct {
 	/* 24128 */ int16_t g_nmtext;
 	/* 24166 */ int16_t g_xytext[18];
 	/* 24206 */ char afile[SIZE_AFILE];
+	/* 26254 */ int16_t size_afile;		/* length of recently read desktop.inf */
+	/* 26256 */ char appbuf[SIZE_AFILE];
 	/* 28304 */ char *g_pbuff;
 	/* 29208 */ APP *applist;			/* app buffer list */
+	/* 29212 */ ICONBLK iconaddr[NUM_IB];	/* desktop icons */
+	/* 29416 */ ICONBLK g_iblist[NUM_IB];
 	/* 29644 */ CSAVE g_cnxsave;
+	/* 30200 */ int16_t *icondata;
 	/* 30208 */ OBJECT *g_pscreen;
 	/* 30230 */ BOOLEAN ml_havebox;
 	/* 30271 */ char ml_ftmp[LEN_ZFNAME];
