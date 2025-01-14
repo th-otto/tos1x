@@ -450,7 +450,9 @@ VOID gem_main(NOTHING)
 	LWSET(OB_HEIGHT(1), (gl_hchar + 2));
 	LWSET(OB_HEIGHT(2), (gl_hchar + 3));
 
+#if 0
 	rs_gaddr(ad_sysglo, R_STRING, FSTRING, (VOIDPTR *)&ad_fsel);
+#endif
 
 	indisp = FALSE;						/* init in dispatch semaphore to not indisp        */
 

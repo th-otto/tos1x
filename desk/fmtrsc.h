@@ -2,5 +2,5 @@
 /*
  * We can use the same header file for all languages.
  */
-#include "rsc/100/gemus.h"
+#include "rsc/100/fmtus.h"
 #endif

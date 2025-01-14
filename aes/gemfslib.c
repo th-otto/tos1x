@@ -261,7 +261,9 @@ PP(int16_t *pbutton;)
 	defdrv = (int16_t) dos_gdrv();			/* get the default drive */
 	savedrv = defdrv;
 
+#if 0 /* ZZZ */
 	curdrv = defdrv + DRIVEA;
+#endif
 	/* save for default dr  */
 	pxpath = dos_alloc((int32_t) ((int16_t) LPATH * (int16_t) (DEVICES + 1)));
 
@@ -284,7 +286,9 @@ PP(int16_t *pbutton;)
 bye:
 		dos_free(pxpath);
 bye2:
+#if 0 /* ZZZ */
 		fm_show(NOMEMORY, NULL, 1);
+#endif
 		return FALSE;
 	} else
 	{
@@ -312,11 +316,13 @@ bye2:
 	count = isdrive();
 	j = 1;
 	/* start from A drive set the button    */
+#if 0 /* ZZZ */
 	for (ret = 0, i = DRIVEA; i <= DRIVEP; i++, ret++)
 	{
 		LWSET(OB_STATE(i), (count & j) ? NORMAL : DISABLED);
 		j = j << 1;
 	}
+#endif
 
 	label = F1NAME;						/* clean up the files   */
 
@@ -469,19 +475,24 @@ bye2:
 			firstry = FALSE;
 
 			/* reset the last one   */
+#if 0 /* ZZZ */
 			if (curdrv <= DRIVEP)
 				ob_change(tree, curdrv, NORMAL, TRUE);
+#endif
 
 			if (*(ad_fpath + 1) == ':')	/* if there a drive */
 				defdrv = (int16_t) (*ad_fpath - 'A');
 
+#if 0 /* ZZZ */
 			curdrv = defdrv + DRIVEA;
 
 			if (curdrv <= DRIVEP)
 				ob_change(tree, curdrv, SELECTED, TRUE);
+#endif
 
 			break;
 
+#if 0 /* ZZZ */
 		case DRIVEA:
 		case DRIVEB:
 		case DRIVEC:
@@ -506,6 +517,7 @@ bye2:
 				goto fs1;
 			else
 				goto rdir5;
+#endif
 
 		case F1NAME:
 		case F2NAME:

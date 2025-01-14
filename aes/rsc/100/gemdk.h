@@ -1,5 +1,5 @@
 /*
- * resource set indices for gemde
+ * resource set indices for gemdk
  *
  * created by ORCS 2.18
  */
@@ -24,13 +24,13 @@
 #undef RSC_NAME
 #endif
 #ifndef __ALCYON__
-#define RSC_NAME "gemde"
+#define RSC_NAME "gemdk"
 #endif
 #ifdef RSC_ID
 #undef RSC_ID
 #endif
-#ifdef gemde
-#define RSC_ID gemde
+#ifdef gemdk
+#define RSC_ID gemdk
 #else
 #define RSC_ID 0
 #endif
@@ -176,7 +176,7 @@
 #    define _WORD short
 #  endif
 #endif
-extern _WORD gemde_rsc_load(_WORD wchar, _WORD hchar);
-extern _WORD gemde_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
-extern _WORD gemde_rsc_free(void);
+extern _WORD gemdk_rsc_load(_WORD wchar, _WORD hchar);
+extern _WORD gemdk_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
+extern _WORD gemdk_rsc_free(void);
 #endif

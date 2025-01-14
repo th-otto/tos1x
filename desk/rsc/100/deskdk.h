@@ -1,11 +1,11 @@
 /*
- * resource set indices for deskde
+ * resource set indices for deskdk
  *
  * created by ORCS 2.18
  */
 
 /*
- * Number of Strings:        216
+ * Number of Strings:        228
  * Number of Bitblks:        1
  * Number of Iconblks:       0
  * Number of Color Iconblks: 0
@@ -13,24 +13,24 @@
  * Number of Tedinfos:       29
  * Number of Free Strings:   29
  * Number of Free Images:    0
- * Number of Objects:        169
+ * Number of Objects:        170
  * Number of Trees:          14
  * Number of Userblks:       0
  * Number of Images:         1
- * Total file size:          8578
+ * Total file size:          8562
  */
 
 #ifdef RSC_NAME
 #undef RSC_NAME
 #endif
 #ifndef __ALCYON__
-#define RSC_NAME "deskde"
+#define RSC_NAME "deskdk"
 #endif
 #ifdef RSC_ID
 #undef RSC_ID
 #endif
-#ifdef deskde
-#define RSC_ID deskde
+#ifdef deskdk
+#define RSC_ID deskdk
 #else
 #define RSC_ID 0
 #endif
@@ -39,7 +39,7 @@
 # define RSC_STATIC_FILE 0
 #endif
 #if !RSC_STATIC_FILE
-#define NUM_STRINGS 216
+#define NUM_STRINGS 228
 #define NUM_FRSTR 29
 #define NUM_UD 0
 #define NUM_IMAGES 1
@@ -48,13 +48,13 @@
 #define NUM_IB 0
 #define NUM_CIB 0
 #define NUM_TI 29
-#define NUM_OBS 169
+#define NUM_OBS 170
 #define NUM_TREE 14
 #endif
 
 
 
-#define ADMENU             0 /* form/dialog */
+#define ADMENU             0 /* menu */
 #define DESKMENU           3 /* TITLE in tree ADMENU */
 #define FILEMENU           4 /* TITLE in tree ADMENU */
 #define VIEWMENU           5 /* TITLE in tree ADMENU */
@@ -82,7 +82,7 @@
 #define ADFILEIN           1 /* form/dialog */
 #define INFTITLE           1 /* STRING in tree ADFILEIN */
 #define FINAME             2 /* FBOXTEXT in tree ADFILEIN */
-#define FIBYTES            3 /* FBOXTEXT in tree ADFILEIN */
+#define FISIZE             3 /* FBOXTEXT in tree ADFILEIN */
 #define FIDATE             4 /* FBOXTEXT in tree ADFILEIN */
 #define FITIME             5 /* FBOXTEXT in tree ADFILEIN */
 #define FIRWRITE           8 /* BUTTON in tree ADFILEIN */
@@ -99,14 +99,14 @@
 #define DIAVAIL            7 /* FBOXTEXT in tree ADDISKIN */
 #define DIOK               8 /* BUTTON in tree ADDISKIN */
 
-#define ADFINFO            3 /* form/dialog */
-#define FONAME             2 /* FBOXTEXT in tree ADFINFO */
-#define FODATE             3 /* FBOXTEXT in tree ADFINFO */
-#define FOTIME             4 /* FBOXTEXT in tree ADFINFO */
-#define FONFOLDS           5 /* FBOXTEXT in tree ADFINFO */
-#define FONFILES           6 /* FBOXTEXT in tree ADFINFO */
-#define FOUSED             7 /* FBOXTEXT in tree ADFINFO */
-#define FOOK               8 /* BUTTON in tree ADFINFO */
+#define ADFOLDIN           3 /* form/dialog */
+#define FOLNAME            2 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLDATE            3 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLTIME            4 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLNFOLD           5 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLNFILE           6 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLSIZE            7 /* FBOXTEXT in tree ADFOLDIN */
+#define FOLOK              8 /* BUTTON in tree ADFOLDIN */
 
 #define ADDINFO            4 /* form/dialog */
 #define DEOK              11 /* BUTTON in tree ADDINFO */
@@ -128,6 +128,13 @@
 #define DRCANCEL          10 /* BUTTON in tree ADINSDIS */
 
 #define ADINSAPP           8 /* form/dialog */
+#define APNAME             2 /* FBOXTEXT in tree ADINSAPP */
+#define APDFTYPE           3 /* FBOXTEXT in tree ADINSAPP */
+#define APGEM              6 /* BUTTON in tree ADINSAPP */
+#define APDOS              7 /* BUTTON in tree ADINSAPP */
+#define APPARMS            8 /* BUTTON in tree ADINSAPP */
+#define APOK               9 /* BUTTON in tree ADINSAPP */
+#define APCANCEL          10 /* BUTTON in tree ADINSAPP */
 
 #define CPBOX              9 /* form/dialog */
 #define NUMDIR             2 /* FBOXTEXT in tree CPBOX */
@@ -233,7 +240,7 @@
 #    define _WORD short
 #  endif
 #endif
-extern _WORD deskde_rsc_load(_WORD wchar, _WORD hchar);
-extern _WORD deskde_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
-extern _WORD deskde_rsc_free(void);
+extern _WORD deskdk_rsc_load(_WORD wchar, _WORD hchar);
+extern _WORD deskdk_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
+extern _WORD deskdk_rsc_free(void);
 #endif

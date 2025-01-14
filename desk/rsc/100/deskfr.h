@@ -1,5 +1,5 @@
 /*
- * resource set indices for deskde
+ * resource set indices for deskfr
  *
  * created by ORCS 2.18
  */
@@ -17,20 +17,20 @@
  * Number of Trees:          14
  * Number of Userblks:       0
  * Number of Images:         1
- * Total file size:          8562
+ * Total file size:          9314
  */
 
 #ifdef RSC_NAME
 #undef RSC_NAME
 #endif
 #ifndef __ALCYON__
-#define RSC_NAME "deskde"
+#define RSC_NAME "deskfr"
 #endif
 #ifdef RSC_ID
 #undef RSC_ID
 #endif
-#ifdef deskde
-#define RSC_ID deskde
+#ifdef deskfr
+#define RSC_ID deskfr
 #else
 #define RSC_ID 0
 #endif
@@ -240,7 +240,7 @@
 #    define _WORD short
 #  endif
 #endif
-extern _WORD deskde_rsc_load(_WORD wchar, _WORD hchar);
-extern _WORD deskde_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
-extern _WORD deskde_rsc_free(void);
+extern _WORD deskfr_rsc_load(_WORD wchar, _WORD hchar);
+extern _WORD deskfr_rsc_gaddr(_WORD type, _WORD idx, void *gaddr);
+extern _WORD deskfr_rsc_free(void);
 #endif

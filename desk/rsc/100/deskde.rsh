@@ -313,7 +313,7 @@ extern void *hfix_objs(RSHDR *_hdr, OBJECT *_ob, _WORD _num_objs);
 #undef NUM_OBS
 #undef NUM_TREE
 #undef NUM_UD
-#define NUM_STRINGS 216
+#define NUM_STRINGS 228
 #define NUM_BB		1
 #define NUM_IB		0
 #define NUM_CIB     0
@@ -321,7 +321,7 @@ extern void *hfix_objs(RSHDR *_hdr, OBJECT *_ob, _WORD _num_objs);
 #define NUM_TI		29
 #define NUM_FRSTR	29
 #define NUM_FRIMG	0
-#define NUM_OBS     169
+#define NUM_OBS     170
 #define NUM_TREE	14
 #define NUM_UD		0
 #endif
@@ -347,202 +347,214 @@ static char deskde_string_16[] = "  schlie\236e";
 static char deskde_string_17[] = "  schlie\236e Fenster";
 static char deskde_string_18[] = "--------------------";
 static char deskde_string_19[] = "  formatiere..";
-static char deskde_string_20[] = "  als Bilder";
-static char deskde_string_21[] = "  als Text";
-static char deskde_string_22[] = "--------------";
-static char deskde_string_23[] = "  ordne Namen";
-static char deskde_string_24[] = "  ordne Datum";
-static char deskde_string_25[] = "  ordne Gr\224\236e";
-static char deskde_string_26[] = "  ordne Art";
-static char deskde_string_27[] = "  Floppy anmelden..";
-static char deskde_string_28[] = "  Anwendung anmelden";
-static char deskde_string_29[] = "---------------------";
-static char deskde_string_30[] = "  Voreinstellung..";
-static char deskde_string_31[] = "  Arbeit sichern";
-static char deskde_string_32[] = "  Hardcopy";
-static char deskde_string_33[] = "DATEI INFO";
-static char deskde_string_34[] = "@";
-static char deskde_string_35[] = "Name:  ________.___";
-static char deskde_string_36[] = "F";
-static char deskde_string_37[] = "@2345678\0By";
-static char deskde_string_38[] = "Bytes:  ________";
-static char deskde_string_39[] = "9";
-static char deskde_string_40[] = "@5432";
-static char deskde_string_41[] = "vom:  __/__/__";
-static char deskde_string_42[] = "9";
-static char deskde_string_43[] = "@1234";
-static char deskde_string_44[] = "__:__ __";
-static char deskde_string_45[] = "9999aa";
-static char deskde_string_46[] = "Merkmal:";
-static char deskde_string_47[] = "lesen/schreiben";
-static char deskde_string_48[] = "nur lesen";
-static char deskde_string_49[] = "OK";
-static char deskde_string_50[] = "ABBRUCH";
-static char deskde_string_51[] = "DISK-INFO";
-static char deskde_string_52[] = "@";
-static char deskde_string_53[] = "Floppykennung:  _:";
-static char deskde_string_54[] = "A";
-static char deskde_string_55[] = "@2345678901";
-static char deskde_string_56[] = "Diskname: ________.___";
-static char deskde_string_57[] = "F";
-static char deskde_string_58[] = "@1234";
-static char deskde_string_59[] = "Ordner:     _____";
-static char deskde_string_60[] = "9";
-static char deskde_string_61[] = "@2345";
-static char deskde_string_62[] = "Dateien:     _____";
-static char deskde_string_63[] = "9";
-static char deskde_string_64[] = "@7654321";
-static char deskde_string_65[] = "Bytes belegt:  ________";
-static char deskde_string_66[] = "9";
-static char deskde_string_67[] = "@1010101";
-static char deskde_string_68[] = "Bytes frei:  ________";
-static char deskde_string_69[] = "9";
-static char deskde_string_70[] = "OK";
-static char deskde_string_71[] = "ORDNER-INFO";
-static char deskde_string_72[] = "@2345678999";
-static char deskde_string_73[] = "Ordnername: ________.___";
-static char deskde_string_74[] = "F";
-static char deskde_string_75[] = "@ddddd";
-static char deskde_string_76[] = "vom: __-__-__  ";
-static char deskde_string_77[] = "9";
-static char deskde_string_78[] = "@hhhhh";
-static char deskde_string_79[] = "__:__ __";
-static char deskde_string_80[] = "9999aa";
-static char deskde_string_81[] = "@1234";
-static char deskde_string_82[] = "Ordner:     _____";
-static char deskde_string_83[] = "9";
-static char deskde_string_84[] = "@2345";
-static char deskde_string_85[] = "Dateien:     _____";
-static char deskde_string_86[] = "9";
-static char deskde_string_87[] = "@7654321";
-static char deskde_string_88[] = "Bytes belegt:  ________";
-static char deskde_string_89[] = "9";
-static char deskde_string_90[] = "OK";
-static char deskde_string_91[] = "GEM, Graphics Environment Manager";
-static char deskde_string_92[] = "---------------";
-static char deskde_string_93[] = "        TOS";
-static char deskde_string_94[] = "";
-static char deskde_string_95[] = "";
-static char deskde_string_96[] = "All Rights Reserved.";
-static char deskde_string_97[] = "Copyright (c) 1985";
-static char deskde_string_98[] = "Digital Research, Inc.";
-static char deskde_string_99[] = "ATARI CORP.";
-static char deskde_string_100[] = "OK";
-static char deskde_string_101[] = "PAPIERKORB INFORMATION";
-static char deskde_string_102[] = "Werfen Sie nur die Objekte";
-static char deskde_string_103[] = "in den Papierkorb, die Sie";
-static char deskde_string_104[] = "f\201r IMMER l\224schen wollen.";
-static char deskde_string_105[] = "";
-static char deskde_string_106[] = "";
-static char deskde_string_107[] = "OK";
-static char deskde_string_108[] = "ANWENDUNG \231FFNEN";
-static char deskde_string_109[] = "@2345678901";
-static char deskde_string_110[] = "Name:  ________.___";
-static char deskde_string_111[] = "F";
-static char deskde_string_112[] = "@1234567890123456789012345678901234567";
-static char deskde_string_113[] = "______________________________________";
-static char deskde_string_114[] = "X";
-static char deskde_string_115[] = "OK";
-static char deskde_string_116[] = "ABBRUCH";
-static char deskde_string_117[] = "Parameter:";
-static char deskde_string_118[] = "FLOPPY ANMELDEN";
-static char deskde_string_119[] = "@";
-static char deskde_string_120[] = "Kennbuchstabe: _";
-static char deskde_string_121[] = "a";
-static char deskde_string_122[] = "@23456789012";
-static char deskde_string_123[] = "Bildtitel: ____________";
-static char deskde_string_124[] = "X";
-static char deskde_string_125[] = "ANMELDEN";
-static char deskde_string_126[] = "L\224SCHEN";
-static char deskde_string_127[] = "ABBRUCH";
-static char deskde_string_128[] = "ANWENDUNG ANMELDEN";
-static char deskde_string_129[] = "@2345679012";
-static char deskde_string_130[] = "Name:  ________.___";
-static char deskde_string_131[] = "F";
-static char deskde_string_132[] = "@12";
-static char deskde_string_133[] = "Dateityp:  ___";
-static char deskde_string_134[] = "F";
-static char deskde_string_135[] = "Anwendungsart:";
-static char deskde_string_136[] = "GEM";
-static char deskde_string_137[] = "TOS";
-static char deskde_string_138[] = "TOS erlaubt Parameter";
-static char deskde_string_139[] = "OK";
-static char deskde_string_140[] = "ABBRUCH";
-static char deskde_string_141[] = "ORDNER/DATEIEN KOPIEREN";
-static char deskde_string_142[] = "@234";
-static char deskde_string_143[] = "Anzahl der Ordner:  ____";
-static char deskde_string_144[] = "9";
-static char deskde_string_145[] = "@432";
-static char deskde_string_146[] = "Anzahl der Dateien:  ____";
-static char deskde_string_147[] = "9";
-static char deskde_string_148[] = "OK";
-static char deskde_string_149[] = "ABBRUCH";
-static char deskde_string_150[] = "ORDNER/DATEIEN L\231SCHEN";
-static char deskde_string_151[] = "@980";
-static char deskde_string_152[] = "Anzahl der Ordner:  ____";
+static char deskde_string_20[] = "";
+static char deskde_string_21[] = "";
+static char deskde_string_22[] = "  als Bilder";
+static char deskde_string_23[] = "  als Text";
+static char deskde_string_24[] = "--------------";
+static char deskde_string_25[] = "  ordne Namen";
+static char deskde_string_26[] = "  ordne Datum";
+static char deskde_string_27[] = "  ordne Gr\224\236e";
+static char deskde_string_28[] = "  ordne Art";
+static char deskde_string_29[] = "  Floppy anmelden..";
+static char deskde_string_30[] = "  Anwendung anmelden";
+static char deskde_string_31[] = "---------------------";
+static char deskde_string_32[] = "  Voreinstellung..";
+static char deskde_string_33[] = "  Arbeit sichern";
+static char deskde_string_34[] = "  Hardcopy";
+static char deskde_string_35[] = "DATEI INFO";
+static char deskde_string_36[] = "@";
+static char deskde_string_37[] = "Name:  ________.___";
+static char deskde_string_38[] = "F";
+static char deskde_string_39[] = "@2345678\0By";
+static char deskde_string_40[] = "Bytes:  ________";
+static char deskde_string_41[] = "9";
+static char deskde_string_42[] = "@5432";
+static char deskde_string_43[] = "vom:  __/__/__";
+static char deskde_string_44[] = "9";
+static char deskde_string_45[] = "@1234";
+static char deskde_string_46[] = "__:__ __";
+static char deskde_string_47[] = "9999aa";
+static char deskde_string_48[] = "Merkmal:";
+static char deskde_string_49[] = "lesen/schreiben";
+static char deskde_string_50[] = "nur lesen";
+static char deskde_string_51[] = "OK";
+static char deskde_string_52[] = "ABBRUCH";
+static char deskde_string_53[] = "DISK-INFO";
+static char deskde_string_54[] = "@";
+static char deskde_string_55[] = "Floppykennung:  _:";
+static char deskde_string_56[] = "A";
+static char deskde_string_57[] = "@2345678901";
+static char deskde_string_58[] = "Diskname: ________.___";
+static char deskde_string_59[] = "F";
+static char deskde_string_60[] = "@1234";
+static char deskde_string_61[] = "Ordner:     _____";
+static char deskde_string_62[] = "9";
+static char deskde_string_63[] = "@2345";
+static char deskde_string_64[] = "Dateien:     _____";
+static char deskde_string_65[] = "9";
+static char deskde_string_66[] = "@7654321";
+static char deskde_string_67[] = "Bytes belegt:  ________";
+static char deskde_string_68[] = "9";
+static char deskde_string_69[] = "@1010101";
+static char deskde_string_70[] = "Bytes frei:  ________";
+static char deskde_string_71[] = "9";
+static char deskde_string_72[] = "OK";
+static char deskde_string_73[] = "ORDNER-INFO";
+static char deskde_string_74[] = "@2345678999";
+static char deskde_string_75[] = "Ordnername: ________.___";
+static char deskde_string_76[] = "F";
+static char deskde_string_77[] = "@ddddd";
+static char deskde_string_78[] = "vom: __-__-__  ";
+static char deskde_string_79[] = "9";
+static char deskde_string_80[] = "@hhhhh";
+static char deskde_string_81[] = "__:__ __";
+static char deskde_string_82[] = "9999aa";
+static char deskde_string_83[] = "@1234";
+static char deskde_string_84[] = "Ordner:     _____";
+static char deskde_string_85[] = "9";
+static char deskde_string_86[] = "@2345";
+static char deskde_string_87[] = "Dateien:     _____";
+static char deskde_string_88[] = "9";
+static char deskde_string_89[] = "@7654321";
+static char deskde_string_90[] = "Bytes belegt:  ________";
+static char deskde_string_91[] = "9";
+static char deskde_string_92[] = "OK";
+static char deskde_string_93[] = "GEM, Graphics Environment Manager";
+static char deskde_string_94[] = "---------------";
+static char deskde_string_95[] = "        TOS";
+static char deskde_string_96[] = "";
+static char deskde_string_97[] = "";
+static char deskde_string_98[] = "All Rights Reserved.";
+static char deskde_string_99[] = "Copyright (c) 1985";
+static char deskde_string_100[] = "Digital Research, Inc.";
+static char deskde_string_101[] = "ATARI CORP.";
+static char deskde_string_102[] = "OK";
+static char deskde_string_103[] = "PAPIERKORB INFORMATION";
+static char deskde_string_104[] = "Werfen Sie nur die Objekte";
+static char deskde_string_105[] = "in den Papierkorb, die Sie";
+static char deskde_string_106[] = "f\201r IMMER l\224schen wollen.";
+static char deskde_string_107[] = "";
+static char deskde_string_108[] = "";
+static char deskde_string_109[] = "OK";
+static char deskde_string_110[] = "ANWENDUNG \231FFNEN";
+static char deskde_string_111[] = "@2345678901";
+static char deskde_string_112[] = "Name:  ________.___";
+static char deskde_string_113[] = "F";
+static char deskde_string_114[] = "@1234567890123456789012345678901234567";
+static char deskde_string_115[] = "______________________________________";
+static char deskde_string_116[] = "X";
+static char deskde_string_117[] = "OK";
+static char deskde_string_118[] = "ABBRUCH";
+static char deskde_string_119[] = "Parameter:";
+static char deskde_string_120[] = "FLOPPY ANMELDEN";
+static char deskde_string_121[] = "@";
+static char deskde_string_122[] = "Kennbuchstabe: _";
+static char deskde_string_123[] = "a";
+static char deskde_string_124[] = "@23456789012";
+static char deskde_string_125[] = "Bildtitel: ____________";
+static char deskde_string_126[] = "X";
+static char deskde_string_127[] = "";
+static char deskde_string_128[] = "";
+static char deskde_string_129[] = "";
+static char deskde_string_130[] = "ANMELDEN";
+static char deskde_string_131[] = "L\224SCHEN";
+static char deskde_string_132[] = "ABBRUCH";
+static char deskde_string_133[] = "ANWENDUNG ANMELDEN";
+static char deskde_string_134[] = "@2345679012";
+static char deskde_string_135[] = "Name:  ________.___";
+static char deskde_string_136[] = "F";
+static char deskde_string_137[] = "@12\0Dateity";
+static char deskde_string_138[] = "Dateityp:  ___";
+static char deskde_string_139[] = "F";
+static char deskde_string_140[] = "Anwendungsart:";
+static char deskde_string_141[] = "GEM";
+static char deskde_string_142[] = "TOS";
+static char deskde_string_143[] = "TOS erlaubt Parameter";
+static char deskde_string_144[] = "OK";
+static char deskde_string_145[] = "ABBRUCH";
+static char deskde_string_146[] = "";
+static char deskde_string_147[] = "ORDNER/DATEIEN KOPIEREN";
+static char deskde_string_148[] = "@234";
+static char deskde_string_149[] = "Anzahl der Ordner:  ____";
+static char deskde_string_150[] = "9";
+static char deskde_string_151[] = "@432";
+static char deskde_string_152[] = "Anzahl der Dateien:  ____";
 static char deskde_string_153[] = "9";
-static char deskde_string_154[] = "@678";
-static char deskde_string_155[] = "Anzahl der Dateien:  ____";
-static char deskde_string_156[] = "9";
-static char deskde_string_157[] = "OK";
-static char deskde_string_158[] = "ABBRUCH";
-static char deskde_string_159[] = "NAME EXISTIERT SCHON!";
-static char deskde_string_160[] = "";
-static char deskde_string_161[] = "Vorhandener Name:  ________.___";
-static char deskde_string_162[] = "F";
-static char deskde_string_163[] = "";
-static char deskde_string_164[] = "Name der Kopie:  ________.___";
-static char deskde_string_165[] = "F";
-static char deskde_string_166[] = "OK";
-static char deskde_string_167[] = "ABBRUCH";
-static char deskde_string_168[] = "NEUER ORDNER";
+static char deskde_string_154[] = "OK";
+static char deskde_string_155[] = "ABBRUCH";
+static char deskde_string_156[] = "ORDNER/DATEIEN L\231SCHEN";
+static char deskde_string_157[] = "@980";
+static char deskde_string_158[] = "Anzahl der Ordner:  ____";
+static char deskde_string_159[] = "9";
+static char deskde_string_160[] = "@678";
+static char deskde_string_161[] = "Anzahl der Dateien:  ____";
+static char deskde_string_162[] = "9";
+static char deskde_string_163[] = "OK";
+static char deskde_string_164[] = "ABBRUCH";
+static char deskde_string_165[] = "NAME EXISTIERT SCHON!";
+static char deskde_string_166[] = "";
+static char deskde_string_167[] = "Vorhandener Name:  ________.___";
+static char deskde_string_168[] = "F";
 static char deskde_string_169[] = "";
-static char deskde_string_170[] = "Name:  ________.___";
+static char deskde_string_170[] = "Name der Kopie:  ________.___";
 static char deskde_string_171[] = "F";
 static char deskde_string_172[] = "OK";
 static char deskde_string_173[] = "ABBRUCH";
-static char deskde_string_174[] = "VOREINSTELLUNG";
-static char deskde_string_175[] = "L\224schbest\204tigung:";
-static char deskde_string_176[] = "JA";
-static char deskde_string_177[] = "NEIN";
-static char deskde_string_178[] = "Kopierbest\204tigung:";
-static char deskde_string_179[] = "JA";
-static char deskde_string_180[] = "NEIN";
-static char deskde_string_181[] = "OK";
-static char deskde_string_182[] = "ABBRUCH";
-static char deskde_string_183[] = "Bildschirmaufl\224sung:";
-static char deskde_string_184[] = "GERING";
-static char deskde_string_185[] = "MITTEL";
-static char deskde_string_186[] = "HOCH";
-static char deskde_string_187[] = " %L Bytes in %W Dateien.";
-static char deskde_string_188[] = " ";
-static char deskde_string_189[] = "DRUCKE";
-static char deskde_string_190[] = "FORMATIEREN";
-static char deskde_string_191[] = "DISKKOPIE";
-static char deskde_string_192[] = " ";
-static char deskde_string_193[] = "[1][|Diese Datei kann nur|gedruckt oder gezeigt werden.|][ANZEIGEN|DRUCKEN|ABBRUCH]";
-static char deskde_string_194[] = "[1][|Keine weiteren Fenster|vorhanden! Abhilfe durch|Schlie\236en eines Fensters.][  OK  ]";
-static char deskde_string_195[] = "[1][|Der Papierkorb l\204\236t sich|nicht \224ffnen.][  OK  ]";
-static char deskde_string_196[] = "[3][|Formatieren l\224scht alle|Daten auf Disk %S:.][  OK  | ABBRUCH ]";
-static char deskde_string_197[] = "[1][|Kopieren ist nur m\224glich auf|Disk, Ordner oder Fenster.][  OK  ]";
-static char deskde_string_198[] = "[1][|Dieses Bild darf nicht auf|ein anderes gelegt werden.][  OK  ]";
-static char deskde_string_199[] = "[1][|KEINE DISK IN DEN PAPIERKORB!|L\224schen mit \'formatiere..\' im|DATEI Men\201.][  OK  ]";
-static char deskde_string_200[] = "[3][|Kopieren von Disk %S: auf|%S: l\224scht alle Daten auf|Disk %S:. Einverst\204ndnis|mit OK.][  OK  | ABBRUCH ]";
-static char deskde_string_201[] = "[1][|Objekte aus Fenstern nicht auf|dem DESKTOP ablegen!][  OK  ]";
-static char deskde_string_202[] = "[1][|Desktopbilder d\201rfen|nicht in Fenster.][  OK  ]";
-static char deskde_string_203[] = "[2][|DIESER NAME IST SCHON |VERGEBEN! Neuen Namen oder |ABBRUCH w\204hlen.][ ABBRUCH |WIEDERHOLUNG]";
-static char deskde_string_204[] = "[1][|Diese Diskette hat zuwenig|Speicherplatz.][  OK  ]";
-static char deskde_string_205[] = "[2][|Datei gleichem Namens|schon vorhanden!][ OK ]";
-static char deskde_string_206[] = "[3][|So tief im Indexpfad k\224nnen|keine Ordner angelegt oder|angesprochen werden.][ ABBRUCH ]";
-static char deskde_string_207[] = "[1][|Das ROMMODUL erlaubt kein|Verschieben von Objekten.][  OK  ]";
-static char deskde_string_208[] = " ";
-static char deskde_string_209[] = "[1][|Ung\201ltige Kopieranweisung!][  OK  ]";
-static char deskde_string_210[] = " DESK ";
-static char deskde_string_211[] = " DESK ";
-static char deskde_string_212[] = " DESK ";
-static char deskde_string_213[] = " DESK ";
-static char deskde_string_214[] = " DESK ";
-static char deskde_string_215[] = " DESK ";
+static char deskde_string_174[] = "NEUER ORDNER";
+static char deskde_string_175[] = "";
+static char deskde_string_176[] = "Name:  ________.___";
+static char deskde_string_177[] = "F";
+static char deskde_string_178[] = "OK";
+static char deskde_string_179[] = "ABBRUCH";
+static char deskde_string_180[] = "VOREINSTELLUNG";
+static char deskde_string_181[] = "L\224schbest\204tigung:";
+static char deskde_string_182[] = "JA";
+static char deskde_string_183[] = "NEIN";
+static char deskde_string_184[] = "Kopierbest\204tigung:";
+static char deskde_string_185[] = "JA";
+static char deskde_string_186[] = "NEIN";
+static char deskde_string_187[] = "";
+static char deskde_string_188[] = "";
+static char deskde_string_189[] = "";
+static char deskde_string_190[] = "";
+static char deskde_string_191[] = "";
+static char deskde_string_192[] = "";
+static char deskde_string_193[] = "OK";
+static char deskde_string_194[] = "ABBRUCH";
+static char deskde_string_195[] = "Bildschirmaufl\224sung:";
+static char deskde_string_196[] = "GERING";
+static char deskde_string_197[] = "MITTEL";
+static char deskde_string_198[] = "HOCH";
+static char deskde_string_199[] = " %L Bytes in %W Dateien.";
+static char deskde_string_200[] = " ";
+static char deskde_string_201[] = "DRUCKE";
+static char deskde_string_202[] = "FORMATIEREN";
+static char deskde_string_203[] = "DISKKOPIE";
+static char deskde_string_204[] = " ";
+static char deskde_string_205[] = "[1][|Diese Datei kann nur|gedruckt oder gezeigt werden.|][ANZEIGEN|DRUCKEN|ABBRUCH]";
+static char deskde_string_206[] = "[1][|Keine weiteren Fenster|vorhanden! Abhilfe durch|Schlie\236en eines Fensters.][  OK  ]";
+static char deskde_string_207[] = "[1][|Der Papierkorb l\204\236t sich|nicht \224ffnen.][  OK  ]";
+static char deskde_string_208[] = "[3][|Formatieren l\224scht alle|Daten auf Disk %S:.][  OK  | ABBRUCH ]";
+static char deskde_string_209[] = "[1][|Kopieren ist nur m\224glich auf|Disk, Ordner oder Fenster.][  OK  ]";
+static char deskde_string_210[] = "[1][|Dieses Bild darf nicht auf|ein anderes gelegt werden.][  OK  ]";
+static char deskde_string_211[] = "[1][|KEINE DISK IN DEN PAPIERKORB!|L\224schen mit \'formatiere..\' im|DATEI Men\201.][  OK  ]";
+static char deskde_string_212[] = "[3][|Kopieren von Disk %S: auf|%S: l\224scht alle Daten auf|Disk %S:. Einverst\204ndnis|mit OK.][  OK  | ABBRUCH ]";
+static char deskde_string_213[] = "[1][|Objekte aus Fenstern nicht auf|dem DESKTOP ablegen!][  OK  ]";
+static char deskde_string_214[] = "[1][|Desktopbilder d\201rfen|nicht in Fenster.][  OK  ]";
+static char deskde_string_215[] = "[2][|DIESER NAME IST SCHON |VERGEBEN! Neuen Namen oder |ABBRUCH w\204hlen.][ ABBRUCH |WIEDERHOLUNG]";
+static char deskde_string_216[] = "[1][|Diese Diskette hat zuwenig|Speicherplatz.][  OK  ]";
+static char deskde_string_217[] = "[2][|Datei gleichem Namens|schon vorhanden!][ OK ]";
+static char deskde_string_218[] = "[3][|So tief im Indexpfad k\224nnen|keine Ordner angelegt oder|angesprochen werden.][ ABBRUCH ]";
+static char deskde_string_219[] = "[1][|Das ROMMODUL erlaubt kein|Verschieben von Objekten.][  OK  ]";
+static char deskde_string_220[] = " ";
+static char deskde_string_221[] = "[1][|Ung\201ltige Kopieranweisung!][  OK  ]";
+static char deskde_string_222[] = " DESK ";
+static char deskde_string_223[] = " DESK ";
+static char deskde_string_224[] = " DESK ";
+static char deskde_string_225[] = " DESK ";
+static char deskde_string_226[] = " DESK ";
+static char deskde_string_227[] = " DESK ";
 
 
 static _UBYTE deskde_IMAGE0[] = {
@@ -557,18 +569,6 @@ static _UBYTE deskde_IMAGE0[] = {
 
 
 static char *rs_frstr[NUM_FRSTR] = {
-	deskde_string_187,
-	deskde_string_188,
-	deskde_string_189,
-	deskde_string_190,
-	deskde_string_191,
-	deskde_string_192,
-	deskde_string_193,
-	deskde_string_194,
-	deskde_string_195,
-	deskde_string_196,
-	deskde_string_197,
-	deskde_string_198,
 	deskde_string_199,
 	deskde_string_200,
 	deskde_string_201,
@@ -585,7 +585,19 @@ static char *rs_frstr[NUM_FRSTR] = {
 	deskde_string_212,
 	deskde_string_213,
 	deskde_string_214,
-	deskde_string_215
+	deskde_string_215,
+	deskde_string_216,
+	deskde_string_217,
+	deskde_string_218,
+	deskde_string_219,
+	deskde_string_220,
+	deskde_string_221,
+	deskde_string_222,
+	deskde_string_223,
+	deskde_string_224,
+	deskde_string_225,
+	deskde_string_226,
+	deskde_string_227
 };
 
 
@@ -595,35 +607,35 @@ static BITBLK rs_bitblk[NUM_BB] = {
 
 
 static TEDINFO rs_tedinfo[NUM_TI] = {
-	{ deskde_string_34, deskde_string_35, deskde_string_36, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,22 }, /* FINAME */
-	{ deskde_string_37, deskde_string_38, deskde_string_39, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 12,26 }, /* FISIZE */
-	{ deskde_string_40, deskde_string_41, deskde_string_42, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* FIDATE */
-	{ deskde_string_43, deskde_string_44, deskde_string_45, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* FITIME */
-	{ deskde_string_52, deskde_string_53, deskde_string_54, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,22 }, /* DIDRIVE */
-	{ deskde_string_55, deskde_string_56, deskde_string_57, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,26 }, /* DIVOLUME */
-	{ deskde_string_58, deskde_string_59, deskde_string_60, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* DINFOLDS */
-	{ deskde_string_61, deskde_string_62, deskde_string_63, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* DINFILES */
-	{ deskde_string_64, deskde_string_65, deskde_string_66, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,22 }, /* DIUSED */
-	{ deskde_string_67, deskde_string_68, deskde_string_69, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,27 }, /* DIAVAIL */
-	{ deskde_string_72, deskde_string_73, deskde_string_74, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,26 }, /* FOLNAME */
-	{ deskde_string_75, deskde_string_76, deskde_string_77, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 7,20 }, /* FOLDATE */
-	{ deskde_string_78, deskde_string_79, deskde_string_80, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 7,9 }, /* FOLTIME */
-	{ deskde_string_81, deskde_string_82, deskde_string_83, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* FOLNFOLD */
-	{ deskde_string_84, deskde_string_85, deskde_string_86, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* FOLNFILE */
-	{ deskde_string_87, deskde_string_88, deskde_string_89, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,22 }, /* FOLSIZE */
-	{ deskde_string_109, deskde_string_110, deskde_string_111, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,20 }, /* APPLNAME */
-	{ deskde_string_112, deskde_string_113, deskde_string_114, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 39,39 }, /* APPLPARM */
-	{ deskde_string_119, deskde_string_120, deskde_string_121, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,19 }, /* DRID */
-	{ deskde_string_122, deskde_string_123, deskde_string_124, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 13,25 }, /* DRLABEL */
-	{ deskde_string_129, deskde_string_130, deskde_string_131, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,20 }, /* APNAME */
-	{ deskde_string_132, deskde_string_133, deskde_string_134, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 4,15 }, /* APDFTYPE */
-	{ deskde_string_142, deskde_string_143, deskde_string_144, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,23 }, /* NUMDIR */
-	{ deskde_string_145, deskde_string_146, deskde_string_147, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,21 }, /* NUMFILE */
-	{ deskde_string_151, deskde_string_152, deskde_string_153, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,25 }, /* DELDIR */
-	{ deskde_string_154, deskde_string_155, deskde_string_156, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,23 }, /* DELFILES */
-	{ deskde_string_160, deskde_string_161, deskde_string_162, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 }, /* FNAME */
-	{ deskde_string_163, deskde_string_164, deskde_string_165, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 }, /* EDFNAME */
-	{ deskde_string_169, deskde_string_170, deskde_string_171, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 } /* MKNAME */
+	{ deskde_string_36, deskde_string_37, deskde_string_38, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,22 }, /* FINAME */
+	{ deskde_string_39, deskde_string_40, deskde_string_41, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 12,26 }, /* FISIZE */
+	{ deskde_string_42, deskde_string_43, deskde_string_44, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* FIDATE */
+	{ deskde_string_45, deskde_string_46, deskde_string_47, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* FITIME */
+	{ deskde_string_54, deskde_string_55, deskde_string_56, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,22 }, /* DIDRIVE */
+	{ deskde_string_57, deskde_string_58, deskde_string_59, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,26 }, /* DIVOLUME */
+	{ deskde_string_60, deskde_string_61, deskde_string_62, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* DINFOLDS */
+	{ deskde_string_63, deskde_string_64, deskde_string_65, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* DINFILES */
+	{ deskde_string_66, deskde_string_67, deskde_string_68, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,22 }, /* DIUSED */
+	{ deskde_string_69, deskde_string_70, deskde_string_71, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,27 }, /* DIAVAIL */
+	{ deskde_string_74, deskde_string_75, deskde_string_76, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,26 }, /* FOLNAME */
+	{ deskde_string_77, deskde_string_78, deskde_string_79, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 7,20 }, /* FOLDATE */
+	{ deskde_string_80, deskde_string_81, deskde_string_82, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 7,9 }, /* FOLTIME */
+	{ deskde_string_83, deskde_string_84, deskde_string_85, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,29 }, /* FOLNFOLD */
+	{ deskde_string_86, deskde_string_87, deskde_string_88, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 6,27 }, /* FOLNFILE */
+	{ deskde_string_89, deskde_string_90, deskde_string_91, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 9,22 }, /* FOLSIZE */
+	{ deskde_string_111, deskde_string_112, deskde_string_113, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,20 }, /* APPLNAME */
+	{ deskde_string_114, deskde_string_115, deskde_string_116, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 39,39 }, /* APPLPARM */
+	{ deskde_string_121, deskde_string_122, deskde_string_123, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 2,19 }, /* DRID */
+	{ deskde_string_124, deskde_string_125, deskde_string_126, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 13,25 }, /* DRLABEL */
+	{ deskde_string_134, deskde_string_135, deskde_string_136, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,32 }, /* APNAME */
+	{ deskde_string_137, deskde_string_138, deskde_string_139, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 12,32 }, /* APDFTYPE */
+	{ deskde_string_148, deskde_string_149, deskde_string_150, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,23 }, /* NUMDIR */
+	{ deskde_string_151, deskde_string_152, deskde_string_153, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,21 }, /* NUMFILE */
+	{ deskde_string_157, deskde_string_158, deskde_string_159, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,25 }, /* DELDIR */
+	{ deskde_string_160, deskde_string_161, deskde_string_162, IBM, 0, TE_RIGHT, 0x1100, 0x0, 0, 5,23 }, /* DELFILES */
+	{ deskde_string_166, deskde_string_167, deskde_string_168, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 }, /* FNAME */
+	{ deskde_string_169, deskde_string_170, deskde_string_171, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 }, /* EDFNAME */
+	{ deskde_string_175, deskde_string_176, deskde_string_177, IBM, 0, TE_LEFT, 0x1100, 0x0, 0, 0,0 } /* MKNAME */
 };
 
 
@@ -647,7 +659,7 @@ static OBJECT rs_object[NUM_OBS] = {
 	{ 15, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_9), 0,5, 20,1 },
 	{ 16, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_10), 0,6, 20,1 },
 	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_11), 0,7, 20,1 },
-	{ 26, 18, 25, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 20,8 },
+	{ 28, 18, 27, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 20,8 },
 	{ 19, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_12), 0,0, 20,1 }, /* OPENITEM */
 	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_13), 0,1, 20,1 }, /* SHOWITEM */
 	{ 21, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_14), 0,2, 20,1 },
@@ -655,189 +667,190 @@ static OBJECT rs_object[NUM_OBS] = {
 	{ 23, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_16), 0,4, 20,1 }, /* CLSFITEM */
 	{ 24, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_17), 0,5, 20,1 }, /* CLOSWITEM */
 	{ 25, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_18), 0,6, 20,1 },
-	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_19), 0,7, 20,1 }, /* FORMITEM */
-	{ 27, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 28, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
+	{ 26, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_19), 0,7, 20,1 }, /* FORMITEM */
+	{ 27, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_20), 0,8, 20,1 },
+	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_21), 0,9, 20,1 },
 	{ 36, 29, 35, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 15,0, 14,7 },
-	{ 30, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_20), 0,0, 14,1 }, /* ICONITEM */
-	{ 31, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_21), 0,1, 14,1 }, /* TEXTITEM */
-	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_22), 0,2, 14,1 },
-	{ 33, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_23), 0,3, 14,1 }, /* NAMEITEM */
-	{ 34, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_24), 0,4, 14,1 }, /* DATEITEM */
-	{ 35, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_25), 0,5, 14,1 }, /* SIZEITEM */
-	{ 28, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_26), 0,6, 14,1 }, /* TYPEITEM */
+	{ 30, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_22), 0,0, 14,1 }, /* ICONITEM */
+	{ 31, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_23), 0,1, 14,1 }, /* TEXTITEM */
+	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_24), 0,2, 14,1 },
+	{ 33, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_25), 0,3, 14,1 }, /* NAMEITEM */
+	{ 34, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_26), 0,4, 14,1 }, /* DATEITEM */
+	{ 35, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_27), 0,5, 14,1 }, /* SIZEITEM */
+	{ 28, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_28), 0,6, 14,1 }, /* TYPEITEM */
 	{ 7, 37, 42, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 16,0, 21,6 },
-	{ 38, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_27), 0,0, 21,1 }, /* IDSKITEM */
-	{ 39, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_28), 0,1, 21,1 }, /* IAPPITEM */
-	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_29), 0,2, 21,1 },
-	{ 41, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_30), 0,3, 21,1 }, /* PREFITEM */
-	{ 42, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_31), 0,4, 21,1 }, /* SAVEITEM */
-	{ 36, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskde_string_32), 0,5, 21,1 }, /* PRINTITEM */
+	{ 38, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_29), 0,0, 21,1 }, /* IDSKITEM */
+	{ 39, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_30), 0,1, 21,1 }, /* IAPPITEM */
+	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskde_string_31), 0,2, 21,1 },
+	{ 41, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_32), 0,3, 21,1 }, /* PREFITEM */
+	{ 42, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_33), 0,4, 21,1 }, /* SAVEITEM */
+	{ 36, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskde_string_34), 0,5, 21,1 }, /* PRINTITEM */
 
 /* ADFILEIN */
 
 	{ -1, 1, 11, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,13 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_33), 1,1, 16,1 }, /* INFTITLE */
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_35), 1,1, 16,1 }, /* INFTITLE */
 	{ 3, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[0]), 12,3, 19,1 }, /* FINAME */
 	{ 4, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[1]), 2,4, 25,1 }, /* FISIZE */
 	{ 5, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[2]), 1,5, 26,1 }, /* FIDATE */
 	{ 6, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[3]), 28,5, 8,1 }, /* FITIME */
-	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_46), 9,7, 11,1 },
+	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_48), 9,7, 11,1 },
 	{ 10, 8, 9, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 19,7, 23,3 },
-	{ 9, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_47), 0,0, 16,1 }, /* FIRWRITE */
-	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_48), 0,2, 10,1 }, /* FIRONLY */
-	{ 11, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_49), 9,11, 8,1 }, /* FIOK */
-	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_50), 25,11, 8,1 }, /* FICNCL */
+	{ 9, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_49), 0,0, 16,1 }, /* FIRWRITE */
+	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_50), 0,2, 10,1 }, /* FIRONLY */
+	{ 11, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_51), 9,11, 8,1 }, /* FIOK */
+	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_52), 25,11, 8,1 }, /* FICNCL */
 
 /* ADDISKIN */
 
 	{ -1, 1, 8, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,12 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_51), 1,1, 16,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_53), 1,1, 16,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[4]), 8,3, 25,1 }, /* DIDRIVE */
 	{ 4, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[5]), 13,4, 23,1 }, /* DIVOLUME */
 	{ 5, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[6]), 4,5, 28,1 }, /* DINFOLDS */
 	{ 6, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[7]), 4,6, 28,1 }, /* DINFILES */
 	{ 7, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[8]), 4,7, 28,1 }, /* DIUSED */
 	{ 8, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[9]), 6,8, 26,1 }, /* DIAVAIL */
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_70), 26,10, 8,1 }, /* DIOK */
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_72), 26,10, 8,1 }, /* DIOK */
 
 /* ADFOLDIN */
 
 	{ -1, 1, 8, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,11 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_71), 1,1, 18,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_73), 1,1, 18,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[10]), 8,3, 26,1 }, /* FOLNAME */
 	{ 4, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[11]), 15,4, 22,1 }, /* FOLDATE */
 	{ 5, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[12]), 29,4, 8,1 }, /* FOLTIME */
 	{ 6, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[13]), 1,5, 28,1 }, /* FOLNFOLD */
 	{ 7, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[14]), 3,6, 26,1 }, /* FOLNFILE */
 	{ 8, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[15]), 1,7, 28,1 }, /* FOLSIZE */
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_90), 26,9, 8,1 }, /* FOLOK */
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_92), 26,9, 8,1 }, /* FOLOK */
 
 /* ADDINFO */
 
 	{ -1, 1, 11, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,16 },
 	{ 2, -1, -1, G_IMAGE, OF_NONE, OS_NORMAL, C_UNION(&rs_bitblk[0]), 1040,5, 8192,16384 },
-	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_91), 3,1, 32,1 },
-	{ 4, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_92), 11,4, 7,1 },
-	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_93), 9,3, 16,1 },
-	{ 6, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_94), 15,5, 16,1 },
-	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_95), 9,6, 29,1 },
-	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_96), 11,12, 22,1 },
-	{ 9, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_97), 11,9, 10,1 },
-	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_98), 10,11, 0,1 },
-	{ 11, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_99), 15,10, 42,1 },
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_100), 15,14, 8,1 }, /* DEOK */
+	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_93), 3,1, 32,1 },
+	{ 4, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_94), 11,4, 7,1 },
+	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_95), 9,3, 16,1 },
+	{ 6, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_96), 15,5, 16,1 },
+	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_97), 9,6, 29,1 },
+	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_98), 11,12, 22,1 },
+	{ 9, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_99), 11,9, 10,1 },
+	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_100), 10,11, 0,1 },
+	{ 11, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_101), 15,10, 42,1 },
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_102), 15,14, 8,1 }, /* DEOK */
 
 /* ADPINFO */
 
 	{ -1, 1, 7, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,11 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_101), 3,1, 23,1 },
-	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_102), 3,3, 23,1 },
-	{ 4, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_103), 3,4, 23,1 },
-	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_104), 3,5, 23,1 },
-	{ 6, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_105), 3,6, 23,1 },
-	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_106), 3,7, 23,1 },
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_107), 26,9, 8,1 }, /* APDOK */
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_103), 3,1, 23,1 },
+	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_104), 3,3, 23,1 },
+	{ 4, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_105), 3,4, 23,1 },
+	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_106), 3,5, 23,1 },
+	{ 6, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_107), 3,6, 23,1 },
+	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_108), 3,7, 23,1 },
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_109), 26,9, 8,1 }, /* APDOK */
 
 /* ADOPENAP */
 
 	{ -1, 1, 6, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 40,9 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_108), 3,1, 16,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_110), 3,1, 16,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[16]), 6,3, 19,1 }, /* APPLNAME */
 	{ 4, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[17]), 1,5, 38,1 }, /* APPLPARM */
-	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_115), 9,7, 8,1 }, /* APPLOK */
-	{ 6, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_116), 25,7, 8,1 }, /* APPLCNCL */
-	{ 0, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskde_string_117), 1,4, 12,1 },
+	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_117), 9,7, 8,1 }, /* APPLOK */
+	{ 6, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_118), 25,7, 8,1 }, /* APPLCNCL */
+	{ 0, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskde_string_119), 1,4, 12,1 },
 
 /* ADINSDIS */
 
 	{ -1, 1, 10, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,8 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_118), 3,1, 18,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_120), 3,1, 18,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[18]), 4,3, 25,1 }, /* DRID */
 	{ 4, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[19]), 8,4, 29,1 }, /* DRLABEL */
-	{ 5, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 6, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 7, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 8, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 9, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_125), 6,6, 8,1 }, /* DROK */
-	{ 10, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_126), 16,6, 8,1 }, /* DRREMOVE */
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_127), 26,6, 8,1 }, /* DRCANCEL */
+	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_127), 8,6, 10,1 },
+	{ 6, -1, -1, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 18,6, 24,1 },
+	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_128), 1,0, 8,1 },
+	{ 8, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_129), 10,0, 8,1 },
+	{ 9, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_130), 6,6, 8,1 }, /* DROK */
+	{ 10, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_131), 16,6, 8,1 }, /* DRREMOVE */
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_132), 26,6, 8,1 }, /* DRCANCEL */
 
 /* ADINSAPP */
 
-	{ -1, 1, 10, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,13 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_128), 3,1, 19,1 },
+	{ -1, 1, 11, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,13 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_133), 3,1, 19,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[20]), 13,3, 21,1 }, /* APNAME */
 	{ 4, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[21]), 9,4, 19,1 }, /* APDFTYPE */
-	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_135), 4,5, 17,1 },
+	{ 5, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_140), 4,5, 17,1 },
 	{ 9, 6, 8, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 1,7, 40,4 },
-	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_136), 0,0, 5,1 }, /* APGEM */
-	{ 8, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_137), 6,0, 5,1 }, /* APDOS */
-	{ 5, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_138), 13,0, 23,1 }, /* APPARMS */
-	{ 10, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_139), 18,11, 8,1 }, /* APOK */
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_140), 28,11, 8,1 }, /* APCANCEL */
+	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_141), 0,0, 5,1 }, /* APGEM */
+	{ 8, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_142), 6,0, 5,1 }, /* APDOS */
+	{ 5, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_143), 13,0, 23,1 }, /* APPARMS */
+	{ 10, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_144), 18,11, 8,1 }, /* APOK */
+	{ 11, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_145), 28,11, 8,1 }, /* APCANCEL */
+	{ 0, -1, -1, G_BUTTON, 0x31, OS_NORMAL, C_UNION(deskde_string_146), 13,2, 22,1 },
 
 /* CPBOX */
 
 	{ -1, 1, 5, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 34,8 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_141), 3,1, 20,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_147), 3,1, 20,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[22]), 2,3, 30,1 }, /* NUMDIR */
 	{ 4, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[23]), 3,4, 29,1 }, /* NUMFILE */
-	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_148), 13,6, 8,1 }, /* OKCP */
-	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_149), 23,6, 8,1 }, /* CCANCEL */
+	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_154), 13,6, 8,1 }, /* OKCP */
+	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_155), 23,6, 8,1 }, /* CCANCEL */
 
 /* DELBOX */
 
 	{ -1, 1, 5, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 30,8 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_150), 3,1, 23,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_156), 3,1, 23,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[24]), 1,3, 28,1 }, /* DELDIR */
 	{ 4, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[25]), 2,4, 27,1 }, /* DELFILES */
-	{ 5, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_157), 9,6, 8,1 }, /* DELOK */
-	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_158), 19,6, 8,1 }, /* DELCNCL */
+	{ 5, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_163), 9,6, 8,1 }, /* DELOK */
+	{ 0, -1, -1, G_BUTTON, 0x27, OS_NORMAL, C_UNION(deskde_string_164), 19,6, 8,1 }, /* DELCNCL */
 
 /* SAMENAME */
 
 	{ -1, 1, 5, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 34,8 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_159), 3,1, 28,1 }, /* SNAME */
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_165), 3,1, 28,1 }, /* SNAME */
 	{ 3, -1, -1, G_FBOXTEXT, OF_NONE, OS_NORMAL, C_UNION(&rs_tedinfo[26]), 2,3, 31,1 }, /* FNAME */
 	{ 4, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[27]), 4,4, 29,1 }, /* EDFNAME */
-	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_166), 13,6, 8,1 }, /* COPY */
-	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_167), 23,6, 8,1 }, /* QUIT */
+	{ 5, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_172), 13,6, 8,1 }, /* COPY */
+	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_173), 23,6, 8,1 }, /* QUIT */
 
 /* ADMKDBOX */
 
 	{ -1, 1, 4, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 27,7 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_168), 3,1, 10,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_174), 3,1, 10,1 },
 	{ 3, -1, -1, G_FBOXTEXT, OF_EDITABLE, OS_NORMAL, C_UNION(&rs_tedinfo[28]), 3,3, 19,1 }, /* MKNAME */
-	{ 4, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_172), 6,5, 8,1 }, /* MKOK */
-	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_173), 16,5, 8,1 }, /* MKCNCL */
+	{ 4, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_178), 6,5, 8,1 }, /* MKOK */
+	{ 0, -1, -1, G_BUTTON, 0x25, OS_NORMAL, C_UNION(deskde_string_179), 16,5, 8,1 }, /* MKCNCL */
 
 /* ADSETPREF */
 
 	{ -1, 1, 20, G_BOX, OF_NONE, OS_OUTLINED, C_UNION(0x21100L), 0,0, 38,13 },
-	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_174), 3,1, 16,1 },
-	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_175), 4,3, 16,1 },
+	{ 2, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_180), 3,1, 16,1 },
+	{ 3, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_181), 4,3, 16,1 },
 	{ 6, 4, 5, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 22,3, 12,1 },
-	{ 5, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_176), 0,0, 5,1 }, /* SPCDYES */
-	{ 3, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_177), 7,0, 5,1 }, /* SPCDNO */
-	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_178), 3,5, 15,1 },
-	{ 10, 8, 9, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 22,5, 12,1 },
-	{ 9, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_179), 0,0, 5,1 }, /* SPCCYES */
-	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_180), 7,0, 5,1 }, /* SPCCNO */
-	{ 11, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 12, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 13, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 14, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 15, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 16, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 17, -1, -1, G_IBOX, OF_HIDETREE, OS_NORMAL, C_UNION(0x0L), 0,0, 256,256 },
-	{ 18, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_181), 5,11, 8,1 }, /* SPOK */
-	{ 19, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_182), 27,11, 8,1 }, /* SPCANCEL */
-	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_183), 1,7, 31,2 },
+	{ 5, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_182), 0,0, 5,1 }, /* SPCDYES */
+	{ 3, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_183), 7,0, 5,1 }, /* SPCDNO */
+	{ 7, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_184), 3,5, 15,1 },
+	{ 17, 8, 16, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 22,5, 12,1 },
+	{ 9, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_185), 0,0, 5,1 }, /* SPCCYES */
+	{ 10, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_186), 7,0, 5,1 }, /* SPCCNO */
+	{ 11, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_187), 2,7, 19,1 },
+	{ 12, -1, -1, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 3,9, 31,2 },
+	{ 13, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_188), 0,0, 7,1 },
+	{ 14, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_189), 9,0, 3,1 },
+	{ 15, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_190), 14,0, 3,1 },
+	{ 16, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_191), 19,0, 3,1 },
+	{ 7, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_192), 24,0, 7,1 },
+	{ 18, -1, -1, G_BUTTON, 0x7, OS_NORMAL, C_UNION(deskde_string_193), 5,11, 8,1 }, /* SPOK */
+	{ 19, -1, -1, G_BUTTON, 0x5, OS_NORMAL, C_UNION(deskde_string_194), 27,11, 8,1 }, /* SPCANCEL */
+	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskde_string_195), 1,7, 31,2 },
 	{ 0, 21, 23, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 3,9, 31,2 },
-	{ 22, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_184), 4,0, 8,1 }, /* SPLOW */
-	{ 23, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_185), 15,0, 7,1 }, /* SPMEDIUM */
-	{ 20, -1, -1, G_BUTTON, 0x31, OS_NORMAL, C_UNION(deskde_string_186), 25,0, 5,1 } /* SPHIGH */
+	{ 22, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_196), 4,0, 8,1 }, /* SPLOW */
+	{ 23, -1, -1, G_BUTTON, 0x11, OS_NORMAL, C_UNION(deskde_string_197), 15,0, 7,1 }, /* SPMEDIUM */
+	{ 20, -1, -1, G_BUTTON, 0x31, OS_NORMAL, C_UNION(deskde_string_198), 25,0, 5,1 } /* SPHIGH */
 };
 
 
@@ -851,11 +864,11 @@ static OBJECT *rs_trindex[NUM_TREE] = {
 	&rs_object[93], /* ADOPENAP */
 	&rs_object[100], /* ADINSDIS */
 	&rs_object[111], /* ADINSAPP */
-	&rs_object[122], /* CPBOX */
-	&rs_object[128], /* DELBOX */
-	&rs_object[134], /* SAMENAME */
-	&rs_object[140], /* ADMKDBOX */
-	&rs_object[145] /* ADSETPREF */
+	&rs_object[123], /* CPBOX */
+	&rs_object[129], /* DELBOX */
+	&rs_object[135], /* SAMENAME */
+	&rs_object[141], /* ADMKDBOX */
+	&rs_object[146] /* ADSETPREF */
 };
 
 
@@ -1052,7 +1065,7 @@ _WORD deskde_rsc_free()
 
 #else /* !RSC_STATIC_FILE */
 #if 0
-_WORD rs_numstrings = 216;
+_WORD rs_numstrings = 228;
 _WORD rs_numfrstr = 29;
 
 _WORD rs_nuser = 0;
@@ -1062,7 +1075,7 @@ _WORD rs_numfrimg = 0;
 _WORD rs_numib = 0;
 _WORD rs_numcib = 0;
 _WORD rs_numti = 29;
-_WORD rs_numobs = 169;
+_WORD rs_numobs = 170;
 _WORD rs_numtree = 14;
 
 char rs_name[] = "deskde.rsc";

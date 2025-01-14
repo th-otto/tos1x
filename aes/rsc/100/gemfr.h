@@ -61,20 +61,20 @@
 #define FCLSBOX                            4 /* BOXCHAR in tree SELECTOR */
 #define FTITLE                             5 /* BOXTEXT in tree SELECTOR */
 #define FILEBOX                            6 /* BOX in tree SELECTOR */
-#define F7NAME                             7 /* FBOXTEXT in tree SELECTOR */
-#define F8NAME                             8 /* FBOXTEXT in tree SELECTOR */
-#define F9NAME                             9 /* FBOXTEXT in tree SELECTOR */
-#define SCRLBAR                           10 /* FBOXTEXT in tree SELECTOR */
-#define FUPAROW                           11 /* FBOXTEXT in tree SELECTOR */
-#define FDNAROW                           12 /* FBOXTEXT in tree SELECTOR */
-#define FSVSLID                           13 /* FBOXTEXT in tree SELECTOR */
-#define FSVELEV                           14 /* FBOXTEXT in tree SELECTOR */
-#define F1NAME                            15 /* FBOXTEXT in tree SELECTOR */
-#define F2NAME                            16 /* BOX in tree SELECTOR */
-#define F3NAME                            17 /* BOXCHAR in tree SELECTOR */
-#define F4NAME                            18 /* BOXCHAR in tree SELECTOR */
-#define F5NAME                            19 /* BOX in tree SELECTOR */
-#define F6NAME                            20 /* BOX in tree SELECTOR */
+#define F1NAME                            12 /* FBOXTEXT in tree SELECTOR */
+#define F2NAME                            13 /* FBOXTEXT in tree SELECTOR */
+#define F3NAME                            14 /* FBOXTEXT in tree SELECTOR */
+#define F4NAME                            15 /* FBOXTEXT in tree SELECTOR */
+#define F5NAME                            16 /* FBOXTEXT in tree SELECTOR */
+#define F6NAME                            17 /* FBOXTEXT in tree SELECTOR */
+#define F7NAME                            18 /* FBOXTEXT in tree SELECTOR */
+#define F8NAME                            19 /* FBOXTEXT in tree SELECTOR */
+#define F9NAME                            20 /* FBOXTEXT in tree SELECTOR */
+#define SCRLBAR                            7 /* BOX in tree SELECTOR */
+#define FUPAROW                            8 /* BOXCHAR in tree SELECTOR */
+#define FDNAROW                            9 /* BOXCHAR in tree SELECTOR */
+#define FSVSLID                           10 /* BOX in tree SELECTOR */
+#define FSVELEV                           11 /* BOX in tree SELECTOR */
 #define OK                                21 /* BUTTON in tree SELECTOR */
 #define CANCEL                            22 /* BUTTON in tree SELECTOR */
 
@@ -133,7 +133,7 @@
 
 #define STRNG12                           24 /* Free string */
 
-#define STR026                            25 /* Alert string */
+#define ALRT08ERR                         25 /* Alert string */
 
 #define ALRTXXERR                         26 /* Alert string */
 

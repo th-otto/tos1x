@@ -120,10 +120,10 @@ int main(int argc, char **argv)
 	
 	write_file("gem%s.rsc", tosrsc + 10, offsets[0] - 10);
 	write_file("desk%s.rsc", tosrsc + (offsets[0] & -2), offsets[1] - offsets[0]);
-	write_file("unk1%s.dat", tosrsc + (offsets[1] & -2), offsets[2] - offsets[1]);
+	write_file("icon%s.dat", tosrsc + (offsets[1] & -2), offsets[2] - offsets[1]);
 	write_file("desk%s.inf", tosrsc + (offsets[2] & -2), offsets[3] - offsets[2]);
 	write_file("fmt%s.rsc", tosrsc + (offsets[3] & -2), offsets[4] - offsets[3]);
-	write_file("unk2%s.dat", tosrsc + (offsets[4] & -2), rscsize - offsets[4]);
+	write_file("garb%s.dat", tosrsc + (offsets[4] & -2), rscsize - offsets[4]);
 	
 	return EXIT_SUCCESS;
 }
