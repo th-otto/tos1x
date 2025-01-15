@@ -25,6 +25,7 @@ include ../bios/SRCFILES
 include ../vdi/SRCFILES
 include ../bdos/SRCFILES
 include aesdesk.mak
+include biosvdi.mak
 
 all:: $(IMG)
 
@@ -32,7 +33,7 @@ include SRCFILES
 
 STARTUP = startup.o
 
-OBJS = $(STARTUP) vars.o tosvars.o $(addprefix ../bios/,$(BIOS_OBJS)) $(addprefix ../bdos/,$(BDOS_OBJS)) $(addprefix ../vdi/,$(VDI_OBJS)) $(AESDESK_OBJS)
+OBJS = $(STARTUP) vars.o tosvars.o $(BIOSVDI_OBJS) $(AESDESK_OBJS)
 
 LINK_OBJS := $(shell echo $(OBJS) | tr ' ' ',')
 

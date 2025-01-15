@@ -78,6 +78,8 @@ SIZE_FONT_HEAD	equ	90	     * size of font_head structure in FONTDEF.H
 		xdef	fringe0
 		xdef	innerLoop
 		xdef	fringe1
+		xdef    _width
+		xdef    _height
 
 
 _seed_type	equ	_fill_buffer+00		; indicates the type of fill
@@ -109,6 +111,8 @@ _leftcollision	equ	_fill_buffer+40 	; like _collision. (new seedfill)
 _v_align	equ	_fill_buffer+42		; scaler alignments
 _collision	equ	_fill_buffer+42  	; seed was removed from Q (new rtn)
 _Q		equ	_fill_buffer+44	 	; storage for the seed points (1280)
+_width      equ	_fill_buffer+44
+_height     equ	_fill_buffer+46
 _wordx		equ	_fill_buffer+48
 _wordy		equ	_fill_buffer+50		; add this to each space for interword
 _rmword		equ	_fill_buffer+52		; the number of pixels left over

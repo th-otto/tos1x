@@ -50,7 +50,11 @@ VOID bhdv_init(NOTHING)
 	char unused[10];
 	
 	UNUSED(unused);
+#if TOSVERSIO >= 0x104
 	fd_mediach = 82;
+#else
+	fd_mediach = 300;
+#endif
 	for (dev = curflop = nflops = 0; dev < NUMFLOPPIES; dev++)
 	{
 		drivechange[dev] = MEDIANOCHANGE;
@@ -126,12 +130,7 @@ PP(int16_t dev;)
 	bdev = &blkdev[dev];
 	bpb = &bdev->bpb;
 	do {
-#if BINEXACT
-		/* 0L = ugly hack to pass 2 zeroes */
-		err = floprd(dskbufp, NULL, dev, 1, 0L, BPBSECT);
-#else
 		err = floprd(dskbufp, NULL, dev, 1, 0, 0, BPBSECT);
-#endif
 		if (err < 0)
 		{
 			err = callcrit((int16_t)err, dev);
@@ -169,7 +168,9 @@ PP(int16_t dev;)
 	bpb->rdlen = (getiword(BS->dir) << 5) / bpb->recsiz;
 	bpb->datrec = bpb->fatrec + bpb->rdlen + bpb->fsiz;
 	bpb->numcl = (getiword(BS->sec) - bpb->datrec) / bpb->clsiz;
+#if TOSVERSION >= 0x104
 	bpb->b_flags = 0;
+#endif
 #if FAT1_SUPPORT
 	if (BS->fat < 2)
 	{
@@ -218,7 +219,11 @@ PP(int16_t dev;)
 		return MEDIACHANGE;
 	if (fd_latch[d])
 		*p = MEDIAMAYCHANGE;
+#if TOSVERSION >= 0x104
 	return ((frclock - fd_lastacc[d]) < fd_mediach) ? MEDIANOCHANGE : *p;
+#else
+	return ((hz_200 - fd_lastacc[d]) < fd_mediach) ? MEDIANOCHANGE : *p;
+#endif
 }
 
 
@@ -241,12 +246,7 @@ PP(int16_t _dev;)
 	} else if (ret == MEDIAMAYCHANGE)
 	{
 		do {
-#if BINEXACT
-			/* 0L = ugly hack to pass 2 zeroes */
-			err = floprd(dskbufp, NULL, dev, 1, 0L, BPBSECT);
-#else
 			err = floprd(dskbufp, NULL, dev, 1, 0, 0, BPBSECT);
-#endif
 			if (err < 0)
 			{
 				err = callcrit((int16_t)err, dev);
@@ -432,6 +432,7 @@ int16_t bhdv_boot(NOTHING)
 	register int ret;
 	
 	chdv_init();
+#if TOSVERSION >= 0x104
 #if !TP_26 /* KILL_BOOT */
 	if (nflops != 0
 #if TP_27 /* NORM_BOOT */
@@ -440,12 +441,7 @@ int16_t bhdv_boot(NOTHING)
 	)
 	{
 		ret = 2;   /* couldn't load */
-#if BINEXACT
-		/* 0L = ugly hack to pass 2 zeroes */
-		if (floprd(dskbufp, NULL, 0, 1, 0L, 1) == 0)
-#else
 		if (floprd(dskbufp, NULL, 0, 1, 0, 0, 1) == 0)
-#endif
 		{
 			ret = 0;
 		} else if (fd_wp[0] == 0)
@@ -457,6 +453,22 @@ int16_t bhdv_boot(NOTHING)
 	{
 		ret = 1;   /* no floppy */
 	}
+
+#else
+
+	ret = nflops != 0 ? 1 : 2;
+	if (nflops != 0 && bootdev < NUMFLOPPIES)
+	{
+		if (floprd(dskbufp, NULL, bootdev, 1, 0, 0, 1) == 0)
+		{
+			ret = 0;
+		} else if (fd_wp[0] == 0)
+		{
+			return 3;   /* unreadable */
+		}
+	}
+#endif
+
 	if (ret != 0)
 		return ret;
 	if (sectsum((const int16_t *)dskbufp, SECTOR_SIZE / 2) == BOOTABLE_CHECKSUM)

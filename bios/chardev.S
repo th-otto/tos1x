@@ -84,7 +84,7 @@ BCONMAP_START_HANDLE equ 6
 	xdef _bco3stat
 _bco3stat:
         moveq.l   #-1,d0
-        move.b    ABSW(ACIA_MIDI_BASE+ACIA_CTRL),d2
+        move.b    ABSW2(ACIA_MIDI_BASE+ACIA_CTRL),d2
         btst      #1,d2
         bne.s     bco3sret
         xdef retzero
@@ -110,7 +110,7 @@ bco3sret:
 _bcon3out:
         move.w    6(a7),d1
 bcon3o1:
-        lea.l     ABSW(ACIA_MIDI_BASE),a1
+        lea.l     ABSW2(ACIA_MIDI_BASE),a1
 bcon3o2:
         move.b    ACIA_CTRL(a1),d2
         btst      #1,d2
@@ -161,7 +161,7 @@ midiws1:
 	xdef _bcon3stat
 _bcon3stat:
         lea.l     ABSW(midiiorec),a0            /* point to midi i/o bufrec */
-        lea.l     ABSW(ACIA_MIDI_BASE),a1       /* point to midi register base */
+        lea.l     ABSW2(ACIA_MIDI_BASE),a1      /* point to midi register base */
         moveq.l   #-1,d0                        /* set result to true */
         lea.l     head(a0),a2
         lea.l     tail(a0),a3
@@ -210,8 +210,12 @@ _bcon3in:
         moveq.l   #0,d1                         /* wrap pointer */
 bcon3i1:
         movea.l   buf(a0),a1                    /* get base address of buffer */
+#if TOSVERSION >= 0x104
         and.l     #$0000FFFF,d1
         move.b    0(a1,d1.l),d0                 /* get character */
+#else
+        move.b    0(a1,d1.w),d0                 /* get character */
+#endif
         move.w    d1,head(a0)                   /* store new head pointer to buffer record */
 bcon3i2:
         move.w    (a7)+,sr
@@ -278,12 +282,16 @@ bcon0o3:
         move.w    6(a7),d0                      /* retrieve byte to be sent and... */
         moveq     #-113,d1                      /* write out byte to parallel port */
         bsr       gientry
+#if TOSVERSION >= 0x104
         move.w    sr,-(a7)
         ori.w     #$0700,sr
+#endif
         bsr.s     strobeon
         bsr.s     strobeon
         bsr.s     strobeoff
+#if TOSVERSION >= 0x104
         move.w    (a7)+,sr
+#endif
         moveq.l   #-1,d0                        /* set d0=-1 for good transfer status */
         rts
 
@@ -356,12 +364,12 @@ bco0st1:
 /* 106de: 00e0357e */
 	xdef _bcon6stat
 _bcon6stat:
-        lea.l     ABSW2(rs232iorec),a0            /* point to rs-232 buffer record */
+        lea.l     ABSW(rs232iorec),a0            /* point to rs-232 buffer record */
 bcon6st1:
         moveq.l   #-1,d0
-        lea.l     head(a0),a1
-        lea.l     tail(a0),a0
-        cmpm.w    (a0)+,(a1)+                   /* buffer empty test */
+        lea.l     head(a0),a2
+        lea.l     tail(a0),a3
+        cmpm.w    (a3)+,(a2)+                   /* buffer empty test */
         bne.s     bcon6st2
         moveq.l   #0,d0
 bcon6st2:
@@ -378,32 +386,14 @@ bcon6st2:
 /* 106de: 00e03596 */
 	xdef _bcon6in
 _bcon6in:
-        lea.l     ABSW2(rs232iorec),a0          /* point to rs-232 buffer record */
 bcon6in1:
-        bsr       iorecget
-        move.w    d0,-(a7)
-        tst.b     ctr(a0)                       /* flow control active? */
-        beq.s     bcon6in3                      /* (no) */
-        move.w    tail(a0),d0
-        sub.w     head(a0),d0
-        bpl.s     bcon6in2                      /* underflow? */
-        add.w     size(a0),d0
-bcon6in2:
-        cmp.w     low(a0),d0
-        bgt.s     bcon6in3
-        tst.b     highwater(a0)                 /* high-water flag already set? */
-        beq.s     bcon6in3
-        clr.b     highwater(a0)                 /* clear high-water flag */
-        btst      #0,ctr(a0)                    /* is the rs232 mode xon/xoff? */
-        bne.s     rs232co1                      /* (yes) */
-        bsr       rtson
-        bra       bcon6in3
-rs232co1:
-        move.b    #$11,xonoffc(a0)              /* "xon" */
-        bsr       bcon6o0
-bcon6in3:
-        move.w    (a7)+,d0
+        bsr       _bcon6stat
+        tst.w     d0
+        beq.s     bcon6in1
+        bsr       rs232get
+        andi.w    #$00FF,d0
         rts
+
 
 /**************************************************************************
  *                                                                        *
@@ -416,12 +406,12 @@ bcon6in3:
 /* 106de: 00e035e0 */
 	xdef _bco6stat
 _bco6stat:
-        lea.l     ABSW2(rs232iorec+IOREC_SIZE),a0  /* point to rs-232 output buffer record */
+        lea.l     ABSW(rs232iorec),a0  /* point to rs-232 buffer record */
 bco6s1:
-        move.w    tail(a0),d1
-        bsr       wrapin
         moveq.l   #-1,d0
-        cmp.w     head(a0),d1
+        move.w    IOREC_SIZE+tail(a0),d2
+        bsr       wrapout
+        cmp.w     IOREC_SIZE+head(a0),d2
         bne.s     _bco6sret
         moveq.l   #0,d0
 _bco6sret:
@@ -439,21 +429,10 @@ _bco6sret:
 /* 106de: 00e03608 */
 	xdef _bcon6out
 _bcon6out:
-        move.w    6(a7),d0
-        lea.l     ABSW2(rs232iorec+IOREC_SIZE),a0  /* point to rs-232 output buffer record */
-        bsr       iorecput
-bcon6o0:
-        lea.l     ABSW2(MFP_REGS),a2
-bcon6o1:
-        tst.b     MFP_TSR-MFP_REGS(a2)          /* transmitter status */
-        bpl.s     bcon6o2                       /* not ready */
-        move.w    sr,-(a7)
-        ori.w     #$0700,sr
-        bsr       iorecout
-        move.w    (a7)+,sr
-bcon6o2:
+        move.w    6(a7),d1
+        bsr       rs232put
+        bcs       _bcon6out
         rts
-
 
 /**************************************************************************
  *                                                                        *
@@ -504,10 +483,12 @@ ikbd_wr1:
         move.b    0(a1),d2                       /* grab keyboard status */
         btst      #1,d2
         beq.s     ikbd_wr1
+#if TOSVERSION >= 0x102
 		move.w    #$03B6,d2
 ikbd_wr2:
 		bsr.s     ikbd_wr3
 		dbf       d2,ikbd_wr2
+#endif
         move.b    d1,ACIA_DATA(a1)              /* write char to the ikbd port */
 ikbd_wr3:
         rts
@@ -581,8 +562,12 @@ _bcon2in:
         moveq.l   #0,d1                         /* wrap pointer */
 bcon2in1:
         movea.l   buf(a0),a1                    /* get base address of buffer */
+#if TOSVERSION >= 0x104
         and.l     #$0000FFFF,d1
         move.l    0(a1,d1.l),d0                 /* get character */
+#else
+        move.l    0(a1,d1.w),d0                 /* get character */
+#endif
         move.w    d1,head(a0)                   /* store new head pointer to buffer */
 bcon2in2:
         move.w    (a7)+,sr
@@ -605,6 +590,7 @@ _bco2stat:
  * VT52 emulator callback for the bell sound
  *********************************************************/
 /* 104de: 00fc34e4 */
+/* 100de: 00fc201c */
 #if !BINEXACT
 		xdef ringbell
 #endif
@@ -616,6 +602,8 @@ ringbell:
 soundir8:
         rts
 #endif
+
+#include "keytbl.inc"
 
 /***********************************************************************************
  *                                                                                 *
@@ -648,7 +636,9 @@ initmfp:
         movep.l   d0,8(a0)                      /* clear ierb thru isra */
         movep.l   d0,16(a0)                     /* clear isrb thru vr */
         move.b    #$48,MFP_VR-MFP_REGS(a0)      /* set mfp autovector to $100 and s-bit */
+#if TOSVERSION >= 0x102
         bset      #2,MFP_AER-MFP_REGS(a0)       /* set cts to low to high transition */
+#endif
 
 /* init the "c" timer */
         move.w    #$1111,ABSW(_tim_c_sieve)     /* setup bitstream for /4 on timer c interrupts */
@@ -668,10 +658,16 @@ initmfp:
         moveq.l   #1,d1                         /* init for /4 for 9600 baud */
         moveq.l   #2,d2                         /* init for 9600 baud */
         bsr       settimer                      /* branch to out timer initialier... */
+#if TOSVERSION >= 0x104
         move.w    #1,ABSW2(baudrate)            /* baudrate = 9600 */
+#endif
 
 /* now init the 3 rs232 chip registers */
+#if TOSVERSION >= 0x102
         move.l    #$00880101,d0
+#else
+        move.l    #$00980101,d0
+#endif
         movep.l   d0,MFP_SCR-MFP_REGS(a0)
 
 initmfp2:
@@ -764,6 +760,11 @@ initmfp3:
         lea.l     ctsint,a2                     /* point to the CTS interrupt routine... */
         moveq.l   #2,d0                         /* point to the CTS interrrupt number */
         bsr       initint
+#if TOSVERSION < 0x102
+        movea.l   #ikbd_init_commands,a2
+        moveq.l   #3,d3
+        bsr       ikbdws1
+#endif
 
 dummyrts:
         rts
@@ -776,6 +777,13 @@ copymem:
         move.b    (a1)+,(a0)+
         dbf       d0,copymem
         rts
+
+#if TOSVERSION < 0x102
+ikbd_init_commands:
+		dc.b 0x80,0x01 /* reset */
+		dc.b 0x12      /* disable mouse */
+		dc.b 0x1a      /* disable joystick */
+#endif
 
 ikbdtable:
         dc.l      ikbdbuf
@@ -790,9 +798,9 @@ miditable:
  */
 rs232table:
         dc.l      rs232ibuf
-        dc.w      SERIAL_BUFSIZE,0,0,128,192
+        dc.w      SERIAL_BUFSIZE,0,0,64,192
         dc.l      rs232obuf
-        dc.w      SERIAL_BUFSIZE,0,0,128,192
+        dc.w      SERIAL_BUFSIZE,0,0,64,192
         dc.b      0,0,0,0,1,0
 
 /* array of exception vector addresses for the above interrupts, including */
@@ -1064,13 +1072,106 @@ jenabin1:
  *************************************************************************/
 bselect:
         move.b    d0,d1                         /* copy d0 to d1 for scratch work */
-        cmpi.b    #$08,d1                       /* see if desired int # >= 8... */
+        cmpi.b    #8,d0                         /* see if desired int # >= 8... */
         blt.s     bselect1                      /* ...and branch if it ain't... */
         subq.w    #8,d1                         /* adjust for using ixrb instead */
-        rts
 bselect1:
-        addq.l    #MFP_IERB-MFP_IERA,a1         /* adjust for using ixrb instead */
+        cmpi.b    #8,d0
+        bge.s     bselect2:
+        addq.w    #MFP_IERB-MFP_IERA,a1         /* adjust for using ixrb instead */
+bselect2:
         rts
+
+rs232ptr:
+        lea       ABSW2(rs232iorec),a0
+        lea       ABSW2(MFP_REGS),a1
+        rts
+
+rs232idx:
+        move.w     tail(a0),d2
+        move.w     head(a0),d3
+        cmp.w      d3,d2                        /* head > tail? */
+        bhi.s      rs232i1buf                   /* no */
+        add.w      size(a0),d2                  /* add buffer size */
+rs232i1buf:
+        sub.w      d3,d2
+        rts
+        
+rtschk:
+        btst      #1,ctr(a0)                    /* is the rs232 mode RTS/CTS? */
+        beq.s     rtschk1                       /* (no) */
+        bsr       rtson
+rtschk1:
+		rts
+
+rs232put:
+        move.w     sr,-(a7)                     /* save status */
+        ori.w      #$0700,sr                    /* IPL 7, disable interupts */
+        bsr.s      rs232ptr                     /* get RS232 buffer pointer */
+        btst       #0,ctr(a0)                   /* XON/XOFF mode? */
+        beq.s      rs232p1                      /* no */
+        tst.b      xoff(a0)                     /* xon active? */
+        bne.s      rs232p2                      /* yes */
+rs232p1:
+        btst       #7,MFP_TSR-MFP_REGS(a1)      /* is MFP still sending? */
+        beq.s      rs232p2                      /* yes */
+        move.w     IOREC_SIZE+head(a0),d2       /* head index */
+        cmp.w      IOREC_SIZE+tail(a0),d2       /* compare with tail index */
+        bne.s      rs232p2                      /* characters still in buffer */
+        move.b     d1,MFP_UDR-MFP_REGS(a1)      /* byte into MFP transmitter register */
+        bra.s      rs232p3
+rs232p2:
+        move.w     IOREC_SIZE+tail(a0),d2       /* tail index */
+        bsr        wrapout                      /* test for wrap around */
+        cmp.w      IOREC_SIZE+head(a0),d2       /* compare with head index */
+        beq.s      rs232p4                      /* buffer full? */
+        movea.l    IOREC_SIZE+buf(a0),a1        /* pointer to send buffer */
+        move.b     d1,0(a1,d2.w)                /* write byte in buffer */
+        move.w     d2,IOREC_SIZE+tail(a0)       /* save new tail index */
+rs232p3:
+        bsr.s      rtschk                       /* set RTS */
+        move.w     (a7)+,sr                     /* restore status */
+        andi.b     #$FE,ccr                     /* ok, clear carry flag */
+        rts
+rs232p4:
+        bsr.s      rtschk                       /* set RTS */
+        move.w     (a7)+,sr                     /* restore status */
+        ori.b      #$01,ccr                     /* no output, set carry flag */
+        rts
+
+
+rs232get:
+        move.w     sr,-(a7)
+        ori.w      #$0700,sr
+        bsr        rs232ptr
+        move.w     head(a0),d1
+        cmp.w      tail(a0),d1                  /* underflow? */
+        beq.s      rs232g1
+        bsr        wrapin
+        movea.l    buf(a0),a1
+        moveq.l    #0,d0
+        move.b     0(a1,d1.w),d0
+        move.w     d1,head(a0)
+        move.w     (a7)+,sr
+        andi.b     #$FE,ccr
+        bra.s      rs232g2
+rs232g1:
+        move.w     (a7)+,sr
+        ori.b      #1,ccr
+rs232g2:
+        btst       #0,ctr(a0)                   /* flow control active? */
+        beq.s      rs232g3
+        tst.b      highwater(a0)                /* high-water flag already set? */
+        beq.s      rs232g3
+        bsr        rs232idx
+        cmp.w      low(a0),d2
+        bne.s      rs232g3
+        move.b     #$11,d1                      /* "xon" */
+        bsr        rs232put
+        clr.b      highwater(a0)                /* clear high-water flag */
+rs232g3:
+        rts
+
 
 /*************************************************************************
  *
@@ -1084,59 +1185,65 @@ bselect1:
 /* 104de: 00fc37f2 */
 /* 106de: 00e039b2 */
 rcvrint:
-        movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
-        lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
-        lea.l     ABSW2(MFP_REGS),a2            /* set mfp chip address pointer */
+        movem.l   d0-d3/a0-a2,-(a7)             /* save affected registers */
+        bsr       rs232ptr                      /* point to current output buffer record */
+        move.b    MFP_RSR-MFP_REGS(a1),rcv(a0)  /* do the required rsr read before the udr read! */
+        btst      #7,rcv(a0)
+        beq        rcvrint5
+        btst       #1,ctr(a0)
+        beq.s      rcvrint1
+        bsr        rtsoff
 rcvrint1:
-        move.b    MFP_RSR-MFP_REGS(a2),rcv(a0)  /* do the required rsr read before the udr read! */
-        move.b    MFP_UDR-MFP_REGS(a2),d0       /* get incoming data byte */
-
-        btst      #0,ctr(a0)                    /* is the rs232 mode xon/xoff? */
-        beq.s     rcvrint3                      /* no... so process normally */
-
-        cmpi.b    #$13,d0                       /* is the data an "xoff" signal? */
-        bne.s     rcvrint2                      /* no...now check for xon */
-        move.b    #-1,xoff(a0)                  /* set to halted transmission to host */
-        bra.s     rcvrint7
+        move.b     MFP_UDR-MFP_REGS(a1),d0      /* get incoming data byte */
+        btst       #1,ctr(a0)
+        bne.s      rcvrint3
+        btst       #0,ctr(a0)                   /* is the rs232 mode xon/xoff? */
+        beq.s      rcvrint3                     /* no... so process normally */
+        cmpi.b     #$11,d0                      /* is the data an "xon" signal? */
+        bne.s      rcvrint2                     /* no...now check for xoff */
+        move.b     #0,xoff(a0)                  /* set to normal transmission status */
+        move.w     IOREC_SIZE+head(a0),d2
+        cmp.w      IOREC_SIZE+tail(a0),d2
+        beq.s      rcvrint5
+        bsr        wrapout
+        movea.l    IOREC_SIZE+buf(a0),a2
+        move.b     0(a2,d2.w),MFP_UDR-MFP_REGS(a1)
+        move.w     d2,IOREC_SIZE+head(a0)
+        bra.s      rcvrint5
 rcvrint2:
-        cmpi.b    #$11,d0                       /* is the data an "xon" signal? */
-        bne.s     rcvrint3                      /* neither xon/xoff value, must be normal data... */
-        clr.b     xoff(a0)                      /* set to normal transmission status */
-        bra.s     rcvrint6                      /* abnormal exit condition!! */
+        cmpi.b     #$13,d0                      /* is the data an "xoff" signal? */
+        bne.s      rcvrint3                     /* neither xon/xoff value, must be normal data... */
+        move.b     #0xff,xoff(a0)               /* set to halted transmission to host */
+        bra.s      rcvrint5
 rcvrint3:
-        move.w    tail(a0),d1                   /* get current tail pointer offset */
-        bsr       wrapin                        /* do wrap of input pointer if needed */
-        cmp.w     head(a0),d1                   /* head=tail? */
-        beq.s     rcvrint7                      /* yes...exit... */
-        bsr       iorecput                      /* store data in ring buffer */
-
-/* now check for highwater mark triggering of flow-control */
-        tst.b     ctr(a0)                       /* flow control active? */
-        beq.s     rcvrint7                      /* no...exit... */
-        move.w    tail(a0),d0                   /* current tail pointer */
-        sub.w     head(a0),d0                   /* - current head */
-        bpl.s     rcvrint4                      /* wrap around? */
-        add.w     size(a0),d0                   /* + size to correct the wrap around */
+        move.w     tail(a0),d1                  /* get current tail pointer offset */
+        bsr        wrapin                       /* do wrap of input pointer if needed */
+        cmp.w      head(a0),d1                  /* head=tail? */
+        beq.s      rcvrint5                     /* yes...exit... */
+        movea.l    buf(a0),a2                   /* store data in ring buffer */
+        move.b     d0,0(a2,d1.w)
+        move.w     d1,tail(a0)
+        bsr        rs232idx
+        cmp.w      high(a0),d2
+        bne.s      rcvrint4
+        btst       #1,ctr(a0)                   /* flow control active? */
+        bne.s      rcvrint5
+        btst       #0,ctr(a0)                   /* are we using xon/xoff flow control? */
+        beq.s      rcvrint4                     /* no */
+        tst.b      highwater(a0)                /* high-water flag already set? */
+        bne.s      rcvrint4                     /* yes...exit... */
+        move.b     #0xff,highwater(a0)            /* set high-water flag */
+        move.b     #$13,d1
+        bsr        rs232put
 rcvrint4:
-        cmp.w     high(a0),d0                   /* high-water mark not reached? */
-        blt.s     rcvrint7                      /* correct...exit... */
-        tst.b     highwater(a0)                 /* high-water flag already set? */
-        bne.s     rcvrint7                      /* yes...exit... */
-        move.b    #-1,highwater(a0)             /* set high-water flag */
-        btst      #0,ctr(a0)                    /* are we using xon/xoff flow control? */
-        bne.s     rcvrint5                      /* yes... */
-        bsr       rtsoff                        /* we're ready now for more data...yum! yum! */
-        bra.s     rcvrint7
+        btst       #1,ctr(a0)
+        beq.s      rcvrint5
+        bsr        rtson
 rcvrint5:
-        move.b    #$13,xonoffc(a0)              /* xoff */
-rcvrint6:
-        tst.b     MFP_TSR-MFP_REGS(a2)          /* transmitter status? */
-        bpl.s     rcvrint7                      /* not ready */
-        bsr       iorecout
-rcvrint7:
-        bclr      #4,MFP_ISRA-MFP_REGS(a2)
-        movem.l   (a7)+,d0-d1/a0-a2             /* restore affected registers */
+        bclr       #4,MFP_ISRA-MFP_REGS(a1)
+        movem.l    (a7)+,d0-d3/a0-a2            /* restore affected registers */
         rte
+
 
 /*************************************************************************
  *
@@ -1148,12 +1255,26 @@ rcvrint7:
 /* 104de: 00fc3890 */
 /* 106de: 00e03a50 */
 txrint:
-        movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
-        lea.l     ABSW2(MFP_REGS),a2            /* set mfp chip address pointer */
+        movem.l   d2/a0-a2,-(a7)                /* save affected registers */
+        bsr        rs232ptr
+        btst       #1,ctr(a0)
+        bne.s      txrint2
+        btst       #0,ctr(a0)
+        beq.s      txrint1
+        tst.b      xoff(a0)
+        bne.s      txrint2
 txrint1:
-        bsr       iorecout
-		bclr      #2,MFP_ISRA-MFP_REGS(a2)
-        movem.l   (a7)+,d0-d1/a0-a2             /* restore affected registers */
+        move.b     MFP_TSR-MFP_REGS(a1),wr5(a0)
+        move.w     IOREC_SIZE+head(a0),d2
+        cmp.w      IOREC_SIZE+tail(a0),d2
+        beq.s      txrint2
+        bsr        wrapout
+        movea.l    IOREC_SIZE+buf(a0),a2
+        move.b     0(a2,d2.w),MFP_UDR-MFP_REGS(a1)
+        move.w     d2,IOREC_SIZE+head(a0)
+txrint2:
+		bclr      #2,MFP_ISRA-MFP_REGS(a1)
+        movem.l   (a7)+,d2/a0-a2                /* restore affected registers */
         rte
 
 /*************************************************************************
@@ -1166,27 +1287,27 @@ txrint1:
 /* 104de: 00fc38aa */
 /* 106de: 00e03a6a */
 ctsint:
-        movem.l   d0-d1/a0-a2,-(a7)             /* save affected registers */
-        lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
-        lea.l     ABSW2(MFP_REGS),a2            /* set mfp chip address pointer */
-
-        btst      #1,ctr(a0)                    /* are we using CTS/RTS flow control? */
-        beq.s     ctsint2                       /* no... */
-        btst      #2,0(a2)                      /* CTS already active? */
-        bne.s     ctsint1                       /* yes... */
-        clr.b     xoff(a0)                      /* xon_flag = 0 */
-        bset      #2,MFP_AER-MFP_REGS(a2)       /* CTS set */
-        tst.b     MFP_TSR-MFP_REGS(a2)          /* transmitter status? */
-        bpl.s     ctsint2                       /* not empty... */
-        bsr.s     iorecout                      /* send a byte */
-        bra.s     ctsint2
+        movem.l    d2/a0-a2,-(a7)               /* save affected registers */
+        bsr        rs232ptr                     /* point to current output buffer record */
+        btst       #1,ctr(a0)                   /* are we using CTS/RTS flow control? */
+        beq.s      ctsint2                      /* no... */
+        move.b     MFP_TSR-MFP_REGS(a1),wr5(a0)
 ctsint1:
-        move.b    #-1,xoff(a0)                  /* xon_flag = -1 */
-        bclr      #2,MFP_AER-MFP_REGS(a2)
+        btst       #7,wr5(a0)                  /* transmitter status? */
+        beq.s      ctsint1                     /* not empty... */
+        move.w     IOREC_SIZE+head(a0),d2
+        cmp.w      IOREC_SIZE+tail(a0),d2
+        beq.s      ctsint3
+        bsr        wrapout
+        movea.l    IOREC_SIZE+buf(a0),a2
+        move.b     0(a2,d2.w),MFP_UDR-MFP_REGS(a1) /* send a byte */
+        move.w     d2,IOREC_SIZE+head(a0)
 ctsint2:
-		bclr      #2,MFP_ISRB-MFP_REGS(a2)
-        movem.l   (a7)+,d0-d1/a0-a2             /* restore affected registers */
+        bclr       #2,MFP_ISRB-MFP_REGS(a1)
+        movem.l    (a7)+,d2/a0-a2              /* restore affected registers */
         rte
+ctsint3:
+        bra.s      ctsint2
 
 
 /*************************************************************************
@@ -1197,13 +1318,12 @@ ctsint2:
 /* 104de: 00fc38f6 */
 /* 106de: 00e03ab6 */
 rxerror:
-        movem.l   d0/a0,-(a7)                   /* save all registers */
-        lea.l     ABSW2(MFP_REGS),a0            /* set mfp chip address pointer */
-rxerror1:
-        move.b    MFP_RSR-MFP_REGS(a0),rs232iorec+rcv /* receiver status register */
-        move.b    MFP_UDR-MFP_REGS(a0),d0       /* dummy read of data register */
-		bclr      #3,MFP_ISRA-MFP_REGS(a0)
-        movem.l   (a7)+,d0/a0                   /* restore all registers */
+        movem.l   d0/a0-a1,-(a7)                /* save all registers */
+        bsr       rs232ptr                     /* set mfp chip address pointer */
+        move.b    MFP_RSR-MFP_REGS(a1),rcv(a0) /* receiver status register */
+        move.b    MFP_UDR-MFP_REGS(a1),d0       /* dummy read of data register */
+		bclr      #3,MFP_ISRA-MFP_REGS(a1)
+        movem.l   (a7)+,d0/a0-a1                /* restore all registers */
         rte
 
 /* 306de: 00e02964 */
@@ -1211,126 +1331,12 @@ rxerror1:
 /* 104de: 00fc3918 */
 /* 106de: 00e03ad8 */
 txerror:
-        move.l    a0,-(a7)
-        lea.l     ABSW2(MFP_REGS),a0            /* set mfp chip address pointer */
-txerror1:
-        move.b    MFP_TSR-MFP_REGS(a0),rs232iorec+wr5  /* transmitter status register */
-		bclr      #1,MFP_ISRA-MFP_REGS(a0)
-        movea.l   (a7)+,a0                      /* restore all registers */
+        movem.l   a0-a1,-(a7)
+        bsr       rs232ptr                      /* set mfp chip address pointer */
+        move.b    MFP_TSR-MFP_REGS(a1),wr5(a0)  /* transmitter status register */
+		bclr      #1,MFP_ISRA-MFP_REGS(a1)
+        movem.l   (a7)+,a0-a1                   /* restore all registers */
         rte
-
-/*************************************************************************
- * write a character from the ring buffer to the serial port
- *************************************************************************/
-/* 306de: 00e02980 */
-/* 206de: 00e0264a */
-/* 104de: 00fc3932 */
-/* 106de: 00e03af2 */
-iorecout:
-        lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
-		move.b    ctr(a0),d0
-		and.b     xoff(a0),d0
-		bne.s     ioreco3
-        move.b    xonoffc(a0),d0                /* send handshake byte pending? */
-        beq.s     ioreco1                       /* no... */
-        clr.b     xonoffc(a0)                   /* clear handshake byte */
-        bra.s     ioreco2                       /* output the handshake byte */
-ioreco1:
-        lea.l     ABSW2(rs232iorec+IOREC_SIZE),a0          /* point to current output buffer record */
-        move.w    head(a0),d0                   /* head-index */
-        cmp.w     tail(a0),d0                   /* = tail-index? */
-        beq.s     ioreco3                       /* buffer empty? => out */
-        bsr.s     iorecget                      /* get next character from the buffer */
-ioreco2:
-        tst.b     MFP_TSR-MFP_REGS(a2)          /* transmit buffer empty? */
-        bpl.s     ioreco2                       /* no...wait... */
-        move.b    MFP_TSR-MFP_REGS(a2),rs232iorec+wr5   /* save transmitter status; BUG: should be wr5(a0) */
-        move.b    d0,MFP_UDR-MFP_REGS(a2)       /* output the byte */
-ioreco3:
-        rts
-
-/*************************************************************************
- * put a character into the ring buffer
- *************************************************************************/
-/* 306de: 00e029be */
-/* 206de: 00e02688 */
-/* 106de: 00e03b34 */
-iorecput:
-        move.w    tail(a0),d1
-        bsr.s     wrapin
-iorecp1:
-        cmp.w     head(a0),d1                   /* = head-index? */
-        beq.s     iorecp1                       /* buffer full...wait... */
-        movea.l   buf(a0),a1                    /* ptr to send buffer */
-        and.l     #$0000FFFF,d1                 /* byte into the send buffer */
-        move.b    d0,0(a1,d1.l)                 /* update tail-index */
-        move.w    d1,tail(a0)
-        rts
-
-/*************************************************************************
- * get a character from the ring buffer
- *************************************************************************/
-/* 306de: 00e029dc */
-/* 206de: 00e026a6 */
-/* 106de: 00e03b54 */
-iorecget:
-        move.w    head(a0),d1
-        cmp.w     tail(a0),d1                   /* head-index = tail-index? */
-        beq.s     iorecget                      /* empty? wait... */
-        bsr.s     wrapin
-        movea.l   buf(a0),a1                    /* ptr to receive buffer */
-        moveq.l   #0,d0
-        and.l     #$0000FFFF,d1
-        move.b    0(a1,d1.l),d0                 /* byte from the receive buffer */
-        move.w    d1,head(a0)                   /* update head-index */
-        rts
-
-/*************************************************************************
- * set RTS signal
- *************************************************************************/
-/* 306de: 00e029fc */
-/* 206de: 00e026c6 */
-/* 104de: 00fc39b6 */
-/* 106de: 00e03b76 */
-rtson:
-        lea.l     ABSW2(psgsel),a1
-        move.w    sr,-(a7)
-        ori.w     #$0700,sr
-        move.b    #$0E,(a1)
-        move.b    (a1),d1
-        and.b     #$F7,d1                       /* clear bit 3 in port A */
-        move.b    d1,2(a1)
-        move.w    (a7)+,sr
-        rts
-
-/*************************************************************************
- * clear RTS signal
- *************************************************************************/
-/* 306de: 00e02a18 */
-/* 206de: 00e026e2 */
-/* 104de: 00fc39d4 */
-rtsoff:
-        lea.l     ABSW2(psgsel),a1
-        move.w    sr,-(a7)
-        ori.w     #$0700,sr
-        move.b    #$0E,(a1)
-        move.b    (a1),d1
-        ori.b     #$08,d1                       /* set bit 3 in port A */
-        move.b    d1,2(a1)
-        move.w    (a7)+,sr
-        rts
-
-/*************************************************************************
- * get next index for ringbuffer into D1
- *************************************************************************/
-wrapin:
-        addq.w    #1,d1                         /* i=h+1 */
-        cmp.w     size(a0),d1                   /* > i => current bufsiz? */
-        bcs.s     wrapin1                       /* no... */
-        moveq.l   #0,d1                         /* wrap pointer */
-wrapin1:
-        rts
-
 
 /*
  * XBIOS #14 - Iorec - Returns pointer to a serial device's input buffer record.
@@ -1341,9 +1347,14 @@ wrapin1:
 /* 106de: 00e03bbe */
 	xdef _iorec
 _iorec:
+        moveq.l   #0,d1
         move.w    4(a7),d1             /* device number */
+        move.w    sr,-(a7)
+        ori.w     #$0700,sr
+        lea.l     iorectab,a2
         asl.l     #2,d1
-        move.l    iorectab(pc,d1.w),d0
+        move.l    0(a2,d1.l),d0
+        move.w    (a7)+,sr
         rts
 iorectab:
         dc.l rs232iorec                /* RS232 */
@@ -1373,53 +1384,25 @@ _rsconf:
 /*
  * Rsconf function for device 6 (rs232 driven by MFP)
  */
+#if TOSVERSION >= 0x104
         cmpi.w    #-2,4(a7)                     /* -2 = return last baudrate */
         bne.s     rs6conf2
         move.w    ABSW2(baudrate),d0            /* last baudrate */
         rts
+#endif
 rs6conf2:
         ori.w     #$0700,sr                     /* no interrupts for now */
-        lea.l     ABSW2(rs232iorec),a0          /* point to current output buffer record */
+        bsr        rs232ptr                     /* point to current output buffer record */
 #define mfpareg a1
-        lea.l     ABSW2(MFP_REGS),mfpareg       /* set mfp chip address pointer */
 /*
  *      first we grab the old ucs,rsr,tsr,scr contents
  */
         movep.l   MFP_UCR-MFP_REGS(mfpareg),d7
-        move.w    6(a7),d0                      /* if -1 then don't change */
-#if TOSVERSION >= 0x106
-        cmp.w     #3,d0
-        bhi.s     rs6conf6
-        bne.s     rs6conf3
-        moveq.l   #1,d0                         /* set flag for handshake */
-rs6conf3:
-        move.b    d0,ctr(a0)                    /* set new handshake state */
-#else
-#if TP_70
-        /* swedish/czech versions have the RSCONF1 patch applied (from tos14fix) */
-        cmp.w     #3,d0
-        bhi.s     rs6conf6
-        bne.s     rs6conf5
-#if BINEXACT
-        bra.s     rs6conf4
-        nop
-        nop
-        nop
-        nop
-#endif
-#else
-        cmp.w     #-1,d0
-        beq.s     rs6conf6
-        move.b    d0,ctr(a0)
-        beq.s     rs6conf5
-		and.b     #$FD,d0
-        beq.s     rs6conf5
-#endif
-rs6conf4:
-		move.b    #1,d0
-rs6conf5:
-        move.b    d0,ctr(a0)                    /* set new handshake state */
-#endif
+        tst.w     6(a7)                         /* if -1 then don't change */
+        bmi.s     rs6conf6
+        move.b    7(a7),ctr(a0)
+        moveq.l   #0,d0
+        moveq.l   #0,d2
 rs6conf6:
 /*  set timer baud rate */
         tst.w     4(a7)                         /* if -1 then don't change */
@@ -1432,7 +1415,9 @@ rs6conf6:
         move.b    d0,MFP_RSR-MFP_REGS(mfpareg)  /* disable receiver */
         move.b    d0,MFP_TSR-MFP_REGS(mfpareg)  /* disable transmitter */
         move.w    4(a7),d1                      /* new baudrate */
+#if TOSVERSION >= 0x104
         move.w    d1,baudrate                   /* store for later */
+#endif
         lea       baudctrl,a2
         move.b    0(a2,d1.w),d0                 /* get baudrate control register settings mask */
         lea       bauddata,a2
@@ -1481,6 +1466,29 @@ bauddata: dc.b $01,$02,$04,$05,$08,$0a,$0b,$10,$20,$40,$60,$80,$8f,$af,$40,$60
 
 
 /*************************************************************************
+ * get next index for ringbuffer into D1
+ *************************************************************************/
+wrapin:
+        addq.w    #1,d1                         /* i=h+1 */
+        cmp.w     size(a0),d1                   /* > i => current bufsiz? */
+        bcs.s     wrapin1                       /* no... */
+        moveq.l   #0,d1                         /* wrap pointer */
+wrapin1:
+        rts
+
+/*************************************************************************
+ * get next index for ringbuffer into D2
+ *************************************************************************/
+wrapout:
+        addq.w    #1,d2                         /* i=h+1 */
+        cmp.w     IOREC_SIZE+size(a0),d2        /* > i => current bufsiz? */
+        bcs.s     wrapout1                      /* no... */
+        moveq.l   #0,d2                         /* wrap pointer */
+wrapout1:
+        rts
+
+
+/*************************************************************************
  * receiver buffer full interrupt handler for IKBD/MIDI ACIA
  *************************************************************************/
 /* 306de: 00e03268 */
@@ -1490,21 +1498,22 @@ bauddata: dc.b $01,$02,$04,$05,$08,$0a,$0b,$10,$20,$40,$60,$80,$8f,$af,$40,$60
 /* 162de: 00e03ca0 */
 _int_acia:
         movem.l   d0-d3/a0-a3/a5,-(a7)
-        SETBASEREG
+        /* SETBASEREG */
+        lea       0,a5
 intacia1:
         movea.l   ABSW(midisys),a2
         jsr       (a2)
         movea.l   ABSW(ikbdsys),a2
         jsr       (a2)
-        btst      #4,ABSW(MFP_GPIP)    /* ACIA receiver buffer empty? */
+        btst      #4,ABSW2(MFP_GPIP)    /* ACIA receiver buffer empty? */
         beq.s     intacia1             /* no, read more bytes */
-        bclr      #6,ABSW(MFP_ISRB)    /* clear in-service bit */
+        bclr      #6,ABSW2(MFP_ISRB)    /* clear in-service bit */
         movem.l   (a7)+,d0-d3/a0-a3/a5
         rte
 
 _midisys:
         lea.l     ABSW(midiiorec),a0
-        lea.l     ABSW(ACIA_MIDI_BASE),a1
+        lea.l     ABSW2(ACIA_MIDI_BASE),a1
         movea.l   ABSW(vmiderr),a2
         bra.s     _aciasys
 _ikbdsys:
@@ -1709,6 +1718,7 @@ kbdvec10:
 kbdvec11:
         btst      #7,d0                         /* was key released? */
         bne.s     kbdvec12
+#if TOSVERSION >= 0x102
         move.b    d0,ABSW(kb_key_last)          /* save for key repeat */
         move.b    kb_initial,ABSW(kb_ticks)
         move.b    kb_repeat,ABSW(kb_delay)
@@ -1718,6 +1728,21 @@ kbdvec12:
         bclr      #7,d1
         cmp.b     ABSW(kb_key_last),d1
         bne.s     kbdvec13
+#else
+        tst.b      ABSW(kb_key_last)
+        bne.s      kbdvec90
+        move.b     d0,ABSW(kb_key_last)
+        move.b     kb_initial,ABSW(kb_ticks)
+        move.b     kb_repeat,ABSW(kb_delay)
+        bra.s      kbdvec15
+kbdvec90:
+        move.b     #0,ABSW(kb_ticks)
+        move.b     #0,ABSW(kb_delay)
+        bra.s      kbdvec15
+kbdvec12:
+        tst.b      ABSW(kb_key_last)
+        beq.s      kbdvec13
+#endif
         moveq.l   #0,d1
         move.b    d1,ABSW(kb_key_last)
         move.b    d1,ABSW(kb_ticks)
@@ -1769,7 +1794,7 @@ kbdvec19:
 kbdvec20:
         move.b    0(a0,d0.w),d0                 /* get ascii code from key table */
         btst      #2,ABSW(_shifty)              /* control active? */
-        beq.s     kbdvec27
+        beq.s     kbdvec28
         cmpi.b    #$0D,d0                       /* control-CR, convert to LF */
         bne.s     kbdvec21
         moveq.l   #10,d0
@@ -1807,6 +1832,11 @@ kbdvec26:
         moveq.l   #$1f,d0
         bra       kbdvec44
 kbdvec27:
+#if TOSVERSION < 0x102
+        andi.w    #31,d0
+        bra       kbdvec42
+#endif
+kbdvec28:
         btst      #3,ABSW(_shifty)              /* is alt active? */
         beq       kbdvec42
 
@@ -2226,8 +2256,10 @@ kbdvec37:
         move.b    #$01,d2
         bra       keymous4
 kbdvec38:
+#if TOSVERSION >= 0x102
         btst      #2,ABSW(_shifty)              /* is control active? */
         bne.s     kbdvec43                      /* yes, skip */
+#endif
         cmpi.b    #$02,d1                       /* is scancode between '1' key and '=' key? */
         bcs.s     kbdvec39
         cmpi.b    #$0D,d1
@@ -2249,10 +2281,12 @@ kbdvec41:
         bhi.s     kbdvec44
         bra.s     kbdvec40
 kbdvec42:
+#if TOSVERSION >= 0x102
         btst      #2,ABSW(_shifty)
         beq.s     kbdvec44
 kbdvec43:
         andi.w    #$001F,d0
+#endif
 kbdvec44:
         asl.w     #8,d1                         /* put scancode to high byte */
         add.w     d1,d0                         /* insert ascii code */
@@ -2272,6 +2306,7 @@ kbdvec45:
         swap      d0
         lsl.l     #8,d0
         lsr.w     #8,d0
+#if TOSVERSION >= 0x104
         move.l    d0,d2                         /* save keycode for tests */
         bclr      #28,d2                        /* clear capslock state */
         swap      d2
@@ -2279,12 +2314,17 @@ kbdvec45:
         beq       _main                         /* yes, reset */
         cmp.w     #$0D53,d2                     /* control+alt+leftshift-delete? */
         beq       coldboot
+#endif
         btst      #3,ABSW(_conterm)
         bne.s     kbdvec46
         andi.l    #$00FFFFFF,d0
 kbdvec46:
+#if TOSVERSION >= 0x102
         and.l     #$0000FFFF,d1
         move.l    d0,0(a2,d1.l)
+#else
+        move.l    d0,0(a2,d1.w)
+#endif
         move.w    d1,tail(a0)
 kbdvec47:
         rts
@@ -2323,8 +2363,12 @@ midivec1:
         cmp.w     head(a0),d1                   /* head=tail? */
         beq.s     midivec2                      /* yes */
         movea.l   buf(a0),a2                    /* get buffer pointer */
+#if TOSVERSION >= 0x102
         and.l     #$0000FFFF,d1
         move.b    d0,0(a2,d1.l)                 /* store the data */
+#else
+        move.b    d0,0(a2,d1.w)                 /* store the data */
+#endif
         move.w    d1,tail(a0)                   /* store the new buftail pointer */
 midivec2:
         rts
@@ -2366,6 +2410,7 @@ keymous4:
 mousekey:  dc.b      $47,$c7,$52,$d2
 
 
+#if TOSVERSION >= 0x104
 /* 306de: 00e0380c */
 /* 206de: 00e03466 */
 /* 404: 00e0398c */
@@ -2398,6 +2443,7 @@ coldbool:	movem.l   d0-d7,(a0)
 coldbooe:   move.l    ABSW(4),a0
             jmp       (a0)
 coldbend:   dc.w 0
+#endif
 
 
 /*************************************************************************
@@ -2453,6 +2499,32 @@ giacces1:
         move.w    (a7)+,sr
         rts
 
+
+/*************************************************************************
+ * clear RTS signal
+ *************************************************************************/
+/* 306de: 00e02a18 */
+/* 206de: 00e026e2 */
+/* 104de: 00fc39d4 */
+rtsoff:
+        moveq     #8,d2
+        bra.s     onbit
+
+/*************************************************************************
+ * set RTS signal
+ *************************************************************************/
+/* 306de: 00e029fc */
+/* 206de: 00e026c6 */
+/* 104de: 00fc39b6 */
+/* 106de: 00e03b76 */
+rtson:
+        moveq.l   #-9,d2
+        bra.s     offbit
+
+/* unused */
+dtroff:
+        moveq.l   #16,d2
+        bra.s     onbit
 
 /*********************************************************************
  *       routine to turn on the dtr signal                           *
@@ -2704,7 +2776,7 @@ _xbtimer:
         bmi.s     imrts
         movea.l   10(a7),a2                     /* setup for initint call */
         moveq.l   #0,d1                         /* clear long */
-        lea.l     xbtimtab(pc),a1               /* point to timer -> interrupt # translation tab */
+        lea.l     xbtimtab,a1                   /* point to timer -> interrupt # translation tab */
         andi.l    #$000000FF,d0                 /* mask off the highest three bytes in register */
         move.b    0(a1,d0.w),d0                 /* setup for initint call */
         bsr       initint
@@ -2775,9 +2847,9 @@ _keytbl3:
 /* 106de: 00e043f6 */
 	xdef _bioskeys
 _bioskeys:
-        move.l    #_keytblnorm,ABSW(_curkeytbl)
-        move.l    #_keytblshift,ABSW(_curkeytbl+4)
-        move.l    #_keytblcaps,ABSW(_curkeytbl+8)
+        move.l    #keytblnorm,ABSW(_curkeytbl)
+        move.l    #keytblshift,ABSW(_curkeytbl+4)
+        move.l    #keytblcaps,ABSW(_curkeytbl+8)
         rts
 
 /*************************************************************************
@@ -2934,7 +3006,8 @@ timercint:
         rol.w     _tim_c_sieve                  /* rotate divisor bits */
         bpl.s     timerci3                      /* if not 4th interrupt, then return */
         movem.l   d0-d7/a0-a6,-(a7)
-		SETBASEREG
+		/* SETBASEREG */
+		lea       0,a5
 		
         bsr.s     soundirq                      /* process sounds */
 
@@ -2999,7 +3072,7 @@ timerci3:
 soundirq:
         movem.l   d0-d1/a0,-(a7)
         move.l    ABSW(_sndtable),d0            /* get current sound ptr */
-        beq.s     soundir7                      /* br to exit if zero, inactive */
+        beq       soundir7                      /* br to exit if zero, inactive */
         movea.l   d0,a0                         /* ptr to a0 */
         move.b    ABSW(_snddelay),d0            /* check delay timer */
         beq.s     soundir1                      /* br over delay timer update if not on */
@@ -3011,20 +3084,20 @@ soundir1:
         move.b    (a0)+,d0                      /* pick up next sound command */
         bmi.s     soundir3                      /* if minus, go do special */
 
-        move.b    d0,ABSW(psgsel)               /* else, register load command--select this */
+        move.b    d0,ABSW2(psgsel)              /* else, register load command--select this */
         cmpi.b    #$07,d0                       /* reg. 7 selected? */
         bne.s     soundir2                      /* br if no */
 
         move.b    (a0)+,d1                      /* get data to write to reg 7 */
         andi.b    #$3F,d1                       /* always leave i/o port settings alone */
-        move.b    ABSW(psgsel),d0               /* get mixer contents */
+        move.b    ABSW2(psgsel),d0              /* get mixer contents */
         andi.b    #$C0,d0                       /* mask off non-useful info... */
         or.b      d1,d0                         /* generate new setting */
-        move.b    d0,ABSW(psgwr)                /* write data */
+        move.b    d0,ABSW2(psgwr)               /* write data */
         bra.s     soundir1                      /* go for next command */
 
 soundir2:
-        move.b    (a0)+,ABSW(psgwr)             /* write next byte as data directly to reg */
+        move.b    (a0)+,ABSW2(psgwr)            /* write next byte as data directly to reg */
         bra.s     soundir1                      /* go for next command */
 /*  special case command */
 soundir3:
@@ -3041,11 +3114,11 @@ soundir4:
         cmpi.b    #$82,d0                       /* command greater than 129 */
         bne.s     soundir5                      /* br if yes--must be set timer */
 /*  command 129 */
-        move.b    (a0)+,ABSW(psgsel)            /* 129--select register */
+        move.b    (a0)+,ABSW2(psgsel)           /* 129--select register */
         move.b    (a0)+,d0                      /* get increment step (signed) */
         add.b     d0,ABSW(_sndtmp)              /* add to aux data */
         move.b    (a0)+,d0                      /* terminating value */
-        move.b    ABSW(_sndtmp),ABSW(psgwr)     /* load reg from data in auxd */
+        move.b    ABSW(_sndtmp),ABSW2(psgwr)    /* load reg from data in auxd */
         cmp.b     ABSW(_sndtmp),d0              /* reached end of cycle? */
         beq.s     soundir6                      /* br if so */
 /*  still within loop, reset sound pointer to iterate for next irq */
@@ -3062,39 +3135,12 @@ soundir7:
         movem.l   (a7)+,d0-d1/a0                /* pop stack & exit */
         rts
 
-#if TOSVERSION > 0x104
-/*********************************************************
- * VT52 emulator callback for the bell sound
- *********************************************************/
-/* 306de: 00e03b86 */
-/* 206de: 00e037a4 */
-/* 104de: 00fc34e4 */
-/* 106de: 00e0454c */
-#if !BINEXACT
-		xdef ringbell
-#endif
-ringbell:
-        btst      #2,ABSW(_conterm)             /* console bell enabled? */
-        beq.s     soundir8                      /* (no sound) */
-        movea.l   _bell_hook,a0
-        jsr       (a0)                          /* go through the bell vector */
-        rts
-
-/*
- * default function for system variable bell_hook
- */
-/* 306de: 00e03b98 */
-/* 206de: 00e037b6 */
-/* 106de: 00e0455e */
-	xdef _do_bell
-_do_bell:
-        move.l    #_bellsnd,ABSW(_sndtable)     /* sound data for console bell */
-        move.b    #0,ABSW(_snddelay)            /* enable sound timer */
-soundir8:
-        rts
-#endif
+#include "sounds.inc"
 
 		bss
 		
+#if TOSVERSION >= 0x104
 		xdef baudrate
 		comm baudrate,2
+#endif
+

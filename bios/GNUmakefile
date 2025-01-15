@@ -44,6 +44,8 @@ tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 
 keytbl.o: $(top_srcdir)/common/config.h
 
+chardev.o: $(top_srcdir)/common/config.h keytbl.inc sounds.inc
+
 prtkeys$(EXEEXT): prtkeys.o
 	$(AM_V_LD)${LD} ${LDFLAGS} -o $@ prtkeys.o
 

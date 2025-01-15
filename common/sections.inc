@@ -655,6 +655,13 @@
 #define GLUELEN     $000041C4
 #endif
 
+#if OS_COUNTRY == CTRY_FR
+#define BIOSTLEN    BTLEN_US+$78
+#define DESKTLEN    DTLEN_US-$2A
+#define DESKDLEN    $000009D6
+#define GLUELEN     $000044D6
+#endif
+
 #endif /* TOSVERSION == 0x100 */
 
 

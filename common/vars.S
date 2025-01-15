@@ -78,10 +78,10 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	INT(fd_side)
 	INT(fd_scount)
 	PTR(fd_buffer)
+	PTR(fd_dmaend)
 	INT(fd_spt)
 	INT(fd_interlv)
 	INT(fd_virgin)
-	PTR(fd_secmap)
 
 	LONG(lastacstm)
 
@@ -225,7 +225,7 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 
 	V(_secbuf,b,4*SECTOR_SIZE)
 
-	ds.b 2 /* unused? */
+	INT(_curflop)
 
 	INT(_prtbrval)
 	INT(_prtbwords)
@@ -550,10 +550,6 @@ _endvdibss: ds.b 0
 
 	/* ZZZ todo */
 
-	INT(_width)
-
-	INT(_height)
-
 	PTR(_ofdlist)
 
 	INT(_rrecno)
@@ -567,12 +563,10 @@ _endvdibss: ds.b 0
 
 	V(_ofdbuf,b,70*80)
 
-	BYTE(_osuser)
 	PTR(_dirrec)
 
 	V(_ospd,b,256)
 
-	INT(_curflop)
 
 	V(_aautopath,b,CMDLEN)
 	V(_do_srcpath,b,PATHLEN)
@@ -582,9 +576,6 @@ _endvdibss: ds.b 0
 	V(_do_srcname,b,16)
 	V(_cp_dst,b,122)
 
-#if TOSVERSION >= 0x106
-	PTR(savea0)
-#endif
 	V(psetsr,w,1)
 
 	LONG(retaddr)
@@ -625,7 +616,6 @@ _endvdibss: ds.b 0
 	V(_g_autoboot,b,CMDLEN)
 	INT(_g_wsend)
 
-	PTR(_gl_pglue)
 	INT(_fs_first)
 	INT(_fs_count)
 	LONG(_fs_fnum)
@@ -635,12 +625,25 @@ _endvdibss: ds.b 0
 	
 	INT(_gl_kstate)
 
+	BYTE(_osuser)
+	even
 #if TOSVERSION >= 0x104
+	/*
+	 * just for reference:
+	 * variables that were used in later TOS versions,
+	 * in no particular order
+	 */
 	INT(_gl_play)
 	PTR(_gl_store)
 	INT(_tbutton)
 	INT(_gl_mx)
 	INT(_gl_my)
+	INT(_width)
+	INT(_height)
+	PTR(_gl_pglue)
+#endif
+#if TOSVERSION >= 0x106
+	PTR(savea0)
 #endif
 
 	ds.b 2

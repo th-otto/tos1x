@@ -3,7 +3,6 @@
 #include "tosvars.inc"
 #include "biosdefs.h"
 
-
 	text
 
 /**************************************************************************
@@ -15,6 +14,7 @@
 /* 206de: 00e01e86 */
 /* 104de: 00fc315e */
 /* 106de: 00e03336 */
+/* 100de: 00fc1d12 */
 	xdef _clockvec
 _clockvec:
 		lea.l     0,a5                          /* set base register */
@@ -44,34 +44,54 @@ _clockvec:
         move.b    #0,ABSW(iclk_ready)           /* clear handshaking flag */
         rts
 
-
+/*
+ * XBIOS #17 - Gettime - Gets intelligent keyboard's time and date
+ *
+ * Returns that value (in DOS format) as a 32-bit word.
+ * (Time in the low word, date in the high word).
+ */
 /* 306de: 00e021a4 */
 /* 206de: 00e01eca */
 /* 104de: 00fc31a8 */
 /* 106de: 00e03380 */
-	xdef igetdt
+/* 100de: 00fc1d5c */
+		xdef _gettime
+_gettime: ds.b 0
+		xdef igetdt
 igetdt:
         move.b    #-1,ABSW(iclk_ready)
         move.b    #$1C,d1    /* send read clock command */
         bsr       ikbd_writeb
+#if TOSVERSION >= 0x104
         movea.l   ABSW(_hz_200),a0
         adda.w    #200,a0
         moveq.l   #0,d0
+#endif
 igetdt1:
+#if TOSVERSION >= 0x104
         cmpa.l    ABSW(_hz_200),a0
         bcs.s     igetdt2
+#endif
         tst.b     ABSW(iclk_ready)
         bne.s     igetdt1
         move.l    ABSW(iclkrtime),d0
 igetdt2:
         rts
 
+/*
+ * XBIOS #16 - Settime - Sets the intelligent keyboard's time and date.
+ *
+ * 'datetime' is a 32-bit DOS-format date and time (time in the low word,
+ * date in the high word).
+ */
 /* 306de: 00e021ce */
 /* 206de: 00e01ef4 */
 /* 104de: 00fc31d2 */
 /* 106de: 00e033aa */
-/* 100fr: 00fc1d76 */ 
-	xdef isetdt
+/* 100de: 00fc1d76 */ 
+		xdef _settime
+_settime: ds.b 0
+		xdef isetdt
 isetdt:
         move.l    4(a7),ABSW(iclkwtime)
         lea.l     iclkbuf+6,a0
@@ -121,12 +141,25 @@ isetdt:
  **************************************************************************/
 bcdput:
         moveq.l   #0,d1
+#if TOSVERSION >= 0x102
         move.b    d0,d1
         divs.w    #10,d1
         asl.w     #4,d1
         move.w    d1,d0
         swap      d1
         add.w     d1,d0
+#else
+        moveq.l    #10,d3
+bcdput1:
+        sub.b      d3,d0
+        bmi.s      bcdput2
+        addq.b     #1,d1
+        bra.s      bcdput1
+bcdput2:
+        addi.b     #10,d0
+        asl.b      #4,d1
+        add.b      d1,d0
+#endif
         move.b    d0,-(a0)                      /* transfer to output clock buffer */
         rts
 
@@ -138,12 +171,24 @@ bcdput:
  *                                                                        *
  **************************************************************************/
 bcdget:
+#if TOSVERSION >= 0x102
         move.b    (a0)+,d0                      /* get bcd byte */
         move.b    d0,d1
         and.w     #$000F,d0                     /* dump high nibble */
         and.w     #$00F0,d1                     /* isolate high nibble */
         asr.w     #4,d1                         /* dump low nibble */
         mulu.w    #10,d1                        /* high nibble * 10 */
+#else
+        moveq.l    #0,d0
+        move.b     (a0),d0
+        lsr.b      #4,d0
+        lsl.b      #1,d0
+        move.b     d0,d1
+        asl.b      #2,d0
+        add.b      d1,d0
+        move.b     (a0)+,d1
+        andi.w     #15,d1
+#endif
         add.w     d1,d0                         /* + low nibble */
         rts
 

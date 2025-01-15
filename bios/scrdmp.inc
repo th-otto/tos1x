@@ -52,7 +52,7 @@ _bscr_dump:
         move.w    d0,(_pbdef+22)                /* pbdef.pb_prtype */
 /* do it */
         pea.l     ABSW(_pbdef)
-        move.w    #$0001,ABSW(_dumpflg)
+        move.w    #$0001,ABSW2(_dumpflg)
         bsr       _prtblk
         move.w    #-1,_dumpflg
         addq.w    #4,a7

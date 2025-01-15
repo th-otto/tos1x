@@ -45,8 +45,11 @@
 #include "gsxdef.h"
 #include "gsxextrn.h"
 
+#if TOSVERSION >= 0x102
+/* in old versions, part of the overlay area */
 int16_t width;
 int16_t height;
+#endif
 
 static VOID make_header PROTO((NOTHING));
 

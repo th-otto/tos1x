@@ -1,7 +1,3 @@
-#include "bios.h"
-
-/* Note: note used for TOS < 1.04, see sounds.inc instead */
-
 /*
  * sound data...
  *
@@ -44,37 +40,37 @@
  *
  */
 
-/* 106de: 00e2a3c8 */
-uint8_t const bellsnd[] = {
-  0, 0x34,    /* channel A pitch */
-  1, 0,
-  2, 0,       /* no channel B */
-  3, 0,
-  4, 0,       /* no channel C */
-  5, 0,
-  6, 0,       /* no noise */
-  7, 0xFE,    /* no sound or noise except channel A */
-  8, 0x10,    /* channel A amplitude */
-  9, 0,
-  10, 0,
-  11, 0,      /* envelope */
-  12, 16,
-  13, 9,
-  0xFF, 0,    /* stop sound */
-};
+/* 100fr: 00fc3094 */
+_bellsnd:
+  dc.b 0, 0x34     /* channel A pitch */
+  dc.b 1, 0
+  dc.b 2, 0        /* no channel B */
+  dc.b 3, 0
+  dc.b 4, 0        /* no channel C */
+  dc.b 5, 0
+  dc.b 6, 0        /* no noise */
+  dc.b 7, 0xFE     /* no sound or noise except channel A */
+  dc.b 8, 0x10     /* channel A amplitude */
+  dc.b 9, 0
+  dc.b 10, 0
+  dc.b 11, 0       /* envelope */
+  dc.b 12, 16
+  dc.b 13, 9
+  dc.b 0xFF, 0    /* stop sound */
 
-uint8_t const clicksnd[] = {
-  0, 0x3B,
-  1, 0,
-  2, 0,
-  3, 0,
-  4, 0,
-  5, 0,
-  6, 0,
-  7, 0xFE,
-  8, 16,
-  13, 3,
-  11, 0x80,
-  12, 1,
-  0xFF, 0,
-};
+/* 100fr: 00fc30b2 */
+_clicksnd:
+  dc.b 0, 0x3B
+  dc.b 1, 0
+  dc.b 2, 0
+  dc.b 3, 0
+  dc.b 4, 0
+  dc.b 5, 0
+  dc.b 6, 0
+  dc.b 7, 0xFE
+  dc.b 8, 16
+  dc.b 13, 3
+  dc.b 11, 0x80
+  dc.b 12, 1
+  dc.b 0xFF, 0
+

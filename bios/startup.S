@@ -150,6 +150,8 @@ _os_conf:               /* Flag for PAL version + country */
 #endif
 _os_dosdate:
     dc.w   OS_DOSDATE   /* os_date, Date of system build in GEMDOS format */
+    /* following variables did not exist in 1.00 */
+#if TOSVERSION >= 0x102
 os_root:
     dc.l   _root        /* Pointer to the GEMDOS mem pool */
 os_kbshift:
@@ -158,7 +160,7 @@ os_run:
     dc.l   _run         /* Pointer to a pointer to the actual basepage */
 os_dummy:
     dc.l   0            /* _main should start at offset 0x30, shouldn't it? */
-
+#endif
 
         data
 _ui_mupb:
@@ -197,7 +199,6 @@ _main:
 #else
         reset                  /* reset all hardware */
 #endif
-		SETBASEREG
 
 /*
  * Check for diagnostic cartridge
@@ -212,9 +213,11 @@ nodiag:
         bra       memchk
 memcret:
         bne.s     resetvec
-        move.b    ABSW(memctrl),ABSW(memconf)  /* initialize memory controller */
+        move.b    ABSW2(memctrl),ABSW2(memconf)  /* initialize memory controller */
 
 resetvec:
+		SETBASEREG
+
 /*
  * Check, if we should jump to a reset vector after warmboot
  * The high byte of resvector must be zero,
@@ -235,7 +238,6 @@ resetvec:
 /* to a6, otherwise there will be an infinite loop. */
         jmp      (a0)                   /* jump to resvec */
 noreset:
-		SETBASEREG
 
 
 /*
@@ -251,7 +253,7 @@ noreset:
  */
 meminit:
 
-        lea.l     ABSW(psgsel),a0
+        lea.l     ABSW2(psgsel),a0
         move.b    #$07,(a0)  /* select mixer control */
         move.b    #$C0,2(a0) /* Port A+B = output */
         move.b    #$0E,(a0)  /* select Port A */
@@ -265,7 +267,7 @@ ret_1b:
 #if TP_02 /* COLOR_60HZ */
         move.b    #0,(v_syncmod).w          /* yes -- twiddle to 60hz */
 #else
-        move.b    #2,ABSW(v_syncmod)        /* yes -- twiddle to 50hz */
+        move.b    #2,ABSW2(v_syncmod)        /* yes -- twiddle to 50hz */
 #endif
 notpal:
 
@@ -273,7 +275,7 @@ notpal:
  * next, set up the palette(s)
  */
 
-        lea.l     ABSW(palette),a1
+        lea.l     ABSW2(palette),a1
         move.w    #16-1,d0
         lea.l     dflt_pal(pc),a0
 initpal:
@@ -281,12 +283,13 @@ initpal:
         dbf       d0,initpal
 
 /* set Video screen memory position to 0x10000 */
-        move.b    #$01,ABSW(v_bas_h)
-        clr.b     ABSW(v_bas_m)
+        move.b    #$01,ABSW2(v_bas_h)
+        move.b    #0,ABSW2(v_bas_m)
 
 #if TOSVERSION >= 0x106
 		clr.b     ABSW(v_bas_l)
 #endif
+		SETBASEREG
 
         move.b    ABSW(memctrl),d6                /* d6 = memory controller configuration */
 
@@ -299,7 +302,7 @@ memcret2:
 /* First we try to configure the memory controller */
 
             clr.w     d6
-            move.b    #$a,ABSW(memconf)			/* default: setup controller for 2Mb/2Mb */
+            move.b    #$a,ABSW2(memconf)			/* default: setup controller for 2Mb/2Mb */
 
             movea.w   #$8,a0
             lea       $200008,a1				/* + 2Mb */
@@ -357,7 +360,6 @@ chkmem7:    sub.l     #$200000,d1				/* - 2Mb */
  * memory location) causes us to stop and size the memory accordingly.
  */
 
-        lea.l     $00008000,a7
         movea.l   (_buserror).l,a4
         lea.l     st_ramsize_done(pc),a0 /* bus error means end of ram */
         move.l    a0,(_buserror).l
@@ -389,64 +391,30 @@ st_ramsize_done:                    /* bus error or bad ram  */
         move.l    a0,d5               /* d5 = st ram size */
         move.l    a4,(_buserror).l
 
-#if TOSVERSION < 0x106
-		SETBASEREG
-		move.l    d5,d0
-		sub.l     #$00008000,d0
-		lsr.w     #8,d0
-		move.b    d0,ABSW(v_bas_m)
-		swap      d0
-		move.b    d0,ABSW(v_bas_h)
-		movea.l   d5,a0
-#endif
-
 /* =========================================================================== */
 /* ==== This part is executed only on first boot ============================= */
 /* =========================================================================== */
 
         /* Clear the memory */
-#if TOSVERSION >= 0x106
-#if TP_04 /* MEM_INIT & !RAMRESET */
-        movea.w   #$100,a0
-#else
-        move.l    #sysvars_start,a0
-#endif
-        move.l    d5,d4
-        moveq.l   #0,d0
-clrmem:
-		move.l    d0,(a0)+
-		move.l    d0,(a0)+
-		move.l    d0,(a0)+
-		move.l    d0,(a0)+
-        cmpa.l    d4,a0
-        bne.s     clrmem
-#else
+        move.l    d5,a0
 #if TP_04 /* MEM_INIT & !RAMRESET */
         move.l    #$100,d4
 #else
         move.l    #sysvars_start,d4
 #endif
-        moveq.l   #0,d0
-        moveq.l   #0,d1
-        moveq.l   #0,d2
-        moveq.l   #0,d3
+		movem.l   zeroes(pc),d0-d3
 clrmem:
-		movem.l   d0-d3,-(a0)
-		movem.l   d0-d3,-(a0)
-		movem.l   d0-d3,-(a0)
 		movem.l   d0-d3,-(a0)
         cmpa.l    d4,a0
         bne.s     clrmem
 
 		SETBASEREG
-#endif
 
         move.b    d6,ABSW(memctrl)
         move.l  d5,ABSW(_phystop)            /* highest address as phystop */
 
         move.l    #$752019F3,ABSW(_memvalid) /* set memvalid to ok */
         move.l    #$237698AA,ABSW(_memval2)  /* set memval2 to ok */
-        move.l    #$5555AAAA,ABSW(_memval3)  /* set memval3 to ok */
 
 #if TOSVERSION >= 0x106
 		clr.l     ABSW2(_ramtop)             /* no FASTRAM available */
@@ -462,7 +430,7 @@ nomemchk:
 
 /* clear the remainder of the BSS section */
 
-        movea.l   #__sbss,a0
+        movea.w   #__sbss,a0
         movea.l   #$10000,a1
         moveq.l   #0,d0
 clrbss:
@@ -476,13 +444,13 @@ scrsize equ ((640*400)/8+$300)
 
         movea.l   ABSW(_phystop),a0
         suba.l    #scrsize,a0
-        move.w    #(scrsize/16)-1,d1
         move.l    a0,ABSW(_v_bas_ad)
-        move.b    ABSW(_v_bas_ad+1),ABSW(v_bas_h)
-        move.b    ABSW(_v_bas_ad+2),ABSW(v_bas_m)
+        move.b    ABSW(_v_bas_ad+1),ABSW2(v_bas_h)
+        move.b    ABSW(_v_bas_ad+2),ABSW2(v_bas_m)
 #if TOSVERSION >= 0x106
         move.b    ABSW(_v_bas_ad+3),ABSW(v_bas_l)
 #endif
+        move.w    #(scrsize/16)-1,d1
 clrscr:
         move.l    d0,(a0)+
         move.l    d0,(a0)+
@@ -496,8 +464,8 @@ clrscr:
         beq.s     gemok
         lea.l     _os_beg(pc),a0
 gemok:
-        move.l    4(a0),ABSW(_end_os)
-        move.l    8(a0),ABSW(_exec_os)
+        move.l    4(a0),ABSW2(_end_os)
+        move.l    8(a0),ABSW2(_exec_os)
 
 /* =========================================================================== */
 /* initialize system variables */
@@ -529,7 +497,9 @@ gemok:
         move.l    #_os_entry,ABSW(_sysbase)          /* unnessary; will be overwritten by instoshdr below */
         move.l    #save_beg+save_siz,ABSW(_savptr)   /* register-save pointer for traps 13&14 */
         move.l    #bios_unimpl,ABSW(_swv_vec)        /* ignore monitor changes for now */
+#if TOSVERSION >= 0x104
         clr.l     ABSW(_drvbits)                     /* remove all drives */
+#endif
 #if TOSVERSION >= 0x106
         move.l    #_do_bell,ABSW(_bell_hook)
         move.l    #_do_keyclick,ABSW(_kcl_hook)
@@ -608,8 +578,10 @@ cooVDO:	move.l    #$5F56444F,(a0)+
         move.l    #NCOOKIES,(a0)+
 
 #else
+#if TOSVERSION >= 0x104
         clr.w     ABSW(_longframe)
         bsr       instoshdr
+#endif
 #endif
 		
 /* =========================================================================== */
@@ -642,11 +614,13 @@ initexc:
         move.l    a3,(_zerodiv).l      /* ignore zero divide */
 noexc:
 
+#if TOSVERSION >= 0x104
         moveq.l   #6,d0
         lea.l     ABSW(_lvl1vec),a1
 initauto:
         move.l    #just_rte,(a1)+      /* ignore auto vectors */
         dbf       d0,initauto
+#endif
 
         move.l    #int_vbl,ABSW(_lvl4vec)      /* vblank handler */
         move.l    #int_hbl,ABSW(_lvl2vec)      /* hblank handler */
@@ -668,6 +642,7 @@ initvbl:
         clr.l     (a0)+
         dbf       d0,initvbl
 
+#if TOSVERSION >= 0x104
 /* init bios device vectors */
         lea.l     tconstat,a0
         movea.w   #_bconstat_vec,a1
@@ -675,12 +650,14 @@ initvbl:
 initcon:
         move.l    (a0)+,(a1)+
         dbf       d0,initcon
+#endif
 
 
 
 /* initialize MFP */
         bsr       initmfp
 
+#if TOSVERSION >= 0x104
 /* reset IKBD */
         move.l    #ikbdres,-(a7)
         move.w    #$0001,-(a7)
@@ -690,48 +667,50 @@ initcon:
 ikbdwait:
         bsr       nodiskboot
         dbf       d0,ikbdwait
+#endif
 
 /* Run all boot applications from the application cartridge,
  * before video initialization.
  */
         moveq.l   #2,d0
         bsr       _run_cartridge_applications
-		SETBASEREG
 
 /*
  * check monitor type, and set boot resolution
  */
-        move.b    ABSW(v_shf_mod),d0
+        move.b    ABSW2(v_shf_mod),d0
 		and.b     #$03,d0
 		cmp.b     #$03,d0
 		bne.s     shfmodok
 		moveq.l   #STHIGH,d0
 shfmodok:
-		move.b    d0,ABSW(_sshiftmod)  /* .. and also system var */
+		move.b    d0,ABSW2(_sshiftmod)  /* .. and also system var */
 
-		move.b    ABSW(MFP_GPIP),d0
+		move.b    ABSW2(MFP_GPIP),d0
 		bmi.s     nomonomon
 		lea.l     monchkret(pc),a6
 		bra       waitvbl
 monchkret:
-		move.b    #STHIGH,ABSW(v_shf_mod)
-		move.b    #STHIGH,ABSW(_sshiftmod)
+		move.b    #STHIGH,ABSW2(v_shf_mod)
+		move.b    #STHIGH,ABSW2(_sshiftmod)
 nomonomon:
 
+#if TOSVERSION >= 0x102
         bsr       blittest
         jsr       resetdev                /* linaA blitter/no-blitter table init */
+#endif
         jsr       esc_init                /* clear screen, initialize cursor */
 
-		cmpi.b    #STMED,ABSW(_sshiftmod)
+		cmpi.b    #STMED,ABSW2(_sshiftmod)
 		bne.s     nomed
-		move.w    ABSW(palette+30),ABSW(palette+6)
+		move.w    ABSW2(palette+30),ABSW2(palette+6)
 nomed:
 
 /*
  * initialize video
  */
         move.l    #_main,ABSW(_swv_vec)     /* RESET system on monitor change */
-        move.w    #$0001,ABSW(_vblsem)      /* enable vblank processing */
+        move.w    #$0001,ABSW2(_vblsem)      /* enable vblank processing */
 
 /* Run all boot applications from the application cartridge,
  * after hardware initialization.
@@ -780,13 +759,15 @@ biosinit: ds.b 0
 #if TOSVERSION >= 0x106
 		nop
 #endif
-		jsr       _osinit            /* initialize DOS */
+		bsr       _osinit            /* initialize DOS */
 
-/* --- set the current system time and date */
-        move.w    _os_dosdate,_date  /* use BIOS time as current time */
 #if (HD_WAIT == 1) | (HD_WAIT == 2) | (HD_WAIT == 3)
 		bsr       hd_wait
 #endif
+
+/* --- set the current system time and date */
+
+#if TOSVERSION >= 0x104
         bsr       igetdt             /* read time from the keyboard controller */
         swap      d0
         tst.b     d0
@@ -795,6 +776,12 @@ biosinit: ds.b 0
         swap      d0
         move.w    d0,_time
 clockdone:
+#else
+        move.w    _os_dosdate,-(a7)  /* use BIOS time as current time */
+        move.w     #$002B,-(a7)      /* Tsetdate */
+        trap       #1
+        addq.w     #4,a7
+#endif
 
 /* boot eventually from a block device (floppy or harddisk) */
         bsr       diskboot
@@ -811,8 +798,11 @@ clockdone:
         bsr       run_reset_resident
         tst.w     _cmdload                     /* load shell from disk? */
         beq.s     nocmd
+        bsr       esce
         bsr       autoexec
+#if TOSVERSION >= 0x104
         move.l    #_os_entry,_sysbase          /* -> base of OS */
+#endif
         pea.l     emptystr(pc)                 /* null environment string */
         pea.l     emptystr(pc)                 /* null argument string */
         pea.l     command_prg(pc)              /* push shell filename */
@@ -821,10 +811,12 @@ clockdone:
 nocmd:
 /* --- bring up GEM: */
         bsr       autoexec
+#if TOSVERSION >= 0x104
         move.l    #_os_entry,_sysbase
+#endif
 /* --- kludge up an enviroment string */
         lea.l     default_env(pc),a0
-        movea.l   #gem_env,a1
+        movea.w   #gem_env,a1
 copyenv:
         cmpi.b    #$23,(a0)                    /* look for drive# character */
         bne.s     nextenvc
@@ -876,8 +868,10 @@ gem_prg:     dc.b 'GEM.PRG'
 
 emptystr: dc.b 0,0,0
 
+#if TOSVERSION >= 0x104
 ikbdres:
         dc.b $80,$01
+#endif
 
 /* Run all boot applications from the application cartridge.
  * Beware: Hatari features a special cartridge which is used
@@ -888,6 +882,7 @@ ikbdres:
 /* 206de: 00e00962 */
 /* 104de: 00fc0530 */
 /* 106de: 00e00640 */
+/* 100fr: 00fc048c */
 diskboot:
         moveq.l   #3,d0
         bsr       _run_cartridge_applications
@@ -909,6 +904,7 @@ nodiskboot:
 /* 206de: 00e0097a */
 /* 104de: 00fc054c */
 /* 106de: 00e0065c */
+/* 100fr: 00fc04a8 */
 dmaboot:
 /* --- boot from DMA device */
 dmadone:
@@ -919,11 +915,10 @@ dmadone:
 #endif
 
 confdone:
-		suba.l    a4,a4
 dmadev:
         bsr.s     _dmaread             /* read first sector of this device */
         bne.s     nextdev
-        move.l    _dskbufp(a4),a0      /* buf = _dskbufp */
+        move.l    ABSW2(_dskbufp),a0   /* buf = _dskbufp */
         move.w    #256-1,d1            /* 256 word checksum over the boot sector */
         moveq.l   #0,d0
 dmacrc:
@@ -932,8 +927,8 @@ dmacrc:
         cmp.w     #$1234,d0            /* checksum == 0x1234? */
         bne.s     nextdev              
         /* execute this valid boot sector */
-        move.l    _dskbufp(a4),a0      /* buf = _dskbufp */
-        jsr       (a0)                   /* execute boot sector */
+        move.l    ABSW2(_dskbufp),a0   /* buf = _dskbufp */
+        jsr       (a0)                 /* execute boot sector */
 nextdev:
         add.b     #$20,d7
         bne.s     confdone
@@ -943,15 +938,14 @@ nextdev:
         rts
 
 _dmaread:
-		moveq.l   #1,d5
 dmaread1:
-		lea.l     $ffff8606(a4),a6
-		lea.l     $ffff8604(a4),a5
-		st        _flock(a4)
-		move.l    _dskbufp(a4),-(a7)
-		move.b    3(a7),$ffff860d(a4)
-		move.b    2(a7),$ffff860b(a4)
-		move.b    1(a7),$ffff8609(a4)
+		lea.l     ABSW2($ffff8606),a6
+		lea.l     ABSW2($ffff8604),a5
+		st        ABSW2(_flock)
+		move.l    ABSW2(_dskbufp),-(a7)
+		move.b    3(a7),ABSW2($ffff860d)
+		move.b    2(a7),ABSW2($ffff860b)
+		move.b    1(a7),ABSW2($ffff8609)
 		addq.w    #4,a7
 		move.w    #$0098,(a6)
 		move.w    #$0198,(a6)
@@ -1002,13 +996,12 @@ dmaread6: ds.b 0
 		move.w    (a5),d0
 		and.w     #$00FF,d0
 		beq.s     dmaread4
-		dbf       d5,dmaread1
 dmaread3:
 		moveq.l   #-1,d0
 dmaread4:
 		move.w    #$0080,(a6)
 		tst.b     d0
-		sf        _flock(a4)
+		sf        ABSW2(_flock)
 		rts
 acmdtab:
 		dc.l      $0000008a,$0000008A,$0000008a,$0001008A
@@ -1018,11 +1011,11 @@ acsistat:
 		moveq.l   #10,d1
 #endif
 acsista0:
-		add.l     _hz_200(a4),d1
+		add.l     ABSW2(_hz_200),d1
 acsista1:
-		btst      #5,MFP_GPIP(a4)
+		btst      #5,ABSW2(MFP_GPIP)
 		beq.s     acsista2
-		cmp.l     _hz_200(a4),d1
+		cmp.l     ABSW2(_hz_200),d1
 #if TOSVERSION >= 0x106
 		bhi.s     acsista1
 #else
@@ -1046,6 +1039,7 @@ acsista2:
 /* 206de: 00e00b68 */
 /* 104de: 00fc0628 */
 /* 106de: 00e0076a */
+/* 100fr: 00fc0596 */
 _run_cartridge_applications:
         lea     cart_base,a0
 cartext2:
@@ -1069,6 +1063,7 @@ cartover:
 /* 306de: 00e00bee */
 /* 206de: 00e00b9a */
 /* 104de: 00fc0652 */
+/* 100fr: 00fc05c0 */
 bios_unimpl:
 		rts
 
@@ -1109,15 +1104,18 @@ memchk2:
 /* 306de: 00e00c06 */
 /* 206de: 00e00bb2 */
 /* 104de: 00fc066a */
+/* 100fr: 00fc05d8 */
 memchk:
 		SETBASEREG
         cmpi.l    #$752019F3,ABSW(_memvalid)     /* test memory configuration validation, check first magic number */
         bne.s     memchk3                      /* (mismatched -- return NE) */
         cmpi.l    #$237698AA,ABSW(_memval2)      /* check one more (for paranoia) */
-        bne.s     memchk3                      /* (mismatched -- return NE) */
-        cmpi.l    #$5555AAAA,ABSW(_memval3)      /* check a third time (for more paranoia) */
 memchk3:
         jmp       (a6)                         /* return EQ/NE */
+
+/* four zeroes for memclr */
+zeroes:
+		dc.l 0,0,0,0
 
 /*
  * Default palette assignments.
@@ -1127,6 +1125,7 @@ memchk3:
 /* 206de: 00e00bd0 */
 /* 104de: 00fc068a */
 /* 106de: 00e007cc */
+/* 100fr: 00fc05fe */
 dflt_pal:
 #if TOSVERSION >= 0x106
 		dc.w $0fff     /* 0 white */
@@ -1179,6 +1178,7 @@ dflt_pal:
 /* 206de: 00e00bf0 */
 /* 104de: 00fc06aa */
 /* 404: 00e00c9a */
+/* 100fr: 00fc061e */
 int_hbl:
         move.w    d0,-(a7)            /* save d0 */
         move.w    2(a7),d0            /* get status register from stack */
@@ -1199,6 +1199,7 @@ is_ipl:
 /* 208de: 00e00baa */
 /* 104de: 00fc06c0 */
 /* 404: 00e00cb0 */
+/* 100fr: 00fc0634 */
 int_vbl:
         addq.l    #1,_frclock         /* increase num of happened ints */
         subq.w    #1,_vblsem          /* check vbl semaphore */
@@ -1228,13 +1229,15 @@ moncheck:
         not.b     d1
 nomoncheck:
 #else
+#if TOSVERSION >= 0x104
         move.b    ABSW(MFP_GPIP),d1
 #endif
-        move.b    ABSW(v_shf_mod),d0
+#endif
+        move.b    ABSW2(v_shf_mod),d0
 		and.b     #3,d0
 		cmp.b     #STHIGH,d0
 		bge.s     vbl_wasmono
-        btst      #7,d1
+        btst      #7,ABSW2(MFP_GPIP)
         bne.s     vbl_nomonchg
 		move.w    #2000,d0
 vblloop:
@@ -1243,7 +1246,7 @@ vblloop:
 		move.b    #STHIGH,d0
         bra.s     vbl_monchg
 vbl_wasmono:
-        btst      #7,d1
+        btst      #7,ABSW2(MFP_GPIP)
         beq.s     vbl_nomonchg
         move.b    ABSW(_defshiftmod),d0
 		cmp.b     #STHIGH,d0
@@ -1251,13 +1254,13 @@ vbl_wasmono:
         clr.b     d0 /* STLOW */
 vbl_monchg:
         move.b    d0,ABSW(_sshiftmod)
-		move.b    d0,ABSW(v_shf_mod)
+		move.b    d0,ABSW2(v_shf_mod)
         movea.l   ABSW(_swv_vec),a0
         jsr       (a0)
 
 vbl_nomonchg:
 
-        jsr       blink								/* blink cursor */
+        bsr       blink								/* blink cursor */
 		SETBASEREG
 
 /* --- reload color palettes */
@@ -1265,7 +1268,7 @@ vbl_nomonchg:
         tst.l     ABSW(_colorptr)						/* reload color palettes, if(colorptr != NULL).... */
         beq.s     vbl_no_palette
         movea.l   ABSW(_colorptr),a0					/* a0 -> user's color base */
-        lea.l     ABSW(palette),a1					/* a1 -> hardware palette base */
+        lea.l     ABSW2(palette),a1					/* a1 -> hardware palette base */
         move.w    #16-1,d0								/* d0 = count */
 vbl_palette_loop:
         move.w    (a0)+,(a1)+
@@ -1279,9 +1282,11 @@ vbl_no_palette:
 #if TOSVERSION >= 0x106
         move.b    ABSW(_v_bas_ad+3),ABSW(v_bas_l)
 #endif
-		/* BUG: writing any of those bytes will reset low byte to zero */
-        move.b    ABSW(_v_bas_ad+2),ABSW(v_bas_m)
-        move.b    ABSW(_v_bas_ad+1),ABSW(v_bas_h)
+		move.l    ABSW(_v_bas_ad),d0
+		lsr.l     #8,d0
+        move.b    d0,ABSW2(v_bas_m)
+		lsr.w     #8,d0
+        move.b    d0,ABSW2(v_bas_h)
 vbl_no_screenpt:
 
 /* ------ Call deferred interrupt vectors */
@@ -1316,6 +1321,7 @@ vbl_end:
 /* 306de: 00e00d78 */
 /* 206de: 00e00d1a */
 /* 104de: 00fc07a0 */
+/* 100fr: 00fc0724 */
 just_rte:
         rte
 
@@ -1325,6 +1331,7 @@ just_rte:
 /* 306de: 00e00d7a */
 /* 206de: 00e00d1c */
 /* 104de: 00fc07a2 */
+/* 100fr: 00fc0726 */
 _vsync:
         move.w    sr,-(a7)
         andi.w    #$F8FF,sr							/* enable vbl interrupts */
@@ -1344,6 +1351,7 @@ vsyncwait:
 /* 306de: 00e00d92 */
 /* 206de: 00e00d34 */
 /* 104de: 00fc07ba */
+/* 100fr: 00fc0744 */
 		xdef _callcrit
 _callcrit:
         move.l    _etv_critic,-(a7)
@@ -1389,6 +1397,7 @@ critret:
 /* 206de: 00e00d3e */
 /* 104de: 00fc07c4 */
 /* 404: 00e00d76 */
+/* 100fr: 00fc074c */
 _xbiostrap:
         lea.l     xbios_vecs(pc),a0
         bra.s     biosxbios
@@ -1399,6 +1408,7 @@ _xbiostrap:
 /* 206de: 00e00d44 */
 /* 104de: 00fc07ca */
 /* 404: 00e00d7c */
+/* 100fr: iosxbios */
 _biostrap:
         lea.l     bios_vecs(pc),a0
 
@@ -1460,6 +1470,7 @@ trph3:
 /* 206de: 00e00da4 */
 /* 104de: 00fc0818 */
 /* 106de: 00e009a6 */
+/* 100fr: 00fc079c */
 #define INDIRECT $80000000
 bios_vecs:
         dc.w 12
@@ -1481,6 +1492,7 @@ bios_vecs:
 /* 206de: 00e00dd6 */
 /* 104de: 00fc084a */
 /* 106de: 00e009d8 */
+/* 100fr: 00fc07ce */
 xbios_vecs:
         dc.w (xbvecsend-xbios_vecs)/4
         dc.l _initmouse
@@ -1523,9 +1535,13 @@ xbios_vecs:
         dc.l _vsync
         dc.l _supexec
         dc.l _puntaes
-#if TOSVERSION >= 104
+#if TOSVERSION >= 0x102
         dc.l bios_unimpl
+#if TOSVERSION >= 0x104
         dc.l _floprate
+#else
+        dc.l bios_unimpl
+#endif
 #if TP_64 /* IDE_BOOT */
         dc.l dmaread
 #else
@@ -1570,6 +1586,7 @@ xbvecsend:
 /* 306de: 00e00fd0 */
 /* 206de: 00e00edc */
 /* 104de: 00fc0950 */
+/* 100fr: 00fc0870 */
 _supexec:
         movea.l   4(a7),a0
         jmp       (a0)
@@ -1597,9 +1614,15 @@ _supexec:
 /* 306de: 00e00fd6 */
 /* 206de: 00e00ee2 */
 /* 104de: 00fc0956 */
+/* 100fr: 00fc0876 */
 _bbconstat:
+#if TOSVERSION >= 0x102
         lea.l     ABSW(_bconstat_vec),a0
         bra.s     doxconxx
+#else
+        lea.l     tconstat(pc),a0
+        bra.s     doxconxx
+#endif
 
 /*
  * BIOS #2 - Bconin  - Get character from device
@@ -1618,9 +1641,15 @@ _bbconstat:
 /* 306de: 00e00fde */
 /* 206de: 00e00eea */
 /* 104de: 00fc095c */
+/* 100fr: 00fc087c */
 _bbconin:
+#if TOSVERSION >= 0x102
         lea.l     ABSW(_bconin_vec),a0
         bra.s     doxconxx
+#else
+        lea.l     tconstat+6*4(pc),a0
+        bra.s     doxconxx
+#endif
 
 /*
  * BIOS #8 - Bcostat - Read status of output device
@@ -1632,9 +1661,15 @@ _bbconin:
 /* 306de: 00e00fe6 */
 /* 206de: 00e00ef2 */
 /* 104de: 00fc0962 */
+/* 100fr: 00fc0882 */
 _bbcostat:
+#if TOSVERSION >= 0x102
         lea.l     ABSW(_bcostat_vec),a0
         bra.s     doxconxx
+#else
+        lea.l     tconstat+12*4(pc),a0
+        bra.s     doxconxx
+#endif
 
 /*
  * BIOS #3 - Bconout - Print character to output device
@@ -1643,8 +1678,13 @@ _bbcostat:
 /* 206de: 00e00efa */
 /* 104de: 00fc0968 */
 /* 106de: 00e00af6 */
+/* 100fr: 00fc0888 */
 _bbconout:
+#if TOSVERSION >= 0x102
         lea.l     ABSW(_bconout_vec),a0
+#else
+        lea.l     tconstat+18*4(pc),a0
+#endif
 
 doxconxx:
         move.w    4(a7),d0            /* get device number */
@@ -1672,6 +1712,7 @@ doxconxx:
 /* 104de: 00fc0978 */
 /* 106de: 00e00b06 */
 /* 404: 00e00e56 */
+/* 100fr: 00fc0898 */
 tconstat:
         dc.l      bios_unimpl
         dc.l      _bcon6stat    /* BIOS device 1 (AUX) defaults to RS232 port */
@@ -1679,32 +1720,43 @@ tconstat:
         dc.l      _bcon3stat
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#if TOSVERSION >= 0x102
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#endif
+
         dc.l      _bcon0in
         dc.l      _bcon6in      /* BIOS device 1 (AUX) defaults to RS232 port */
         dc.l      _bcon2in
         dc.l      _bcon3in
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#if TOSVERSION >= 0x102
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#endif
+
         dc.l      _bco0stat
         dc.l      _bco6stat     /* BIOS device 1 (AUX) defaults to RS232 port */
         dc.l      _bco2stat
         dc.l      _bco4stat     /* BUG compatibility with early TOS versions: MIDI(3) and KBD(4) are swapped */
         dc.l      _bco3stat
         dc.l      bios_unimpl
+#if TOSVERSION >= 0x102
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#endif
+
         dc.l      _bcon0out
         dc.l      _bcon6out     /* BIOS device 1 (AUX) defaults to RS232 port */
         dc.l      _bcon2out
         dc.l      _bcon3out
         dc.l      _bcon4out
         dc.l      _bcon5out
+#if TOSVERSION >= 0x102
         dc.l      bios_unimpl
         dc.l      bios_unimpl
+#endif
 
 /*
  * BIOS #10 - Drvmap - Read drive bitmap
@@ -1719,6 +1771,7 @@ tconstat:
 /* 206de: 00e00fb0 */
 /* 104de: 00fc09f8 */
 /* 106de: 00e00b86 */
+/* 100fr: 00fc08f8 */
 _drvmap:
         move.l    ABSW(_drvbits),d0
         rts
@@ -1742,6 +1795,7 @@ _drvmap:
 /* 206de: 00e00fb6 */
 /* 104de: 00fc09fe */
 /* 106de: 00e00b8c */
+/* 100fr: 00fc08fe */
 _kbshift:
         moveq.l   #0,d0
         move.b    ABSW(_shifty),d0
@@ -1766,6 +1820,7 @@ kbshift1:
 /* 206de: 00e00fc8 */
 /* 104de: 00fc0a10 */
 /* 106de: 00e00b9e */
+/* 100fr: 00fc0910 */
 _getmpb:
         movea.l   4(a7),a0
         lea.l     ABSW(_themd),a1
@@ -1799,6 +1854,7 @@ _getmpb:
 /* 206de: 00e00ff4 */
 /* 104de: 00fc0a3c */
 /* 106de: 00e00bca */
+/* 100fr: 00fc093c */
 _setexc:
         move.w    4(a7),d0          /* d0 = vector # */
         lsl.w     #2,d0             /* turn into longword index */
@@ -1818,8 +1874,9 @@ setexc1:
 /* 206de: 00e0100c */
 /* 104de: 00fc0a54 */
 /* 106de: 00e00be2 */
+/* 100fr: 00fc0954 */
 _tickcal:
-        moveq.l   #0,d0
+        clr.l     d0
         move.w    ABSW(_timer_ms),d0
         rts
 
@@ -1832,11 +1889,12 @@ _tickcal:
 /* 206de: 00e01014 */
 /* 104de: 00fc0a5c */
 /* 106de: 00e00bea */
+/* 100fr: 00fc095c */
 _physbase:
         moveq.l   #0,d0             /* cleanup pointer-to-be */
-        move.b    ABSW(v_bas_h),d0    /* load and shift bits 16..23 */
+        move.b    ABSW2(v_bas_h),d0    /* load and shift bits 16..23 */
         lsl.w     #8,d0
-        move.b    ABSW(v_bas_m),d0    /* load and shift bits 8..15 */
+        move.b    ABSW2(v_bas_m),d0    /* load and shift bits 8..15 */
         lsl.l     #8,d0
 #if TOSVERSION >= 0x106
         move.b    ABSW(v_bas_l),d0    /* load bits 0..7 */
@@ -1852,6 +1910,7 @@ _physbase:
 /* 206de: 00e01030 */
 /* 104de: 00fc0a6c */
 /* 106de: 00e00bfe */
+/* 100fr: 00fc0970 */
 _logbase:
         move.l    ABSW(_v_bas_ad),d0
         rts
@@ -1865,6 +1924,7 @@ _logbase:
 /* 206de: 00e01036 */
 /* 104de: 00fc0a72 */
 /* 106de: 00e00c0a */
+/* 100fr: 00fc0976 */
 _getrez:
         moveq.l   #0,d0
 		move.b    ABSW(v_shf_mod),d0          /* get screen rezolution */
@@ -1884,6 +1944,7 @@ _getrez:
 /* 206de: 00e01042 */
 /* 104de: 00fc0a7e */
 /* 106de: 00e00c10 */
+/* 100fr: 00fc0982 */
 _vsetscreen:
 /* --- set logical location: */
         tst.l     4(a7)                      /* if(logloc < 0) then ignore it */
@@ -1893,8 +1954,8 @@ nosetl:
 /* --- set physical location: */
         tst.l     8(a7)                      /* if(physloc < 0) then ignore it */
         bmi.s     nosetp
-        move.b    9(a7),ABSW(v_bas_h)
-        move.b    10(a7),ABSW(v_bas_m)
+        move.b    9(a7),ABSW2(v_bas_h)
+        move.b    10(a7),ABSW2(v_bas_m)
 #if TOSVERSION >= 0x106
         move.b    11(a7),ABSW(v_bas_l)
 #endif
@@ -1904,10 +1965,10 @@ nosetp:
         bmi.s     nosetr
         move.b    13(a7),ABSW(_sshiftmod)      /* set software shadow */
         bsr       _vsync
-        move.b    ABSW(_sshiftmod),ABSW(v_shf_mod) /* set hardware location */
+        move.b    ABSW(_sshiftmod),ABSW2(v_shf_mod) /* set hardware location */
         clr.w     ABSW(_vblsem)                /* disable vblank processing */
         jsr       esc_init                   /* re-initialize glass tty routines */
-        move.w    #1,ABSW(_vblsem)             /* re-enable vblanks */
+        move.w    #1,ABSW2(_vblsem)             /* re-enable vblanks */
 nosetr:
         rts
 
@@ -1922,6 +1983,7 @@ nosetr:
 /* 206de: 00e0108e */
 /* 104de: 00fc0ac4 */
 /* 106de: 00e00c5c */
+/* 100fr: 00fc09d0 */
 _setpalette:
         move.l    4(a7),ABSW(_colorptr)     /* next VBL will do this */
         rts
@@ -1939,11 +2001,12 @@ _setpalette:
 /* 206de: 00e01096 */
 /* 104de: 00fc0acc */
 /* 106de: 00e00c64 */
+/* 100fr: 00fc09d8 */
 _setcolor:
         move.w    4(a7),d1                   /* get color number */
         add.w     d1,d1                      /* turn into word index */
         and.w     #$001F,d1                  /* force color range (prevent buserr) */
-        lea.l     ABSW(palette),a0             /* a0 -> base of palette memory */
+        lea.l     ABSW2(palette),a0          /* a0 -> base of palette memory */
         move.w    0(a0,d1.w),d0              /* return old color */
 #if TOSVERSION >= 0x106
         and.w     #$0FFF,d0                  /* mask dirty bits */
@@ -1966,11 +2029,12 @@ setcol3:
 /* 306de: 00e01202 */
 /* 206de: 00e010c8 */
 /* 104de: 00fc0af0 */
+/* 100fr: 00fc09fe */
 _puntaes:
         movea.l   _os_magic(pc),a0           /* get pointer to magic */
         cmpi.l    #$87654321,(a0)            /* is the magic still there? */
         bne.s     puntaes1                   /* no -- just return */
-        cmpa.l    ABSW(_phystop),a0            /* is it in ROM? */
+        cmpa.l    ABSW2(_phystop),a0         /* is it in ROM? */
         bge.s     puntaes1                   /* yes -- we can't do anything about it */
         clr.l     (a0)                       /* clobber AES! */
         bra       _main                      /* restart the system */
@@ -1986,23 +2050,22 @@ puntaes1:
 /* 306de: 00e0121c */
 /* 206de: 00e010e2 */
 /* 104de: 00fc0b0a */
+/* 100fr: 00fc0a1a */
 any_vec:
 #if P68000 | (TOSVERSION < 0x200)
 		bsr.s     savp_2                     /* stack PC */
 		nop
 savp_2:
-		SETBASEREG
-		move.l    (sp)+,ABSW(_proc_enum)       /* save bogus PC + exception number */
+		move.l    (sp)+,ABSW2(_proc_enum)    /* save bogus PC + exception number */
 #else
 #if !P68010
 		jsr       savp_2                     /* stack PC */
 savp_2:
-		SETBASEREG
-		move.l    (sp)+,ABSW(_proc_enum)       /* save bogus PC + exception number */
+		move.l    (sp)+,ABSW2(_proc_enum)    /* save bogus PC + exception number */
 #endif
 #endif
 /* dump the registers, including SSP */
-        movem.l   d0-d7/a0-a7,ABSW(_proc_dregs)
+        movem.l   d0-d7/a0-a7,ABSW2(_proc_dregs)
 #if P68010
         move.l    2(a7),ABSW(_proc_enum)
 /* get the exception number from the format word */
@@ -2014,26 +2077,26 @@ savp_2:
 #endif
 /* dump the correct value for USP */
         move.l    usp,a0
-        move.l    a0,ABSW(_proc_usp)
+        move.l    a0,ABSW2(_proc_usp)
 /* dump 16 words from the stack */
         moveq.l   #15,d0
-        lea.l     ABSW(_proc_stk),a0
+        lea.l     ABSW2(_proc_stk),a0
         movea.l   a7,a1
 any_vec1:
         move.w    (a1)+,(a0)+
         dbf       d0,any_vec1
 /* magic value */
-        move.l    #$12345678,ABSW(_proc_lives)
+        move.l    #$12345678,ABSW2(_proc_lives)
 
 /* --- draw an appropriate number of 'shrooms on the screen: */
         moveq.l   #0,d1
-        move.b    ABSW(_proc_enum),d1
+        move.b    ABSW2(_proc_enum),d1
         subq.w    #1,d1
         bsr.s     drawbombs
 /* restore a sane stack (should have probably been done before calling subroutine above) */
-        move.l    #save_beg+save_siz,ABSW(_savptr)        /* clobber BIOS top level */
-        move.w    #-1,-(a7)                             /* "error" return condition */
-        move.w    #$004C,-(a7)                          /* Pterm */
+        move.l    #save_beg+save_siz,ABSW2(_savptr)     /* clobber BIOS top level */
+        move.w    #1,-(a7)                              /* "error" return condition */
+        clr.l     -(a7)                                 /* Pterm0; nonsense above: Pterm0 does not pass exitcode */
         trap      #1
         bra       _main
 
@@ -2048,14 +2111,15 @@ any_vec1:
  */
 /* 104de: 00fc0b56 */
 /* 106de: 00e00cee */
+/* 100fr: 00fc0a70 */
 drawbombs:
-        move.b    ABSW(v_shf_mod),d7
+        move.b    ABSW2(v_shf_mod),d7
         and.w     #3,d7
         add.w     d7,d7                      /* d7 = rez index */
-        moveq.l   #0,d0
-        move.b    ABSW(v_bas_h),d0
+        clr.l     d0
+        move.b    ABSW2(v_bas_h),d0
         lsl.w     #8,d0
-        move.b    ABSW(v_bas_m),d0
+        move.b    ABSW2(v_bas_m),d0
         lsl.l     #8,d0
 #if TOSVERSION >= 0x106
         move.b    ABSW(v_bas_l),d0
@@ -2065,7 +2129,7 @@ drawbo1:
         adda.w    bofftab(pc,d7.w),a0
 drawbo3:
         lea.l     bombimage,a1               /* a1 -> source from */
-        move.w    #$000F,d6                  /* d6 = scanline count */
+        move.w    #16-1,d6                   /* d6 = scanline count */
 drawbo4:
         move.w    d1,d2                      /* d2 = # to draw on this line */
         movea.l   a0,a2                      /* safe ptr to beg of line */
@@ -2147,6 +2211,7 @@ autoname:                      dc.b '*.PRG',0
 /* 206de: 00e011f6 */
 /* 104de: 00fc0bf4 */
 /* 106de: 00e00d90 */
+/* 100fr: 00fc0b14 */
 autoexec:
         lea.l     autopath(pc),a0
         lea.l     autoname(pc),a1
@@ -2272,10 +2337,11 @@ autosca4:
 /* 206de: 00e013b2 */
 /* 104de: 00fc0da2 */
 /* 106de: 00e00f3e */
+/* 100fr: 00fc0cc4 */
 bombimage:
 #if TP_16 == 0 /* Bomb */
         dc.b $06,$00,$29,$00,$00,$80,$48,$40,$11,$f0,$01,$f0,$07,$fc,$0f,$fe
-        dc.b $0d,$fe,$1f,$ff,$1f,$ef,$0f,$ee,$0f,$de,$07,$fc,$03,$f8,$00,$e0
+        dc.b $0f,$fe,$1f,$ff,$1f,$ef,$0f,$ee,$0f,$de,$07,$fc,$03,$f8,$00,$e0
 #endif
 #if TP_16 == 1 /* PILZE */
         dc.b $07,$c0,$1f,$f0,$3b,$f8,$77,$f4,$b7,$fa,$bb,$fa,$df,$f6,$66,$fc
@@ -2338,6 +2404,7 @@ waitvbl4:   cmp.b     (a0),d4
 /* 206de: 00e01408 */
 /* 104de: 00fc0dfe */
 /* 106de: 00e00f9a */
+/* 100fr: 00fc0d20 */
 run_reset_resident:
         movea.l   _phystop,a0                   /* start at the top of the address space */
 run_res1:
@@ -2363,131 +2430,7 @@ run_res2:
 run_res3:
         rts
 
-/*
- * XBIOS #17 - Gettime - Gets intelligent keyboard's time and date
- *
- * Returns that value (in DOS format) as a 32-bit word.
- * (Time in the low word, date in the high word).
- */
-/* 306de: 00e0156e */
-/* 206de: 00e01446 */
-/* 104de: 00fc0e3e */
-/* 106de: 00e00fda */
-/* 100fr: 00fc1d5c */
-
-	xdef _clockvec
-_clockvec:
-		lea.l     0,a5                          /* set base register */
-        lea.l     ABSW(clockbuf),a0
-        bsr       bcdget
-#if BINEXACT /* Year 2k fix */
-        subi.b    #80,d0                        /* adjust so that 1980 => 0 for time base */
-#endif
-        move.b    d0,d2
-        asl.l     #4,d2
-        bsr       bcdget
-        add.b     d0,d2
-        asl.l     #5,d2
-        bsr       bcdget
-        add.b     d0,d2
-        asl.l     #5,d2
-        bsr       bcdget
-        add.b     d0,d2
-        asl.l     #6,d2
-        bsr       bcdget
-        add.b     d0,d2
-        asl.l     #5,d2
-        bsr       bcdget
-        lsr.b     #1,d0                         /* adjust to provide two second increments... */
-        add.b     d0,d2                         /* ...another @!#%@#$% kludge, thank you ! */
-        move.l    d2,ABSW(iclkrtime)
-        move.b    #0,ABSW(iclk_ready)           /* clear handshaking flag */
-        rts
-
-_gettime:
-igetdt:
-        move.b    #-1,ABSW(iclk_ready)
-        move.b    #$1C,d1    /* send read clock command */
-        bsr       ikbd_writeb
-_gett1:
-        tst.b     ABSW(iclk_ready)
-        bne       _gett1
-        move.l    ABSW(iclkrtime),d0
-        rts
-
-/*
- * XBIOS #16 - Settime - Sets the intelligent keyboard's time and date.
- *
- * 'datetime' is a 32-bit DOS-format date and time (time in the low word,
- * date in the high word).
- */
-/* 306de: 00e0157c */
-/* 206de: 00e01454 */
-/* 104de: 00fc0e4c */
-/* 106de: 00e00fe8 */
-_settime:
-/* almost same as isetdt from ikbdclk.S */
-        move.l    4(a7),ABSW(iclkwtime)
-        lea.l     iclkbuf+6,a0
-        move.l    ABSW(iclkwtime),d2
-        move.b    d2,d0
-        andi.b    #$1F,d0  /* write seconds */
-        asl.b     #1,d0
-        bsr.s      bcdput
-        lsr.l     #5,d2    /* write minutes */
-        move.b    d2,d0
-        andi.b    #$3F,d0
-        bsr.s     bcdput
-        lsr.l     #6,d2    /* write hour */
-        move.b    d2,d0
-        andi.b    #$1F,d0
-        bsr.s     bcdput
-        lsr.l     #5,d2    /* write day of month */
-        move.b    d2,d0
-        andi.b    #$1F,d0
-        bsr.s     bcdput
-        lsr.l     #5,d2    /* write month */
-        move.b    d2,d0
-        andi.b    #$0F,d0
-        bsr.s     bcdput
-        lsr.l     #4,d2    /* write year */
-        move.b    d2,d0
-        andi.b    #$7F,d0
-        bsr.s     bcdput
-#if BINEXACT /* Year 2k fix */
-        addi.b    #$80,(a0)
-#endif
-        move.b    #$1B,d1    /* send set clock command */
-        bsr       ikbd_writeb
-        moveq.l   #5,d3
-        lea.l     iclkbuf,a2
-        bsr       ikbdws1
-        move.b    #$1C,d1    /* send read clock command */
-        bsr       ikbd_writeb
-        rts
-
-bcdput:
-        moveq.l   #0,d1
-        move.b    d0,d1
-        divs.w    #10,d1
-        asl.w     #4,d1
-        move.w    d1,d0
-        swap      d1
-        add.w     d1,d0
-        move.b    d0,-(a0)                      /* transfer to output clock buffer */
-        rts
-
-bcdget:
-        move.b    (a0)+,d0                      /* get bcd byte */
-        move.b    d0,d1
-        and.w     #$000F,d0                     /* dump high nibble */
-        and.w     #$00F0,d1                     /* isolate high nibble */
-        asr.w     #4,d1                         /* dump low nibble */
-        mulu.w    #10,d1                        /* high nibble * 10 */
-        add.w     d1,d0                         /* + low nibble */
-        rts
-
-
+#if TOSVERSION >= 0x104
 /*
  * copy sysbase into memory and patch it
  */
@@ -2512,8 +2455,10 @@ jmpop:
         jmp       $00000000.l
 braop:
         bra.s     jmpop
+#endif
 
 
+#if TOSVERSION >= 0x102
 /*
  * XBIOS #40 - Blitmode
  *
@@ -2567,6 +2512,7 @@ noblitter:
         move.w    d1,sr
         movea.l   a2,a7
         rts
+#endif
 
 #if HD_WAIT == 1
 #include "../tospatch/patches/hdwait1.S"

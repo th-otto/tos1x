@@ -29,7 +29,7 @@
 /*
  * set to 1 for supporting hardware accelerated blitter routines
  */
-#define BLITTER_SUPPORT (TOSVERSION >= 0x104)
+#define BLITTER_SUPPORT (TOSVERSION >= 0x102)
 
 /*
  * used to mark some strange looking code segments

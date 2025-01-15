@@ -2422,11 +2422,15 @@
 [00fc226a] 4e75                      rts
 [00fc226c] 70ff                      moveq.l    #-1,d0
 [00fc226e] 4e75                      rts
+
+ringbell:
 [00fc2270] 082d 0002 0484            btst       #2,1156(a5)
 [00fc2276] 670e                      beq.s      $00FC2286
 [00fc2278] 2b7c 00fc 321c 0e8a       move.l     #$00FC321C,3722(a5)
 [00fc2280] 1b7c 0000 0e8e            move.b     #$00,3726(a5)
 [00fc2286] 4e75                      rts
+
+keybtlnorm:
 [00fc2288] 001b 3132                 ori.b      #$32,(a3)+
 [00fc228c] 3334 3536 3738 3930 9e27  move.w     ([$37383930,a4],d3.w*4,$9E27),-(a1) ; 68020+ only
 [00fc2296] 0809 7177                 btst       #29047,a1

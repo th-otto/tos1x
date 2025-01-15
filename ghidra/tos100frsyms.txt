@@ -101,7 +101,7 @@ fd_sect         000009c6        Data Label      Global  User Defined
 fd_side         000009c8        Data Label      Global  User Defined
 fd_scount       000009ca        Data Label      Global  User Defined
 fd_buffer       000009cc        Data Label      Global  User Defined
-fd_buffer_end   000009d0        Data Label      Global  User Defined
+fd_dmaend       000009d0        Data Label      Global  User Defined
 fd_spt          000009d4        Data Label      Global  User Defined
 fd_interlv      000009d6        Data Label      Global  User Defined
 fd_virgin       000009d8        Data Label      Global  User Defined
@@ -160,11 +160,40 @@ old_tik         00001672        Data Label      Global  User Defined
 old_2           00001676        Data Label      Global  User Defined
 dskbuf          0000167a        Data Label      Global  User Defined
 fill_buffer     0000167a        Data Label      Global  User Defined
+seed_type       0000167a        Data Label      Global  User Defined
 search_color    0000167c        Data Label      Global  User Defined
+Qbottom         0000167e        Data Label      Global  User Defined
+qTop            00001680        Data Label      Global  User Defined
+qPtr            00001682        Data Label      Global  User Defined
+qTmp            00001684        Data Label      Global  User Defined
+qHole           00001686        Data Label      Global  User Defined
 oldy            00001688        Data Label      Global  User Defined
+oldxleft        0000168a        Data Label      Global  User Defined
+oldxright       0000168c        Data Label      Global  User Defined
+newxleft        0000168e        Data Label      Global  User Defined
+newxright       00001690        Data Label      Global  User Defined
 xleft           00001692        Data Label      Global  User Defined
+xright          00001694        Data Label      Global  User Defined
+direction       00001696        Data Label      Global  User Defined
+done            00001698        Data Label      Global  User Defined
+gotseed         0000169a        Data Label      Global  User Defined
+leftoldy        0000169c        Data Label      Global  User Defined
+leftdirection   0000169e        Data Label      Global  User Defined
+leftseed        000016a0        Data Label      Global  User Defined
+h_align         000016a2        Data Label      Global  User Defined
+v_align         000016a4        Data Label      Global  User Defined
 width           000016a6        Data Label      Global  User Defined
 height          000016a8        Data Label      Global  User Defined
+wordx           000016aa        Data Label      Global  User Defined
+wordy           000016ac        Data Label      Global  User Defined
+rmword          000016ae        Data Label      Global  User Defined
+rmwordx         000016b0        Data Label      Global  User Defined
+rmwordy         000016b2        Data Label      Global  User Defined
+charx           000016b4        Data Label      Global  User Defined
+chary           000016b6        Data Label      Global  User Defined
+rmchar          000016b8        Data Label      Global  User Defined
+rmcharx         000016ba        Data Label      Global  User Defined
+rmchary         000016bc        Data Label      Global  User Defined
 FLIP_Y          000016be        Data Label      Global  User Defined
 deftxbu         00001766        Data Label      Global  User Defined
 ptsin_array     0000197a        Data Label      Global  User Defined
@@ -339,6 +368,7 @@ prtbilow        00004e16        Data Label      Global  User Defined
 prtbihigh       00004e18        Data Label      Global  User Defined
 prtboval        00004e1a        Data Label      Global  User Defined
 secbuf          00004e22        Data Label      Global  User Defined
+curflop         00005622        Data Label      Global  User Defined
 prtbrval        00005624        Data Label      Global  User Defined
 prtbwords       00005626        Data Label      Global  User Defined
 prtbval         00005628        Data Label      Global  User Defined
@@ -869,14 +899,8 @@ dummyrts        00fc230a        Instruction Label       initmfp User Defined
 copymem         00fc230c        Function        Global  User Defined
 ikbd_init_commands      00fc2314        Data Label      Global  User Defined
 ikbdtable       00fc2318        Data Label      Global  User Defined
-ikbdtable2      00fc231c        Data Label      Global  User Defined
 miditable       00fc2326        Data Label      Global  User Defined
-miditable2      00fc232a        Data Label      Global  User Defined
 rs232table      00fc2334        Data Label      Global  User Defined
-rs232table1     00fc2338        Data Label      Global  User Defined
-rs232table2     00fc2342        Data Label      Global  User Defined
-rs232table3     00fc2346        Data Label      Global  User Defined
-rs232table4     00fc2350        Data Label      Global  User Defined
 mfpvectr        00fc2356        Data Label      Global  User Defined
 settimer        00fc2366        Function        Global  User Defined
 settim1         00fc23c4        Instruction Label       settimer        User Defined
@@ -897,10 +921,11 @@ jdisint1        00fc2442        Instruction Label       Global  User Defined
 jenabint        00fc2472        Function        Global  User Defined
 jenabin1        00fc247c        Instruction Label       Global  User Defined
 bselect         00fc249c        Instruction Label       Global  User Defined
-lea_rs232iorec_mfp      00fc24b0        Function        Global  User Defined
-dortson         00fc24d2        Function        Global  User Defined
-iorecout        00fc24e0        Function        Global  User Defined
-FUN_00fc253c    00fc253c        Function        Global  Default
+rs232ptr        00fc24b0        Function        Global  User Defined
+rs232ibuf       00fc24be        Function        Global  User Defined
+rtschk          00fc24d2        Function        Global  User Defined
+rs232put        00fc24e0        Function        Global  User Defined
+rs232get        00fc253c        Function        Global  Default
 rcvrint         00fc2596        Function        Global  User Defined
 txrint          00fc2666        Function        Global  User Defined
 ctsint          00fc26b2        Function        Global  User Defined
@@ -911,7 +936,8 @@ iorectab        00fc274e        Data Label      Global  User Defined
 rsconf          00fc275a        Function        Global  User Defined
 baudctrl        00fc27e4        Data Label      Global  User Defined
 bauddata        00fc27f4        Data Label      Global  User Defined
-wrapin          00fc2810        Instruction Label       Global  User Defined
+wrapin          00fc2804        Instruction Label       Global  User Defined
+wrapout         00fc2810        Instruction Label       Global  User Defined
 int_acia        00fc281c        Function        Global  User Defined
 _midisys        00fc284a        Instruction Label       Global  User Defined
 _ikbdsys        00fc285a        Instruction Label       Global  User Defined
@@ -984,7 +1010,9 @@ mousekey        00fc2d66        Data Label      Global  User Defined
 giaccess        00fc2d6a        Function        Global  User Defined
 gientry         00fc2d72        Instruction Label       Global  User Defined
 giacces1        00fc2d92        Instruction Label       Global  User Defined
+rtsoff          00fc2d9e        Instruction Label       Global  User Defined
 rtson           00fc2da2        Instruction Label       Global  User Defined
+dtroff          00fc2da6        Function        Global  User Defined
 dtron           00fc2daa        Function        Global  User Defined
 ongibit         00fc2dae        Function        Global  User Defined
 onbit           00fc2db4        Instruction Label       Global  User Defined
@@ -1179,7 +1207,7 @@ FUN_00fc4ad0    00fc4ad0        Function        Global  Default
 v_fontinit      00fc4b08        Instruction Label       v_escape        User Defined
 gl_f_init       00fc4b10        Function        Global  User Defined
 osinit          00fc4b78        Function        Global  User Defined
-FUN_00fc4c02    00fc4c02        Function        Global  Default
+bdoslmul        00fc4c02        Function        Global  User Defined
 _osinit         00fc4c56        Function        Global  User Defined
 trap13          00fc4ca4        Function        Global  User Defined
 ground_it       00fc4cb4        Instruction Label       Global  User Defined

@@ -1,5 +1,7 @@
 #include "bios.h"
 
+/* Note: not used for TOS versions < 1.04 see keytbl.inc instead */
+
 #define DEADMIN 1
 #define DEAD(i) (i + DEADMIN)
 
