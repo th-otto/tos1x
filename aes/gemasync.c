@@ -37,7 +37,9 @@
 #include "aes.h"
 #include "gemlib.h"
 
+#if TOSVERSION >= 0x104
 int16_t tbutton;
+#endif
 #if AESVERSION >= 0x200
 int16_t wwait;
 #endif
@@ -199,7 +201,9 @@ PP(register EVSPEC mask;)
 	erret = LLOWD(p->e_return);
 	p->e_nextp = eul;
 	eul = p;
+#if TOSVERSION >= 0x104
 	tbutton = LHIWD(p->e_return);
+#endif
 	return erret;
 }
 

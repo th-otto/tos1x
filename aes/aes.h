@@ -338,10 +338,12 @@ extern int16_t gl_bvhard;
 extern int16_t gl_recd;
 extern int16_t gl_rlen;
 extern intptr_t gl_rbuf;
+#if TOSVERSION >= 0x104
 extern int16_t gl_play;					/* 3/11/86  */
 extern VOIDPTR gl_store;				/* 3/11/86  */
 extern int16_t gl_mx;					/* 3/12/86  */
 extern int16_t gl_my;					/* 3/12/86  */
+#endif
 
 #if AESVERSION >= 0x200
 int16_t ap_init PROTO((intptr_t pglobal));
@@ -359,7 +361,9 @@ int16_t ap_trecd PROTO((intptr_t pbuff, int16_t length));
 /*
  * gemasync.c
  */
+#if TOSVERSION >= 0x104
 extern int16_t tbutton;
+#endif
 extern int16_t wwait;
 
 EVB *get_evb PROTO((NOTHING));

@@ -70,7 +70,11 @@ PP(int16_t *lrets;)
 		lrets[1] = yrat;
 	}
 
+#if TOSVERSION >= 0x104
 	lrets[2] = tbutton;
+#else
+	lrets[2] = button;
+#endif
 	lrets[3] = kstate;
 	mtrans = 0;
 }
@@ -264,14 +268,18 @@ PP(int16_t *prets;)
 		{
 			if ((mtrans > 1) && (downorup(pr_button, buparm)))
 			{
+#if TOSVERSION >= 0x104
 				tbutton = pr_button;	/* changed */
+#endif
 				what |= MU_BUTTON;
 				prets[5] = pr_mclick;
 			} else
 			{
 				if (downorup(button, buparm))
 				{
+#if TOSVERSION >= 0x104
 					tbutton = button;	/* changed */
+#endif
 					what |= MU_BUTTON;
 					prets[5] = mclick;
 				}
@@ -367,7 +375,10 @@ PP(int16_t *prets;)
 		if (which & bumsk)
 		{
 			prets[5] = (uint16_t) aret(bumsk);
+#if TOSVERSION >= 0x104
 			prets[2] = tbutton;
+#endif
+			/* otherwise BUG: prets[2] not set at all */
 			what |= MU_BUTTON;
 		}
 		if (which & m1msk)

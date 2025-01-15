@@ -49493,6 +49493,7 @@ ap_tplay:
 [00fe5fd8] 5087                      addq.l     #8,d7
 [00fe5fda] 202e fff8                 move.l     -8(a6),d0
 [00fe5fde] 604c                      bra.s      $00FE602C
+case 0:
 [00fe5fe0] 302e 000e                 move.w     14(a6),d0
 [00fe5fe4] 48c0                      ext.l      d0
 [00fe5fe6] 2f00                      move.l     d0,-(a7)
@@ -49507,10 +49508,13 @@ ap_tplay:
 [00fe6006] f5a4                      dc.w       $F5A4 ; ev_timer
 [00fe6008] 42ae fff8                 clr.l      -8(a6)
 [00fe600c] 6034                      bra.s      $00FE6042
+case 2
 [00fe600e] 2d7c 00fe 4ad6 fff8       move.l     #$00FE4AD6,-8(a6) ; mchange
 [00fe6016] 602a                      bra.s      $00FE6042
+case 1
 [00fe6018] 2d7c 00fe 4964 fff8       move.l     #$00FE4964,-8(a6) ; bchange
 [00fe6020] 6020                      bra.s      $00FE6042
+case 3
 [00fe6022] 2d7c 00fe 490c fff8       move.l     #$00FE490C,-8(a6) ; kchange
 [00fe602a] 6016                      bra.s      $00FE6042
 [00fe602c] 4a40                      tst.w      d0

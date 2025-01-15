@@ -52,10 +52,12 @@ int16_t gl_bvhard;
 int16_t gl_recd;
 int16_t gl_rlen;
 intptr_t gl_rbuf;
+#if TOSVERSION >= 0x104
 int16_t gl_play;				/* 3/11/86  */
 VOIDPTR gl_store;				/* 3/11/86  */
 int16_t gl_mx;					/* 3/12/86  */
 int16_t gl_my;					/* 3/12/86  */
+#endif
 
 
 /*
@@ -213,9 +215,11 @@ PP(int16_t scale;)
 
 	ad_f = &f;							/* old x86 relict */
 	dsptch();							/* dispatch everybody   */
+#if TOSVERSION >= 0x104
 	gl_play = FALSE;
 	gl_mx = xrat;
 	gl_my = yrat;
+#endif
 
 	for (i = 0; i < length; i++)
 	{
@@ -231,6 +235,7 @@ PP(int16_t scale;)
 			f.f_code = 0;
 			break;
 		case MCHNG:
+#if TOSVERSION >= 0x104
 			if (!gl_play)
 			{
 				/* disconnect the cursor from VDI until the playing is done */
@@ -251,6 +256,9 @@ PP(int16_t scale;)
 			}
 			f.f_code = mchange;
 			gl_play = TRUE;
+#else
+			f.f_code = mchange;
+#endif
 			break;
 		case BCHNG:
 			f.f_code = bchange;
@@ -267,6 +275,7 @@ PP(int16_t scale;)
 		dsptch();
 	}
 
+#if TOSVERSION >= 0x104
 	if (gl_play)						/* connect back the mouse */
 	{
 		i_lptr1(drwaddr);
@@ -282,6 +291,7 @@ PP(int16_t scale;)
 
 		gl_play = FALSE;
 	}
+#endif
 }
 
 

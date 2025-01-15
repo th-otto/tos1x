@@ -454,6 +454,7 @@ PP(register int16_t ry1;)
 	/* xrat, yrat hold true */
 	xrat = rx;
 	yrat = ry;
+#if TOSVERSION >= 0x104
 	/* post the event   */
 	if (gl_play)						/* KLUDGE 3/11/86   */
 	{
@@ -475,6 +476,7 @@ PP(register int16_t ry1;)
 		xrat = rx1;
 		yrat = ry1;
 	}
+#endif
 
 	/*
 	 * give mouse to screen handler when not button down and

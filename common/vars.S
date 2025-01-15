@@ -625,20 +625,23 @@ _endvdibss: ds.b 0
 	V(_g_autoboot,b,CMDLEN)
 	INT(_g_wsend)
 
-	INT(_gl_play)
 	PTR(_gl_pglue)
 	INT(_fs_first)
 	INT(_fs_count)
 	LONG(_fs_fnum)
 	INT(_gl_mouse)
-	PTR(_gl_store)
 	INT(_fs_topptr)
 	INT(_autoexec)
 	
 	INT(_gl_kstate)
+
+#if TOSVERSION >= 0x104
+	INT(_gl_play)
+	PTR(_gl_store)
 	INT(_tbutton)
 	INT(_gl_mx)
 	INT(_gl_my)
+#endif
 
 	ds.b 2
 	
