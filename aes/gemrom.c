@@ -39,6 +39,7 @@
 #include "aes.h"
 #include "gemlib.h"
 #include "taddr.h"
+#include "../desk/deskrsc.h"
 
 struct rominfo {
 	VOIDPTR data;
@@ -116,9 +117,11 @@ extern uint16_t const tosrsc[];
  */
 VOID rsc_read(NOTHING)
 {
-	register uint16_t *intptr;
-	int i;
+	register int16_t *intptr;
+	register int unused;
+	register int i;
 
+	UNUSED(unused);
 	/* copy rsc to ram */
 	intptr = dos_alloc((int32_t) TOS_RSSIZE);
 	/* BUG: no malloc check */
@@ -133,13 +136,32 @@ VOID rsc_read(NOTHING)
 	for (i = 1; i < 4; i++)
 	{
 		/* calculate start address */
-		romdata[i].data = intptr + intptr[i - 1] / 2;
+		romdata[i].data = intptr + (uint16_t)intptr[i - 1] / 2;
 		/* size is difference between the 2 offsets */
-		romdata[i].size = intptr[i] - intptr[i - 1];
+		romdata[i].size = (uint16_t)intptr[i] - (uint16_t)intptr[i - 1];
 	}
 	romdata[4].data = romdata[2].data;
 	romdata[4].size = romdata[2].size;
+#if BINEXACT
+	/*
+	 * when declaring the intptr above as unsigned,
+	 * Alcyon produces an extra clr.w instruction when
+	 * accessing it, but for some strange reason,
+	 * not in the statement below. Still an lsr (unsigned)
+	 * instruction is used for the shifts
+	 */
+	asm("move.w     a5,d0");
+	asm("move.w     6(a5),d1");
+	asm("lsr.w      #1,d1");
+	asm("lsl.w      #1,d1");
+	asm("swap       d1");
+	asm("clr.w      d1");
+	asm("swap       d1");
+	asm("add.l      d1,d0");
+	asm("move.l     d0,_romdata+30");
+#else
 	romdata[5].data = intptr + intptr[3] / 2;
+#endif
 	romdata[5].size = intptr[4] - intptr[3];
 	
 	havedesk = TRUE;
@@ -166,10 +188,15 @@ PP(register int which;)
 PP(register intptr_t pointer;)
 PP(register uint16_t offset;)
 {
+	register VOIDPTR unused;
 	register intptr_t data;
-	register int16_t size;
+	register int size;
+	int i;
 	int doit;
-	
+	int16_t menu_w;
+	OBJECT *tree;
+
+	UNUSED(unused);
 	data = (intptr_t)romdata[which].data;
 	size = romdata[which].size;
 	
@@ -182,14 +209,15 @@ PP(register uint16_t offset;)
 	{
 		/* read in desktop iconblks */
 		LBCOPY((VOIDPTR)pointer, (VOIDPTR)data, offset);
-		return offset;
+		return (int16_t)offset;
 	} else if (which == 4)
 	{
 		/* read in desktop icon data */
-		LBCOPY((VOIDPTR)pointer, (const VOIDPTR)(data + offset), size - offset);
+		LBCOPY((VOIDPTR)pointer, (const VOIDPTR)(data + offset), size - (int16_t)offset);
 		return size - offset;
 	} else if (which < 2 || which == 5)
 	{
+		/* read in some resource file */
 		doit = FALSE;
 		if (which == 0 && havegem == TRUE)
 		{
@@ -209,6 +237,9 @@ PP(register uint16_t offset;)
 		
 		if (doit)
 		{
+			/*
+			 * First time. Fix the resource pointers.
+			 */
 			rs_global = pointer;
 			rs_hdr = (RSHDR *)data;
 			do_rsfix(data, size);
@@ -226,10 +257,22 @@ PP(register uint16_t offset;)
 			}
 		} else
 		{
+			/*
+			 * 2nd time. Just copy back the global arrays.
+			 */
 			if (which == 1)
 			{
 				LWCOPY((VOIDPTR)pointer, desk_global, 15);
-				/* ZZZ some code todo here */
+				ini_tree(&tree, ADMENU);
+				menu_w = gl_ncols * gl_wchar;
+				for (i = 0; i < 2; i++)
+					LWSET(OB_WIDTH(i), menu_w);
+				LWSET(OB_HEIGHT(ROOT), gl_hchar * 25);
+				LWSET(OB_HEIGHT(THEBAR), gl_hchar + 2);
+#undef THEMENUS
+#define THEMENUS 7 /* hmpf */
+				LWSET(OB_WIDTH(THEMENUS), menu_w);
+				LWSET(OB_HEIGHT(THEMENUS), gl_hchar * 24);
 			} else if (which == 5)
 			{
 				LWCOPY((VOIDPTR)pointer, fmt_global, 15);

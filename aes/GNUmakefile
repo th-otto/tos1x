@@ -26,6 +26,10 @@ ifeq ($(TOSVERSION),104)
 LINEF_FLAGS = -A
 CPPFLAGS += $(LINEF_FLAGS)
 endif
+ifeq ($(TOSVERSION),100)
+LINEF_FLAGS = -A
+CPPFLAGS += $(LINEF_FLAGS)
+endif
 endif
 
 include SRCFILES
