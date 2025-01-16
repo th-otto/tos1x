@@ -8,7 +8,7 @@ struct _pbdef
    /* 12 */ uint16_t pb_right;   /* Right margin in dots              */
    /* 14 */ uint16_t pb_screz;   /* Resolution                        */
    /* 16 */ uint16_t pb_prrez;   /* Printer type (Atari/Epson)        */
-   /* 18 */ const int16_t *pb_colptr;  /* Pointer to color palette    */
+   /* 18 */ const uint16_t *pb_colptr;  /* Pointer to color palette    */
    /* 22 */ uint16_t pb_prtype;  /* 0: Atari matrix monochrome
                            1: Atari matrix color
                            2: Atari daisywheel monochrome

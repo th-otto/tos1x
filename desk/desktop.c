@@ -111,7 +111,7 @@ PP(register BOOLEAN *pisapp;)
 				*ptr = toupper(*ptr);
 				ptr++;
 			}
-			pa = app_afind(FALSE, pf->f_attr & FA_DIREC ? 1 : 0, -1, namebuf, pisapp);
+			pa = app_afind(FALSE, pf->f_attr & FA_DIREC ? AT_ISFOLD : AT_ISFILE, -1, namebuf, pisapp);
 		}
 	}
 	*ppf = pf;
@@ -891,7 +891,7 @@ BOOLEAN deskmain(NOTHING)
 	
 	if (isdrive() == 0)
 	{
-		ob_change((LPTREE)d->g_atree[ADMENU], L6ITEM, DISABLED, FALSE); /* WTF? */
+		ob_change((LPTREE)d->g_atree[ADMENU], L6ITEM, DISABLED, FALSE); /* BUG: was supposed to be SAVEITEM */
 	}
 	
 	d->g_cviewitem = ICONITEM;
