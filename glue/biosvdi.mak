@@ -30,7 +30,6 @@ BIOSVDI_100_OBJS = \
 	\
 	../bios/zeromem.o \
 	\
-	../vdi/sbescape.o \
 	../vdi/font6x6.o \
 	../vdi/font8x8.o \
 	../vdi/font8x16.o \

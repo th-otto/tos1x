@@ -502,8 +502,10 @@
 [00fc07e8] 2f39 0000 0404            move.l     $00000404,-(a7)
 [00fc07ee] 70ff                      moveq.l    #-1,d0
 [00fc07f0] 4e75                      rts
+xbiostrap:
 [00fc07f2] 41fa 0084                 lea.l      $00FC0878(pc),a0
 [00fc07f6] 6004                      bra.s      $00FC07FC
+biostrap:
 [00fc07f8] 41fa 004c                 lea.l      $00FC0846(pc),a0
 [00fc07fc] 2279 0000 04a2            movea.l    $000004A2,a1
 [00fc0802] 301f                      move.w     (a7)+,d0
@@ -530,73 +532,89 @@
 [00fc083c] 3f19                      move.w     (a1)+,-(a7)
 [00fc083e] 23c9 0000 04a2            move.l     a1,$000004A2
 [00fc0844] 4e73                      rte
-[00fc0846] 000c 00fc                 ori.b      #$FC,a4 ; apollo only
-[00fc084a] 0a46 00fc                 eori.w     #$00FC,d6
-[00fc084e] 0984                      bclr       d4,d4
-[00fc0850] 00fc 098c 00fc            chk2.b     #$FC,d0 ; 68020+ only
-[00fc0856] 099c                      bclr       d4,(a4)+
-[00fc0858] 8000                      or.b       d0,d0
-[00fc085a] 0476 00fc 0a72            subi.w     #$00FC,114(a6,d0.l*2) ; 68020+ only
-[00fc0860] 00fc 0a8a 8000            chk2.b     #$00,d0 ; 68020+ only
-[00fc0866] 0472 00fc 0994            subi.w     #$00FC,([za2],d0.l) ; 68020+ only; reserved OD=0
-[00fc086c] 8000                      or.b       d0,d0
-[00fc086e] 047e 00fc                 subi.w     #$00FC,???
-[00fc0872] 0a2e 00fc 0a34            eori.b     #$FC,2612(a6)
-[00fc0878] 0041 00fc                 ori.w      #$00FC,d1
-[00fc087c] 2f82 00fc                 move.l     d2,-4(a7,d0.w)
-[00fc0880] 0670 00fc 0a92            addi.w     #$00FC,-110(a0,d0.l*2) ; 68020+ only
-[00fc0886] 00fc 0aa6 00fc            chk2.b     #$FC,d0 ; 68020+ only
-[00fc088c] 0aac 00fc 0ab8 00fc       eori.l     #$00FC0AB8,252(a4)
-[00fc0894] 0b06                      btst       d5,d6
-[00fc0896] 00fc 0b0e 00fc            chk2.b     #$FC,d0 ; 68020+ only
-[00fc089c] 1782 00fc                 move.b     d2,-4(a3,d0.w)
-[00fc08a0] 1858                      movea.l    (a0)+,b4 ; apollo only
-[00fc08a2] 00fc 1916 00fc            chk2.b     #$FC,d1 ; 68020+ only
-[00fc08a8] 0fc0                      bset       d7,d0
-[00fc08aa] 00fc 2030 00fc            cmp2.b     #$FC,d2 ; 68020+ only
-[00fc08b0] 2658                      movea.l    (a0)+,a3
-[00fc08b2] 00fc 28f6 00fc            chk2.b     #$FC,d2 ; 68020+ only
-[00fc08b8] 290e                      move.l     a6,-(a4)
-[00fc08ba] 00fc 3088 00fc            cmp2.b     #$FC,d3 ; 68020+ only
-[00fc08c0] 1510                      move.b     (a0),-(a2)
-[00fc08c2] 00fc 15f8 00fc            cmp2.b     #$FC,d1 ; 68020+ only
-[00fc08c8] 1ae2                      move.b     -(a2),(a5)+
-[00fc08ca] 00fc 0d50 00fc            chk2.b     #$FC,d0 ; 68020+ only
-[00fc08d0] 46f2 00fc                 move.w     -4(a2,d0.w),sr
-[00fc08d4] 0ea4 00fc                 ???.l      -(a4),b0 ; apollo only
-[00fc08d8] 0e96 00fc                 ???.l      (a6),b0 ; apollo only
-[00fc08dc] 30b4 00fc                 move.w     -4(a4,d0.w),(a0)
-[00fc08e0] 2212                      move.l     (a2),d1
-[00fc08e2] 00fc 2682 00fc            cmp2.b     #$FC,d2 ; 68020+ only
-[00fc08e8] 26bc 00fc 2efe            move.l     #$00FC2EFE,(a3)
-[00fc08ee] 00fc 2f5c 00fc            chk2.b     #$FC,d2 ; 68020+ only
-[00fc08f4] 2f36 00fc                 move.l     -4(a6,d0.w),-(a7)
-[00fc08f8] 304c                      movea.w    a4,a0
-[00fc08fa] 00fc 30ce 00fc            cmp2.b     #$FC,d3 ; 68020+ only
-[00fc0900] 30e2                      move.w     -(a2),(a0)+
-[00fc0902] 00fc 3116 00fc            cmp2.b     #$FC,d3 ; 68020+ only
-[00fc0908] 30f4 00fc                 move.w     -4(a4,d0.w),(a0)+
-[00fc090c] 3254                      movea.w    (a4),a1
-[00fc090e] 00fc 07d0 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0914] 097e                      bchg       d4,???
-[00fc0916] 00fc 0b34 00fc            chk2.b     #$FC,d0 ; 68020+ only
-[00fc091c] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc0922] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0928] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc092e] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0934] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc093a] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0940] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc0946] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc094c] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc0952] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0958] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc095e] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0964] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc096a] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc0970] 0670 00fc 0670            addi.w     #$00FC,112(a0,d0.w*8) ; 68020+ only
-[00fc0976] 00fc 0670 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc097c] 0ef6 206f 0004            cas.l      d7,d1,4(a6,d0.w) ; 68020+ only
+bios_vecs:
+[00fc0846] 000c
+           00fc0a46
+           00fc0984
+[00fc0850] 00fc098c
+           00fc099c
+[00fc0858] 80000476
+           00fc0a72
+[00fc0860] 00fc0a8a
+           80000472
+           00fc0994
+[00fc086c] 8000047e
+           00fc0a2e
+           00fc0a34
+xbios_vecs:
+[00fc0878] 0041
+           00fc2f82
+           00fc0670
+           00fc0a92
+[00fc0886] 00fc0aa6
+           00fc0aac
+           00fc0ab8
+           00fc0b06
+[00fc0896] 00fc0b0e
+           00fc1782
+           00fc1858
+[00fc08a2] 00fc1916
+           00fc0fc0
+[00fc08aa] 00fc2030
+           00fc2658
+[00fc08b2] 00fc28f6
+           00fc290e
+[00fc08ba] 00fc3088
+           00fc1510
+[00fc08c2] 00fc15f8
+           00fc1ae2
+[00fc08ca] 00fc0d50
+           00fc46f2
+           00fc0ea4
+           00fc0e96
+           00fc30b4
+           00fc2212
+[00fc08e2] 00fc2682
+           00fc26bc
+           00fc2efe
+[00fc08ee] 00fc2f5c
+           00fc2f36
+           00fc304c
+[00fc08fa] 00fc30ce
+           00fc30e2
+[00fc0902] 00fc3116
+           00fc30f4
+           00fc3254
+[00fc090e] 00fc07d0
+           00fc097e
+[00fc0916] 00fc0b34
+           00fc0670
+           00fc0670
+[00fc0922] 00fc0670
+           00fc0670
+           00fc0670
+[00fc092e] 00fc0670
+           00fc0670
+           00fc0670
+[00fc093a] 00fc0670
+           00fc0670
+           00fc0670
+[00fc0946] 00fc0670
+           00fc0670
+           00fc0670
+[00fc0952] 00fc0670
+           00fc0670
+           00fc0670
+[00fc095e] 00fc0670
+           00fc0670
+           00fc0670
+[00fc096a] 00fc0670
+           00fc0670
+           00fc0670
+[00fc0976] 00fc0670
+           00fc0ef6
+
+[00fc097e] 206f 0004                 movea.l    4(a7),a0
 [00fc0982] 4ed0                      jmp        (a0)
 [00fc0984] 41f9 0000 051e            lea.l      $0000051E,a0
 [00fc098a] 6016                      bra.s      $00FC09A2
@@ -5061,6 +5079,8 @@ J3:
 [00fc46ea] 08d4 0001                 bset       #1,(a4)
 [00fc46ee] 67f2                      beq.s      $00FC46E2
 [00fc46f0] 4e75                      rts
+
+cursconf:
 [00fc46f2] 49f9 0000 2994            lea.l      $00002994,a4
 [00fc46f8] 302f 0004                 move.w     4(a7),d0
 [00fc46fc] b07c 0007                 cmp.w      #$0007,d0

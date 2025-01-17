@@ -1156,9 +1156,10 @@ set_v_col_fg    00fc4566        Instruction Label       Global  User Defined
 set_v_col_bg    00fc4572        Instruction Label       Global  User Defined
 escd            00fc457e        Instruction Label       Global  User Defined
 esce            00fc459a        Function        Global  User Defined
-FUN_00fc45b8    00fc45b8        Function        Global  Default
+enable_it       00fc45b8        Function        Global  User Defined
 show_cursor     00fc45ce        Function        Global  User Defined
 escf            00fc45e0        Function        Global  User Defined
+hide_cursor     00fc45e0        Function        Global  User Defined
 caseD_66        00fc45e0        Function        escf    Analysis
 escj            00fc4600        Function        Global  User Defined
 caseD_6a        00fc4600        Function        switchD_00fc42b6        User Defined
@@ -1194,16 +1195,16 @@ caseD_4         00fc475a        Instruction Label       switchD_00fc4728        
 setrate         00fc475a        Instruction Label       Global  User Defined
 caseD_5         00fc4762        Instruction Label       switchD_00fc4728        Analysis
 getrate         00fc4762        Instruction Label       Global  User Defined
-out_of_bounds   00fc4796        Instruction Label       Global  User Defined
+get_addr_font   00fc476a        Function        Global  User Defined
 ascii_out       00fc479a        Function        Global  User Defined
 erase_region    00fc4844        Function        Global  User Defined
-FUN_00fc48e4    00fc48e4        Function        Global  Default
-FUN_00fc492c    00fc492c        Function        Global  Default
+cell_addr       00fc48e4        Function        Global  User Defined
+sb_cell         00fc492c        Function        Global  User Defined
 move_cursor     00fc4998        Function        Global  User Defined
-FUN_00fc4a16    00fc4a16        Function        Global  Default
-FUN_00fc4a50    00fc4a50        Function        Global  Default
-FUN_00fc4a88    00fc4a88        Function        Global  Default
-FUN_00fc4ad0    00fc4ad0        Function        Global  Default
+neg_cell        00fc4a16        Function        Global  User Defined
+f_wrap          00fc4a50        Function        Global  User Defined
+sb_scrup        00fc4a88        Function        Global  User Defined
+sb_scrdn        00fc4ad0        Function        Global  User Defined
 v_fontinit      00fc4b08        Instruction Label       v_escape        User Defined
 gl_f_init       00fc4b10        Function        Global  User Defined
 osinit          00fc4b78        Function        Global  User Defined

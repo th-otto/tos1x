@@ -585,9 +585,11 @@ esc1:
 /* 104de: 00fcb5ac */
 		xdef resetdev
 resetdev:
+#if BLITTER_SUPPORT
         move.l    #_STSoftList,PIXLV(LA_SOFTROUTINES,a1)
         move.l    #_STHardList,PIXLV(LA_HARDROUTINES,a1)
         jmp       _SETBLT
+#endif
 
 rezinit:
         lsl.w     #3,d0

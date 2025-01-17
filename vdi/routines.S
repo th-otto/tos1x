@@ -11,9 +11,9 @@
 #include "lineaequ.inc"
 
 
+#if BLITTER_SUPPORT
 		xdef	_STHardList		; orig ST routines blitter
 _STHardList: ds.b 0
-#if BLITTER_SUPPORT
 		dc.l	hb_cell
 		dc.l	hb_scrup
 		dc.l	hb_scrdn
@@ -24,18 +24,6 @@ _STHardList: ds.b 0
 		dc.l	hb_vline
 		dc.l	hb_hline
 		dc.l	hb_text
-#else
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-		dc.l	hb_nop
-#endif
 
 		xdef	_STSoftList		; orig ST routines no blitter
 _STSoftList:	ds.b 0
@@ -49,7 +37,4 @@ _STSoftList:	ds.b 0
 		dc.l	sb_vline		; vline     subroutine
 		dc.l	sb_hline		; _HABLINE  subroutine
 		dc.l	sb_text			; textblt   subroutine
-
-#if !BLITTER_SUPPORT
-hb_nop: rts
 #endif

@@ -591,9 +591,7 @@ _bco2stat:
  *********************************************************/
 /* 104de: 00fc34e4 */
 /* 100de: 00fc201c */
-#if !BINEXACT
 		xdef ringbell
-#endif
 ringbell:
         btst      #2,ABSW(_conterm)             /* console bell enabled? */
         beq.s     soundir8                      /* (no sound) */
