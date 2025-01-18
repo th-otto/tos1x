@@ -122,23 +122,23 @@ DMD /* drive media block */
 {
 	/*  0 */ RECNO	m_recoff[3]; /* record offsets for fat,dir,data		 */
 	/*  6 */ int16_t m_drvnum;	 /* drive number for this media			 */
-	/*  8 */ CLNO m_fatrec;		 /* first fat record (of last fat)       */
-	/* 10 */ RECNO m_fsiz;		 /* fat size in records					 */
-	/* 12 */ RECNO m_clsiz;		 /* cluster size in records				 */
-	/* 14 */ int16_t m_clsizb;	 /* cluster size in bytes				 */	/* BUG: should be unsigned */
-	/* 16 */ int16_t m_recsiz;	 /* record size in bytes				 */	/* BUG: should be unsigned */
+	/*  8 */ RECNO m_fsiz;		 /* fat size in records					 */
+	/* 10 */ RECNO m_clsiz;		 /* cluster size in records				 */
+	/* 12 */ int16_t m_clsizb;	 /* cluster size in bytes				 */	/* BUG: should be unsigned */
+	/* 14 */ int16_t m_recsiz;	 /* record size in bytes				 */	/* BUG: should be unsigned */
 
-	/* 18 */ CLNO	m_numcl;	 /*  total number of clusters in data	 */
-	/* 20 */ int16_t m_clrlog;	 /* log (base 2) of clsiz in records	 */
-	/* 22 */ int16_t m_clrm; 	 /* clsiz in rec, mask					 */
-	/* 24 */ int16_t m_rblog;	 /* log (base 2) of recsiz in bytes 	 */
-	/* 26 */ int16_t m_rbm;		 /* recsiz in bytes, mask				 */
-	/* 28 */ int16_t m_clblog;	 /* log (base 2) of clsiz in bytes		 */
-	/* 30 */ OFD    *m_fatofd;	 /* OFD for 'fat file'					 */
-	/* 34 */ uint16_t m_1fat;	 /* 1 FAT only ?						 */
-	/* 36 */ uint16_t m_unused;
-	/* 38 */ DND 	*m_dtl; 	 /* root of directory tree list 		 */
-	/* 42 */ uint16_t m_16;		 /* 16 bit fat ?						 */
+	/* 16 */ CLNO	m_numcl;	 /*  total number of clusters in data	 */
+	/* 18 */ int16_t m_clrlog;	 /* log (base 2) of clsiz in records	 */
+	/* 20 */ int16_t m_clrm; 	 /* clsiz in rec, mask					 */
+	/* 22 */ int16_t m_rblog;	 /* log (base 2) of recsiz in bytes 	 */
+	/* 24 */ int16_t m_rbm;		 /* recsiz in bytes, mask				 */
+	/* 26 */ int16_t m_clblog;	 /* log (base 2) of clsiz in bytes		 */
+	/* 28 */ OFD    *m_fatofd;	 /* OFD for 'fat file'					 */
+	/* 32 */ uint16_t m_1fat;	 /* 1 FAT only ?						 */
+	/* 34 */ CLNO m_fatrec;		 /* first fat record (of last fat)       */
+	/* 36 */ DND 	*m_dtl; 	 /* root of directory tree list 		 */
+	/* 40 */ uint16_t m_16;		 /* 16 bit fat ?						 */
+	/* 42 */ uint16_t m_unused;
 	/* 44 */
 };
 
@@ -229,16 +229,6 @@ MPB
 	MD *mp_rover;
 };
 
-
-
-
-/* For BIOS calls... */
-
-#define date_time(op,var)	trap13(0x11,(op),(var))
-#define GET_TIME	0
-#define SET_TIME	1
-#define GET_DATE	2
-#define SET_DATE	3
 
 
 

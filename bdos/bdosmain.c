@@ -6,7 +6,6 @@
 #include "bios.h"
 
 BCB bcbx[4];
-BOOLEAN dirlock;
 char secbuf[4][512];
 
 

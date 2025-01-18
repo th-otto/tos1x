@@ -39,6 +39,7 @@ BDOS_CSRCS=\
 	bdosmain.c \
 	sup.c \
 	time.c \
+	btools.c \
 	${empty}
 
 BDOS_SRCS = $(BDOS_HEADERS) $(BDOS_ASRCS) $(BDOS_CSRCS)

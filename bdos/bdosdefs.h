@@ -3,7 +3,13 @@
 #undef GEMDOS
 #define GEMDOS 0x0013
 #endif
+#if TOSVERSION >= 0x0102
+/* Note: 1.02 reports still 0x13, although it is slightly different */
+#undef GEMDOS
+#define GEMDOS 0x0013
+#endif
 #if TOSVERSION >= 0x0103
+/* never happened */
 #undef GEMDOS
 #define GEMDOS 0x0014
 #endif
@@ -53,6 +59,7 @@
 #define BLKDEVNUM 16
 /* size of typeahead buffer */
 #define KBBUFSZ 80
+#define	KBBUFMASK	(KBBUFSZ-1)
 /* for compatibility with older versions: size of root array */
 #define MAXQUICK 5
 
@@ -65,3 +72,9 @@
  * support for alternate ram
  */
 #define ALTRAM_SUPPORT (GEMDOS >= 0x18)
+
+/*
+ * size of BDOS memory pool, in words
+ */
+#define LENOSM 3000
+

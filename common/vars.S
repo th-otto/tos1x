@@ -177,12 +177,12 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	BYTE(_prtbdev)
 	even
 	V(_pbpar,b,30)
-	V(bdos_mempool,b,6000)
+	V(_osmem,w,LENOSM)
 
 	BYTE(_prtboch)
 	even
 
-	INT(_bdos_usedw)
+	INT(_osmptr)
 
 	INT(_prtbbval)
 
@@ -261,7 +261,7 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	V(_drvtbl,l,BLKDEVNUM)
 	V(_glbkbchar,l,3*KBBUFSZ)
 
-	INT(_bdos_freew)
+	INT(_osmlen)
 	INT(_prtbheight)
 
 	INT(_drvsel)
@@ -294,7 +294,7 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	V(_ram8x16,b,90)
 	INT(_prtbinvert)
 
-	V(_beptr,l,3)
+	V(_buptr,l,3)
 	BYTE(_prtblow)
 	even
 	BYTE(_prtbamon)
@@ -304,7 +304,7 @@ __sbss:	ds.b 0 /* end of "base" BSS; start of the BSS area that is zeroed by BIO
 	even
 	INT(_prtbink)
 	V(_bcbx,b,4*20) /* 4*sizeof(BCB) */
-	V(_buptr,l,3)
+	V(_beptr,l,3)
 
 /* This label is referenced by the OSHEADER */
 	xdef _endvdibss
@@ -550,23 +550,7 @@ _endvdibss: ds.b 0
 
 	/* ZZZ todo */
 
-	PTR(_ofdlist)
-
-	INT(_rrecno)
-
 	ds.b 4
-
-	INT(_rwrtflg)
-
-	PTR(_rdm)
-	INT(_dirlock)
-
-	V(_ofdbuf,b,70*80)
-
-	PTR(_dirrec)
-
-	V(_ospd,b,256)
-
 
 	V(_aautopath,b,CMDLEN)
 	V(_do_srcpath,b,PATHLEN)
@@ -625,7 +609,6 @@ _endvdibss: ds.b 0
 	
 	INT(_gl_kstate)
 
-	BYTE(_osuser)
 	even
 #if TOSVERSION >= 0x104
 	/*

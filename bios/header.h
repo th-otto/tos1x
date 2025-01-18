@@ -24,13 +24,13 @@
 #undef OS_DATE
 #undef OS_DOSDATE
 /* unfortunately, that seems to be different */
-#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_DK)
-#define OS_DATE $02061986
-#define OS_DOSDATE $0C46
-#endif
 #if (OS_COUNTRY == CTRY_US) | (OS_COUNTRY == CTRY_UK)
 #define OS_DATE $11201985
 #define OS_DOSDATE $0B74
+#endif
+#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_DK)
+#define OS_DATE $02061986
+#define OS_DOSDATE $0C46
 #endif
 #if (OS_COUNTRY == CTRY_FR)
 #define OS_DATE $04241986

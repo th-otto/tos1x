@@ -13,7 +13,6 @@
 #include "sections.inc"
 
 /* from BIOS */
-		xdef _zeromem
 		text
 #if BINEXACT
 #  ifdef __GNUC__
@@ -25,21 +24,8 @@
 #if BINEXACT
 
 
-#if TOSVERSION == 0x104
-_zeromem equ BIOSTBASE+$1EE0
-#endif
-
-#if TOSVERSION == 0x106
-_zeromem equ BIOSTBASE+$20B8
-#endif
-
-#if TOSVERSION == 0x162
-_zeromem equ BIOSTBASE+$20B8
-#endif
-
 #else
 
-_zeromem equ BIOSTBASE+$1548
        xdef _memcpy
 _memcpy equ BIOSTBASE+2
 	   xdef _shifty

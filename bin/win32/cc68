@@ -35,7 +35,7 @@ do
 		outfile=$1
 		shift
 		;;
-	-O2) ;;
+	-O2 | -O1) ;;
 	-fomit-frame-pointer) ;;
 	--optimize) optimize=true ;;
 	-fomit-frame-pointer) ;;

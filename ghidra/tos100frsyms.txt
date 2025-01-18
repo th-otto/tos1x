@@ -344,9 +344,9 @@ fd_mediach      000029b4        Data Label      Global  User Defined
 rseed           000029b8        Data Label      Global  User Defined
 prtbdev         000029bc        Data Label      Global  User Defined
 pbpar           000029be        Data Label      Global  User Defined
-bdos_mempool    000029dc        Data Label      Global  User Defined
+osmem           000029dc        Data Label      Global  User Defined
 prtboch         0000414c        Data Label      Global  User Defined
-bdos_memusedw   0000414e        Data Label      Global  User Defined
+osmptr          0000414e        Data Label      Global  User Defined
 prtbbval        00004150        Data Label      Global  User Defined
 glbcolumn       00004152        Data Label      Global  User Defined
 oscnt           00004158        Data Label      Global  User Defined
@@ -416,14 +416,14 @@ run             0000602c        Data Label      Global  User Defined
 prtbidx         00006030        Data Label      Global  User Defined
 ram8x16         00006032        Data Label      Global  User Defined
 prtbinvert      0000608c        Data Label      Global  User Defined
-beptr           0000608e        Data Label      Global  User Defined
+buptr           0000608e        Data Label      Global  User Defined
 prtblow         0000609a        Data Label      Global  User Defined
 prtbamon        0000609c        Data Label      Global  User Defined
 date            0000609e        Data Label      Global  User Defined
 prtbbol         000060a0        Data Label      Global  User Defined
 prtbink         000060a2        Data Label      Global  User Defined
 bcbx            000060a4        Data Label      Global  User Defined
-buptr           000060f4        Data Label      Global  User Defined
+beptr           000060f4        Data Label      Global  User Defined
 endvdibss       00006100        Data Label      Global  User Defined
 
 retsava         00006100        Data Label      Global  User Defined
@@ -925,7 +925,7 @@ rs232ptr        00fc24b0        Function        Global  User Defined
 rs232ibuf       00fc24be        Function        Global  User Defined
 rtschk          00fc24d2        Function        Global  User Defined
 rs232put        00fc24e0        Function        Global  User Defined
-rs232get        00fc253c        Function        Global  Default
+rs232get        00fc253c        Function        Global  User Defined
 rcvrint         00fc2596        Function        Global  User Defined
 txrint          00fc2666        Function        Global  User Defined
 ctsint          00fc26b2        Function        Global  User Defined
@@ -1221,7 +1221,6 @@ swp68           00fc4d08        Function        Global  User Defined
 swp68l          00fc4d1a        Function        Global  User Defined
 xsetjmp         00fc4d30        Function        Global  User Defined
 xlongjmp        00fc4d4c        Function        Global  User Defined
-okrc            00fc4d5a        Instruction Label       xlongjmp        User Defined
 enter           00fc4d66        Instruction Label       Global  User Defined
 enter_1         00fc4d78        Instruction Label       Global  User Defined
 enter_2         00fc4d82        Instruction Label       Global  User Defined
@@ -1240,7 +1239,7 @@ xs_scram        00fc4e5c        Instruction Label       Global  User Defined
 x20_inq         00fc4e62        Instruction Label       Global  User Defined
 xi_exit         00fc4e6e        Instruction Label       Global  User Defined
 oscall          00fc4e70        Function        Global  User Defined
-UC              00fc4e8a        Function        Global  User Defined
+uc              00fc4e8a        Function        Global  User Defined
 getdmd          00fc4eba        Function        Global  User Defined
 syshnd          00fc4f46        Function        Global  User Defined
 getofd          00fc4f80        Function        Global  User Defined
@@ -1250,7 +1249,7 @@ xforce          00fc509e        Function        Global  User Defined
 ixforce         00fc50b8        Function        Global  User Defined
 xlog2           00fc515a        Function        Global  User Defined
 login           00fc5180        Function        Global  User Defined
-FUN_00fc53a6    00fc53a6        Function        Global  Default
+cl2rec          00fc53a6        Function        Global  User Defined
 xfr2usr         00fc53ba        Function        Global  User Defined
 usr2xfr         00fc53e2        Function        Global  User Defined
 xmovs           00fc540a        Function        Global  User Defined
@@ -1258,8 +1257,8 @@ xcmps           00fc5432        Function        Global  User Defined
 xclose          00fc5486        Function        Global  User Defined
 ixclose         00fc55ae        Function        Global  User Defined
 flushbcb        00fc56ca        Function        Global  User Defined
-FUN_00fc57b2    00fc57b2        Function        Global  Default
-FUN_00fc5858    00fc5858        Function        Global  Default
+usrio           00fc57b2        Function        Global  User Defined
+getrec          00fc5858        Function        Global  User Defined
 makofd          00fc59fc        Function        Global  User Defined
 match           00fc5a5a        Function        Global  User Defined
 builds          00fc5ae8        Function        Global  User Defined
@@ -1271,14 +1270,13 @@ ixwrite         00fc5cdc        Function        Global  User Defined
 clfix           00fc5d04        Function        Global  User Defined
 getcl           00fc5dfa        Function        Global  User Defined
 nextcl          00fc5eb4        Function        Global  User Defined
-FUN_00fc5f98    00fc5f98        Function        Global  Default
+addit           00fc5f98        Function        Global  User Defined
 xrw             00fc5fda        Function        Global  User Defined
 GetDnd          00fc6364        Function        Global  User Defined
 scan            00fc63fe        Function        Global  User Defined
 ckdrv           00fc65a0        Function        Global  User Defined
 dcrack          00fc669e        Function        Global  User Defined
 findit          00fc672e        Function        Global  User Defined
-FUN_00fc679c    00fc679c        Function        Global  Default
 xchdir          00fc6840        Function        Global  User Defined
 packit          00fc6928        Function        Global  User Defined
 dopath          00fc6994        Function        Global  User Defined
@@ -1308,17 +1306,17 @@ xgetfree        00fc782a        Function        Global  User Defined
 xrename         00fc78b2        Function        Global  User Defined
 xlseek          00fc7a90        Function        Global  User Defined
 ixlseek         00fc7aec        Function        Global  User Defined
-DIVMOD          00fc7be6        Function        Global  User Defined
+divmod          00fc7be6        Function        Global  User Defined
 contains_dots   00fc7c14        Function        Global  User Defined
 ncmps           00fc7c56        Function        Global  User Defined
-bdos_walloc     00fc7c92        Function        Global  User Defined
-mgetofd         00fc7cdc        Function        Global  User Defined
-oftdel          00fc7d5e        Function        Global  User Defined
+getosm          00fc7c92        Function        Global  User Defined
+xmgetblk        00fc7cdc        Function        Global  User Defined
+xmfreblk        00fc7d5e        Function        Global  User Defined
 xtermres        00fc7d9a        Function        Global  User Defined
 xterm           00fc7dea        Function        Global  User Defined
 x0term          00fc7e42        Function        Global  User Defined
 ixterm          00fc7e4e        Function        Global  User Defined
-FUN_00fc7ef6    00fc7ef6        Function        Global  Default
+paramsize       00fc7ef6        Function        Global  User Defined
 xexec           00fc7f36        Function        Global  User Defined
 FUN_00fc8392    00fc8392        Function        Global  Default
 xpgmld          00fc83a6        Function        Global  User Defined
@@ -1338,7 +1336,7 @@ buflush         00fc8b0e        Function        Global  User Defined
 conout          00fc8b56        Function        Global  User Defined
 xtabout         00fc8bdc        Function        Global  User Defined
 tabout          00fc8bfc        Function        Global  User Defined
-FUN_00fc8c48    00fc8c48        Function        Global  Default
+cookdout        00fc8c48        Function        Global  User Defined
 xauxout         00fc8c92        Function        Global  User Defined
 xprtout         00fc8cba        Function        Global  User Defined
 getch           00fc8ce2        Function        Global  User Defined
@@ -1350,8 +1348,8 @@ xauxin          00fc8dfe        Function        Global  User Defined
 rawconio        00fc8e22        Function        Global  User Defined
 xprt_line       00fc8e82        Function        Global  User Defined
 prt_line        00fc8ea2        Function        Global  User Defined
-FUN_00fc8ecc    00fc8ecc        Function        Global  Default
-FUN_00fc8f12    00fc8f12        Function        Global  Default
+newline         00fc8ecc        Function        Global  User Defined
+backsp          00fc8f12        Function        Global  User Defined
 readline        00fc8faa        Function        Global  User Defined
 cgets           00fc8fe6        Function        Global  User Defined
 ni              00fc90fe        Function        Global  User Defined
@@ -1653,7 +1651,7 @@ twopf           00fcf7c6        Instruction Label       Global  User Defined
 thknop          00fcf7ca        Instruction Label       Global  User Defined
 thk01           00fcf7e4        Instruction Label       Global  User Defined
 thk00           00fcf7e8        Instruction Label       Global  User Defined
-thk00           00fcf7f8        Instruction Label       Global  User Defined
+thk0            00fcf7f8        Instruction Label       Global  User Defined
 thk1            00fcf7fc        Instruction Label       Global  User Defined
 thkoplp         00fcf81a        Instruction Label       Global  User Defined
 thklpe          00fcf820        Instruction Label       Global  User Defined

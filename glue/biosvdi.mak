@@ -10,25 +10,21 @@ BIOSVDI_100_OBJS = \
 	../vdi/escape.o \
 	\
 	../bdos/bdosmain.o \
+	../bdos/lmul.o \
+	../bdos/osinit.o \
+	../bdos/fshand.o \
+	../bdos/osmem.o \
 	../bdos/console.o \
+	../bdos/proc.o \
+	../bdos/fsopnclo.o \
 	../bdos/fsfat.o \
 	../bdos/fsglob.o \
 	../bdos/fsdir.o \
-	../bdos/fsopnclo.o \
-	../bdos/fshand.o \
 	../bdos/fsmain.o \
 	../bdos/fssupp.o \
-	../bdos/proc.o \
 	../bdos/umem.o \
-	../bdos/osmem.o \
-	../bdos/osinit.o \
-	../bdos/lmul.o \
-	../bdos/ldiv.o \
-	../bdos/xfer.o \
 	../bdos/sup.o \
 	../bdos/time.o \
-	\
-	../bios/zeromem.o \
 	\
 	../vdi/font6x6.o \
 	../vdi/font8x8.o \

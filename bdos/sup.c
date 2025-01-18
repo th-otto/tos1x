@@ -10,7 +10,9 @@
 #include "mem.h"
 #include "btools.h"
 
+#if GEMDOS >= 0x15
 PD ospd;
+#endif
 
 /*
  *  local constants
@@ -33,6 +35,9 @@ int32_t osif PROTO((int16_t *));
 ERROR chgdrv PROTO((int16_t drv, ERROR rc));
 ERROR adddrv PROTO((int16_t drv, ERROR rc));
 VOID tikfrk PROTO((int n));
+
+ERROR xread PROTO((FH h, long len, VOIDPTR ubufr));
+ERROR xopen PROTO((const char *fname, int16_t mode));
 
 
 /*
@@ -248,12 +253,15 @@ FND const funcs[0x58] = {
 
 /* 306de: 00e18af6 */
 /* 306us: 00e18a9c */
+/* 100fr: 00fc90fe */
 ERROR ni(NOTHING)
 {
 	return E_INVFN;
 }
 
+#if GEMDOS >= 0x15
 int8_t const stddev[NUMSTD] = { H_Console, H_Console, H_Aux, H_Print, H_Console, H_Console };
+#endif
 
 
 
@@ -265,6 +273,7 @@ int8_t const stddev[NUMSTD] = { H_Console, H_Console, H_Aux, H_Print, H_Console,
 /* 306de: 00e18b00 */
 /* 306us: 00e18aa6 */
 /* 104de: 00fc965c */
+/* 100fr: 00fc9108 */
 int32_t xgetver(NOTHING)
 {
 	return ((GEMDOS & 0xff) << 8) | ((GEMDOS >> 8) & 0xff);					/*  minor.major */
@@ -279,9 +288,11 @@ int32_t xgetver(NOTHING)
 /* 306us: 00e18ab4 */
 /* 104de: 00fc966a */
 /* 106de: 00e09896 */
+/* 100fr: 00fc9116 */
 VOID cinit(NOTHING)
 {
 	register PD *r;
+#if GEMDOS >= 0x15
 	register int32_t *p;
 	register int i;
 	
@@ -290,10 +301,21 @@ VOID cinit(NOTHING)
 	r = run = &ospd;
 	for (p = (int32_t *)r, i = sizeof(*r) / sizeof(*p); i != 0; i--)
 		*p++ = 0;
-
 	/* set up system initial standard handles */
 	for (i = 0; i < NUMSTD; i++)
 		r->p_uft[i] = stddev[i];
+#else
+	Getmpb(&pmd);
+	osmlen = LENOSM;
+	r = run = MGET(PD);
+
+	/* set up system initial standard handles */
+	r->p_uft[0] = H_Console;			/* stdin    =   con:    */
+	r->p_uft[1] = H_Console;			/* stdout   =   con:    */
+	r->p_uft[2] = H_Aux;				/* stdaux   =   aux:    */
+	r->p_uft[3] = H_Print;				/* stdprn   =   prn:    */
+	/* BUG: p_uft[4] and p_uft[5] not set */
+#endif
 
 	fill[BFHPRN] = fill[BFHAUX] = fill[BFHCON] = 0;
 	
@@ -320,8 +342,9 @@ VOID cinit(NOTHING)
 /* 306us: 00e18b5c */
 /* 104de: 00fc9712 */
 /* 106de: 00e0993e */
+/* 100fr: 00fc91b4 */
 VOID freetree(P(DND *)d)
-PP(DND *d;)
+PP(register DND *d;)
 {
 	register int i;
 
@@ -331,7 +354,7 @@ PP(DND *d;)
 		freetree(d->d_right);
 	if (d->d_ofd)
 	{
-		oftdel(d->d_ofd);
+		xmfreblk(d->d_ofd);
 	}
 	for (i = 0; i < NCURDIR; i++)
 	{
@@ -341,7 +364,7 @@ PP(DND *d;)
 			/* diruse[i] = 0; */
 		}
 	}
-	oftdel((OFD *)d);
+	xmfreblk((OFD *)d);
 }
 
 
@@ -353,21 +376,30 @@ PP(DND *d;)
 /* 306us: 00e18bec */
 /* 104de: 00fc97a2 */
 /* 106de: 00e099ce */
+/* 100fr: 00fc9228 */
 VOID offree(P(DMD *) d)
 PP(DMD *d;)
 {
 	register int i;
 	register OFD *f;
-
+	register DMD *dmd;
+	
+	UNUSED(dmd);
 	for (i = 0; i < (OPNFILES - NUMSTD); i++)
+	{
 		if (((long) (f = sft[i].f_ofd)) > 0L)
+#if BINEXACT
+			if (f->o_dmd == dmd) /* BUG: should be d */
+#else
 			if (f->o_dmd == d)
+#endif
 			{
-				oftdel(f);
+				xmfreblk(f);
 				sft[i].f_ofd = 0;
 				sft[i].f_own = 0;
 				sft[i].f_use = 0;
 			}
+	}
 }
 
 
@@ -425,7 +457,9 @@ PP(int16_t *pw;)
 	char *volatile pb2;
 	char *volatile p;
 	char ctmp;
+	BPB *b;
 	BCB *volatile bx;
+	DND *dn;
 	volatile int typ;
 	volatile int h;
 	volatile int i;
@@ -435,9 +469,9 @@ PP(int16_t *pw;)
 	volatile ERROR rc;
 	volatile long numl;
 	const FND *volatile f;
-	volatile long cnt;
-	volatile long j;
+#if GEMDOS >= 0x15
 	volatile OFD *fd;
+#endif
 	
 #if GEMDOS >= 0x15
 	osuser++;
@@ -457,9 +491,56 @@ PP(int16_t *pw;)
 
 		if (rc == E_CHNG)
 		{
+#if GEMDOS >= 0x15
 			if ((rc = chgdrv(errdrv, rc)))
 				return rc;
+#else
+			/* first, out with the old stuff */
+			dn = drvtbl[errdrv]->m_dtl;
+			offree(drvtbl[errdrv]);
+			if (drvtbl[errdrv]->m_fatofd)
+				xmfreblk(drvtbl[errdrv]->m_fatofd);
+
+			for (i = 0; i < NCURDIR; i++)
+			{
+				if (diruse[i])
+				{
+					if (dirtbl[i]->d_drv == dn->d_drv)
+					{
+						diruse[i] = 0;
+						dirtbl[i] = NULL;
+					}
+				}
+			}
+			
+			xmfreblk(drvtbl[errdrv]);
+			drvtbl[errdrv] = NULL;
+
+			if (dn)
+				freetree(dn);
+
+			for (i = 0; i < 2; i++)
+				for (bx = bufl[i]; bx; bx = bx->b_link)
+					if (bx->b_bufdrv == errdrv)
+						bx->b_bufdrv = -1;
+
+			/* then, in with the new */
+
+			b = (BPB *) Getbpb(errdrv);
+			if (b == NULL)
+			{
+				drvsel &= ~DRVMASK(errdrv);
+				return rc;
+			}
+			if (login(b, errdrv))
+				return E_NSMEM;
+#endif
+#if BINEXACT
+			/* BUG: apparently was erroneously declared as int here */
+			asm(" clr.w _rwerr");
+#else
 			rwerr = 0;
+#endif
 			errdrv = 0;
 			goto restrt;
 		}
@@ -491,10 +572,12 @@ PP(int16_t *pw;)
 			case 6:                 /* Crawio() */
 				if (pw[1] != 0xFF)
 					goto rawout;
+#if GEMDOS >= 0x15
 				if (xread(h, 1L, &ctmp) == 1)
 					return ctmp;
 				else
 					return 0;
+#endif
 			case 1:                 /* Cconin() */
 			case 3:                 /* Cauxin() */
 			case 7:                 /* Crawcin() */
@@ -506,24 +589,27 @@ PP(int16_t *pw;)
 			case 5:                 /* Cprnout() */
 				/* write the char in the int at pw[1] */
 			  rawout:
+#if GEMDOS >= 0x15
 				xwrite(h, 1L, ((char *) &pw[1]) + 1);
 				return E_OK; /* returned result of xwrite in previous versions??? */
+#else
+#if BINEXACT
+				return xwrite(h, 1L, pw[1]); /* BUG: good luck, passes an int as pointer */
+#else
+				return xwrite(h, 1L, ((char *) &pw[1]) + 1);
+#endif
+#endif
 				
 			case 9:                 /* Cconws() */
 				pb2 = *((char **) &pw[1]);
-				for (j = 0; pb2[j]; j++)
-					;
-				if ((cnt = xwrite(h, j, pb2)) < 0)
-				{
-					return cnt;
-				} else if (cnt < j)
-				{
-					return ERR;
-				} else
-				{
-					return E_OK;
-				}
-
+				while (*pb2)
+					xwrite(h, 1L, pb2++);
+#if BINEXACT
+				return; /* BUG: no return value */
+#else
+				return E_OK;
+#endif
+				
 			case 10:                /* Cconrs() */
 				pb2 = *((char **) &pw[1]);
 				max = *pb2++;
@@ -532,7 +618,7 @@ PP(int16_t *pw;)
 				{
 					if (xread(h, 1L, p) == 1)
 					{
-						oscall(0x40, 1, 1L, p);
+						oscall(0x40, 1, 1L, p); /* recursive call to Fwrite */
 						if (*p == 0x0d)
 						{				/* eat the lf */
 							xread(h, 1L, &ctmp);
@@ -542,20 +628,25 @@ PP(int16_t *pw;)
 						break;
 				}
 				*pb2 = i;
-				return 0;
+				return E_OK;
 
 			case 11:                /* Cconis() */
 			case 18:                /* Cauxis() */
+#if GEMDOS >= 0x15
 				if (!(fd = getofd(h)))
 					return 0;
 				if (fd->o_bytnum != fd->o_fileln)
 					return -1;
 				return 0;
+#endif
 			case 16:                /* Cconos() */
 			case 17:                /* Cprnos() */
 			case 19:                /* Cauxos() */
+#if GEMDOS >= 0x15
 				return -1;
-				break; /* not reached */
+#else
+				return 0xff; /* BUG from original sources */
+#endif
 			}
 		}
 		
@@ -629,7 +720,7 @@ PP(int16_t *pw;)
 
 			if (fn == 0x40)				/* Fwrite */
 			{
-#if 0
+#if GEMDOS < 0x15
 				if (pw[2])				/* disallow HUGE writes     */
 					return 0;
 #endif
@@ -637,8 +728,12 @@ PP(int16_t *pw;)
 				pb2 = *pb;				/* char * is buffer address */
 
 				num += 3; /* should be: num = HXFORM(num); */
+#if GEMDOS < 0x15
+				for (i = 0; i < pw[3]; i++) /* BUG from original sources: only uses low 16 bit */
+#else
 				numl = *((int32_t *)&pw[2]);
 				while (numl--)
+#endif
 				{
 					if (num == BFHCON)
 					{
@@ -653,7 +748,11 @@ PP(int16_t *pw;)
 					}
 				}
 
+#if GEMDOS < 0x15
+				return pw[3];
+#else
 				return *((int32_t *)&pw[2]);
+#endif
 			}
 
 			return 0;
@@ -704,6 +803,7 @@ PP(int16_t *pw;)
 
 		case 3:
 			rc = (*f->fncall) (pw[1], pw[2], pw[3], pw[4], pw[5], pw[6], pw[7]);
+			break;
 		}
 	}
 	return rc;
@@ -757,6 +857,7 @@ PP(int16_t n;)
 /* 306us: 00e19352 */
 /* 104de: 00fc9f08 */
 /* 106de: 00e0a134 */
+/* 100fr: 00fc9a80 */
 VOID tikfrk(P(int) n)
 PP(int n;)
 {
@@ -783,7 +884,7 @@ PP(int n;)
 		time &= 0xF81F;
 		time += 0x0800;
 
-		if ((time & 0xF800) != (int16_t)(24 << 11))
+		if ((time & 0xF800) != (uint32_t)(24 << 11))
 			return;
 
 		time = 0;
@@ -826,6 +927,7 @@ PP(int n;)
 }
 
 
+#if GEMDOS >= 0x15
 /* 306de: 00e194ec */
 /* 306us: 00e19492 */
 /* 104de: 00fca048 */
@@ -844,7 +946,7 @@ PP(ERROR rc;)
 	dn = drvtbl[drv]->m_dtl;
 	offree(drvtbl[drv]);
 	if (drvtbl[drv]->m_fatofd)
-		oftdel(drvtbl[drv]->m_fatofd);
+		xmfreblk(drvtbl[drv]->m_fatofd);
 
 	for (i = 0; i < NCURDIR; i++)
 	{
@@ -861,7 +963,7 @@ PP(ERROR rc;)
 	if (dn)
 		freetree(dn);
 
-	oftdel((OFD *)drvtbl[drv]);
+	xmfreblk((OFD *)drvtbl[drv]);
 	drvtbl[drv] = NULL;
 
 	for (i = 0; i < 2; i++)
@@ -894,3 +996,4 @@ PP(ERROR rc;)
 		return E_NSMEM;
 	return E_OK;
 }
+#endif

@@ -28,7 +28,7 @@ cve     equ 5
 
 
 #if (GEMDOS == 0x17) & BINEXACT
-/* does not check fro _longframe here */
+/* does not check for _longframe here */
 #undef P68000
 #define P68000 1
 #endif
@@ -76,12 +76,14 @@ _trap13:
     move.l  biosav,-(sp)
     rts
 
+#if TOSVERSION >= 0x104
     xdef    _trap14
 _trap14:
     move.l  (sp)+,biosav
     trap    #14
     move.l  biosav,-(sp)
     rts
+#endif
 
 /*
  *  ground_it - trap 2 entry point
@@ -117,26 +119,9 @@ nodsp:
 oterm:
 	move.l		fstrtend,sp				/* get file system's stack */
     clr.w   	-(sp)					/* return code = 0x0000 */
-    bsr 		_xterm					/* terminate (never returns) */
+    jsr 		_xterm					/* terminate (never returns) */
     illegal								/* "cannot happen" */
     rte									/* "cannot happen" */
-
-/***************************************************************************
- *
- * uc - utility routine to return the upper-case of character passed in
- *
- ***************************************************************************/
-
-    xdef _uc
-_uc:
-    move.w    4(a7),d0
-    cmp.b     #'a',d0
-    blt.s     uc1
-    cmp.b     #'z',d0
-    bgt.s     uc1
-    bclr      #5,d0
-uc1:
-    rts
 
     page
 /***************************************************************************
@@ -168,10 +153,12 @@ _indcall:
 
     xdef    _swp68
 _swp68:
-    move.l  4(a7),a0					/* a0 -> word */
+    link    a6,#0
+    move.l  8(a6),a0					/* a0 -> word */
     move    (a0),d0						/* get word */
     ror 	#8,d0						/* swap bytes */
     move    d0,(a0)						/* stuff word back */
+    unlk    a6
     rts
 
 /***************************************************************************
@@ -182,12 +169,14 @@ _swp68:
 
     xdef    _swp68l
 _swp68l:
-    move.l  4(a7),a0					/* a0 -> longword */
+    link    a6,#0
+    move.l  8(a6),a0					/* a0 -> longword */
     move.l  (a0),d0						/* get longword */
     ror 	#8,d0						/* swap low word */
     swap    d0							/* switch high and low words */
     ror 	#8,d0						/* swap high word */
     move.l  d0,(a0)
+    unlk    a6
     rts
 
 
@@ -517,7 +506,8 @@ _oscall:
  *
  ******************************************************************************/
 
-	xdef _xbgettime
+#if TOSVERSION >= 0x102
+	xdef xbgettime
 	xref _date
 	xref _time
 _xbgettime:
@@ -561,6 +551,7 @@ _xbsettime:
 	addq.w    #6,a7
 #endif
 	rts
+#endif
 
 /******************************************************************************/
 

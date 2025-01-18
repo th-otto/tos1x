@@ -134,7 +134,7 @@ RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_1}
 #
 # optimizations
 # 
-OPTS = -O2 -fomit-frame-pointer
+OPTS = -O1 -fomit-frame-pointer
 
 
 #

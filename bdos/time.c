@@ -17,12 +17,13 @@ GEMDOS time and date functions
 /* 306de: 00e196a4 */
 /* 306us: 00e1964a */
 /* 104de: 00fca200 */
+/* 100fr: 00fc9bda */
 int32_t xgetdate(NOTHING)
 {
 #if !GEMDOS
 	date_time(GET_DATE, &date);			/* allow bios to update date */
 #endif
-	return date;
+	return (int16_t)date; /* BUG: sign extended */
 }
 
 
@@ -38,11 +39,14 @@ int32_t xgetdate(NOTHING)
 /* 306de: 00e196b4 */
 /* 306us: 00e1965a */
 /* 104de: 00fca210 */
-int32_t xsetdate(P(int16_t) d)
-PP(int16_t d;)
+/* 100fr: 00fc9bea */
+int32_t xsetdate(P(int16_t) _d)
+PP(int16_t _d;)
 {
 	register int curmo, day;
-
+	register int16_t d;
+	
+	d = _d;
 	curmo = ((d >> 5) & 0x0F);
 	day = d & DAY_BM;
 
@@ -61,7 +65,9 @@ PP(int16_t d;)
 
 	date = d;							/* ok, assign that value to date */
 #if GEMDOS
+#if TOSVERSION >= 0x102
 	xbsettime();						/* tell xbios about new date */
+#endif
 #else
 	date_time(SET_DATE, &date);			/* tell bios about new date */
 #endif
@@ -77,12 +83,13 @@ PP(int16_t d;)
 /* 306de: 00e19732 */
 /* 306us: 00e196d8 */
 /* 104de: 00fca28e */
+/* 100fr: 00fc9c5c */
 int32_t xgettime(NOTHING)
 {
 #if !GEMDOS
 	date_time(GET_TIME, &time);			/* bios may update time if it wishes */
 #endif
-	return time;
+	return (int16_t)time; /* BUG: sign extended */
 }
 
 
@@ -99,8 +106,9 @@ int32_t xgettime(NOTHING)
 /* 306de: 00e19742 */
 /* 306us: 00e196e8 */
 /* 104de: 00fca29e */
+/* 100fr: 00fc9c6c */
 int32_t xsettime(P(int16_t) t)
-PP(int16_t t;)
+PP(register int16_t t;)
 {
 	if ((t & SEC_BM) >= 30)
 		return ERR;
@@ -108,12 +116,14 @@ PP(int16_t t;)
 	if ((t & MIN_BM) >= (60 << 5))		/* 60 max minutes per hour */
 		return ERR;
 
-	if ((uint16_t)(t & HRS_BM) >= (uint16_t)(24 << 11))		/* max of 24 hours in a day */
+	if ((int16_t)(t & HRS_BM) >= (int32_t)(24 << 11))		/* max of 24 hours in a day */
 		return ERR;
 
 	time = t;
 #if GEMDOS
+#if TOSVERSION >= 0x102
 	xbsettime();						/* tell xbios about new time */
+#endif
 #else
 	date_time(SET_TIME, &time);			/* tell bios about new time */
 #endif

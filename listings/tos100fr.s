@@ -6069,7 +6069,7 @@ swp68l:
 [00fc4d26] 4840                      swap       d0
 [00fc4d28] e058                      ror.w      #8,d0
 [00fc4d2a] 2080                      move.l     d0,(a0)
-[00fc4d2c] 4e5e                      unlk       a6
+[00fc4d2c] 4e5e                      punlk       a6
 [00fc4d2e] 4e75                      rts
 xsetjmp:
 [00fc4d30] 4e56 0000                 link       a6,#0
@@ -6087,7 +6087,6 @@ xlongjmp:
 [00fc4d54] 4a80                      tst.l      d0
 [00fc4d56] 6602                      bne.s      $00FC4D5A
 [00fc4d58] 7001                      moveq.l    #1,d0
-okrc:
 [00fc4d5a] 206e 0008                 movea.l    8(a6),a0
 [00fc4d5e] 2c58                      movea.l    (a0)+,a6
 [00fc4d60] 2e58                      movea.l    (a0)+,a7
@@ -6215,7 +6214,7 @@ oscall:
 [00fc4e86] 4e5e                      unlk       a6
 [00fc4e88] 4e75                      rts
 
-UC:
+uc:
 [00fc4e8a] 4e56 0000                 link       a6,#0
 [00fc4e8e] 48e7 0300                 movem.l    d6-d7,-(a7)
 [00fc4e92] 1e2e 0009                 move.b     9(a6),d7
@@ -6233,11 +6232,12 @@ UC:
 [00fc4eb2] 4cdf 0080                 movem.l    (a7)+,d7
 [00fc4eb6] 4e5e                      unlk       a6
 [00fc4eb8] 4e75                      rts
+
 getdmd:
 [00fc4eba] 4e56 0000                 link       a6,#0
 [00fc4ebe] 48e7 0104                 movem.l    d7/a5,-(a7)
 [00fc4ec2] 3ebc 0003                 move.w     #$0003,(a7)
-[00fc4ec6] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc4ec6] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc4ecc] 2a40                      movea.l    d0,a5
 [00fc4ece] 306e 0008                 movea.w    8(a6),a0
 [00fc4ed2] d1c8                      adda.l     a0,a0
@@ -6246,17 +6246,17 @@ getdmd:
 [00fc4edc] 208d                      move.l     a5,(a0)
 [00fc4ede] 675a                      beq.s      $00FC4F3A
 [00fc4ee0] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc4ee4] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc4ee4] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc4eea] 2b40 0024                 move.l     d0,36(a5)
 [00fc4eee] 6742                      beq.s      $00FC4F32
 [00fc4ef0] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc4ef4] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc4ef4] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc4efa] 2f00                      move.l     d0,-(a7)
 [00fc4efc] 206d 0024                 movea.l    36(a5),a0
 [00fc4f00] 215f 0014                 move.l     (a7)+,20(a0)
 [00fc4f04] 6722                      beq.s      $00FC4F28
 [00fc4f06] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc4f0a] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc4f0a] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc4f10] 2b40 001c                 move.l     d0,28(a5)
 [00fc4f14] 6704                      beq.s      $00FC4F1A
 [00fc4f16] 200d                      move.l     a5,d0
@@ -6610,7 +6610,7 @@ login:
 [00fc53a0] 4280                      clr.l      d0
 [00fc53a2] 4e5e                      unlk       a6
 [00fc53a4] 4e75                      rts
-FUN_00fc53a6:
+cl2rec:
 [00fc53a6] 4e56 fffc                 link       a6,#-4
 [00fc53aa] 206e 000a                 movea.l    10(a6),a0
 [00fc53ae] 3028 000a                 move.w     10(a0),d0
@@ -6931,7 +6931,7 @@ flushbcb:
 [00fc57aa] 4cdf 30c0                 movem.l    (a7)+,d6-d7/a4-a5
 [00fc57ae] 4e5e                      unlk       a6
 [00fc57b0] 4e75                      rts
-FUN_00fc57b2:
+usrio:
 [00fc57b2] 4e56 0000                 link       a6,#0
 [00fc57b6] 48e7 0104                 movem.l    d7/a5,-(a7)
 [00fc57ba] 2a79 0000 04b6            movea.l    $000004B6,a5
@@ -6976,7 +6976,7 @@ FUN_00fc57b2:
 [00fc5850] 4cdf 2000                 movem.l    (a7)+,a5
 [00fc5854] 4e5e                      unlk       a6
 [00fc5856] 4e75                      rts
-FUN_00fc5858:
+getrec:
 [00fc5858] 4e56 fff0                 link       a6,#-16
 [00fc585c] 48e7 0f0c                 movem.l    d4-d7/a4-a5,-(a7)
 [00fc5860] 2a6e 000a                 movea.l    10(a6),a5
@@ -7101,7 +7101,7 @@ makofd:
 [00fc5a00] 48e7 010c                 movem.l    d7/a4-a5,-(a7)
 [00fc5a04] 286e 0008                 movea.l    8(a6),a4
 [00fc5a08] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc5a0c] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc5a0c] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc5a12] 2a40                      movea.l    d0,a5
 [00fc5a14] 200d                      move.l     a5,d0
 [00fc5a16] 6604                      bne.s      $00FC5A1C
@@ -7609,7 +7609,7 @@ nextcl:
 [00fc5f90] 4cdf 30f0                 movem.l    (a7)+,d4-d7/a4-a5
 [00fc5f94] 4e5e                      unlk       a6
 [00fc5f96] 4e75                      rts
-FUN_00fc5f98:
+addit:
 [00fc5f98] 4e56 0000                 link       a6,#0
 [00fc5f9c] 48e7 0104                 movem.l    d7/a5,-(a7)
 [00fc5fa0] 2a6e 0008                 movea.l    8(a6),a5
@@ -7899,7 +7899,7 @@ GetDnd:
 [00fc6370] 286e 000c                 movea.l    12(a6),a4
 [00fc6374] 2d6d 0014 fffc            move.l     20(a5),-4(a6)
 [00fc637a] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc637e] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc637e] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc6384] 2640                      movea.l    d0,a3
 [00fc6386] 200b                      move.l     a3,d0
 [00fc6388] 6604                      bne.s      $00FC638E
@@ -8227,7 +8227,6 @@ findit:
 [00fc6792] 3f3c 0010                 move.w     #$0010,-(a7)
 [00fc6796] 2f2e fffc                 move.l     -4(a6),-(a7)
 [00fc679a] 2f0d                      move.l     a5,-(a7)
-FUN_00fc679c:
 [00fc679c] 6100 fc60                 bsr        $00FC63FE
 [00fc67a0] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fc67a6] 2d40 fff8                 move.l     d0,-8(a6)
@@ -8708,7 +8707,7 @@ makopn:
 [00fc6daa] 206e 000c                 movea.l    12(a6),a0
 [00fc6dae] 2668 0024                 movea.l    36(a0),a3
 [00fc6db2] 3ebc 0004                 move.w     #$0004,(a7)
-[00fc6db6] 4eb9 00fc 7cdc            jsr        $00FC7CDC
+[00fc6db6] 4eb9 00fc 7cdc            jsr        xmgetblk
 [00fc6dbc] 2840                      movea.l    d0,a4
 [00fc6dbe] 200c                      move.l     a4,d0
 [00fc6dc0] 6606                      bne.s      $00FC6DC8
@@ -9826,7 +9825,7 @@ ixlseek:
 [00fc7bde] 4cdf 30e0                 movem.l    (a7)+,d5-d7/a4-a5
 [00fc7be2] 4e5e                      unlk       a6
 [00fc7be4] 4e75                      rts
-DIVMOD:
+divmod:
 [00fc7be6] 4e56 fffc                 link       a6,#-4
 [00fc7bea] 306e 0010                 movea.w    16(a6),a0
 [00fc7bee] d1c8                      adda.l     a0,a0
@@ -9892,7 +9891,7 @@ ncmps:
 [00fc7c8c] 7001                      moveq.l    #1,d0
 [00fc7c8e] 4e5e                      unlk       a6
 [00fc7c90] 4e75                      rts
-bdos_walloc:
+getosm:
 [00fc7c92] 4e56 0000                 link       a6,#0
 [00fc7c96] 48e7 0104                 movem.l    d7/a5,-(a7)
 [00fc7c9a] 302e 0008                 move.w     8(a6),d0
@@ -9914,7 +9913,7 @@ bdos_walloc:
 [00fc7cd4] 4cdf 2000                 movem.l    (a7)+,a5
 [00fc7cd8] 4e5e                      unlk       a6
 [00fc7cda] 4e75                      rts
-mgetofd:
+xmgetblk:
 [00fc7cdc] 4e56 ffee                 link       a6,#-18
 [00fc7ce0] 302e 0008                 move.w     8(a6),d0
 [00fc7ce4] e740                      asl.w      #3,d0
@@ -9954,7 +9953,7 @@ mgetofd:
 [00fc7d56] 202e fffa                 move.l     -6(a6),d0
 [00fc7d5a] 4e5e                      unlk       a6
 [00fc7d5c] 4e75                      rts
-oftdel:
+xmfreblk:
 [00fc7d5e] 4e56 0000                 link       a6,#0
 [00fc7d62] 48e7 0300                 movem.l    d6-d7,-(a7)
 [00fc7d66] 206e 0008                 movea.l    8(a6),a0
@@ -10091,7 +10090,7 @@ ixterm:
 [00fc7eee] 4cdf 38c0                 movem.l    (a7)+,d6-d7/a3-a5
 [00fc7ef2] 4e5e                      unlk       a6
 [00fc7ef4] 4e75                      rts
-FUN_00fc7ef6:
+paramsize:
 [00fc7ef6] 4e56 0000                 link       a6,#0
 [00fc7efa] 48e7 0300                 movem.l    d6-d7,-(a7)
 [00fc7efe] 4247                      clr.w      d7
@@ -11105,7 +11104,7 @@ tabout:
 [00fc8c40] 4cdf 00c0                 movem.l    (a7)+,d6-d7
 [00fc8c44] 4e5e                      unlk       a6
 [00fc8c46] 4e75                      rts
-FUN_00fc8c48:
+cookdout:
 [00fc8c48] 4e56 0000                 link       a6,#0
 [00fc8c4c] 48e7 0700                 movem.l    d5-d7,-(a7)
 [00fc8c50] 3e2e 0008                 move.w     8(a6),d7
@@ -11331,7 +11330,7 @@ prt_line:
 [00fc8ec6] 66e0                      bne.s      $00FC8EA8
 [00fc8ec8] 4e5e                      unlk       a6
 [00fc8eca] 4e75                      rts
-FUN_00fc8ecc:
+newline:
 [00fc8ecc] 4e56 0000                 link       a6,#0
 [00fc8ed0] 48e7 0700                 movem.l    d5-d7,-(a7)
 [00fc8ed4] 3c2e 0008                 move.w     8(a6),d6
@@ -11356,7 +11355,7 @@ FUN_00fc8ecc:
 [00fc8f0a] 4cdf 00c0                 movem.l    (a7)+,d6-d7
 [00fc8f0e] 4e5e                      unlk       a6
 [00fc8f10] 4e75                      rts
-FUN_00fc8f12:
+backsp:
 [00fc8f12] 4e56 0000                 link       a6,#0
 [00fc8f16] 48e7 0704                 movem.l    d5-d7/a5,-(a7)
 [00fc8f1a] 4a6e 000e                 tst.w      14(a6)
@@ -12345,6 +12344,17 @@ xsettime:
 [00fc9cb8] 4cdf 0080                 movem.l    (a7)+,d7
 [00fc9cbc] 4e5e                      unlk       a6
 [00fc9cbe] 4e75                      rts
+
+********************************************************************************
+********************************************************************************
+*
+* End GEMDOS text len 0x5148
+*
+* Start VDI
+*
+********************************************************************************
+********************************************************************************
+
 line1010:
 [00fc9cc0] 226f 0002                 movea.l    2(a7),a1
 [00fc9cc4] 3411                      move.w     (a1),d2
@@ -21911,6 +21921,17 @@ vq_color:
 [00fd1b68] 30c1                      move.w     d1,(a0)+
 [00fd1b6a] 3081                      move.w     d1,(a0)
 [00fd1b6c] 60ac                      bra.s      $00FD1B1A
+
+********************************************************************************
+********************************************************************************
+*
+* End VDI text len 0x7EAE
+*
+* Start BIOS/GEMDOS/VDI data
+*
+********************************************************************************
+********************************************************************************
+
 pcnttab2:
 proto_data:
 [00fd1b6e] 0000 008e                 ori.b      #$8E,d0

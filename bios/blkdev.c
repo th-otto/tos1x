@@ -50,7 +50,7 @@ VOID bhdv_init(NOTHING)
 	char unused[10];
 	
 	UNUSED(unused);
-#if TOSVERSIO >= 0x104
+#if TOSVERSION >= 0x104
 	fd_mediach = 82;
 #else
 	fd_mediach = 300;

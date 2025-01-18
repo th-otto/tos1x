@@ -16,10 +16,10 @@
 DTAINFO
 {
     char  dt_name[12];          /*  file name: filename.typ     00-11   */
-    int32_t dt_offset_drive;    /*  dir position                12-15   */
-	int16_t dt_curbyt;			/* byte pointer within current cluster 16-17 */
-	CLNO  dt_curcl;				/* current cluster number for file	   18-19 */
-    char  dt_attr;              /*  attributes of file          20      */
+    char dt_attr;               /* search attributes */
+    char dt_pos[4];             /* search pos; note: unaligned */
+    char dt_dnd[4];             /* search directory; note: unaligned */
+
                                 /*  --  below must not change -- [1]    */
     char  dt_fattr;             /*  attrib from fcb             21      */
     _DOSTIME dt_td;             /*  time, date fields from fcb  22-25   */

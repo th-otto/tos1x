@@ -64,20 +64,13 @@ return:		rts
 /* 306de: 00e06682 */
 /* 104de: 00fcb27c */
 		xdef	_v_clrwk
-_v_clrwk: PIXLA(a0)
-		move.l    d0,-(a7)
-        move.w	PIXLV(v_planes,a0),d0	; d0 <- # of planes
-		mulu.w	PIXLV(v_hz_rez,a0),d0		; d0 <- (planes) x (hor rez)
-		mulu.w	PIXLV(v_vt_rez,a0),d0		; d0 <- (plns)x(hrez)x(vrt rz)
-		lsr.l	#3,d0			; d0 <- # bytes to clr (screen)
-
-		move.l	_v_bas_ad,-(sp)
-		add.l	d0,(sp)			; ending addr
-		move.l	_v_bas_ad,-(sp)		; starting address
-		jsr	_zeromem
-		addq.l	#8,sp			; cleanup stack
-
-		move.l    (a7)+,d0
+_v_clrwk:
+		move.l	_v_bas_ad,a0
+		move.w #(32000/4)-1,d0
+		moveq #0,d1
+v_clrwk1:
+		move.l d1,(a0)+
+		dbf d1,v_clrwk1
 		rts
 
 /*******************************************************************************

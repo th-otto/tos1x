@@ -14,8 +14,11 @@ int glbcolumn[3];
 char fill[3];
 
 
-VOID conbrk PROTO((FH h, int flag));
+#if GEMDOS >= 0x15
 VOID conadd PROTO((FH h, int32_t ch));
+#else
+#define conadd(h, ch) *(beptr[h])++ = ch, fill[h]++
+#endif
 VOID buflush PROTO((FH h));
 VOID conout PROTO((FH h, int ch));
 VOID cookdout PROTO((FH h, int ch));
@@ -56,14 +59,19 @@ int backsp PROTO((FH h, const char *cbuf, int retlen, int col));
 /* 306us: 00e13858 */
 /* 104de: 00fc4388 */
 /* 106de: 00e0456e */
+/* 100fr: 00fc8904 */
 int32_t constat(P(FH) h)
 PP(FH h;)
 {
 	if (fill[h])
 		return -1;
+#if GEMDOS >= 0x15
 	if (h != BFHPRN)
 		return Bconstat(h);
 	return 0;
+#else
+	return Bconstat(h);
+#endif
 }
 
 /*****************************************************************************
@@ -80,6 +88,7 @@ PP(FH h;)
 /* 306us: 00e1388e */
 /* 104de: 00fc43be */
 /* 106de: 00e045a4 */
+/* 100fr: 00fc8930 */
 int32_t xconstat(NOTHING)
 {
 	return constat(HXFORM(run->p_uft[0]));
@@ -98,6 +107,7 @@ int32_t xconstat(NOTHING)
 /* 306us: 00e138a8 */
 /* 104de: 00fc43d8 */
 /* 106de: 00e045be */
+/* 100fr: 00fc894a */
 int32_t xconostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[1]));
@@ -116,6 +126,7 @@ int32_t xconostat(NOTHING)
 /* 306us: 00e138cc */
 /* 104de: 00fc43fc */
 /* 106de: 00e045e2 */
+/* 100fr: 00fc896e */
 int32_t xprtostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[3]));
@@ -134,6 +145,7 @@ int32_t xprtostat(NOTHING)
 /* 306us: 00e138f0 */
 /* 104de: 00fc4420 */
 /* 106de: 00e04606 */
+/* 100fr: 00fc8992 */
 int32_t xauxistat(NOTHING)
 {
 	return constat(HXFORM(run->p_uft[2]));
@@ -152,6 +164,7 @@ int32_t xauxistat(NOTHING)
 /* 306us: 00e1390c */
 /* 104de: 00fc443c */
 /* 106de: 00e04622 */
+/* 100fr: 00fc89ae */
 int32_t xauxostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[2]));
@@ -166,54 +179,52 @@ int32_t xauxostat(NOTHING)
 /* 306us: 00e13930 */
 /* 104de: 00fc4460 */
 /* 106de: 00e04646 */
-VOID conbrk(P(FH) h, P(int) flag)
-PP(register FH h;)
-PP(register int flag;)
+/* 100fr: 00fc89d2 */
+static VOID conbrk(P(FH) h)
+PP(FH h;)
 {
 	register int32_t ch;
 	register int stop, c;
-	int retry;
 	
-	UNUSED(retry);
 	stop = 0;
-#if (GEMDOS >= 0x0017) | (TOSVERSION >= 0x106)
-		while ((flag && fill[h] == 0) || (h != BFHPRN && Bconstat(h) != 0))
-#else
-	do
+	if (Bconstat(h) != 0)
 	{
-		retry = 0;
-		while ((retry++ < 16 && h != BFHPRN && Bconstat(h) != 0))
-#endif
+		do
 		{
-			do
+			c = (ch = Bconin(h)) & 0xFF;
+			if (c == ctrlc)
 			{
-				c = (ch = Bconin(h)) & 0xFF;
-				if (c == ctrlc)
+				buflush(h);				/* flush BDOS & BIOS buffers */
+				warmboot();
+				return;
+			}
+	
+			if (c == ctrls)
+			{
+				stop = 1;
+			} else if (c == ctrlq)
+			{
+				stop = 0;
+			} else if (c == ctrlx)
+			{
+				buflush(h);
+				conadd(h, ch);
+			} else
+			{
+#if GEMDOS >= 0x15
+				conadd(h, ch);
+#else
+				if (fill[h] < KBBUFSZ)
 				{
-					buflush(h);				/* flush BDOS & BIOS buffers */
-					warmboot();
-					unreachable();
-				}
-		
-				if (c == ctrls)
-				{
-					stop = 1;
-				} else if (c == ctrlq)
-				{
-					stop = 0;
-				} else if (c == ctrlx)
-				{
-					buflush(h);
 					conadd(h, ch);
 				} else
 				{
-					conadd(h, ch);
+					Bconout(h, 7);
 				}
-			} while (stop);
-		}
-#if (GEMDOS < 0x0017) & (TOSVERSION < 0x106)
-	} while (flag && fill[h] == 0);
 #endif
+			}
+		} while (stop);
+	}
 }
 
 
@@ -221,8 +232,9 @@ PP(register int flag;)
 /* 306us: 00e139e0 */
 /* 104de: 00fc4526 */
 /* 106de: 00e046f6 */
+/* 100fr: 00fc8b0e */
 VOID buflush(P(FH) h)
-PP(FH h;)
+PP(register FH h;)
 {
 	/* flush BDOS type-ahead buffer */
 
@@ -235,6 +247,7 @@ PP(FH h;)
 /* 306us: 00e13a24 */
 /* 104de: 00fc456a */
 /* 106de: 00e046f6 */
+#if GEMDOS >= 0x15
 VOID conadd(P(FH) h, P(int32_t) ch)
 PP(register FH h;)
 PP(int32_t ch;)
@@ -253,6 +266,7 @@ PP(int32_t ch;)
 		Bconout(hh, 7);
 	}
 }
+#endif
 
 /******************/
 /* console output */
@@ -263,11 +277,12 @@ PP(int32_t ch;)
 /* 306us: 00e13ad8 */
 /* 104de: 00fc461e */
 /* 106de: 00e047ee */
+/* 100fr: 00fc8b56 */
 VOID conout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)
 {
-	conbrk(h, FALSE);					/* check for control-s break */
+	conbrk(h);						/* check for control-s break */
 	Bconout(h, ch);						/* output character to console */
 	if (ch >= ' ')
 		glbcolumn[h]++;					/* keep track of screen column */
@@ -290,10 +305,11 @@ PP(register int ch;)
 /* 306us: 00e13b62 */
 /* 104de: 00fc46a8 */
 /* 106de: 00e04878 */
+/* 100fr: 00fc8bdc */
 VOID xtabout(P(int16_t) ch)
 PP(int16_t ch;)
 {
-	tabout(HXFORM(run->p_uft[1]), ch & 0xff);
+	tabout(HXFORM(run->p_uft[1]), ch);
 }
 
 /*****************************************************************************
@@ -307,11 +323,14 @@ PP(int16_t ch;)
 /* 306us: 00e13b86 */
 /* 104de: 00fc46cc */
 /* 106de: 00e0489c */
+/* 100fr: 00fc8bfc */
 VOID tabout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)									/* character to output to console   */
 {
+#if GEMDOS >= 0x15
 	ch &= 0xff;
+#endif
 	if (ch == tab)
 	{
 		do
@@ -332,11 +351,14 @@ PP(register int ch;)									/* character to output to console   */
 /* 306us: 00e13bd6 */
 /* 104de: 00fc471c */
 /* 106de: 00e048ec */
+/* 100fr: 00fc8c48 */
 VOID cookdout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)									/* character to output to console   */
 {
+#if GEMDOS >= 0x15
 	ch &= 0xff;
+#endif
 	if (ch == tab)
 	{
 		tabout(h, ch);					/* if tab, expand it   */
@@ -364,6 +386,7 @@ PP(register int ch;)									/* character to output to console   */
 /* 306us: 00e13c24 */
 /* 104de: 00fc476a */
 /* 106de: 00e0493a */
+/* 100fr: 00fc8c92 */
 int16_t xauxout(P(int16_t) ch)
 PP(int16_t ch;)
 {
@@ -382,6 +405,7 @@ PP(int16_t ch;)
 /* 306de: 00e13ca6 */
 /* 306us: 00e13c4c */
 /* 104de: 00fc4792 */
+/* 100fr: 00fc8cba */
 int32_t xprtout(P(int16_t) ch)
 PP(int16_t ch;)
 {
@@ -392,6 +416,7 @@ PP(int16_t ch;)
 /* 306de: 00e13cce */
 /* 306us: 00e13c74 */
 /* 104de: 00fc47ba */
+/* 100fr: 00fc8ce2 */
 int32_t getch(P(FH) h)
 PP(register FH h;)
 {
@@ -400,14 +425,17 @@ PP(register FH h;)
 	if (fill[h])
 	{
 		temp = *(buptr[h])++;
+#if GEMDOS >= 0x15
 		fill[h]--;
 		if (buptr[h] == &glbkbchar[h][KBBUFSZ])
 			buptr[h] = glbkbchar[h];
+#else
+		if (--fill[h] == 0)
+			buptr[h] = beptr[h] = glbkbchar[h];
+#endif
 		return temp;
-	} else
-	{
-		return Bconin(h);
 	}
+	return Bconin(h);
 }
 
 /*****************************************************************************
@@ -422,6 +450,7 @@ PP(register FH h;)
 /* 306de: 00e13d7c */
 /* 306us: 00e13d22 */
 /* 104de: 00fc4868 */
+/* 100fr: 00fc8d6a */
 int32_t x7in(NOTHING)
 {
 	return getch(HXFORM(run->p_uft[0]));
@@ -431,12 +460,15 @@ int32_t x7in(NOTHING)
 /* 306de: 00e13d98 */
 /* 306us: 00e13d3e */
 /* 104de: 00fc4884 */
+/* 100fr: 00fc8d86 */
 int32_t conin(P(FH) h)							/* BDOS console input function */
 PP(register FH h;)
 {
 	register long ch;
 
-	conbrk(h, TRUE);
+#if GEMDOS >= 0x15
+	conbrk(h);
+#endif
 	conout(h, (int) (ch = getch(h)));
 	return ch;
 }
@@ -453,6 +485,7 @@ PP(register FH h;)
 /* 306de: 00e13dd0 */
 /* 306us: 00e13d76 */
 /* 104de: 00fc48bc */
+/* 100fr: 00fc8db2 */
 int32_t xconin(NOTHING)
 {
 	return conin(HXFORM(run->p_uft[0]));
@@ -470,14 +503,15 @@ int32_t xconin(NOTHING)
 /* 306de: 00e13dea */
 /* 306us: 00e13d90 */
 /* 104de: 00fc48d6 */
+/* 100fr: 00fc8dcc */
 int32_t x8in(NOTHING)
 {
 	register FH h;
 	register long ch;
 
 	h = HXFORM(run->p_uft[0]);
-	conbrk(h, TRUE);
 	ch = getch(h);
+	conbrk(h);
 	return ch;
 }
 
@@ -493,6 +527,7 @@ int32_t x8in(NOTHING)
 /* 306de: 00e13e22 */
 /* 306us: 00e13dc8 */
 /* 104de: 00fc490e */
+/* 100fr: 00fc8dfe */
 int32_t xauxin(NOTHING)
 {
 	return Bconin(HXFORM(run->p_uft[2]));
@@ -510,8 +545,9 @@ int32_t xauxin(NOTHING)
 /* 306de: 00e13e46 */
 /* 306us: 00e13dec */
 /* 104de: 00fc4932 */
+/* 100fr: 00fc8e22 */
 int32_t rawconio(P(int16_t) parm)
-PP(int16_t parm;)
+PP(register int16_t parm;)
 {
 	register FH i;
 
@@ -535,6 +571,7 @@ PP(int16_t parm;)
 /* 306de: 00e13ea6 */
 /* 306us: 00e13e4c */
 /* 104de: 00fc4992 */
+/* 100fr: 00fc8e82 */
 VOID xprt_line(P(const char *) p)
 PP(const char *p;)
 {
@@ -545,9 +582,10 @@ PP(const char *p;)
 /* 306de: 00e13ec6 */
 /* 306us: 00e13e6c */
 /* 104de: 00fc49b2 */
+/* 100fr: 00fc8ea2 */
 VOID prt_line(P(FH) h, P(const char *) p)
-PP(register FH h;)
-PP(register const char *p;)
+PP(FH h;)
+PP(const char *p;)
 {
 	while (*p)
 		tabout(h, *p++);
@@ -563,6 +601,7 @@ PP(register const char *p;)
 /* 306de: 00e13ef4 */
 /* 306us: 00e13e9a */
 /* 104de: 00fc49e0 */
+/* 100fr: 00fc8ecc */
 VOID newline(P(FH) h, P(int) startcol)
 PP(register int startcol;)
 PP(register FH h;)
@@ -581,6 +620,7 @@ PP(register FH h;)
 /* 306de: 00e13f3a */
 /* 306us: 00e13ee0 */
 /* 104de: 00fc4a26 */
+/* 100fr: 00fc8f12 */
 int backsp(P(FH) h, P(const char *) cbuf, P(int) retlen, P(int) col)
 PP(FH h;)
 PP(const char *cbuf;)
@@ -603,7 +643,12 @@ PP(int col;)								/* starting console column  */
 		{
 			col += 8;
 			col &= ~7;					/* for tab, go to multiple of 8 */
-		} else if ((ch & ~0x1f) == 0)
+		}
+#if GEMDOS >= 0x15
+		else if ((ch & ~0x1f) == 0)
+#else
+		else if (ch < ' ')
+#endif
 		{
 			/* control chars put out 2 printable chars */
 			col += 2;
@@ -631,6 +676,7 @@ PP(int col;)								/* starting console column  */
 /* 306de: 00e13fd6 */
 /* 306us: 00e13f7c */
 /* 104de: 00fc4ac2 */
+/* 100fr: 00fc8faa */
 VOID readline(P(char *) p)
 PP(register char *p;)								/* max length, return length, buffer space */
 {
@@ -641,6 +687,7 @@ PP(register char *p;)								/* max length, return length, buffer space */
 /* 306de: 00e14012 */
 /* 306us: 00e13fb8 */
 /* 104de: 00fc4afe */
+/* 100fr: 00fc8fe6 */
 int cgets(P(FH) h, P(int) maxlen, P(char *) buf)
 PP(register FH h;)									/* h is special handle denoting device number */
 PP(int maxlen;)
@@ -653,7 +700,9 @@ PP(char *buf;)
 	stcol = glbcolumn[h];				/* set up starting column */
 	for (retlen = 0; retlen < maxlen;)
 	{
-		conbrk(h, TRUE);
+#if GEMDOS >= 0x15
+		conbrk(h);
+#endif
 		switch (ch = getch(h))
 		{
 		case cr:
@@ -664,6 +713,10 @@ PP(char *buf;)
 		case rub:
 			retlen = backsp(h, buf, retlen, stcol);
 			break;
+#if GEMDOS < 0x15
+		case ctrlc:
+			warmboot();
+#endif
 		case ctrlx:
 			do
 				retlen = backsp(h, buf, retlen, stcol);

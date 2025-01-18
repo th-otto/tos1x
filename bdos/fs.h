@@ -47,7 +47,7 @@ OFD
 	/*  38 */ RECNO o_currec; 		/* current record number for file		*/
 	/*  40 */ int16_t o_curbyt;		/* byte pointer within current cluster  */
 	/*  42 */ int16_t  o_usecnt;	/* use count for inherited files 	    */
-	/*  44 */ OFD   *o_thread;		/* mulitple open thread list			*/
+	/*  44 */ OFD   *o_thread;		/* multiple open thread list			*/
 	/*  48 */ uint16_t o_mod; 		/* mode file opened in (see below)	    */
 	/*  50 */ 
 };
@@ -203,13 +203,8 @@ extern	int16_t	bios_dev[];		/*  in fsfioctl.c		*/
 #define Bconin(a)		trap13(0x02,a)
 #define Bconout(a,b)	trap13(0x03,a,b)
 #define Rwabs(wrtflg,buf,count,rec,drive) trap13(0x04,wrtflg,buf,count,rec,drive)
-#ifdef __ALCYON__
-#define Rwabsw(buf,count,rec,drive) trap13(0x00040001l,buf,count,rec,drive)
-#define Rwabsr(buf,count,rec,drive) trap13(0x00040000l,buf,count,rec,drive)
-#else
 #define Rwabsw(buf,count,rec,drive) Rwabs(1,buf,count,rec,drive)
 #define Rwabsr(buf,count,rec,drive) Rwabs(0,buf,count,rec,drive)
-#endif
 #define Setexc(d,a)		trap13(0x05,d,a)	/* Vector Exchange	    */
 #define Tickcal()		trap13(0x06)		/* Timer tick		    */
 #define Getbpb(d)		(BPB *)trap13(0x07,d)	/* Get BIOS Parameter Block */
@@ -221,6 +216,8 @@ extern	int16_t	bios_dev[];		/*  in fsfioctl.c		*/
 #define CIOCW(d,l,b)	trap13(0x0D,d,l,b)	/* Char IOCtl Write	    */
 #define DIOCR(d,l,b)	trap13(0x0E,d,l,b)	/* Disk IOCtl Read	    */
 #define DIOCW(d,l,b)	trap13(0x0F,d,l,b)	/* Disk IOCtl Write	    */
+#define CVE(d,a)		trap13(0x10,d,a)	/* Char Vector Exchange	    */
+/* #define date_time(op,var)	trap13(0x11,(op),(var)) */
 
 
 /**********************
@@ -280,8 +277,6 @@ extern uint16_t time, date;
 extern xjmp_buf errbuf;
 extern int const nday[];
 extern char fill[3];
-extern BOOLEAN dirlock;
-extern char osuser;
 extern int8_t const stddev[NUMSTD];
 
 /********************************
@@ -322,12 +317,7 @@ ERROR ckdrv PROTO((int d));
 DMD *getdmd PROTO((int drv));
 int xlog2 PROTO((int n));
 
-#if 0
 RECNO cl2rec PROTO((CLNO cl, DMD *dm));
-#else
-#define cl2rec(cl, dm) ((cl) * (dm)->m_clsiz)
-#endif
-
 VOID clfix PROTO((CLNO cl, CLNO link, DMD *dm));
 CLNO getcl PROTO((CLNO cl, DMD *dm));
 int nextcl PROTO((OFD *p, int wrtflg));
@@ -349,7 +339,7 @@ VOID usr2xfr PROTO((int, char *, char *));
 int uc PROTO((char c));
 OFD *makofd PROTO((DND *p));
 OFD *getofd PROTO((FH h));
-#if 0
+#if 1
 int16_t divmod PROTO((int16_t *modp, int32_t divdnd, int16_t divsor));
 #define DIVMOD(res, modp, divdnd, divsor) res = divmod(&(modp), (int32_t)(divdnd), divsor)
 #else
@@ -381,10 +371,14 @@ int contains_dots PROTO((const char *name, char ill));
 */
 
 ERROR xcreat PROTO((const char *fname, int8_t attr));
+#if !BINEXACT /* not declared for kpgmld() */
 ERROR xopen PROTO((const char *fname, int16_t mode));
+ERROR xread PROTO((FH h, long len, VOIDPTR ubufr));
+#endif
 ERROR xmkdir PROTO((const char *s));
 ERROR xrmdir PROTO((const char *p));
-ERROR xchmod PROTO((const char *p, int16_t wrt, char mod));
+/* BUG: wrong return type */
+int xchmod PROTO((const char *p, int16_t wrt, char mod));
 ERROR xsfirst PROTO((const char *name, int16_t att));
 ERROR xsnext PROTO((NOTHING));
 ERROR xgsdtof PROTO((uint16_t *buf, FH h, int16_t wrt));
@@ -395,7 +389,6 @@ ERROR xgetfree PROTO((int32_t *buf, int16_t drv));
 ERROR xforce PROTO((FH std, FH h));
 ERROR xdup PROTO((FH h));
 ERROR xlseek PROTO((long n, FH h, int16_t flg));
-ERROR xread PROTO((FH h, long len, VOIDPTR ubufr));
 ERROR xwrite PROTO((FH h, long len, VOIDPTR ubufr));
 DTAINFO *xgetdta PROTO((NOTHING));
 VOID xsetdta PROTO((DTAINFO *addr));
@@ -450,6 +443,5 @@ ERROR xmxalloc PROTO((int32_t amount, int16_t mode));
                     /* the following are used for the second arg to ixclose() */
 #define CL_DIR  0x0002      /* this is a directory file, flush, do not free */
 #define CL_FULL 0x0004      /* even though it's a directory, full close */
-
 
 #endif /* FS_H */
