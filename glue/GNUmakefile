@@ -35,7 +35,10 @@ STARTUP = startup.o
 
 OBJS = $(STARTUP) vars.o tosvars.o $(BIOSVDI_OBJS) $(AESDESK_OBJS)
 
-LINK_OBJS := $(shell echo $(OBJS) | tr ' ' ',')
+
+BIOSLINK_OBJS := $(shell echo $(BIOSVDI_OBJS) | tr ' ' ',')
+AESLINK_OBJS := $(shell echo tosrsc$(COUNTRY).o $(AESDESK_OBJS) | tr ' ' ',')
+LINK_OBJS = $(BIOSLINK_OBJS),$(AESLINK_OBJS)
 
 ROMSIZE_100 = 256k
 ROMSIZE_104 = 192k
@@ -44,13 +47,16 @@ ROMSIZE_162 = 256k
 ROMSIZE = $(ROMSIZE_$(TOSVERSION))
 
 ifeq ($(USE_CROSS_ALCYON),1)
-tos.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o
-	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(rombase)],bss[0]]' $@=$(LINK_OBJS),tosrsc$(COUNTRY).o
+tos1.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o biosext.o
+	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(rombase)],bss[0]]' $@=vars.o,tosvars.o,$(BIOSLINK_OBJS),biosext.o
+
+tos2.img: tos1.img
+	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(aes_tbase)],bss[0]]' $@=vars.o,tosvars.o,$(AESLINK_OBJS)
 
 tos.rel: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o ../vdi/vdivar.o ../aes/gembase.o sbss.o ebss.o
 	$(AM_V_at)$(CP) ../vdi/cbssdefs.o .
 	$(AM_V_at)$(CP) ../aes/gembase.o .
-	$(AM_V_LD)$(LINK68) '[abs,relocs=td,text[$(rombase)],bss[0]]' tosrel.tmp=$(LINK_OBJS),tosrsc$(COUNTRY).o > $@
+	$(AM_V_LD)$(LINK68) '[abs,relocs=td,text[$(rombase)],bss[0]]' tosrel.tmp=$(LINK_OBJS) > $@
 	$(AM_V_at)$(RM) tosrel.tmp
 
 else
@@ -63,8 +69,11 @@ tos.img: $(STARTUP) $(LIBS) tosrsc$(COUNTRY).o vars.o tosvars.o ebss.o
 
 endif
 
-$(IMG): tos.img $(MKROM)
-	$(MKROM) pad $(ROMSIZE) $< $@
+$(IMG): tos1.img tos2.img $(MKROM)
+	$(MKROM) pad $(ROMSIZE) tos1.img tos2.img $@
+
+$(MKROM)::
+	$(MAKE) -C $(top_srcdir)/tools mkrom
 
 vdivar.o: ../vdi/vdivar.S
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
@@ -75,13 +84,16 @@ vars.o: ../common/vars.S $(top_srcdir)/common/config.h
 tosvars.o: ../common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
+biosext.o: ../bios/biosext.S $(top_srcdir)/common/config.h
+	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
+
 include gluer.mak
 
 check:: $(IMG)
 	$(CMP) $(CMPL) -x --ignore-initial=0x0:0x0 --offsets=0x$(rombase):0 $(top_srcdir)/roms/tos$(TOSVERSION)$(COUNTRY).img $(IMG)
 
 clean:
-	$(RM) *.o *.a *.i $(IMG) tos.img tosimg.tmp tostmp.map $(PROGRAMS) tosrsc*.c glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
+	$(RM) *.o *.a *.i $(IMG) tos.img tos1.img tos2.img tosimg.tmp tostmp.map $(PROGRAMS) tosrsc*.c glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
 
 distclean: clean
 	$(RM) $(top_srcdir)/common/sections.mak *.img

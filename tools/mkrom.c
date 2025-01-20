@@ -76,6 +76,7 @@ struct hdr2
 #define MAGIC		(unsigned short) 0x601a	/*  bra .+26 instruction */
 #define MAGIC1		(unsigned short) 0x601b	/* data & bss base defined */
 #define MAGIC2		(unsigned short) 0x602e	/*  bra .+46 instruction */
+#define MAGIC3		(unsigned short) 0x601e	/*  bra .+30 instruction */
 
 
 static char const program_name[] = "mkrom";
@@ -315,7 +316,8 @@ PP(struct hdr2 *hdr;)
 	hdr->ch_rlbflg = rdbelong(buffer + 24);
 	hdr->ch_dstart = rdbelong(buffer + 28);
 	hdr->ch_bstart = rdbelong(buffer + 32);
-	if (hdr->ch_magic == MAGIC2 || /* Atari ROM header */
+	if (hdr->ch_magic == MAGIC2 || /* Atari ROM header >= 1.02 */
+		hdr->ch_magic == MAGIC3 || /* Atari ROM header < 1.02 */
 		hdr->ch_magic == 0xfa52 || /* first word of cartridge magic */
 		hdr->ch_magic == 0x1111)   /* Amiga ROM header */
 	{
@@ -379,9 +381,11 @@ PP(unsigned int inc;)
 
 
 /* Copy and pad with zeros up to target_size */
-static int cmd_pad(P(FILE *) infile, P(const char *) infilename, P(FILE *) outfile, P(const char *) outfilename, P(long) target_size)
+static int cmd_pad(P(FILE *) infile, P(const char *) infilename, P(FILE *) in2file, P(const char *) in2name, P(FILE *) outfile, P(const char *) outfilename, P(long) target_size)
 PP(FILE *infile;)
 PP(const char *infilename;)
+PP(FILE *in2file;)
+PP(const char *in2name;)
 PP(FILE *outfile;)
 PP(const char *outfilename;)
 PP(long target_size;)
@@ -398,11 +402,11 @@ PP(long target_size;)
 	uint16_t crc;
 	
 	printf("# Padding %s to %ld KB image into %s\n", infilename, target_size / 1024, outfilename);
-
+	
 	/* Get the input file size */
 	source_size = get_file_size(infile, infilename);
 	if (source_size == SIZE_ERROR)
-		return 0;
+		return FALSE;
 	
 	/*
 	 * check if the file has a header
@@ -419,15 +423,46 @@ PP(long target_size;)
 	if (buffer == NULL)
 	{
 		fprintf(stderr, "%s: %s\n", program_name, strerror(errno));
+		lfree(buffer);
 		return FALSE;
 	}
 	
-	/* read the input file */
-	ret = read_file(infile, infilename, buffer, source_size > target_size ? target_size : source_size);
+	/* read the input file(s) */
+	if (source_size > target_size)
+	{
+		fprintf(stderr, "%s: %s is too big: %lu extra bytes\n", program_name, infilename, source_size - target_size);
+		return FALSE;
+	}
+	ret = read_file(infile, infilename, buffer, source_size);
 	if (!ret)
 		return ret;
+	if (in2file)
+	{
+		long source2_size;
 
-	if (rdbeshort(buffer) == MAGIC2)
+		source2_size = get_file_size(in2file, in2name);
+		if (source2_size == SIZE_ERROR)
+			return FALSE;
+		if (read_header(in2file, in2name, &hdr) == FALSE)
+			return FALSE;
+		if (hdr.ch_magic == MAGIC1)
+		{
+			/* only copy text+data, ignore potential symbol info */
+			source2_size = hdr.ch_tsize + hdr.ch_dsize;
+		}
+		if (source_size + source2_size > target_size)
+		{
+			fprintf(stderr, "%s: %s is too big: %lu extra bytes\n", program_name, in2name, source_size + source2_size - target_size);
+			lfree(buffer);
+			return FALSE;
+		}
+		ret = read_file(in2file, in2name, buffer + source_size, source2_size);
+		if (!ret)
+			return ret;
+		source_size += source2_size;
+	}
+
+	if (rdbeshort(buffer) == MAGIC2 || rdbeshort(buffer) == MAGIC3)
 		tos_version = rdbeshort(buffer + 2);
 	else
 		tos_version = 0;
@@ -485,8 +520,8 @@ PP(long target_size;)
 	/* Check if the input file size is not too big */
 	if (source_size > (target_size - 2 * banks))
 	{
-		lfree(buffer);
 		fprintf(stderr, "%s: %s is too big: %lu extra bytes\n", program_name, infilename, source_size - target_size);
+		lfree(buffer);
 		return FALSE;
 	}
 
@@ -524,6 +559,8 @@ PP(char **argv;)
 {
 	const char *infilename;
 	FILE *infile;
+	const char *in2name;
+	FILE *in2file;
 	const char *outfilename;
 	FILE *outfile;
 	long target_size = 0;
@@ -539,6 +576,8 @@ PP(char **argv;)
 	asm("_ftoa equ 0");
 #endif
 
+	in2name = NULL;
+	in2file = NULL;
 	if (argc == 5 && !strcmp(argv[1], "pad"))
 	{
 		op = CMD_PAD;
@@ -549,6 +588,17 @@ PP(char **argv;)
 
 		infilename = argv[3];
 		outfilename = argv[4];
+	} else if (argc == 6 && !strcmp(argv[1], "pad"))
+	{
+		op = CMD_PAD;
+
+		target_size = get_size_value(argv[2]);
+		if (target_size == SIZE_ERROR)
+			return EXIT_FAILURE;
+
+		infilename = argv[3];
+		in2name = argv[4];
+		outfilename = argv[5];
 	} else if (argc == 4 && !strcmp(argv[1], "stc"))
 	{
 		op = CMD_STC;
@@ -583,12 +633,22 @@ PP(char **argv;)
 		return EXIT_FAILURE;
 	}
 
-	/* Open the source file */
+	/* Open the source file(s) */
 	infile = fopen(infilename, "rb");
 	if (infile == NULL)
 	{
 		fprintf(stderr, "%s: %s: %s\n", program_name, infilename, strerror(errno));
 		return EXIT_FAILURE;
+	}
+	
+	if (in2name)
+	{
+		in2file = fopen(in2name, "rb");
+		if (in2file == NULL)
+		{
+			fprintf(stderr, "%s: %s: %s\n", program_name, in2name, strerror(errno));
+			return EXIT_FAILURE;
+		}
 	}
 
 	/* Open the destination file */
@@ -602,7 +662,7 @@ PP(char **argv;)
 	switch (op)
 	{
 	case CMD_PAD:
-		ret = cmd_pad(infile, infilename, outfile, outfilename, target_size);
+		ret = cmd_pad(infile, infilename, in2file, in2name, outfile, outfilename, target_size);
 		break;
 
 #if 0
