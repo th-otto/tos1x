@@ -629,37 +629,36 @@
 /*
  * these are identical in almost all language versions
  */
-#define BIOSDLEN    $00000256
-#define VDITLEN     $000098A2
-#define VDIDLEN     $00002846
-#define BDOSTLEN    $00005F64
-#define BDOSDLEN    $00000396
+#define BTLEN_FR    $00004B78
+#define DTLEN_FR    $00016406
+
+#define BDOSTLEN    $00005148
+#define VDITLEN     $00007EBE
+#define BIOSDLEN    $00002E58
+#define BDOSDLEN    $00000000 /* included in bios */
+#define VDIDLEN     $00000000 /* included in bios */
 #define AESTLEN     $00000000 /* included in desk */
 #define AESDLEN     $00000000 /* included in desk */
 
-
-#define BTLEN_US    $0000432E
-#define DTLEN_US    $000146CA
-
 #if OS_COUNTRY == CTRY_DE
-#define BIOSTLEN    BTLEN_US+$5A
-#define DESKTLEN    DTLEN_US-$28
+#define BIOSTLEN    BTLEN_FR
+#define DESKTLEN    DTLEN_FR
 #define DESKDLEN    $000009DC
-#define GLUELEN     $00004226
+#define GLUELEN     $000044E0
 #endif
 
 #if OS_COUNTRY == CTRY_US
-#define BIOSTLEN    BTLEN_US
-#define DESKTLEN    DTLEN_US
+#define BIOSTLEN    BTLEN_FR
+#define DESKTLEN    DTLEN_FR
 #define DESKDLEN    $000009E0
-#define GLUELEN     $000041C4
+#define GLUELEN     $00004850
 #endif
 
 #if OS_COUNTRY == CTRY_FR
-#define BIOSTLEN    BTLEN_US+$78
-#define DESKTLEN    DTLEN_US-$2A
-#define DESKDLEN    $000009D6
-#define GLUELEN     $000044D6
+#define BIOSTLEN    BTLEN_FR
+#define DESKTLEN    DTLEN_FR
+#define DESKDLEN    $00000A0E
+#define GLUELEN     $000047FA
 #endif
 
 #endif /* TOSVERSION == 0x100 */
@@ -690,20 +689,20 @@
  */
 #define BDOSTBASE BIOSTBASE+BIOSTLEN
 #define VDITBASE  BDOSTBASE+BDOSTLEN
-#define AESTBASE  VDITBASE+VDITLEN
+#define AESTBASE  VDITBASE+VDITLEN+BIOSDLEN+GLUELEN
 #endif
 #define DESKTBASE AESTBASE+AESTLEN
 #define ETEXT     DESKTBASE+DESKTLEN
 
-#define BIOSDBASE ETEXT
 #if TOSVERSION >= 0x200
 #define VDIDBASE  BIOSDBASE+BIOSDLEN
 #define BDOSDBASE VDIDBASE+VDIDLEN
 #define AESDBASE  BDOSDBASE+BDOSDLEN
 #else
-#define BDOSDBASE BIOSDBASE+BIOSDLEN
-#define VDIDBASE  BDOSDBASE+BDOSDLEN
-#define AESDBASE  VDIDBASE+VDIDLEN
+#define BIOSDBASE VDITBASE+VDITLEN
+#define BDOSDBASE BIOSDBASE
+#define VDIDBASE  BDOSDBASE
+#define AESDBASE  VDIDBASE+BIOSDLEN
 #endif
 #define DESKDBASE AESDBASE+AESDLEN
 #define EDATA     DESKDBASE+DESKDLEN+GLUELEN

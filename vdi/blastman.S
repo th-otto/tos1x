@@ -23,16 +23,6 @@
 #include "lineaequ.inc"
 
 
-#define V_FUNC(func,la,r) \
-	move.l	PIXLV((LA_ROUTINES)+func,la),r
-
-#define V_CALL(func,la,r) \
-		V_FUNC(func,la,r) \
-		jsr (r)
-#define V_JUMP(func,la,r) \
-		V_FUNC(func,la,r) \
-		jmp (r)
-
 
 #include "sbframe.inc"
 
@@ -73,8 +63,26 @@ KG_BLT:
 	move.w	d6,D_XMAX(a6)
 	move.w	d7,D_YMAX(a6)
 
+#if BLITTER_SUPPORT
+
+#define V_FUNC(func,la,r) \
+	move.l	PIXLV((LA_ROUTINES)+func,la),r
+
+#define V_CALL(func,la,r) \
+		V_FUNC(func,la,r) \
+		jsr (r)
+#define V_JUMP(func,la,r) \
+		V_FUNC(func,la,r) \
+		jmp (r)
+
     PIXLA(a5)
 	V_JUMP(V_BLAST,a5,a5)		; a5 -> desired version of blast_man
 
 /* easteregg alert */
 	dc.b 'JIM LOVES JENEANE',0
+
+#else
+
+#include "sbblit.S"
+
+#endif

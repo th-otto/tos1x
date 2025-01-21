@@ -292,10 +292,17 @@
  * PIXLA: load address register with lineavar variable base if MULTI_LINEA, no-op otherwise
  * PIXLV: access through base register if MULTI_LINEA, absolute otherwise
  */
+#if TOSVERSION < 0x102
+#define LA(r)
+#define PIXLA(r)
+#define PIXLV(v,r) lineavars+(v)
+#define LV(v,r) lineavars+(v)
+#else
 #define LA(r) lea lineavars,r
 #define PIXLA(r)
 #define PIXLV(v,r) lineavars+(v)
 #define LV(v,r) v(r)
+#endif
 
 
 #if BLITTER_SUPPORT

@@ -291,18 +291,16 @@ VOID vsf_color(NOTHING)
 /* 104de: 00fcbc8c */
 VOID v_locator(NOTHING)
 {
-	register int16_t motion, button;
+	int16_t i;
 	register int16_t *pointer;
-	register int16_t x, y;
 
 	LV(INTIN)[0] = 1;
 
 	/* Set the initial locator position.                 */
 
 	pointer = LV(PTSIN);
-	x = *pointer++;
-	y = *pointer;
-	SET_CUR(x, y);						/* set GCURX, GCURY, & mouse */
+	GCURX = *pointer++;
+	GCURY = *pointer;
 
 
 	if (LV(loc_mode) == 0)					/* Request mode       */
@@ -314,7 +312,7 @@ VOID v_locator(NOTHING)
 
 		/* Wait for key or button event (bit 0 of GLOC_KEY return)    */
 
-		while (!(GLOC_KEY() & 1))		/* X1 and Y1 get updated  */
+		while ((i = GLOC_KEY()) != 1)		/* X1 and Y1 get updated  */
 			;
 
 		pointer = LV(CONTRL);
@@ -329,38 +327,35 @@ VOID v_locator(NOTHING)
 	}
 	else								/* Sample mode        */
 	{
-		motion = 0;
-		button = 0;
-
-		switch (GLOC_KEY())
+		i = GLOC_KEY();
+		pointer = LV(CONTRL);
+		*(pointer + 2) = 1;
+		*(pointer + 4) = 0;
+		switch (i)
 		{
 		case 0:
+			*(pointer + 2) = 0;
 			break;
 
 		case 1:
-			button = 1;
+			*(pointer + 2) = 0;
+			*(pointer + 4) = 1;
 			*(LV(INTOUT)) = LV(TERM_CH) & 0x00FF;
 			break;
 
 		case 2:
-			motion = 1;
 			pointer = LV(PTSOUT);
 			*pointer++ = LV(X1);
 			*pointer = LV(Y1);
 			break;
 
 		case 3:
-			motion = 1;
-			button = 1;
-			*(LV(INTOUT)) = LV(TERM_CH) & 0x00FF;
+			*(pointer + 4) = 1;
 			pointer = LV(PTSOUT);
 			*pointer++ = LV(X1);
 			*pointer = LV(Y1);
 			break;
 		}
-		pointer = LV(CONTRL);
-		*(pointer + 2) = motion;
-		*(pointer + 4) = button;
 	}
 }
 
@@ -393,25 +388,27 @@ VOID v_hide_c(NOTHING)
 
 /*--------------------------------------------------------------------------*/
 /*
+ * VDI #124 - vq_mouse - Inquire Mouse Status
+ *
  * RETURN MOUSE BUTTON STATUS
- *
- * vq_mouse() - has been changed to an assembly file, to allow for
- *              atomic access to mouse parameter block.
- * vq_mouse() 
- * {
- *    register int16_t *pointer;
- *
- *    LV(INTOUT)[0] = MOUSE_BT;
- *
- *    pointer = LV(CONTRL);
- *    *(pointer+4) = 1;
- *    *(pointer+2) = 1;
- *
- *    pointer = LV(PTSOUT);
- *    *pointer++ = GCURX;
- *    *pointer   = GCURY;
- * }
  */
+/* 100fr: 00fcb01e */
+#if TOSVERSION < 0x102
+VOID vq_mouse(NOTHING)
+{
+    register int16_t *pointer;
+
+    LV(INTOUT)[0] = MOUSE_BT;
+
+    pointer = LV(CONTRL);
+    *(pointer+4) = 1;
+    *(pointer+2) = 1;
+
+    pointer = LV(PTSOUT);
+    *pointer++ = GCURX;
+    *pointer   = GCURY;
+}
+#endif
 
 /*--------------------------------------------------------------------------*/
 /* 

@@ -60,7 +60,7 @@ sb_vline:	lea	-FRAG_LEN(sp),sp  ; sp -> pixel fragment frame
 		beq	sv_nofrag
 
 		move.l	sp,a2		; a2 -> ram for pixel fragment code
-		bsr	pixfrag
+*		bsr	pixfrag
 
 sv_nofrag:	move.w	LV(V_PLANES,a4),d0
 		add.w	d0,d0		; d0 <- 2 * planes

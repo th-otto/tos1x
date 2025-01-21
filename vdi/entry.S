@@ -66,57 +66,41 @@ _GSX_ENTRY:
 	move.l	d1,a0			; a0 -> caller's parameter block
 	PIXLA(a2)
 	lea	PIXLV(local_pb,a2),a1		; a1 -> local parameter block
-	lea	ptsin_array,a3		; a3 -> local ptsin array
 
 *   make a local copy of the pointers in the caller's parameter block
 
-	move.l	(a0)+,a2		; a2 -> caller's contrl array
-	move.l	a2,(a1)+		; contrl
-	move.l	(a0)+,(a1)+		; intin
-	move.l	(a0)+,a4		; a4 -> caller's ptsin array
-	move.l	a3,(a1)+		; ptsin (local ptsin array)
-	move.l	(a0)+,(a1)+		; intout
-	move.l	(a0)+,(a1)+		; ptsout
+	move.l	0(a0),(a1)+		; contrl
+	move.l	4(a0),(a1)+		; intin
+	move.l	#ptsin_array,(a1)+		; ptsin (local ptsin array)
+	move.l	12(a0),(a1)+		; intout
+	move.l	16(a0),(a1)+		; ptsout
 
 
 *   get number of ptsin entries to copy locally
 
-	move.w	2(a2),d0	 ; d0 <- number of verticies from CONTRL[1]
+	movea.l 0(a0),a1
+	move.w	2(a1),d0	 ; d0 <- number of verticies from CONTRL[1]
 	move.w	d0,-(sp)	 ; save copy since driver may alter original
 	beq	no_ptsin	 ; no entries to copy
 
-	move.w	#max_vert,d1	 ; d1 <- maximum length of ptsin array  (words)
-	cmp.w	d1,d0		 ; is it more than we have room for?
-	ble	ptsin_ok	 ; no, transfer this number
+	asl.w      #1,d0
+	cmpi.w	#max_vert,d0		 ; is it more than we have room for?
+	bls	ptsin_ok	 ; no, transfer this number
 
-	move.w	d1,d0		 ; yes, set size to max
-	move.w	d1,2(a2)	 ; truncate value in user's CONTRL array
+	move.w	#max_vert,d0		 ; yes, set size to max
+	move.w	#max_vert/2,2(a1)	 ; truncate value in user's CONTRL array
 
 
 *   make a local copy of the PTSIN array
 
 ptsin_ok:
-	move.w	d0,d1			; d1 <- gets the number of verticies
-	asr.w	#3,d0			; d0 <- (# of verticies) div (8)
-	andi.w	#7,d1			; d1 <- (# of verticies) mod (8)
-	add.w	d1,d1			; make d1 a word index
-	neg.w	d1			; make it an index from the bottom
-	jmp	dec_count(pc,d1.w)	; move mod 8 vertices
+	subq.w     #1,d0        ; for dbra
+	move.l  8(a0),a0        ; users ptsin
+	move.l #ptsin_array,a1
 
 ptsin_loop:
-
-	move.l	(a4)+,(a3)+		; move 8 verticies [(x,y)] at a time
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-	move.l	(a4)+,(a3)+
-
-dec_count:
-
-	dbra	d0,ptsin_loop		; d0 contains count ((# of verts) / (8))
+	move.w	(a0)+,(a1)+		; move verticies
+	dbra	d0,ptsin_loop		; d0 contains count ((# of verts))
 
 
 no_ptsin:

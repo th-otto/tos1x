@@ -1,16 +1,12 @@
-VDI_104_OBJS1=escape.o font6x6.o font8x8.o font8x16.o
-VDI_104_OBJS2=entry.o tables.o line1010.o gsxasm1.o
-VDI_104_OBJS3=allgem.o blitinit.o routines.o jmptbl.o isin.o monobj.o
-VDI_104_OBJS4=opnwk.o monout.o text.o textblt.o hbtxtblt.o
-VDI_104_OBJS5=mono.o hbmono.o gsxasm2.o hbrect.o mouse.o copyrfm.o blastman.o
-VDI_104_OBJS6=hbbitblt.o blaster.o seedfill.o xfrmform.o stcolor.o
-VDI_104_OBJS7=sbblit.o sbfrag.o sbescape.o sbhline.o sbvline.o sbmono.o sbtxtblt.o
-VDI_104_OBJS9=cbssdefs.o
+VDI_100_OBJS1=escape.o font6x6.o font8x8.o font8x16.o
+VDI_100_OBJS2=entry.o tables.o line1010.o gsxasm1.o
+VDI_100_OBJS3=allgem.o blitinit.o routines.o jmptbl.o isin.o monobj.o
+VDI_100_OBJS4=opnwk.o monout.o text.o textblt.o hbtxtblt.o sbtxtblt.o
+VDI_100_OBJS5=mono.o hbmono.o gsxasm2.o hbrect.o mouse.o copyrfm.o blastman.o
+VDI_100_OBJS6=sbfrag.o hbbitblt.o blaster.o seedfill.o xfrmform.o stcolor.o
+VDI_100_OBJS9=cbssdefs.o
 
-VDI_104_OBJS=${VDI_104_OBJS1} ${VDI_104_OBJS2} ${VDI_104_OBJS3} ${VDI_104_OBJS4} ${VDI_104_OBJS5} ${VDI_104_OBJS6} ${VDI_104_OBJS7} ${VDI_104_OBJS8} ${VDI_104_OBJS9} ${VDI_104_OBJS10}
-VDI_106_OBJS=${VDI_104_OBJS}
-VDI_162_OBJS=${VDI_104_OBJS}
-VDI_100_OBJS=${VDI_104_OBJS}
+VDI_100_OBJS=${VDI_100_OBJS1} ${VDI_100_OBJS2} ${VDI_100_OBJS3} ${VDI_100_OBJS4} ${VDI_100_OBJS5} ${VDI_100_OBJS6} ${VDI_100_OBJS7} ${VDI_100_OBJS8} ${VDI_100_OBJS9} ${VDI_100_OBJS10}
 
 VDI_OBJS=${VDI_${TOSVERSION}_OBJS}
 

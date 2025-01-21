@@ -1408,20 +1408,24 @@ dr_clip         00fc9ed2        Instruction Label       CLC_FLIT        User Def
 drc_1           00fc9efe        Instruction Label       CLC_FLIT        User Defined
 drc_2           00fc9f12        Instruction Label       CLC_FLIT        User Defined
 drc_end         00fc9f1e        Instruction Label       CLC_FLIT        User Defined
+int_neg         00fc9f24        Instruction Label       CLC_FLIT        User Defined
 bub_sort        00fc9f30        Function        Global  User Defined
 SMUL_DIV        00fc9f58        Function        Global  User Defined
 concat          00fc9f8c        Function        Global  User Defined
 ABLINE          00fc9fb8        Function        Global  User Defined
-wm_tbl          00fca0d6        Data Label      Global  User Defined
-ABLINE_jump_table       00fca0f6        Data Label      Global  User Defined
-FUN_00fca148    00fca148        Function        Global  Default
-FUN_00fca278    00fca278        Function        Global  Default
-FUN_00fca326    00fca326        Function        Global  Default
-FUN_00fca33e    00fca33e        Function        Global  Default
+ortbl           00fca0d6        Data Label      Global  User Defined
+dxge            00fca0f6        Data Label      Global  User Defined
+or_dxge         00fca148        Function        Global  User Defined
+or_dygt         00fca278        Function        Global  User Defined
+xl_noswap       00fca326        Function        Global  User Defined
+xl_swap         00fca33e        Function        Global  User Defined
 HABLINE         00fca356        Function        Global  User Defined
 lf_tab          00fca3de        Data Label      Global  User Defined
 rf_tab          00fca3de        Data Label      Global  User Defined
-FUN_00fca460    00fca460        Function        Global  Default
+rep_x           00fca410        Instruction Label       HABLINE        User Defined
+or_x            00fca44a        Instruction Label       HABLINE        User Defined
+nor_x           00fca454        Instruction Label       HABLINE        User Defined
+or_nor          00fca460        Function        Global  User Defined
 GSHIFT_S        00fca4fa        Function        Global  User Defined
 v_nop           00fca504        Function        Global  User Defined
 v_cellarray     00fca504        Function        v_nop   User Defined
@@ -1441,9 +1445,9 @@ no_char         00fca6b2        Instruction Label       GCHR_KEY        User Def
 mouse_init      00fca6b8        Function        Global  User Defined
 user_init       00fca734        Function        Global  User Defined
 dinit_mouse     00fca736        Function        Global  User Defined
-FUN_00fca756    00fca756        Function        Global  Default
+GLOC_KEY        00fca756        Function        Global  User Defined
 esc_init        00fca7e2        Function        Global  User Defined
-FUN_00fca878    00fca878        Function        Global  Default
+rezinit         00fca878        Function        Global  User Defined
 reztab0         00fca8ac        Data Label      Global  User Defined
 reztab1         00fca8af        Data Label      Global  User Defined
 reztab2         00fca8b2        Data Label      Global  User Defined
@@ -1457,7 +1461,7 @@ caseD_3         00fcaa76        Instruction Label       switchD_00fcaaa0        
 caseD_4         00fcaa84        Instruction Label       switchD_00fcaaa0        Analysis
 switchD         00fcaaa0        Instruction Label       switchD_00fcaaa0        Analysis
 caseD_5         00fcaaa2        Instruction Label       switchD_00fcaaa0        Analysis
-FUN_00fcab14    00fcab14        Function        Global  Default
+Icos            00fcab14        Function        Global  User Defined
 vsl_type        00fcab3e        Function        Global  User Defined
 vsl_width       00fcab88        Function        Global  User Defined
 vsl_ends        00fcabe8        Function        Global  User Defined
@@ -1496,7 +1500,7 @@ caseD_5         00fcb31a        Instruction Label       switchD_00fcb318        
 vsf_perimeter   00fcb324        Function        Global  User Defined
 vsl_udsty       00fcb36a        Function        Global  User Defined
 vs_clip         00fcb382        Function        Global  User Defined
-FUN_00fcb426    00fcb426        Function        Global  Default
+arb_corner      00fcb426        Function        Global  User Defined
 dro_cpyfm       00fcb472        Function        Global  User Defined
 drt_cpyfm       00fcb4a4        Function        Global  User Defined
 dr_recfl        00fcb4dc        Function        Global  User Defined
@@ -1522,17 +1526,17 @@ caseD_a         00fcbc0c        Instruction Label       switchD_00fcbc0a        
 vql_attributes  00fcbc16        Function        Global  User Defined
 vqm_attributes  00fcbc72        Function        Global  User Defined
 vqf_attributes  00fcbcd2        Function        Global  User Defined
-FUN_00fcbd24    00fcbd24        Function        Global  Default
-FUN_00fcbdae    00fcbdae        Function        Global  Default
-FUN_00fcbf2a    00fcbf2a        Function        Global  Default
+pline           00fcbd24        Function        Global  User Defined
+clip_line       00fcbdae        Function        Global  User Defined
+code            00fcbf2a        Function        Global  User Defined
 plygn           00fcbf82        Function        Global  User Defined
-FUN_00fcc11c    00fcc11c        Function        Global  Default
-FUN_00fcc4c6    00fcc4c6        Function        Global  Default
+gdp_rbox        00fcc11c        Function        Global  User Defined
+gdp_arc         00fcc4c6        Function        Global  User Defined
 clc_nsteps      00fcc572        Function        Global  User Defined
 gdp_ell         00fcc5d2        Function        Global  User Defined
 clc_arc         00fcc682        Function        Global  User Defined
-FUN_00fcc7f8    00fcc7f8        Function        Global  Default
-FUN_00fcc88a    00fcc88a        Function        Global  Default
+Calc_pts        00fcc7f8        Function        Global  User Defined
+st_fl_ptr       00fcc88a        Function        Global  User Defined
 caseD_0         00fcc8a6        Instruction Label       switchD_00fcc956        Analysis
 caseD_1         00fcc8b0        Instruction Label       switchD_00fcc956        Analysis
 caseD_2         00fcc8ba        Instruction Label       switchD_00fcc956        Analysis
@@ -1540,15 +1544,15 @@ caseD_3         00fcc8fa        Instruction Label       switchD_00fcc956        
 caseD_4         00fcc93a        Instruction Label       switchD_00fcc956        Analysis
 switchD         00fcc956        Instruction Label       switchD_00fcc956        Analysis
 caseD_5         00fcc958        Instruction Label       switchD_00fcc956        Analysis
-FUN_00fcc96a    00fcc96a        Function        Global  Default
-FUN_00fcca84    00fcca84        Function        Global  Default
+clr_dda         00fcc96a        Function        Global  User Defined
+wline           00fcca84        Function        Global  User Defined
 perp_off        00fccc76        Function        Global  User Defined
 quad_xform      00fccdba        Function        Global  User Defined
-FUN_00fcce32    00fcce32        Function        Global  Default
+do_circ         00fcce32        Function        Global  User Defined
 s_fa_attr       00fccf3a        Function        Global  User Defined
-FUN_00fccfa6    00fccfa6        Function        Global  Default
+r_fa_attr       00fccfa6        Function        Global  User Defined
 do_arrow        00fccfde        Function        Global  User Defined
-FUN_00fcd07a    00fcd07a        Function        Global  Default
+arrow           00fcd07a        Function        Global  User Defined
 init_wk         00fcd2e6        Function        Global  User Defined
 d_opnvwk        00fcd4f6        Function        Global  User Defined
 d_clsvwk        00fcd588        Function        Global  User Defined
@@ -1694,11 +1698,11 @@ line_lp         00fcfb76        Instruction Label       Global  User Defined
 flip_lp         00fcfb7e        Instruction Label       Global  User Defined
 strtflip        00fcfb90        Instruction Label       Global  User Defined
 replicat        00fcfbc0        Instruction Label       Global  User Defined
-FUN_00fcfca2    00fcfca2        Function        Global  Default
+yloop           00fcfca2        Function        Global  User Defined
 getdest         00fcfd04        Function        Global  User Defined
 outlin          00fcfd26        Function        Global  User Defined
-FUN_00fcfdc0    00fcfdc0        Function        Global  Default
-chk_clip        00fcfdde        Instruction Label       FUN_00fcfdc0    User Defined
+MONO8XHT        00fcfdc0        Function        Global  User Defined
+on_bounds       00fcfdde        Instruction Label       MONO8XHT    User Defined
 vtrap1          00fcff62        Function        Global  User Defined
 TRNSFONT        00fcff72        Function        Global  User Defined
 put_pix         00fcff94        Function        Global  User Defined
@@ -1706,20 +1710,19 @@ ppx_loop        00fcffcc        Instruction Label       put_pix User Defined
 ppx_clr         00fcffd8        Instruction Label       put_pix User Defined
 get_pix         00fcffe0        Function        Global  User Defined
 fill_line       00fd0026        Function        Global  User Defined
-FUN_00fd0078    00fd0078        Function        Global  Default
+end_pts         00fd0078        Function        Global  User Defined
 M_RECTFILL      00fd018c        Function        Global  User Defined
 mouse_rel       00fd02e0        Function        Global  User Defined
-FUN_00fd0394    00fd0394        Function        Global  Default
+scrn_clip       00fd0394        Function        Global  User Defined
 MOV_CUR         00fd03c2        Instruction Label       Global  User Defined
 vb_draw         00fd03e2        Instruction Label       Global  User Defined
 vex_butv        00fd042c        Instruction Label       Global  User Defined
 vex_motv        00fd0444        Instruction Label       Global  User Defined
 vex_curv        00fd045c        Instruction Label       Global  User Defined
 cur_display     00fd0474        Function        Global  User Defined
-FUN_00fd05c2    00fd05c2        Function        Global  Default
 cur_replace     00fd0648        Function        Global  User Defined
 HIDE_CUR        00fd0718        Function        Global  User Defined
-FUN_00fd074a    00fd074a        Function        Global  Default
+DIS_CUR         00fd074a        Function        Global  User Defined
 vsc_form        00fd078e        Function        Global  User Defined
 COPY_RFM        00fd080a        Function        Global  User Defined
 pat_parm        00fd0836        Instruction Label       COPY_RFM        User Defined
@@ -1745,7 +1748,7 @@ ymax_clipped    00fd0a70        Instruction Label       COPY_RFM        User Def
 max_save        00fd0a90        Instruction Label       COPY_RFM        User Defined
 bad_parameter   00fd0aa4        Instruction Label       COPY_RFM        User Defined
 KG_BLT          00fd0abc        Function        Global  User Defined
-bitblt          00fd0af8        Function        Global  User Defined
+sb_bitblt       00fd0af8        Function        Global  User Defined
 std_blt         00fd0b36        Instruction Label       bitblt  User Defined
 act_shift       00fd0b54        Instruction Label       bitblt  User Defined
 start_addr      00fd0b62        Instruction Label       bitblt  User Defined
@@ -1765,7 +1768,6 @@ log_op          00fd0d38        Data Label      Global  User Defined
 unary_blt       00fd0d78        Instruction Label       bitblt  User Defined
 call_unary      00fd0d98        Instruction Label       bitblt  User Defined
 get_fringe      00fd0da2        Function        Global  User Defined
-D_XMIN          00fd0db2        Instruction Label       get_fringe      User Defined
 fr_l_mask       00fd0dc4        Data Label      Global  User Defined
 fr_r_mask       00fd0dc6        Data Label      Global  User Defined
 s_xy2addr       00fd0de6        Function        Global  User Defined
@@ -1816,7 +1818,7 @@ mode_00         00fd102e        Instruction Label       Global  User Defined
 f1op_00         00fd1036        Instruction Label       Global  User Defined
 f2op_00         00fd1044        Instruction Label       Global  User Defined
 mode_01         00fd104e        Instruction Label       Global  User Defined
-f1op_01         00fd1050        Instruction Label       Global  User Defined
+f1op_01         00fd1056        Instruction Label       Global  User Defined
 f2op_01         00fd1064        Instruction Label       Global  User Defined
 mode_02         00fd1072        Instruction Label       Global  User Defined
 f1op_02         00fd107a        Instruction Label       Global  User Defined
@@ -1847,14 +1849,14 @@ mode_11         00fd1180        Instruction Label       Global  User Defined
 f1op_11         00fd1188        Instruction Label       Global  User Defined
 f2op_11         00fd1196        Instruction Label       Global  User Defined
 mode_12         00fd11a2        Instruction Label       Global  User Defined
-mode_12         00fd11aa        Instruction Label       Global  User Defined
+f1op_12         00fd11aa        Instruction Label       Global  User Defined
 f2op_12         00fd11b8        Instruction Label       Global  User Defined
 mode_13         00fd11c4        Instruction Label       Global  User Defined
 f1op_13         00fd11cc        Instruction Label       Global  User Defined
 f2op_13         00fd11da        Instruction Label       Global  User Defined
 mode_14         00fd11e6        Instruction Label       Global  User Defined
 f1op_14         00fd11ee        Instruction Label       Global  User Defined
-f2op_14         00fd11fa        Instruction Label       Global  User Defined
+f2op_14         00fd11fc        Instruction Label       Global  User Defined
 mode_15         00fd120a        Instruction Label       Global  User Defined
 f1op_15         00fd1212        Instruction Label       Global  User Defined
 f2op_15         00fd1220        Instruction Label       Global  User Defined
@@ -1864,10 +1866,10 @@ crunch_Q        00fd170e        Function        Global  User Defined
 get_seed        00fd1768        Function        Global  User Defined
 v_get_pixel     00fd1924        Function        Global  User Defined
 vr_trnfm        00fd197e        Function        Global  User Defined
-FUN_00fd19cc    00fd19cc        Function        Global  Default
-FUN_00fd1a00    00fd1a00        Function        Global  Default
+in_place        00fd19cc        Function        Global  User Defined
+out_of_place    00fd1a00        Function        Global  User Defined
 vs_color        00fd1a1e        Function        Global  User Defined
-FUN_00fd1aba    00fd1aba        Function        Global  Default
+vs_col11        00fd1aba        Function        Global  User Defined
 vq_color        00fd1ad0        Function        Global  User Defined
 pcnttab2        00fd1b6e        Data Label      Global  User Defined
 proto_data      00fd1b7e        Data Label      Global  User Defined

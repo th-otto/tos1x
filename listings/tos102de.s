@@ -1,20 +1,18 @@
 [00fc0000] 602e                      bra.s      $00FC0030
-[00fc0002] 0102                      btst       d0,d2
-[00fc0004] 00fc 0030 00fc            cmp2.b     #$FC,d0 ; 68020+ only
-[00fc000a] 0000                      dc.w       $0000
-[00fc000c] 0000                      dc.w       $0000
-[00fc000e] 8900                      sbcd.b     d0,d4
-[00fc0010] 00fc 0030 00fe            cmp2.b     #$FE,d0 ; 68020+ only
-[00fc0016] fff4                      dc.w       $FFF4
-[00fc0018] 0422 1987                 subi.b     #$87,-(a2)
-[00fc001c] 0003 0e96                 ori.b      #$96,d3
-[00fc0020] 0000                      dc.w       $0000
-[00fc0022] 7e9c                      moveq.l    #-100,d7
-[00fc0024] 0000                      dc.w       $0000
-[00fc0026] 0e61 0000                 moves.w    -(a1),d0
-[00fc002a] 87ce                      divs.w     a6,d3 ; apollo only
-[00fc002c] 0000                      dc.w       $0000
-[00fc002e] 0000                      dc.w       $0000
+[00fc0002] 0102                      dc.w       $0102
+[00fc0004] 00fc 0030                 dc.l       _main
+           00fc 0000                 dc.l       _os_entry
+[00fc000c] 0000 8900                 dc.l       _endvdibss
+[00fc0010] 00fc 0030                 dc.l       _main
+           00fe fff4                 dc.l       _ui_mupb
+[00fc0018] 0422 1987                 dc.l       $04221987
+[00fc001c] 0003                      dc.w       3
+           0e96                      dc.w       $0e96
+[00fc0020] 0000 7e9c                 dc.l       _root
+[00fc0024] 0000 0e61                 dc.l       _shifty
+           0000 87ce                 dc.l       _run
+[00fc002c] 0000 0000                 dc.l       0
+
 [00fc0030] 46fc 2700                 move.w     #$2700,sr
 [00fc0034] 4e70                      reset
 [00fc0036] 0cb9 fa52 235f 00fa 0000  cmpi.l     #$FA52235F,$00FA0000

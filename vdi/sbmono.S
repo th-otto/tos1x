@@ -18,22 +18,6 @@
 *
 *******************************************************************************
 
-#include "config.h"
-#include "vdidefs.h"
-#include "lineaequ.inc"
-#include "tosvars.inc"
-
-
-/*
- * in TOS versions before 4.00, the routines below
- * are called with a5 pointing to the font base.
- * In TOS 4.x, they are called with a1 pointing to the
- * linea reference base.
- */
-OF equ -FBASE
-OF4 equ -FBASE-4
-
-
 *  no clipping to worry about
 *
 *   d0.w =  DESTX
@@ -46,31 +30,26 @@ OF4 equ -FBASE-4
 /* 206de: 00e0e9ba */
 /* 104de: 00fd2b1a */
 /* 106de: 00e12d7a */
+/* 100fr: 00fcfe1a */
 		xdef	 sb_mono
 sb_mono:
-	move.l	a6,-(sp)	; save a6
-
-	muls	LV((bytes_lin)+OF,a5),d1	; d1 <- Y offset
-	asr.w	#4,d0			; d0 <- word offset to X
-	subx.w	d4,d4			; d4 <- 0000=>even byte  FFFF=>odd byte
-	muls	LV((v_planes)+OF,a5),d0	; d0 <- X offset /2
-	add.w	d4,d4			; cy:0=>even byte cy:1=>odd byte
-	addx.l	d0,d0			; d0 <- byte offset to X
+		move.l     a6,-(a7)	; save a6 
+		jsr        concat
+		tst.w      d0
+		beq.s      word_ok
+		addq.w     #1,d1
+word_ok:
 
 	move.l	_v_bas_ad,a1
-	add.l	d0,a1			; a1 -> screen destination
-	add.l	d1,a1
-
-	move.l  (a5)+,a0					; a0 -> source form base address
-	move.w	(a5),d0						; d0 <- source form width
-	move.l	LV((INTIN)+OF4,a5),a2		; a2 -> character string
-	move.w	LV((v_lin_wr)+OF4,a5),d1	; d1 <- screen form width
-	move.w	LV((WRT_MODE)+OF4,a5),d4	; d4 <- writing mode
-	add.w	d4,d4			; d4 <- writing mode index
-
-	dbra	d3,next_char		; d3 <- character height dbra counter
-	/* BUG: a6 not restored -> crash */
-	rts				; quit on null height
+	add.w	d1,a1					; a1 -> screen destination
+	move.l  LV(FBASE,a5),a0			; a0 -> source form base address
+	move.l	LV(INTIN,a5),a2			; a2 -> character string
+	move.w	LV(FWIDTH,a5),d0		; d0 <- source form width
+	move.w  LV(v_lin_wr,a5),d1	; d1 <- screen form width
+	move.w	LV(WRT_MODE,a5),d4	; d4 <- writing mode
+	lsl.w	#1,d4			; d4 <- writing mode index
+	lea mode_base,a4
+	bra    next_char
 
 
 *	a0   -> source form base
@@ -88,8 +67,8 @@ mchar_lp:
 	move.l	a1,-(sp)		; save screen destination on stack
 	move.w	(a2)+,d5		; d5 <- next character from string
 	lea	0(a0,d5.w),a3		; a3 -> top-most grfx byt for cur char
-	move.w	 LV((TEXT_FG)+OF4,a5),d6	; d6 <- foreground color
-	move.w	LV((v_planes)+OF4,a5),d5	; d5 <- plane count
+	move.w	 LV(TEXT_FG,a5),d6	; d6 <- foreground color
+	move.w	LV(v_planes,a5),d5	; d5 <- plane count
 	bra	next_plane
 
 mplan_lp:
@@ -98,17 +77,17 @@ mplan_lp:
 	ror.w	#1,d6		; cy <- current plane's foreground color bit
 	bcc	bit_clr		; cy:0 => use top half of table
 
-	addq.w	#8,d7		; cy:1 => use bottom half of table
+	ori.w	#8,d7		; cy:1 => use bottom half of table
 
 bit_clr:
 
 	move.w	mode_tbl(pc,d7.w),d7	; d7 <- offset to routine
-	jmp	mode_tbl(pc,d7.w)	; perform proper operation
+	jsr	0(a4,d7.w)	; perform proper operation
 
 
 mplan_cont:
 
-	addq.l	#2,a1			;destination to next plane
+	addq.w	#2,a1			;destination to next plane
 
 next_plane:
 
@@ -116,14 +95,14 @@ next_plane:
 
 
 	move.l	(sp)+,a1	; a1 -> original screen destination
-	addq.l	#1,a1		; a1 -> next character position
+	addq.w	#1,a1		; a1 -> next character position
 	move.l	a1,d7
-	btst.l	#0,d7		; word fault ?
+	andi.w	#1,d7		; word fault ?
 	bne	next_char	; if not, use other half of current word
 
-	move.w	LV((v_planes)+OF4,a5),d7	; d7 <- number of planes
+	move.w	LV(v_planes,a5),d7	; d7 <- number of planes
 	subq.w	#1,d7			; d7 <-	number of planes -1
-	add.w	d7,d7			; d7 <- offset to 1st plane of nxt byte
+	lsl.w	#1,d7			; d7 <- offset to 1st plane of nxt byte
 	add.w	d7,a1			; a1 -> next char position
 
 next_char:
@@ -132,21 +111,21 @@ next_char:
 
 	moveq.l	#1,d0			; exit blit with success code in d0
 	move.l	(sp)+,a6		; restore a6
-	move.l	(sp)+,a5		; restore a5 (it was saved by our caller in mono.s)
 	rts
 
 
 mode_tbl:
 
-	dc.w	 mon_zer-mode_tbl	;replace		0
-	dc.w	mon_set0-mode_tbl	;transparent		0
-	dc.w	 mon_xor-mode_tbl	;exclusive or (xor)	0
-	dc.w	mon_not0-mode_tbl	;inverse transparent	0
+	dc.w	 mon_zer-mode_base	;replace		0
+	dc.w	mon_set0-mode_base	;transparent		0
+	dc.w	 mon_xor-mode_base	;exclusive or (xor)	0
+	dc.w	mon_not0-mode_base	;inverse transparent	0
 
-	dc.w	 mon_rep-mode_tbl	;replace		1
-	dc.w	mon_set1-mode_tbl	;transparent		1
-	dc.w	 mon_xor-mode_tbl	;exclusive or (xor)	1
-	dc.w	mon_not1-mode_tbl	;inverse transparent	1
+	dc.w	 mon_rep-mode_base	;replace		1
+	dc.w	mon_set1-mode_base	;transparent		1
+	dc.w	 mon_xor-mode_base	;exclusive or (xor)	1
+	dc.w	mon_not1-mode_base	;inverse transparent	1
+mode_base:
 
 
 
@@ -163,53 +142,58 @@ mode_tbl:
 
 mon_rep:
 
-	move.l	a1,a6		;copy screen address to temp
-	move.l	a3,a4		;copy form address to temp
+	move.l	a1,a5		;copy screen address to temp
+	move.l	a3,a6		;copy form address to temp
 	move.w	d3,d7		;copy height count to temp
-
+    bra rep_lp1
 rep_lp:
-	move.b	(a4),(a6)	;direct replacement
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	move.b	(a6),(a5)	;direct replacement
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+rep_lp1:
 	dbra	d7,rep_lp	;go for next line
 
-	bra	mplan_cont
+	rts
 
 
 *  all zeros
 
 mon_zer:
 
-	move.l	a1,a6		;copy screen address to temp
+	move.l	a1,a5		;copy screen address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra zer_lp1
 
 zer_lp:
-	clr.b	(a6)		;all zeros
-	adda.w	d1,a6		;advance to next screen byte
+	clr.b	(a5)		;all zeros
+	adda.w	d1,a5		;advance to next screen byte
+zer_lp1:
 	dbra	d7,zer_lp	;go for next line
 
-	bra	mplan_cont
+	rts
 
 
 
 mon_set0:
 
 	swap	d2		;save lower 16 bits in upper 16
-	move.l	a1,a6		;copy screen address to temp
-	move.l	a3,a4		;copy form address to temp
+	move.l	a1,a5		;copy screen address to temp
+	move.l	a3,a6		;copy form address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra set0_lp1
 
 set0_lp:
 
-	move.b	(a4),d2		;fetch next row data
+	move.b	(a6),d2		;fetch next row data
 	not.b	d2
-	and.b	d2,(a6)		;perform logic op
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	and.b	d2,(a5)		;perform logic op
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+set0_lp1:
 	dbra	d7,set0_lp	;go for next line
 
 	swap	d2		;restore d2
-	bra	mplan_cont
+	rts
 
 
 
@@ -217,20 +201,22 @@ set0_lp:
 mon_set1:
 
 	swap	d2
-	move.l	a1,a6		;copy screen address to temp
-	move.l	a3,a4		;copy form address to temp
+	move.l	a1,a5		;copy screen address to temp
+	move.l	a3,a6		;copy form address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra set1_lp1
 
 set1_lp:
 
-	move.b	(a4),d2		;fetch next row data
-	or.b	d2,(a6)		;perform logic op
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	move.b	(a6),d2		;fetch next row data
+	or.b	d2,(a5)		;perform logic op
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+set1_lp1:
 	dbra	d7,set1_lp	;go for next line
 
 	swap	d2
-	bra	mplan_cont
+	rts
 
 
 
@@ -238,58 +224,64 @@ set1_lp:
 mon_not0:
 
 	swap	d2		;save lower 16 bits in upper 16
-	move.l	a1,a6		;copy screen address to temp
-	move.l	a3,a4		;copy form address to temp
+	move.l	a1,a5		;copy screen address to temp
+	move.l	a3,a6		;copy form address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra not0_lp1
 
 not0_lp:
 
-	move.b	(a4),d2		;fetch next row data
-	and.b	d2,(a6)		;perform logic op
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	move.b	(a6),d2		;fetch next row data
+	and.b	d2,(a5)		;perform logic op
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+not0_lp1:
 	dbra	d7,not0_lp	;go for next line
 
 	swap	d2		;restore d2
-	bra	mplan_cont
+	rts
 
 
 
 mon_not1:
 
 	swap	d2
-	move.l	a1,a6		;copy screen address to temp
-	move.l	a3,a4		;copy form address to temp
+	move.l	a1,a5		;copy screen address to temp
+	move.l	a3,a6		;copy form address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra not1_lp1
 
 not1_lp:
 
-	move.b	(a4),d2		;fetch next row data
+	move.b	(a6),d2		;fetch next row data
 	not.b	d2
-	or.b	d2,(a6)		;perform logic op
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	or.b	d2,(a5)		;perform logic op
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+not1_lp1:
 	dbra	d7,not1_lp	;go for next line
 
 	swap	d2
-	bra	mplan_cont
+	rts
 
 
 
 mon_xor:
 
 	swap	d2
-	move.l	a3,a4		;copy form address to temp
-	move.l	a1,a6		;copy screen address to temp
+	move.l	a1,a5		;copy form address to temp
+	move.l	a3,a6		;copy screen address to temp
 	move.w	d3,d7		;copy height count to temp
+    bra xor_lp1
 
 xor_lp:
 
-	move.b	(a4),d2		;fetch next row data
-	eor.b	d2,(a6)		;perform logic op
-	adda.w	d0,a4		;advance to next form byte
-	adda.w	d1,a6		;advance to next screen byte
+	move.b	(a6),d2		;fetch next row data
+	eor.b	d2,(a5)		;perform logic op
+	adda.w	d0,a6		;advance to next form byte
+	adda.w	d1,a5		;advance to next screen byte
+xor_lp1:
 	dbra	d7,xor_lp	;go for next line
 
 	swap	d2
-	bra	mplan_cont
+	rts

@@ -30,17 +30,6 @@
 #include "tosvars.inc"
 
 
-#define V_FUNC(func,la,r) \
-	move.l	PIXLV((LA_ROUTINES)+func,la),r
-
-#define V_CALL(func,la,r) \
-		V_FUNC(func,la,r) \
-		jsr (r)
-#define V_JUMP(func,la,r) \
-		V_FUNC(func,la,r) \
-		jmp (r)
-
-
 *
 *
 * title:	copy_rfm
@@ -447,7 +436,7 @@ max_save:
 	move.w	d6,D_XMAX(a6)
 	move.w	d7,D_YMAX(a6)
 
-	V_CALL(V_BLAST,a1,a5)			/* a5 -> desired version of blast_man (uses BLASTER) */
+	bsr sb_bitblt
 
 bad_parameter:
 
@@ -459,3 +448,4 @@ bad_parameter:
 	unlk	a6
 	movem.l	(sp)+,d0-d7/a0-a5
 	rts
+	nop

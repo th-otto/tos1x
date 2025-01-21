@@ -11,8 +11,6 @@
 
 /* from VDI */
 		xdef line1010
-		xdef _SETBLT
-		xdef _GETBLT
 		xdef esc_init
 		xdef resetdev
 		xdef blink
@@ -25,6 +23,8 @@
 		xdef bdoslmul
 
 #if TOSVERSION == 0x104
+		xdef _SETBLT
+		xdef _GETBLT
 line1010    equ VDITBASE+$08AA
 _SETBLT     equ VDITBASE+$1318
 _GETBLT     equ VDITBASE+$1340
@@ -40,6 +40,8 @@ bdoslmul  equ BDOSTBASE+$510A
 #endif
 
 #if TOSVERSION == 0x106
+		xdef _SETBLT
+		xdef _GETBLT
 line1010    equ VDITBASE+$08AA
 _SETBLT     equ VDITBASE+$1318
 _GETBLT     equ VDITBASE+$1340
@@ -56,6 +58,8 @@ bdoslmul  equ BDOSTBASE+$5150
 
 
 #if TOSVERSION == 0x162
+		xdef _SETBLT
+		xdef _GETBLT
 line1010    equ VDITBASE+$08AA
 _SETBLT     equ VDITBASE+$1318
 _GETBLT     equ VDITBASE+$1340

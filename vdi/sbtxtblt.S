@@ -312,10 +312,18 @@ ramlen		equ	-84
 /* 206de: 00e0eaec */
 /* 104de: 00fd2c4c */
 /* 106de: 00e12eac */
+#if BLITTER_SUPPORT
+#define fp a5
 	xdef	sb_text
-sb_text:	link	a5,#ramlen		; allocate local block of ram
+sb_text:
+#else
+#define fp a6
+	xdef	_TEXT_BLT
+_TEXT_BLT:
+#endif
+		link	fp,#ramlen		; allocate local block of ram
 
-		clr.w	swap_tmps(a5)		; temps not swapped yet
+		clr.w	swap_tmps(fp)		; temps not swapped yet
 		move.w	LV(STYLE,a6),-(sp)
 		move.w	LV(WRT_MODE,a6),-(sp)
 		move.w	LV(SKEWMASK,a6),-(sp)
@@ -329,7 +337,7 @@ sb_text:	link	a5,#ramlen		; allocate local block of ram
 		add.w	LV(R_OFF,a6),d6		; we never use them separately
 
 		movem.w	d0-d3,-(sp)
-		clr.w	buffree(a5)		; indicate low buffer is free
+		clr.w	buffree(fp)		; indicate low buffer is free
 		tst.w	LV(SCALE,a6)		;  doubling?
 		beq	adr_nodb		; br if no
 
@@ -340,7 +348,7 @@ sb_text:	link	a5,#ramlen		; allocate local block of ram
 		bsr	_ACT_SIZ
 		move.w	(sp)+,d3		; restore 1 level of stack
 		move.w	d0,d3			; set new DELY
-		move.w	d0,tmp_dely(a5)		; save in temp for replication use
+		move.w	d0,tmp_dely(fp)		; save in temp for replication use
 		move.w	(sp)+,d2		; DELX to d2
 		move.w	LV(XACC_DDA,a6),d1	; get xacc_dda to d1
 		move.w	LV(DDA_INC,a6),d0		; dda_inc to d0
@@ -358,17 +366,19 @@ no_db_wd:	btst.b	#0,LV((T_SCLSTS)+1,a6)
 
 clc_n_su:	dbra	d2,doub_wid
 
-		move.w	d1,tmp_xacc(a5)		; save this value
+		move.w	d1,tmp_xacc(fp)		; save this value
 
 		move.w	d3,d1
-		move.w	d3,tmp_delx(a5)
+		move.w	d3,tmp_delx(fp)
 		move.w	(sp)+,d3
 		move.w	(sp)+,d2
 		move.w	(sp)+,d0
+#if TOSVERSION >= 0x102
 		tst.w	d1
 		beq	upda_dst
+#endif
 
-adr_nodb:	clr.w	smear(a5)		; in case no thicken init
+adr_nodb:	clr.w	smear(fp)		; in case no thicken init
 		btst.b	#THICKEN,LV((STYLE)+1,a6)
 		beq	adr_notk
 		move.w	LV(WEIGHT,a6),d4
@@ -484,8 +494,8 @@ chk_xmx:	cmp.w	LV(XMX_CLIP,a6),d0		; left edge > X-MAX?
 *
 *  clip check done..
 *
-clp_done:	move.w	LV(FWIDTH,a6),s_next(a5)	; add this to go down one line
-		move.l	LV(FBASE,a6),sform(a5)	; start of font
+clp_done:	move.w	LV(FWIDTH,a6),s_next(fp)	; add this to go down one line
+		move.l	LV(FBASE,a6),sform(fp)	; start of font
 		tst.w	LV(SCALE,a6)		; scaling goin' on
 		beq	chk_skw			; br to skip if not
 		movem.l	d0-d7,-(sp)		; perform scaling 1st
@@ -514,21 +524,21 @@ preskew:	btst	#OUTLINE,d1		; outlining?
 preblt:		move.w	LV(SOURCEX,a6),d0
 		move.w	d0,d2
 		andi.w	#$000F,d2
-		move.w	d2,tsdad(a5)		; save source dot address
+		move.w	d2,tsdad(fp)		; save source dot address
 
 		lsr.w	#4,d0			; make byte address
-		add.w	d0,d0			; make even-byte address (word aligned)
+		lsl.w	#1,d0			; make even-byte address (word aligned)
 
 		move.w	LV(SOURCEY,a6),d2		; d2 <- source y
-		move.w	LV(DELY,a6),height(a5)
-		add.w	height(a5),d2		; d2 <- bottom of source + 1
+		move.w	LV(DELY,a6),height(fp)
+		add.w	height(fp),d2		; d2 <- bottom of source + 1
 		subq.w	#1,d2			; d2 <- bottom of source     (0 based)
 
-		mulu	s_next(a5),d2		; d2 <- offset to bottom of font form
-		neg.w	s_next(a5)		; use negative increment to move up
-		movea.l	sform(a5),a0		; 04 nov 87  HANDLE FONT FORMS > 32k
-		adda.w	d0,a0			; a0 -> font source for top of char
-		adda.l	d2,a0			; a0 -> font source for bottom of char
+		mulu	s_next(fp),d2		; d2 <- offset to bottom of font form
+		neg.w	s_next(fp)		; use negative increment to move up
+		add.w	d0,d2			; d2 -> font source for top of char
+		movea.l	sform(fp),a0		; 04 nov 87  HANDLE FONT FORMS > 32k
+		lea.l   0(a0,d2.w),a0			; a0 -> font source for bottom of char
 
 		move.w	LV(DELX,a6),d0		; char width
 		move.w	LV(WEIGHT,a6),d1		; thicken amount
@@ -537,33 +547,33 @@ preblt:		move.w	LV(SOURCEX,a6),d0
 		beq	no_smear		; br if no
 
 		add.w	d1,d0			; add adjusted WEIGHT to DELX
-		move.w	d1,smear(a5)		; save smear
+		move.w	d1,smear(fp)		; save smear
 
 *+
 *  outline code..
 *-
-no_smear:	clr.w	tddad(a5)
+no_smear:	clr.w	tddad(fp)
 		move.w	LV(DELY,a6),d1
 		move.w	LV(STYLE,a6),d2
 		btst	#OUTLINE,d2		; check for outline mode
 		beq	no_out
 		addq.w	#3,d0			; add 3 pixels to delx (1 left, 2 right)
-		addq.w	#1,tddad(a5)		; make leftmost column blank
+		addq.w	#1,tddad(fp)		; make leftmost column blank
 		addq.w	#2,LV(DELY,a6)		; add 2 rows (outline adds 2 to ht & wd)
 		addq.w	#3,d1			; add 3 rows for buffer clear (line buf)
 
 *+
 *  end additions
 *-
-no_out:		move.w	d0,width(a5)
+no_out:		move.w	d0,width(fp)
 		add.w	d6,d0			; we moved to d6
 
 		move.w	d0,LV(DELX,a6)		; now the char is bigger
 		lsr.w	#4,d0
-		add.w	d0,d0
+		lsl.w	#1,d0
 		addq.w	#2,d0			; this is the dest width in bytes
 		neg.w	d0
-		move.w	d0,d_next(a5)		; move upward in buffer
+		move.w	d0,d_next(fp)		; move upward in buffer
 		neg.w	d0
 		subq.w	#1,d1			; start of bottom line
 		mulu	d1,d0
@@ -581,7 +591,7 @@ no_out:		move.w	d0,width(a5)
 *-
 do_clear:	move.l	a1,-(sp)
 		move.w	d0,d3
-		sub.w	d_next(a5),d3		; count the bottom line
+		sub.w	d_next(fp),d3		; count the bottom line
 		lsr.w	#1,d3			; bytes to words
 		moveq	#0,d1
 		bra	replp1
@@ -593,9 +603,9 @@ replp1:		dbra	d3,replp
 
 		btst	#OUTLINE,d2
 		beq	no_clear
-		subq.w	#3,width(a5)
+		subq.w	#3,width(fp)
 		subq.w	#1,LV(DELX,a6)
-		add.w	d_next(a5),d0
+		add.w	d_next(fp),d0
 
 *+
 *  buffer now clear..
@@ -607,10 +617,10 @@ no_clear:	adda.w	d0,a1			; start at the bottom
 
 		move.w	#7,LV(WRT_MODE,a6)	; replace mode for this blt
 
-		move.w	#1,forecol(a5)		; foreground 1 for this blt
-		clr.w	backcol(a5)		; background 0 for this blt
-		move.w	#1,nbrplane(a5)		; 1 plane, natch
-		move.w	#2,nextwrd(a5)		; plane offset is 2
+		move.w	#1,forecol(fp)		; foreground 1 for this blt
+		clr.w	backcol(fp)		; background 0 for this blt
+		move.w	#1,nbrplane(fp)		; 1 plane, natch
+		move.w	#2,nextwrd(fp)		; plane offset is 2
 		andi.w	#SKEWM+THICKM,LV(STYLE,a6)	; only do thicken & skew
 
 		bsr	norm_blt		; blt source into buffer
@@ -620,12 +630,12 @@ no_clear:	adda.w	d0,a1			; start at the bottom
 
 		move.l	(sp)+,a1		; reget old destination ptr
 
-no_mode:	move.w	d_next(a5),d7		; reset the source to the buffer
+no_mode:	move.w	d_next(fp),d7		; reset the source to the buffer
 		neg.w	d7
-		move.w	d7,s_next(a5)
+		move.w	d7,s_next(fp)
 
 		move.l	a1,a0			; use source ptr
-		move.l	a0,sform(a5)
+		move.l	a0,sform(fp)
 
 *+
 *  outline additions
@@ -634,7 +644,7 @@ no_mode:	move.w	d_next(a5),d7		; reset the source to the buffer
 		beq	skip_out		; br to skip outline code
 
 		ext.l	d7
-		add.l	d7,sform(a5)		; use 2nd down for buffer top (top is temp buf)
+		add.l	d7,sform(fp)		; use 2nd down for buffer top (top is temp buf)
 		bsr	outlin			; outline buffer please
 
 *+
@@ -667,7 +677,7 @@ do_clip:	btst.b	#THICKEN,LV((STYLE)+1,a6)
 		bne	do_cl_nt
 		add.w	d0,LV(DELX,a6)
 
-do_cl_nt:	move.w	d0,smear(a5)
+do_cl_nt:	move.w	d0,smear(fp)
 
 no_thik:	tst.w	LV(CLIP,a6)		; clip requested?
 		beq	scrn_blt		; br to skip clip if not
@@ -746,33 +756,33 @@ nxtword:	dc.b	2,4,0,8
 *	out to screen
 *
 /* 206de: 00e0ee5a */
-scrn_blt:	move.w	LV(TEXT_FG,a6),forecol(a5) ; copy foreground color to temp
-		move.w	LV(TEXT_BG,a6),backcol(a5) ; likewise for background
+scrn_blt:	move.w	LV(TEXT_FG,a6),forecol(fp) ; copy foreground color to temp
+		move.w	LV(TEXT_BG,a6),backcol(fp) ; likewise for background
 		move.w	LV(V_PLANES,a6),d0	; d0 <- # of planes
-		move.w	d0,nbrplane(a5)		; save locally
+		move.w	d0,nbrplane(fp)		; save locally
 		move.b	nxtword-1(pc,d0.w),d0	; d0 <- offset  (assumed:hi byte=0)
-		move.w	d0,nextwrd(a5)		; save locally
+		move.w	d0,nextwrd(fp)		; save locally
 
 		move.w	LV(SOURCEX,a6),d0		; d0 <- character X
 		move.w	d0,d2
 		andi.w	#$0F,d2			; d2 <- offset within word to character
-		move.w	d2,tsdad(a5)		; save source dot address
-		lsr.w	#4,d0
-		add.w	d0,d0			; d0 <- word alligned offset to char
+		move.w	d2,tsdad(fp)		; save source dot address
+		lsr.w	#3,d0
+		andi.w  #$FFFE,d0			; d0 <- word alligned offset to char
 
-		move.w	LV(DELY,a6),d2
-		move.w	d2,height(a5)		; height <- del Y
-		add.w	LV(SOURCEY,a6),d2		; d2 <- source Y + del Y
+		move.w	LV(SOURCEY,a6),d2		; d2 <- source Y + del Y
+		move.w	LV(DELY,a6),height(fp)		; height <- del Y
+		add.w	height(fp),d2
 		subq.w	#1,d2			; d2 <- Y offset to bottom of char
-		mulu	s_next(a5),d2		; d2 <- byte offset to bottom of char
+		mulu	s_next(fp),d2		; d2 <- byte offset to bottom of char
 
-		neg.w	s_next(a5)		; traverse form from bottom to top
+		neg.w	s_next(fp)		; traverse form from bottom to top
 
-		movea.l	sform(a5),a0		; HANDLE FONT FORMS > 32k
-		adda.w	d0,a0			; a0 -> top of character
-		adda.l	d2,a0			; a0 -> bottom of character
+		add.w	d0,d2			; a0 -> top of character
+		movea.l	sform(fp),a0		; HANDLE FONT FORMS > 32k
+		adda.w	d2,a0			; a0 -> bottom of character
 
-		move.w	LV(DELX,a6),width(a5)
+		move.w	LV(DELX,a6),width(fp)
 
 		move.w	LV(DESTY,a6),d1
 		add.w	LV(DELY,a6),d1
@@ -785,13 +795,13 @@ scrn_blt:	move.w	LV(TEXT_FG,a6),forecol(a5) ; copy foreground color to temp
 * d1.w is screen offset of destination
 *-
 		move.l	_v_bas_ad,a1
-		adda.l	d1,a1			; CONCAT returns d1.l
+		adda.w	d1,a1			; CONCAT returns d1.l
 
-		move.w	d0,tddad(a5)		; save dot address
+		move.w	d0,tddad(fp)		; save dot address
 
 		move.w	LV(v_lin_wr,a6),d0
 		neg.w	d0
-		move.w	d0,d_next(a5)
+		move.w	d0,d_next(fp)
 
 		bsr	norm_blt
 
@@ -808,12 +818,12 @@ upda_dst:	movem.w	(sp)+,d0-d3
 		tst.w	LV(SCALE,a6)		; set up dest address
 		beq	upda_ndb
 
-		move.w	tmp_xacc(a5),LV(XACC_DDA,a6) ; save new XACC_DDA
+		move.w	tmp_xacc(fp),LV(XACC_DDA,a6) ; save new XACC_DDA
 
-		move.w	tmp_delx(a5),d1		;get actual char width
-		move.w	tmp_dely(a5),d3		;get actual char height
+		move.w	tmp_delx(fp),d1		;get actual char width
+		move.w	tmp_dely(fp),d3		;get actual char height
 
-		tst.w	swap_tmps(a5)		; are we swapped
+		tst.w	swap_tmps(fp)		; are we swapped
 		beq	upda_ndb		; if yes swap back
 		exg	d1,d3
 
@@ -849,8 +859,10 @@ ck180:		cmpi.w	#1800,d0
 ck270:		add.w	d1,LV(DESTY,a6)		; move down by DELX
 
 
-blt_done:	unlk	a5
+blt_done:	unlk	fp
+#if BLITTER_SUPPORT
 		movem.l	(sp)+,a5-a6		; restore pre-saved registers
+#endif
 		rts				; return to "C"
 
 
@@ -868,8 +880,8 @@ blt_done:	unlk	a5
 *
 *
 *
-norm_blt:	move.w	tddad(a5),d1		; get destination offset
-		sub.w	tsdad(a5),d1		; subtract source offset -> d1
+norm_blt:	move.w	tddad(fp),d1		; get destination offset
+		sub.w	tsdad(fp),d1		; subtract source offset -> d1
 		move.w	d1,d0			; copy to d0
 		bpl	do_rot			; br if tsdad =< tddad & rotate right
 *+
@@ -879,32 +891,32 @@ norm_blt:	move.w	tddad(a5),d1		; get destination offset
 		ori.w	#$8000,d1		; fake a negative (stripped by ROR or ROL)
 		addi.w	#16,d0			; make word_mask_table index positive
 
-do_rot:		move.w	d1,shif_cnt(a5)		; save shift count (bit15=1 if ROL, else ROR)
+do_rot:		move.w	d1,shif_cnt(fp)		; save shift count (bit15=1 if ROL, else ROR)
 		lsl.w	#1,d0			; x2 for index
 		lea	lf_tab,a2		; get base addr of mask table
 		move.w	(a2,d0.w),d0		; set the overlap for middle words
 		not.w	d0
-		move.w	d0,rota_msk(a5)		; save as rotate mask
+		move.w	d0,rota_msk(fp)		; save as rotate mask
 
 *+
 *    Set up fringe masks..
 *-
-get_mask:	move.w	tddad(a5),d0		; get destination dot address
+get_mask:	move.w	tddad(fp),d0		; get destination dot address
 		lsl.w	#1,d0			; x2 for index in d0
-		move.w	(a2,d0.w),left_msk(a5)	; get mask for destination dot address
+		move.w	(a2,d0.w),left_msk(fp)	; get mask for destination dot address
 
 		lsr.w	#1,d0			; d0 back to tddad
-		add.w	width(a5),d0		; add to form right side
+		add.w	width(fp),d0		; add to form right side
 
 		move.w	d0,d2			; copy possibly thickened width to temp d2
-		sub.w	smear(a5),d2		; get original before thickened
+		sub.w	smear(fp),d2		; get original before thickened
 		andi.w	#$F,d2
 		lsl.w	#1,d2
 		move.w	(a2,d2.w),d2
 		not.w	d2
-		move.w	d2,thk_msk(a5)
+		move.w	d2,thk_msk(fp)
 		clr.w	d4
-		move.w	#$8000,skew_msk(a5)
+		move.w	#$8000,skew_msk(fp)
 		moveq.l	#-1,d3			; assume sgl_loop
 
 		cmpi.w	#$10,d0			; more than a word?
@@ -916,16 +928,16 @@ get_mask:	move.w	tddad(a5),d0		; get destination dot address
 		lsl.w	#1,d0			; x2 for index
 		move.w	(a2,d0.w),d1
 		not.w	d1
-		and.w	d1,left_msk(a5)		; put the two masks together
+		and.w	d1,left_msk(fp)		; put the two masks together
 
-		move.w	#sgl_loop-cs,blttype(a5) ; set blttype vector ***change
+		move.w	#sgl_loop-cs,blttype(fp) ; set blttype vector ***change
 		bra	msk_done		; exit mask stuff
 
 *+
 *  Two fringe masks needed..
 *-
 doub_des:
-		move.w	#dbl_loop-cs,blttype(a5) ; set blttype vector for double
+		move.w	#dbl_loop-cs,blttype(fp) ; set blttype vector for double
 		move.w	d0,d1			; get tddad +DELX to d1
 		lsr.w	#4,d1			; divide by 16
 		subq.w	#1,d1
@@ -935,15 +947,15 @@ doub_des:
 *+
 *  # of middle words is zero
 *-
-		move.w	tsdad(a5),d1
-		add.w	width(a5),d1
+		move.w	tsdad(fp),d1
+		add.w	width(fp),d1
 		cmpi.w	#$20,d1
 		bcs	do_ritem		; br if source fits in two words too
 
-mlt_dest:	move.w	#mlt_rite-cs,blttype(a5)
-		tst.w	shif_cnt(a5)		; check sign of shift count
+mlt_dest:	move.w	#mlt_rite-cs,blttype(fp)
+		tst.w	shif_cnt(fp)		; check sign of shift count
 		bpl	do_ritem
-		move.w	#mlt_left-cs,blttype(a5)
+		move.w	#mlt_left-cs,blttype(fp)
 
 do_ritem:	andi.w	#$000F,d0
 		bne	not_null
@@ -954,20 +966,20 @@ not_null:	lsl	#1,d0
 		move.w	(a2,d0.w),d4
 		not.w	d4
 
-msk_done:	move.w	d3,dest_wrd(a5)
-		move.w	d4,rite_msk(a5)
+msk_done:	move.w	d3,dest_wrd(fp)
+		move.w	d4,rite_msk(fp)
 		addq.w	#2,d3
 		cmp.w	d2,d4
 		bcs	msk0
 		addq.w	#1,d3
 
-msk0:		move.b	d3,src_wrd(a5)
-		move.b	d3,src_wrd+1(a5)
+msk0:		move.b	d3,src_wrd(fp)
+		move.b	d3,src_wrd+1(fp)
 
 plane_lp:	move.w	LV(WRT_MODE,a6),d0	; d0 = 00000000 000xxxxx ,WRT_MODE
-		lsr.w	forecol(a5)		; this plane's foreground bit -> cy
+		lsr.w	forecol(fp)		; this plane's foreground bit -> cy
 		roxl.w	#1,d0
-		lsr.w	backcol(a5)
+		lsr.w	backcol(fp)
 		roxl.w	#1,d0
 
 *
@@ -975,10 +987,10 @@ plane_lp:	move.w	LV(WRT_MODE,a6),d0	; d0 = 00000000 000xxxxx ,WRT_MODE
 *
 sp1:		move.b	wrmappin(pc,d0.w),d0
 		move.w	toptable(pc,d0.w),a2
-		move.w	a2,logicop(a5)		; call this address to do tlogicop
-		move.w	a2,special(a5)		; logicop or special effects
-		move.w	a2,specwf(a5)		; word fringe special effects
-		move.w	twoptble(pc,d0.w),specw(a5) ; logicop or special effects for words
+		move.w	a2,logicop(fp)		; call this address to do tlogicop
+		move.w	a2,special(fp)		; logicop or special effects
+		move.w	a2,specwf(fp)		; word fringe special effects
+		move.w	twoptble(pc,d0.w),specw(fp) ; logicop or special effects for words
 *
 *  Do special effects..
 *
@@ -1067,15 +1079,15 @@ do_specl:	btst.l	#LIGHT,d0
 *+
 *  Light special effect..
 *-
-		move.w	LV(LITEMASK,a6),lite_msk(a5)	; reload the mask for this char
-		move.w	special(a5),litejmp(a5)	; endpoint of light routine
-		move.w	#liteop-cs,special(a5)	; insert this in the loop
+		move.w	LV(LITEMASK,a6),lite_msk(fp)	; reload the mask for this char
+		move.w	special(fp),litejmp(fp)	; endpoint of light routine
+		move.w	#liteop-cs,special(fp)	; insert this in the loop
 
-		move.w	specwf(a5),litejpwf(a5)	; endpoint of light routine
-		move.w	#liteopwf-cs,specwf(a5)	; insert this in the loop
+		move.w	specwf(fp),litejpwf(fp)	; endpoint of light routine
+		move.w	#liteopwf-cs,specwf(fp)	; insert this in the loop
 
-		move.w	specw(a5),litejpw(a5)	; endpoint of light routine
-		move.w	#liteopw-cs,specw(a5)	; insert this in the loop
+		move.w	specw(fp),litejpw(fp)	; endpoint of light routine
+		move.w	#liteopw-cs,specw(fp)	; insert this in the loop
 
 no_lite:	btst.l	#THICKEN,d0
 		beq	no_thick
@@ -1083,16 +1095,16 @@ no_lite:	btst.l	#THICKEN,d0
 *+
 *  Thicken special effect..
 *-
-		clr.w	thknover(a5)
+		clr.w	thknover(fp)
 
-		move.w	special(a5),thknjmp(a5)	; endpoint of thicken routine
-		move.w	#thknop-cs,special(a5)	; insert routine into the loop
+		move.w	special(fp),thknjmp(fp)	; endpoint of thicken routine
+		move.w	#thknop-cs,special(fp)	; insert routine into the loop
 
-		move.w	specwf(a5),thknjpwf(a5)	; endpoint of light routine
-		move.w	#thknopwf-cs,specwf(a5)	; insert routine into loop
+		move.w	specwf(fp),thknjpwf(fp)	; endpoint of light routine
+		move.w	#thknopwf-cs,specwf(fp)	; insert routine into loop
 
-		move.w	specw(a5),thknjpw(a5)	; endpoint of light routine
-		move.w	#thknopw-cs,specw(a5)	; insert routine into the loop
+		move.w	specw(fp),thknjpw(fp)	; endpoint of light routine
+		move.w	#thknopw-cs,specw(fp)	; insert routine into the loop
 
 no_thick:	btst.l	#SKEW,d0
 		beq	no_skew
@@ -1100,39 +1112,39 @@ no_thick:	btst.l	#SKEW,d0
 *+
 *  Skew special effect..
 *-
-		move.w	LV(SKEWMASK,a6),skew_msk(a5)	; reload mask for this char
-		move.w	special(a5),skewjmp(a5)
-		move.w	#skewop-cs,special(a5)
+		move.w	LV(SKEWMASK,a6),skew_msk(fp)	; reload mask for this char
+		move.w	special(fp),skewjmp(fp)
+		move.w	#skewop-cs,special(fp)
 
-		cmpi.w	#sgl_loop-cs,blttype(a5)
+		cmpi.w	#sgl_loop-cs,blttype(fp)
 		bne	not_sngl
-		clr.w	dest_wrd(a5)
-		move.w	#dbl_loop-cs,blttype(a5)
+		clr.w	dest_wrd(fp)
+		move.w	#dbl_loop-cs,blttype(fp)
 		bra	no_skew
 
-not_sngl:	cmpi.w	#dbl_loop-cs,blttype(a5)
+not_sngl:	cmpi.w	#dbl_loop-cs,blttype(fp)
 		bne	mlt_skew
-		cmpi.w	#$10,width(a5)
+		cmpi.w	#$10,width(fp)
 		bls	no_skew			; br if source is at most two words
 
-		move.w	#mlt_rite-cs,blttype(a5)
-		tst.w	shif_cnt(a5)
+		move.w	#mlt_rite-cs,blttype(fp)
+		tst.w	shif_cnt(fp)
 
 		bpl	mlt_skew		; br if mlt_rite assumption correct
-		move.w	#mlt_left-cs,blttype(a5)
+		move.w	#mlt_left-cs,blttype(fp)
 
 mlt_skew:
 no_skew:
-no_specl:	move.w	left_msk(a5),d2		; get the first mask
-		move.w	height(a5),d3		; set loop count
+no_specl:	move.w	left_msk(fp),d2		; get the first mask
+		move.w	height(fp),d3		; set loop count
 		move.l	#cs,a3			; base address of BLT threads
 
-		move.w	blttype(a5),a4
+		move.w	blttype(fp),a4
 		movem.l	a0-a1,-(sp)		; save source/ destination ptrs
 		jsr	0(a3,a4.w)		; do the fastest one
 		movem.l	(sp)+,a0-a1		; reget source/ destination pts
 		addq.l	#2,a1			; advance destination plane
-		subq.w	#1,nbrplane(a5)		; decrement plane count
+		subq.w	#1,nbrplane(fp)		; decrement plane count
 		bne	more_pl			; loop for next plane
 
 *+
@@ -1156,7 +1168,7 @@ cs:
 ***********************************************
 sgl_lp:		move.w	(a1),d4			; get dest
 		move.l	(a0),d0			; get 2 src wrds (may only use 1)
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		bmi	left_rol
 		lsr.l	d1,d0
 		bra	end_ro
@@ -1166,13 +1178,13 @@ left_rol:	lsl.l	d1,d0
 end_ro:		swap	d0
 		move.w	d0,d1
 		swap	d0
-		move.w	special(a5),a4
+		move.w	special(fp),a4
 		jsr	0(a3,a4.w)		; do special effect or just logicop
 
 		move.w	d1,(a1)			; store the result
 
-		adda.w	s_next(a5),a0		; get to next line above in font
-		adda.w	d_next(a5),a1		;  and on screen
+		adda.w	s_next(fp),a0		; get to next line above in font
+		adda.w	d_next(fp),a1		;  and on screen
 
 *+
 *  Entry point for single loop...
@@ -1186,7 +1198,7 @@ sgl_loop:	dbra	d3,sgl_lp
 dbl_lp:		move.w	(a1),d4			; get dest
 		move.l	(a0),d0			; do a line (two fringes)
 
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		bmi	dbleft
 		lsr.l	d1,d0			; align source & destination
 		bra	dblendr
@@ -1197,25 +1209,25 @@ dblendr:	swap	d0
 		move.w	d0,d1
 		swap	d0
 
-		move.w	left_msk(a5),d2		; get the first one back
+		move.w	left_msk(fp),d2		; get the first one back
 
-		move.w	special(a5),a4		; call special
+		move.w	special(fp),a4		; call special
 		jsr	0(a3,a4.w)
 
 		move.w	d1,(a1)			; save the result
 		move.w	d0,d1			; get the other half (it got shifted in)
-		move.w	nextwrd(a5),d5		; get offset to next word
+		move.w	nextwrd(fp),d5		; get offset to next word
 		move.w	(a1,d5.w),d4		; get next destination word
 
-		move.w	rite_msk(a5),d2		; use right mask
+		move.w	rite_msk(fp),d2		; use right mask
 
-		move.w	logicop(a5),a4		; call logic op
+		move.w	logicop(fp),a4		; call logic op
 		jsr	0(a3,a4.w)
 
 		move.w	d1,(a1,d5.w)		; save the result
 
-		adda.w	s_next(a5),a0		; get to next line above in font
-		adda.w	d_next(a5),a1		;  and on screen
+		adda.w	s_next(fp),a0		; get to next line above in font
+		adda.w	d_next(fp),a1		;  and on screen
 *
 *  Entry point for double loop...
 *
@@ -1226,27 +1238,27 @@ dbl_loop:	dbra	d3,dbl_lp
 *    Multi - Left
 *************************************************
 mlt_left:	movem.l	a0-a1,-(sp)		; save source/destination registers
-		move.w	dest_wrd(a5),d7		; # of full words between fringes
+		move.w	dest_wrd(fp),d7		; # of full words between fringes
 		move.l	(a0)+,d0		; get two words of source
 
 		move.w	(a1),d4			; get destination word
 
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		lsl.l	d1,d0
 
 		swap	d0
 		move.w	d0,d1
 		swap	d0			; source aligned to destination
 
-		move.w	left_msk(a5),d2		; get the mask for left fringe
+		move.w	left_msk(fp),d2		; get the mask for left fringe
 
-		move.w	specwf(a5),a4		; call specialwf
+		move.w	specwf(fp),a4		; call specialwf
 		jsr	0(a3,a4.w)		; to do special effect or just logicop
 
 		move.w	d1,(a1)			; store the result
-		adda.w	nextwrd(a5),a1		; advance destination ptr to next word
+		adda.w	nextwrd(fp),a1		; advance destination ptr to next word
 
-		move.w	rota_msk(a5),d2		; get mask for inner full words
+		move.w	rota_msk(fp),d2		; get mask for inner full words
 *
 *  inner loop for non-fringe words..
 *
@@ -1257,7 +1269,7 @@ word_lef:	move.w	d0,d4			; save what's left of this word
 		move.w	d1,d0			; pack d0
 		swap	d0
 
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		lsl.l	d1,d0
 
 		swap	d0
@@ -1274,33 +1286,33 @@ word_lef:	move.w	d0,d4			; save what's left of this word
 		tst.w	d7			; "jcxz"
 		beq	lef_don			; br if we have to mask the last word
 
-		move.w	specw(a5),a4		; call specialw
+		move.w	specw(fp),a4		; call specialw
 		jsr	0(a3,a4.w)
 
 		move.w	d1,(a1)			; store the result
-		adda.w	nextwrd(a5),a1		; advance destination to next word
+		adda.w	nextwrd(fp),a1		; advance destination to next word
 
 		subq.w	#1,d7			; decrement inner loop count
 		bra	word_lef		; go for more
 
-lef_don:	move.w	rite_msk(a5),d2		; load the mask we need
+lef_don:	move.w	rite_msk(fp),d2		; load the mask we need
 
-		move.w	specwf(a5),a4		; call specialwf
+		move.w	specwf(fp),a4		; call specialwf
 		jsr	0(a3,a4.w)		; feature - this clears thickenover
 
 		move.w	d1,(a1)			; store the result
 
 		movem.l	(sp)+,a0-a1		; pop source/destination ptrs
 
-		adda.w	s_next(a5),a0		; get to next line above in font
-		adda.w	d_next(a5),a1		;   and on screen
+		adda.w	s_next(fp),a0		; get to next line above in font
+		adda.w	d_next(fp),a1		;   and on screen
 
-		clr.w	thknover(a5)
+		clr.w	thknover(fp)
 
 		subq.w	#1,d3			; decrement # of lines to move
 		beq	ldone			; exit if finished
 
-		rol.w	lite_msk(a5)
+		rol.w	lite_msk(fp)
 
 		btst.b	#SKEW,LV((STYLE)+1,a6)
 		bne	skewopw
@@ -1312,27 +1324,27 @@ ldone:		rts
 *   Multi - right
 *************************************************
 mlt_rite:	movem.l	a0-a1,-(sp)		; save source/destination registers
-		move.w	dest_wrd(a5),d7		; # of full words between fringes
+		move.w	dest_wrd(fp),d7		; # of full words between fringes
 		move.w	(a0)+,d0		; get one word of source
 		swap	d0			; put in hi word
 
 		move.w	(a1),d4			; get destination word
 
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		lsr.l	d1,d0			; align source & destination
 		swap	d0
 		move.w	d0,d1
 		swap	d0			; source aligned to destination
 
-		move.w	left_msk(a5),d2		; get the mask for left fringe
+		move.w	left_msk(fp),d2		; get the mask for left fringe
 
-		move.w	specwf(a5),a4		; call specialwf
+		move.w	specwf(fp),a4		; call specialwf
 		jsr	0(a3,a4.w)		; to do special effect or just logicop
 
 		move.w	d1,(a1)			; store the result
-		adda.w	nextwrd(a5),a1		; advance destination ptr to next word
+		adda.w	nextwrd(fp),a1		; advance destination ptr to next word
 
-		move.w	rota_msk(a5),d2		; get mask for inner full words
+		move.w	rota_msk(fp),d2		; get mask for inner full words
 *
 *  inner loop for non-fringe words..
 *
@@ -1342,7 +1354,7 @@ word_rit:	move.w	d0,d4			; save what's left of this word
 		move.w	(a0)+,d0		; get next source word
 		swap	d0
 
-		move.w	shif_cnt(a5),d1
+		move.w	shif_cnt(fp),d1
 		lsr.l	d1,d0			; align source & destination
 		swap	d0
 		move.w	d0,d1
@@ -1358,32 +1370,32 @@ word_rit:	move.w	d0,d4			; save what's left of this word
 		tst.w	d7			; "jcxz"
 		beq	rite_don		; br if we have to mask the last word
 
-		move.w	specw(a5),a4		; call specialw
+		move.w	specw(fp),a4		; call specialw
 		jsr	0(a3,a4.w)
 
 		move.w	d1,(a1)			; store the result
-		adda.w	nextwrd(a5),a1		; advance destination to next word
+		adda.w	nextwrd(fp),a1		; advance destination to next word
 
 		subq.w	#1,d7			; decrement inner loop count
 		bra	word_rit		; go for more
 
-rite_don:	move.w	rite_msk(a5),d2		; load the mask we need
+rite_don:	move.w	rite_msk(fp),d2		; load the mask we need
 
-		move.w	specwf(a5),a4		; call specialwf
+		move.w	specwf(fp),a4		; call specialwf
 		jsr	0(a3,a4.w)		; feature - this clears thickenover
 
 		move.w	d1,(a1)			; store the result
 
 		movem.l	(sp)+,a0-a1		; pop source/destination ptrs
-		adda.w	s_next(a5),a0		; get to next line above in font
-		adda.w	d_next(a5),a1		;   and on screen
+		adda.w	s_next(fp),a0		; get to next line above in font
+		adda.w	d_next(fp),a1		;   and on screen
 
-		clr.w	thknover(a5)
+		clr.w	thknover(fp)
 
 		subq.w	#1,d3			; decrement # of lines to move
 		beq	rdone			; exit if finished
 
-		rol.w	lite_msk(a5)
+		rol.w	lite_msk(fp)
 
 		btst.b	#SKEW,LV((STYLE)+1,a6)
 		bne	skewopw
@@ -1546,19 +1558,19 @@ twopf:		moveq.l	#-1,d1		; mode 15	D' = 1
 *			d7.w
 *
 thknop:		and.w	d2,d1
-		move.w	thk_msk(a5),d6
-		btst.b	#0,skew_msk+1(a5)	; was a skew performed?
+		move.w	thk_msk(fp),d6
+		btst.b	#0,skew_msk+1(fp)	; was a skew performed?
 		beq	thk00			; br if not
 		ori.b	#$10,ccr
 		roxr.w	#1,d6
 		bcc	thk01
 		move.w	#$8000,d6
 
-thk01:		move.w	d6,thk_msk(a5)
+thk01:		move.w	d6,thk_msk(fp)
 
-thk00:		tst.w	dest_wrd(a5)
+thk00:		tst.w	dest_wrd(fp)
 		bmi	thk0
-		cmp.w	rite_msk(a5),d6
+		cmp.w	rite_msk(fp),d6
 		bcc	thk0
 		and.w	d6,d0
 		bra	thk1
@@ -1566,10 +1578,10 @@ thk00:		tst.w	dest_wrd(a5)
 thk0:		clr.w	d0
 		and.w	d6,d1
 
-thk1:		move.w	smear(a5),d6
+thk1:		move.w	smear(fp),d6
 		move.w	d2,d5
 		swap	d5
-		move.w	rite_msk(a5),d5
+		move.w	rite_msk(fp),d5
 		lsl.l	d6,d5
 
 		swap	d5
@@ -1589,7 +1601,7 @@ thkoplp:	move.l	d1,d0
 thklpe:		dbra	d6,thkoplp
 		move.w	d1,d0
 		swap	d1
-		move.w	thknjmp(a5),a4
+		move.w	thknjmp(fp),a4
 		jmp	(a3,a4.w)
 
 *************************************************
@@ -1603,11 +1615,11 @@ thklpe:		dbra	d6,thkoplp
 *	destroyed:	d5.w
 *			d6.w
 *
-thknopw:	subq.b	#1,src_wrd+1(a5)
+thknopw:	subq.b	#1,src_wrd+1(fp)
 		bne	thk2
-		and.w	thk_msk(a5),d1
+		and.w	thk_msk(fp),d1
 
-thk2:		move.w	smear(a5),d6
+thk2:		move.w	smear(fp),d6
 		swap	d1
 		clr.w	d1
 		move.l	d1,d5
@@ -1619,9 +1631,9 @@ thkopwlp:	lsr.l	#1,d5
 thkopwe:	dbra	d6,thkopwlp
 		move.w	d1,d5
 		swap	d1
-		or.w	thknover(a5),d1
-		move.w	d5,thknover(a5)
-		move.w	thknjpw(a5),a4
+		or.w	thknover(fp),d1
+		move.w	d5,thknover(fp)
+		move.w	thknjpw(fp),a4
 		jmp	(a3,a4.w)
 
 
@@ -1637,19 +1649,19 @@ thkopwe:	dbra	d6,thkopwlp
 *			d6.w
 *			d7.hi w
 *
-thknopwf:	move.w	thk_msk(a5),d6
-		subq.b	#1,src_wrd+1(a5)
+thknopwf:	move.w	thk_msk(fp),d6
+		subq.b	#1,src_wrd+1(fp)
 		bmi	thk3
 		beq	thk4
 
 *+
 *  starting left fringe, do left mask only
 *-
-		subq.b	#1,src_wrd+1(a5)
+		subq.b	#1,src_wrd+1(fp)
 		bne	thk11
 		and.w	d6,d1
 
-thk11:		and.w	left_msk(a5),d1
+thk11:		and.w	left_msk(fp),d1
 		bra	thk7
 
 *+
@@ -1666,19 +1678,19 @@ thk4:		and.w	d6,d1
 *+
 * compute mask & count for next line..
 *-
-thk5:		tst.w	skew_msk(a5)
+thk5:		tst.w	skew_msk(fp)
 		bmi	thk6
-		move.w	dest_wrd(a5),d5
+		move.w	dest_wrd(fp),d5
 		addq.w	#2,d5
 		swap	d7
-		move.w	rite_msk(a5),d7
+		move.w	rite_msk(fp),d7
 		ori.b	#$10,ccr
 		roxr.w	#1,d7
 		bcc	thk33
 		move.w	#$8000,d7
 		addq.w	#1,d5
 
-thk33:		cmpi.w	#1,left_msk(a5)
+thk33:		cmpi.w	#1,left_msk(fp)
 		bne	thk34
 		subq.w	#1,d5
 
@@ -1692,12 +1704,12 @@ thk31:		cmp.w	d6,d7
 		addq.w	#1,d5
 
 thk35:		swap	d7
-		move.w	d6,thk_msk(a5)
-		move.b	d5,src_wrd(a5)
+		move.w	d6,thk_msk(fp)
+		move.b	d5,src_wrd(fp)
 
-thk6:		move.b	src_wrd(a5),src_wrd+1(a5)
+thk6:		move.b	src_wrd(fp),src_wrd+1(fp)
 
-thk7:		move.w	smear(a5),d6
+thk7:		move.w	smear(fp),d6
 		swap	d1
 		clr.w	d1
 		move.l	d1,d5
@@ -1709,10 +1721,10 @@ thkopwl:	lsr.l	#1,d5
 thkopwfe:	dbra	d6,thkopwl
 		move.w	d1,d5
 		swap	d1
-		or.w	thknover(a5),d1
-		move.w	d5,thknover(a5)
+		or.w	thknover(fp),d1
+		move.w	d5,thknover(fp)
 		and.w	d2,d1
-		move.w	thknjpwf(a5),a4
+		move.w	thknjpwf(fp),a4
 		jmp	(a3,a4.w)
 
 ****************************************************
@@ -1724,18 +1736,18 @@ thkopwfe:	dbra	d6,thkopwl
 *			d0.w	lo lite source word
 *
 *
-liteop:		and.w	lite_msk(a5),d1
-		and.w	lite_msk(a5),d0
-		rol.w	lite_msk(a5)
-		move.w	litejmp(a5),a4
+liteop:		and.w	lite_msk(fp),d1
+		and.w	lite_msk(fp),d0
+		rol.w	lite_msk(fp)
+		move.w	litejmp(fp),a4
 		jmp	(a3,a4.w)
 
-liteopw:	and.w	lite_msk(a5),d1
-		move.w	litejpw(a5),a4
+liteopw:	and.w	lite_msk(fp),d1
+		move.w	litejpw(fp),a4
 		jmp	(a3,a4.w)
 
-liteopwf:	and.w	lite_msk(a5),d1
-		move.w	litejpwf(a5),a4
+liteopwf:	and.w	lite_msk(fp),d1
+		move.w	litejpwf(fp),a4
 		jmp	(a3,a4.w)
 
 ****************************************************
@@ -1751,7 +1763,7 @@ liteopwf:	and.w	lite_msk(a5),d1
 *			left_msk, rite_msk = rotated masks
 *
 *
-skewop:		rol.w	skew_msk(a5)
+skewop:		rol.w	skew_msk(fp)
 		bcc	no_shift
 
 		swap	d1
@@ -1759,22 +1771,22 @@ skewop:		rol.w	skew_msk(a5)
 		lsr.l	#1,d1
 
 		swap	d2
-		move.w	rite_msk(a5),d2		; pack mask words into long one (d2)
+		move.w	rite_msk(fp),d2		; pack mask words into long one (d2)
 		lsr.l	#1,d2
-		move.w	d2,rite_msk(a5)
+		move.w	d2,rite_msk(fp)
 		swap	d2			; unpack mask words
-		move.w	d2,left_msk(a5)
+		move.w	d2,left_msk(fp)
 		beq	nxt_word
-		move.w	shif_cnt(a5),d0
+		move.w	shif_cnt(fp),d0
 		bmi	dec_rol
 
 ror_add:	addq.w	#1,d0
 
-new_shif:	move.w	d0,shif_cnt(a5)
+new_shif:	move.w	d0,shif_cnt(fp)
 		move.w	d1,d0			; unpack skewized source words
 		swap	d1
 
-no_shift:	move.w	skewjmp(a5),a4
+no_shift:	move.w	skewjmp(fp),a4
 		jmp	(a3,a4.w)
 
 dec_rol:	tst.b	d0
@@ -1787,16 +1799,16 @@ begn_ror:	clr.w	d0
 *
 *  we crossed a word boundary..
 *
-nxt_word:	move.w	d2,rite_msk(a5)		; 0h to right mask
+nxt_word:	move.w	d2,rite_msk(fp)		; 0h to right mask
 		swap	d2
-		move.w	d2,left_msk(a5)		; move right mask to left mask
-		adda.w	nextwrd(a5),a1		; bump next destination address
+		move.w	d2,left_msk(fp)		; move right mask to left mask
+		adda.w	nextwrd(fp),a1		; bump next destination address
 		move.w	(a1),d4			; get the word we're really doing
 
 		move.w	#15,d0
-		sub.w	shif_cnt(a5),d0
+		sub.w	shif_cnt(fp),d0
 		ori.w	#$8000,d0
-		move.w	d0,shif_cnt(a5)
+		move.w	d0,shif_cnt(fp)
 		bra	no_shift
 
 ********************************************************
@@ -1804,61 +1816,61 @@ nxt_word:	move.w	d2,rite_msk(a5)		; 0h to right mask
 *    recomputes rotation and jumps to proper routine to finish char
 *
 *
-skewopw:	rol.w	skew_msk(a5)
+skewopw:	rol.w	skew_msk(fp)
 		bcc	do_shift
 
-		tst.w	shif_cnt(a5)
+		tst.w	shif_cnt(fp)
 		bmi	mlt_left
 		bra	mlt_rite
 
 do_shift:	ori	#$10,ccr		; set x bit
-		roxr.w	rota_msk(a5)		; one more bit into next word
+		roxr.w	rota_msk(fp)		; one more bit into next word
 
-		move.w	rite_msk(a5),d0
+		move.w	rite_msk(fp),d0
 		cmp.w	#$FFFF,d0		; if mask is full on
 		beq	inc_rite
 
 		ori	#$10,ccr		; set x bit
 		roxr.w	#1,d0			; rotate in a 1
-		move.w	d0,rite_msk(a5)
+		move.w	d0,rite_msk(fp)
 
-do_left:	move.w	shif_cnt(a5),d0
+do_left:	move.w	shif_cnt(fp),d0
 		tst.b	d0
 		bne	no_rota
-		move.w	#$8000,rota_msk(a5)	; these are the bits that are good
+		move.w	#$8000,rota_msk(fp)	; these are the bits that are good
 
-no_rota:	move.w	left_msk(a5),d1
+no_rota:	move.w	left_msk(fp),d1
 		lsr.w	#1,d1			; rotate in a 0
 		beq	wnxt_wrd		; br if mask inoperative, inc addr
 
-		move.w	d1,left_msk(a5)
+		move.w	d1,left_msk(fp)
 
 		tst.w	d0
 		bmi	wdec_rol
-		addq.w	#1,shif_cnt(a5)
+		addq.w	#1,shif_cnt(fp)
 		bra	mlt_rite
 
 wdec_rol:	tst.b	d0
 		beq	set_msk
-		subq.w	#1,shif_cnt(a5)		; do 1 less rol
+		subq.w	#1,shif_cnt(fp)		; do 1 less rol
 		bra	mlt_left
 
-set_msk:	move.w	#1,shif_cnt(a5)
+set_msk:	move.w	#1,shif_cnt(fp)
 		bra	mlt_rite
 
-inc_rite:	addq.w	#1,dest_wrd(a5)		; spilled out of a word to get here
-		move.w	#$8000,rite_msk(a5)
+inc_rite:	addq.w	#1,dest_wrd(fp)		; spilled out of a word to get here
+		move.w	#$8000,rite_msk(fp)
 		bra	do_left			; go back & finish up
 
-wnxt_wrd:	move.w	#$FFFF,left_msk(a5)	; ran out of word
+wnxt_wrd:	move.w	#$FFFF,left_msk(fp)	; ran out of word
 
-		subq.w	#1,dest_wrd(a5)		; so more is in the fringe
-		adda.w	nextwrd(a5),a1		; bump next destination address
+		subq.w	#1,dest_wrd(fp)		; so more is in the fringe
+		adda.w	nextwrd(fp),a1		; bump next destination address
 
 		move.w	#15,d2
-		sub.w	d0,d2			; d0 has old shif_cnt(a5)
+		sub.w	d0,d2			; d0 has old shif_cnt(fp)
 		ori.w	#$8000,d2
-		move.w	d2,shif_cnt(a5)
+		move.w	d2,shif_cnt(fp)
 
 		bra	mlt_left
 
@@ -1870,18 +1882,18 @@ wnxt_wrd:	move.w	#$FFFF,left_msk(a5)	; ran out of word
 rotation:	move.w	LV(SOURCEX,a6),d1
 		move.w	d1,d2
 		andi.w	#$0F,d2
-		move.w	d2,tsdad(a5)		; save source dot address
+		move.w	d2,tsdad(fp)		; save source dot address
 		lsr.w	#4,d1			; make byte address
 		lsl.w	#1,d1
 
-		movea.l	sform(a5),a0
+		movea.l	sform(fp),a0
 		adda.w	d1,a0			; a0 -> source
 
-		move.w	LV(DELX,a6),width(a5)
+		move.w	LV(DELX,a6),width(fp)
 		move.w	LV(SOURCEY,a6),d0		; d0
 		move.w	LV(DELY,a6),d1		; d1
-		move.w	d1,height(a5)
-		move.w	s_next(a5),d2		; d2
+		move.w	d1,height(fp)
+		move.w	s_next(fp),d2		; d2
 
 		bsr	getdest			; get destination in a1
 
@@ -1892,40 +1904,40 @@ rotation:	move.w	LV(SOURCEX,a6),d1
 rot90:		cmpi.w	#900,d6
 		beq	top_src
 
-		neg.w	s_next(a5)		; go up 1 line
+		neg.w	s_next(fp)		; go up 1 line
 		subq.w	#1,d1
 		add.w	d1,d0			; start at bottom
 		mulu	d2,d0			; get mem address of start corner
-		adda.l	d0,a0			; 04 Nov 86   HANDLE FORMS > 32k
+		adda.w	d0,a0			; 04 Nov 86   HANDLE FORMS > 32k
 
 top_src:	move.w	LV(DELY,a6),d0
 		lsr.w	#4,d0
-		add.w	d0,d0
+		lsl.w	#1,d0
 		addq.w	#2,d0			; form width is height / 8 + 1
-		move.w	d0,d_next(a5)
+		move.w	d0,d_next(fp)
 
 		move.l	a1,-(sp)		; save destination ptr
 
 		cmpi.w	#2700,d6		; cmp CHUP
 		beq	top_dwn			; top down is good programmin'
 
-		neg.w	d_next(a5)		; bottom working up
+		neg.w	d_next(fp)		; bottom working up
 		move.w	LV(DELX,a6),d1		; d1 <- height
 		subq.w	#1,d1			; d1 <- height -1
 		mulu	d1,d0			; d0 <- offset to bottom of char dst
-		adda.l	d0,a1			; HANDLE DST > 32k
+		adda.w	d0,a1			; HANDLE DST > 32k
 
 
-top_dwn:	move.w	tsdad(a5),d2
+top_dwn:	move.w	tsdad(fp),d2
 		move.w	#$8000,d3		; d3
 		move.w	d3,d4			; d4 1st bit of scratch area
 		lsr.w	d2,d3
 		moveq	#0,d0			; d0
-		move.w	width(a5),d2		; d2 pixels in source row
-		move.w	s_next(a5),d6
+		move.w	width(fp),d2		; d2 pixels in source row
+		move.w	s_next(fp),d6
 		bra	rot_nsrc
 
-rot_ylp:	move.w	height(a5),d1
+rot_ylp:	move.w	height(fp),d1
 		movem.l	a0-a1/d4,-(sp)
 		bra	rot_srt
 
@@ -1947,7 +1959,7 @@ rot_srt:	dbra	d1,rot_xlp
 		move.w	d0,(a1)
 		moveq	#0,d0
 		movem.l	(sp)+,a0-a1/d4
-		adda.w	d_next(a5),a1
+		adda.w	d_next(fp),a1
 		ror.w	#1,d3
 		bcc	rot_nsrc
 		addq.l	#2,a0
@@ -1959,36 +1971,36 @@ rot_done:	move.l	(sp)+,a1		; reget former destination ptr
 
 		move.w	LV(DELX,a6),d0
 		move.w	LV(DELY,a6),d1
-		move.w	d1,width(a5)
+		move.w	d1,width(fp)
 		move.w	d1,LV(DELX,a6)
-		move.w	d0,height(a5)
+		move.w	d0,height(fp)
 		move.w	d0,LV(DELY,a6)
 
-		move.w	tmp_dely(a5),d0	; Must swap tmps too RJG 4/13/85
-		move.w	tmp_delx(a5),tmp_dely(a5)
-		move.w	d0,tmp_delx(a5)
-		move.w	#1,swap_tmps(a5)
+		move.w	tmp_dely(fp),d0	; Must swap tmps too RJG 4/13/85
+		move.w	tmp_delx(fp),tmp_dely(fp)
+		move.w	d0,tmp_delx(fp)
+		move.w	#1,swap_tmps(fp)
 
-		move.w	d_next(a5),d0
+		move.w	d_next(fp),d0
 		cmpi.w	#900,LV(CHUP,a6)
 		bne	rot_nneg
 		neg.w	d0
 
-rot_nneg:	move.w	d0,s_next(a5)
+rot_nneg:	move.w	d0,s_next(fp)
 
 repexit:	clr.w	LV(SOURCEX,a6)
 
 		clr.w	LV(SOURCEY,a6)
-		move.l	a1,sform(a5)
+		move.l	a1,sform(fp)
 		rts
 
-upsd_dwn:	move.w	DELX(a6),d0		; a0 -> top of source
-		add.w	tsdad(a5),d0
+upsd_dwn:	move.w	LV(DELX,a6),d0		; a0 -> top of source
+		add.w	tsdad(fp),d0
 		subq.w	#1,d0			; make width instead of address
 		lsr.w	#4,d0
-		add.w	d0,d0			; make it even byte address
+		lsl.w	#1,d0			; make it even byte address
 		addq.w	#2,d0			; form width is DELX / 8 + 1
-		move.w	d0,d_next(a5)
+		move.w	d0,d_next(fp)
 
 		move.w	d0,d2
 		lsr.w	#1,d2			; d2 <- words to move per line
@@ -1997,7 +2009,7 @@ upsd_dwn:	move.w	DELX(a6),d0		; a0 -> top of source
 
 		move.l	a1,-(sp)		; save destination ptr
 
-		adda.l	d0,a1			; a1 -> last word in form
+		adda.w	d0,a1			; a1 -> last word in form
 		bra	strtflip
 
 upsd_lp:	movea.l	a0,a2			; use a2 as working source
@@ -2014,15 +2026,15 @@ flip_lp:	lsr.w	#1,d0
 		move.w	d5,-(a1)		; store in buffer pre-decrement
 		dbra	d3,line_lp
 
-		adda.w	s_next(a5),a0		; dest (a2) is already updated
+		adda.w	s_next(fp),a0		; dest (a2) is already updated
 
 strtflip:	dbra	d1,upsd_lp
 
-		move.w	d_next(a5),s_next(a5)
+		move.w	d_next(fp),s_next(fp)
 
 		move.l	(sp)+,a1		; reget former destination ptr
 
-		move.l	a1,sform(a5)
+		move.l	a1,sform(fp)
 		move.w	LV(SOURCEX,a6),d0
 		add.w	LV(DELX,a6),d0
 		neg.w	d0
@@ -2039,19 +2051,19 @@ strtflip:	dbra	d1,upsd_lp
 replicat:	move.w	LV(SOURCEX,a6),d0
 		move.w	d0,d4
 		andi.w	#$0F,d0			; d0 <- source dot address
-		move.w	d0,tsdad(a5)
+		move.w	d0,tsdad(fp)
 
 		lsr.w	#4,d4
-		add.w	d4,d4			; d4 <- offset to 1st word of char
+		lsl.w	#1,d4			; d4 <- offset to 1st word of char
 
 		move.w	LV(SOURCEY,a6),d0
-		mulu	s_next(a5),d0		; d0 <- offset to bottom of form
+		mulu	s_next(fp),d0		; d0 <- offset to bottom of form
 
-		movea.l	sform(a5),a0		; HANDLE FORMS > 32k
-		adda.w	d4,a0
-		adda.l	d0,a0			; a0 -> bottom of character
+		add.w	d4,d0
+		movea.l	sform(fp),a0		; HANDLE FORMS > 32k
+		adda.w	d0,a0			; a0 -> bottom of character
 
-		move.w	tsdad(a5),d2		;
+		move.w	tsdad(fp),d2		;
 		move.w	#$8000,d3		; d3
 		move.w	d3,d4			; d4
 		lsr.w	d2,d3
@@ -2059,8 +2071,8 @@ replicat:	move.w	LV(SOURCEX,a6),d0
 		move.w	LV(DELY,a6),d2
 		move.w	LV(DELX,a6),d1
 
-		move.w	d2,height(a5)		; d2 <- # of rows to duplicate
-		move.w	d1,width(a5)
+		move.w	d2,height(fp)		; d2 <- # of rows to duplicate
+		move.w	d1,width(fp)
 
 		bsr	getdest			; get destination ptr in a1
 
@@ -2068,10 +2080,10 @@ replicat:	move.w	LV(SOURCEX,a6),d0
 *  outlining, expand buffer size all around perimeter
 *
 noline:		lsr.w	#3,d1
-		add.w	d1,d1
+		lsl.w	#1,d1
 		addq.w	#2,d1
 
-noline1:	move.w	d1,d_next(a5)
+noline1:	move.w	d1,d_next(fp)
 		move.l	a1,a3			; save for use later
 
 		move.w	LV(T_SCLSTS,a6),d7
@@ -2079,9 +2091,9 @@ noline1:	move.w	d1,d_next(a5)
 		moveq	#0,d7
 		roxr.l	#1,d7
 
-		move.w	s_next(a5),d7
+		move.w	s_next(fp),d7
 		move.w	LV(DDA_INC,a6),d2
-		move.w	height(a5),d5
+		move.w	height(fp),d5
 		subq.w	#1,d5
 		move.w	#32767,d6
 		tst.l	d7
@@ -2120,9 +2132,9 @@ nrepdoub:	tst.l	d7
 nrpndoub:	dbra	d2,repwidcl
 		move.w	d1,LV(XACC_DDA,a6)
 		move.w	d3,LV(DELX,a6)
-		move.w	tmp_dely(a5),LV(DELY,a6)
-		move.w	d_next(a5),d1
-		move.w	d1,s_next(a5)
+		move.w	tmp_dely(fp),LV(DELY,a6)
+		move.w	d_next(fp),d1
+		move.w	d1,s_next(fp)
 
 repexit1:	move.l	LV(scrtchp,a6),a1		; this one guaranteed former dest
 		bra	repexit
@@ -2157,7 +2169,7 @@ repexit1:	move.l	LV(scrtchp,a6),a1		; this one guaranteed former dest
 *
 yloop:		movem.l	a0-a1/d3-d7,-(sp)	; save some regs
 		moveq	#0,d0			; clear grafix
-		move.w	width(a5),d5
+		move.w	width(fp),d5
 		subq.w	#1,d5			; adjust for dbra
 
 		move.w	LV(XACC_DDA,a6),d7
@@ -2222,19 +2234,19 @@ repdone:	move.w	d0,(a1)
 *  entry:	none
 *  exit:	a1 -> free buffer
 *
-*	buffree(a5) is updated to be offset to other buffer, to become free
+*	buffree(fp) is updated to be offset to other buffer, to become free
 *	all other regs preserved
 *
 getdest:	move.w	d7,-(sp)
 		move.l	LV(scrtchp,a6),a1
-		move.w	buffree(a5),d7
+		move.w	buffree(fp),d7
 		beq	getdest1
 
 		adda.w	d7,a1
-		clr.w	buffree(a5)
+		clr.w	buffree(fp)
 		bra	getdest2
 
-getdest1:	move.w	LV(scrpt2,a6),buffree(a5)
+getdest1:	move.w	LV(scrpt2,a6),buffree(fp)
 
 getdest2:	move.w	(sp)+,d7
 		rts
@@ -2324,7 +2336,7 @@ out_loop:	move.l	(a0),d0		; get next top line grafix data
 
 		movem.l	(sp)+,a0-a2/d6-d7	; save ptrs & counters
 		move.l	a2,a1
-		adda.w	s_next(a5),a2
+		adda.w	s_next(fp),a2
 		cmpi.w	#1,d6
 		bne	srt_lin
 		move.l	a1,a2

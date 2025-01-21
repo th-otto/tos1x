@@ -32,11 +32,6 @@
 
 	text
 
-fail_ret:
-		movea.l   (a7)+,a5
-		moveq	#0,d0		; exit if not byte bnd or clip required
-		rts			; 0 indicates failure
-
 *  Entry point here..
 /* 306de: 00e0c050 */
 /* 206de: 00e0c2e2 */
@@ -44,45 +39,40 @@ fail_ret:
 /* 106de: 00e10766 */
 	xdef	_MONO8XHT
 _MONO8XHT:
-		move.l    a5,-(a7)
-	    lea lineavars+DESTX,a5
-		move.w	(a5)+,d0		; d0 <- dst X
+		move.w	LV(DESTX,a5),d0		; d0 <- dst X
+		move.w	LV(DESTY,a5),d1		; d0 <- dst X
+		move.w	LV(DELY,a5),d3		; d3 <- dY
 		move.w	d0,d2			; d2 <- dst X
-		and.w	#$0007,d2		; this routine is only for
-		bne	fail_ret		; byte alligned characters
+		andi.w	#$0007,d2		; this routine is only for
+		beq	on_bounds		; byte alligned characters
+fail_ret:
+		moveq	#0,d0		; exit if not byte bnd or clip required
+		rts			; 0 indicates failure
 
 on_bounds:
-		move.w	(a5),d1		; d1 <- dst Y
-		move.w	(DELY)-DESTY(a5),d3		; d3 <- dY
-
-		move.l	(CONTRL)-DESTY(a5),a0		; a0 -> CONTRL array
+		move.l	LV(CONTRL,a5),a0		; a0 -> CONTRL array
 		move.w	  6(a0),d2		; d2 <- # chars in string
 
-		lea (CLIP)-DESTY(a5),a5
-		tst.w	(a5)+
+		tst.w	LV(CLIP,a5)
 		beq	no_clip			; skip clip test if disabled
 
-		move.w	(a5)+,d5	;8	d5 <- Xmin clip
-		move.w	(a5)+,d6	;8	d6 <- Ymin clip
-		move.w	(a5)+,d7	;8	d7 <- Xmax clip
-
-		cmp.w	d6,d1			/* str can't extend above Ymin */
-		blt	fail_ret		;
+		cmp.w	LV(YMN_CLIP,a5),d1			/* str can't extend above Ymin */
+		blt	fail_ret
 
 		move.w	d1,d4			;4	d4 <- dst Y
 		add.w	d3,d4			;4	d4 <- bottom Y +1
-		cmp.w	(a5),d4	/* str can't descend below Ymax */
+		cmp.w	LV(YMX_CLIP,a5),d4	/* str can't descend below Ymax */
 		bge	fail_ret		;8/10
 
-		cmp.w	d5,d0			/* str can't extend left of Xmin */
-		blt	fail_ret		;8/10
-
+		cmp.w	LV(XMN_CLIP,a5),d0			/* str can't extend left of Xmin */
+		blt	fail_ret
 		move.w	d2,d4			; d4 <- number of characters
 		lsl.w	#3,d4			; d4 <- width of str in pixels
 		add.w	d0,d4			; d4 <- rightmost X +1
-		cmp.w	d7,d4			/* str can't extend right of Xmax */
-		bge	fail_ret		;8/10
-
+		cmp.w	LV(XMX_CLIP,a5),d4			/* str can't extend right of Xmax */
+		bge	fail_ret
+		
+		
 *  no clipping to worry about
 *
 *   d0.w = DESTX
@@ -90,7 +80,15 @@ on_bounds:
 *   d2.w = # of characters
 *   d3.w = DELY
 
-no_clip:
+no_clip: ds.b 0
+
+#if BLITTER_SUPPORT
 		lea.l	lineavars+FBASE,a5	; a5 -> font form
 		move.l	(LA_ROUTINES)+(V_MONO)-FBASE(a5),a4		; a4 -> version of mono
 		jmp	(a4)
+#else
+
+#include "sbmono.S"
+
+#endif
+

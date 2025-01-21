@@ -39,14 +39,19 @@ single: tosvars.o $(VARS_OBJS) vdiext.o $(VDI_OBJS) ${MAKEFILE}
 #
 text_306_sed=$(SED) -e 's/add.l \#4,(sp)/dc.w 22679/' $*.s > $*.1; mv $*.1 $*.s
 
+ifeq ($(TOSVERSION),306)
 text.o: text.c
 	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
 	$(AM_V_at)$(text_$(TOSVERSION)_sed)
 	$(AM_V_at)$(BIN)optimize -q $*.s
 	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
 	$(AM_V_at)$(RM) $*.s
+endif
 
 endif
+
+mono.o: mono.S sbmono.S
+blastman.o: blastman.S sbblit.S
 
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<

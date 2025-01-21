@@ -118,6 +118,7 @@ VOID vq_extnd(NOTHING)
 	for (i = 0; i < 45; i++)
 		*dp++ = *sp++;
 
+#if BLITTER_SUPPORT
 	if (LV(INTIN)[0])						/* if extended inquire is requested */
 	{
 		if (GETBLT() & 1)
@@ -125,6 +126,7 @@ VOID vq_extnd(NOTHING)
 		else
 			LV(INTOUT)[6] = BLTPRFRM;		/*     non BiT BLiT performance     */
 	}
+#endif
 }
 
 
@@ -387,9 +389,7 @@ VOID v_gdp(NOTHING)
 
 		case 9:						/* GDP Justified Text */
 			d_justified();
-#ifndef __ALCYON__
 			break;
-#endif
 		}
 	}
 }
@@ -618,8 +618,11 @@ VOID plygn(NOTHING)
 		if (LV(fill_miny) < LV(YMN_CLIP))
 		{
 			if (LV(fill_maxy) >= LV(YMN_CLIP))	/* plygon starts before clip */
+			{
 				LV(fill_miny) = LV(YMN_CLIP) - 1;	/* plygon partial overlap */
-			else						/* see fix 1.2 */
+				if (LV(fill_miny) < 1)
+					LV(fill_miny) = 1;
+			} else						/* see fix 1.2 */
 				return;					/* plygon entirely before clip */
 		}
 		if (LV(fill_maxy) > LV(YMX_CLIP))
@@ -784,7 +787,7 @@ VOID gdp_arc(NOTHING)
 	LV(yrad) = SMUL_DIV(LV(xrad), xsize, ysize);
 	clc_nsteps();
 
-#if 0 /* removed 5/1/86 LT */
+#if TOSVERSION < 0x102 /* removed 5/1/86 LT */
 
 	LV(n_steps) = SMUL_DIV(LV(del_ang), LV(n_steps), 3600);
 	if (LV(n_steps) == 0)
@@ -841,7 +844,7 @@ VOID gdp_ell(NOTHING)
 		LV(yrad) = yres - LV(yrad);
 	clc_nsteps();
 
-#if 0 /*  removed 5/1/86 LT */
+#if TOSVERSION < 0x102 /*  removed 5/1/86 LT */
 	LV(n_steps) = SMUL_DIV(LV(del_ang), LV(n_steps), 3600);
 	if (LV(n_steps) == 0)
 		return;
@@ -959,8 +962,8 @@ VOID st_fl_ptr(NOTHING)
 	case 4:
 		pm = 0x000f;
 		pp = &work_ptr->ud_patrn[0];
-#ifndef __ALCYON__
 		break;
+#if !BINEXACT
 	default:
 		/* BUG: illegal values for fill_style set patptr to undefined pointer pp */
 		return;

@@ -51,7 +51,7 @@ _v_cellarray: ds.b 0
 _v_nop: ds.b 0
 		xdef	_vq_cellarray
 _vq_cellarray: ds.b 0
-return:		rts
+		rts
 
 /*******************************************************************************
  *
@@ -70,7 +70,8 @@ _v_clrwk:
 		moveq #0,d1
 v_clrwk1:
 		move.l d1,(a0)+
-		dbf d1,v_clrwk1
+		dbf d0,v_clrwk1
+return:
 		rts
 
 /*******************************************************************************
@@ -157,7 +158,11 @@ _FindDevice:
         addq.l    #2,a7
         move.b    d0,d2
         cmp.b     #2,d2                         /* current res = mono? */
+#if BINEXACT
+        dc.w 0x6700,FindDev5-*-2                /* branch offset of 128 not optimized */
+#else
         beq.s     FindDev5                      /* yes, can't be changed */
+#endif
 		PIXLA(a2)
         move.l    PIXLV(INTIN,a2),a0
         move.w    (a0),d0
@@ -173,12 +178,11 @@ FindDev1:
         beq.s     FindDev2                      /* yes, no need to change */
 /* switch to low resolution */
         clr.w     -(a7)
-        moveq.l   #-1,d0
-        move.l    d0,-(a7)
-        move.l    d0,-(a7)
+        move.l    #-1,-(a7)
+        move.l    #-1,-(a7)
         move.w    #5,-(a7)                      /* Setscreen(-1, -1, 0) */
         trap      #14
-        lea.l     12(a7),a7
+        adda.l    #12,a7
 FindDev2:
         pea.l     paltab16
         move.w    #6,-(a7)
@@ -188,16 +192,14 @@ FindDev2:
         rts
 /* switch to medium resolution */
 FindDev3:
-        moveq.l   #1,d0                         
-        cmp.b     d0,d2                         /* current res == medium? */
+        cmp.b     #1,d2                         /* current res == medium? */
         beq.s     FindDev4                      /* yes, no need to change */
-        move.w    d0,-(a7)
-        moveq.l   #-1,d0
-        move.l    d0,-(a7)
-        move.l    d0,-(a7)
+        move.w    #1,-(a7)
+        move.l    #-1,-(a7)
+        move.l    #-1,-(a7)
         move.w    #5,-(a7)
         trap      #14                           /* Setscreen(-1, -1, 1) */
-        lea.l     12(a7),a7
+        adda.l    #12,a7
 FindDev4:
         pea.l     paltab4
         move.w    #6,-(a7)
@@ -299,8 +301,8 @@ _DINIT_G:	PIXLA(a1)
 
 		bsr	dinit_mouse
 		bsr	_v_clrwk
-		bra	esce			; Show the alpha cursor. return
-
+		bsr	esce			; Show the alpha cursor. return
+		rts
 
 
 /*******************************************************************************
@@ -318,8 +320,132 @@ _DINIT_G:	PIXLA(a1)
 
    		xdef	_GCHC_KEY
 _GCHC_KEY:	PIXLA(a1)
-		move.w	#1,PIXLV(TERM_CH,a1)		; return dummy choice per 8086
 		moveq.l	#1,d0			; indicate choice value
+		move.w	d0,PIXLV(TERM_CH,a1)		; return dummy choice per 8086
+		rts
+
+
+/*******************************************************************************
+ *
+ *	GCHR_KEY	get char for string input
+ *			entry: none
+ *			exit:  d0=1	key pressed
+ *			       d0=0	nothing happened
+ *
+ *			TERM_CH		16 bit char info
+ *
+ *******************************************************************************/
+
+/* 306de: 00e0687e */
+/* 104de: 00fcb456 */
+   		xdef	_GCHR_KEY
+_GCHR_KEY:	move.w	#DEV,-(sp)	; see if a character present
+		move.w	#BCONSTAT,-(sp)
+		trap	#BIOS
+
+		tst.w	d0		; d0=0 => no character
+		beq	no_char
+
+		move.w	#BCONIN,(sp)	; get the character
+		trap	#BIOS
+		addq.l	#4,sp
+
+		move.l	d0,d1
+		swap	d1
+		lsl.w	#8,d1		; d0<07:00> <- ascii code
+		or.w	d1,d0		; d0<15:08> <- scan code
+
+		PIXLA(a1)
+		move.w	d0,PIXLV(TERM_CH,a1)	; store character
+		moveq.l	#1,d0		; indicate character present
+		rts
+no_char:
+		addq.l	#4,sp
+		moveq.l	#0,d0		; indicate no character present
+		rts
+
+/*******************************************************************************
+ *
+ *  INITIALIZE MOUSE
+ *
+ *  on entry:
+ *
+ *     GCURXY	initial XY position of mouse cursor
+ *
+ *******************************************************************************/
+
+/* 306de: 00e068ac */
+/* 104de: 00fcb484 */
+/* 106de: 00e0b6b0 */
+mouse_init:
+		PIXLA(a1)
+		lea	user_init,a0		; button and motion vectors
+		move.l	a0,PIXLV(user_but,a1)		; default to no action (rts)
+		move.l	a0,PIXLV(user_mot,a1)
+		move.l	#_MOV_CUR,PIXLV(user_cur,a1)	; set up link to vblank display
+
+* Initialize the default mouse form (presently the arrow)
+
+		move.l	PIXLV(INTIN,a1),-(sp)		; Save the intin pointer and
+		move.l	#arrow_cdb,PIXLV(INTIN,a1)		; make it point to the arrow
+		bsr	_vsc_form		; a1 gets clobbered here
+		PIXLA(a1)
+
+		move.l	(sp)+,PIXLV(INTIN,a1)	; Restore INTIN pointer
+
+* initialize mouse/draw status and semaphores
+
+		moveq.l	#0,d0
+		move.w	d0,PIXLV(MOUSE_BT,a1)	; clear mouse button state
+		move.b	d0,PIXLV(cur_ms_stat,a1)	; clear current mouse status
+		move.b	d0,PIXLV(mouse_flag,a1)	; mouse_cdb is unlocked
+*		move.b	#1,PIXLV(HIDE_CNT,a1)	; don't display cursor form yet
+
+* Initialize communication packet between mouse interrupt service routine
+* and vblank cursor display routine. Insert vblank draw routine into front
+* of vblank queue.
+
+		lea	PIXLV(xydraw,a1),a0		; init the draw parameter block
+
+		move.w	d0,(a0)+	; to the initial position
+		move.w	d0,(a0)+
+		move.b	d0,(a0)			; mark data invalid for update
+
+		move.l	_vblqueue,a0		; insert the display routine
+		move.l	#vb_draw,(a0)		; at the head of the queue
+
+* Activate mouse interrupt processing
+
+		pea	mouse_rel	; mouse packet interrupt handler
+		pea	rel_pblock	; mouse configuration parameter block
+		move.w	#1,-(sp)	; enable mouse, in relative mode
+		clr.w	-(sp)		; Initmouse()
+		trap	#XBIOS
+		adda.l #12,sp
+
+user_init:	rts
+
+
+
+/*******************************************************************************
+ *
+ *	DEINITIALIZE MOUSE	entry: 		none
+ *				exit:		none
+ *				destroys:	a0/d0
+ *
+ *******************************************************************************/
+
+/* 306de: 00e06932 */
+/* 104de: 00fcb50a */
+dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
+		clr.l	(a0)
+
+		move.l	#-1,-(sp)	; discontinue mouse processing
+		move.l	#-1,-(sp)
+		clr.l	-(sp)		; type=0: disable mouse
+		trap	#XBIOS		; INITMOUSE
+		adda.l #12,sp
+
 		rts
 
 
@@ -366,164 +492,54 @@ _GCHC_KEY:	PIXLA(a1)
 /* 104de: 00fcb408 */
 		xdef	_GLOC_KEY
 _GLOC_KEY:	PIXLA(a1)
-		moveq.l	#3,d1		; d1 <- mask for updating cur_ms_stat
 
-		move.w	SR,d0
-
-		ori.w	#$0700,SR		; >>>> BEGIN ATOM <<<<
-		move.b	PIXLV(cur_ms_stat,a1),d2	; clearing state change flags indicates
-		and.b	d1,PIXLV(cur_ms_stat,a1)	; that this data has been processed
-		move.l	PIXLV(GCURXY,a1),PIXLV(X1,a1)	; X1<-latest X and Y1<-latest Y
-		move.w	d0,SR			; >>>>  END ATOM  <<<<
-
-		clr.w	d0		; d0 <- initial status: no change
-
-		btst.l	#5,d2
-		beq	test_button
-
-		addq.w	#2,d0		; status: coordinate information valid
-
-test_button:	and.b	#$C0,d2		; test for change in button state
-		beq	key_stat	; if no change, check for key press
-
-		move.w	#$20,d1		; d1 <- lf button terminator code: 32
-		btst.l	#6,d2		; left button has priority over right.
-		bne	button_exit	; if left isn't down then right is.
-
-		addq.w	#1,d1		; d1 <- rt button terminator code: 33
-
-button_exit:	move.w	d1,PIXLV(TERM_CH,a1)	; store the character code
-		addq.w	#1,d0		; status: mouse button pressed
+		move.b	_cur_ms_stat,d0
+		move.b	d0,d1		/* save state */
+		andi.b	#0xc0,d0	/* mask out all but button status bits */
+		beq	key_stat	/* nothing go check key stat */
+		move.b     d1,d0
+		btst       #6,d0
+		beq clr_bt1
+		move.w	#0x20,_TERM_CH	/* send terminator code for left key */
+		bra clr_bt_stat
+clr_bt1:
+		move.w	#0x21,_TERM_CH	/* send terminator code for left key */
+clr_bt_stat:
+		andi.b	#0x23,d0		/* clear mouse button status */
+		move.b	d0,_cur_ms_stat	/* store cleared state */
+		move.w	#1,d0		/* set button pressed flag */
 		rts
 
+key_stat:	move.w	#2, -(sp)	/* see if a character present at aux port */
+		move.w	#1, -(sp)
+		trap	#13
 
-key_stat:	move.w	 d0,-(sp)	; preserve mouse status
-		bsr	_GCHR_KEY	; d0 on return:  0:no key  1:key press
-		add.w	 (sp)+,d0	; d0 <- final locator status
-		rts
-
-/*******************************************************************************
- *
- *	GCHR_KEY	get char for string input
- *			entry: none
- *			exit:  d0=1	key pressed
- *			       d0=0	nothing happened
- *
- *			TERM_CH		16 bit char info
- *
- *******************************************************************************/
-
-/* 306de: 00e0687e */
-/* 104de: 00fcb456 */
-   		xdef	_GCHR_KEY
-_GCHR_KEY:	move.w	#DEV,-(sp)	; see if a character present
-		move.w	#BCONSTAT,-(sp)
-		trap	#BIOS
+		tst.w	d0
+		bne	key_cont	/* no char */
 		addq.l	#4,sp
-
-		tst.w	d0		; d0=0 => no character
-		beq	no_char
-
-		move.w	#DEV,-(sp)	; load proper devoce
-		move.w	#BCONIN,-(sp)	; get the character
-		trap	#BIOS
+		bra mov_stat
+key_cont:
+		move.w	#2,(sp)	/* from auxin */
+		trap	#13
 		addq.l	#4,sp
-
 		move.l	d0,d1
 		swap	d1
-		lsl.w	#8,d1		; d0<07:00> <- ascii code
-		or.w	d1,d0		; d0<15:08> <- scan code
+		lsl.w	#8,d1
+		or.w	d1,d0
+		move.w	d0,_TERM_CH	/* store char */
+		move.l	#1,d0
+		rts
+mov_stat:
+		bclr.l	#5,d1		/* test and clear mouse motion flag  */
+		beq	no_chg
 
-		PIXLA(a1)
-		move.w	d0,PIXLV(TERM_CH,a1)	; store character
-		moveq.l	#1,d0		; indicate character present
+		move.b	d1,_cur_ms_stat	/* save mouse stat */
+		move.w	_GCURX,_X1	/* set _X1 = _GCURX */
+		move.w	_GCURY,_Y1	/* set _Y1 = _GCURY */
+		move.l	#2,d0
+		rts
 
-no_char:	rts
-
-
-/*******************************************************************************
- *
- *  INITIALIZE MOUSE
- *
- *  on entry:
- *
- *     GCURXY	initial XY position of mouse cursor
- *
- *******************************************************************************/
-
-/* 306de: 00e068ac */
-/* 104de: 00fcb484 */
-/* 106de: 00e0b6b0 */
-mouse_init:
-		PIXLA(a1)
-		lea	user_init,a0		; button and motion vectors
-		move.l	a0,PIXLV(user_but,a1)		; default to no action (rts)
-		move.l	a0,PIXLV(user_mot,a1)
-		move.l	#_MOV_CUR,PIXLV(user_cur,a1)	; set up link to vblank display
-
-* Initialize the default mouse form (presently the arrow)
-
-		lea	PIXLV(INTIN,a1),a0		; a0 -> pointer to INTIN array
-		move.l	(a0),-(sp)		; Save the intin pointer and
-		move.l	#arrow_cdb,(a0)		; make it point to the arrow
-		bsr	_vsc_form		; a1 gets clobbered here
-		PIXLA(a1)
-
-		move.l	(sp)+,PIXLV(INTIN,a1)	; Restore INTIN pointer
-
-* initialize mouse/draw status and semaphores
-
-		moveq.l	#0,d0
-		move.w	d0,PIXLV(MOUSE_BT,a1)	; clear mouse button state
-		move.b	d0,PIXLV(cur_ms_stat,a1)	; clear current mouse status
-		move.b	d0,PIXLV(mouse_flag,a1)	; mouse_cdb is unlocked
-		move.b	#1,PIXLV(HIDE_CNT,a1)	; don't display cursor form yet
-
-* Initialize communication packet between mouse interrupt service routine
-* and vblank cursor display routine. Insert vblank draw routine into front
-* of vblank queue.
-
-		lea	PIXLV(xydraw,a1),a0		; init the draw parameter block
-
-		move.l	PIXLV(GCURXY,a1),(a0)+	; to the initial position
-		move.b	#1,(a0)			; mark data valid for update
-
-		move.l	_vblqueue,a0		; insert the display routine
-		move.l	#vb_draw,(a0)		; at the head of the queue
-
-* Activate mouse interrupt processing
-
-		pea	mouse_rel	; mouse packet interrupt handler
-		pea	rel_pblock	; mouse configuration parameter block
-		move.w	#1,-(sp)	; enable mouse, in relative mode
-		clr.w	-(sp)		; Initmouse()
-		trap	#XBIOS
-		lea	12(sp),sp
-
-user_init:	rts
-
-
-
-/*******************************************************************************
- *
- *	DEINITIALIZE MOUSE	entry: 		none
- *				exit:		none
- *				destroys:	a0/d0
- *
- *******************************************************************************/
-
-/* 306de: 00e06932 */
-/* 104de: 00fcb50a */
-dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
-		clr.l	(a0)
-
-		moveq.l	#-1,d0
-		move.l	d0,-(sp)	; discontinue mouse processing
-		move.l	d0,-(sp)
-		clr.l	-(sp)		; type=0: disable mouse
-		trap	#XBIOS		; INITMOUSE
-		lea	12(sp),sp
-
+no_chg:		move.l	#0,d0
 		rts
 
 
@@ -540,38 +556,42 @@ dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
 esc_init:
 _esc_init:
         move.b    _sshiftmod,d0
-        moveq.l   #3,d1
-        and.w     d1,d0
-        cmp.w     d1,d0
+        and.w     #3,d0
+        cmp.w     #3,d0
         bne.s     esc0
-        moveq.l   #2,d0
+        move.w    #2,d0
 esc0:
 		move.w    d0,-(a7)
+#if BINEXACT
+        dc.w 0x6100,rezinit-*-2             /* branch offset of 126 not optimized */
+#else
         bsr       rezinit
-        lea.l     _f8x8,a0
+#endif
         move.w    (a7)+,d0
+        lea.l     _f8x8,a0
         cmp.w     #2,d0
         bne.s     esc1
         lea.l     _f8x16,a0
 esc1:
         bsr       gl_f_init
-        clr.w     d0
+        move.w    #-1,_v_col_fg
+        moveq     #0,d0
         move.w    d0,PIXLV(v_col_bg,a1)		; background color is all zeroes
         move.w    d0,PIXLV(v_curcx,a1)
         move.w    d0,PIXLV(v_curcy,a1)
         move.w    d0,PIXLV(v_cur_off,a1)
-        move.b    d0,PIXLV(v_delay,a1)		; cursor redisplay interval (immediate)
-        not.w     d0
-        move.w    d0,PIXLV(v_col_fg,a1)		; foreground color is all ones
-        move.l    _v_bas_ad,PIXLV(v_cur_ad,a1)	; home cursor.
-        moveq.l   #1,d0
-        move.b    d0,PIXLV(v_stat_0,a1)		; flash, nowrap, normal video.
-        move.w    d0,PIXLV(disab_cnt,a1)	; cursor disabled 1 level deep.
-        moveq.l   #30,d0
-        move.b    d0,PIXLV(v_cur_tim,a1)	;.5 sec blink rate (@60 Hz vbl)
-        move.b    d0,PIXLV(vct_init,a1)		;.5 sec blink rate (@60 Hz vbl)
+        move.l    _v_bas_ad,a0
+        move.l    a0,PIXLV(v_cur_ad,a1)	; home cursor.
+        move.b    #1,PIXLV(v_stat_0,a1)		; flash, nowrap, normal video.
+        move.b    #30,PIXLV(v_cur_tim,a1)	;.5 sec blink rate (@60 Hz vbl)
+        move.b    #30,PIXLV(vct_init,a1)		;.5 sec blink rate (@60 Hz vbl)
+        move.w    #1,PIXLV(disab_cnt,a1)	; cursor disabled 1 level deep.
+        move.w    #(32000/4)-1,d1
+esc2:
+        move.l     d0,(a0)+
+        dbf        d1,esc2
         move.l    #normal_ascii,con_state
-        bra       _v_clrwk
+        rts
 
 /* 306de: 00e069f4 */
 /* 206de: 00e07354 */
@@ -585,16 +605,24 @@ resetdev:
 #endif
 
 rezinit:
-        lsl.w     #3,d0
-        lea.l     reztab(pc,d0.w),a0
-        move.w    (a0)+,PIXLV(v_planes,a1)
-        move.w    (a0),PIXLV(v_lin_wr,a1)
-        move.w    (a0)+,PIXLV(bytes_lin,a1)
-        move.w    (a0)+,PIXLV(v_vt_rez,a1)
-        move.w    (a0),PIXLV(v_hz_rez,a1)
+        moveq.l   #0,d1
+        move.b    reztab(pc,d0.w),d1
+        move.w    d1,PIXLV(v_planes,a1)
+        move.b    rezltab(pc,d0.w),d1
+        move.w    d1,PIXLV(v_lin_wr,a1)
+        move.w    d1,PIXLV(bytes_lin,a1)
+        asl.w     #1,d0
+        move.w    rezhtab(pc,d0.w),d1
+        move.w    d1,PIXLV(v_vt_rez,a1)
+        move.w    rezwtab(pc,d0.w),d1
+        move.w    d1,PIXLV(v_hz_rez,a1)
         rts
 
 reztab:
-		dc.w  4,160,200,320
-		dc.w  2,160,200,640
-		dc.w  1,80,400,640
+		dc.b 4,2,1
+rezltab:
+		dc.b 160,160,80
+rezhtab:
+		dc.w 200,200,400
+rezwtab:
+		dc.w 320,640,640

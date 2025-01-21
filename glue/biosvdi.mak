@@ -26,17 +26,17 @@ BIOSVDI_100_OBJS = \
 	../bdos/sup.o \
 	../bdos/time.o \
 	\
+	../vdi/line1010.o \
+	../vdi/tables.o \
 	../vdi/font6x6.o \
 	../vdi/font8x8.o \
 	../vdi/font8x16.o \
 	../vdi/entry.o \
-	../vdi/tables.o \
-	../vdi/line1010.o \
 	../vdi/gsxasm1.o \
 	../vdi/allgem.o \
+	../vdi/jmptbl.o \
 	../vdi/blitinit.o \
 	../vdi/routines.o \
-	../vdi/jmptbl.o \
 	../vdi/isin.o \
 	../vdi/monobj.o \
 	../vdi/opnwk.o \
@@ -44,6 +44,7 @@ BIOSVDI_100_OBJS = \
 	../vdi/text.o \
 	../vdi/textblt.o \
 	../vdi/hbtxtblt.o \
+	../vdi/sbtxtblt.o \
 	../vdi/mono.o \
 	../vdi/hbmono.o \
 	../vdi/gsxasm2.o \
@@ -51,17 +52,12 @@ BIOSVDI_100_OBJS = \
 	../vdi/mouse.o \
 	../vdi/copyrfm.o \
 	../vdi/blastman.o \
+	../vdi/sbfrag.o \
 	../vdi/hbbitblt.o \
 	../vdi/blaster.o \
 	../vdi/seedfill.o \
 	../vdi/xfrmform.o \
 	../vdi/stcolor.o \
-	../vdi/sbblit.o \
-	../vdi/sbfrag.o \
-	../vdi/sbhline.o \
-	../vdi/sbvline.o \
-	../vdi/sbmono.o \
-	../vdi/sbtxtblt.o \
 	../vdi/cbssdefs.o \
 	$(empty)
 

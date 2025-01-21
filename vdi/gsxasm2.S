@@ -41,16 +41,6 @@
 #include "lineaequ.inc"
 #include "tosvars.inc"
 
-#define V_FUNC(func,la,r) \
-	move.l	PIXLV((LA_ROUTINES)+func,la),r
-
-#define V_CALL(func,la,r) \
-		V_FUNC(func,la,r) \
-		jsr (r)
-#define V_JUMP(func,la,r) \
-		V_FUNC(func,la,r) \
-		jmp (r)
-
 
 		text
 
@@ -133,13 +123,13 @@ _put_pix:
 		move.w	2(a0),d1	; d1 <- Y coordinate
 		bsr	concat		; get physical offset
 		move.l	_v_bas_ad,a1	; a1 -> start of screen
-		add.l	d1,a1		; a1 -> 1st word containing pixel
+		add.w	d1,a1		; a1 -> 1st word containing pixel
 
-		eor.w	#$000F,d0	; d0 <- bit number corresponding to X
-		clr.w	d1
-		bset.l	d0,d1		; d1 <- OR mask
-		move.w	d1,d0		; d0 <- OR mask  (for setting a bit)
-		not.w	d0		; d0 <- AND mask (for clearing a bit)
+		add.w      d0,d0
+		lea.l      ortbl,a0
+		move.w     0(a0,d0.w),d0		; d0 <- OR mask  (for setting a bit)
+		move.w	d0,d1
+		not.w	d1		; d1 <- AND mask (for clearing a bit)
 
 		move.w	PIXLV(v_planes,a2),d2	; d2 <- planes
 		subq.w	#1,d2			; d2 <- dbra plane counter
@@ -149,11 +139,11 @@ _put_pix:
 ppx_loop:	ror.w	#1,d3		; rotate pixel bit and put in carry.
 		bcc	ppx_clr		; if 0, clear the bit.
 
-ppx_set:	or.w	d1,(a1)+	; if 1, set the bit.
+ppx_set:	or.w	d0,(a1)+	; if 1, set the bit.
 		dbra	d2,ppx_loop
 		rts
 
-ppx_clr:	and.w	d0,(a1)+	; clear the bit.
+ppx_clr:	and.w	d1,(a1)+	; clear the bit.
 		dbra	d2,ppx_loop
 		rts
 
@@ -186,11 +176,11 @@ _get_pix:
 		move.w	(a0),d1		; d1 <- Y coordinate
 		bsr	concat		; get physical offset
 		move.l	_v_bas_ad,a0	; a0 -> screen base
-		add.l	d1,a0		; a0 -> 1st word of pixel
+		add.w	d1,a0		; a0 -> 1st word of pixel
 
-		eor.w	#$000F,d0	; d0 <- bit number corresponding to X
-		clr.w	d1
-		bset.l	d0,d1		; d1 <- pixel mask corresponding to X
+		add.w      d0,d0
+		lea.l      ortbl,a1
+		move.w     0(a1,d0.w),d1		; fetch the pixel word mask.
 
 		move.w	PIXLV(v_planes,a1),d2	; d2 <- planes
 		move.w	d2,d0
@@ -198,12 +188,15 @@ _get_pix:
 		subq.w	#1,d2			; d2 <- dbra plane counter
 		add.w	d0,a0			; a0 ->highest order bitplane+2
 		moveq.l	#0,d0			; init pixel acc and cy:0
-
-gpx_loop:	move.w	-(a0),d3	; d3 <- current plane word
+		bra gpxl_in
+gpx_loop:
+		asl.w      #1,d0	; shift accumulator for next bit_plane.
+gpxl_in:
+		move.w	-(a0),d3	; d3 <- current plane word
 		and.w	d1,d3		; test the current word's bit
-		sne	d3		; bit=0 cy:0       bit=1 cy:1
-		add.b	d3,d3		; set carry flag to bit value
-		addx.w	d0,d0		; shift in latest bit
+		beq	gpxl_bot		; if 0, branch.
+		or.w    #1,d0		; if 1, set value accumulator bit.
+gpxl_bot:
 		dbra	d2,gpx_loop
 		rts
 
@@ -229,11 +222,37 @@ gpx_loop:	move.w	-(a0),d3	; d3 <- current plane word
 
 		xdef	_fill_line
 _fill_line:
-	movem.w	4(sp),d4-d6		; d4 <- X1  d5 <- X2  d6 <- Y1
-	exg	d5,d6			; d4 <- X1  d5 <- Y1  d6 <- X2
+		move.l	_v_bas_ad,a5	/* fetch video base address. */
+		lea	PIXLV(FG_BP_1,a4),a4	/* point to array of bit_plane values. */
+		move.w	PIXLV(v_planes,a4),a3	/* a3 := xinc. (# of planes) */
+		move.w	a3,d3
+		adda.w	a3,a3		/* word xinc. */
+		subq.w	#1,d3		/* d3 := (# of planes) -1. */
+		move.w	4(sp),d0	/* fetch xleft. (input to concat) */
+		move.w	d0,d4		/* save for later. */
 
-	LA(a4)
-    bra fline
+		move.w	8(sp),d1	/* fetch y. (input to concat) */
+		move.w	d1,d5		/* save for later. */
+		bsr	concat		/* form physical offset. */
+		adda.w	d1,a5		/* base + physical offset. */
+		move.w	6(sp),d2	/* fetch xright. */
+		and.w	PIXLV(patmsk,a4),d5	/* compute pattern index. */
+		asl.w	#1,d5		/* word indexing. */
+		move.l	PIXLV(patptr,a4),a0	/* ptr to start of pattern. */
+		adda.w	d5,a0		/* index into pattern. */
+		suba.w	a1,a1		/* default offset = 0. */
+		tst.w	PIXLV(multifill,a4)	/* multi-plane fill pattern? */
+		beq	xline		/* no, branch. */
+		move.w	#32,a1		/* yes, offset = 32. */
+*
+*	d4 = xleft.			a5 = ptr to destination.
+*	d3 = # of bit_planes - 1	a4 = ptr to _FG_BP_1.
+*	d2 = xright.
+*   a3 = # of bytes between video planes
+*	d1 = fill pattern.		a1 = offset to next planes fill pattern
+*	d0 = xleft and 0x000F.           a0 = ptr to fill pattern.
+*
+		bra	xline		/* fill the horizontal line with color. */
 
 *******************************************************************************
 *******************************************************************************
@@ -273,14 +292,14 @@ vars set 4
 		bgt	ep_ret0			; return if below viewport Ymax
 
 		move.l	_v_bas_ad,a5		; a5 -> start of logical screen
-		move.w	PIXLV(v_planes,a6),d3	; d3 <- planes
-		move.w	d3,a3
+		move.w	PIXLV(v_planes,a6),a3	; d3 <- planes
+		move.w	a3,d3
 		add.w	a3,a3			; a3 <- off to nxt wrd in plane
 		subq.w	#1,d3			; d3 <- dbra plane counter
 		move.w	vars+0(sp),d0		; d0 <- X coordinate
 
 		bsr	concat			; d1<-physical off d0<-X mod 16
-		add.l	d1,a5			; a5 -> word containing (X,Y)
+		add.w	d1,a5			; a5 -> word containing (X,Y)
 
 
 *	a5 = ptr to word containing low-order pixel bit.
@@ -292,29 +311,15 @@ vars set 4
 *	d0 = X mod 16
 
 
-		eor.w	#$000F,d0	; d0 <- bit number corresponding to X
-		clr.w	d1
-		bset.l	d0,d1		; d1 <- OR mask
-		move.w	d1,d0		; d0 <- pixel mask corresponding to X
+		add.w	d0,d0		/* word indexing. */
+		lea	ortbl,a4	/* table of pixel masks. */
+		move.w	0(a4,d0.w),d0	/* fetch the pixel mask. */
 
-		move.w	d1,a0		; a0 <- copy of pixel mask
+		move.w	d0,a0		; a0 <- copy of pixel mask
+		moveq.l	#0,d1		; d1 <- initial pixel accumulator
 		move.w	d3,a1		; a1 <- copy of dbra plane counter
 		move.l	a5,a2		; a2 -> root word of search span
 		add.w	a3,a5		; a5 -> next word in plane
-		moveq.l	#0,d1		; d1 <- initial pixel accumulator
-
-px_loop:	move.w	-(a5),d4	; d4 <- this plane's word
-		and.w	d0,d4		; isolate the bit of interest
-		sne	d4		; copy the bit to all bits
-		add.b	d4,d4		; move the bit into the carry flag
-		addx.w	d1,d1		; shift the new bit into the LSB of d1
-		dbra	d3,px_loop	; do the next plane
-
-		move.w	a1,d3			; d3 <- dbra plane counter
-		move.w	vars+0(sp),d7		; d7 <- X coordinate
-		move.w	PIXLV(XMX_CLIP,a6),d6	; d6 <- X max
-		move.w	d1,d2			; d2 <- target color of search
-
 
 
 *	a5 = ptr to word containing low-order pixel bit
@@ -333,44 +338,67 @@ px_loop:	move.w	-(a5),d4	; d4 <- this plane's word
 *	d1 = pixel value accumulator
 *	d0 = pixel mask
 
-
-rnedg_loop:	cmp.w	d1,d2		; Search to the right while the
-		bne	rt_nedge	; current pixel is the target
-		cmp.w	d6,d7		; color and X is not greater
-		bgt	rt_nedge	; than Xmax
-
-
-*	    Search to the right
-
-		moveq.l	#0,d1		; d1 <- initial pixel accumulator
-		addq.w	#1,d7		; d7 <- pixel to the right of X
-		ror.w	#1,d0		; d0 <- corresponding pixel mask
-		bcc	rn_gpx		; check for word fault
-
-		add.w	a3,a5		; a5 -> next word to right
-
-rn_gpx:		add.w	a3,a5		; a5 -> hi-order word +2
-
-rnpx_loop:	move.w	-(a5),d4	; d4 <- this plane's word
+		bra	pxl_in
+*
+*  Get color value of requested pixel.
+*
+px_lp:
+		asl.w	#1,d1		/* shift accumulator for next bit_plane. */
+pxl_in:
+		move.w	-(a5),d4	; d4 <- this plane's word
 		and.w	d0,d4		; isolate the bit of interest
-		sne	d4		; bit=0 d4:00   bit=1 d4:FF
-		add.b	d4,d4		; put the bit into the carry flag
-		addx.w	d1,d1		; d1 <- new bit in LSB
-		dbra	d3,rnpx_loop	; do the next plane
-
+		beq	pxl_bot		/* if 0, branch. */
+		or.w	#1,d1		/* if 1, set value accumulator bit. */
+pxl_bot:
+		dbra	d3,px_lp
+		move.l	a2,a5		/* restore the pixel word pointer. */
 		move.w	a1,d3		; d3 <- dbra plane counter
-		bra	rnedg_loop
+		move.w  vars+0(a7),d7 ; d7 = x coordinate.
+		move.w	PIXLV(XMX_CLIP,a6),d6	; d6 <- X min
+		move.l	a5,-(sp)	/* push a5. (this adds 4 to the parameter offsets) */
+		move.w	d1,d2		/* this is the color we are searching for */
+		bra	rnl1		/* branch around redundant test. */
+rnedg_lp:
+		cmp.w	d1,d2		/* while (pixel value <> search color) */
+		bne	rt_nedge
+rnl1:
+		cmp.w	d6,d7		/* and (x coord < x resolution). */
+		bgt	rt_nedge
+		addq.w	#1,d7		/* increment x coord. */
+		ror.w	#1,d0		/* "increment" the pixel mask and a5. */
+		bcc	rn_gpx		/* if no wrap, branch. */
+		adda.w	a3,a5		/* else point to next bit_plane 0. */
+rn_gpx:
+		movea.l	a5,a2		/* save a5. */
+*	Now, search to the right.
+		moveq.l	#0,d1		/* clear the pixel value. */
+		adda.w	a3,a5		/* point to highest-order bit_plane. (+2) */
+		bra	rnpxl_in
+rnpx_lp:
+		asl.w	#1,d1		/* shift accumulator for next bit_plane. */
+rnpxl_in:
+		move.w	-(a5),d4	/* fetch a bit. */
+		and.w	d0,d4		/* test the bit. */
+		beq	rnpxl_bot	/* if 0, branch. */
+		or.w	#1,d1		/* if 1, set value accumulator bit. */
+rnpxl_bot:
+		dbra	d3,rnpx_lp
+		move.l	a2,a5		/* restore the pixel word pointer. */
+		move.w	a1,d3		/* restore the # of bit_planes - 1. */
+		bra	rnedg_lp
 
-
-rt_nedge:	move.l	a2,a5			; a5 -> root wrd of search span
-		move.l	vars+8(sp),a4		; a4 -> end Xright
+rt_nedge:
+		move.l	(sp)+,a5		; a5 -> root wrd of search span
+		adda.w	a3,a5		/* to use predecrement addressing. */
 		subq.w	#1,d7			; d7 <- end Xright
+		movea.l	vars+8(sp),a4	/* fetch ptr to endxright. */
 		move.w	d7,(a4)			; store end Xright
-		move.w	vars+0(sp),d7		; d7 <- initial X
-		move.w	PIXLV(XMN_CLIP,a6),d6	; d6 <- X min
-		move.w	a0,d0			; d0 <- initial pixel mask
+		move.l	a5,a2		/* save a5. */
+		move.w	4(sp),d7	/* fetch x coord again. */
+		move.w	PIXLV(XMN_CLIP,a4), d6	/* fetch left side of x viewport */
+		move.w	a0,d0		/* restore pixel mask. */
 
-
+*	Now, search to the left.
 
 *	a5 = ptr to word containing low-order pixel bit
 *	a4 = scratch
@@ -388,46 +416,54 @@ rt_nedge:	move.l	a2,a5			; a5 -> root wrd of search span
 *	d1 = pixel value accumulator
 *	d0 = pixel mask
 
-		move.w	d2,d1		; d1 <- is the target color
+		bra	lnlp1		/* d1 isn't ready yet. */
 
-lnedg_loop:	cmp.w	d1,d2		; Search to the left while the
-		bne	lt_nedge	; current pixel is the target
-		cmp.w	d6,d7		; color and X is not less
-		blt	lt_nedge	; than Xmin
+lnedg_lp:
+		cmp.w	d1,d2		/* while (pixel value <> search color) */
+		bne	lt_nedge
+lnlp1:
+		cmp.w	d6, d7		/* and (x coord inside viewport). */
+		bmi	lt_nedge
+		subq.w	#1,d7		/* decrement x coord. */
+		rol.w	#1,d0		/* "decrement" the pixel mask and a5. */
+		bcc	ln_gpx		/* if no wrap, branch. */
+		suba.w	a3,a5		/* else point to previous bit_plane 0. */
+ln_gpx:
+		movea.l	a5,a2		/* save a5. */
 
-*	    Search to the left
+*	Now, get the next pixel value.
 
-		moveq.l	#0,d1		; d1 <- initial pixel accumulator
-		subq.w	#1,d7		; d7 <- next pixel to the left
-		rol.w	#1,d0		; d0 <- corresponding pixel mask
-		bcs	lnpx_loop	; skip if word fault
+		moveq.l	#0,d1		/* clear the pixel value. */
+		bra	lnpxl_in
 
-		add.w	a3,a5		; a5 -> word after hi-order bit plane
-
-lnpx_loop:	move.w	-(a5),d4	; d4 <- this plane's word
-		and.w	d0,d4		; isolate the bit of interest
-		sne	d4		; bit=0 d4:00   bit=1 d4:FF
-		add.b	d4,d4		; put the bit into the carry flag
-		addx.w	d1,d1		; d1 <- new bit in LSB
-		dbra	d3,lnpx_loop	; do the next plane
-
-		move.w	a1,d3		; d3 <- dbra plane counter
-		bra	lnedg_loop
-
+lnpx_lp:
+		asl.w	#1,d1		/* shift accumulator for next bit_plane. */
+lnpxl_in:
+		move.w	-(a5),d4	/* fetch a bit. */
+		and.w	d0,d4		/* test the bit. */
+		beq	lnpxl_bot	/* if 0, branch. */
+		or.w	#1,d1		/* if 1, set value accumulator bit. */
+lnpxl_bot:
+		dbra	d3,lnpx_lp
+		move.l	a2,a5		/* restore the pixel word pointer. */
+		move.w	a1,d3		/* restore the # of bit_planes - 1. */
+		bra	lnedg_lp
 
 lt_nedge:
-		addq.w	#1,d7		; d7 <- minimum X of span
-		move.l	vars+4(sp),a4	; a4 -> end Xleft
-		move.w	d7,(a4)		; store end Xleft
+		addq.w	#1,d7		/* backup the x coord by 1. */
+		movea.l	8(sp),a4	/* fetch ptr to endxleft. */
+		move.w	d7,(a4)		/* output x coord to endxleft. */
 
-		move.w	_seed_type,d0
 		cmp.w	_search_color,d2
-		beq	ep_is_search	; return segment is of search color
+		beq	ep_is_search
 
-		eor.w	#1,d0		; return segment not of search color
+		move.w	_seed_type, d0	/* return segment not of search color */
+		eori.w	#1,d0
+		rts
 
 ep_is_search:
-		eor.w	#0,d0		; what the fuck is this ?
+		move.w	_seed_type, d0	/* return segment is of search color */
+		eori.w	#0,d0		; what the fuck is this ?
 		rts
 
 
@@ -469,99 +505,176 @@ ep_ret0:
 *******************************************************************************
 *******************************************************************************
 
-rf_null:
-	movem.w	d4-d7,(a0)		; the old routine saved clipped values
+rf_out:
 	rts
 
-
 /* 306de: 00e0c28a */
+/* 104de: 00fd082e */
+/* 100fr: 00fd018c */
 		xdef	_RECTFILL
 _RECTFILL: ds.b 0
-/* 104de: 00fd082e */
 		xdef	M_RECTFILL
 M_RECTFILL: ds.b 0
 	LA(a2)
-	lea	LV(X1,a2),a0		; a0 -> rectangle endpoints array
-	movem.w	(a0),d4-d7		; d4<-X1   d5<-Y1   d6<-X2   d7<-Y2
-
-	lea	LV(CLIP,a2),a1		; a1 -> clipping flag
-	tst.w	(a1)+			; a1 -> 1st entry in clipping array
-	beq	rf_noclip		; if no clipping, don't dawdle here.
-
-
-*   Clipping is in effect
-
-	movem.w	(a1),d0-d3		; d0<-Xmin d1<-Ymin d2<-Xmax d3<-Ymax
-
-	cmp.w	d0,d4			; X1 < clipping Xmin ?
-	bge	rf_xmax			; no  => X1 is in bounds
-	cmp.w	d0,d6			; X2 < clipping Xmin ?
-	blt	rf_null			; yes => null rectangle
-
-	move.w	d0,d4			; d4 <- clipped X1
-
-rf_xmax:
-
-	cmp.w	d2,d6			; X2 > clipping Xmax ?
-	ble	rf_yclip		; no  => X2 is in bounds
-	cmp.w	d2,d4			; X1 > clipping Xmax ?
-	bgt	rf_null			; yes => null rectangle
-
-	move.w	d2,d6			; d6 <- clipped X2
-
+		tst.w	_CLIP
+		beq	BOX_FILL		/* if no clipping, just do it. */
+*
+*	clipping.
+*
+		move.w	_XMN_CLIP,d0
+		move.w	_X1,d1
+		move.w	_X2,d2
+		cmp.w	d0,d1			/* is x1 >= xmn_clip? */
+		bge	rf_xmx			/* yes, branch. */
+		cmp.w	d0,d2			/* is x2 < xmn_clip */
+		blt	rf_out			/* yes, branch. (clipped box is null) */
+		move.w	d0,_X1			/* clip x1. */
+rf_xmx:
+		move.w	_XMX_CLIP,d0
+		cmp.w	d0,d2			/* is x2 <= xmx_clip? */
+		ble	rf_yclip		/* yes, branch. (x clip is done) */
+		cmp.w	d0,d1			/* is x1 > xmx_clip? */
+		bgt	rf_out			/* yes, branch. (clipped box is null) */
+		move.w	d0,_X2			/* clip x2. */
+*
 rf_yclip:
+		move.w	_YMN_CLIP,d0
+		move.w	_Y1,d1
+		move.w	_Y2,d2
+		cmp.w	d0,d1			/* is y1 >= ymn_clip? */
+		bge	rf_ymx			/* yes, branch. */
+		cmp.w	d0,d2			/* is y2 < ymn_clip */
+		blt	rf_out			/* yes, branch. (clipped box is null) */
+		move.w	d0,_Y1			/* clip y1. */
+rf_ymx:
+		move.w	_YMX_CLIP,d0
+		cmp.w	d0,d2			/* is y2 <= ymx_clip? */
+		ble	BOX_FILL		/* yes, branch. (y clip is done) */
+		cmp.w	d0,d1			/* is y1 > ymx_clip? */
+		bgt	rf_out			/* yes, branch. (clipped box is null) */
+		move.w	d0,_Y2			/* clip y2. */
+*
+*	fall through to BOX_FILL.
+***********************************************************************
+*
+*	BOX_FILL:							      
+*		This routine fills a rectangular area of the screen with a    
+*	pattern using a "bitblt" algorithm similar to "_HABLINE"'s.	      
+*		This routine handles all 3 video resolutions.		      
+*									      
+*		input:  _X1 = x coord of upper left corner.		      
+*			_Y1 = y coord of upper left corner.		      
+*			_X2 = x coord of lower right corner.		      
+*			_Y2 = y coord of lower right corner.		      
+*			_WRT_MODE = writing mode.			      
+*									      
+*		output: none.						      
+*									      
+*		destroys: everything.					      
+*									      
+***********************************************************************
+parm_size	set	6		/* temporary stack area size */
+patindx		set	-2		/* copy of current pattern index */
+pat_start	set	-6		/* copy of pattern starting address */
 
-	cmp.w	d1,d5			; Y1 < clipping Ymin ?
-	bge	rf_ymax			; no  => Y1 is in bounds
-	cmp.w	d1,d7			; Y2 < clipping Ymin ?
-	blt	rf_null			; yes => null rectangle
+BOX_FILL:
+		link    a6,#-6	/* allocate temporary stack area */
+		move.l	_v_bas_ad,a5	/* fetch video base address. */
+		lea.l   PIXLV(FG_BP_1,a2),a4
+		move.w	_v_planes,a3	/* a3 := xinc. (# of planes) */
+		move.w	a3,d3
+		adda.w	a3,a3		/* word xinc. */
+		subq.w	#1,d3		/* d3 := (# of planes) -1. */
+		move.w	_X1,d0		/* fetch X1. (input to concat) */
+		move.w	d0,d4		/* save for later. */
+		move.w	_Y1,d1		/* fetch Y1. (input to concat) */
+		move.w	d1,d5		/* save for later. */
+		bsr	concat		/* form physical offset. */
+		adda.w	d1,a5		/* base + physical offset. */
+		move.w	_X2,d2		/* fetch X2. */
+		move.w	_Y2,d6		/* fetch Y2. */
+		sub.w	d5,d6		/* line loop counter. */
+		and.w	_patmsk,d5	/* compute pattern index. */
+		move.w	d5,patindx(a6) 	/* save pattern index in low word */
+		asl.w	#1,d5		/* word indexing. */
+		move.l	_patptr,a0	/* ptr to start of pattern. */
+		adda.w  d5,a0
+		move.l	a0,pat_start(a6) /* save starting address of pattern */
+		lea	lf_tab,a2	/* point to fringe table. */
+*
+*	d7 = scratch.		a5 = ptr to destination.
+*	d6 = line loop counter.	a4 = ptr to _FG_BP_1.
+*	d5 = scratch.
+*   a3 = # of bytes between video planes.
+*
+*	d4 = X1.		a2 = ptr to fringe table.
+*	d3 = # of bit_planes - 1.
+*	d2 = X2.		a0 = ptr to fill pattern.
+*	d1 = scratch.
+*	d0 = X1 and 0x000F.
+*
+		asl.w	#1,d0		/* word index for left fringe. */
+		move.w	0(a2,d0.w),d0	/* fetch left fringe mask. */
+		not.w	d0		/* not left fringe mask. */
+		move.w	d2,d7		/* X2. */
+		and.w	#0x000F,d7	/* X2 and 0x000F. */
+		asl.w	#1,d7		/* word index. */
+		move.w	2(a2,d7.w),d7	/* fetch not right fringe mask. */
+		moveq.l	#4,d5
+		asr.w	d5,d4		/* X1/16. */
+		asr.w	d5,d2		/* X2/16. */
+		sub.w	d4,d2		/* X2/16 - X1/16. */
+		subq.w	#1,d2		/* inner loop count. (-1,0,>0.) */
+*
+*					/* -1 => X1 and X2 in same word. */
+*					/* 0  => 2 words, inner loop = 0. */
+*					/* >0 => LM,inner loop,RM. */
+*
+		bpl	bf_cont		/* >= 0 normal case. */
+		addq.w	#1,d2		/* loop count := 0. */
+		or	d7,d0		/* combine both masks. */
+		moveq	#-1,d7		/* prevent right mask from effecting screen. */
+bf_cont:
+		move.w	_WRT_MODE,d5	/* decode write mode. */
+		asl.w	#2,d5		/* longword indexing. */
+		lea	htab,a2		/* point to start of decode table. */
+		movea.l	0(a2,d5.w),a2	/* address of HABLINE writing mode fragment. */
+		suba.w	a1,a1		/* default offset = 0. */
+		tst.w	_multifill	/* multi-plane fill pattern? */
+		beq	bf_loop	/* no, branch. */
+		move.w	#32,a1		/* yes, offset = 32. */
+*
+*                                 a6 = copy of ptr to destination.
+*	d7 = right mask.	  a5 = ptr to destination.
+*	d6 = line loop counter.	  a4 = ptr to _FG_BP_1.
+*	d5 = scratch.
+*   a3 = # of bytes between video planes.
+*
+*	d4 = scratch.	  	  a2 = ptr to HABLINE writing mode fragment.
+* 	d3 = # of bit_planes - 1. a1 = offset to next bit-plane's fill pattern.
+*	d2 = inner loop count.	  a0 = ptr to fill pattern.
+*	d1 = scratch.
+*	d0 = left mask (or left "and" right masks).
+*
+*
+bf_loop:
+		movem.l    a4-a5,-(a7)
+		move.w     d3,-(a7)
+		jsr	(a2)		/* draw a horizontal line. */
 
-	move.w	d1,d5			; d5 <- clipped Y1
-
-rf_ymax:
-
-	cmp.w	d3,d7			; Y2 > clipping Ymax ?
-	ble	rf_rsave		; no  => Y2 is in bounds
-	cmp.w	d3,d5			; Y1 > clipping Ymax ?
-	bgt	rf_null			; yes => null rectangle
-
-	move.w	d3,d7			; d7 <- clipped Y2
-
-
-*   To maintain compatibility with previous versions of this routine,
-*   the clipped values must be saved to their original memory locations.
-
-rf_rsave:
-
-	movem.w	d4-d7,(a0)		; save clipped values: X1 Y1 X2 Y2
-
-rf_noclip:
-
-	move.w	d4,d0			; d0 <- X1
-	asr.w	#4,d0			; d0 <- word containing X1
-
-	move.w	d6,d1			; d2 <- X2
-	asr.w	#4,d1			; d2 <- word containing X2
-
-	lea	lf_tab,a1		; a1 -> left fringe mask table
-	moveq.l	#$0F,d2			; d1 <- mod 16 mask
-
-	and.w	d2,d4			; d4 <- X1 mod 16
-	add.w	d4,d4			; d4 <- offset into fringe table
-	move.w	0(a1,d4.w),d4		; d4 <- left fringe mask  (0:Dst 1:Src)
-
-	and.w	d2,d6			; d6 <- X2 mod 16
-	add.w	d6,d6			; d6 <- offset into right fringe table
-	move.w	2(a1,d6.w),d6		; d6 <- inverted right fringe mask
-	not.w	d6			; d6 <- right fringe mask (0:Dst 1:Src)
-
-	sub.w	d0,d1			; d2 <- span -1 of rectangle in words
-
-	bne	select_version		; 1 word span =>  merge lf & rt masks
-
-	and.w	d6,d4			; d4 <- single fringe mask
-
-select_version:
-
-	V_JUMP(V_RECT,a2,a5)		; vec to rectangle filler
+		addq.w	#1,patindx(a6) 	/* increment pattern count. */
+		addq.l	#2,pat_start(a6)	/* increment pattern pointer. */
+		move.w	patindx(a6),a5	/* get pattern count */
+		cmp.w	PIXLV(patmsk,a2),a5	/* pattern count > pattern maximum? */
+		ble		bf_pat		/* no, branch. */
+		move.l	PIXLV(patptr,a2),pat_start(a6) /* reset the pattern pointer */
+		clr.w	patindx(a6)	/* reset the pattern count. */
+bf_pat:
+		movea.l	pat_start(a6),a0	/* point to the next line of pattern. */
+		move.w     (a7)+,d3	/* restore video plane count */
+		movem.l    (a7)+,a4-a5
+		adda.w     PIXLV(v_lin_wr),a5
+		dbra	d6,bf_loop	/* rectangle loop. */
+		unlk       a6	/* remove temporary stack variables */
+		rts
 

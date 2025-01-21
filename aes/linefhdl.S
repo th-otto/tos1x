@@ -662,4 +662,30 @@ lineftab: ds.b 0
 		dc.l _brkrct              ; F968
 		dc.l _cart_find           ; F96C
 
+/* unused space */
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.l 0
+		dc.w 0
+		
 #endif

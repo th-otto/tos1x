@@ -47,7 +47,7 @@ ROMSIZE_162 = 256k
 ROMSIZE = $(ROMSIZE_$(TOSVERSION))
 
 ifeq ($(USE_CROSS_ALCYON),1)
-tos1.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o biosext.o
+tos1.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o biosext.o biosvdi.mak aesdesk.mak
 	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(rombase)],bss[0]]' $@=vars.o,tosvars.o,$(BIOSLINK_OBJS),biosext.o
 
 tos2.img: tos1.img

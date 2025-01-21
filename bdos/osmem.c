@@ -607,7 +607,7 @@ PP(char *v;)								/* command, tail, environment   */
 		/* set owner of environment & bp */
 		p->m_own = env->m_own = (mode == PE_LOADGO
 #if GEMDOS < 0x15
-			|| mode == PE_GO
+			|| mode == PE_GO /* won't happen, since we don't get here for mode == PE_GO */
 #endif
 			) ? b : run;
 		max = p->m_length;

@@ -116,6 +116,9 @@ VOID v_opnwk(NOTHING)
 	LV(val_mode) = 0;					/* default is request mode    */
 	LV(chc_mode) = 0;					/* default is request mode    */
 	LV(str_mode) = 0;					/* default is request mode    */
+#if TOSVERSION < 0x102
+	LV(HIDE_CNT) = 1;
+#endif
 
 	/*
 	 * Install mouse interrupt service routine, vblank draw routine,

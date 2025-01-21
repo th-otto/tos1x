@@ -30,23 +30,12 @@
 #include "lineaequ.inc"
 
 
-#define V_FUNC(func,la,r) \
-	move.l	(lineavars+LA_ROUTINES)+func,r
-
-#define V_CALL(func,la,r) \
-		V_FUNC(func,la,r) \
-		jsr (r)
-#define V_JUMP(func,la,r) \
-		V_FUNC(func,la,r) \
-		jmp (r)
-
 
 	xdef _scrtsiz
 _scrtsiz:	dc.w	204	; WUT THE FUT ??$*&@!??
 
 *  entry point for textblt & scaling routine
 *
-	xdef	_TEXT_BLT
 	xdef	_ACT_SIZ
 
 	text
@@ -146,7 +135,7 @@ siz_0:	bra	act_exit
 siz_doub:
 
 	move.w	d1,d0
-	add.w	d0,d0			; d0 = size * 2
+	lsl.w	#1,d0			; d0 = size * 2
 	bra	act_exit
 
 sz_sm_lp:
@@ -178,11 +167,25 @@ sz_sm_2:
 *                                       *
 *****************************************
 
+#if BLITTER_SUPPORT
+
+#define V_FUNC(func,la,r) \
+	move.l	(lineavars+LA_ROUTINES)+func,r
+
+#define V_CALL(func,la,r) \
+		V_FUNC(func,la,r) \
+		jsr (r)
+#define V_JUMP(func,la,r) \
+		V_FUNC(func,la,r) \
+		jmp (r)
+
 /* 306de: 00e0c038 */
 /* 206de: 00e0b7ce */
 /* 104de: 00fcfa2e */
 /* 106de: 00e0fc52 */
+	xdef	_TEXT_BLT
 _TEXT_BLT:
 	movem.l	a5-a6,-(sp)
 	LA(a6)
 	V_JUMP(V_TEXT,a6,a4)
+#endif

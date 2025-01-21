@@ -71,23 +71,27 @@
 /* 104de: 00fd09fa */
 /* 106de: 00e10c1e */
 		xdef	mouse_rel
-mouse_rel:	movem.l	d0-d7/a0-a6,-(sp)
+mouse_rel:
+		tst.b	PIXLV(mouse_flag,a2)		/* cntrl access to ms frm (CDB) */
+		bne	ms_exit
+
+		movem.l	d0-d7/a0-a6,-(sp)
 		PIXLA(a2)
 
 		move.b	(a0),d0			/* get header from mouse buffer */
 		move.b	d0,d1			/* save it */
-		and.b	#$F8,d1			/* mask out button bits */
-		cmp.b	#$F8,d1			/* is header relative positioning */
+		andi.b	#$F8,d1			/* mask out button bits */
+		cmpi.b	#$F8,d1			/* is header relative positioning */
 		bne	ms_done			/* no check just return */
 
-		and.w	#3,d0			/* IKBD <00>:rt btn  <01>:lf btn */
+		andi.w	#3,d0			/* IKBD <00>:rt btn  <01>:lf btn */
 		lsr.b	#1,d0			/* VDI <00>:lf btn <01>:rt btn */
 		bcc	right_up
 
 		bset.l	#1,d0
 
 right_up:	move.b	PIXLV(cur_ms_stat,a2),d1	/* d1 <- previous mouse state */
-		and.w	#3,d1			/* d1 <- prev mouse button state */
+		andi.w	#3,d1			/* d1 <- prev mouse button state */
 		cmp.b	d1,d0			/* update just the pstion if btn */
 		beq	xy_update		/* hasn't chngd since last IRQ */
 
@@ -113,13 +117,13 @@ xy_update:	move.b	1(a0),d0		/* has mouse position changed ? */
 
 new_coord:	bset.b	#5,PIXLV(cur_ms_stat,a2)	/* motion:set motion status flag */
 
-		move.l	PIXLV(GCURXY,a2),d0
-		move.l	d0,d1			/* d1 <- old mouse cursor Y */
-		swap	d0			/* d0 <- old mouse cursor X */
+		move.w	PIXLV(GCURX,a2),d0			/* d0 <- old mouse cursor X */
 
-		move.b	 1(a0),d3		/* d3 <- delta X from IKBD */
-		ext.w	d3			/* sign extend delta X to word */
-		add.w	d3,d0			/* d0 <- new mouse cursor X */
+		move.b	 1(a0),d1		/* d3 <- delta X from IKBD */
+		ext.w	d1			/* sign extend delta X to word */
+		add.w	d1,d0			/* d0 <- new mouse cursor X */
+
+		move.w	PIXLV(GCURY,a2),d1			/* d0 <- old mouse cursor Y */
 
 		move.b	 2(a0),d3		/* d3 <- delta Y from IKBD */
 		ext.w	d3			/* sign extend delta Y to word */
@@ -132,14 +136,16 @@ new_coord:	bset.b	#5,PIXLV(cur_ms_stat,a2)	/* motion:set motion status flag */
 
 		bsr	scrn_clip		/* IS THIS TOO PARANOID ?! */
 
-		lea	PIXLV(GCURXY,a2),a1		/* save new cursor position */
-		move.w	d0,(a1)+		/* X */
-		move.w	d1,(a1)			/* Y */
+				/* save new cursor position */
+		move.w	d0,PIXLV(GCURX,a2)		/* X */
+		move.w	d1,PIXLV(GCURY,a2)		/* Y */
 
 		move.l	PIXLV(user_cur,a2),a1
 		jsr 	(a1)			/* call user cur display routine */
 
-ms_done:	movem.l	(sp)+,d0-d7/a0-a6
+ms_done:
+		movem.l	(sp)+,d0-d7/a0-a6
+ms_exit:
 		rts
 
 
@@ -156,7 +162,8 @@ ms_done:	movem.l	(sp)+,d0-d7/a0-a6
  *
  *******************************************************************************/
 		/* xdef	scrn_clip */
-scrn_clip:	tst.w	d0			/* is new_x < 0 */
+scrn_clip:
+		tst.w	d0			/* is new_x < 0 */
 		bge	cl_xmax
 		clr.w	d0
 		bra	cl_y
@@ -195,6 +202,8 @@ cl_done:
 /* 106de: 00e10cf2 */
 		xdef	_MOV_CUR
 _MOV_CUR: PIXLA(a0)
+		tst.w PIXLV(HIDE_CNT,a0)		/* HIDE_CNT semaphore controls */
+		bne mv_exit
 		move.w	SR,-(sp)	/* save old status register */
 		ori.w	#$0700,SR	/* turn off interrupts */
 		lea	PIXLV(xydraw,a0),a0
@@ -202,6 +211,7 @@ _MOV_CUR: PIXLA(a0)
 		move.w	d1,(a0)+	/* new CUR_Y */
 		bset.b	#0,(a0)		/* mark data available in draw_flag/CUR_FLAG */
 		move.w	(sp)+,SR	/* restore old SR */
+mv_exit:
 		rts
 
 
@@ -214,25 +224,27 @@ _MOV_CUR: PIXLA(a0)
  *  relocated.
  */
 		xdef	vb_draw
-vb_draw:	PIXLA(a5)
-		tst.w	PIXLV(HIDE_CNT,a5)		/* HIDE_CNT semaphore controls */
-		bne	vblank_exit		/* access to cur disp routines */
+vb_draw:
+		PIXLA(a5)
 
-		tst.b	PIXLV(mouse_flag,a5)		/* cntrl access to ms frm (CDB) */
-		bne	vblank_exit
+		move.w     sr,-(a7)
+		ori.w      #$0700,sr
 
 		bclr.b	#0,PIXLV(draw_flag,a5)	/* control access to cursor position */
-		beq	vblank_exit		/* 1:data valid  0:data invalid */
+		beq	vblank_noop		/* 1:data valid  0:data invalid */
 
 /*
  *  RETRIEVE CURSOR X AND Y VIA AN ATOMIC OPERATION: this prevents the
  *  mouse position interrupt service routine from altering position data
  *  while we are in the process of retrieving it.
  */
-		move.l	PIXLV(xydraw,a5),d1		/* d1[31:16] <- cursor X */
-		move.l	d1,d0			/* d1[15:00] <- cursor CUR_Y */
-		swap	d0			/* d0[15:00] <- cursor CUR_X */
+		lea	PIXLV(xydraw,a5),a0
+		move.w	(a0)+,d0		/* d0[15:00] <- cursor CUR_X */
+		move.w	(a0)+,d1		/* d1[15:00] <- cursor CUR_Y */
+		move.w  (a7)+,sr
 
+		tst.b	PIXLV(mouse_flag,a5)		/* cntrl access to ms frm (CDB) */
+		bne	vblank_exit
 		movem.w	d0-d1,-(sp)		/* Save new xy */
 		lea     PIXLV(save_block,a5),a2
 		bsr	cur_replace		/* Undraw old cursor */
@@ -241,9 +253,11 @@ vb_draw:	PIXLA(a5)
 		lea	PIXLV(mouse_cdb,a5),a0	/* a0 -> CDB */
 		lea     PIXLV(save_block,a5),a2
 		bsr	cur_display		/* and draw new cursor */
-
-vblank_exit:	rts
-
+vblank_exit:
+		rts
+vblank_noop:
+		move.w     (a7)+,sr
+		rts
 
 /*******************************************************************************
  *
@@ -449,7 +463,7 @@ clip_down:
 get_addr:	bsr	concat			/* x:d0 y:d1   starting offset */
 
 		move.l	_v_bas_ad,a1
-		adda.l	d1,a1			/* a1 -> dst */
+		adda.w	d1,a1			/* a1 -> dst */
 
 
 /*
@@ -577,9 +591,10 @@ r_lf_loop:
         jmp       (a4)
 
 s_fg0bg0:
-        or.l      d1,d0
-        not.l     d0
-        and.l     d0,d2
+		not.l	d0
+		and.l	d0,d2
+		not.l	d1
+		and.l	d1,d2
         jmp       (a5)
 
 s_fg0bg1:
@@ -600,9 +615,9 @@ s_fg1bg1:
         jmp       (a5)
 
 x_fg0bg0:
-        eor.l     d1,d2
-        not.l     d0
-        and.l     d0,d2
+        eor.l     d0,d2
+        not.l     d1
+        and.l     d1,d2
         jmp       (a5)
 
 x_fg0bg1:
@@ -801,18 +816,21 @@ hang_it_up:
 /* 104de: 00fd0e16 */
 /* 106de: 00e1103a */
 		xdef	_HIDE_CUR
-_HIDE_CUR:	PIXLA(a5)
-		lea	PIXLV(HIDE_CNT,a5),a2
-		addq.w	#1,(a2)			/* increment hide count */
-		cmp.w	#1,(a2)			/* count =1 => hide the cursor */
+_HIDE_CUR:
+		PIXLA(a5)
+		addq.b	#1,PIXLV(mouse_flag,a5)
+		addq.w	#1,PIXLV(HIDE_CNT,a5)			/* increment hide count */
+		cmp.w	#1,PIXLV(HIDE_CNT,a5)			/* count =1 => hide the cursor */
 		bne	hid_cur1
 
 		move.l	a6,-(sp)
 		lea     PIXLV(save_block,a5),a2
 		bsr	cur_replace		/* turn it off */
 		move.l	(sp)+,a6
-
-hid_cur1:	rts
+		clr.b	PIXLV(draw_flag,a5)
+hid_cur1:
+		subq.b	#1,PIXLV(mouse_flag,a5)
+		rts
 
 
 /*
@@ -827,16 +845,15 @@ hid_cur1:	rts
 /* 104de: 00fd0e34 */
 		xdef	_DIS_CUR
 _DIS_CUR:	PIXLA(a5)
-		cmp.w	#1,PIXLV(HIDE_CNT,a5)	/* If cur is to be redisplayed, */
+		addq.b  #1,PIXLV(mouse_flag,a5)
+		subq.w	#1,PIXLV(HIDE_CNT,a5)	/* If cur is to be redisplayed, */
 		bgt	dec_hide_cnt		/* perform the operation prior to */
-		blt	fix_neg			/* decrementing semaphore to 0 */
+		bmi	fix_neg			/* decrementing semaphore to 0 */
 
 /*   Redisplay only occurs when HIDE_CNT equals one on entry. */
 
-		move.w	SR,d0
-		ori.w	#$0700,SR		/* >>>> BEGIN ATOM <<<< */
-
-		move.l	PIXLV(GCURXY,a5),d1		/* retrieve of X and Y */
+		move.w	PIXLV(GCURX,a5),d0		/* retrieve of X and Y */
+		move.w	PIXLV(GCURY,a5),d1
 
 /*
  *   Some renegade programs reposition the mouse cursor by hiding the
@@ -845,25 +862,19 @@ _DIS_CUR:	PIXLA(a5)
  *   an unneccessary vblank redraw of the cursor after this routine has
  *   already displayed it, the draw flag in the draw packet is cleared.
  */
-		clr.b	PIXLV(draw_flag,a5)		/* mark packet data invalid */
-
-		move.w	d0,SR			/* >>>>  END ATOM  <<<< */
-
-		move.l	d1,d0			/* d1 <- Y */
-		swap	d0			/* d0 <- X */
-
 		move.l	a6,-(sp)
 		lea	PIXLV(mouse_cdb,a5),a0	/* a0 -> system CDB */
 		lea     PIXLV(save_block,a5),a2
 		bsr	cur_display
 		PIXLA(a5)
 		move.l	(sp)+,a6
+		clr.b	PIXLV(draw_flag,a5)		/* mark packet data invalid */
 
-dec_hide_cnt:	subq.w	#1,PIXLV(HIDE_CNT,a5)	/* decrement the redraw semaphore */
+fix_neg:
+		clr.w	PIXLV(HIDE_CNT,a5)		/* this should never be executed. */
+dec_hide_cnt:
+		subq.b  #1,PIXLV(mouse_flag,a5)
 		rts
-
-fix_neg:	clr.w	PIXLV(HIDE_CNT,a5)		/* this should never be executed. */
-		rts				/* it's just paranoia in action. */
 
 
 /*
@@ -928,33 +939,12 @@ xfm_move_loop:	move.w	(a0)+,(a1)+
 		move.w	30(a0),(a1)+		/* interleave mask and form */
 		dbra	d0,xfm_move_loop
 
-
-/*
- *  If invisible, the new cursor form will be displayed immediately upon the
- *  SHOW operation. If the cursor is currently visible, the new cursor form
- *  will be displayed at the next vblank. In previous versions of vsc_form,
- *  the new cursor form, if visible, would only be redisplayed at the GCURXY
- *  position only after a mouse interrupt was recieved and processed. In this
- *  version the new cursor form, if visible, is displayed at the following
- *  vblank regardless of new mouse events. The vblank draw packet is loaded
- *  with coordinates from GCURXY to maintain behavioral consistancy with
- *  privious systems.
- */
-		lea	PIXLV(xydraw,a2),a0		/* a0 -> vblank draw packet */
-
-		move.w	SR,d0
-		ori.w	#$0700,SR		/* >>>> BEGIN ATOM <<<< */
-
-		move.l	PIXLV(GCURXY,a2),(a0)+	/* setup the vblank draw packet in CUR_X/CUR_Y */
-		bset.b	#0,(a0)			/* mark data available in draw_flag/CUR_FLAG */
-
-		move.w	d0,SR			/* >>>>  END ATOM  <<<< */
-
 		subq.b	#1,PIXLV(mouse_flag,a2)	/* unlock mouse_cdb semaphore */
 
 		rts
 
 
+#if TOSVERSION >= 0x102
 /*
  *  SET MOUSE CURSOR POSITION
  *
@@ -982,6 +972,7 @@ _SET_CUR: PIXLA(a1)
 		move.w	d0,SR			/* >>>>  END ATOM  <<<< */
 
 		rts
+#endif
 
 
 
@@ -991,6 +982,7 @@ _SET_CUR: PIXLA(a1)
  *	Implement vq_mouse with atomic retrieval of
  *	mouse position and button state
  */
+#if TOSVERSION >= 0x102
 /* 306de: 00e0c918 */
 /* 206de: 00e0ccd0 */
 /* 104de: 00fd0f30 */
@@ -1015,9 +1007,11 @@ _vq_mouse:
 		move.w	 d0,8(a0)		/* CONTRL[4] <- PTSOUT length */
 
 		rts
+#endif
 
 
 /* parameter block for a relative mouse BIOS call */
+		.data
 		xdef	rel_pblock
 rel_pblock:	dc.b	0	/* Y=0 at the top of the screen */
 		dc.b	0	/* Generate interrupts on make and break */

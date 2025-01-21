@@ -29,6 +29,7 @@
 
 #include "lineaequ.inc"
 
+#if BLITTER_SUPPORT /* whole file */
 
 *******************************************************************************
 *									      *
@@ -79,3 +80,5 @@ rCopyLoop:
 _GETBLT:
         move.w    PIXLV(BLT_MODE,a0),d0
 		rts
+
+#endif

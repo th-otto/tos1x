@@ -125,17 +125,7 @@ VOID d_gtext(NOTHING)
 #if (TOSVERSION < 0x106) & BINEXACT
 			fnt_ptr->font_id == 1 &&
 #endif
-#if BINEXACT
-			/*
-			 * strange cast; without it produces
-			 *  clr.w d0
-			 *  move 48(a5),d0
-			 * but comparison is done unsigned anyway
-			 */
-			(int)fnt_ptr->bottom <= fnt_ptr->ul_size
-#else
 			fnt_ptr->bottom <= fnt_ptr->ul_size
-#endif
 			)
 		{
 			if (LV(SCALE) && (LV(DDA_INC) == 0xFFFF))
@@ -154,6 +144,10 @@ VOID d_gtext(NOTHING)
 
 		switch (h_align)
 		{
+#if !BINEXACT
+		default:
+			/* BUG: undefined values used below */
+#endif
 		case 0:						/* left justified   */
 			delh = 0;
 			break;
@@ -180,13 +174,7 @@ VOID d_gtext(NOTHING)
 				NPTSOUT = 0;
 			}
 			delh = width - (olin << 1);	/* jde 29aug85      */
-#ifndef __ALCYON__
 			break;
-		default:
-			/* BUG: undefined values used below */
-			delh = 0;
-			break;
-#endif
 		}
 
 		if (LV(STYLE) & SKEW)
@@ -229,7 +217,7 @@ VOID d_gtext(NOTHING)
 			delv = 0;
 			delh += d1 + d2;
 			break;
-#ifndef __ALCYON__
+#if !BINEXACT
 		default:
 			/* BUG: undefined values used below */
 			delv = 0;
@@ -243,7 +231,7 @@ VOID d_gtext(NOTHING)
 
 		switch (LV(CHUP))
 		{
-#ifndef __ALCYON__
+#if !BINEXACT
 		default:
 			/* BUG: undefined values used below */
 #endif
@@ -1012,13 +1000,24 @@ VOID dqt_extent(NOTHING)
 
 	case 2700:
 		*pointer++ = 0;
+#if TOSVERSION < 0x102
+		/* BUG */
+		*pointer++ = height;
+#else
 		*pointer++ = width;
+#endif
 		*pointer++ = 0;
 		*pointer++ = 0;
 		*pointer++ = height;
 		*pointer++ = 0;
+#if TOSVERSION < 0x102
+		/* BUG */
+		*pointer++ = width;
+		*pointer = height;
+#else
 		*pointer++ = height;
 		*pointer = width;
+#endif
 		break;
 	}
 	FLIP_Y = 1;
