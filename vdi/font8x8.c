@@ -26,8 +26,8 @@
 #include "gsxextrn.h"
 
 
-extern int16_t const off_8x8[];
-extern int16_t const dat_8x8[];
+/* static */ extern int16_t const off_8x8[];
+/* static */ extern int16_t const dat_8x8[];
 
 
 struct font_head const f8x8 = {

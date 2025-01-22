@@ -24,8 +24,8 @@
 #include "gsxextrn.h"
 
 
-extern int16_t const off_6x6[];
-extern int16_t const dat_6x6[];
+/* static */ extern int16_t const off_6x6[];
+/* static */ extern int16_t const dat_6x6[];
 
 
 struct font_head const f6x6 = {

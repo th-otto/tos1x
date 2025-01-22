@@ -216,8 +216,16 @@ PP(char **argv;)
 	}
 	
 	fprintf(fp, "};\n");
-	
+
+	/*
+	 * FIXME: do we need this label at all?
+	 * In TOS <= 1.02, tosrsc is at the end of VDI,
+	 * not at the end of the ROM, so it must not be put here.
+	 */
+	fprintf(fp, "\n");
+	fprintf(fp, "#if TOSVERSION >= 0x104\n");
 	fprintf(fp, "char const edata[2] = { 0xff, 0xff };\n");
+	fprintf(fp, "#endif\n");
 
 	return EXIT_SUCCESS;
 }

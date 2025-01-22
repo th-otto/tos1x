@@ -21,6 +21,7 @@ RANLIB = ${BIN}doindex${EXEEXT}
 
 LD=${BIN}aln${EXEEXT}
 LINK68=${BIN}link68${EXEEXT}
+SIZE68=${BIN}size68${EXEEXT}
 RELMOD=${BIN}relmod${EXEEXT}
 CPP=${BIN}cp68${EXEEXT} ${CPPFLAGS} -P
 CRT0=crt0.o

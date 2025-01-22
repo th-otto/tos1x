@@ -21961,6 +21961,7 @@ RSTCO:
 [00fd1c0e] 0000                      dc.w       $0000
 fstrtend:
 [00fd1c10] 0000 166e                 ori.b      #$6E,d0
+/* end of bios data */
 logmsk:
 [00fd1c14] 0000 0001                 ori.b      #$01,d0
 [00fd1c18] 0003 0007                 ori.b      #$07,d3
@@ -22149,6 +22150,7 @@ switchdataD_00fd1ed6:
 [00fd1f36] 5052                      addq.w     #8,(a2)
 [00fd1f38] 4e3a 0070 726e            cmpiw.l    #$0070,$00FD91A8(pc) ; apollo only
 [00fd1f3e] 3a00                      move.w     d0,d5
+/* end of gemdos data */
 MAX_VERT:
 LINE_STYLE:
 [00fd1f40] 0080 ffff fff0            ori.l      #$FFFFFFF0,d0
@@ -22749,7 +22751,6 @@ rel_pblock:
 [00fd25f0] 00fc d8b0 0000            chk2.b     #$00,a5 ; 68020+ only
 [00fd25f6] 0101                      btst       d0,d1
 arrow_cdb:
-f6x6:
 [00fd25f8] 0001 0000                 ori.b      #$00,d1
 [00fd25fc] 0001 0000                 ori.b      #$00,d1
 [00fd2600] 0001 c000                 ori.b      #$00,d1
@@ -22778,7 +22779,10 @@ f6x6:
 [00fd2636] 6c00 4600                 bge        $00FD6C38
 [00fd263a] 0600 0300                 addi.b     #$00,d0
 [00fd263e] 0300                      btst       d1,d0
-[00fd2640] 0000 0001                 ori.b      #$01,d0
+[00fd2640] 0000
+
+f6x6:
+[00fd2642] 0001
 [00fd2644] 0008 3678                 ori.b      #$78,a0 ; apollo only
 [00fd2648] 3620                      move.w     -(a0),d3
 [00fd264a] 7379                      ???
@@ -62746,7 +62750,7 @@ err_tbl:
 ********************************************************************************
 ********************************************************************************
 *
-* End AES & DESKTOP data len 0x16406
+* End AES & DESKTOP data len 0xA0E
 *
 ********************************************************************************
 ********************************************************************************
@@ -62761,6 +62765,6 @@ err_tbl:
 [00fefff2] 0000 
 
 _ui_mupb:
-[00fefff4] 8765 4321                 dc.l       $87654321
-[00fefff8] 0000 a100                 dc.l       _endgembss
-[00fefffc] 00fd 91d0                 dc.l       gemstart
+[00fefff4] 87654321                  dc.l       $87654321
+[00fefff8] 0000a100                  dc.l       _endgembss
+[00fefffc] 00fd91d0                  dc.l       gemstart

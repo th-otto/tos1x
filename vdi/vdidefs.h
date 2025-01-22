@@ -61,6 +61,6 @@
 /*
  * PTSIN maximum length
  */
-#define MAX_PTSIN 256
+#define MAX_PTSIN 128
 
 #endif /* __VDIDEFS_H__ */

@@ -82,7 +82,7 @@ BOOLEAN havefmt;		/* fmt.rsc already read in ? */
 #endif
 
 extern uint16_t const tosrsc[];
-
+asm("_tosrsc equ 0"); /* ZZZ now defined in first half of ROM */
 
 
 #if OS_COUNTRY == CTRY_US
@@ -270,7 +270,7 @@ PP(register uint16_t offset;)
 				LWSET(OB_HEIGHT(ROOT), gl_hchar * 25);
 				LWSET(OB_HEIGHT(THEBAR), gl_hchar + 2);
 #undef THEMENUS
-#define THEMENUS 7 /* hmpf */
+#define THEMENUS 7 /* hmpf: needs definition from desktop resource */
 				LWSET(OB_WIDTH(THEMENUS), menu_w);
 				LWSET(OB_HEIGHT(THEMENUS), gl_hchar * 24);
 			} else if (which == 5)

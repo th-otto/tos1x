@@ -84,11 +84,11 @@ _GSX_ENTRY:
 	beq	no_ptsin	 ; no entries to copy
 
 	asl.w      #1,d0
-	cmpi.w	#max_vert,d0		 ; is it more than we have room for?
+	cmpi.w	#max_vert*2,d0		 ; is it more than we have room for?
 	bls	ptsin_ok	 ; no, transfer this number
 
-	move.w	#max_vert,d0		 ; yes, set size to max
-	move.w	#max_vert/2,2(a1)	 ; truncate value in user's CONTRL array
+	move.w	#max_vert*2,d0		 ; yes, set size to max
+	move.w	#max_vert,2(a1)	 ; truncate value in user's CONTRL array
 
 
 *   make a local copy of the PTSIN array

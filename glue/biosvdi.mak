@@ -27,17 +27,14 @@ BIOSVDI_100_OBJS = \
 	../bdos/time.o \
 	\
 	../vdi/line1010.o \
-	../vdi/tables.o \
-	../vdi/font6x6.o \
-	../vdi/font8x8.o \
-	../vdi/font8x16.o \
 	../vdi/entry.o \
+	../vdi/tables.o \
 	../vdi/gsxasm1.o \
 	../vdi/allgem.o \
 	../vdi/jmptbl.o \
+	../vdi/isin.o \
 	../vdi/blitinit.o \
 	../vdi/routines.o \
-	../vdi/isin.o \
 	../vdi/monobj.o \
 	../vdi/opnwk.o \
 	../vdi/monout.o \
@@ -50,6 +47,9 @@ BIOSVDI_100_OBJS = \
 	../vdi/gsxasm2.o \
 	../vdi/hbrect.o \
 	../vdi/mouse.o \
+	../vdi/font6x6.o \
+	../vdi/font8x8.o \
+	../vdi/font8x16.o \
 	../vdi/copyrfm.o \
 	../vdi/blastman.o \
 	../vdi/sbfrag.o \

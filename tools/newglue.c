@@ -78,18 +78,24 @@ long memory;
 
 char *header;
 
-#define TOTALFILE	4
+#define TOTALFILE	7
 
 
 char gemrsc[256];
+char icondat[256];
 char deskrsc[256];
 char deskinf[256];
+char fmtrsc[256];
+char garbage[256];
 char glue[256];
 
 static char *files[TOTALFILE] = {
 	gemrsc,
 	deskrsc,
+	icondat,
 	deskinf,
+	fmtrsc,
+	garbage,
 	glue
 };
 
@@ -282,7 +288,7 @@ PP(const char *name;)
 	char headerbuf[70];
 	char buf[128];
 	int count;
-	
+
 	if (name == 0 || *name == '\0')
 		return;
 	ic = open(name, O_RDONLY | O_BINARY);
@@ -315,7 +321,9 @@ PP(char **argv;)
 	char *outfile;
 	const char *country = NULL;
 	const char *version = NULL;
-	
+	int tosversion = 0;
+	FILE *fp;
+
 #ifdef __ALCYON__
 	/* symbols etoa and ftoa are unresolved */
 	asm("xdef _etoa");
@@ -330,6 +338,9 @@ PP(char **argv;)
 		sprintf(gemrsc, "../aes/rsc/gem%s.rsc", country);
 		sprintf(deskrsc, "../desk/rsc/desk%s.rsc", country);
 		sprintf(deskinf, "../desk/rsc/desk%s.inf", country);
+		sprintf(icondat, "../desk/rsc/icon%s.dat", country);
+		sprintf(fmtrsc, "../desk/rsc/fmt%s.rsc", country);
+		sprintf(garbage, "../desk/rsc/garb%s.dat", country);
 		sprintf(glue, "glue.%s", country);
 	} else if (argc == 3)
 	{
@@ -338,7 +349,11 @@ PP(char **argv;)
 		sprintf(gemrsc, "../aes/rsc/%s/gem%s.rsc", version, country);
 		sprintf(deskrsc, "../desk/rsc/%s/desk%s.rsc", version, country);
 		sprintf(deskinf, "../desk/rsc/%s/desk%s.inf", version, country);
+		sprintf(icondat, "../desk/rsc/%s/icon%s.dat", version, country);
+		sprintf(fmtrsc, "../desk/rsc/%s/fmt%s.rsc", version, country);
+		sprintf(garbage, "../desk/rsc/%s/garb%s.dat", version, country);
 		sprintf(glue, "glue.%s", country);
+		tosversion = (int)strtol(version, NULL, 16);
 	} else if (argc == (TOTALFILE + 1))
 	{
 		for (i = 0; i < TOTALFILE; i++)
@@ -346,7 +361,7 @@ PP(char **argv;)
 	} else
 	{
 		fprintf(stderr, _("usage: glue gem.rsc desk.rsc desk.inf glue.xxx\n"));
-		fprintf(stderr, _("   or: glue xxx\n"));
+		fprintf(stderr, _("   or: glue <xxx> [<tosversion>]\n"));
 		fprintf(stderr, _("where <xxx> is a country code\n"));
 		return EXIT_FAILURE;
 	}
@@ -372,8 +387,15 @@ PP(char **argv;)
 	address = top + HEADSIZE;
 	size = 0;
 
-	for (i = 0; i < (TOTALFILE - 1); i++)	/* three files */
+	for (i = 0; i < (TOTALFILE - 1); i++)	/* three or six files */
 	{
+		if (tosversion >= 0x104)
+		{
+			/* icon.dat & fmt.rsc only for version <= 1.02 */
+			if (i == 2 || i == 4 || i == 5)
+				continue;
+		}
+		
 		memory -= size;
 
 		handle = open(files[i], O_RDONLY | O_BINARY);	/* open source file */
@@ -388,10 +410,17 @@ PP(char **argv;)
 		size = read(handle, address, 0xfff8);
 		close(handle);
 
-		if (size & 0x1)				/* on the odd boundary */
-			size += 5;
-		else
-			size += 4;
+		if (tosversion >= 0x104)
+		{
+			if (size & 0x1)				/* on the odd boundary */
+				size += 5;
+			else
+				size += 4;
+		} else
+		{
+			if (size & 0x1)				/* on the odd boundary */
+				size += 1;
+		}
 
 		if (memory <= size)
 		{
@@ -400,121 +429,138 @@ PP(char **argv;)
 		}
 
 		/* fill in header */
-		putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
-
-#ifdef TP_36
-		if (i == 1)
+		if (tosversion >= 0x104)
 		{
-			char *infostr;
-			int len;
-			
-			infostr = rsc_gspec(address, ADDINFO, 3);
-			len = (int)strlen(TP_36);
-			if (len > 0)
-			{
-				if (len > (int)strlen(infostr))
-					len = (int)strlen(infostr);
-				memcpy(infostr, TP_36, len);
-				infostr[len] = '\0';
-			}
-		}
+			if (i == 3)
+				/* desktop.inf in slot #2 */
+				putbeshort(header + 2 * 2, (int) ((intptr_t)address - (intptr_t)top - 2));
+			else
+				putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
+		} else
+		{
+			putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
+#if 1
+			if (i > 0)
+				printf("header[%d] = %04x\n", i - 1, getbeshort(header + 2 * i));
 #endif
+		}
 
+		if (tosversion >= 0x104)
+		{
+#ifdef TP_36
+			if (i == 1)
+			{
+				char *infostr;
+				int len;
+				
+				infostr = rsc_gspec(address, ADDINFO, 3);
+				len = (int)strlen(TP_36);
+				if (len > 0)
+				{
+					if (len > (int)strlen(infostr))
+						len = (int)strlen(infostr);
+					memcpy(infostr, TP_36, len);
+					infostr[len] = '\0';
+				}
+			}
+#endif
+	
 #ifdef TP_37_1
-		if (i == 1)
-			copy_icon(address, ADICON, 1, TP_37_1);
+			if (i == 1)
+				copy_icon(address, ADICON, 1, TP_37_1);
 #endif
 #ifdef TP_37_2
-		if (i == 1)
-			copy_icon(address, ADICON, 2, TP_37_2);
+			if (i == 1)
+				copy_icon(address, ADICON, 2, TP_37_2);
 #endif
 #ifdef TP_37_3
-		if (i == 1)
-			copy_icon(address, ADICON, 3, TP_37_3);
+			if (i == 1)
+				copy_icon(address, ADICON, 3, TP_37_3);
 #endif
 #ifdef TP_37_4
-		if (i == 1)
-			copy_icon(address, ADICON, 4, TP_37_4);
+			if (i == 1)
+				copy_icon(address, ADICON, 4, TP_37_4);
 #endif
 #ifdef TP_37_5
-		if (i == 1)
-			copy_icon(address, ADICON, 5, TP_37_5);
+			if (i == 1)
+				copy_icon(address, ADICON, 5, TP_37_5);
 #endif
 #ifdef TP_37_6
-		if (i == 1)
-			copy_icon(address, ADICON, 6, TP_37_6);
+			if (i == 1)
+				copy_icon(address, ADICON, 6, TP_37_6);
 #endif
 #ifdef TP_37_7
-		if (i == 1)
-			copy_icon(address, ADICON, 7, TP_37_7);
+			if (i == 1)
+				copy_icon(address, ADICON, 7, TP_37_7);
 #endif
 #ifdef TP_37_8
-		if (i == 1)
-			copy_icon(address, ADICON, 8, TP_37_8);
+			if (i == 1)
+				copy_icon(address, ADICON, 8, TP_37_8);
 #endif
 #ifdef TP_37_9
-		if (i == 1)
-			copy_icon(address, ADICON, 9, TP_37_9);
+			if (i == 1)
+				copy_icon(address, ADICON, 9, TP_37_9);
 #endif
 #ifdef TP_37_10
-		if (i == 1)
-			copy_icon(address, ADICON, 10, TP_37_10);
+			if (i == 1)
+				copy_icon(address, ADICON, 10, TP_37_10);
 #endif
 #ifdef TP_37_11
-		if (i == 1)
-			copy_icon(address, ADICON, 11, TP_37_11);
+			if (i == 1)
+				copy_icon(address, ADICON, 11, TP_37_11);
 #endif
 #ifdef TP_37_12
-		if (i == 1)
-			copy_icon(address, ADICON, 12, TP_37_12);
+			if (i == 1)
+				copy_icon(address, ADICON, 12, TP_37_12);
 #endif
-
+	
 #ifdef TP_38_0
-		if (i == 0)
-			copy_cursor(address, MICE0, TP_38_0);
+			if (i == 0)
+				copy_cursor(address, MICE0, TP_38_0);
 #endif
 #ifdef TP_38_1
-		if (i == 0)
-			copy_cursor(address, MICE1, TP_38_1);
+			if (i == 0)
+				copy_cursor(address, MICE1, TP_38_1);
 #endif
 #ifdef TP_38_2
-		if (i == 0)
-			copy_cursor(address, MICE2, TP_38_2);
+			if (i == 0)
+				copy_cursor(address, MICE2, TP_38_2);
 #endif
 #ifdef TP_38_3
-		if (i == 0)
-			copy_cursor(address, MICE3, TP_38_3);
+			if (i == 0)
+				copy_cursor(address, MICE3, TP_38_3);
 #endif
 #ifdef TP_38_4
-		if (i == 0)
-			copy_cursor(address, MICE4, TP_38_4);
+			if (i == 0)
+				copy_cursor(address, MICE4, TP_38_4);
 #endif
 #ifdef TP_38_5
-		if (i == 0)
-			copy_cursor(address, MICE5, TP_38_5);
+			if (i == 0)
+				copy_cursor(address, MICE5, TP_38_5);
 #endif
 #ifdef TP_38_6
-		if (i == 0)
-			copy_cursor(address, MICE6, TP_38_6);
+			if (i == 0)
+				copy_cursor(address, MICE6, TP_38_6);
 #endif
 #ifdef TP_38_7
-		if (i == 0)
-			copy_cursor(address, MICE7, TP_38_7);
+			if (i == 0)
+				copy_cursor(address, MICE7, TP_38_7);
 #endif
-
+	
 #ifdef TP_39_1
-		if (i == 0)
-			copy_image(address, NOTEBB, TP_39_1);
+			if (i == 0)
+				copy_image(address, NOTEBB, TP_39_1);
 #endif
 #ifdef TP_39_2
-		if (i == 0)
-			copy_image(address, QUESBB, TP_39_2);
+			if (i == 0)
+				copy_image(address, QUESBB, TP_39_2);
 #endif
 #ifdef TP_39_3
-		if (i == 0)
-			copy_image(address, STOPBB, TP_39_3);
+			if (i == 0)
+				copy_image(address, STOPBB, TP_39_3);
 #endif
-
+		}
+	
 		(VOID)copy_icon;
 		(VOID)copy_cursor;
 		(VOID)copy_image;
@@ -544,12 +590,12 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x2bda);
-			} else if (i == 2 && size == 0x02aa) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x02aa) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x000d);
 				putbeshort(address - 2, 0x0008);
 				putbeshort(address - 0, 0x0001);
-			} else if (i == 2 && size == 0x0224) /* 1.04 */
+			} else if (i == 3 && size == 0x0224) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0002);
 				putbeshort(address - 2, 0x0014);
@@ -567,7 +613,7 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x5820);
 				putbeshort(address - 2, 0x0000);
-			} else if (i == 2 && size == 0x02aa) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x02aa) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x000d);
 				putbeshort(address - 2, 0x0008);
@@ -593,13 +639,13 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x2b6a);
 				putbeshort(address - 2, 0x0008);
-			} else if (i == 2 && size == 0x02a6) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x02a6) /* 2.06/3.06 */
 			{
 				address[-5] = 0x01;
 				putbeshort(address - 4, 0x0009);
 				putbeshort(address - 2, 0xffff);
 				putbeshort(address - 0, 0xffff);
-			} else if (i == 2 && size == 0x021c) /* 1.04 */
+			} else if (i == 3 && size == 0x021c) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0005);
 				putbeshort(address - 2, 0x0014);
@@ -624,13 +670,13 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x2b6a);
 				putbeshort(address - 2, 0x0008);
-			} else if (i == 2 && size == 0x02a6) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x02a6) /* 2.06/3.06 */
 			{
 				address[-5] = 0x01;
 				putbeshort(address - 4, 0x0009);
 				putbeshort(address - 2, 0xffff);
 				putbeshort(address - 0, 0xffff);
-			} else if (i == 2 && size == 0x021c) /* 1.04 */
+			} else if (i == 3 && size == 0x021c) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0005);
 				putbeshort(address - 2, 0x0014);
@@ -655,12 +701,12 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x25f6);
-			} else if (i == 2 && size == 0x029c) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x029c) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x1100);
 				putbeshort(address - 2, 0x0001);
 				putbeshort(address - 0, 0x0003);
-			} else if (i == 2 && size == 0x0216) /* 1.04 */
+			} else if (i == 3 && size == 0x0216) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0020);
 				putbeshort(address - 2, 0x0000);
@@ -686,12 +732,12 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x265a);
-			} else if (i == 2 && size == 0x02a2) /* 2.06/3.06 */
+			} else if (i == 3 && size == 0x02a2) /* 2.06/3.06 */
 			{
 				putbeshort(address - 4, 0x4d20);
 				putbeshort(address - 2, 0x3031);
 				putbeshort(address - 0, 0x2030);
-			} else if (i == 2 && size == 0x0218) /* 1.04 */
+			} else if (i == 3 && size == 0x0218) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0802);
 				putbeshort(address - 2, 0x0000);
@@ -709,7 +755,7 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0xffff);
 				putbeshort(address - 2, 0xffff);
-			} else if (i == 2 && size == 0x0224) /* 1.04 */
+			} else if (i == 3 && size == 0x0224) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x2526);
 				putbeshort(address - 2, 0x0000);
@@ -727,7 +773,7 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x0019);
 				putbeshort(address - 2, 0x0001);
-			} else if (i == 2 && size == 0x0214) /* 1.04 */
+			} else if (i == 3 && size == 0x0214) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x0000);
@@ -745,7 +791,7 @@ PP(char **argv;)
 			{
 				putbeshort(address - 4, 0x0000);
 				putbeshort(address - 2, 0x2bda);
-			} else if (i == 2 && size == 0x0224) /* 1.04 */
+			} else if (i == 3 && size == 0x0224) /* 1.04 */
 			{
 				putbeshort(address - 4, 0x0002);
 				putbeshort(address - 2, 0x0014);
@@ -763,7 +809,7 @@ PP(char **argv;)
 				 * put back wrong rsh_rssize field in PL resource
 				 */
 				putbeshort(address - size + 34, 0x620c);
-			} else if (i == 2 && size == 0x02a4)
+			} else if (i == 3 && size == 0x02a4)
 			{
 				putbeshort(address - 4, 0x4020);
 				putbeshort(address - 2, 0x4020);
@@ -780,20 +826,27 @@ PP(char **argv;)
 			if (i == 1 && size == 0x2e6a) /* 1.04 */
 			{
 			}
-			if (i == 2 && size == 0x0216) /* 1.04 */
+			if (i == 3 && size == 0x0216) /* 1.04 */
 			{
 			}
 		}
 	}
 
 	size = (intptr_t)address - (intptr_t)top; /* BUG: should be address - top - 2 */
+	if (tosversion < 0x104)
+		size -= 2;
+
 	if (size >= 0xfffcL)
 	{
 		fprintf(stderr, _("output file is too large ($%lx)\n"), size);
 		return EXIT_FAILURE;
 	}
 	
-	putbeshort(header + 2 * i, (unsigned int) (size));
+	if (tosversion >= 0x104)
+	{
+		/* total size in slot #3 */
+		putbeshort(header + 2 * 3, (unsigned int) (size));
+	}
 
 	handle = open(outfile, O_CREAT | O_TRUNC | O_WRONLY | O_BINARY, 0644);
 	if (handle < 0)
@@ -804,6 +857,7 @@ PP(char **argv;)
 
 	printf(_("Writing %s\n"), outfile);
 
+	/* first slot of header is unused, since gem.rsc is always right after the header */
 	memory = write(handle, top + 2, (size_t)size);
 	close(handle);
 	if (size != memory)
@@ -814,6 +868,16 @@ PP(char **argv;)
 	}
 
 	printf(_("File size is $%lx\nDone.\n"), size);
-	
+
+	fp = fopen("tosrsc.h", "w");
+	if (fp == NULL)
+	{
+		fprintf(stderr, _("cannot create tosrsc.h\n"));
+		unlink(outfile);
+		return EXIT_FAILURE;
+	}
+	fprintf(fp, "#define TOS_RSSIZE 0x%lx\n", size);
+	fclose(fp);
+
 	return EXIT_SUCCESS;
 }

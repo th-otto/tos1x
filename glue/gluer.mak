@@ -6,10 +6,12 @@ tosrsc$(COUNTRY).c: $(MKBININC) glue.$(COUNTRY)
 GEM_RSC = ../aes/rsc/$(TOSVERSION)/gem$(COUNTRY).rsc
 DESK_RSC = ../desk/rsc/$(TOSVERSION)/desk$(COUNTRY).rsc
 DESK_INF = ../desk/rsc/$(TOSVERSION)/desk$(COUNTRY).inf
+FMT_RSC = ../desk/rsc/$(TOSVERSION)/fmt$(COUNTRY).rsc
+ICON_DAT = ../desk/rsc/$(TOSVERSION)/icon$(COUNTRY).dat
 
 -include localrsc.mak
 
-glue.$(COUNTRY): $(MKGLUE) $(GEM_RSC) $(DESK_RSC) $(DESK_INF)
+glue.$(COUNTRY): $(MKGLUE) $(GEM_RSC) $(DESK_RSC) $(DESK_INF) $(FMT_RSC) $(ICON_DAT)
 	$(AM_V_GEN)$(MKGLUE) $(COUNTRY) $(TOSVERSION)
 
 rscend.o: rscend.S

@@ -914,7 +914,7 @@ escd:
 	subq.w	#1,d2			; d2 <- Ymax (line above the cursor)
 	swap d2
 	move.w	_v_celmx,d2		; d2 <- Xmax (right side of screen)
-	moveq	#0,d0			; d0 <- Xmin (left sideof screen)
+	moveq	#0,d1			; d1 <- Xmin (left sideof screen)
 
 	bra	erase_region		; erase screen above cursor
 

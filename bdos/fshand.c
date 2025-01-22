@@ -29,6 +29,17 @@ static VOID makbuf PROTO((FCB *f, DTAINFO *dt));
 #define dirscan(a,c) ((DND *) scan(a,c,FA_DIREC,&negone))
 
 /*
+ *  logmsk -
+ *	log values of:
+ *        1, 2, 4, 8, 16, 32, 64, 128  256, 512, 1024, 2048 ... 
+ */
+
+int16_t const logmsk[] = { 0, 1, 3, 7, 15, 31, 63, 127, 255, 511, 1023, 2047,
+	4095, 8191, 16383, 32767
+};
+
+
+/*
  *  negone - for use as parameter
  */
 

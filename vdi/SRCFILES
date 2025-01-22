@@ -1,8 +1,9 @@
-VDI_100_OBJS1=escape.o font6x6.o font8x8.o font8x16.o
-VDI_100_OBJS2=entry.o tables.o line1010.o gsxasm1.o
-VDI_100_OBJS3=allgem.o blitinit.o routines.o jmptbl.o isin.o monobj.o
-VDI_100_OBJS4=opnwk.o monout.o text.o textblt.o hbtxtblt.o sbtxtblt.o
-VDI_100_OBJS5=mono.o hbmono.o gsxasm2.o hbrect.o mouse.o copyrfm.o blastman.o
+# Note: in the real rom, escape.o is actually part of BIOS
+VDI_100_OBJS1=escape.o entry.o line1010.o tables.o gsxasm1.o allgem.o
+VDI_100_OBJS2=jmptbl.o isin.o blitinit.o routines.o monobj.o
+VDI_100_OBJS3=opnwk.o monout.o text.o textblt.o hbtxtblt.o sbtxtblt.o
+VDI_100_OBJS4=mono.o hbmono.o gsxasm2.o hbrect.o mouse.o
+VDI_100_OBJS5=font6x6.o font8x8.o font8x16.o copyrfm.o blastman.o
 VDI_100_OBJS6=sbfrag.o hbbitblt.o blaster.o seedfill.o xfrmform.o stcolor.o
 VDI_100_OBJS9=cbssdefs.o
 

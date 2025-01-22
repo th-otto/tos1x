@@ -67,6 +67,7 @@ AESDESK_OBJS = \
 	../aes/gemglobe.o \
 	../aes/linefhdl.o \
 	../aes/gembase.o \
+	../aes/ui_mupb.o \
 	\
 	$(empty)
 

@@ -483,7 +483,11 @@ static char const proto_data[NUM_PROTOBT_ENTRIES * 19] = {
 	/* bps               spc res     fat dir       sec         media spf      spt      sides   hid */
 	   LEW(SECTOR_SIZE), 1,  LEW(1), 2,  LEW(64),  LEW(360),   0xfc, LEW(2),  LEW(9),  LEW(1), LEW(0),   /* 0 = SS, 40 tracks, SD */
 	   LEW(SECTOR_SIZE), 2,  LEW(1), 2,  LEW(112), LEW(720),   0xfd, LEW(2),  LEW(9),  LEW(2), LEW(0),   /* 1 = DS, 40 tracks, SD */
+#if TOSVERSION >= 0x102
 	   LEW(SECTOR_SIZE), 2,  LEW(1), 2,  LEW(112), LEW(720),   0xf9, LEW(5),  LEW(9),  LEW(1), LEW(0),   /* 2 = SS, 80 tracks, SD */
+#else
+	   LEW(SECTOR_SIZE), 2,  LEW(1), 2,  LEW(112), LEW(720),   0xf8, LEW(5),  LEW(9),  LEW(1), LEW(0),   /* 2 = SS, 80 tracks, SD */
+#endif
 	   LEW(SECTOR_SIZE), 2,  LEW(1), 2,  LEW(112), LEW(1440),  0xf9, LEW(5),  LEW(9),  LEW(2), LEW(0),   /* 3 = DS, 80 tracks, SD */
 #undef LEW
 };
@@ -527,7 +531,7 @@ PP(int16_t execflag;)
 		/* BUG: serial2 checked by floppy mediach detection, but not set here */
 	}
 	
-	if (disktype >= 0)
+	if (disktype >= 0) /* BUG: no range check here (TOS 2.x has more entries) */
 	{
 		idx = disktype * 19;
 		for (i = 0; i < 19; idx++, i++)

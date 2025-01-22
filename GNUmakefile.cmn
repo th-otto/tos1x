@@ -60,6 +60,7 @@ LD = $(CC)
 AS = $(CC)
 AR = ${BIN}ar68
 LINK68 = ${BIN}link68
+SIZE68 = ${BIN}size68
 RELMOD = ${BIN}relmod
 ARFLAGS = -r
 RANLIB = :

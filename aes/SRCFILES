@@ -47,7 +47,7 @@ AES_104_OBJS = \
 
 AES_106_OBJS=${AES_104_OBJS}
 AES_162_OBJS=${AES_104_OBJS}
-AES_100_OBJS=${AES_104_OBJS}
+AES_100_OBJS=${AES_104_OBJS} ui_mupb.o
 
 AES_OBJS=${AES_${TOSVERSION}_OBJS}
 
@@ -79,6 +79,7 @@ AES_ASRCS=\
 	trap14.S \
 	gemjstrt.S \
 	linefhdl.S \
+	ui_mupb.S \
 	${empty}
 
 AES_CSRCS=\

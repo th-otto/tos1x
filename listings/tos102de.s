@@ -58973,10 +58973,12 @@ xif:
 [00fee0dc] 3080                      move.w     d0,(a0)
 [00fee0de] 4e5e                      unlk       a6
 [00fee0e0] 4e75                      rts
+trp13:
 [00fee0e2] 23df 0000 95ae            move.l     (a7)+,$000095AE
 [00fee0e8] 4e4d                      trap       #13
 [00fee0ea] 2f39 0000 95ae            move.l     $000095AE,-(a7)
 [00fee0f0] 4e75                      rts
+trp14:
 [00fee0f2] 23df 0000 95b2            move.l     (a7)+,$000095B2
 [00fee0f8] 4e4e                      trap       #14
 [00fee0fa] 2f39 0000 95b2            move.l     $000095B2,-(a7)
@@ -58996,6 +58998,7 @@ xif:
 [00fee13a] 4eb9 00fe c8e8            jsr        $00FEC8E8
 [00fee140] dffc 0000 000a            adda.l     #$0000000A,a7
 [00fee146] 4e75                      rts
+rsc_read:
 [00fee148] 4e56 0000                 link       a6,#0
 [00fee14c] 48e7 0704                 movem.l    d5-d7/a5,-(a7)
 [00fee150] 2ebc 0000 3f7a            move.l     #$00003F7A,(a7)
@@ -59066,6 +59069,8 @@ xif:
 [00fee220] 33fc 0001 0000 9c14       move.w     #$0001,$00009C14
 [00fee228] 33fc 0001 0000 9c40       move.w     #$0001,$00009C40
 [00fee230] f831                      dc.w       $F831 ; movem.l (a7)+,d6-d7/a5
+
+rom_ram:
 [00fee232] 4e56 fff6                 link       a6,#-10
 [00fee236] 48e7 3f04                 movem.l    d2-d7/a5,-(a7)
 [00fee23a] 3e2e 0008                 move.w     8(a6),d7
@@ -59234,9 +59239,12 @@ xif:
 [00fee464] f170                      dc.w       $F170 ; wm_open
 [00fee466] 508f                      addq.l     #8,a7
 [00fee468] f83f                      dc.w       $F83F ; movem.l (a7)+,d3-d7/a5
+
+size_theglo:
 [00fee46a] 4e56 fffc                 link       a6,#-4
 [00fee46e] 303c 150b                 move.w     #$150B,d0
 [00fee472] f001                      dc.w       $F001 ; movem.l (a7)+,#0
+
 [00fee474] 4e56 fffc                 link       a6,#-4
 [00fee478] 2ebc 0000 4a96            move.l     #$00004A96,(a7)
 [00fee47e] f364                      dc.w       $F364 ; app_reverse

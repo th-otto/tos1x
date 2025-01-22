@@ -64,7 +64,7 @@ line1010:	move.l	2(sp),a1	; fetch pc off stack.
 la_out:		rte
 *
 var_base:
-		LA(a0)
+		lea lineavars,a0 
 		move.l	a0,d0		; for "C".
 		lea	fonts,a1	; and a ptr to the first font header.
 		lea	atab,a2		; and a ptr to the array of pointers.

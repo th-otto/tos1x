@@ -113,7 +113,11 @@ FND const funcs[0x58] = {
 	
 	/* 0x04 */ { GDF xauxout, 0x82 },
 	/* 0x05 */ { GDF xprtout, 0x83 },
+#if TOSVERSION >= 0x102
 	/* 0x06 */ { GDF rawconio, 0x80 },
+#else
+	/* 0x06 */ { GDF rawconio, 0x00 },
+#endif
 	
 	/* 0x07 */ { GDF x7in, 0x80 },
 	/* 0x08 */ { GDF x8in, 0x80 },

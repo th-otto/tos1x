@@ -36,8 +36,8 @@ STARTUP = startup.o
 OBJS = $(STARTUP) vars.o tosvars.o $(BIOSVDI_OBJS) $(AESDESK_OBJS)
 
 
-BIOSLINK_OBJS := $(shell echo $(BIOSVDI_OBJS) | tr ' ' ',')
-AESLINK_OBJS := $(shell echo tosrsc$(COUNTRY).o $(AESDESK_OBJS) | tr ' ' ',')
+BIOSLINK_OBJS := $(shell echo $(BIOSVDI_OBJS) tosrsc$(COUNTRY).o | tr ' ' ',')
+AESLINK_OBJS := $(shell echo $(AESDESK_OBJS) | tr ' ' ',')
 LINK_OBJS = $(BIOSLINK_OBJS),$(AESLINK_OBJS)
 
 ROMSIZE_100 = 256k
@@ -49,9 +49,24 @@ ROMSIZE = $(ROMSIZE_$(TOSVERSION))
 ifeq ($(USE_CROSS_ALCYON),1)
 tos1.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o biosext.o biosvdi.mak aesdesk.mak
 	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(rombase)],bss[0]]' $@=vars.o,tosvars.o,$(BIOSLINK_OBJS),biosext.o
+	$(MAKE) tos1.mak
 
-tos2.img: tos1.img
-	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(aes_tbase)],bss[0]]' $@=vars.o,tosvars.o,$(AESLINK_OBJS)
+# TODO: get text+data size of tos1.img to calculate start address
+-include tos1.mak
+
+tos2.img: tos1.img tos1.mak
+	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(tos2_tbase)],bss[0]]' $@=vars.o,tosvars.o,$(AESLINK_OBJS)
+
+tos1.mak: tos1.img
+	$(AM_V_at)$(SIZE68) tos1.img > tos1.i
+	$(AM_V_at)sed -e 's/a/A/g' -e 's/b/B/g' -e 's/c/C/g' -e 's/d/D/g' -e 's/e/E/g' -e 's/f/F/g' tos1.i > tos1.1
+	$(AM_V_at)echo "ibase=16" > tos1.2
+	$(AM_V_at)echo "obase=10" >> tos1.2
+	$(AM_V_at)sed -n 's/^.*tExt lEngth *- *[0-9]* *\([0-9a-fA-F]*\).*$$/tos1_tlen=\1/p' tos1.1 >> tos1.2
+	$(AM_V_at)sed -n 's/^.*DAtA lEngth *- *[0-9]* *\([0-9a-fA-F]*\).*$$/tos1_dlen=\1/p' tos1.1 >> tos1.2
+	$(AM_V_at)echo 'print "tos2_tbase=", tos1_tlen + tos1_dlen, "\n"' >> tos1.2
+	$(AM_V_GEN)$(BC) -q < tos1.2 > $@
+	$(AM_V_at)$(RM) tos1.i tos1.1 tos1.2
 
 tos.rel: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o ../vdi/vdivar.o ../aes/gembase.o sbss.o ebss.o
 	$(AM_V_at)$(CP) ../vdi/cbssdefs.o .
@@ -93,7 +108,7 @@ check:: $(IMG)
 	$(CMP) $(CMPL) -x --ignore-initial=0x0:0x0 --offsets=0x$(rombase):0 $(top_srcdir)/roms/tos$(TOSVERSION)$(COUNTRY).img $(IMG)
 
 clean:
-	$(RM) *.o *.a *.i $(IMG) tos.img tos1.img tos2.img tosimg.tmp tostmp.map $(PROGRAMS) tosrsc*.c glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
+	$(RM) *.o *.a *.i $(IMG) tos.img tos1.img tos2.img tosimg.tmp tostmp.map tos1.mak $(PROGRAMS) tosrsc*.c tosrsc.h glue.* tosrel.tmp tos.rel $(top_srcdir)/common/config.h
 
 distclean: clean
 	$(RM) $(top_srcdir)/common/sections.mak *.img

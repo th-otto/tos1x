@@ -106,13 +106,15 @@ TTLOW     equ 7
         xdef  _os_conf
         xdef  _os_dosdate
 
-        xdef _ui_mupb
-
         xref  _root
         xref  _run
 
 _os_entry:
     bra.s   _main       /* os_entry, branch to _main */
+
+/* in TOS versions <= 1.02, this is always located at the end of the rom */
+_ui_mupb equ _os_entry+$2fff4
+
 os_version:
     dc.w    ATOSVERSION  /* os_version, TOS version */
 reseth:
@@ -124,7 +126,7 @@ os_end:
 os_res1:
     dc.l    _main       /* os_res1, reserved */
 _os_magic:
-    dc.l    _ui_mupb    /* os_magic, pointer to GEM's MUPB */
+    dc.l    _os_entry+$2fff4 /* os_magic, pointer to GEM's MUPB */
 _os_date:
     dc.l   OS_DATE      /* os_date, Date of system build */
 _os_conf:               /* Flag for PAL version + country */
@@ -161,12 +163,6 @@ os_run:
 os_dummy:
     dc.l   0            /* _main should start at offset 0x30, shouldn't it? */
 #endif
-
-        data
-_ui_mupb:
-        dc.l GEM_MUPB_MAGIC
-        dc.l _endgembss
-        dc.l gemstart
 
 		text
 
