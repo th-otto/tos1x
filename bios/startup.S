@@ -46,7 +46,6 @@ save_siz equ nlevels*46+8
 /*       xref __edata       / * end of data section */
         xref _endvdibss    /* end of VDI BSS */
         xref _endgembss    /* end of GEM BSS */
-        xref __ebss        /* end of BSS */
 
 		xref _supstk
 

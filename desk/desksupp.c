@@ -49,8 +49,10 @@ PP(BOOLEAN exitflag;)
 PP(int16_t taillen;)
 {
 	register THEDSK *d;
+	long unused;
 	
 	UNUSED(exitflag);
+	UNUSED(unused);
 	d = thedesk;
 	strcpy(d->g_cmd, psubcmd);
 	strcpy(&d->g_tail[1], psubtail);

@@ -159,7 +159,6 @@ struct DTAINFO { /* Disk Transfer Area */
 struct DMD { /* Drive Media Block */
     RECNO m_recoff[3];
     short m_drvnum;
-    CLNO m_fatrec;
     RECNO m_fsiz;
     RECNO m_clsiz;
     short m_clsizb;
@@ -169,13 +168,13 @@ struct DMD { /* Drive Media Block */
     short m_clrm;
     short m_rblog;
     short m_rbm;
-    struct OFD *m_fatofd; /* Moved */
     short m_clblog; /* Moved */
+    struct OFD *m_fatofd; /* Moved */
     short m_1fat;
-    struct DND *m_unused;
+    CLNO m_fatrec;
+    struct DND *m_dtl;
     short m_16; /* Moved */
-    undefined field17_0x2a;
-    undefined field18_0x2b;
+    short m_unused;
 };
 
 struct DND { /* Directory Node Descriptor */
@@ -191,7 +190,7 @@ struct DND { /* Directory Node Descriptor */
     struct DMD *d_drv;
     struct OFD *d_dirfil;
     ulong d_dirpos;
-    ulong d_scan;
+    long d_scan;
     struct OFD *d_files;
     ushort d_usecount;
 };
@@ -205,8 +204,8 @@ struct OFD {
     void *o_dmd;
     void *o_dnode;
     struct OFD *o_dirfil;
-    ulong o_dirbyt;
-    ulong o_bytnum;
+    long o_dirbyt;
+    long o_bytnum;
     short o_curcl;
     short o_currec;
     short o_curbyt;
@@ -237,7 +236,7 @@ struct APP {
     char *a_pdata;
     short a_aicon;
     short a_dicon;
-    short a_achar;
+    short a_char;
     short a_x;
     short a_y;
 };
@@ -459,6 +458,30 @@ struct DTA {
 
 typedef long ERROR;
 
+typedef struct EXT_IOREC EXT_IOREC, *PEXT_IOREC;
+
+typedef struct IOREC IOREC, *PIOREC;
+
+struct IOREC { /* Input/Output Records */
+    byte *buf;
+    short size;
+    short head;
+    short tail;
+    short low;
+    short high;
+};
+
+struct EXT_IOREC {
+    struct IOREC irec;
+    struct IOREC orec;
+    uchar rcv;
+    uchar tsr;
+    char highwater;
+    char xoff;
+    uchar ctr;
+    char xonxoffc;
+};
+
 typedef struct FCB FCB, *PFCB;
 
 struct FCB { /* File Control Block */
@@ -467,7 +490,7 @@ struct FCB { /* File Control Block */
     char f_fill[10];
     struct _DOSTIME f_td;
     CLNO f_clust;
-    ulong f_fileln;
+    long f_fileln;
 };
 
 typedef short FH;
@@ -528,17 +551,6 @@ struct ICONBLK {
     short ib_ytext;
     short ib_wtext;
     short ib_htext;
-};
-
-typedef struct IOREC IOREC, *PIOREC;
-
-struct IOREC { /* Input/Output Records */
-    byte *buf;
-    short size;
-    short head;
-    short tail;
-    short low;
-    short high;
 };
 
 typedef struct KEYTAB KEYTAB, *PKEYTAB;
@@ -604,6 +616,16 @@ struct MFORM { /* Mouse pointer */
     short mf_bg;
     short mf_mask[16];
     short mf_data[16];
+};
+
+typedef struct MOBLK MOBLK, *PMOBLK;
+
+struct MOBLK {
+    short m_out;
+    short m_x;
+    short m_y;
+    short m_w;
+    short m_h;
 };
 
 typedef struct MPB MPB, *PMPB;
@@ -751,6 +773,13 @@ struct SPB {
     struct EVB *sy_wait;
 };
 
+typedef struct struct rominfo struct rominfo, *Pstruct rominfo;
+
+struct struct rominfo {
+    void *data;
+    ushort size;
+};
+
 typedef struct TEDINFO TEDINFO, *PTEDINFO;
 
 struct TEDINFO {
@@ -769,7 +798,14 @@ struct TEDINFO {
 
 typedef struct THEDSK THEDSK, *PTHEDSK;
 
+typedef struct USERBLK USERBLK, *PUSERBLK;
+
 typedef struct WSAVE WSAVE, *PWSAVE;
+
+struct USERBLK {
+    void *ub_code;
+    long ub_parm;
+};
 
 struct WSAVE {
     struct GRECT gr_save;
@@ -790,7 +826,9 @@ struct THEDSK {
     char g_wdta[128];
     struct DTA *a_wdta;
     short n_winalloc;
-    char field10_0x424c[5632];
+    struct ICONBLK gl_icons[128];
+    short g_index[128];
+    struct USERBLK g_udefs[128];
     short g_num;
     short *g_pxy;
     short g_iview;
@@ -803,23 +841,28 @@ struct THEDSK {
     short g_incol;
     short g_isort;
     char g_srcpth[128];
-    char field23_0x58e4[134];
-    struct DTA g_fcbstk[8];
-    char field25_0x5aca[44];
+    char g_dstpath[128];
+    char *g_xbuf;
+    ushort g_xlen;
+    struct DTA g_dtastk[9];
     long g_nfiles;
     long g_ndirs;
     long g_size;
-    char g_tmppath[128];
+    char g_tmppth[128];
     short g_xyobpts[120];
     short g_rmsg[8];
-    char field32_0x5c82[4];
+    short *p_msgbuf;
     struct GRECT g_desk;
     struct GRECT g_full;
     char g_cmd[128];
     char *g_pcmd;
     char g_tail[128];
     char *g_ptail;
-    char field39_0x5d9e[84];
+    char g_fcb1[36];
+    char *a_fcb1;
+    char g_fcb2[36];
+    char *a_fcb2;
+    char *a_alert;
     struct OBJECT *g_atree[14];
     short g_croot;
     short g_cwin;
@@ -828,30 +871,46 @@ struct THEDSK {
     short g_csortitem;
     short g_ccopypref;
     short g_cdelepref;
-    short g_coverpref;
-    char field49_0x5e3a[6];
+    short g_cdclkpref;
+    short g_icw;
+    short g_ich;
+    short g_nmicon;
     short g_nmtext;
-    char field51_0x5e42[36];
+    short g_xyicon[18];
     short g_xytext[18];
-    char field53_0x5e8a[4];
+    short gl_wicon;
+    short gl_hicon;
     char afile[2048];
-    char field55_0x668e[2050];
+    short size_afile;
+    char appbuf[2048];
     char *g_pbuff;
-    char field57_0x6e94[900];
+    struct APP app[32];
+    struct APP *appfree;
     struct APP *applist;
-    char field59_0x721c[432];
+    struct ICONBLK iconaddr[6];
+    struct ICONBLK g_iblist[6];
+    short g_ismask[12];
     short g_cnxsave.sitem_save;
     short g_cnxsave.vitem_save;
     short g_cnxsave.ccopy_save;
     short g_cnxsave.cdele_save;
-    short g_cnxsave.covwr_save;
+    short g_cnxsave.cdclk_save;
     short g_cnxsave.pref_save;
     struct WSAVE g_cnxsave.win_save[4];
-    char field67_0x75f8[8];
+    void *icondata;
+    void *a_buffstart;
     struct OBJECT *g_pscreen;
-    char field69_0x7604[18];
+    char ml_files[4];
+    char ml_dirs[4];
+    short ml_dlfi;
+    short ml_dlfo;
+    short ml_dlok;
+    short ml_dlcn;
+    short ml_dpr;
     short ml_havebox;
-    char field71_0x7618[39];
+    char ml_fsrc[13];
+    char ml_fdst[13];
+    char ml_fstr[13];
     char ml_ftmp[13];
     char gl_lngstr[16];
     struct FNODE *ml_pfndx[400];
@@ -901,13 +960,6 @@ struct THEGLO {
     char s_save[2048];
     char s_tail[128];
     struct WINDOW w_win[8];
-};
-
-typedef struct USERBLK USERBLK, *PUSERBLK;
-
-struct USERBLK {
-    void *ub_code;
-    long ub_parm;
 };
 
 typedef struct VDIPB VDIPB, *PVDIPB;

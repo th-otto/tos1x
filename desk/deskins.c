@@ -25,69 +25,55 @@ PP(register APP *app;)
 {
 	register LPTREE tree;
 	register APP *newapp;
-	register APP *a;
-	register BOOLEAN redraw;
+	int ret;
 	register BOOLEAN found;
 	char driveid[2];
 	char label[14];
 	char newdrive[2];
 	char newlabel[14];
-	int ret;
+	short unused;
+	int16_t icon;
+	char unused2[6];
+	BOOLEAN change;
 	
 	tree = (LPTREE)thedesk->g_atree[ADINSDIS];
+	ret = FALSE;
+	change = FALSE;
 	driveid[0] = app->a_char;
 	driveid[1] = '\0';
 	strcpy(label, app->a_pappl);
 	inf_sset((OBJECT *)tree, DRID, driveid);
 	inf_sset((OBJECT *)tree, DRLABEL, label);
-	redraw = FALSE;
-	ret = xform_do((OBJECT *)tree, ROOT);
-	fs_sget(tree, DRID, newdrive);
-	fs_sget(tree, DRLABEL, newlabel);
-	if (ret == DRCANCEL)
-		return FALSE;
+	inf_show((OBJECT *)tree, ROOT);
+	fs_ssget(tree, DRID, newdrive);
+	fs_ssget(tree, DRLABEL, newlabel);
+
+	/* BUG: object is not displayed in resource */
+#define DRFLOPPY 6
+	icon = LWGET(OB_STATE(DRFLOPPY)) & SELECTED;
+
 	if (newdrive[0] == ' ' || newdrive[0] == '\0')
-		return FALSE;
-	if (newdrive[0] != CHAR_FOR_CARTRIDGE)
+		change = TRUE;
+	else if (newdrive[0] != CHAR_FOR_CARTRIDGE)
 		newdrive[0] = toupper(newdrive[0]);
-	if (newdrive[0] != driveid[0])
+	if (LWGET(OB_STATE(DROK)) & SELECTED)
 	{
-		a = thedesk->applist;
-		found = FALSE;
-		while (a != NULL)
+		LWSET(OB_STATE(DROK), NORMAL);
+		if (change)
+			goto retit;
+		if (driveid[0] != newdrive[0])
 		{
-			if (a->a_char == newdrive[0])
-			{
-				found = TRUE;
-				app = a;
-				break;
-			} else
-			{
-				a = a->a_next;
-			}
-		}
-	} else
-	{
-		found = TRUE;
-	}
-	if (ret == DRREMOVE)
-	{
-		if (found)
-			app_free(app);
-		return found;
-	} else
-	{
-		if (!found)
-		{
-			redraw = TRUE;
 			newapp = app_alloc(FALSE);
-			if (newapp != NULL)
+			/* if (newapp != NULL) BUG: missing */
 			{
 				newapp->a_apptype = app->a_apptype;
 				newapp->a_type = newdrive[0] != CHAR_FOR_CARTRIDGE ? AT_ISDISK : AT_ISCART;
 				newapp->a_obid = app->a_obid;
+				newapp->a_pappl = app->a_pappl;
+				newapp->a_pdata = NULL;
 				newapp->a_aicon = app->a_aicon;
 				newapp->a_dicon = -1;
+				newapp->a_char = newdrive[0];
 				if (app->a_x < gl_width / 2)
 					newapp->a_x = thedesk->g_icw + app->a_x;
 				else
@@ -99,21 +85,38 @@ PP(register APP *app;)
 				newapp->a_y = thedesk->g_hicon + app->a_y;
 				app_mtoi(newapp->a_x, newapp->a_y, &newapp->a_x, &newapp->a_y);
 				app = newapp;
-			} else
-			{
-#if 0 /* ZZZ */
-				fun_alert(1, NOICON, NULL);
-#endif
-				return FALSE;
+				ret = TRUE;
 			}
 		}
-		app->a_char = newdrive[0];
-		if (!streq(newlabel, label))
-			redraw = TRUE;
-		newlabel[(int)strlen(newlabel)] = '@';
-		escan_str(newlabel, &app->a_pappl);
-		return redraw;
+		if (!streq(label, newlabel))
+		{
+			newlabel[(int)strlen(newlabel)] = '@';
+			escan_str(newlabel, &app->a_pappl);
+			ret = TRUE;
+		}
+	} else if (LWGET(OB_STATE(DRREMOVE)) & SELECTED)
+	{
+		LWSET(OB_STATE(DRREMOVE), NORMAL);
+		if (change)
+			goto retit;
+		for (app = thedesk->applist; app != NULL; )
+		{
+			if (app->a_aicon == icon && app->a_char == newdrive[0])
+			{
+				app_free(app);
+				app = thedesk->applist;
+				ret = TRUE;
+			} else
+			{
+				app = app->a_next;
+			}
+		}
+	} else if (LWGET(OB_STATE(DRCANCEL)) & SELECTED)
+	{
+		LWSET(OB_STATE(DRCANCEL), NORMAL);
 	}
+retit:
+	return ret;
 }
 
 
@@ -127,30 +130,23 @@ PP(register APP *app;)
 	register APP *newapp;
 	register const char *src;
 	char buffer[12];
+	char newname[12];
 	char ext[4];
 	char newext[4];
 	char filetype[14];
-	long unused;
-	int ret;
+	int16_t icon;
+	int16_t newicon;
 	int apptype;
 	int newapptype;
 	BOOLEAN change;
 	int field;
 	BOOLEAN isnew;
-	BOOLEAN isauto;
-	char path[LEN_ZFPATH];
-	DESKWIN *win;
-	char o180[2];
-	THEDSK *d;
-	char *end;
 	
-	UNUSED(unused);
-	d = thedesk;
-	tree = (LPTREE)d->g_atree[ADINSAPP];
+	tree = (LPTREE)thedesk->g_atree[ADINSAPP];
 	isnew = *app->a_pappl == '*' || *app->a_pappl == '?';
 	fmt_str(name, buffer);
-	src = app->a_pdata;
-	src = scasb(src, '.');
+	for (src = app->a_pdata; *src != '\0' && *src != '.'; src++)
+		;
 	if (*src == '.')
 		src++;
 	strcpy(ext, src);
@@ -164,124 +160,79 @@ PP(register APP *app;)
 		LWSET(OB_STATE(APPARMS), SELECTED);
 	else
 		LWSET(OB_STATE(APDOS), SELECTED);
-	win = win_find(d->g_cwin);
-	end = strscn(&win->w_name[1], path, ' ');
-	*end = '\0';
-	unfmt_str(buffer, filetype);
-	if (end[-1] == '\\')
-	{
-		strcat(path, filetype);
-	}
-	isauto = FALSE;
-#if 0 /* ZZZ */
-	LWSET(OB_STATE(AUTOBOX), NORMAL);
-	LWSET(OB_STATE(NORMALBOX), NORMAL);
-	if (streq(path, &d->autofile[3]))
-	{
-		LWSET(OB_STATE(AUTOBOX), SELECTED);
-		isauto = TRUE;
-	} else
-	{
-		LWSET(OB_STATE(NORMALBOX), SELECTED);
-	}
-#endif
-	ret = xform_do((OBJECT *)tree, ROOT);
-	change = TRUE;
-	fs_sget(tree, APDFTYPE, newext);
+
+	icon = app->a_aicon - IPRG;
+	/* BUG: these objects do not exist in resource */
+	LWSET(OB_STATE(icon + 11), SELECTED);
+	
+	inf_show((OBJECT *)tree, ROOT);
+	change = FALSE;
+	fs_ssget(tree, APNAME, newname);
+	fs_ssget(tree, APDFTYPE, newext);
 	field = inf_gindex(tree, APGEM, 3);
-	o180[0] = '0';
 	switch (field)
 	{
 	case 0:
 		newapptype = PRG;
-		o180[0] = '1';
 		break;
 	case 1:
 		newapptype = TOS;
 		break;
 	case 2:
 		newapptype = TTP;
-		break;
+		/* break; */
 #ifdef __GNUC__
 	default:
 		__builtin_unreachable();
 #endif
 	}
 	LWSET(OB_STATE(APGEM + field), NORMAL);
-	if (ret == APCANCEL)
-		return FALSE;
-#if 0 /* ZZZ */
-	if (ret == APREMOVE)
-	{
-		if (isauto)
+
+	/* BUG: these objects do not exist in resource */
+	newicon = inf_gindex(tree, 11, 17);
+	LWSET(OB_STATE(newicon + 11), NORMAL);
+
+	if (LWGET(OB_STATE(APOK)) & SELECTED)
+	{	
+		if (!streq(buffer, newname) || !streq(ext, newext) || isnew)
 		{
-			d->autofile[0] = '\0';
-			d->autofile[3] = '\0';
-		}
-		if (!isnew)
-			app_free(app);
-#if BINEXACT
-		goto retit;
-#endif
-	} else
-#endif
-	{
-		if (apptype & AF_ISFMEM)
-			newapptype |= AF_ISFMEM;
-		if (!streq(ext, newext) || apptype != newapptype)
-		{
-			if (isnew)
+			newapp = app_alloc(TRUE);
+			if (newapp != NULL)
 			{
-				newapp = app_alloc(TRUE);
-				if (newapp != NULL)
+				newapp->a_apptype = newapptype;
+				newapp->a_type = AT_ISFILE;
+				newapp->a_obid = NIL;
+				unfmt_str(newname, filetype);
+				filetype[(int)strlen(filetype)] = '@';
+				escan_str(filetype, &newapp->a_pappl);
+				if (newext[0] != '\0')
 				{
-					newapp->a_type = AT_ISFILE;
-					newapp->a_obid = NIL;
-					path[(int)strlen(path)] = '@';
-					*(escan_str(path, &newapp->a_pappl) - 1) = '\0';
-#if 0 /* ZZZ */
-					newapp->a_aicon = IPRG - 1;
-					newapp->a_dicon = IFILE - 1;
-#endif
-					newapp->a_char = 0;
-					newapp->a_x = 0;
-					newapp->a_y = 0;
-					app = newapp;
+					strcpy(filetype, "*.*");
+					strcpy(&filetype[2], newext);
 				} else
 				{
-#if 0 /* ZZZ */
-					fun_alert(1, NOAPP, NULL);
-#endif
-					return FALSE;
+					filetype[0] = '\0';
 				}
+				filetype[(int)strlen(filetype)] = '@';
+				escan_str(filetype, &newapp->a_pdata);
+				newapp->a_aicon = newicon + IPRG;
+				newapp->a_dicon = newicon + IFILE;
+				newapp->a_char = 0;
+				newapp->a_x = 0;
+				newapp->a_y = 0;
+				app = newapp;
+				change = TRUE;
 			}
+		}
+		if (apptype != newapptype)
+		{
 			app->a_apptype = newapptype;
-			if (newext[0] != '\0')
-			{
-				strcpy(filetype, getall);
-				strcpy(&filetype[2], newext);
-			} else
-			{
-				filetype[0] = '\0';
-			}
-			filetype[(int)strlen(filetype)] = '@';
-			escan_str(filetype, &app->a_pdata);
+			change = TRUE;
 		}
-#if 0 /* ZZZ */
-		if (LWGET(OB_STATE(AUTOBOX)) & SELECTED)
-		{
-			d->autofile[0] = '0';
-			d->autofile[1] = o180[0];
-			d->autofile[2] = ' ';
-			strcpy(&d->autofile[3], path);
-		} else
-		{
-			d->autofile[0] = '\0';
-		}
-#endif
+		LWSET(OB_STATE(APOK), NORMAL);
+	} else
+	{
+		LWSET(OB_STATE(APCANCEL), NORMAL);
 	}
-#if BINEXACT
-retit:
-#endif
 	return change;
 }

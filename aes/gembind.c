@@ -54,16 +54,12 @@ PP(register VOIDPTR *addr_in;)
 {
 	intptr_t tmparm;
 	intptr_t lbuparm;
-	intptr_t lmaddr;
+	VOIDPTR grmaddr;
 	LPTREE tree;
 	register int16_t ret;
-	MFORM *mform;
 
 	ret = TRUE;
 
-	UNUSED(lmaddr);
-	UNUSED(mform);
-	
 	switch (opcode)
 	{
 	/* Application Manager  */
@@ -116,7 +112,12 @@ PP(register VOIDPTR *addr_in;)
 		ret = ev_mesag(ME_PBUFF);
 		break;
 	case EVNT_TIMER:
+#ifdef __ALCYON__
+		/* ugly: passing two shorts to a function that expects a long */
+		ret = ev_timer(T_HICOUNT, T_LOCOUNT);
+#else
 		ret = ev_timer(HW(T_HICOUNT) | LW(T_LOCOUNT));
+#endif
 		break;
 	case EVNT_MULTI:
 		if (MU_FLAGS & MU_TIMER)
@@ -192,6 +193,9 @@ PP(register VOIDPTR *addr_in;)
 		ret = fm_do((LPTREE)FM_FORM, FM_START);
 		break;	
 	case FORM_DIAL:
+#if BINEXACT
+		ret = /* BUG: fm_dial does not return anything */
+#endif
 		fm_dial(FM_TYPE, (GRECT *)&FM_IX, (GRECT *)&FM_X);
 		break;
 	case FORM_ALERT:
@@ -252,12 +256,10 @@ PP(register VOIDPTR *addr_in;)
 		{
 			if (GR_MNUMBER == M_OFF)
 				gsx_moff();
-			else if (GR_MNUMBER == M_ON)
+			if (GR_MNUMBER == M_ON)
 				gsx_mon();
 		} else
 		{
-			VOIDPTR grmaddr;
-			
 			if (GR_MNUMBER != USER_DEF)			/* set new mouse form   */
 			{
 				/* BUG: gsx_mfset will crash if this fails because number is out of range... */
@@ -265,7 +267,7 @@ PP(register VOIDPTR *addr_in;)
 				grmaddr = (MFORM *)LLGET((intptr_t)grmaddr);
 			} else
 			{
-				grmaddr = (MFORM *)LLGET((intptr_t)GR_MADDR);
+				grmaddr = (MFORM *)GR_MADDR;
 			}
 
 			gsx_mfset(grmaddr);
@@ -295,7 +297,8 @@ PP(register VOIDPTR *addr_in;)
 		break;
 #else
 	case FSEL_INPUT:
-		ret = fs_input(FS_IPATH, FS_ISEL, &FS_BUTTON);
+		/* ret = BUG: no return value */
+		fs_input(FS_IPATH, FS_ISEL, &FS_BUTTON);
 		break;
 #endif
 
@@ -371,13 +374,16 @@ PP(register VOIDPTR *addr_in;)
 		ret = sh_find(SH_PATH, NULL);
 		break;
 	case SHEL_ENVRN:
-		ret = sh_envrn(SH_PATH, SH_SRCH);
+#if BINEXACT
+		ret = /* BUG: does not return anything */
+#endif
+		sh_envrn(SH_PATH, SH_SRCH);
 		break;
 
 	default:
 		fm_show(ALRTNOFUNC, NULL, 1);
 		ret = -1;
-		break;
+		/* break; */
 	}
 	return ret;
 }
@@ -430,3 +436,24 @@ PP(intptr_t pcrys_blk;)
 	if (OP_CODE == RSRC_GADDR)
 		LLSET(ADDR_OUT, ad_rso);
 }
+
+#if AESVERSION < 0x140
+/*
+ *	Supervisor entry point.  Stack frame must be exactly like
+ *	this if supret is to work.
+ */
+VOID super PROTO((int16_t crystal, int16_t dummy, intptr_t pcrys_blk));
+
+VOID super(P(int16_t) crystal, P(int16_t) dummy, P(intptr_t) pcrys_blk)
+PP(int16_t crystal;)
+PP(int16_t dummy;)
+PP(intptr_t pcrys_blk;)
+{
+	UNUSED(dummy);
+	if (crystal == 200)
+		xif(pcrys_blk);
+
+	dsptch();
+	supret(0);
+}
+#endif

@@ -70,7 +70,7 @@ PP(int16_t *lrets;)
 		lrets[1] = yrat;
 	}
 
-#if TOSVERSION >= 0x104
+#if AESVERSION >= 0x140
 	lrets[2] = tbutton;
 #else
 	lrets[2] = button;
@@ -158,7 +158,9 @@ PP(int16_t *lrets;)
 
 	ret = ev_block(AMOUSE, (intptr_t)ADDR(pmo));
 	ev_rets(lrets);
+#if AESVERSION >= 0x140
 	lrets[2] = button;
+#endif
 	return ret;
 }
 
@@ -183,7 +185,9 @@ PP(int16_t *pbuff;)
 	}
 	return TRUE;
 #else
+#if AESVERSION >= 0x140
 	g_wsend = 0;
+#endif
 	return ap_rdwr(AQRD, rlr->p_pid, 16, pbuff);
 #endif
 }
@@ -268,7 +272,7 @@ PP(int16_t *prets;)
 		{
 			if ((mtrans > 1) && (downorup(pr_button, buparm)))
 			{
-#if TOSVERSION >= 0x104
+#if AESVERSION >= 0x140
 				tbutton = pr_button;	/* changed */
 #endif
 				what |= MU_BUTTON;
@@ -277,7 +281,7 @@ PP(int16_t *prets;)
 			{
 				if (downorup(button, buparm))
 				{
-#if TOSVERSION >= 0x104
+#if AESVERSION >= 0x140
 					tbutton = button;	/* changed */
 #endif
 					what |= MU_BUTTON;
@@ -359,8 +363,10 @@ PP(int16_t *prets;)
 	
 	/* get the returns  */
 	ev_rets(&prets[0]);
+#if AESVERSION >= 0x140
 	if (!(flags & MU_BUTTON))
 		prets[2] = button;
+#endif
 
 	/* do arets() if    */
 	/*   something hasn't   */
@@ -375,7 +381,7 @@ PP(int16_t *prets;)
 		if (which & bumsk)
 		{
 			prets[5] = (uint16_t) aret(bumsk);
-#if TOSVERSION >= 0x104
+#if AESVERSION >= 0x140
 			prets[2] = tbutton;
 #endif
 			/* otherwise BUG: prets[2] not set at all */
@@ -403,7 +409,7 @@ PP(int16_t *prets;)
 		}
 	}
 
-#if AESVERSION < 0x200
+#if (AESVERSION < 0x200) & (AESVERSION >= 0x140)
 	if (what & MU_MESAG)
 		g_wsend = 0;
 #endif

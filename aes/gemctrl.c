@@ -126,27 +126,20 @@ PP(register int16_t w_handle;)
 PP(int16_t mx;)
 PP(int16_t my;)
 {
-	register WINDOW *pwin;
+	register THEGLO *DGLO;
 	GRECT t, f;
 	int16_t x, y, w, h;
+	int unused2;
 	int16_t kind;
 	int16_t px, py;
 	OBJECT *tree;
-	int16_t pw, ph;
 	register int wm, hm;
 	register int16_t message;
 	register int16_t cpt;
-	int16_t selst, nrmst, dummy;
-	int16_t unused[3];
 	
-	UNUSED(unused);
-	UNUSED(dummy);
-	UNUSED(nrmst);
-	UNUSED(selst);
-	UNUSED(pw);
-	UNUSED(ph);
+	UNUSED(unused2);
 	
-	pwin = srchwp(w_handle);
+	DGLO = &D;
 	message = 0;
 	if (w_handle == gl_wtop /* ||
 		((D.w_win[w_handle].w_flags & VF_SUBWIN) && (D.w_win[gl_wtop].w_flags & VF_SUBWIN)) */ )
@@ -157,14 +150,10 @@ PP(int16_t my;)
 		w_bldactive(w_handle);
 		tree = gl_awind;
 		UNUSED(tree);
-#ifdef __ALCYON__
-		cpt = ob_find((LPTREE) gl_awind, 10L, mx, my); /* sigh */
-#else
 		cpt = ob_find((LPTREE) gl_awind, 0, 10, mx, my);
-#endif
         w_getsize(WS_CURR, w_handle, &t);
         r_get(&t, &x, &y, &w, &h);
-		kind = pwin->w_kind;
+		kind = DGLO->w_win[w_handle].w_kind;
 		switch (cpt)
 		{
 		case W_CLOSER:
@@ -188,7 +177,7 @@ PP(int16_t my;)
 			}
 			break;
 		case W_NAME:
-			if (pwin->w_kind & MOVER)
+			if (DGLO->w_win[w_handle].w_kind & MOVER)
 			{
 				/* prevent the mover gadget being moved completely offscreen */
 				r_set(&f, 0, gl_hbox, gl_rscreen.g_w + w - gl_wbox - 6, 10000);
@@ -206,9 +195,9 @@ PP(int16_t my;)
 				t.g_h -= h;
 				wm = gl_wchar;
 				hm = gl_hchar;
-				if (pwin->w_kind & (LFARROW | RTARROW | HSLIDE))
+				if (DGLO->w_win[w_handle].w_kind & (LFARROW | RTARROW | HSLIDE))
 					wm = gl_wbox * 7;
-				if (pwin->w_kind & (UPARROW | DNARROW | VSLIDE))
+				if (DGLO->w_win[w_handle].w_kind & (UPARROW | DNARROW | VSLIDE))
 					hm = gl_hbox * 7;
 				gr_rubwind(x, y, wm, hm, &t, &w, &h);
 				message = WM_SIZED;
@@ -242,11 +231,12 @@ PP(int16_t my;)
 			message = cpt == W_HELEV ? WM_HSLID : WM_VSLID;
 			/* slide is 1 less than elev */
 			x = gr_slidebox((LPTREE) gl_awind, cpt - 1, cpt, cpt == W_VELEV);
-			break;
+			/* break; */
 		}
 		if (message == WM_ARROWED)
 		{
 			x = gl_wa[cpt - W_UPARROW];
+#if AESVERSION >= 0x140
 			wm_update(END_UPDATE);			/* give up the screen */
 
 #if TP_48 /* ARROWFIX */
@@ -254,7 +244,7 @@ PP(int16_t my;)
 				register long end = ((((gl_dcindex >> 8) & 0xff) - 1) << 7) / gl_ticktime + TICKS;
 				register PD *p;
 
-				p = pwin->w_owner;
+				p = DGLO->w_win[w_handle].w_owner;
 				for (;;)
 				{
 					if (p->p_qindex <= 0)
@@ -276,7 +266,7 @@ PP(int16_t my;)
 			{
 				if (g_wsend == FALSE)
 				{
-					ap_sendmsg(appl_msg, message, pwin->w_owner->p_pid, w_handle, x, y, w, h);
+					ap_sendmsg(appl_msg, message, DGLO->w_win[w_handle].w_owner->p_pid, w_handle, x, y, w, h);
 					g_wsend = TRUE;
 				}
 
@@ -294,9 +284,10 @@ PP(int16_t my;)
 
 			} while (button & 1);		/* button is global */
 #endif
-
 			wm_update(BEG_UPDATE);			/* take back the screen */
 			return;
+#else
+#endif
 		}
 	} else
 	{
@@ -311,7 +302,7 @@ PP(int16_t my;)
 #endif
 	}
 	/* BUG: x, y, w, h undefined if w_handle != gl_wtop */
-	ct_msgup(message, pwin->w_owner->p_pid, w_handle, x, y, w, h);
+	ct_msgup(message, DGLO->w_win[w_handle].w_owner->p_pid, w_handle, x, y, w, h);
 }
 
 

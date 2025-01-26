@@ -332,13 +332,13 @@ static char deskus_string_1[] = " File ";
 static char deskus_string_2[] = " View ";
 static char deskus_string_3[] = " Options ";
 static char deskus_string_4[] = "  Desktop Info...";
-static char deskus_string_5[] = "--------------------";
-static char deskus_string_6[] = "1";
-static char deskus_string_7[] = "2";
-static char deskus_string_8[] = "3";
-static char deskus_string_9[] = "4";
-static char deskus_string_10[] = "5";
-static char deskus_string_11[] = "6";
+static char deskus_string_5[] = "---------------------";
+static char deskus_string_6[] = "  1";
+static char deskus_string_7[] = "  2";
+static char deskus_string_8[] = "  3";
+static char deskus_string_9[] = "  4";
+static char deskus_string_10[] = "  5";
+static char deskus_string_11[] = "  6";
 static char deskus_string_12[] = "  Open";
 static char deskus_string_13[] = "  Show Info...";
 static char deskus_string_14[] = "----------------";
@@ -650,30 +650,30 @@ static OBJECT rs_object[NUM_OBS] = {
 	{ 6, -1, -1, G_TITLE, OF_NONE, OS_NORMAL, C_UNION(deskus_string_2), 12,0, 6,769 }, /* VIEWMENU */
 	{ 2, -1, -1, G_TITLE, OF_NONE, OS_NORMAL, C_UNION(deskus_string_3), 18,0, 9,769 }, /* OPTNMENU */
 	{ 0, 8, 36, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 0,769, 80,24 },
-	{ 17, 9, 16, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 2,0, 20,8 },
-	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_4), 0,0, 20,1 }, /* ABOUITEM */
-	{ 11, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_5), 0,1, 20,1 }, /* L1ITEM */
-	{ 12, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_6), 0,2, 20,1 },
-	{ 13, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_7), 0,3, 20,1 },
-	{ 14, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_8), 0,4, 20,1 },
-	{ 15, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_9), 0,5, 20,1 },
-	{ 16, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_10), 0,6, 20,1 },
-	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_11), 0,7, 20,1 },
-	{ 28, 18, 27, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 16,8 },
+	{ 17, 9, 16, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 2,0, 21,8 },
+	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_4), 0,0, 21,1 }, /* ABOUITEM */
+	{ 11, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_5), 0,1, 21,1 }, /* L1ITEM */
+	{ 12, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_6), 0,2, 21,1 },
+	{ 13, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_7), 0,3, 21,1 },
+	{ 14, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_8), 0,4, 21,1 },
+	{ 15, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_9), 0,5, 21,1 },
+	{ 16, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_10), 0,6, 21,1 },
+	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_11), 0,7, 21,1 },
+	{ 28, 18, 27, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 16,10 },
 	{ 19, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_12), 0,0, 16,1 }, /* OPENITEM */
 	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_13), 0,1, 16,1 }, /* SHOWITEM */
-	{ 21, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_14), 0,2, 16,1 },
+	{ 21, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_14), 0,2, 16,1 }, /* L2ITEM */
 	{ 22, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_15), 0,3, 16,1 }, /* NEWFITEM */
 	{ 23, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_16), 0,4, 16,1 }, /* CLSFITEM */
-	{ 24, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_17), 0,5, 16,1 }, /* CLOSWITEM */
-	{ 25, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_18), 0,6, 16,1 },
+	{ 24, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_17), 0,5, 16,1 }, /* CLSWITEM */
+	{ 25, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_18), 0,6, 16,1 }, /* L3ITEM */
 	{ 26, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_19), 0,7, 16,1 }, /* FORMITEM */
-	{ 27, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_20), 0,8, 16,1 },
-	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_21), 0,9, 16,1 },
+	{ 27, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_20), 0,8, 16,1 }, /* OUTPITEM */
+	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_21), 0,9, 16,1 }, /* QUITITEM */
 	{ 36, 29, 35, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 14,0, 16,7 },
 	{ 30, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_22), 0,0, 16,1 }, /* ICONITEM */
 	{ 31, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_23), 0,1, 16,1 }, /* TEXTITEM */
-	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_24), 0,2, 16,1 },
+	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_24), 0,2, 16,1 }, /* L4ITEM */
 	{ 33, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_25), 0,3, 16,1 }, /* NAMEITEM */
 	{ 34, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_26), 0,4, 16,1 }, /* DATEITEM */
 	{ 35, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_27), 0,5, 16,1 }, /* SIZEITEM */
@@ -681,7 +681,7 @@ static OBJECT rs_object[NUM_OBS] = {
 	{ 7, 37, 42, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 14,0, 25,6 },
 	{ 38, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_29), 0,0, 25,1 }, /* IDSKITEM */
 	{ 39, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_30), 0,1, 25,1 }, /* IAPPITEM */
-	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_31), 0,2, 25,1 },
+	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskus_string_31), 0,2, 25,1 }, /* L5ITEM */
 	{ 41, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_32), 0,3, 25,1 }, /* PREFITEM */
 	{ 42, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskus_string_33), 0,4, 25,1 }, /* SAVEITEM */
 	{ 36, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskus_string_34), 0,5, 25,1 }, /* PRINTITEM */

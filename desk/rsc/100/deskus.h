@@ -17,7 +17,7 @@
  * Number of Trees:          14
  * Number of Userblks:       0
  * Number of Images:         1
- * Total file size:          9152
+ * Total file size:          9166
  */
 
 #ifdef RSC_NAME
@@ -63,18 +63,24 @@
 #define L1ITEM            10 /* STRING in tree ADMENU */
 #define OPENITEM          18 /* STRING in tree ADMENU */
 #define SHOWITEM          19 /* STRING in tree ADMENU */
+#define L2ITEM            20 /* STRING in tree ADMENU */
 #define NEWFITEM          21 /* STRING in tree ADMENU */
 #define CLSFITEM          22 /* STRING in tree ADMENU */
-#define CLOSWITEM         23 /* STRING in tree ADMENU */
+#define CLSWITEM          23 /* STRING in tree ADMENU */
+#define L3ITEM            24 /* STRING in tree ADMENU */
 #define FORMITEM          25 /* STRING in tree ADMENU */
+#define OUTPITEM          26 /* STRING in tree ADMENU */
+#define QUITITEM          27 /* STRING in tree ADMENU */
 #define ICONITEM          29 /* STRING in tree ADMENU */
 #define TEXTITEM          30 /* STRING in tree ADMENU */
+#define L4ITEM            31 /* STRING in tree ADMENU */
 #define NAMEITEM          32 /* STRING in tree ADMENU */
 #define DATEITEM          33 /* STRING in tree ADMENU */
 #define SIZEITEM          34 /* STRING in tree ADMENU */
 #define TYPEITEM          35 /* STRING in tree ADMENU */
 #define IDSKITEM          37 /* STRING in tree ADMENU */
 #define IAPPITEM          38 /* STRING in tree ADMENU */
+#define L5ITEM            39 /* STRING in tree ADMENU */
 #define PREFITEM          40 /* STRING in tree ADMENU */
 #define SAVEITEM          41 /* STRING in tree ADMENU */
 #define PRINTITEM         42 /* STRING in tree ADMENU */
@@ -173,7 +179,7 @@
 
 #define STINFOST           0 /* Free string */
 
-#define STR002             1 /* Free string */
+#define STTSHOW            1 /* Free string */
 
 #define STTPRINT           2 /* Free string */
 
@@ -205,7 +211,7 @@
 
 #define STSAMENAME        16 /* Alert string */
 
-#define FCNOMEM           17 /* Alert string */
+#define STDISKFULL        17 /* Alert string */
 
 #define STEXISTS          18 /* Alert string */
 

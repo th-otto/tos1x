@@ -26,6 +26,9 @@ ifeq ($(USE_CROSS_ALCYON),1)
 ifeq ($(TOSVERSION),104)
 CPPFLAGS += -A
 endif
+ifeq ($(TOSVERSION),100)
+CPPFLAGS += -A
+endif
 endif
 
 include SRCFILES
@@ -44,6 +47,41 @@ endif
 
 desksupp.o: desksupp.c desksup3.c
 deskinf.o: deskinf.c deskinf2.c deskpref.c
+
+# remove some superflous clr.w D0 that for some reason
+# don't appear in the final ROM
+deskapp1.o: deskapp1.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R14),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+deskapp3.o: deskapp3.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove #-[0-9]*,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+deskif.o: deskif.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R14),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+deskinf.o: deskinf.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R14),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R1\nmove [0-9]*(R14),R1/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+deskfpd.o: deskfpd.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R12),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R1\nmove [0-9]*(R13),R1/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
 
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<

@@ -89,7 +89,7 @@ BOOLEAN desk_pref(NOTHING)
 	LWSET(OB_STATE(flag + SPLOW), SELECTED);
 #endif
 
-	if (xform_do((OBJECT *)tree, ROOT) == SPOK)
+	if (inf_what((OBJECT *)tree, ROOT) == SPOK)
 	{
 		d->g_cdelepref = inf_what((OBJECT *)tree, SPCDYES, SPCDNO);
 		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);

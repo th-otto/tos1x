@@ -159,7 +159,7 @@ PP(register intptr_t aparm;)
 		break;
 	case ABUTTON:						/* link to the CDA also */
 		abutton(e, aparm);
-		break;
+		/* break; */
 	}
 
 	return e->e_mask;
@@ -217,6 +217,7 @@ PP(EVSPEC m;)
 	register int16_t f;
 	register EVB *p, *q;
 
+#if AESVERSION >= 0x140
 	for (p = rlr->p_cda->c_bsleep; p; p = p->e_nextp)
 	{
 		if (p->e_mask & m)
@@ -228,6 +229,7 @@ PP(EVSPEC m;)
 			}
 		}
 	}
+#endif
 
 	m1 = 0;
 	for (p = (q = (EVB *) &rlr->p_evlist)->e_nextp; p; p = (q = p)->e_nextp)

@@ -94,60 +94,31 @@
 #include "gsxdefs.h"
 #include "gemrsc.h"
 #include "dos.h"
+#include "ostruct.h"
 
 
-#define LEN_FSNAME 16
-#define NM_NAMES 9
-#define DEVICES	16						/* sixteen devices  */
-#define LPATH	128
-
-typedef struct fstruct
-{
-	char snames[LEN_FSNAME];
-} FSTRUCT;
+/*
+ * BEWARE, requires change in GEM.RSC
+ */
+#define LEN_FSNAME 40
+#define NM_NAMES (F9NAME - F1NAME + 1)
+#define NAME_OFFSET F1NAME
+/* max file allowed */
+#define NM_FILES 100
 
 STATIC GRECT gl_rfs;
 STATIC VOIDPTR ad_fstree;
-STATIC char *ad_fpath;
-STATIC char *ad_title;
-STATIC char *ad_select;
-STATIC FSTRUCT *ad_fsnames;
-STATIC int16_t fs_first;					/* first enter the file selector */
-STATIC uint16_t fs_topptr;
-STATIC uint16_t fs_count;
-STATIC int32_t fs_fnum;					/* max file allowed */
-STATIC char *ad_fsdta;
+STATIC char *ad_fsnames;
+STATIC _DTA *ad_fsdta;
+STATIC char gl_tmp1[LEN_FSNAME];
+STATIC char gl_tmp2[LEN_FSNAME];
+STATIC long *g_fslist;
 
-static char const wildstr[] = "*.*";
-static char const wslstr[] = "\\*.*";
+static char const gl_fsobj[4] = { FTITLE, FILEBOX, SCRLBAR, 0 };
 
-STATIC char fsname[40];
-STATIC char fcopy[40];
-STATIC char *pathcopy;					/* path copy    */
 STATIC int16_t defdrv;
 
-typedef struct pathstruct
-{
-	char pxname[LPATH];
-} PATHSTRUCT;
-
-STATIC PATHSTRUCT *pxpath;
-
-
 #define Drvmap() trp13(0xa)
-
-
-LINEF_STATIC int16_t r_dir PROTO((char *path, char *select, uint16_t *count));
-LINEF_STATIC int16_t r_files PROTO((char *path, char *select, uint16_t *count, char *filename));
-LINEF_STATIC VOID r_sort PROTO((FSTRUCT *buffer, int16_t count));
-LINEF_STATIC VOID r_sfiles PROTO((int16_t index));
-LINEF_STATIC VOID fs_draw PROTO((int16_t index, char *path, char **addr1, int16_t *ptxtlen));
-#if (AESVERSION >= 0x330)
-static VOID FXWait PROTO((NOTHING));
-static VOID FXSelect PROTO((OBJECT *tree, int16_t obj));
-static VOID FXDeselect PROTO((OBJECT *tree, int16_t obj));
-#endif
-
 
 
 VOID fs_start(NOTHING)
@@ -169,32 +140,306 @@ VOID fs_start(NOTHING)
 /* 306de: 00e1ce92 */
 /* 104de: 00fe0a3a */
 /* 106de: 00e22754 */
-LINEF_STATIC char *fs_back(P(char *) pstr)
+LINEF_STATIC char *fs_back(P(char *) pstr, P(char *) pend)
 PP(register char *pstr;)
+PP(register char *pend;)
 {
-	register char *pend;
-	register int16_t i;
-
-	i = strlen(pstr);					/* find the end of string   */
-	pend = pstr + i;
-
-	while (*pend != '\\' && pend != pstr)
+	/* back off to last slash */
+	while (*pend != ':' && *pend != '\\' && pend != pstr)
 	{
 		pend--;
-		if ((*pend == ':') && (pend == pstr + 1))
-			break;
 	}
 	/* if a : then insert a backslash for fsel dir line */
 	if (*pend == ':')
 	{
 		pend++;
-		LBCOPY(pend + 1, pend, i + 1);
-		*pend = '\\';
+		ins_char(pend, 0, '\\', 64);
 	}
 
 	return pend;
 }
 
+
+
+/*
+ *	Routine to back up a path and return the pointer to the beginning
+ *	of the file specification part
+ */
+LINEF_STATIC char *fs_pspec(P(char *) pstr, P(char *) pend)
+PP(register char *pstr;)
+PP(register char *pend;)
+{
+	pend = fs_back(pstr, pend);
+	if (*pend == '\\')
+		pend++;
+	else
+	{
+		strcpy(pstr, "A:\\*.*");
+		/* pstr[0] += dos_gdrv(); BUG: missing */
+		pend = pstr + 3;
+	}
+	return pend;
+}
+
+
+/*
+ *	Make a particular path the active path.  This involves
+ *	reading its directory, initializing a file list, and filling
+ *	out the information in the path node.  Then sort the files.
+ */
+LINEF_STATIC BOOLEAN fs_active(P(char *) ppath, P(char *)pspec, P(int16_t *) pcount)
+PP(char *ppath;)
+PP(char *pspec;)
+PP(int16_t *pcount;)
+{
+	int16_t ret;
+	int16_t thefile;
+	int16_t len;
+	int unused;
+	int16_t fs_index;
+	register int16_t i;
+	register int16_t j;
+	register int16_t gap;
+	long temp;
+
+	UNUSED(unused);
+	gsx_mfset(ad_hgmice);
+
+	thefile = 0;
+	fs_index = 0;
+	len = 0;
+
+	dos_sdta(ad_fsdta);
+	ret = dos_sfirst(ppath, FA_DIREC);
+	while (ret)
+	{
+		/* if it is a real file */
+		/*   or directory then  */
+		/*   save it and set    */
+		/*   first byte to tell */
+		/*   which      */
+		if (ad_fsdta->d_fname[0] != '.')
+		{
+			ad_fsdta->d_fname[-1] = (ad_fsdta->d_attrib & FA_DIREC) ? 0x07 : ' ';
+			if (ad_fsdta->d_fname[-1] == 0x07 || wildcmp(pspec, ad_fsdta->d_fname))
+			{
+				len = LSTCPY(fs_index + ad_fsnames, &ad_fsdta->d_fname[-1]);
+				g_fslist[thefile] = fs_index;
+				fs_index += len + 2;
+				thefile++;
+			}
+		}
+		ret = dos_snext();
+
+		if (thefile >= NM_FILES)
+		{
+			ret = FALSE;
+			chrout(7);
+		}
+	}
+	*pcount = thefile;
+	/* sort files using shell */
+	/*   sort on page 108 of */
+	/*   K&R C Prog. Lang.  */
+	for (gap = thefile / 2; gap > 0; gap /= 2)
+	{
+		for (i = gap; i < thefile; i++)
+		{
+			for (j = i - gap; j >= 0; j -= gap)
+			{
+				LSTCPY(gl_tmp1, ad_fsnames + g_fslist[j]);
+				LSTCPY(gl_tmp2, ad_fsnames + g_fslist[j + gap]);
+				if (strchk(gl_tmp1, gl_tmp2) <= 0)
+					break;
+				temp = g_fslist[j];
+				g_fslist[j] = g_fslist[j + gap];
+				g_fslist[j + gap] = temp;
+			}
+		}
+	}
+	gsx_mfset(ad_armice);
+	return TRUE;
+}
+
+
+/*
+*	Routine to adjust the scroll counters by one in either
+*	direction, being careful not to overrun or underrun the
+*	tail and heads of the list
+*/
+LINEF_STATIC int16_t fs_1scroll(P(int16_t) curr, P(int16_t) count, P(int16_t) touchob)
+PP(register int16_t curr;)
+PP(register int16_t count;)
+PP(register int16_t touchob;)
+{
+	register int16_t newcurr;
+
+	newcurr = (touchob == FUPAROW) ? (curr - 1) : (curr + 1);
+	if (newcurr < 0)
+		newcurr++;
+	if ((count - newcurr) < NM_NAMES)
+		newcurr--;
+	return count > NM_NAMES ? newcurr : curr;
+}
+
+
+/*
+ *	Routine to take the filenames that will appear in the window, 
+ *	based on the current scrolled position, and point at them 
+ *	with the sub-tree of G_STRINGs that makes up the window box.
+ */
+LINEF_STATIC BOOLEAN fs_format(P(LPTREE) tree, P(int16_t) currtop, P(int16_t) count)
+PP(register LPTREE tree;)
+PP(int16_t currtop;)
+PP(int16_t count;)
+{
+	register int16_t i;
+	register int16_t cnt;
+	register int16_t y;
+	register int16_t h;
+	register int16_t th;
+	char *adtext;
+	int16_t unused;
+	int16_t tlen;
+
+	UNUSED(unused);
+	/* build in real text strings */
+	cnt = min(NM_NAMES, count - currtop);
+	for (i = 0; i < NM_NAMES; i++)
+	{
+		if (i < cnt)
+		{
+			LSTCPY(gl_tmp2, ad_fsnames + g_fslist[currtop + i]);
+			fmt_str(&gl_tmp2[1], &gl_tmp1[1]);
+			gl_tmp1[0] = gl_tmp2[0];
+		} else
+		{
+			gl_tmp1[0] = ' ';
+			gl_tmp1[1] = '\0';
+		}
+		fs_sset(tree, NAME_OFFSET + i, gl_tmp1, &adtext, &tlen);
+		LWSET(OB_STATE(NAME_OFFSET + i), NORMAL);
+	}
+	/* size and position the elevator */
+	y = 0;
+	th = h = LWGET(OB_HEIGHT(FSVSLID));
+	if (count > NM_NAMES)
+	{
+		h = mul_div(NM_NAMES, h, count);
+		h = max(gl_hbox / 2, h);		/* min size elevator    */
+		y = mul_div(currtop, th - h, count - NM_NAMES);
+	}
+	LWSET(OB_Y(FSVELEV), y);
+	LWSET(OB_HEIGHT(FSVELEV), h);
+	return TRUE;
+}
+
+
+/*
+ *	Routine to select or deselect a file name in the scrollable 
+ *	list.
+ */
+LINEF_STATIC VOID fs_sel(P(int16_t) sel, P(int16_t) state)
+PP(int16_t sel;)
+PP(int16_t state;)
+{
+	if (sel)
+		ob_change(ad_fstree, F1NAME + sel - 1, state, TRUE);
+}
+
+
+/*
+ *	Routine to handle scrolling the directory window a certain number
+ *	of file names.
+ */
+LINEF_STATIC int16_t fs_nscroll(P(LPTREE) tree, P(int16_t *) psel, P(int16_t) curr, P(int16_t) count, P(int16_t) touchob, P(int16_t) n)
+PP(register LPTREE tree;)
+PP(register int16_t *psel;)
+PP(int16_t curr;)
+PP(int16_t count;)
+PP(int16_t touchob;)
+PP(int16_t n;)
+{
+	register int16_t i;
+	register int16_t newcurr;
+	register int16_t diffcurr;
+	int16_t sy;
+	GRECT r[2];
+
+	/* single scroll n times */
+	newcurr = curr;
+	for (i = 0; i < n; i++)
+		newcurr = fs_1scroll(newcurr, count, touchob);
+	/* if things changed then redraw */
+	diffcurr = newcurr - curr;
+	if (diffcurr)
+	{
+		curr = newcurr;
+		fs_sel(*psel, NORMAL);
+		*psel = 0;
+		fs_format(tree, curr, count);
+		gsx_gclip(&r[0]);
+		ob_actxywh(tree, F1NAME, &r[1]);
+
+		sy = r[1].g_h;
+		r[1].g_h = r[1].g_h * NM_NAMES;
+		if (diffcurr > 0)
+		{
+			if (diffcurr < NM_NAMES)
+			{
+				bb_screen(S_ONLY, r[1].g_x, r[1].g_y + diffcurr * sy, r[1].g_x, r[1].g_y, r[1].g_w, sy * (NM_NAMES - diffcurr));
+				r[1].g_y += sy * (NM_NAMES - diffcurr);
+				r[1].g_h = diffcurr * sy;
+			} else
+			{
+				r[1].g_h = sy * NM_NAMES;
+			}
+		} else
+		{
+			diffcurr = -diffcurr;
+			if (diffcurr < NM_NAMES)
+			{
+				bb_screen(S_ONLY, r[1].g_x, r[1].g_y, r[1].g_x, r[1].g_y + diffcurr * sy, r[1].g_w, sy * (NM_NAMES - diffcurr));
+				r[1].g_h = diffcurr * sy;
+			} else
+			{
+				r[1].g_h = sy * NM_NAMES;
+			}
+		}
+
+		gsx_sclip(&r[1]);
+		ob_draw(tree, FILEBOX, MAX_DEPTH);
+		gsx_sclip(&r[0]);
+		ob_draw(tree, FSVSLID, MAX_DEPTH);
+	}
+	return curr;
+}
+
+
+/*
+*	Routine to call when a new directory has been specified.  This
+*	will activate the directory, format it, and display ir[0].
+*/
+LINEF_STATIC VOID fs_newdir(P(char *) ftitle, P(char *) fpath, P(char *) pspec, P(OBJECT *) tree, P(int16_t *) pcount)
+char *ftitle;
+char *fpath;
+char *pspec;
+OBJECT *tree;
+int16_t *pcount;
+{
+	const char *ptmp;
+
+	ob_draw((LPTREE)tree, FDIRECTORY, MAX_DEPTH);
+	fs_active(fpath, pspec, pcount);
+	fs_format(tree, ROOT, *pcount);
+	gl_tmp1[0] = ' ';
+	strcpy(&gl_tmp1[1], pspec);
+	strcat(&gl_tmp1[1], " ");
+	LSTCPY(ftitle, gl_tmp1);
+	ptmp = gl_fsobj;
+	while (*ptmp)
+		ob_draw(tree, *ptmp++, MAX_DEPTH);
+}
 
 
 /*
@@ -206,7 +451,7 @@ PP(register char *pstr;)
  *	selector, interacts with the user to determine a selection
  *	or change of path, and returns to the application with
  *	the selected path, filename, and exit button.
- *	Add the label parameter
+ *	Add the label parameter,
  */
 /* 306de: 00e1cef2 */
 /* 104de: 00fe0a8a */
@@ -216,309 +461,125 @@ PP(char *pipath;)
 PP(char *pisel;)
 PP(int16_t *pbutton;)
 {
-	register uint16_t i, j;
-	int16_t dummy;
-	int16_t label;
-	int16_t last;
-	int16_t ret;
+	register int16_t touchob;
+	register int16_t value;
+	register int16_t fnum;
+	int16_t curr;
+	int16_t elevpos;
+	int16_t count;
+	int16_t mx, my;
+	int16_t sel;
+	int16_t pt_x, pt_y;
 	register LPTREE tree;
-	char *addr;
-	intptr_t mul, savedta;
-	PATHSTRUCT *savepath;
-	int16_t botptr;
-	int16_t value;
-	uint16_t count;
-	int16_t xoff, yoff, mx, my, bret;
-	char dirbuffer[122];
-	char *chrptr;
-	char scopy[16];
-	char chr;
-	int16_t curdrv, savedrv;
-	intptr_t **lgptr;
-	GRECT clip;
-	int16_t firstry;
-#if (AESVERSION >= 0x330)
-	OBJECT *xtree;						/* cjg */
-#define XTREE(obj) (&xtree[obj])
-#else
-#define XTREE(obj) ((OBJECT *)(tree + (obj) * sizeof(OBJECT)))
-#define xtree ((OBJECT *)tree)
-#endif
+	long dummy;
+	char *ad_fpath;
+	char *ad_fname;
+	char *ad_ftitle;
+	int16_t fname_len;
+	int16_t fpath_len;
+	int16_t temp_len;
+	int16_t dclkret;
+	int16_t cont;
+	BOOLEAN firsttime;
+	BOOLEAN newname;
+	register char *pstr;
+	register char *pspec;
+	register THEGLO *DGLO;
 
-	UNUSED(chrptr);
+
 	UNUSED(dummy);
-	
-	/*
-	 *	Start up the file selector by initializing the fs_tree
-	 */
-	rs_gaddr(ad_sysglo, R_TREE, SELECTOR, &ad_fstree);
-	ob_center((LPTREE)ad_fstree, &gl_rfs);
-
-	firstry = TRUE;
-	fs_first = TRUE;					/* first enter      */
-	last = F1NAME;						/* last selected file   */
-
-	defdrv = (int16_t) dos_gdrv();			/* get the default drive */
-	savedrv = defdrv;
-
-#if 0 /* ZZZ */
-	curdrv = defdrv + DRIVEA;
-#endif
-	/* save for default dr  */
-	pxpath = dos_alloc((int32_t) ((int16_t) LPATH * (int16_t) (DEVICES + 1)));
-
-	if (!pxpath)
-		goto bye2;
-	/* allocate dta buffer  */
-	ad_fsdta = dos_alloc(0x00000100L);
-
-	if (!ad_fsdta)						/* no buffer, bail out  */
-		goto bye;
-
-	/* get all the memory   */
-	mul = dos_avail();
-	/*  LEN_FSNAMES;    */
-	fs_fnum = mul / (int32_t) LEN_FSNAME;
-
-	if ((!mul) || (fs_fnum < (int32_t) NM_NAMES))
-	{
-		dos_free(ad_fsdta);
-bye:
-		dos_free(pxpath);
-bye2:
-#if 0 /* ZZZ */
-		fm_show(NOMEMORY, NULL, 1);
-#endif
+	UNUSED(curr);
+	DGLO = &D;
+	/* get all the memory */
+	ad_fsnames = dos_alloc((long)40 * LEN_FSNAME); /* BUG: should be 100 (NM_FILES) */
+	if (!ad_fsnames)
 		return FALSE;
-	} else
+	g_fslist = dos_alloc((long)NM_FILES * sizeof(char *));
+	if (!g_fslist)
 	{
-		ad_fsnames = dos_alloc(mul);
+		dos_free(ad_fsnames);
+		return FALSE;
+	}
+	/* allocate dta buffer  */
+	ad_fsdta = dos_alloc(256L);
+	if (!ad_fsdta)
+	{
+		dos_free(ad_fsnames);
+		dos_free(g_fslist);
+		return FALSE;
 	}
 
-	savepath = pxpath;					/* save the address */
-	pathcopy = savepath->pxname;
-	pxpath = savepath + 1;
+	/* init strings in form */
+	tree = ad_fstree;
+	fs_sset(tree, FTITLE, " *.* ", &ad_ftitle, &temp_len);
+	fs_sset(tree, FDIRECTORY, pipath, &ad_fpath, &fpath_len);
+	LSTCPY(gl_tmp1, pisel);
+	fmt_str(gl_tmp1, gl_tmp2);
+	fs_sset(tree, FSELECTION, gl_tmp2, &ad_fname, &fname_len);
 
-	fm_dial(FMD_START, &gl_rcenter, &gl_rfs);
-
-	tree = (LPTREE)ad_fstree;
-#if (AESVERSION >= 0x330)
-	xtree = (OBJECT *) tree;
-#endif
-
-	lgptr = (intptr_t **)OB_SPEC(FDIRECTORY);		/* change the buffer pointer */
-	**lgptr = (intptr_t)dirbuffer; /* tree[FDIRECTORY].ob_spec.tedinfo->te_ptext = dirbuffer */
-
-	fs_sset(tree, FDIRECTORY, "", &ad_fpath, (int16_t *)&addr); /* WTF */
-	fs_sset(tree, FTITLE, "", &ad_title, (int16_t *)&addr);
-	fs_sset(tree, FSELECTION, "", &ad_select, (int16_t *)&addr);
-	/* get the current drive */
-	count = isdrive();
-	j = 1;
-	/* start from A drive set the button    */
-#if 0 /* ZZZ */
-	for (ret = 0, i = DRIVEA; i <= DRIVEP; i++, ret++)
-	{
-		LWSET(OB_STATE(i), (count & j) ? NORMAL : DISABLED);
-		j = j << 1;
-	}
-#endif
-
-	label = F1NAME;						/* clean up the files   */
-
-	for (i = 0; i < NM_NAMES; i++)		/* clean up fields  */
-	{
-		fs_sset(tree, label, " ", &addr, (int16_t *)&addr); /* WTF */
-		LWSET(OB_STATE(label++), NORMAL);
-	}
-	/* save the current dta   */
-	savedta = trap(0x2F);
-
-	gsx_gclip(&clip);					/* get the clipping rect  */
-	/* set the new one    */
+	/* set clip and start form fill-in by drawing the form */
 	gsx_sclip(&gl_rfs);
-	/* reset the height */
-	LWSET(OB_Y(FSVELEV), 0);
-	LWSET(OB_HEIGHT(FSVELEV), LWGET(OB_HEIGHT(FSVSLID)));
+	fm_dial(FMD_START, &gl_rcenter, &gl_rfs);
+	DGLO->g_dir[0] = '\0';
+	ob_draw(tree, ROOT, 1);
 
-#if AESVERSION >= 0x320
-	gr_mouse(M_SAVE, NULL);
-#endif
-#if AESVERSION >= 0x200
-	gsx_mfset(ad_armice);				/* arrow pointer    */
-#endif
 
-	ob_draw(tree, 0, MAX_DEPTH);		/* draw the box     */
-
-	fmt_str(pisel, scopy);
-
-	strcpy(ad_fpath, pipath);			/* make a copy      */
-
-	pathcopy[0] = defdrv + 'A';			/* Backup path      */
-	pathcopy[1] = ':';
-	strcpy(&pathcopy[2], wslstr);
-
-	count = 0;
-	fs_topptr = 0;
-	botptr = 0;
-
-	ret = FDIRECTORY;					/* initial action   */
-	
-#ifndef __ALCYON__
-	bret = 0; /* quiet compiler */
-#endif
-
-	do
+	/* init for while loop by forcing initial fs_newdir call */
+	sel = 0;
+	newname = FALSE;
+	cont = firsttime = TRUE;
+	while (cont)
 	{
-		value = 1;						/* scroll factor    */
-
-		switch (ret)
+		touchob = firsttime ? 0 : fm_do(tree, FSELECTION);
+		gsx_mxmy(&mx, &my);
+		fpath_len = LSTCPY(DGLO->g_loc1, ad_fpath);
+		if (!streq(DGLO->g_dir, DGLO->g_loc1))
 		{
-		case FSVSLID:
-			ob_offset(tree, FSVELEV, &xoff, &yoff);
-			value = NM_NAMES;
-			if (my <= yoff)
-				goto up;
-			else /* if (my >= yoff + XTREE(FSVELEV)->ob_height) */
-				goto down;
-			/* else fall through */
+			fs_sel(sel, NORMAL);
+			if (touchob == FSOK || touchob == FSCANCEL)
+				ob_change(tree, touchob, NORMAL, TRUE);
+			strcpy(DGLO->g_dir, DGLO->g_loc1);
+			pspec = fs_pspec(DGLO->g_dir, &DGLO->g_dir[fpath_len]);
+			LSTCPY(ad_fpath, DGLO->g_dir);
+			pstr = fs_pspec(DGLO->g_loc1, &DGLO->g_loc1[fpath_len]);
+			strcpy(pstr, "*.*");
+			fs_newdir(ad_ftitle, DGLO->g_loc1, pspec, tree, &count);
+			elevpos = sel = 0;
+			firsttime = FALSE;
+		}
 
+		value = 0;
+		dclkret = (touchob & 0x8000) != 0;
+		touchob &= 0x7fff;
+		switch (touchob)
+		{
+		case FSOK:
+		case FSCANCEL:
+			cont = FALSE;
+			break;
+		case FUPAROW:
+		case FDNAROW:
+			value = 1;
+			break;
+		case FSVSLID:
+			ob_offset(tree, FSVELEV, &pt_x, &pt_y);
+			touchob = my <= pt_y ? FUPAROW : FDNAROW;
+			value = NM_NAMES;
+			break;
 		case FSVELEV:
-			take_ownership(TRUE);
+		  	take_ownership(TRUE);
 			value = gr_slidebox(tree, FSVSLID, FSVELEV, TRUE);
 			take_ownership(FALSE);
-			mul = (count - NM_NAMES) * (uint16_t) value;
-			mul = mul / 1000;
-			value = mul;
-			value = fs_topptr - value;
+			value = elevpos - mul_div(value, count - NM_NAMES, 1000);
 			if (value >= 0)
-				goto up;
-			value = -value;
-			
-		case FDNAROW:			/* scroll down  */
-		down:
-			if (fs_topptr == botptr)
-				break;
-
-			if ((fs_topptr + value) <= botptr)
-				fs_topptr += value;
-			else
-				fs_topptr = botptr;
-
-			goto sfiles;
-
-		up:
-		case FUPAROW:				/* scroll up    */
-			if (!fs_topptr)
-				break;
-
-			if ((int16_t) (fs_topptr - value) >= 0)
-				fs_topptr -= value;
-			else
-				fs_topptr = 0;
-
-		sfiles:
-			r_sfiles(fs_topptr);
-			break;
-
-		case FCLSBOX:					/* close box        */
-
-			*(fs_back(ad_fpath)) = 0;	/* back to last path    */
-#if AESVERSION <= 0x200
-			unfmt_str(ad_title, fs_back(ad_fpath) + 1);
-#else
-			strcpy(fs_back(ad_fpath) + 1, ad_title);
-#endif
-
-			/* fall through     */
-		case FDIRECTORY:
-		rdir:
-			if (!*ad_fpath)
-				strcpy(ad_fpath, pathcopy);
-
-			strcpy(fcopy, fs_back(ad_fpath));
-			/* extension OK ?   */
-			if (fcopy[0] == '\\' && fcopy[1])
-				strcpy(fsname, fcopy);	/* yes          */
-
-			if (fcopy[0] != '\\')		/* any slash ?      */
 			{
-				fsname[0] = '\\';
-				strcpy(fsname + 1, fcopy);
-			}
-
-			if (!fcopy[1])				/* if no extension  */
-			{
-				strcpy(fsname, wslstr);
-				strcat(ad_fpath, wildstr);
-			}
-
-			if (r_dir(ad_fpath, scopy, &count))
-			{
-				strcpy(pathcopy, ad_fpath);	/* copy current dir */
-				if (count > NM_NAMES)	/* more than 9 items    */
-					botptr = count - NM_NAMES;
-				else
-					botptr = 0;
+				touchob = FUPAROW;
 			} else
 			{
-		rdir5:
-				strcpy(ad_fpath, pathcopy);
-				ob_draw(tree, FDIRECTORY, MAX_DEPTH);
-				if (firstry)
-				{
-					firstry = FALSE;
-					goto rdir;
-				}
+				touchob = FDNAROW;
+				value = -value;
 			}
-
-			firstry = FALSE;
-
-			/* reset the last one   */
-#if 0 /* ZZZ */
-			if (curdrv <= DRIVEP)
-				ob_change(tree, curdrv, NORMAL, TRUE);
-#endif
-
-			if (*(ad_fpath + 1) == ':')	/* if there a drive */
-				defdrv = (int16_t) (*ad_fpath - 'A');
-
-#if 0 /* ZZZ */
-			curdrv = defdrv + DRIVEA;
-
-			if (curdrv <= DRIVEP)
-				ob_change(tree, curdrv, SELECTED, TRUE);
-#endif
-
 			break;
-
-#if 0 /* ZZZ */
-		case DRIVEA:
-		case DRIVEB:
-		case DRIVEC:
-		case DRIVED:
-		case DRIVEE:
-		case DRIVEF:
-		case DRIVEG:
-		case DRIVEH:
-		case DRIVEI:
-		case DRIVEJ:
-		case DRIVEK:
-		case DRIVEL:
-		case DRIVEM:
-		case DRIVEN:
-		case DRIVEO:
-		case DRIVEP:
-			curdrv = ret;
-			i = (ret - DRIVEA);			/* get the drive */
-			*ad_fpath = (char) (i + 'A');	/* stuff into the path */
-			*(ad_fpath + 1) = ':';
-			if (!dos_gdir(i + 1, ad_fpath + 2))
-				goto fs1;
-			else
-				goto rdir5;
-#endif
-
 		case F1NAME:
 		case F2NAME:
 		case F3NAME:
@@ -528,336 +589,84 @@ bye2:
 		case F7NAME:
 		case F8NAME:
 		case F9NAME:
-			i = ret - F1NAME;
-			addr = &ad_fsnames[i + fs_topptr].snames[1];
-			chr = ad_fsnames[i + fs_topptr].snames[0];
-
-
-			if (chr == 7)				/* is it a directory ?  */
+			fnum = touchob - F1NAME + 1;
+			if (sel && sel != fnum)
+				fs_sel(sel, NORMAL);
+			if (sel != fnum)
 			{
-				unfmt_str(addr, fs_back(ad_fpath) + 1);
-			  fs1:
-				strcat(ad_fpath, fsname);
-				goto rdir;
-			} else /* must be a file   */ if (chr)
-			{							/* clean up the last selected */
-				ob_change(tree, last, NORMAL, TRUE);
-				strcpy((char *)(intptr_t)LLGET(LLGET(OB_SPEC(FSELECTION))), addr);
-				ob_change(tree, ret, SELECTED, TRUE);
-				ob_draw(tree, FSELECTION, MAX_DEPTH);
-				last = ret;
-				if (bret & 0x8000)		/* double click     */
+				sel = fnum;
+				fs_sel(sel, SELECTED);
+			}
+			/* get string and see if file or folder */
+			fs_sget(tree, touchob, gl_tmp1);
+			if (gl_tmp1[0] == ' ')
+			{
+				/* copy to selection */
+				newname = TRUE;
+				if (dclkret)
+					cont = FALSE;
+			} else
+			{
+				/* append in folder name */
+				pstr = fs_pspec(DGLO->g_loc1, &DGLO->g_loc1[fpath_len]);
+				strcpy(gl_tmp2, pstr - 1);
+				unfmt_str(&gl_tmp1[1], pstr);
+				strcat(pstr, gl_tmp2);
+				firsttime = TRUE;
+			}
+			break;
+		case FCLSBOX:
+			pspec = pstr = fs_back(DGLO->g_loc1, &DGLO->g_loc1[fpath_len]);
+			if (*pstr-- == '\\')
+			{
+				firsttime = TRUE;
+				if (*pstr != ':')
 				{
-					ob_change(tree, OK, SELECTED, TRUE);
-					goto fdone;			/* force to exit    */
+					pstr = fs_back(DGLO->g_loc1, pstr);
+					if (*pstr == '\\')
+						strcpy(pstr, pspec);
 				}
 			}
-
 			break;
-
-		default:
-			break;
-		}								/* end of switch    */
-
-		bret = fm_do(tree, FSELECTION);
-
-		gsx_mxmy(&mx, &my);
-
-		ret = bret & 0x7FFF;
-
-#if AESVERSION >= 0x200
-		if (ret == CANCEL)
-			break;
-#endif
-
-		if (!streq(ad_fpath, pathcopy))	/*  is dir changed ?  */
-		{
-			ob_change(tree, ret, NORMAL, TRUE);
-			ret = FDIRECTORY;			/* force a read again   */
-		} else
-		{
-			if (ret == OK)
-				break;
+		case FTITLE:
+			firsttime = TRUE;
+			/* break; */
 		}
+		if (firsttime)
+		{
+			LSTCPY(ad_fpath, DGLO->g_loc1);
+			DGLO->g_dir[0] = '\0';
+			gl_tmp1[1] = '\0';
+			newname = TRUE;
+		}
+		if (newname)
+		{
+			LSTCPY(ad_fname, &gl_tmp1[1]);
+			ob_draw(tree, FSELECTION, MAX_DEPTH);
+			if (!cont)
+				ob_change(tree, FSOK, SELECTED, TRUE);
+			newname = FALSE;
+		}
+		if (value)
+			elevpos = fs_nscroll(tree, &sel, elevpos, count, touchob, value);
+	}
+	
+	/* return path and file name to app */
+	LSTCPY(pipath, ad_fpath);
+	LSTCPY(gl_tmp1, ad_fname);
+	unfmt_str(gl_tmp1, gl_tmp2);
+	LSTCPY(pisel, gl_tmp2);
 
-	} while (ret != CANCEL);
+	/* start the redraw */
+	fm_dial(FMD_FINISH, &gl_rcenter, &gl_rfs);
 
-  fdone:
-
-	dos_sdrv(savedrv);
-	dos_free(ad_fsdta);
-	dos_free(ad_fsnames);
-	dos_free(savepath);
-	strcpy(pipath, ad_fpath);
-	unfmt_str(ad_select, pisel);
-
-	if ((*pbutton = inf_what((OBJECT *)tree, OK, CANCEL)) == -1)
+	/* return exit button   */
+	if ((*pbutton = inf_what((OBJECT *)tree, FSOK, FSCANCEL)) == -1)
 		*pbutton = 0;
 
-	ob_change(tree, ret, NORMAL, FALSE);
-	fm_dial(FMD_FINISH, &gl_rcenter, &gl_rfs);
-	dos_sdta((VOIDPTR)savedta);
-	gsx_sclip(&clip);
-#if AESVERSION >= 0x320
-	gr_mouse(M_RESTORE, NULL);
-#endif
-
-#undef xtree
-#undef XTREE
+	dos_free(ad_fsdta);
+	dos_free(g_fslist);
+	dos_free(ad_fsnames);
 
 	return TRUE;
-}
-
-
-
-/*
- * read in a directory
- */
-/* 306de: 00e1d7d0 */
-/* 104de: 00fe1224 */
-/* 106de: 00e23062 */
-LINEF_STATIC int16_t r_dir(P(char *) path, P(char *) select, P(uint16_t *) count)
-PP(char *path;)
-PP(char *select;)
-PP(register uint16_t *count;)
-{
-	LPTREE tree;
-	register int h;
-	char *addr;
-	register int16_t status, i;
-	char filename[16];
-
-	UNUSED(i);
-	
-	gsx_mfset(ad_hgmice);
-
-	if (!r_files(path, select, count, filename))
-	{									/* if failed    */
-		fm_error(~E_FILNF - 30);
-		status = FALSE;
-		goto r_exit;
-	}
-
-	fs_count = *count;
-	fs_draw(FDIRECTORY, path, &addr, (int16_t *)&addr); /* WTF */
-	fs_draw(FTITLE, filename, &addr, (int16_t *)&addr); /* WTF */
-	fs_draw(FSELECTION, select, &ad_select, (int16_t *)&addr); /* WTF */
-
-	tree = (LPTREE)ad_fstree;
-	fs_topptr = 0;						/* reset top pointer    */
-
-	h = LWGET(OB_HEIGHT(FSVSLID));
-	if (*count > NM_NAMES)
-	{
-		h = (h * NM_NAMES) / *count;
-	}
-
-	LWSET(OB_Y(FSVELEV), 0);			/* move it to the top     */
-	LWSET(OB_HEIGHT(FSVELEV), (uint16_t) h);	/* height of the elevator */
-	r_sfiles(0);						/* show form the top      */
-	status = TRUE;
-
-  r_exit:
-#if AESVERSION >= 0x320
-	gr_mouse(M_PREV, NULL);
-#else
-	gsx_mfset(ad_armice);
-#endif
-	return status;
-}
-
-
-/*
- * Read files into the buffer
- * The buffer size will always be NM_NAMES or more
- * for easy coding and redraw the count will return
- * the actual number of files
- */
-/* 104de: 00fe12f8 */
-/* 106de: 00e23154 */
-LINEF_STATIC int16_t r_files(P(char *) path, P(char *) select, P(uint16_t *) count, P(char *) filename)
-PP(register char *path;)
-PP(char *select;)
-PP(uint16_t *count;)
-PP(register char *filename;)
-{
-	register int16_t i;
-	int32_t j;
-	register int32_t k;
-	int16_t ret;
-	char *chrptr;
-	register FSTRUCT *fsnames;
-	register int16_t drvid;
-
-	fsnames = ad_fsnames;
-
-	*filename = 0;						/* no file name     */
-
-	/* uppercase the drive path */
-	if (*(path + 1) == ':')
-	{
-		*path = toupper(*path);
-		drvid = (int16_t) (*path - 'A');
-	} else
-	{
-		drvid = defdrv;
-	}
-	
-	/* the drive present ?  */
-	k = 1;
-	k = k << drvid;
-	j = Drvmap();						/* get the drive map    */
-
-	if (!(k & j))						/* drive not there  */
-		return FALSE;
-
-
-	dos_sdrv(drvid);					/* set the default drive    */
-	/* take out the wild string stuff   */
-
-	chrptr = fs_back(path);				/* get the directory    */
-	if (*chrptr == '\\')				/* path exists, point at filename */
-		chrptr++;
-
-#if AESVERSION >= 0x200
-	if ((int)strlen(chrptr) > 12)			/* 9/5/90       */
-		chrptr[12] = 0;
-#endif
-
-	strcpy(filename, chrptr);			/* save the file name   */
-	strcpy(chrptr, wildstr);			/* this is the dir  */
-	dos_sdta(ad_fsdta);
-	/* look for all sub dir */
-	if (!(ret = dos_sfirst(path, 0x37)))
-	{									/* error        */
-		if (DOS_AX != E_NOFILES)		/* it is not no files   */
-		{
-			strcpy(chrptr, filename);	/* then return      */
-			return FALSE;
-		}
-	}
-
-	if (!fs_first)
-		*select = 0;					/* clean up selection filed */
-	else
-		fs_first = FALSE;				/* don't clean up at this   */
-	/* time             */
-
-	for (i = 0; i < NM_NAMES; i++)
-		strcpy(fsnames[i].snames, " ");
-
-	i = 0;
-	/* look for directory   */
-	while ((ret) && ((uint16_t) (i) < fs_fnum))
-	{
-		if (ad_fsdta[21] & (F_HIDDEN | F_SYSTEM))
-			goto rfile2;
-
-		if (ad_fsdta[21] & F_SUBDIR)	/* if subdirectory  */
-		{
-			if (ad_fsdta[30] != '.')
-				fsnames[i].snames[0] = 7;
-			else
-				goto rfile2;
-		} else
-		{
-			if (wildcmp(filename, &ad_fsdta[30]))
-				fsnames[i].snames[0] = 0x20;
-			else
-				goto rfile2;
-		}
-
-		fmt_str(&ad_fsdta[30], &fsnames[i++].snames[1]);
-	  rfile2:
-		ret = dos_snext();
-	}
-
-	if (i)
-		r_sort(fsnames, i);
-
-	strcpy(chrptr, filename);			/* restore file name    */
-
-	*count = i;
-
-	return TRUE;
-}
-
-
-/* 104de: 00fe14b8 */
-/* 106de: 00e23352 */
-LINEF_STATIC VOID r_sort(P(FSTRUCT *) buffer, P(int16_t) count)
-PP(register FSTRUCT *buffer;)
-PP(int16_t count;)
-{
-	register int16_t gap, i, j, k;
-	char tmp[LEN_FSNAME];
-
-	UNUSED(k);
-	for (gap = count / 2; gap > 0; gap /= 2)
-	{
-		for (i = gap; i < count; i++)
-		{
-			for (j = i - gap; j >= 0; j -= gap)
-			{
-				if (strchk(buffer[j].snames, buffer[j + gap].snames) <= 0)
-					break;
-
-				LSTCPY(tmp, buffer[j].snames);
-				LSTCPY(buffer[j].snames, buffer[j + gap].snames);
-				LSTCPY(buffer[j + gap].snames, tmp);
-			}
-		}
-	}
-}
-
-
-/* 104de: 00fe1562 */
-/* 106de: 00e2341a */
-/*
- * show files and update the scroll bar
- */
-LINEF_STATIC VOID r_sfiles(P(int16_t) index)
-PP(int16_t index;)
-{
-	register int16_t label, i;
-	register int16_t h;
-	register LPTREE tree;
-	char *addr;
-
-	label = F1NAME;
-	tree = (LPTREE)ad_fstree;
-
-	for (i = index; i < (index + NM_NAMES); i++)
-	{
-		LWSET(OB_STATE(label), NORMAL);
-		fs_sset((LPTREE)ad_fstree, label, " ", &addr, (int16_t *)&addr); /* WTF */
-		fs_draw(label++, ad_fsnames[i].snames, &addr, (int16_t *)&addr); /* WTF */
-	}
-
-	h = LWGET(OB_HEIGHT(FSVSLID));
-
-	h = h * fs_topptr;
-	if (fs_count != 0)
-		h = h / fs_count;
-	
-	LWSET(OB_Y(FSVELEV), h);
-
-	ob_draw(tree, FSVSLID, MAX_DEPTH);	/* erase the old slide bar */
-}
-
-
-
-/*
- * do the fs_sset and ob_draw
- */
-/* 104de: 00fe160e */
-/* 106de: 00e234d6 */
-LINEF_STATIC VOID fs_draw(P(int16_t) index, P(char *) path, P(char **) addr1, P(int16_t *) ptxtlen)
-PP(int16_t index;)
-PP(char *path;)
-PP(char **addr1;)
-PP(int16_t *ptxtlen;)
-{
-	fs_sset((LPTREE)ad_fstree, index, path, addr1, ptxtlen);
-	ob_draw((LPTREE)ad_fstree, index, MAX_DEPTH);
 }

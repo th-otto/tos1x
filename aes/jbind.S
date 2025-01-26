@@ -54,8 +54,10 @@ NOERR   equ     0
 
         xdef    _crit_err
         comm _crit_err,4
+#if AESVERSION >= 0x140
         xdef    savestk
         comm savestk,4
+#endif
         xdef    _SAV2TRP
         comm _SAV2TRP,4
         xdef    _savsup
@@ -196,23 +198,25 @@ _err_trap:
         move.l  #_err_tbl,a1
         move.w  d0,-(a7)                /* save error */
         bne     err1                    /* not 0 */
-        sub.w   a0,a0
+        move.w  #0,a0
         bra     eok
 err1:
         not.w   d0                      /* one's comp */
         move.w  d0,a0
         cmp.w   #17,d0
         ble     eok
-        sub.w   a0,a0
+        move.w  #0,a0
 eok:
         move.b  0(a0,a1.l),d0
         move.w  d1,-(a7)                /* drive,0 rel */
         move.w  d0,-(a7)                /* alert number */
-        jsr     _eralert
+        /* jsr     _eralert */
+        dc.w 0x4eb9
+        dc.l _eralert
         addq.l  #4,a7
         move.w  (a7)+,d1                /* get back error num */
         ext.l   d1
-        tst.w   d0
+        cmp.w   #0,d0
         beq     eabrt                   /* abort */
         move.l  #$10000,d1              /* retry */
 eabrt:
@@ -220,9 +224,11 @@ eabrt:
         movem.l (a7)+,d3-d7/a3-a6
         move.l  errsave,a7
 er_1:
+#if AESVERSION >= 0x140 /* BUG: missing in older versions */
         move.l  _rlr,a0                 /* get the current rlr */
         move.l  8(a0),a0                /* get the UDA */
         move.l  savestk,62(a0)          /* restore the stack */
+#endif
 #if AESVERSION >= 0x200
         clr.w   _crt_error              /* so dispatcher knows we're done */
 #endif
@@ -260,7 +266,7 @@ _dos_exec:
         jsr     sti
 
         move.l  a7,a1
-        clr.l   -(a7)                   /*  NULLPTR */
+        move.l  #0,-(a7)                /*  NULLPTR */
         move.l  10(a1),-(a7)            /*  pcmdln */
         move.l  4(a1),-(a7)             /*  pspec */
         move.w  8(a1),-(a7)             /*  segenv       (3) */
@@ -277,8 +283,8 @@ _dos_exec:
         move.l  8(a0),a0
         move.l  _savsup,62(a0)          /* restore uda->supstk */
         jsr     sti
-        clr.w   _DOS_ERR
-        tst.w   d0
+        move.w  #0,_DOS_ERR
+        cmp.w   #0,d0
         beq     exok
         move.w  #1,_DOS_ERR             /* set error condition */
         move.w  d0,_DOS_AX              /* error code changed */
@@ -432,7 +438,7 @@ La1:
 /* 104de: 00fdd43c */
 /* 106de: 00e1ea34 */
 _grptrp:
-        tst.w   d0                      /* Is function number system reset ? */
+        cmpi.w   #0,d0                  /* Is function number system reset ? */
         beq     _back
 
         cmpi.w  #CRYSTAL1,d0            /* Trying to get to Crystal? */
@@ -451,7 +457,7 @@ _grptrp:
 **********************************************
 
         xdef    _back
-_back:  clr.w   -(sp)
+_back:  move.w  #0,-(sp)
         move.w  #$4c,-(sp)
         trap    #1
 /*
@@ -507,6 +513,7 @@ _gosuper:
  *      supret(0);
  *}
  */
+#if AESVERSION >= 0x140
         cmp.w   #CRYSTAL1,d0
         bne     super1             /* if CRYSTAL2, fall into dsptch (same as appl_yield() for PC-GEM) */
         move.l  d1,-(sp)
@@ -515,21 +522,31 @@ _gosuper:
 super1:
         jsr     dsptch
         clr.w   d0      
+#else
+		move.l  d1,-(a7)
+		move.w  #0,-(a7)
+		move.w  d0,-(a7)
+		move.l  #_super,a0
+		jsr     (a0)
 /*
  *
  * *********************************************
  *      Return from Crystal call 
  * *********************************************
  */
-#if 0
         xdef    _supret
 _supret:
         move.w  4(a7),d0                /* Get return passed from super(). */
 #endif
 
         jsr     cli
-#if 0
-        add.l   #$18,a7                 /* restore stack */
+#if AESVERSION < 0x140
+		/* restore stack: */
+		/* - 8 bytes arguments pushed above */
+		/* - 4 bytes pc from jsr super */
+		/* - 8 bytes from LINK in super */
+		/* - 4 bytes pc from jsr supret */
+        add.l   #24,a7
 #endif
         movea.l _rlr,a0
         movea.l 8(a0),a0                /* Get address of UDA. */

@@ -60,12 +60,6 @@ typedef struct pathnode PNODE;
 typedef intptr_t LPTREE;
 typedef intptr_t LPBYTE;
 
-#define CMD_BAT    0xFA
-#define CMD_COPY   0xFB
-#define CMD_FORMAT 0xFC
-#define CMD_PRINT  0xFD
-#define CMD_TYPE   0xFE
-
 /* file operation definitions   */
 #define OP_COUNT      0
 #define OP_DELETE     1
@@ -175,7 +169,7 @@ struct pathnode {
 	uint16_t p_attr;
 	char		p_spec[LEN_ZFPATH];
 	FNODE		*p_flist;
-	uint16_t	p_count;
+	int16_t		p_count;
 	int32_t		p_size;
 };
 
@@ -188,38 +182,13 @@ typedef struct idtype
 	char i_name[NAMELEN];
 } IDTYPE;
 
-#undef NUM_IB
-#define NUM_IB 6
+/* number of named icons */
+#define NUM_IBLKS 6
 
 #define NUM_ADTREES 14
 
 
 typedef struct {
-	/* 13650 */ char *str;				/* rsrc_gaddr result */
-	/* 13736 */ char *p_cartname;
-	/* 13740 */ int16_t g_icw;
-	/* 13742 */ int16_t g_ich;
-	/* 13744 */ int16_t g_nmicon;
-	/* 13748 */ int16_t g_xyicon[18];
-	/* 13820 */ int16_t g_wicon;		/* desktop icon size */
-	/* 13822 */ int16_t g_hicon;
-	/* 22214 */ APP app[NUM_ANODES];	/* app buffer array */
-	/* 23110 */ APP *appfree;			/* app buffer free list */
-	/* 23526 */ int16_t g_ismask[NUM_IB * 2];
-	/* 24112 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
-	/* 24116 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
-	/* 24120 */ char o24120[8];			/* unused, but keep it because buffer above may overflow */
-	/* 24130 */ BOOLEAN ml_dlpr;
-	/* 24132 */ char printname[26];
-	/* 24158 */ char ml_fstr[13];
-	/* 24184 */ char o24184[16];		/* unused */
-	/* 30440 */ char autofile[PATHLEN];
-	/* 30572 */
-
-	/* same as g_pbuff */
-	/* 28304 */ APP *appnode;			/* app buffer array */
-
-	
 	/*     0 */ FNODE g_flist[NUM_FNODES];
 	/* 16000 */ FNODE *g_favail;
 	/* 16004 */ PNODE g_plist[NUM_PNODES];
@@ -266,7 +235,7 @@ typedef struct {
 	/* 24002 */ char *a_fcb1;           /* unused on Atari */
 	/* 24006 */ char g_fcb2[36];        /* unused on Atari */
 	/* 24042 */ char *a_fcb2;           /* unused on Atari */
-	/* 24046 */ char *a_alert;
+	/* 24046 */ char *a_alert;			/* rsrc_gaddr result */
 	/* 24050 */ OBJECT *g_atree[NUM_ADTREES];	/* resource trees */
 	/* 24106 */ int16_t g_croot;        /* current pseudo root */
 	/* 24108 */ int16_t g_cwin;         /* current window # */
@@ -275,27 +244,47 @@ typedef struct {
 	/* 24114 */ int16_t g_csortitem;    /* curr. sort item chked */
 	/* 24116 */ int16_t g_ccopypref;	/* curr. copy pref.	*/
 	/* 24118 */ int16_t g_cdelepref;	/* curr. delete pref.	*/
-	/* 24120 */ int16_t g_covwrpref;	/* curr. overwrite pref.*/
+	/* 24120 */ int16_t g_cdclkpref;	/* curr. dblclick pref.*/
+	/* 24122 */ int16_t g_icw;
+	/* 24124 */ int16_t g_ich;
+	/* 24126 */ int16_t g_nmicon;
 	/* 24128 */ int16_t g_nmtext;
+	/* 24130 */ int16_t g_xyicon[18];
 	/* 24166 */ int16_t g_xytext[18];
+	/* 24202 */ int16_t g_wicon;		/* desktop icon size */
+	/* 24204 */ int16_t g_hicon;
 	/* 24206 */ char afile[SIZE_AFILE];
 	/* 26254 */ int16_t size_afile;		/* length of recently read desktop.inf */
 	/* 26256 */ char appbuf[SIZE_AFILE];
-	/* 28304 */ char *g_pbuff;
+	/* 28304 */ char *g_pbuff;			/* app buffer array */
+	/* 28308 */ APP app[NUM_ANODES];	/* app buffer array */
+	/* 29204 */ APP *appfree;			/* app buffer free list */
 	/* 29208 */ APP *applist;			/* app buffer list */
-	/* 29212 */ ICONBLK iconaddr[NUM_IB];	/* desktop icons */
-	/* 29416 */ ICONBLK g_iblist[NUM_IB];
+	/* 29212 */ ICONBLK iconaddr[NUM_IBLKS];	/* desktop icons */
+	/* 29416 */ ICONBLK g_iblist[NUM_IBLKS];
+	/* 29620 */ int16_t g_ismask[NUM_IBLKS * 2];
 	/* 29644 */ CSAVE g_cnxsave;
-	/* 30200 */ int16_t *icondata;
+	/* 30200 */ intptr_t icondata; /* a_datastart */
+	/* 30204 */ intptr_t a_buffstart;
 	/* 30208 */ OBJECT *g_pscreen;
+	/* 30212 */ char ml_files[4];		/* string buffer for # of files BUG: too short */
+	/* 30216 */ char ml_dirs[4];		/* string buffer for # of dirs BUG: too short */
+	/* 30220 */ int16_t ml_dlfi;
+	/* 30222 */ int16_t ml_dlfo;
+	/* 30224 */ int16_t ml_dlok;
+	/* 30226 */ int16_t ml_dlcn;
+	/* 30228 */ BOOLEAN ml_dlpr;
 	/* 30230 */ BOOLEAN ml_havebox;
+	/* 30232 */ char ml_fsrc[LEN_ZFNAME];
+	/* 30245 */ char ml_fdst[LEN_ZFNAME];
+	/* 30258 */ char ml_fstr[LEN_ZFNAME];
 	/* 30271 */ char ml_ftmp[LEN_ZFNAME];
 	/* 30284 */ char gl_lngstr[16];		/* WTF? way too small */
 	/* 30300 */ FNODE *ml_pfndx[NUM_FNODES];
+
 	/* attention: must be last, because it makes the structure >32k */
 	/* 31900 */ OBJECT g_screen[NUM_SOBS];
 	/* 35092 */
-
 } THEDSK;
 
 /*
@@ -306,20 +295,15 @@ typedef struct {
 #define CHAR_FOR_CARTRIDGE 'c'
 
 
-extern char const getall[];
-extern char const wilds[];
-extern int16_t gl_kstate;
-
 /*
  * deskwin.c
  */
 extern DESKWIN *g_wlist;				/* head of window list      */
+extern uint8_t gl_dta[];
 
 VOID winfo PROTO((DESKWIN *win));
 DESKWIN *w_gnext PROTO((NOTHING));
 DESKWIN *w_gfirst PROTO((NOTHING));
-VOID up_allwin PROTO((const char *path, BOOLEAN full));
-VOID up_win PROTO((DESKWIN *win));
 VOID bottop PROTO((NOTHING));
 BOOLEAN path_alloc PROTO((int16_t level));
 VOID free_path PROTO((NOTHING));
@@ -463,6 +447,7 @@ int16_t wind_calc PROTO((int16_t wctype, uint16_t kind, int16_t x, int16_t y, in
  * deskdir.c
  */
 extern int f_level;							/* the current depth of the directory path */
+extern int f_maxlevel;
 
 BOOLEAN dofiles PROTO((const char *s, const char *d, int16_t code, int32_t *ndirs, int32_t *nfiles, int32_t *tsize, int16_t type, BOOLEAN multiple));
 BOOLEAN doright PROTO((int flag));
@@ -476,7 +461,7 @@ VOID fun_win2desk PROTO((int16_t wh, int16_t obj));
 BOOLEAN fun_f2any PROTO((int16_t sobj, DESKWIN *wn_dest, APP *an_dest, FNODE *fn_dest, int16_t dobj));
 VOID fun_desk2win PROTO((int16_t wh, int16_t obj));
 BOOLEAN fun_d2desk PROTO((int16_t dobj));
-BOOLEAN desk1_drag PROTO((int16_t wh, int16_t dest_wh, int16_t sobj, int16_t dobj));
+VOID desk1_drag PROTO((int16_t wh, int16_t dest_wh, int16_t dobj));
 VOID add_fname PROTO((char *path, const char *name));
 VOID del_fname PROTO((char *path));
 VOID del_fname PROTO((char *path));
@@ -508,6 +493,7 @@ VOID fc_start PROTO((const char *source, int16_t op));
 extern char *g_buffer;					/* merge string buffer  */
 
 BOOLEAN newfolder PROTO((DESKWIN *win));
+BOOLEAN fun_ddrag PROTO((int16_t src_wh, int16_t dest_wh, int16_t sobj, int16_t dobj));
 
 
 /*
@@ -520,11 +506,10 @@ char *scan_2 PROTO((const char *pcurr, int16_t *pwd)); /* also referenced by AES
 char *save_2 PROTO((char *pcurr, uint16_t wd)); /* also referenced by AES */
 char *save_sstr PROTO((char *pcurr, const char *pstr));
 BOOLEAN read_inf PROTO((NOTHING));
-VOID save_inf PROTO((BOOLEAN todisk));
+BOOLEAN save_inf PROTO((BOOLEAN todisk));
 VOID app_posicon PROTO((int16_t colx, int16_t coly, int16_t *px, int16_t *py));
 VOID app_mtoi PROTO((int16_t newx, int16_t newy, int16_t *px, int16_t *py));
 VOID inf_setsize PROTO((const VOIDPTR p1, char *buf, OBJECT *tree, int16_t obj, BOOLEAN flag));
-BOOLEAN app_start PROTO((NOTHING));
 
 
 /*
@@ -595,16 +580,12 @@ VOID xinf_sset PROTO((OBJECT *obj, int16_t item, const char *buf1));
 VOID mice_state PROTO((int16_t state));
 VOID desk_wait PROTO((BOOLEAN state));
 VOID drawfld PROTO((OBJECT *obj, int16_t which));
-VOID drawclip PROTO((OBJECT *obj, int16_t which));
 BOOLEAN getcookie PROTO((int32_t cookie, int32_t *p_value)); /* also referenced by AES */
 VOID f_str PROTO((OBJECT *obj, int16_t item, int32_t value));
 int16_t ch_level PROTO((const char *path));
 VOID fm_draw PROTO((LPTREE tree));
 VOID do_finish PROTO((OBJECT *obj));
-int16_t xform_do PROTO((OBJECT *obj, int16_t which));
-VOID fmdodraw PROTO((OBJECT *tree, int16_t item));
 VOID lbintoasc PROTO((int32_t longval, char *buffer));
-char *r_slash PROTO((const char *path));
 BOOLEAN xcut_path PROTO((char *path, char *buffer, int16_t cut));
 BOOLEAN cut_path PROTO((char *path));
 VOID cat_path PROTO((char *name, char *path));
@@ -641,7 +622,7 @@ VOID do_wopen PROTO((BOOLEAN new_win, int16_t wh, int16_t curr, int16_t x, int16
 VOID zoom_closed PROTO((BOOLEAN close, int16_t w_id, int16_t xicon, int16_t yicon));
 VOID do_wfull PROTO((int16_t wh));
 BOOLEAN do_diropen PROTO((DESKWIN *pw, BOOLEAN new_win, int16_t curr_icon, int16_t drv, const char *ppath, const char *pname, const char *pext, GRECT *pt));
-BOOLEAN do_aopen PROTO((DESKWIN *win, APP *pa, BOOLEAN isapp, int16_t curr, int16_t drv, const char *path, const char *name));
+BOOLEAN do_aopen PROTO((APP *pa, BOOLEAN isapp, int16_t curr, int16_t drv, const char *path, const char *name));
 BOOLEAN do_dopen PROTO((int16_t curr));
 BOOLEAN do_fopen PROTO((DESKWIN *pw, int16_t curr, int16_t drv, const char *ppath, const char *pname, const char *pext));
 BOOLEAN open_item PROTO((int16_t curr));
@@ -703,7 +684,7 @@ VOID run_it PROTO((const char *file, char *tail, BOOLEAN graphic, BOOLEAN setdir
 /*
  * deskshow.c
  */
-VOID showfile PROTO((const char *fname, int mode));
+BOOLEAN showfile PROTO((const char *fname, int mode));
 
 
 /*
@@ -714,7 +695,7 @@ VOID showfile PROTO((const char *fname, int mode));
 
 BOOLEAN act_chg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t obj, GRECT *pc, uint16_t chgvalue, int16_t dochg, int16_t dodraw, int16_t chkdisabled));
 VOID act_bsclick PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t mx, int16_t my, int16_t keystate, GRECT *pc, int16_t dclick));
-int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t *in_mx, int16_t *in_my, int16_t keystate, GRECT *pc, int16_t *pdobj));
+int16_t act_bdown PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t in_mx, int16_t in_my, int16_t keystate, GRECT *pc, int16_t *pdobj));
 VOID act_allchg PROTO((int16_t wh, OBJECT *tree, int16_t root, int16_t ex_obj, GRECT *pt, GRECT *pc, int16_t chgvalue, BOOLEAN dochg, BOOLEAN dodraw, BOOLEAN dox));
 
 
@@ -786,7 +767,7 @@ VOID inf_sset PROTO((OBJECT *tree, int16_t obj, const char *pstr));
 VOID fs_sget PROTO((OBJECT *tree, int16_t obj, char *pstr));
 VOID fs_ssget PROTO((OBJECT *tree, int16_t obj, char *pstr));
 int16_t inf_gindex PROTO((OBJECT *tree, int16_t baseobj, int16_t numobj));
-VOID merge_str PROTO((char *pdst, const char *ptmp, const char *parms));
+VOID merge_str PROTO((char *pdst, const char *ptmp, const uint16_t *parms));
 int16_t wildcmp PROTO((const char *pwild, const char *ptest));
 VOID bfill PROTO((int16_t num, char bval, VOIDPTR addr));
 int16_t min PROTO((int16_t a, int16_t b));
@@ -807,7 +788,7 @@ int toupper PROTO((int ch));
 int isdrive PROTO((NOTHING));
 int16_t rom_ram PROTO((int which, intptr_t pointer, uint16_t len));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
-BOOLEAN inf_file PROTO((char *ppath, FNODE *info, BOOLEAN isdir));
+BOOLEAN inf_file PROTO((char *ppath, FNODE *info));
 BOOLEAN inf_folder PROTO((char *ppath, FNODE *pf));
 BOOLEAN inf_disk PROTO((char drv_id));
 BOOLEAN opn_appl PROTO((char *papname, char *papparms, char *pcmd, char *ptail));

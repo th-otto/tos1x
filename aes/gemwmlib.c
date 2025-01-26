@@ -196,10 +196,8 @@ PP(int16_t kind;)
 /* 106de: 00e26a84 */
 LINEF_STATIC GRECT *w_getxptr(P(int16_t) which, P(int16_t) w_handle)
 PP(int16_t which;)
-PP(int16_t w_handle;)
+PP(register int16_t w_handle;)
 {
-	register WINDOW *pwin = srchwp(w_handle);
-	
 	switch (which)
 	{
 	case WS_CURR:
@@ -209,17 +207,17 @@ PP(int16_t w_handle;)
 		break;
 #endif
 	case WS_PREV:
-		return &pwin->w_prev;
+		return &D.w_win[w_handle].w_prev;
 #if BINEXACT
 		break;
 #endif
 	case WS_WORK:
-		return &pwin->w_work;
+		return &D.w_win[w_handle].w_work;
 #if BINEXACT
 		break;
 #endif
 	case WS_FULL:
-		return &pwin->w_full;
+		return &D.w_win[w_handle].w_full;
 #if BINEXACT
 		break;
 #endif
@@ -356,8 +354,10 @@ PP(register GRECT *pc;)
 		/* intersect owner rectangle with clip rectangles */
 		if (rc_intersect(pc, &t))
 		{
+#if AESVERSION >= 0x140
 			if (wh == gl_wtop)
 				w_getsize(WS_TRUE, wh, &t); /* hmm.... */
+#endif
 			/* set clip and draw */
 			gsx_sclip(&t);
 			ob_draw((LPTREE)tree, obj, depth);
@@ -486,7 +486,7 @@ LINEF_STATIC VOID w_bldbar(P(uint16_t) kind, P(BOOLEAN) istop,
 	P(int16_t) sl_size,
 #endif
 	P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
-PP(uint16_t kind;)
+PP(int16_t kind;)
 PP(BOOLEAN istop;)
 PP(int16_t w_bar;)
 #if AESVERSION >= 0x200
@@ -627,9 +627,7 @@ PP(register int16_t w_handle;)
 	register int16_t tempw;
 	int16_t offx, offy;
 	register GRECT *pt;
-	register WINDOW *pw;
 	
-	pw = srchwp(w_handle);
 	pt = &t;
 
 	if (w_handle == NIL)
@@ -640,15 +638,15 @@ PP(register int16_t w_handle;)
 #endif
 
 	istop = gl_wtop == w_handle;	/* set if it is on top */
-	kind = pw->w_kind;				/* get the kind of window */
+	kind = D.w_win[w_handle].w_kind;				/* get the kind of window */
 	w_nilit(MAXOBJ, W_ACTIVE);
 
 	/* start adding pieces & adjusting sizes */
-	gl_aname.te_ptext = pw->w_pname;
-	gl_ainfo.te_ptext = pw->w_pinfo;
+	gl_aname.te_ptext = D.w_win[w_handle].w_pname;
+	gl_ainfo.te_ptext = D.w_win[w_handle].w_pinfo;
 #if 0
 	gl_aname.te_just = TE_CNTR;
-	issub = (pw->w_flags & VF_SUBWIN) && (srchwp(gl_wtop)->w_flags & VF_SUBWIN);
+	issub = (D.w_win[w_handle].w_flags & VF_SUBWIN) && (srchwp(gl_wtop)->w_flags & VF_SUBWIN);
 #else
 	UNUSED(issub);
 #endif
@@ -737,7 +735,7 @@ PP(register int16_t w_handle;)
 #if AESVERSION >= 0x200
 		w_bldbar(kind, istop /* || issub */, W_VBAR, pw, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
 #else
-		w_bldbar(kind, istop /* || issub */, W_VBAR, pw->w_vslide, pw->w_vslsiz, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
+		w_bldbar(kind, istop /* || issub */, W_VBAR, D.w_win[w_handle].w_vslide, D.w_win[w_handle].w_vslsiz, pt->g_x, 0, pt->g_w + 2, pt->g_h+2);
 #endif
 	}
 
@@ -748,7 +746,7 @@ PP(register int16_t w_handle;)
 #if AESVERSION >= 0x200
 		w_bldbar(kind, istop /* || issub */, W_HBAR, pw, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
 #else
-		w_bldbar(kind, istop /* || issub */, W_HBAR, pw->w_hslide, pw->w_hslsiz, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
+		w_bldbar(kind, istop /* || issub */, W_HBAR, D.w_win[w_handle].w_hslide, D.w_win[w_handle].w_hslsiz, 0, pt->g_y, pt->g_w + 2, pt->g_h+2);
 #endif
 	}
 
@@ -806,9 +804,7 @@ PP(GRECT *dirty;)
 {
 	GRECT t, d;
 	register GRECT *pt;
-	register WINDOW *wp;
 	
-	wp = srchwp(w_handle);
 	pt = &t;
 	
 	/* make sure work rect and word rect intersect */
@@ -817,11 +813,11 @@ PP(GRECT *dirty;)
 	if (rc_intersect(pt, &d))
 	{
 		/* make sure window owns a rectangle */
-		if (w_union(wp->w_rlist, &d))
+		if (w_union(D.w_win[w_handle].w_rlist, &d))
 		{
 			/* intersect redraw rect with union of owner rects */
 			if (rc_intersect(&d, pt))
-				ap_sendmsg(wind_msg, WM_REDRAW, wp->w_owner->p_pid, w_handle, pt->g_x, pt->g_y, pt->g_w, pt->g_h);
+				ap_sendmsg(wind_msg, WM_REDRAW, D.w_win[w_handle].w_owner->p_pid, w_handle, pt->g_x, pt->g_y, pt->g_w, pt->g_h);
 		}
 	}
 }
@@ -1299,15 +1295,15 @@ PP(register GRECT *pt;)
 /* 306de: 00e224ae */
 /* 104de: 00fe549e */
 /* 106de: 00e27ae8 */
-BOOLEAN wm_start(NOTHING)
+VOID wm_start(NOTHING)
 {
 	register int16_t i;
 	register THEGLO *DGLO;
 	register ORECT *po;
 	register LPTREE tree;
 
-	DGLO = &D;
-	
+	UNUSED(DGLO);
+
 	/* init owner rectangles */
 	or_start();
 	
@@ -1317,8 +1313,8 @@ BOOLEAN wm_start(NOTHING)
 	
 	for (i = 0; i < NUM_MWIN; i++)
 	{
-		DGLO->w_win[i].w_flags = 0x0;
-		DGLO->w_win[i].w_rlist = NULL;
+		D.w_win[i].w_flags = 0x0;
+		D.w_win[i].w_rlist = NULL;
 		W_TREE[i].ob_type = G_IBOX;
 	}
 	W_TREE[ROOT].ob_type = G_BOX;
@@ -1336,7 +1332,7 @@ BOOLEAN wm_start(NOTHING)
 	W_ACTIVE[ROOT].ob_state = SHADOWED;
 
 	/* init rectangle list */
-	DGLO->w_win[0].w_rlist = po = get_orect();
+	D.w_win[0].w_rlist = po = get_orect();
 	po->o_link = NULL;
 	po->o_gr.g_x = 0;
 	po->o_gr.g_y = gl_hbox;
@@ -1361,8 +1357,6 @@ BOOLEAN wm_start(NOTHING)
 	gl_aname.te_just = TE_CNTR;
 	W_ACTIVE[W_NAME].ob_spec = (intptr_t)&gl_aname;
 	W_ACTIVE[W_INFO].ob_spec = (intptr_t)&gl_ainfo;
-	
-	return TRUE;
 }
 
 
@@ -1531,9 +1525,9 @@ PP(register int16_t *poutwds;)							/* return values */
 	register int16_t which;
 	GRECT t;
 	register ORECT *po;
-	register WINDOW *pwin;
+	register THEGLO *DGLO;
 	
-	pwin = srchwp(w_handle);
+	DGLO = &D;
 	which = -1;
 	switch (w_field)
 	{
@@ -1550,16 +1544,16 @@ PP(register int16_t *poutwds;)							/* return values */
 		which = WS_FULL;
 		break;
 	case WF_HSLIDE:
-		poutwds[0] = pwin->w_hslide;
+		poutwds[0] = DGLO->w_win[w_handle].w_hslide;
 		break;
 	case WF_VSLIDE:
-		poutwds[0] = pwin->w_vslide;
+		poutwds[0] = DGLO->w_win[w_handle].w_vslide;
 		break;
 	case WF_HSLSIZE:
-		poutwds[0] = pwin->w_hslsiz;
+		poutwds[0] = DGLO->w_win[w_handle].w_hslsiz;
 		break;
 	case WF_VSLSIZE:
-		poutwds[0] = pwin->w_vslsiz;
+		poutwds[0] = DGLO->w_win[w_handle].w_vslsiz;
 		break;
 	case WF_TOP:
 		poutwds[0] = /*w_top()*/ gl_wtop == NIL ? DESK : gl_wtop;
@@ -1567,18 +1561,18 @@ PP(register int16_t *poutwds;)							/* return values */
 	case WF_FIRSTXYWH:
 	case WF_NEXTXYWH:
 		w_getsize(WS_WORK, w_handle, &t);
-		po = w_field == WF_FIRSTXYWH ? pwin->w_rlist : pwin->w_rnext;
+		po = w_field == WF_FIRSTXYWH ? DGLO->w_win[w_handle].w_rlist : DGLO->w_win[w_handle].w_rnext;
 		w_owns(w_handle, po, &t, (GRECT *)poutwds);
 		break;
 	case WF_SCREEN:
 		gsx_mret((VOIDPTR *)poutwds, (int32_t *)(poutwds + 2));
-		break;
 #if 0 /* PC-GEM only; conflicts with WF_COLOR */
     case WF_TATTRB:
         poutwds[0] = D.w_win[w_handle].w_flags >> 3;
         break;
 #endif
 #if AESVERSION >= 0x200
+		break;
 	case WF_NEWDESK:
 		if (gl_newdesk)
 		{
@@ -1589,16 +1583,9 @@ PP(register int16_t *poutwds;)							/* return values */
 			*((LPTREE *)poutwds) = gl_wtree;
 			poutwds[2] = ROOT;
 		}
-#if !BINEXACT
-		break; /* somehow not removed by optimize */
-#endif
-#else
-#if BINEXACT
-		break; /* somehow not removed by optimize */
-#endif
+		break;
 #endif
 	}
-	/* BUG: WF_COLOR/WF_DCOLOR not supported */
 
 	if (which != -1)
 		w_getsize(which, w_handle, (GRECT *)poutwds);
@@ -1667,11 +1654,12 @@ PP(register int16_t *pinwds;)							/* values to change to */
 	register int16_t osl, osz;
 	int16_t blen, minw, gadget;
 	GRECT t;
-	register WINDOW *pwin;
+	register THEGLO *DGLO;
+	
+	DGLO = &D;
 
 	UNUSED(i);
 	
-	pwin = &D.w_win[w_handle];
 	which = -1;
 	
 	wm_update(BEG_UPDATE);		/* grab the window sync */
@@ -1695,7 +1683,7 @@ PP(register int16_t *pinwds;)							/* values to change to */
 	case WF_TOP:
 		if (w_handle != gl_wtop)
 		{
-			wasclr = !(pwin->w_flags & VF_BROKEN);
+			wasclr = !(DGLO->w_win[w_handle].w_flags & VF_BROKEN);
 			ob_order(gl_wtree, w_handle, NIL);
 			w_getsize(WS_CURR, w_handle, &t);
 			draw_change(w_handle, &t);
@@ -1727,12 +1715,12 @@ PP(register int16_t *pinwds;)							/* values to change to */
 		{
 			if (w_field == WF_HSLSIZE)
 			{
-				osz = pwin->w_hslsiz = pinwds[0];
-				osl = pwin->w_hslide;
+				osz = DGLO->w_win[w_handle].w_hslsiz = pinwds[0];
+				osl = DGLO->w_win[w_handle].w_hslide;
 			} else
 			{
-				osl = pwin->w_hslide = pinwds[0];
-				osz = pwin->w_hslsiz;
+				osl = DGLO->w_win[w_handle].w_hslide = pinwds[0];
+				osz = DGLO->w_win[w_handle].w_hslsiz;
 			}
 			blen = W_ACTIVE[W_HSLIDE].ob_width;
 			gadget = W_HSLIDE;
@@ -1741,12 +1729,12 @@ PP(register int16_t *pinwds;)							/* values to change to */
 		{
 			if (w_field == WF_VSLSIZE)
 			{
-				osz = pwin->w_vslsiz = pinwds[0];
-				osl = pwin->w_vslide;
+				osz = DGLO->w_win[w_handle].w_vslsiz = pinwds[0];
+				osl = DGLO->w_win[w_handle].w_vslide;
 			} else
 			{
-				osl = pwin->w_vslide = pinwds[0];
-				osz = pwin->w_vslsiz;
+				osl = DGLO->w_win[w_handle].w_vslide = pinwds[0];
+				osz = DGLO->w_win[w_handle].w_vslsiz;
 			}
 			blen = W_ACTIVE[W_VSLIDE].ob_height;
 			gadget = W_VSLIDE;
@@ -1759,19 +1747,16 @@ PP(register int16_t *pinwds;)							/* values to change to */
 		UNUSED(blen);
 		UNUSED(minw);
 		break;
-#if (AESVERSION < 0x200) & BINEXACT
-		break;
-#endif
 #if 0 /* PC-GEM only; conflicts with WF_COLOR */
 	case WF_TATTRB:
 		if (pinwds[0] & WA_SUBWIN)
-			pwin->w_flags |= VF_SUBWIN;
+			DGLO->w_win[w_handle].w_flags |= VF_SUBWIN;
 		else
-			pwin->w_flags &= ~VF_SUBWIN;
+			DGLO->w_win[w_handle].w_flags &= ~VF_SUBWIN;
 		if (pinwds[0] & WA_KEEPWIN)
-			pwin->w_flags |= VF_KEEPWIN;
+			DGLO->w_win[w_handle].w_flags |= VF_KEEPWIN;
 		else
-			pwin->w_flags &= ~VF_KEEPWIN;
+			DGLO->w_win[w_handle].w_flags &= ~VF_KEEPWIN;
 		break;
 #endif
 	}

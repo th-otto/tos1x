@@ -63,7 +63,7 @@ _far_bchange:
 	jsr	_b_click
 	addq.l     #2,a7
 	movem.l    (a7)+,d0-d2/a0-a2
-	move.l gstksave,17
+	move.l gstksave,a7
 	rts
 
 /*
@@ -102,7 +102,8 @@ _far_mchange:
 _drawrat:
 	move.w	4(a7),d0		; xrat
 	move.w	6(a7),d1		; yrat
-	move.l	_drwaddr,-(sp)
+	move.l	_drwaddr,a0
+	jsr     (a0)
 	rts
 
 	xdef	_justretf
@@ -121,7 +122,6 @@ _justretf:
 _tikcod:
 	move.l	a7,tstksave		; save stack
 	lea.l 	tstack+23*4,a7
-	addq.l	#1,_TICKS		; bump up the absolute clock
 	tst.l	_CMP_TICK		; are we timing now?
 	beq	tpollmb			; nope, go away
 	addq.l	#1,_NUM_TICK		; yes, we're timing
@@ -136,9 +136,6 @@ _tikcod:
 	move.l	#_tchange,-(a7)
 	jsr	forkq
 	addq.l	#8,a7
-	tst.w	d0		; event recorded ?
-	bne	tpollmb		; Yes
-	addq.l	#1,_CMP_TICK	; No, so reset the counter
 
 tpollmb:
 	move.w	#1,-(a7)
@@ -151,40 +148,10 @@ tpollmb:
 /*
  * --- Chain to next guy who wants to get ticked -----
  */
-	move.l	_tiksav,-(a7)		; Go through some other vector.
+	move.l	_tiksav,a0		; Go through some other vector.
+	jsr     (a0)
 	rts
 
-
-
-/*
- *	delay( ticks )
- *	ULONG ticks;
- * Busy-wait the specified number of system timer ticks, then return.
- * No dispatching here!
- */
-/* 206de: 00e22894 */
-/* 306de: 00e262fa */
-/* 104de: 00fe6514 */
-/* 106de: 00e28c46 */
-	xdef	_delay
-_delay:
-#if TP_48 /* ARROWFIX */
-/*
- * Only place where this functions was used is in hctl_window().
- * The ARROWFIX removes that code.
- * In the original patch, this routine was overwritten
- * with the code to handle the extended modes of ev_dclick().
- */
-#else
-	move.l	4(sp),d0
-	beq.b	xdelay
-	add.l	_TICKS,d0
-delay:
-	cmp.l	_TICKS,d0		; updated by system timer interrupt
-	bcc.b	delay			; busy-wait...
-xdelay:
-	rts
-#endif
 
 
 	bss
@@ -206,8 +173,6 @@ xdelay:
 	comm _NUM_TICK,4
 	xdef _CMP_TICK
 	comm _CMP_TICK,4
-	xdef _TICKS
-	comm _TICKS,4		; absolute number of ticks NOT GLOBAL!
 
 	xdef gstack
 	comm gstack,96		; gsx stack for mouse

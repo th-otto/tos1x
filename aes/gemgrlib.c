@@ -50,15 +50,13 @@ PP(int16_t w;)
 PP(int16_t h;)
 {
 	int16_t rets[6];
-	int16_t event;
 
 	/*
 	 * compiler had better put the values out, x, y, w, h in the 
 	 * right order on the stack to form a MOBLK WTF
 	 */
-	event = ev_multi(MU_BUTTON | MU_M1, (MOBLK *)&out, NULL, 0x0L, 0x00010100L, 0x0L, &rets[0]); /* 01ff00L */
-
-	if (event & MU_BUTTON)			/* button up */
+	if (ev_multi(MU_BUTTON | MU_M1, (MOBLK *)&out, NULL, 0x0L, 0x00010100L, 0x0L, &rets[0]) & MU_BUTTON) /* 01ff00L */
+		/* button up */
 		return FALSE;
 	return TRUE;
 }
@@ -264,9 +262,11 @@ PP(GRECT *poff;)
 PP(int16_t *pwend;)
 PP(int16_t *phend;)
 {
+	int16_t unused;
 	int16_t down;
 	GRECT o;
 
+	UNUSED(unused);
 	wm_update(BEG_UPDATE);
 	gr_setup(BLACK);
 

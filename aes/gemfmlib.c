@@ -141,22 +141,16 @@ PP(int16_t which;)
 	{
 	case BACKWARD:
 		inc = -1;
-		obj = start_obj + inc;
-		break;
+		/* fallthrough */
 
 	case FORWARD:						/* check if it is LASTOB before inc */
-		if (!(LWGET(OB_FLAGS(start_obj)) & LASTOB))
-			obj = start_obj + inc;
-		else
-			obj = -1;
-
+		obj = start_obj + inc;
 		break;
 
 	case DEFLT:
 		flag = DEFAULT;
-		break;
-
-	}									/* switch */
+		/* break; */
+	}
 
 	while (obj >= 0)
 	{
@@ -200,7 +194,7 @@ PP(int16_t obj;)
 PP(int16_t *pchar;)
 PP(int16_t *pnew_obj;)
 {
-	register int16_t direction;
+	int16_t direction;
 
 	/* handle character */
 	direction = -1;
@@ -251,7 +245,7 @@ PP(int16_t *pnew_obj;)
 	register int16_t tobj;
 	int16_t orword;
 	int16_t parent, state, flags;
-	int16_t cont, tstate, tflags;
+	int16_t cont, junk, tstate, tflags;
 	int16_t lrets[6];
 
 	cont = TRUE;
@@ -273,7 +267,7 @@ PP(int16_t *pnew_obj;)
 		if (flags & RBUTTON)
 		{
 			/* check siblings to find and turn off the old RBUTTON */
-			parent = get_par(tree, new_obj, NULL);
+			parent = get_par(tree, new_obj, &junk);
 			tobj = LWGET(OB_HEAD(parent));
 			while (tobj != parent)
 			{
@@ -297,11 +291,7 @@ PP(int16_t *pnew_obj;)
 		}
 		/* if not touchexit then wait for button up */
 		if ((cont) && (flags & (SELECTABLE | EDITABLE)))
-#if BINEXACT /* sigh... */
-			ev_button(1, 0x00010000L, lrets);
-#else
 			ev_button(1, 0x0001, 0000, lrets);
-#endif
 	}
 	/* see if this selection gets us out */
 	if ((state & SELECTED) && (flags & EXIT))
@@ -329,9 +319,10 @@ int16_t fm_do(P(LPTREE) tree, P(int16_t) start_fld)
 PP(register LPTREE tree;)
 PP(int16_t start_fld;)
 {
-	register int16_t edit_obj, cont;
+	register int16_t edit_obj;
 	int16_t next_obj;
 	int16_t which;
+	int16_t cont;
 	int16_t idx;
 	int16_t lrets[6];
 
@@ -375,11 +366,7 @@ PP(int16_t start_fld;)
 			next_obj = ob_find(tree, ROOT, MAX_DEPTH, lrets[0], lrets[1]);
 			if (next_obj == NIL)
 			{
-#if BINEXACT /* sigh... */
-				trp13(0x00030002L, 7);	/* Bconout(CON, 7)  */
-#else
-				trp13(3, 2, 7);	/* Bconout(CON, 7)  */
-#endif
+				bellout();
 				next_obj = 0;
 			} else
 			{
@@ -419,6 +406,9 @@ PP(register GRECT *pt;)
 	gsx_sclip(&gl_rscreen);
 	switch (fmd_type)
 	{
+	case FMD_START:
+		/* grab screen sync or some other mutual exclusion method */
+		break;
 	case FMD_GROW:
 		/* growing box */
 		gr_growbox(pi, pt);
@@ -431,7 +421,7 @@ PP(register GRECT *pt;)
 		/* update certain portion of the screen */
 		w_drawdesk(pt);
         w_update(DESK, pt, DESK, FALSE);
-		break;
+		/* break; */
 	}
 }
 
@@ -446,7 +436,7 @@ PP(int16_t level;)
 {
 	int16_t ret;
 	char *alert;
-	register char *ad_alert;
+	char *ad_alert;
 	
 	UNUSED(ret);
 	ad_alert = alert = rs_str(string);
@@ -467,23 +457,21 @@ int16_t eralert(P(int16_t) n, P(int16_t) d)
 PP(int16_t n;)									/* n = alert #, 0-5     */
 PP(int16_t d;)									/* d = drive code, 0=A  */
 {
-#if BINEXACT
-	int16_t *pdrive_let;
-	int16_t drive_let;
-
-	pdrive_let = &drive_let;
-	drive_let = (d + 'A') << 8;					/* make it a 2 char string! WTF */
-#else
+	int16_t ret;
+	int16_t level;
 	char *pdrive_let;
+	VOIDPTR pwd;
 	char drive_let[2];
 
-	pdrive_let = drive_let;
 	drive_let[0] = d + 'A';						/* make it a 2 char string */
 	drive_let[1] = '\0';
-#endif
+	pdrive_let = drive_let;
 
 	/* which alert */
-	return fm_show(ml_alrt[n], (ml_pwlv[n] & 0xff00) ? (VOIDPTR)&pdrive_let : NULL, ml_pwlv[n] & 0x00ff) != 1;
+	level = ml_pwlv[n] & 0x00ff;
+	pwd = (ml_pwlv[n] & 0xff00) ? (VOIDPTR)&pdrive_let : NULL;
+	ret = fm_show(ml_alrt[n], pwd, level);
+	return ret != 1;
 }
 
 
@@ -496,6 +484,7 @@ PP(int16_t d;)									/* d = drive code, 0=A  */
 BOOLEAN fm_error(P(int16_t) n)
 PP(int16_t n;)									/* n = dos error number */
 {
+	register int16_t ret;
 	register int16_t string;
 
 	if (n > 63)							/* nothing for xtal errors */
@@ -526,5 +515,6 @@ PP(int16_t n;)									/* n = dos error number */
 		string = ALRTXXERR;
 	}
 
-	return fm_show(string, string == ALRTXXERR ? (VOIDPTR)&n : NULL, 1) != 1;
+	ret = fm_show(string, string == ALRTXXERR ? (VOIDPTR)&n : NULL, 1);
+	return ret != 1;
 }

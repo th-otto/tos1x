@@ -233,7 +233,7 @@ PP(GRECT *pt;)
 
 
 VOID gsx_xcbox(P(GRECT *)pt)
-PP(GRECT *pt;)
+PP(register GRECT *pt;)
 {
 	register int16_t wa, ha;
 	register int16_t *ppts;
@@ -262,7 +262,6 @@ PP(GRECT *pt;)
 	ppts[3] = pt->g_y + pt->g_h - 1;
 	ppts[4] = pt->g_x + pt->g_w - wa;
 	ppts[5] = pt->g_y + pt->g_h - 1;
-	ppts[5] = ppts[3];
 	gsx_xline(3, &ppts[0]);
 	ppts[0] = pt->g_x + wa;
 	ppts[1] = pt->g_y + pt->g_h - 1;
@@ -276,9 +275,9 @@ PP(GRECT *pt;)
 
 
 VOID gsx_fix(P(FDB *) pfd, P(int16_t *) theaddr, P(int16_t) wb, P(int16_t) h)
-PP(FDB *pfd;)
-PP(int16_t *theaddr;)
-PP(int16_t wb;)
+PP(register FDB *pfd;)
+PP(register intptr_t theaddr;)
+PP(register int16_t wb;)
 PP(int16_t h;)
 {
 	if (theaddr == ORGADDR)
@@ -356,13 +355,12 @@ PP(int16_t *saddr;)
 PP(uint16_t swb;)
 PP(int16_t *daddr;)
 PP(uint16_t dwb;)
-PP(uint16_t h;)
+PP(register uint16_t h;)
 {
-	gsx_fix(&gl_dst, daddr, dwb, h);
-
 	gsx_fix(&gl_src, saddr, swb, h);
 	gl_src.fd_stand = TRUE;
 	gl_src.fd_nplanes = 1;
+	gsx_fix(&gl_dst, daddr, dwb, h);
 	avr_trnfm(&gl_src, &gl_dst);
 }
 
@@ -412,9 +410,11 @@ VOID gsx_start(NOTHING)
 	gl_nrows = gl_height / gl_hchar;
 	gl_hbox = gl_hchar + 3;
 	gl_wbox = (gl_hbox * gl_ws.ws_hpixel) / gl_ws.ws_wpixel;
+#if AESVERION >= 0x140
 	/*   7/26/89    */
 	if (gl_wbox < (gl_wchar + 2))
 		gl_wbox = gl_wchar + 2;
+#endif
 	vsl_type(7);
 	avsl_width(1);
 	vsl_udsty(0xffff);
@@ -430,11 +430,11 @@ VOID gsx_start(NOTHING)
 VOID bb_fill(P(int16_t) mode, P(int16_t) fis, P(int16_t) patt, P(int16_t) hx, P(int16_t) hy, P(int16_t) hw, P(int16_t) hh)
 PP(int16_t mode;)
 PP(int16_t fis;)
-PP(int16_t patt;)
-PP(int16_t hx;)
-PP(int16_t hy;)
-PP(int16_t hw;)
-PP(int16_t hh;)
+PP(register int16_t patt;)
+PP(register int16_t hx;)
+PP(register int16_t hy;)
+PP(register int16_t hw;)
+PP(register int16_t hh;)
 {
 	register int16_t *ppts;
 
@@ -552,6 +552,11 @@ PP(register int16_t x;)
 PP(register int16_t y;)
 PP(int16_t tb_nc;)
 {
+	int16_t pts_height;
+	register int i;
+	
+	UNUSED(pts_height);
+	UNUSED(i);
 	if (tb_f == IBM)
 	{
 		if (tb_f != gl_font)

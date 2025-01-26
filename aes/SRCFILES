@@ -1,53 +1,51 @@
-AES_104_OBJS = \
+AES_100_OBJS = \
+	gemjstrt.o \
 	geminit.o \
 	apgrlib.o \
 	apgsxif.o \
+	jdispa.o \
+	gemdos.o \
+	jbind.o \
 	gemaints.o \
-	gemaplib.o \
 	gemasync.o \
-	gembase.o \
-	gembind.o \
 	gemcli.o \
 	gemctrl.o \
 	gemdisp.o \
-	gemevlib.o \
 	gemflag.o \
+	geminput.o \
+	gemqueue.o \
+	gempd.o \
+	gemwrect.o \
+	gembind.o \
+	gemaplib.o \
+	gemevlib.o \
 	gemfmalt.o \
 	gemfmlib.o \
 	gemfslib.o \
-	gemglobe.o \
-	linefhdl.o \
-	geminput.o \
+	gemgrlib.o \
+	gemgsxif.o \
 	gemmnlib.o \
 	gemobed.o \
-	gemobjop.o \
-	gempd.o \
-	gemqueue.o \
-	gemrom.o \
+	gemoblib.o \
 	gemrslib.o \
 	gemsclib.o \
 	gemshlib.o \
 	gemwmlib.o \
-	gemwrect.o \
-	romcart.o \
-	gemoblib.o \
-	gemgrlib.o \
-	gemgsxif.o \
 	gsx2.o \
-	jbind.o \
-	jdispa.o \
-	jdos.o \
 	large.o \
-	function.o \
 	optimize.o \
+	function.o \
 	ratrbp.o \
+	romcart.o \
+	gemobjop.o \
 	trap14.o \
+	gemrom.o \
+	gemglobe.o \
+	linefhdl.o \
+	gembase.o \
+	ui_mupb.o \
 	$(DBG_OBJS) \
 	$(empty)
-
-AES_106_OBJS=${AES_104_OBJS}
-AES_162_OBJS=${AES_104_OBJS}
-AES_100_OBJS=${AES_104_OBJS} ui_mupb.o
 
 AES_OBJS=${AES_${TOSVERSION}_OBJS}
 
@@ -91,6 +89,7 @@ AES_CSRCS=\
 	gemcli.c \
 	gemctrl.c \
 	gemdisp.c \
+	gemdos.c \
 	gemevlib.c \
 	gemflag.c \
 	gemfmalt.c \

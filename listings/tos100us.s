@@ -54021,6 +54021,8 @@ gem_main:
 [00feb25a] 6600 fe54                 bne        $00FEB0B0
 [00feb25e] f821                      dc.w       $F821 ; movem.l (a7)+,d7/a5
 [00feb260] 4e56 fffe                 link       a6,#-2
+
+sh_rom:
 [00feb264] 48e7 0104                 movem.l    d7/a5,-(a7)
 [00feb268] 3d7c 0001 fffe            move.w     #$0001,-2(a6)
 [00feb26e] 2a7c 0000 9bb7            movea.l    #$00009BB7,a5

@@ -92,10 +92,25 @@ PP(register CARTNODE *pcart;)
 	app = app_alloc(TRUE);
 	app->a_pappl = pcart->c_name;
 	app->a_apptype = AF_ISFMEM;
-	if ((pcart->c_init))
+#if BINEXACT
+	/* some strange code here */
+	asm("move.l     4(a5),d0");
+	asm("clr.l      d0");
+	asm("beq.s *+8");
+#else
+	if (pcart->c_init, 0)
+#endif
 		app->a_apptype |= AF_ISPARM;
-	if (!(pcart->c_init))
-		app->a_apptype |= (AF_ISGRAF|AF_ISCRYS);
+#if BINEXACT
+	/* some strange code here */
+	/* some strange code here */
+	asm("move.l     4(a5),d0");
+	asm("clr.l      d0");
+	asm("bne.s *+8");
+#else
+	if (!(pcart->c_init, 0))
+#endif
+		app->a_apptype |= AF_ISGRAF | AF_ISCRYS;
 	app->a_type = AT_ISFILE;
 	app->a_aicon = 3; /* IPRG - 1 */
 	app->a_dicon = 255;

@@ -214,8 +214,8 @@ PP(int16_t scale;)
 	FPD *ad_f;
 
 	ad_f = &f;							/* old x86 relict */
+#if AESVERSION >= 0x140
 	dsptch();							/* dispatch everybody   */
-#if TOSVERSION >= 0x104
 	gl_play = FALSE;
 	gl_mx = xrat;
 	gl_my = yrat;
@@ -265,7 +265,7 @@ PP(int16_t scale;)
 			break;
 		case KCHNG:
 			f.f_code = kchange;
-			break;
+			/* break; */
 		}
 		/* play it      */
 		if (f.f_code)
@@ -309,7 +309,6 @@ PP(register int16_t length;)
 {
 	register int16_t i;
 	register intptr_t code;
-	FCODE trash;
 
 	/* start recording in forker()       */
 	cli();
@@ -335,22 +334,21 @@ PP(register int16_t length;)
 	/* convert to machine independent recording */
 	for (i = 0; i < length; i++)
 	{
-		code = 0x0L;
-		trash = (FCODE) LLGET(pbuff);
-		if (trash == tchange)
+		code = (FCODE) LWGET(pbuff); /* BUG: comparing only word */
+		if (code == tchange)
 		{
 			code = TCHNG;				/*    int16_t is changed to int32_t   */
-#if 0
+#if AESVERSION < 0x140
 			LLSET(pbuff+sizeof(int32_t *), LLGET(pbuff+sizeof(int32_t *)) * gl_ticktime);
 #endif
 		}
-		if (trash == mchange)
+		if (code == mchange)
 			code = MCHNG;
-		if (trash == kchange)
+		if (code == kchange)
 			code = KCHNG;
-		if (trash == bchange)
+		if (code == bchange)
 			code = BCHNG;
-		LLSET(pbuff, code);
+		LWSET(pbuff, code); /* BUG: see above */
 		pbuff += sizeof(FPD);
 	}
 	return length;

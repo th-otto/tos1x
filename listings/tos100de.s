@@ -46976,7 +46976,7 @@ crysbind:
 [00fe5c16] 0c6e 00c8 0008            cmpi.w     #$00C8,8(a6)
 [00fe5c1c] 6606                      bne.s      $00FE5C24
 [00fe5c1e] 2eae 000c                 move.l     12(a6),(a7)
-[00fe5c22] f63c                      dc.w       $F63C
+[00fe5c22] f63c                      dc.w       $F63C ; xif
 [00fe5c24] f314                      dc.w       $F314 ; dsptch
 [00fe5c26] 4257                      clr.w      (a7)
 [00fe5c28] f640                      dc.w       $F640 ; supret
@@ -53641,6 +53641,8 @@ sh_main:
 [00feaf04] 6600 ff6a                 bne        $00FEAE70
 [00feaf08] 4a79 0000 7036            tst.w      $00007036
 [00feaf0e] 6600 fe54                 bne        $00FEAD64
+
+sh_rom:
 [00feaf12] f821                      dc.w       $F821 ; movem.l (a7)+,d7/a5
 [00feaf14] 4e56 fffe                 link       a6,#-2
 [00feaf18] 48e7 0104                 movem.l    d7/a5,-(a7)

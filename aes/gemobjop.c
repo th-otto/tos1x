@@ -76,7 +76,7 @@ PP(int16_t *pth;)
 
 	*pstate = tmp.ob_state;			/* set user state variable */
 
-	*ptype = tmp.ob_type & 0x00ff;		/* set user type variable */
+	*ptype = (int16_t)tmp.ob_type & 0x00ff;		/* set user type variable */
 
 	th = 0;								/* border thickness */
 

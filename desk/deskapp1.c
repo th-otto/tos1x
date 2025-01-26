@@ -19,8 +19,8 @@
 
 
 char const infdata[] = "DESKTOP.INF";
-STATIC char infpath[LEN_ZFPATH];
-STATIC int16_t infdrv;
+char infpath[LEN_ZFPATH];
+int16_t infdrv;
 
 
 LINEF_STATIC VOID set_infpath PROTO((NOTHING));
@@ -154,7 +154,7 @@ PP(register int16_t *pwd;)
 /* 306de: 00e2b66e */
 /* 104de: 00fd4de4 */
 char *save_2(P(char *) pcurr, P(uint16_t) wd)
-PP(register char *pcurr;)
+PP(char *pcurr;)
 PP(uint16_t wd;)
 {
 	*pcurr++ = uhex_dig((wd >> 4) & 0x000f);
@@ -177,10 +177,10 @@ PP(register char **ppstr;)
 		pcurr++;
 
 	*ppstr = d->g_pbuff;
-	while (*d->g_pbuff != '@')
+	while (*pcurr != '@')
 		*(d->g_pbuff)++ = *pcurr++;
 
-	*d->g_pbuff++ = 0;
+	*d->g_pbuff++ = '\0';
 	pcurr++;
 	return NO_CONST(pcurr);
 }
@@ -240,7 +240,7 @@ PP(register APP *app;)
 		break;
 	case 'D':
 		app->a_type = AT_ISFOLD;
-		break;
+		/* break; */
 	}
 
 	pcurr += 2;
@@ -283,14 +283,14 @@ PP(register int16_t attr;)
 {
 	register int handle;
 	register THEDSK *d;
-	LPBYTE lp;
+	register LPBYTE lp;
 
 	d = thedesk;
 	handle = 0;
 	strcpy(d->g_srcpth, pname);
 	lp = (LPBYTE)ADDR(&d->g_srcpth[0]);
 	if (openit)
-		handle = dos_open((char *)lp, attr);
+		handle = dos_open((char *)lp, RMODE_RW);
 	else
 		handle = dos_create((char *)lp, attr);
 	if (DOS_ERR)
@@ -303,7 +303,127 @@ PP(register int16_t attr;)
 
 BOOLEAN app_rdicon(NOTHING)
 {
-	/* ZZZ TODO */
+	register THEDSK *d;
+	intptr_t temp;
+	intptr_t stmp;
+	intptr_t dtmp;
+	int16_t handle;
+	int16_t length;
+	int16_t nread;
+	register int16_t num_icons;
+	register int16_t last_icon;
+	register int i;
+	int16_t iwb;
+	int16_t ih;
+	int16_t num_wds;
+	int16_t num_bytes;
+	int16_t num_masks;
+	uint16_t msk_bytes;
+	register int16_t tmp;
+	uint16_t stlength;
+	
+	UNUSED(handle);
+	d = thedesk;
+	/* how much to read? */
+	length = NUM_IBLKS * (int)sizeof(ICONBLK);
+	/* read it */
+	nread = rom_ram(2, (intptr_t)d->iconaddr, length);
+	movs(length, d->iconaddr, d->g_iblist);
+	/* find no. of icons actually used */
+	num_icons = last_icon = 0;
+	/* BUG: range not checked; that makes the last icon structure unusable */
+	while (d->iconaddr[last_icon].ib_pmask != (VOIDPTR) -1L)
+	{
+		/* Note: the ib_pmask and ib_pdata are indices, not pointers */
+		tmp = max(LLOWD((intptr_t)d->iconaddr[last_icon].ib_pmask), LLOWD((intptr_t)d->iconaddr[last_icon].ib_pdata));
+		num_icons = max(num_icons, tmp);
+		last_icon++;
+	}
+	num_icons++;
+	/* how many words of data to read? */
+	/* assume all icons are same w,h as first */
+	num_wds = (d->iconaddr[0].ib_wicon * d->iconaddr[0].ib_hicon) / 16;
+	num_bytes = num_wds * 2;
+	/* allocate some memory in bytes */
+	stlength = num_icons * num_bytes;
+	d->icondata = (intptr_t)dos_alloc((long)stlength); /* BUG: no malloc check */
+	/* read it */
+	nread = rom_ram(4, d->icondata, length);
+	UNUSED(nread);
+	/* fix up str ptrs */
+	
+	/* figure out which are mask & which data */
+	for (i = 0; i < last_icon; i++)
+	{
+		d->g_ismask[(int16_t)(intptr_t)d->iconaddr[i].ib_pmask] = TRUE;
+		d->g_ismask[(int16_t)(intptr_t)d->iconaddr[i].ib_pdata] = FALSE;
+	}
+
+	/* fix up mask ptrs */
+	num_masks = 0;
+	for (i = 0; i < num_icons; i++)
+	{
+		if (d->g_ismask[i])
+		{
+			d->g_ismask[i] = num_masks;
+			num_masks++;
+		} else
+		{
+			d->g_ismask[i] = -1;
+		}
+	}
+
+	/* allocate memory for transformed mask forms */
+	msk_bytes = num_masks * num_bytes;
+	d->a_buffstart = (intptr_t)dos_alloc((long) msk_bytes);
+	
+	/* fix up icon pointers */
+	for (i = 0; i < last_icon; i++)
+	{
+		/* first the mask */
+		temp = (d->g_ismask[(int16_t)(intptr_t)d->iconaddr[i].ib_pmask] * (long) num_bytes);
+		d->g_iblist[i].ib_pmask = (VOIDPTR) (d->a_buffstart + LW(temp));
+		temp = ((intptr_t) d->iconaddr[i].ib_pmask * (long) num_bytes);
+		d->iconaddr[i].ib_pmask = (VOIDPTR) (d->icondata + LW(temp));
+		/* now the data */
+		temp = ((intptr_t) d->iconaddr[i].ib_pdata * (long) num_bytes);
+		d->g_iblist[i].ib_pdata = d->iconaddr[i].ib_pdata = (VOIDPTR) (d->icondata + LW(temp));
+#if 0
+		/* now the text ptrs */
+		d->iconaddr[i].ib_ytext = d->g_iblist[i].ib_ytext = d->iconaddr[0].ib_hicon;
+		d->iconaddr[i].ib_wtext = d->g_iblist[i].ib_wtext = 12 * gl_wschar;
+		d->iconaddr[i].ib_htext = d->g_iblist[i].ib_htext = gl_hschar + 2;
+#endif
+	}
+
+	/* transform forms  */
+	iwb = d->iconaddr[0].ib_wicon / 8;
+	ih = d->iconaddr[0].ib_hicon;
+
+	for (i = 0; i < num_icons; i++)
+	{
+		if (d->g_ismask[i] != -1)
+		{
+			/* preserve standard form of masks */
+			stmp = d->icondata + i * num_bytes;
+			dtmp = d->a_buffstart + d->g_ismask[i] * num_bytes;
+			LWCOPY((VOIDPTR)dtmp, (VOIDPTR)stmp, num_wds);
+		} else
+		{
+			/* transform over std. form of datas */
+			dtmp = d->icondata + (i * num_bytes);
+		}
+		gsx_trans((VOIDPTR)dtmp, iwb, (VOIDPTR)dtmp, iwb, ih);
+	}
+
+	/* initialize bit images */	
+#if NUM_BB == 1
+	app_tran(0);
+#else
+	for (i = 0; i < NUM_BB; i++)
+		app_tran(i);
+#endif
+
 	return TRUE;
 }
 
@@ -352,14 +472,6 @@ PP(register int16_t *py;)
 }
 
 
-BOOLEAN app_start(NOTHING)
-{
-	/* ZZZ TODO */
-	return TRUE;
-}
-
-
-
 /*
  *	Initialize the application list by reading in the DESKTOP.APP
  *	file, either from memory or from the disk if the shel_get
@@ -381,8 +493,6 @@ BOOLEAN read_inf(NOTHING)
 	int16_t envr;
 	int16_t w;
 	int16_t h;
-	ICONBLK *icons;
-	int16_t temp;
 	
 	UNUSED(tmp);
 	UNUSED(j);
@@ -390,16 +500,11 @@ BOOLEAN read_inf(NOTHING)
 	d = thedesk;
 	
 	d->g_pbuff = d->appbuf;
-	ptr = d->appbuf;
 	
 	/* set up linked array */
-	for (i = NUM_ANODES - 1; i >= 0; i--)
+	for (i = NUM_ANODES - 2; i >= 0; i--)
 	{
 		d->app[i].a_next = &d->app[i + 1];
-		d->app[i].a_pappl = ptr;
-		ptr += PATH_LEN;
-		d->app[i].a_pdata = ptr;
-		ptr += EXTENSION;
 	}
 	d->applist = NULL;
 	d->appfree = d->app;
@@ -411,18 +516,17 @@ BOOLEAN read_inf(NOTHING)
 	{
 		if (isdrive())
 		{
-			handle = dos_open(infdata, RMODE_RW);  /* WTF? why read/write? */
-			if (handle > 0)
+			handle = app_getfh(TRUE, "DESKTOP.INF", 0);
+			if (handle == 0)
 			{
-				d->size_afile = dos_read(handle, SIZE_AFILE, d->afile);
-				dos_close(handle);
+				d->size_afile = rom_ram(3, (intptr_t)d->afile, 0);
 			} else
 			{
-				goto re_1;
+				d->size_afile = dos_read(handle, SIZE_AFILE, d->afile); /* BUG: size passed as int */
+				dos_close(handle);
 			}
 		} else
 		{
-		re_1:
 			d->size_afile = rom_ram(3, (intptr_t)d->afile, 0);
 		}
 
@@ -437,124 +541,116 @@ BOOLEAN read_inf(NOTHING)
 		if (*pcurr != '#')
 		{
 			pcurr++;
-			continue;
-		}
-
-		pcurr++;
-		switch (*pcurr)
+		} else
 		{
-		case 'Z':					/* auto boot file */
-			pcurr += 2;
-			pcurr = escan_str(pcurr, (char **)d->autofile);
-			break;
-
-		case 'C':
-			if (cart_init())
-				goto xdesk;
-			break;
-
-		case 'M':
-		case 'T':
-			if (!(tmp = isdrive()))
-				break;
-			if (pcurr[14] == 'C' && !(tmp & 0x04))
-				break;
-			/* fall through */
-		case 'D':
-		case 'F':
-		case 'G':
-		case 'P':
-		xdesk:
-			if ((app = app_alloc(TRUE)) != NULL)
+			pcurr++;
+			switch (*pcurr)
 			{
+#if TOSVERSION >= 0x104
+			case 'Z':					/* auto boot file */
+				pcurr += 2;
+				pcurr = escan_str(pcurr, (char **)d->autofile);
+				break;
+#endif
+	
+			case 'C':
+				if (cart_init())
+					goto xdesk;
+				break;
+	
+			case 'M':
+			case 'T':
+				if (!(tmp = isdrive()))
+					break;
+				if (pcurr[14] == 'C' && !(tmp & 0x04))
+					break;
+				/* fall through */
+			case 'D':
+			case 'F':
+			case 'G':
+			case 'P':
+			xdesk:
+				app = app_alloc(TRUE);
+				/* BUG: no check */
 				pcurr = inf_xdesk(pcurr, app);
-			} else
-			{
-				goto eof;
-			}
-			break;
-
-		case 'W':					/* Window       */
-			pcurr += 2;
-
-			/* BUG: no check for overflow here */
-			pws = &d->g_cnxsave.win_save[i++];
-			/* horizontal slide bar */
-			pcurr = scan_2(pcurr, &pws->hsl_save);
-			/* vertical slide bar */
-			pcurr = scan_2(pcurr, &pws->vsl_save);
-
-			/* window's x position */
-			pcurr = scan_2(pcurr, &pws->gr_save.g_x);
-			if (pws->gr_save.g_x >= gl_ncols)
-				pws->gr_save.g_x /= 2;
-
-			pws->gr_save.g_x *= gl_wchar;
-
-			/* window's y position */
-			pcurr = scan_2(pcurr, &pws->gr_save.g_y);
-
-			pws->gr_save.g_y *= gl_hchar;
-
-			/* window's width */
-			pcurr = scan_2(pcurr, &pws->gr_save.g_w);
-			if (pws->gr_save.g_w > gl_ncols)
-				pws->gr_save.g_w /= 2;
-			pws->gr_save.g_w *= gl_wchar;
-			if (pws->gr_save.g_w < (7 * gl_wbox))
-				pws->gr_save.g_w = 7 * gl_wbox;
-
-			/* window's height  */
-			pcurr = scan_2(pcurr, &pws->gr_save.g_h);
-			pws->gr_save.g_h *= gl_hchar;
-			if (pws->gr_save.g_h < (7 * gl_hbox))
-				pws->gr_save.g_h = 7 * gl_hbox;
-
-			pcurr = scan_2(pcurr, &pws->obid_save);
-
-			ptr = pws->pth_save;
-			while (*pcurr != '@')
-			{
-				*ptr++ = *pcurr++;
-			}
-			*ptr = 0;				/* take out the @ */
-
-			break;
-
-		case 'E':					/* environment string   */
-			pcurr += 2;
-
-			pcurr = scan_2(pcurr, &envr);
-			d->g_cnxsave.vitem_save = (envr & 0x80) != 0;
-			d->g_cnxsave.sitem_save = (envr & 0x60) >> 5;
-			d->g_cnxsave.cdele_save = (envr & 0x10) != 0;
-			d->g_cnxsave.ccopy_save = (envr & 0x08) != 0;
+				break;
+	
+			case 'W':					/* Window       */
+				pcurr += 2;
+	
+				/* BUG: no check for overflow here */
+				pws = &d->g_cnxsave.win_save[i++];
+				/* horizontal slide bar */
+				pcurr = scan_2(pcurr, &pws->hsl_save);
+				/* vertical slide bar */
+				pcurr = scan_2(pcurr, &pws->vsl_save);
+	
+				/* window's x position */
+				pcurr = scan_2(pcurr, &pws->gr_save.g_x);
+				if (pws->gr_save.g_x > gl_ncols)
+					pws->gr_save.g_x /= 2;
+	
+				pws->gr_save.g_x *= gl_wchar;
+	
+				/* window's y position */
+				pcurr = scan_2(pcurr, &pws->gr_save.g_y);
+	
+				pws->gr_save.g_y *= gl_hchar;
+	
+				/* window's width */
+				pcurr = scan_2(pcurr, &pws->gr_save.g_w);
+				if (pws->gr_save.g_w > gl_ncols)
+					pws->gr_save.g_w /= 2;
+				pws->gr_save.g_w *= gl_wchar;
+				if (pws->gr_save.g_w < (7 * gl_wbox))
+					pws->gr_save.g_w = 7 * gl_wbox;
+	
+				/* window's height  */
+				pcurr = scan_2(pcurr, &pws->gr_save.g_h);
+				pws->gr_save.g_h *= gl_hchar;
+				if (pws->gr_save.g_h < (7 * gl_hbox))
+					pws->gr_save.g_h = 7 * gl_hbox;
+	
+				pcurr = scan_2(pcurr, &pws->obid_save);
+	
+				ptr = pws->pth_save;
+				while (*pcurr != '@')
+				{
+					*ptr++ = *pcurr++;
+				}
+				*ptr = 0;				/* take out the @ */
+	
+				break;
+	
+			case 'E':					/* environment string   */
+				pcurr += 2;
+	
+				pcurr = scan_2(pcurr, &envr);
+				d->g_cnxsave.vitem_save = (envr & 0x80) != 0;
+				d->g_cnxsave.sitem_save = (envr & 0x60) >> 5;
+				d->g_cnxsave.cdele_save = (envr & 0x10) != 0;
+				d->g_cnxsave.ccopy_save = (envr & 0x08) != 0;
 #if TOSVERSION >= 0x104
-			d->g_cnxsave.covwr_save = envr & 0x01;
-#endif
-			pcurr = scan_2(pcurr, &envr);
-#if TOSVERSION >= 0x104
-			d->g_cnxsave.cbit_save = (envr & 0xf0) >> 4;
-#endif
-#if TOSVERSION >= 0x162
-			d->g_cnxsave.pref_save = gl_restype;
+				d->g_cnxsave.covwr_save = envr & 0x01;
 #else
-			d->g_cnxsave.pref_save = gl_restype - 1;
+				d->g_cnxsave.cdclk_save = envr & 0x07;
 #endif
-			break;
+				pcurr = scan_2(pcurr, &envr);
+#if TOSVERSION >= 0x104
+				d->g_cnxsave.cbit_save = (envr & 0xf0) >> 4;
+#endif
+				envr = envr & 3;
+				envr++;
+				d->g_cnxsave.pref_save = gl_restype - 1;
+				/* break; */
+			}
 		}
 	}
-eof:;
-	temp = (NUM_IB + 1) * sizeof(ICONBLK); /* BUG: there are only 5 icons */
-	rsrc_gaddr(R_ICONBLK, 0, (VOIDPTR *)&icons);
-	LBCOPY(d->iconaddr, icons, temp);
-	LBCOPY(d->g_iblist, icons, temp);
-	d->iconaddr[0].ib_xchar = 5;
-	d->iconaddr[0].ib_ychar = 14;
-	d->g_iblist[0].ib_xchar = 5;
-	d->g_iblist[0].ib_ychar = 14;
+	if (!app_rdicon())
+		return FALSE;
+
 	d->g_wicon = (d->iconaddr[0].ib_xtext << 1) + d->iconaddr[0].ib_wtext;
-	d->g_hicon = d->iconaddr[0].ib_hicon + d->iconaddr[0].ib_htext + 2;
+	d->g_hicon = d->iconaddr[0].ib_hicon + d->iconaddr[0].ib_htext /* + 2 */;
 	d->g_icw = gl_height <= 300 ? 0 : 8;
 	d->g_icw += d->g_wicon;
 	w = gl_width / d->g_icw;
@@ -572,21 +668,21 @@ eof:;
 	d->g_nmtext = 5;
 	memset(d->g_xyicon, 0, 9 * sizeof(d->g_xyicon[0])); /* BUG */
 	d->g_xyicon[0] = gl_wschar << 2;
-	d->g_xyicon[2] = d->g_xyicon[0];
+	d->g_xyicon[2] = gl_wschar << 2;
 	d->g_xyicon[3] = d->g_hicon - gl_wschar - 2;
-	d->g_xyicon[5] = d->g_xyicon[3];
+	d->g_xyicon[5] = d->g_hicon - gl_wschar - 2;
 	d->g_xyicon[7] = d->g_hicon;
 	d->g_xyicon[8] = d->g_wicon;
 	d->g_xyicon[9] = d->g_hicon;
 	d->g_xyicon[10] = d->g_wicon;
 	d->g_xyicon[11] = d->g_hicon - gl_wschar - 2;
 	d->g_xyicon[12] = gl_wschar << 3;
-	d->g_xyicon[13] = d->g_xyicon[11];
+	d->g_xyicon[13] = d->g_hicon - gl_wschar - 2;
 	d->g_xyicon[14] = gl_wschar << 3;
-	d->g_xyicon[16] = d->g_xyicon[0];
+	d->g_xyicon[16] = gl_wschar << 2;
 	memset(d->g_xytext, 0, 5 * sizeof(d->g_xytext[0])); /* BUG */
 	d->g_xytext[2] = gl_wchar * 12;
-	d->g_xytext[4] = d->g_xytext[2];
+	d->g_xytext[4] = gl_wchar * 12;
 	d->g_xytext[5] = gl_hchar;
 	d->g_xytext[7] = gl_hchar;
 	return TRUE;
@@ -605,8 +701,8 @@ PP(int16_t res;)
 	{
 		gl_restype = res;
 		gl_rschange = TRUE;
+		return TRUE;
 	}
-	return TRUE;
 }
 
 
@@ -640,7 +736,7 @@ LINEF_STATIC VOID app_reverse(NOTHING)
 /* 306de: 00e2c186 */
 /* 104de: 00fd55e8 */
 /* 106de: 00e15aee */
-VOID save_inf(P(BOOLEAN) todisk)
+BOOLEAN save_inf(P(BOOLEAN) todisk)
 PP(BOOLEAN todisk;)
 {
 	register char *pcurr;
@@ -653,13 +749,9 @@ PP(BOOLEAN todisk;)
 	register int16_t handle;
 	register int16_t j;
 	APP *app;
-	char *buf;
-	int16_t size;
-	OBJECT *obj;
-	char infname[16];
+	DESKWIN *top;
 
 	UNUSED(obj);
-	UNUSED(buf);
 	UNUSED(buf1);
 	UNUSED(j);
 
@@ -667,6 +759,7 @@ PP(BOOLEAN todisk;)
 	pcurr = d->afile + SAVE_ATARI;
 	memset(pcurr, 0, SIZE_AFILE - SAVE_ATARI);
 	
+#if TOSVERSION >= 0x104
 	if (d->autofile[0])
 	{
 		*pcurr++ = '#';
@@ -676,6 +769,7 @@ PP(BOOLEAN todisk;)
 		*pcurr++ = 0x0d;
 		*pcurr++ = 0x0a;
 	}
+#endif
 
 	/* save evironment */
 	*pcurr++ = '#';
@@ -689,6 +783,9 @@ PP(BOOLEAN todisk;)
 	envr |= (d->g_cnxsave.sitem_save << 5) & 0x60;
 	envr |= d->g_cnxsave.cdele_save ? 0x10 : 0x00;
 	envr |= d->g_cnxsave.ccopy_save ? 0x08 : 0x00;
+#if TOSVERSION < 0x104
+	envr |= d->g_cnxsave.cdclk_save;
+#endif
 	pcurr = save_2(pcurr, envr);
 
 	envr = 0x0;							/* set resolution prefence  */
@@ -756,7 +853,7 @@ PP(BOOLEAN todisk;)
 			break;
 		case AT_ISFOLD:
 			*pcurr++ = 'D';
-			break;
+			/* break; */
 		}
 
 		*pcurr++ = ' ';
@@ -790,49 +887,51 @@ PP(BOOLEAN todisk;)
 	if (todisk)
 	{
 		--d->size_afile; /* strip trailing zero */
-		infname[0] = isdrive() & 4 ? 'C' : 'A';
-		infname[1] = ':';
-		infname[2] = '\\';
-		strcpy(&infname[3], infdata);
-		handle = dos_create(infname, 0x0);
+		set_infpath();
+		handle = app_getfh(FALSE, "DESKTOP.INF", 0);
 
-		if (handle <= 0)
+		if (handle == 0)
 		{
 			dos_error();
-		} else
-		{
-			size = dos_write(handle, d->size_afile, d->afile);
-			dos_close(handle);
-			/* check for full disk */
-			if (size < d->size_afile)
-			{
-#if 0 /* ZZZ */
-				fun_alert(1, STDISKFULL, NULL);
-#endif
-				dos_delete(infname);
-			}
-			up_allwin(infname, FALSE);	/* rebuild any window on the INF drive */
+			rest_infpath();
+			return TRUE;
 		}
+		d->size_afile = dos_write(handle, d->size_afile, d->afile);
+		dos_close(handle);
+		rest_infpath();
+		/* rebuild any window on the INF drive */
+		top = win_ontop();
+		if (top)
+			up_1win(top);
 	}
 
-#if 0
-	if (todisk)
-		up_allwin(infname, FALSE);		/* rebuild any window on the INF drive */
-
-	desk_wait(FALSE);
+#if !BINEXACT
+	/* BUG: no return value */
+	return FALSE;
 #endif
 }
 
 
 LINEF_STATIC VOID set_infpath(NOTHING)
 {
-	/* ZZZ TODO */
+	char root[4];
+	
+	infdrv = dos_gdrv();
+	dos_gdir(infdrv + 1, infpath);
+	root[0] = 'A';
+	root[1] = ':';
+	root[2] = '\\';
+	root[3] = '\0';
+	if (set_defdrv())
+		root[0] = 'C';
+	dos_chdir(root);
 }
 
 
 LINEF_STATIC VOID rest_infpath(NOTHING)
 {
-	/* ZZZ TODO */
+	dos_sdrv(infdrv);
+	dos_chdir(infpath);
 }
 
 
@@ -851,6 +950,9 @@ BOOLEAN set_defdrv(NOTHING)
 	 */
 	dos_sdrv((isdrive() & 0x04) >> 1);
 #else
+	int unused;
+	
+	UNUSED(unused);
 	if (isdrive() & 0x04)
 	{
 		dos_sdrv(2);
@@ -861,6 +963,4 @@ BOOLEAN set_defdrv(NOTHING)
 		return FALSE;
 	}
 #endif
-	UNUSED(rest_infpath);
-	UNUSED(set_infpath);
 }

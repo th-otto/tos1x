@@ -138,12 +138,14 @@ intptr_t ad_sysglo;
 VOIDPTR ad_armice;
 VOIDPTR ad_hgmice;
 LPTREE ad_stdesk;
-char *ad_fsel;
-intptr_t drawstk;
 BOOLEAN sh_up;						/* is the sh_start being ran yet ? */ /* unused */
+#if AESVERSION >= 0x140
+char *ad_fsel;
 BOOLEAN autoexec;					/* autoexec a file ?    */
 STATIC char g_autoboot[CMDLEN];
 STATIC int16_t g_flag;
+STATIC char aautopath[CMDLEN];
+#endif
 
 
 #define Getrez() trp14(4)
@@ -151,8 +153,6 @@ STATIC int16_t g_flag;
 #define VcheckMode(mode) trp14(95, mode)
 
 #define Cconws(x) trap(9, x)
-
-STATIC char aautopath[CMDLEN];
 
 #if DOWARNING
 BOOLEAN dowarn;
@@ -279,11 +279,8 @@ VOID gem_main(NOTHING)
 	VOIDPTR tmpadbi;
 	LPTREE tree;
 	register THEGLO *DGLO;
-	PD *lslr;
-	register char *apath;
 
 	DGLO = &D;
-	UNUSED(lslr);
 	
 	/****************************************/
 	/*      ini_dlongs();                   */
@@ -296,13 +293,6 @@ VOID gem_main(NOTHING)
     takecpm();
 
 	/****************************************/
-
-	/*
-	 * no check for allocation failure here...
-	 * why not allocate that static? its never changed
-	 */
-	drawstk = (intptr_t)dos_alloc(0x00000400L);	/* draw stack is 1K */
-	drawstk += 0x00000400L;			/* init to top */
 
 	/* init event recorder  */
 	gl_recd = FALSE;
@@ -330,13 +320,6 @@ VOID gem_main(NOTHING)
 	wind_spb.sy_tas = 0;
 	wind_spb.sy_owner = 0;
 	wind_spb.sy_wait = 0;
-
-/*
-	gl_btrue = 0x0;
-	gl_bdesired = 0x0;
-	gl_bdelay = 0x0;
-	gl_bclick = 0x0;
-*/
 
 	/* init initial process */
 	for (i = 0; i < NUM_PDS; i++)
@@ -368,30 +351,31 @@ VOID gem_main(NOTHING)
 	 */
 	gl_mowner = gl_kowner = ctl_pd = ictlmgr(rlr->p_pid);
 
-	rsc_read();							/* read in resource */
-
-	ldaccs();							/* load in accessories  */
-
 	pred_dinf();						/* pre read the inf */
 
 	/* get the resolution and the auto boot name         */
 
 	/* load gem resource and fix it up before we go   */
-
-	/* load all desk acc's  */
-
-	/* init button stuff    */
-	set_defdrv();						/* set default drive    */
-
-	/* do gsx open work station */
-	gsx_init();
-
 	rom_ram(0, ad_sysglo, 0);
 
 	rs_gaddr(ad_sysglo, R_BIPDATA, MICE0, &ad_armice);
 	ad_armice = (VOIDPTR)LLGET((intptr_t)ad_armice);
 	rs_gaddr(ad_sysglo, R_BIPDATA, MICE2, &ad_hgmice);
 	ad_hgmice = (VOIDPTR)LLGET((intptr_t)ad_hgmice);
+
+	/* load all desk acc's  */
+	ldaccs();							/* load in accessories  */
+
+	/* init button stuff    */
+	set_defdrv();						/* set default drive    */
+
+	gl_btrue = 0x0;
+	gl_bdesired = 0x0;
+	gl_bdelay = 0x0;
+	gl_bclick = 0x0;
+
+	/* do gsx open work station */
+	gsx_init();
 
 	/* fix up icons */
 	for (i = 0; i < 3; i++)
@@ -410,7 +394,6 @@ VOID gem_main(NOTHING)
 	sti();
 
 	sh_tographic();						/* go into graphic mode */
-	sh_gem = TRUE;
 
 	/* take the tick int. */
 	cli();
@@ -424,10 +407,12 @@ VOID gem_main(NOTHING)
 	ev_dclick(3, TRUE);
 #endif
 
-	/* get st_desk ptr */
-	rs_gaddr(ad_sysglo, R_TREE, SCREEN, (VOIDPTR *)&ad_stdesk);
-	tree = ad_stdesk;
-
+	if (havegem == 0)
+	{
+		rs_fixit(ad_sysglo);
+		havegem = 2;
+	}
+	
 #if TOSVERSION >= 0x106
 	/* fix up the GEM rsc. file now that we have an open WS    */
 	/* This code is also in gemshlib, but it belongs here so that the correct
@@ -438,10 +423,15 @@ VOID gem_main(NOTHING)
 		LLSET(ad_stdesk + 12, 0x00001173L);
 #endif
 
+	/* init. window vars. */
 	wm_start();
 
 	/* startup gem libs */
 	fs_start();
+
+	/* get st_desk ptr */
+	rs_gaddr(ad_sysglo, R_TREE, SCREEN, (VOIDPTR *)&ad_stdesk);
+	tree = ad_stdesk;
 
 	for (i = 0; i < 3; i++)
 		LWSET(OB_WIDTH(i), (gl_wchar * gl_ncols));
@@ -450,15 +440,11 @@ VOID gem_main(NOTHING)
 	LWSET(OB_HEIGHT(1), (gl_hchar + 2));
 	LWSET(OB_HEIGHT(2), (gl_hchar + 3));
 
-#if 0
-	rs_gaddr(ad_sysglo, R_STRING, FSTRING, (VOIDPTR *)&ad_fsel);
-#endif
-
-	indisp = FALSE;						/* init in dispatch semaphore to not indisp        */
-
 #if DOWARNING
 	if (!dowarn)
 	{
+		PD *lslr;
+
 		lslr = drl;						/* save the dispatcher list     */
 		drl = NULL;						/* Don't allow anybody to run   */
 		fm_alert(0, "[1][\
@@ -485,8 +471,11 @@ VOID gem_main(NOTHING)
 #endif
 
 
+#if AESVERSION >= 0x140
 	if (g_autoboot[0])					/* if there is a auto boot program */
 	{
+		register char *apath;
+
 #ifndef ACC_DELAY
 		for (i = 0; i < 6; i++)			/* let the acc's have a chance  */
 			all_run();
@@ -499,6 +488,7 @@ VOID gem_main(NOTHING)
 
 		sh_write(1, g_flag - 0, 0, g_autoboot, "");
 	}
+#endif
 
 	sh_main();
 
@@ -506,14 +496,14 @@ VOID gem_main(NOTHING)
 	rsc_free();							/* free up resource */
 #endif
 
-	drawstk -= 0x00000400L;				/* reset to bottom  */
-	dos_free((VOIDPTR)drawstk);
-
 	gsx_mfree();
 
 	cli();
 	giveerr();
 	sti();
+
+	/* free up resource space */
+	rs_free(ad_sysglo);
 
 	/* free up the acc's */
 	free_accs();
@@ -578,11 +568,7 @@ int16_t pred_dinf(NOTHING)
 	char *pbuf;
 	register char *temp;
 	int16_t defdrv;
-	char *chrptr;
 
-	UNUSED(chrptr);
-	
-	g_autoboot[0] = 0;
 	pbuf = dos_alloc((int32_t) SIZE_AFILE);
 	change = FALSE;
 	/*
@@ -591,20 +577,19 @@ int16_t pred_dinf(NOTHING)
 	 */
 	sh_get(pbuf, SIZE_AFILE);
 
-	rom_ram(3, (intptr_t)pbuf, 0);			/* res is default from ROM  */
-
 	if (isdrive() && diskin)			/* there is a disk  */
 	{
 		defdrv = dos_gdrv();			/* save default drive   */
 		dos_chdir("\\");				/* open newdesk.inf */
 		{								/* try desktop.inf  */
-			fh = dos_open(infdata, RMODE_RD);
+			fh = dos_open("DESKTOP.INF", RMODE_RD);
 			if (DOS_ERR)				/* no file      */
 			{
 				if (isdrive() & 0x04)	/* try the hard disk    */
 				{
-					do_cdir(2, "\\");
-					fh = dos_open(infdata, RMODE_RD);
+					dos_sdrv(2);
+					dos_chdir("\\");
+					fh = dos_open("DESKTOP.INF", RMODE_RD);
 				} else
 				{
 					DOS_ERR = TRUE;
@@ -618,8 +603,15 @@ int16_t pred_dinf(NOTHING)
 			dos_close(fh);
 			change = TRUE;
 			dos_sdrv(defdrv);			/* set it back to default   */
+		} else
+		{
+			rom_ram(3, (intptr_t)pbuf, 0);			/* res is default from ROM  */
 		}
+	} else
+	{
+		rom_ram(3, (intptr_t)pbuf, 0);			/* res is default from ROM  */
 	}
+
 	/* if we read it from disk, reschange may have changed. */
 	if (change)
 	{
@@ -634,87 +626,53 @@ int16_t pred_dinf(NOTHING)
 			} else
 			{
 				temp++;					/* get the auto boot file   */
+#if AESVERSION >= 0x140
 				if ((*temp == 'Z') && (autoexec))
 				{
 					temp += 2;			/* get the flag     */
 					temp = scan_2(temp, &g_flag);
 					temp = escan_str(temp, (char **)&g_autoboot[0]);
-				} else if (*temp == 'E')
+				} else
+#endif
+				if (*temp == 'E')
 				{
 					temp += 5;
 					scan_2(temp, &res);
+#if (TOSVERSION >= 0x102)
 					{					/* turn on the bit ?        */
-#ifdef __ALCYON__ /* sigh... */
-						trp14(((res & 0xF0) >> 4) ? 0x00400001L : 0x00400000L);
-#else
 						Blitmode(((res & 0xF0) >> 4) ? 1 : 0);
-#endif
 					}
+#endif
 
 					{
+						res &= 3;
+						res += 1;
 						if (gl_rschange)	/* if we've been here before    */
 						{
-#if (TOSVERSION == 0x104) | ((TOSVERSION == 0x106) & TP_74)
-							save_2(temp, (res & 0xF0) | (gl_restype - 1));
-#else
-							save_2(temp, (res & 0xF0) | gl_restype);
-#endif
+							save_2(temp, gl_restype - 1);
 						} else
 						{
-							res &= 0xF;
-#if (TOSVERSION == 0x104) | ((TOSVERSION == 0x106) & TP_74)
-							res += 1;
-#endif
 							gl_rschange = FALSE;
 							if (!app_reschange(res))
 								change = FALSE;	/* NO no res change     */
+							cont = FALSE;
 						}
 					}
-
 				}
 			}
 		}
 	}
 	
 	/* put in common area for special desk accessories */
+#if AESVERSION >= 0x140
 	autoexec = FALSE;
+#endif
 	sh_put(pbuf, SIZE_AFILE);
 	dos_free(pbuf);
-	return change;
-}
-
-
-/*
- * Save 25 columns and full height of the screen memory
- */
-/* 306de: 00e1e4e6 */
-/* 104de: 00fd430c */
-/* 106de: 00e14712 */
-BOOLEAN gsx_malloc(NOTHING)
-{
-#ifdef __ALCYON__ /* sigh... */
-	gsx_fix(&gl_tmp, NULL, 0L);
-#else
-	gsx_fix(&gl_tmp, NULL, 0, 0);
-#endif
-	/*
-	 * This buggy multiplication actually works, because it is compiled into a muls,
-	 * then the long result is stored without further sign-extension.
-	 * It thus make use of one the many bugs in the Alcyon compiler,
-	 * and has been fixed above for TOS 4.x
-	 */
-	gl_mlen = (int32_t)((gl_ws.ws_yres + 1) * (gl_ws.ws_xres + 1));
-	gl_mlen = (gl_nplanes * gl_mlen) / 32;
-#if TOSVERSION < 0x106
-	if (gl_mlen < 13312)
-#endif
-		gl_mlen = 13312;
-
-	gl_tmp.fd_addr = dos_alloc(gl_mlen);
-#ifndef __ALCYON__
-	/* BUG: no return here, which will return the value of gl_tmp.fd_addr casted to int... */
-	return TRUE;
-#endif
+	if (change)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 

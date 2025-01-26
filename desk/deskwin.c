@@ -57,7 +57,7 @@ PP(int16_t isort;)
 		d->g_ihint = MIN_HINT;
 		d->g_num = d->g_nmicon;
 		d->g_pxy = d->g_xyicon;
-		break;
+		/* break; */
 	}
 	d->g_iwspc = d->g_iwext + d->g_iwint;
 	d->g_ihspc = d->g_ihext + d->g_ihint;
@@ -184,11 +184,8 @@ PP(int16_t wh;)
  *	Bring a window node to the top of the window list.
  */
 VOID win_top(P(DESKWIN *)thewin)
-PP(register DESKWIN *thewin;)
+PP(DESKWIN *thewin;)
 {
-	int unused;
-	
-	UNUSED(unused);
 	objc_order(thedesk->g_pscreen, thewin->w_root, NIL);
 #if TOSVERSION >= 0x104
 	if (!streq(thedesk->p_cartname, thewin->w_name))
@@ -205,19 +202,19 @@ PP(register DESKWIN *thewin;)
 DESKWIN *win_ontop(NOTHING)
 {
 	register THEDSK *d;
-	register DESKWIN *pw;
 	register int16_t tail;
 
 	d = thedesk;
 	tail = d->g_screen[ROOT].ob_tail;
 	if (d->g_screen[tail].ob_width != 0 && d->g_screen[tail].ob_height != 0)
 	{
-		pw = &g_wlist[tail - NUM_ROBS];
 #if TOSVERSION >= 0x104
+		register DESKWIN *pw;
+		pw = &g_wlist[tail - NUM_ROBS];
 		if (!streq(d->p_cartname, pw->w_name))
 			pro_chdir(pw->w_name[1], &pw->w_name[4]);
 #endif
-		return pw;
+		return &g_wlist[tail - NUM_ROBS];
 	} else
 	{
 		return NULL;
@@ -344,13 +341,12 @@ PP(int16_t y;)
 PP(int16_t w;)
 PP(int16_t h;)
 {
-	FNODE *pfirst;
-	register FNODE *pf;
+	FNODE *pf;
 	register int16_t obid;
 	register int16_t skipcnt;
 	register int16_t sl_value;
-	register int16_t r_cnt;
-	register int16_t c_cnt;
+	int16_t r_cnt;
+	int16_t c_cnt;
 	int16_t o_wfit;
 	int16_t o_hfit;							/* object grid      */
 	int16_t i_index;
@@ -367,8 +363,7 @@ PP(int16_t h;)
 	/* free all this windows kids and set size */
 	obj_wfree(pwin->w_root, x, y, w, h);
 	/* make pfirst point at 1st file in current view */
-	win_ocalc(pwin, w / d->g_iwspc, h / d->g_ihspc, &pfirst);
-	pf = pfirst;
+	win_ocalc(pwin, w / d->g_iwspc, h / d->g_ihspc, &pf);
 	o_wfit = min(pwin->w_pncol + 1, pwin->w_vncol - pwin->w_cvcol);
 	o_hfit = min(pwin->w_pnrow + 1, pwin->w_vnrow - pwin->w_cvrow);
 	r_cnt = c_cnt = 0;
@@ -382,7 +377,8 @@ PP(int16_t h;)
 		obid = obj_ialloc(pwin->w_root, xoff + d->g_iwint, yoff + d->g_ihint, d->g_iwext, d->g_ihext);
 		if (!obid)
 			/* error case, no more obs */
-			return;
+			/* return BUG: missing */
+			;
 		/* remember it */
 		pf->f_obid = obid;
 		/* build object     */
@@ -405,7 +401,7 @@ PP(int16_t h;)
 			d->g_screen[obid].ob_spec = (intptr_t)&d->gl_icons[obid];
 			movs(sizeof(ICONBLK), &d->g_iblist[i_index], &d->gl_icons[obid]);
 			d->gl_icons[obid].ib_ptext = pf->f_name;
-			break;
+			/* break; */
 		}
 		pf = pf->f_next;
 		c_cnt++;
@@ -468,7 +464,7 @@ PP(register int16_t newcv;)
 	register GRECT *pc;
 	
 	pc = &c;
-	newcv = max(newcv, 0);
+	newcv = max(0, newcv);
 
 	if (vertical)
 	{
@@ -648,8 +644,8 @@ again:;
 	case WA_RTLINE:
 		newcv = pw->w_cvcol + 1;
 		vertical = FALSE;
-		break;
 #ifndef __ALCYON__
+		break;
 	default:
 		return;
 #endif
@@ -794,9 +790,9 @@ PP(register DESKWIN *pwin;)
 	d = thedesk;
 	parms.size = pwin->w_path->p_size;
 	parms.count = pwin->w_path->p_count;
-	rsrc_gaddr(R_STRING, STINFOST, (VOIDPTR *) &d->str);
-	LSTCPY(g_buffer, d->str);
-	merge_str(pwin->w_info, g_buffer, &parms);
+	rsrc_gaddr(R_STRING, STINFOST, (VOIDPTR *) &d->a_alert);
+	LSTCPY(g_buffer, d->a_alert);
+	merge_str(pwin->w_info, g_buffer, (VOIDPTR) &parms);
 }
 
 

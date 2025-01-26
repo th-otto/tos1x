@@ -34,7 +34,7 @@
  *
  * showfile(fname,mode)
  * char *fname;         filename of file to show
- * int mode;            TRUE for printer, FALSE for screen.
+ * int mode;            FALSE for printer, TRUE for screen.
  *
  * For screen mode, call this function after the screen is clear and the 
  * cursor is enabled.  When this function returns, the screen needs to
@@ -69,18 +69,25 @@
 
 #include "desktop.h"
 #include "toserrno.h"
+#include "desksupp.h"
+#include "deskstr.h"
+/*
+ * WTF: need constants from AES resource here
+ */
+#undef NUM_STRINGS
+#undef NUM_FRSTR
+#undef NUM_UD
+#undef NUM_IMAGES
+#undef NUM_BB
+#undef NUM_FRIMG
+#undef NUM_IB
+#undef NUM_CIB
+#undef NUM_TI
+#undef NUM_OBS
+#undef NUM_TREE
+#undef SCREEN
+#include "gemrsc.h"
 
-
-#undef Fopen
-#undef Fread
-#undef Fclose
-#undef Malloc
-#undef Mfree
-#define Fopen(f,m) trap(0x3d,f,m)
-#define Fread(handle,count,buf) trap(0x3f,handle,(long)count,buf)
-#define Fclose(handle) trap(0x3e,handle)
-#define Malloc(size) trap(0x48,(long)size)
-#define Mfree(size) trap(0x49,(long)size)
 
 #undef Bconstat
 #undef Bconin
@@ -93,12 +100,19 @@
 #undef Setprt
 #define Setprt(a) trp14(0x21, a)
 
+#undef Cconws
+#define Cconws(s) trap(9,s)
+#undef Cauxout
+#define Cauxout(ch) trap(4, ch)
+#undef Cprnout
+#define Cprnout(ch) trap(5, ch)
+
 #define BUFSIZ 4096						/* Malloc this much as a disk buffer */
 
 							/* #define MAXLINE 24	*//* line interval for --more-- */
 #define MAXCHAR 16						/* character interval for checking keyboard */
 
-#define MAXLINES 24
+#define MAXLINES 22
 
 /* ASCII equates */
 
@@ -112,298 +126,231 @@
 #define CTLS 19
 #define SPACE 32
 
-#undef SILLY_ERROR_HANDLING
-#if (TOSVERSION <= 0x104) & BINEXACT
-#define SILLY_ERROR_HANDLING
-#endif
+STATIC int sf_inptr; /* input file pointer */
+STATIC int sf_bufsize; /* input buffered size */
+STATIC BOOLEAN sf_eof;
+STATIC int sf_key;
+STATIC int sf_line;
+
+LINEF_STATIC VOID sf_disp PROTO((int handle, char *buf));
+LINEF_STATIC VOID sf_page PROTO((int handle, char *buf));
+LINEF_STATIC VOID sf_newline PROTO((int handle, char *buf));
+LINEF_STATIC BOOLEAN sf_putc PROTO((int ch, BOOLEAN centronics));
+LINEF_STATIC int sf_more PROTO((NOTHING));
+LINEF_STATIC VOID cconws PROTO((const char *s));
 
 
-LINEF_STATIC int doui PROTO((int mode, int *plinecount));
-LINEF_STATIC VOID bconws PROTO((const char *s));
+VOID sh_type(P(const char *) fname)
+PP(const char *fname;)
+{
+	showfile(fname, TRUE);
+}
+
+
+VOID sh_print(P(const char *) fname)
+PP(const char *fname;)
+{
+	showfile(fname, FALSE);
+}
+
+
+LINEF_STATIC BOOLEAN sf_getc(P(int) handle, P(char *) buf, P(int *) ch)
+PP(int handle;)
+PP(register char *buf;)
+PP(int *ch;)
+{
+	if (sf_inptr == -1)
+		return FALSE;
+	if (sf_bufsize == sf_inptr && sf_eof)
+		return FALSE;
+	if (sf_inptr == BUFSIZ)
+	{
+		sf_inptr = 0;
+		sf_bufsize = dos_read(handle, BUFSIZ, buf);
+		if (sf_bufsize != BUFSIZ)
+		{
+			sf_eof = TRUE;
+		}
+	}
+	*ch = buf[sf_inptr++] & 0xff;
+	return TRUE;
+}
 
 
 /* 306de: 00e331aa */
 /* 104de: 00fe66b2 */
 /* 106de: 00e28e36 */
-VOID showfile(P(const char *)fname, P(int) mode)
+BOOLEAN showfile(P(const char *)fname, P(int) mode)
 PP(const char *fname;)
 PP(int mode;)
 {
-	int linecount, serial;
-	register int charcount;
-	register int handle;
-	char *buf;
-	register char *ptr;
-	register long len;
-	register int i;
-	long c;
 	int ch;
-	char *alert;
+	int key;
+	BOOLEAN centronics;
+	register int handle;
+	register char *buf;
 
-	linecount = charcount = 0;
-	handle = -1;
+	sf_eof = FALSE;
 
-	if (!(buf = (char *)Malloc((long) BUFSIZ)))
+	handle = dos_open(fname, RMODE_RD);
+	if (DOS_ERR)
 	{
-#ifdef SILLY_ERROR_HANDLING
-		if (mode)						/* printer mode no memory */
-		{
-#endif
-			fun_alert(1, FCNOMEM, NULL);
-			goto allout;
-#ifdef SILLY_ERROR_HANDLING
-		} else							/* alpha mode */
-		{
-			/* silly error handling */
-#if 0 /* ZZZ */
-			rsrc_gaddr(R_STRING, STNOMEM, (VOIDPTR *)&alert);
-#endif
-			bconws(alert);
-			bconws("\r\n");
-		}
-		goto allfin;
-#endif
+		return FALSE;
+	}
+	if (!(buf = (char *)dos_alloc((long)BUFSIZ)))
+	{
+		/* BUG: handle leaked */
+		return FALSE;
 	}
 
-	if ((handle = Fopen(fname, 0)) < 0)
-	{
-#ifdef SILLY_ERROR_HANDLING
-		if (mode)						/* printer mode no file */
-		{
-#endif
-			form_error(~E_FILNF - 30);
-			goto allout;
-#ifdef SILLY_ERROR_HANDLING
-		} else
-		{
-			/* silly error handling */
-#if 0 /* ZZZ */
-			rsrc_gaddr(R_STRING, STCANTOPEN, (VOIDPTR *)&alert);
-#endif
-			bconws(alert);
-			bconws(fname);
-			bconws("\r\n");
-		}
-		goto allfin;
-#endif
-	}
-
-	/* PRINTER MODE CODE */
+	sf_inptr = BUFSIZ;
 	if (mode)
 	{
-		/* find out where to send serial or parallel */
-
-		serial = (Setprt(-1) & 0x10) ? TRUE : FALSE;
-
-		charcount = 0;
-
-		while ((len = Fread(handle, (long) BUFSIZ, buf)) > 0)
-		{
-			for (ptr = buf, i = 0; i < len; i++, ptr++)
-			{
-				switch (*ptr)
-				{
-				case CR:
-					charcount = 0;
-					break;
-				case BS:
-					charcount--;
-					break;
-				default:
-					/* advance for printing chars only */
-					if (*ptr >= (unsigned) SPACE)
-						charcount++;
-				}
-			doa2:
-				if (!Bconout(serial, *ptr))							/* device not present ?   */
-				{						/* retry ?      */
-					if (fm_show(18 /* ALRT04CRT */, NULL, 2) == 2)
-						goto doa2;
-					else				/* cancel */
-					{
-						goto alldone;
-					}
-				}
-
-				if (++linecount >= MAXCHAR)
-				{
-					linecount = 0;
-					if (Bconstat(2))
-					{
-						ch = (int) (c = Bconin(2));
-						if (ch == CTLC || ch == 'q' || ch == 'Q' || (c & 0x00ff0000L) == 0x00610000)
-							goto alldone;
-					}
-				}
-			}
-		}
-		goto alldone;
-	}
-
-	/* SCREEN MODE CODE */
-	while ((len = Fread(handle, (long) BUFSIZ, buf)) > 0)
-	{
-		for (ptr = buf, i = 0; i < len; i++, ptr++)
-		{
-			Bconout(2, *ptr);
-			charcount++;
-			if (*ptr == NL)
-			{
-				charcount = 0;
-				linecount++;
-				if (linecount >= MAXLINES)
-				{
-#if 0 /* ZZZ */
-					rsrc_gaddr(R_STRING, STMORE, (VOIDPTR *)&alert);
-#endif
-					bconws("\r");
-					bconws(alert);
-					if (doui(1, &linecount))
-						goto alldone;
-					bconws("\r\033K\r");
-				}
-			} else if (charcount >= MAXCHAR)
-			{
-				if (doui(0, &linecount))
-					goto alldone;
-			}
-		}
-	}
-
-	if (len < 0)
-	{
-#if 0 /* ZZZ */
-		rsrc_gaddr(R_STRING, STREADERROR, (VOIDPTR *)&alert);
-#endif
-		bconws("\r\n");
-		bconws(alert);
+		/* SCREEN MODE CODE */
+		sf_disp(handle, buf);
 	} else
 	{
-#if 0 /* ZZZ */
-		rsrc_gaddr(R_STRING, STENDFILE, (VOIDPTR *)&alert);
-#endif
-		bconws("\r\n");
-		bconws(alert);
-	}
+		/* PRINTER MODE CODE */
+		/* find out where to send serial or parallel */
 
-#ifdef SILLY_ERROR_HANDLING
-allfin:
-#endif
-	doui(1, &linecount);
-
-alldone:
-	if (handle >= 0)
-	{
-		Fclose(handle);
-	}
-
-  allout:
-	if (buf)							/* if there is memory allocated */
-		Mfree(buf);						/* free it          */
-}
-
-
-/*
- * This routine uses the global GEM variable gl_btrue to get the button
- * state, and it shouldn't.  But it can't call graf_mkstate, because
- * that causes a dispatch, which causes the AES to buffer keystrokes.
- */
-/* 106de: 00e2911a */
-#if TOSVERSION >= 0x106
-static long uikey(NOTHING)
-{
-	if (gl_btrue & 1)
-		return SPACE;					/* left mouse button = next page    */
-	if (gl_btrue & 2)
-		return CTLC;					/* right mouse button quits         */
-	if (Bconstat(2))
-		return Bconin(2);				/* if there's a key, return it      */
-	return 0;							/* otherwise, return nullo          */
-}
-#endif
-
-
-/*
- * doui: get user I/O.  Mode is 0 for polling, ~0 for blocking (at --more--).
- *
- * Returns 1 if user wants to stop, or modifies *plinecount for next
- * screenful.
- */
-/* 306de: 00e3359e */
-/* 104de: 00fe6988 */
-/* 106de: 00e29166 */
-int doui(P(int) mode, P(int *)plinecount)
-PP(int mode;)
-PP(int *plinecount;)
-{
-	long c;
-	int stop = 0;
-
-#if TOSVERSION >= 0x106
-	while ((c = uikey()) || mode || stop)
-#else
-	while (mode || Bconstat(2) || stop)
-#endif
-	{
-#if TOSVERSION >= 0x106
-		switch ((int) (c) & 0xff)
-#else
-		switch ((int) (c = Bconin(2)) & 0xff)
-#endif
+		centronics = (Setprt(-1) & 0x10) ? FALSE : TRUE;
+		while (sf_getc(handle, buf, &ch))
 		{
-			/* ^D and d and D step 1/2 screen ahead */
-		case CTLD:
-		case 'd':
-		case 'D':
-			*plinecount = MAXLINES / 2;
-			return 0;
-
-			/* space steps another screenful */
-		case SPACE:
-			*plinecount = 0;
-			return 0;
-
-			/* Return steps another line */
-		case CR:
-			/* do one line & say --more-- again */
-			*plinecount = MAXLINES - 1;
-			return 0;
-
-			/* ^S, ^Q pause/restart */
-		case CTLS:
-			stop = 1;
-			break;
-
-		case CTLQ:
-			stop = 0;
-			break;
-
-			/* ^C, q, and Q quit */
-		case CTLC:
-		case 'Q':
-		case 'q':
-			return 1;
-
-			/* check here for non-ASCII keys */
-		default:
-			/* UNDO quits */
-			if ((c & 0x00ff0000) == 0x00610000)
-				return 1;
-
-			/* other keys don't do anything */
-			break;
+			key = toupper(rawcon(255));
+			if (key == CTLC)
+				goto alldone;
+			if (key == 'Q')
+				goto alldone;
+			if (!sf_putc(ch, centronics))
+				goto alldone;
 		}
+		sf_putc('\r', centronics);
+		sf_putc('\n', centronics);
 	}
-	return 0;
+alldone:
+	dos_close(handle);
+	dos_free(buf);
+	return TRUE;
 }
 
 
-/* 306de: 00e3359e */
-/* 104de: 00fe6a36 */
-/* 106de: 00e29200 */
-LINEF_STATIC VOID bconws(P(const char *)s)
-PP(register const char *s;)
+LINEF_STATIC VOID sf_disp(P(int) handle, P(char *)buf)
+PP(register int handle;)
+PP(register char *buf;)
+{
+	register BOOLEAN done;
+	
+	done = FALSE;
+	Cconws("\033v"); /* turn on wrap */
+	sf_page(handle, buf);
+	do
+	{
+		if (sf_inptr == -1)
+		{
+			while (rawcon(255) == 0)
+				;
+			done = TRUE;
+		} else
+		{
+			switch (sf_more())
+			{
+			case CTLC:
+			case 'Q':
+				done = TRUE;
+				break;
+			case ' ':
+				sf_page(handle, buf);
+				break;
+			case '\r':
+				sf_newline(handle, buf);
+				/* break; */
+			}
+		}
+	} while (!done);
+}
+
+
+LINEF_STATIC int sf_more(NOTHING)
+{
+	cconws(S_MORE);
+	while ((sf_key = rawcon(255)) == 0)
+		;
+	sf_key = toupper(sf_key);
+	Cconws("\033l"); /* clear line */
+	return sf_key;
+}
+
+
+LINEF_STATIC VOID sf_page(P(int) handle, P(char *)buf)
+PP(int handle;)
+PP(char *buf;)
+{
+	for (sf_line = MAXLINES; sf_line-- != 0; )
+	{
+		if (sf_newline(handle, buf))
+			;
+		else
+			break;
+	}
+}
+
+
+LINEF_STATIC BOOLEAN sf_newline(P(int) handle, P(char *)buf)
+PP(int handle;)
+PP(char *buf;)
+{
+	int ch;
+	BOOLEAN more;
+	
+	more = TRUE;
+	while ((more = sf_getc(handle, buf, &ch)))
+	{
+		Bconout(2, ch); /* ugly mix of GEMDOS and BIOS output here */
+		if (ch == '\n')
+			break;
+	}
+	if (more == TRUE)
+		return TRUE;
+	rawcon('\r');
+	rawcon('\n');
+	cconws(S_EOF);
+	sf_inptr = -1;
+	return FALSE;
+}
+
+
+LINEF_STATIC VOID cconws(P(const char *) s)
+PP(const char *s;)
 {
 	while (*s)
-		Bconout(2, *s++);
+		rawcon(*s++);
+}
+
+
+LINEF_STATIC BOOLEAN sf_putc(P(int) ch, P(BOOLEAN) centronics)
+PP(register int ch;)
+PP(register BOOLEAN centronics;)
+{
+	int done;
+	
+	if (centronics)
+	{
+		done = FALSE;
+		while (!done)
+		{
+			if ((done = Cprnout(ch)))
+				break;
+			/* device not responding */
+			done = fm_show(ALRT04CRT, 0, 1); /* BUG: 2nd parameter is pointer */
+			desk_wait(TRUE);
+			done = done != 1 ? 0 : 99;
+		}
+		if (done == 99)
+			done = FALSE;
+		return done;
+	} else
+	{
+		Cauxout(ch);
+		return TRUE;
+	}
 }

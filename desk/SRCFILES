@@ -7,10 +7,14 @@ DESK_OBJS5= deskif.o
 DESK_OBJS=${DESK_OBJS1} ${DESK_OBJS2} ${DESK_OBJS3} ${DESK_OBJS4} ${DESK_OBJS5} ${DESK_OBJS6} ${DESK_OBJS7}
 
 DESK_HEADERS=\
-	deskdefs.h \
-	desktop.h \
-	deskrsc.h \
 	aesbind.h \
+	app.h \
+	deskdefs.h \
+	deskrsc.h \
+	deskstr.h \
+	desksupp.h \
+	desktop.h \
+	fmtrsc.h \
 	mobdefs.h \
 	osbind.h \
 	window.h \
@@ -40,6 +44,7 @@ DESK_CSRCS=\
 	desksup3.c \
 	desktop.c \
 	deskwin.c \
+	deskglob.c \
 	${empty}
 
 DESK_SRCS = $(DESK_HEADERS) $(DESK_ASRCS) $(DESK_CSRCS)

@@ -114,12 +114,12 @@ lineftab: ds.b 0
 		dc.l _trap                ; F0D8
 		dc.l _fun_alert           ; F0DC
 		dc.l _rsrc_gaddr          ; F0E0
-		dc.l _bconws              ; F0E4
+		dc.l 0                    ; F0E4
 		dc.l _form_error          ; F0E8
 		dc.l _trp14               ; F0EC
 		dc.l _trp13               ; F0F0
 		dc.l _fm_show             ; F0F4
-		dc.l _doui                ; F0F8
+		dc.l 0                    ; F0F8
 		dc.l _ap_find             ; F0FC
 		dc.l _ap_tplay            ; F100
 		dc.l _ap_trecd            ; F104
@@ -281,7 +281,7 @@ lineftab: ds.b 0
 		dc.l _dos_error           ; F374
 		dc.l _dos_write           ; F378
 		dc.l _dos_delete          ; F37C
-		dc.l _up_allwin           ; F380
+		dc.l 0                    ; F380
 		dc.l _dos_sdrv            ; F384
 		dc.l _obj_wfree           ; F388
 		dc.l _obj_ialloc          ; F38C
@@ -293,7 +293,7 @@ lineftab: ds.b 0
 		dc.l _form_dial           ; F3A4
 		dc.l _objc_draw           ; F3A8
 		dc.l _objc_offset         ; F3AC
-		dc.l _r_slash             ; F3B0
+		dc.l 0                    ; F3B0
 		dc.l _fmt_str             ; F3B4
 		dc.l _dos_avail           ; F3B8
 		dc.l _do1_alert           ; F3BC
@@ -303,11 +303,11 @@ lineftab: ds.b 0
 		dc.l _fm_draw             ; F3CC
 		dc.l _form_do             ; F3D0
 		dc.l _inf_what            ; F3D4
-		dc.l _dirop_init          ; F3D8
+		dc.l 0                    ; F3D8
 		dc.l _add_path            ; F3DC
 		dc.l _d_doop              ; F3E0
 		dc.l _sub_path            ; F3E4
-		dc.l _dirop_file          ; F3E8
+		dc.l 0                    ; F3E8
 		dc.l _do_finish           ; F3EC
 		dc.l _dos_free            ; F3F0
 		dc.l _dos_sdta            ; F3F4
@@ -315,7 +315,7 @@ lineftab: ds.b 0
 		dc.l _dos_sfirst          ; F3FC
 		dc.l _do_namecon          ; F400
 		dc.l _xstrpcat            ; F404
-		dc.l _notsame_name        ; F408
+		dc.l 0                    ; F408
 		dc.l _d_dofdel            ; F40C
 		dc.l _dos_mkdir           ; F410
 		dc.l _dos_snext           ; F414
@@ -327,7 +327,7 @@ lineftab: ds.b 0
 		dc.l _fs_sget             ; F42C
 		dc.l _unfmt_str           ; F430
 		dc.l 0                    ; F434
-		dc.l _drawclip            ; F438
+		dc.l 0                    ; F438
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440
 		dc.l _desk_clear          ; F444
@@ -355,14 +355,14 @@ lineftab: ds.b 0
 		dc.l _form_alert          ; F49C
 		dc.l _appl_write          ; F4A0
 		dc.l _win_ith             ; F4A4
-		dc.l _up_win              ; F4A8
+		dc.l 0                    ; F4A8
 		dc.l _pn_folder           ; F4AC
 		dc.l _desk_verify         ; F4B0
 		dc.l _win_sinfo           ; F4B4
 		dc.l _wind_set            ; F4B8
 		dc.l 0                    ; F4BC
 		dc.l _send_msg            ; F4C0
-		dc.l _xform_do            ; F4C4
+		dc.l 0                    ; F4C4
 		dc.l _up_1win             ; F4C8
 		dc.l _dir_op              ; F4CC
 		dc.l _par_chk             ; F4D0
@@ -392,14 +392,14 @@ lineftab: ds.b 0
 		dc.l _inf_dttmsz          ; F530
 		dc.l _dos_chmod           ; F534
 		dc.l _dos_label           ; F538
-		dc.l _fmdodraw            ; F53C
+		dc.l 0                    ; F53C
 		dc.l _inf_gindex          ; F540
 		dc.l _app_reschange       ; F544
 		dc.l _toupper             ; F548
 		dc.l _app_free            ; F54C
 		dc.l _strscn              ; F550
 		dc.l _objc_add            ; F554
-		dc.l _do_cdir             ; F558
+		dc.l 0                    ; F558
 		dc.l _shel_write          ; F55C
 		dc.l _do_wopen            ; F560
 		dc.l _win_bldview         ; F564
@@ -456,8 +456,8 @@ lineftab: ds.b 0
 		dc.l _do_filemenu         ; F630
 		dc.l _men_update          ; F634
 		dc.l _mediach             ; F638
-		dc.l _rb_start            ; F63C
-		dc.l _rb_stop             ; F640
+		dc.l 0                    ; F63C
+		dc.l 0                    ; F640
 		dc.l _do_viewmenu         ; F644
 		dc.l _win_bdall           ; F648
 		dc.l _do_optnmenu         ; F64C
@@ -555,14 +555,14 @@ lineftab: ds.b 0
 		dc.l _w_drawdesk          ; F7BC
 		dc.l _w_update            ; F7C0
 		dc.l _rs_str              ; F7C4
-		dc.l _r_sfiles            ; F7C8
+		dc.l 0                    ; F7C8
 		dc.l _fs_back             ; F7CC
-		dc.l _r_dir               ; F7D0
+		dc.l 0                    ; F7D0
 		dc.l _dos_gdir            ; F7D4
 		dc.l _gsx_mxmy            ; F7D8
-		dc.l _r_files             ; F7DC
-		dc.l _fs_draw             ; F7E0
-		dc.l _r_sort              ; F7E4
+		dc.l 0                    ; F7DC
+		dc.l 0                    ; F7E0
+		dc.l 0                    ; F7E4
 		dc.l _hcli                ; F7E8
 		dc.l _takecpm             ; F7EC
 		dc.l _hsti                ; F7F0
@@ -629,7 +629,7 @@ lineftab: ds.b 0
 		dc.l _ratinit             ; F8E4
 		dc.l _ratexit             ; F8E8
 		dc.l _sh_draw             ; F8EC
-		dc.l _sh_search           ; F8F0
+		dc.l 0                    ; F8F0
 		dc.l _sh_path             ; F8F4
 		dc.l _sh_toalpha          ; F8F8
 		dc.l _cart_exec           ; F8FC

@@ -74,8 +74,8 @@ static TEDINFO edblk;
 
 
 LINEF_STATIC VOID ob_getsp(P(LPTREE) tree, P(int16_t) obj, P(TEDINFO *) pted)
-PP(LPTREE tree;)
-PP(int16_t obj;)
+PP(register LPTREE tree;)
+PP(register int16_t obj;)
 PP(TEDINFO *pted;)
 {
 	int16_t flags;
@@ -102,18 +102,20 @@ PP(GRECT *pt;)
 {
 	register int16_t xd, yd, wd, hd;
 	register intptr_t plong;
-	int16_t iword, th;
-	int32_t ilong;
-	GRECT rec;
 
 	plong = OB_X(ROOT);
 	wd = LWGET(plong + 0x04L);
 	hd = LWGET(plong + 0x06L);			/* pixel center, no character snap 881101 */
-	xd = ((gl_width - wd) / 2) /* / gl_wchar * gl_wchar */ ;
+	xd = ((gl_width - wd) / 2) / gl_wchar * gl_wchar;
 	yd = gl_hbox + ((gl_height - gl_hbox - hd) / 2);
 	LWSET(plong, xd);
 	LWSET(plong + 0x02L, yd);
 
+#if AESVERSION >= 0x140
+	{
+	int16_t iword, th;
+	int32_t ilong;
+	GRECT rec;
 	/* account for outline  */
 	if (LWGET(OB_STATE(ROOT)) & OUTLINED)
 	{
@@ -131,6 +133,17 @@ PP(GRECT *pt;)
 		wd += th;
 		hd += th;
 	}
+	}
+#else
+	/* account for outline or shadow */
+	if (LWGET(OB_STATE(ROOT)) & (OUTLINED /* | SHADOWED */))
+	{
+		xd -= 3;
+		yd -= 3;
+		wd += 6;
+		hd += 6;
+	}
+#endif
 
 	r_set(pt, xd, yd, wd, hd);
 }
@@ -206,6 +219,7 @@ PP(register int16_t pos;)
 	/* skip to first one    */
 	while ((str[i]) && (str[i] != '_'))
 		i++;
+#if AESVERSION >= 0x140
 /* here we may have come to the end of the string without finding a field
 	backup to the last position where there was one and advance one
 	position past it...						*/
@@ -217,6 +231,7 @@ PP(register int16_t pos;)
 		if (str[i])
 			i++;
 	}
+#endif
 	return i;
 }
 
@@ -389,11 +404,8 @@ PP(int16_t idx;)
 PP(int16_t *Pstart;)
 PP(int16_t *pfinish;)
 {
-	register THEGLO *DGLO;
-
-	DGLO = &D;
-	*Pstart = find_pos(&DGLO->g_tmpstr[0], idx);
-	*pfinish = find_pos(&DGLO->g_tmpstr[0], strlen(&DGLO->g_rawstr[0]));
+	*Pstart = find_pos(&D.g_tmpstr[0], idx);
+	*pfinish = find_pos(&D.g_tmpstr[0], strlen(&D.g_rawstr[0]));
 }
 
 
@@ -402,12 +414,9 @@ PP(int16_t *pfinish;)
 LINEF_STATIC int16_t ob_delit(P(int16_t) idx)
 PP(int16_t idx;)
 {
-	register THEGLO *DGLO;
-
-	DGLO = &D;
-	if (DGLO->g_rawstr[idx])
+	if (D.g_rawstr[idx])
 	{
-		strcpy(&DGLO->g_rawstr[idx], &DGLO->g_rawstr[idx + 1]);
+		strcpy(&D.g_rawstr[idx], &D.g_rawstr[idx + 1]);
 		return FALSE;
 	}
 	return TRUE;
@@ -427,21 +436,23 @@ PP(int16_t in_char;)
 PP(register int16_t *idx;)							/* rel. to raw data */
 PP(int16_t kind;)
 {
-	register intptr_t spec;
+	register int16_t dist;
 	register int16_t tmp_back, cur_pos;
-	int16_t pos, len, flags, dist;
-	GRECT t, c, oc;
+	int16_t pos, len, flags;
+	int16_t unused;
+	GRECT t, c;
+	char *pstr;
 	int16_t ii, no_redraw, start;
 	int16_t finish, nstart, nfinish;
-	char bin_char, *pstr;
+	char bin_char;
+	long unused2;
 	register THEGLO *DGLO;
 
-	UNUSED(pstr);
-	UNUSED(oc);
+	UNUSED(unused);
+	UNUSED(unused2);
 	UNUSED(c);
 	UNUSED(t);
 	UNUSED(flags);
-	UNUSED(spec);
 
 	DGLO = &D;
 
@@ -565,7 +576,8 @@ PP(int16_t kind;)
 		}
 		break;
 	case EDEND:
-		break;
+		/* break */
+		;
 	}
 	/* draw/erase the cursor */
 	cur_pos = find_pos(&DGLO->g_tmpstr[0], *idx);

@@ -21,8 +21,6 @@
 #include "toserrno.h"
 
 char *g_buffer;						/* merge string buffer  */
-STATIC char cp_dst[LEN_ZFPATH];
-
 
 /*
  * Perform an alert box message
@@ -40,13 +38,13 @@ PP(VOIDPTR parms;)
 
 	dst = g_buffer;
 	d = thedesk;
-	rsrc_gaddr(R_STRING, item, (VOIDPTR *)&d->str);
+	rsrc_gaddr(R_STRING, item, (VOIDPTR *)&d->a_alert);
 	if (parms != NULL)
 	{
-		merge_str(dst, d->str, parms);
-		d->str = dst;
+		merge_str(dst, d->a_alert, parms);
+		d->a_alert = dst;
 	}
-	return form_alert(defbutton, d->str);
+	return form_alert(defbutton, d->a_alert);
 }
 
 
@@ -71,38 +69,6 @@ VOID send_msg(P(int16_t) type, P(int16_t) whom, P(int16_t) w3, P(int16_t) w4, P(
 }
 
 
-/* 104de: 00fd9510 */
-/* 106de: 00e1a1fe */
-VOID up_allwin(P(const char *) path, P(BOOLEAN) dofull)
-PP(const char *path;)
-PP(BOOLEAN dofull;)
-{
-	register DESKWIN *win;
-	register int i;
-	
-	graf_mouse(HOURGLASS, NULL);
-	for (i = NUM_WNODES; i != 0; i--)
-	{
-		win = win_ith(i);
-		if (win->w_id != 0)
-		{
-			if (dofull)						/* compare the full path    */
-			{
-				if (streq(win->w_path->p_spec, path))
-					up_win(win);
-			} else							/* just the id  */
-			{
-				if (win->w_path->p_spec[0] == path[0])
-				{
-					up_win(win);
-				}
-			}
-		}
-	}
-	graf_mouse(ARROW, NULL);
-}
-
-
 /* 104de: 00fd9572 */
 /* 106de: 00e1a27c */
 /* Rebuild window path and pflist */
@@ -110,9 +76,10 @@ PP(BOOLEAN dofull;)
 VOID up_1win(P(DESKWIN *) win)
 PP(register DESKWIN *win;)
 {
-	char *path;
+	register char *path;
 	register int i;
-	GRECT gr;
+	register int ok;
+	int16_t x, y, w, h;
 	
 	graf_mouse(HOURGLASS, NULL);
 	path = win->w_path->p_spec;
@@ -123,7 +90,7 @@ PP(register DESKWIN *win;)
 		{
 			if (streq(win->w_path->p_spec, path))
 			{
-				pn_folder(win->w_path);
+				ok = pn_folder(win->w_path);
 				desk_verify(win->w_id, TRUE);
 				win_sinfo(win);
 #ifdef __GNUC__
@@ -131,32 +98,12 @@ PP(register DESKWIN *win;)
 #else
 				wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
 #endif
-				wind_get(win->w_id, WF_WORKXYWH, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
-				send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
+				wind_get(win->w_id, WF_WORKXYWH, &x, &y, &w, &h);
+				send_msg(WM_REDRAW, gl_apid, win->w_id, x, y, w, h);
 			}
 		}
 	}
 	graf_mouse(ARROW, NULL);
-}
-
-
-/* 104de: 00fd95c0 */
-/* 106de: 00e1a2e2 */
-VOID up_win(P(DESKWIN *) win)
-PP(register DESKWIN *win;)
-{
-	GRECT gr;
-
-	pn_folder(win->w_path);
-	desk_verify(win->w_id, TRUE);
-	win_sinfo(win);
-#ifdef __GNUC__
-	wind_set(win->w_id, WF_INFO, ((intptr_t)win->w_info) >> 16, (intptr_t)win->w_info, 0, 0);
-#else
-	wind_set(win->w_id, WF_INFO, win->w_info, 0, 0);
-#endif
-	wind_get(win->w_id, WF_WORKXYWH, &gr.g_x, &gr.g_y, &gr.g_w, &gr.g_h);
-	send_msg(WM_REDRAW, gl_apid, win->w_id, gr.g_x, gr.g_y, gr.g_w, gr.g_h);
 }
 
 
@@ -172,28 +119,24 @@ PP(register DESKWIN *win;)
 	register LPTREE tree;
 	register PNODE *pp_node;
 	register char *ptmp;
+	register BOOLEAN more;
 	register BOOLEAN cont;
+	register BOOLEAN unused;
 	register int i;
 	char fnew_name[NAMELEN - 2];
 	char unew_name[NAMELEN];
-	long unused;
-	BOOLEAN more;
-	DTA dta;
-	int ret;
+	int strid;
 
 	UNUSED(unused);
-	UNUSED(more);
-	UNUSED(ret);
-
 	tree = (LPTREE)thedesk->g_atree[ADMKDBOX];
 	pp_node = win->w_path;
 	ptmp = thedesk->g_srcpth;
 	strcpy(ptmp, pp_node->p_spec);
 	
-#if 0 /* BUG: cartidge not handled */
+#if 0 /* BUG: cartridge not handled */
 	if (pp_node->p_spec[0] == CHAR_FOR_CARTRIDGE)
 	{
-		fun_alert(1, STNOMEM, NULL);
+		fun_alert(1, STROMRDONLY, NULL);
 		return;
 	}
 #endif
@@ -207,54 +150,55 @@ PP(register DESKWIN *win;)
 
 	if (i > MAX_LEVEL)
 	{
-#if 0 /* ZZZ */
-		fun_alert(1, STFOF8DEE, NULL);
-#endif
+		fun_alert(1, STDEEP, NULL);
 		return FALSE;
 	}
 
-	do
+	cont = TRUE;
+	while (cont)
 	{
 		fnew_name[0] = 0;
 		inf_sset((OBJECT *)tree, MKNAME, fnew_name);
+		show_hide(tree);
+		form_do(tree, ROOT);
 		cont = FALSE;
-		if (xform_do((OBJECT *)tree, ROOT) == MKOK)
+		if (inf_what((OBJECT *)tree, MKOK, MKCNCL))
 		{
 			desk_wait(TRUE);
-			fs_sget(tree, MKNAME, fnew_name);
+			fs_ssget(tree, MKNAME, fnew_name);
 			unfmt_str(fnew_name, unew_name);
 			if (unew_name[0])				/* no name  */
 			{
 				add_fname(thedesk->g_srcpth, unew_name);
 
-				dos_sdta(&dta);
+				dos_sdta(gl_dta);
 
 				if (dos_sfirst(thedesk->g_srcpth, FA_DIREC|FA_SYSTEM|FA_HIDDEN))
 				{
 					/* file exists */
-#if 0 /* ZZZ */
-					cont = fun_alert(1, STFOEXISTS, NULL) - 1 ? FALSE : TRUE;
-#endif
+					DOS_ERR = TRUE;
+					DOS_AX = ~E_ACCDN - 30;
+					strid = STSAMENAME;
 				} else
 				{
 					dos_mkdir(thedesk->g_srcpth);
-					if (DOS_AX == ~E_ACCDN - 30)
-					{
-#if 0 /* ZZZ */
-						fun_alert(1, STDISKFULL, NULL);
-#endif
-					} else
-					{
-						if (dos_error())
-							up_1win(win);
-					}
+					strid = STDISKFULL;
 				}
-				del_fname(thedesk->g_srcpth);
+				if (DOS_ERR && DOS_AX == ~E_ACCDN - 30)
+				{
+					cont = fun_alert(1, strid, NULL) - 1;
+					del_fname(thedesk->g_srcpth);
+				} else
+				{
+					if ((more = dos_error()))
+						up_1win(win);
+				}
 			}
 		}
-	} while (cont);
+	}
 
 	desk_wait(FALSE);
+	do_finish(tree);
 	return TRUE;
 }
 
@@ -262,26 +206,30 @@ PP(register DESKWIN *win;)
 /* 104de: 00fd9768 */
 /* 106de: 00e1a4ec */
 BOOLEAN fun_op(P(int) op, P(PNODE *) pspath)
-PP(register int op;)
+PP(int op;)
 PP(register PNODE *pspath;)
 {
 	register char *tmp;
-	register int level;
 	uint16_t fcnt;
 	uint16_t dcnt;
 	uint32_t size;
+	int unused;
+	int level;
+	int unused2;
 	
+	UNUSED(unused);
+	UNUSED(unused2);
 	/* do the operation */
 	if (op != -1)
 	{
-		/* get count of source files */
-		if (dir_op(OP_COUNT, &pspath->p_spec[0], pspath->p_flist, thedesk->g_tmppth, &fcnt, &dcnt, &size) == FALSE)
-			return FALSE;
-		if (op == OP_COPY || op == OP_MOVE)
+		if (op == OP_COPY)
 		{
 			if (par_chk(pspath->p_spec, pspath->p_flist, thedesk->g_tmppth))
 			{
-				level = f_level - 2;
+				/* get count of source files */
+				/* BUG: error code not checked */
+				dir_op(OP_COUNT, &pspath->p_spec[0], pspath->p_flist, thedesk->g_tmppth, &fcnt, &dcnt, &size);
+				level = f_maxlevel;
 				tmp = thedesk->g_tmppth;
 				while (*tmp++ != '\0')
 				{
@@ -290,9 +238,7 @@ PP(register PNODE *pspath;)
 				}
 				if (level > MAX_LEVEL + 1)
 				{
-#if 0 /* ZZZ */
-					fun_alert(1, STFOF8DEE, NULL);
-#endif
+					fun_alert(1, STILLCOPY, NULL);
 					return FALSE;
 				}
 			} else
@@ -300,12 +246,12 @@ PP(register PNODE *pspath;)
 				return FALSE;
 			}
 		}
+		dir_op(OP_COUNT, &pspath->p_spec[0], pspath->p_flist, thedesk->g_tmppth, &fcnt, &dcnt, &size);
 		/* do the operation */
 		dir_op(op, pspath->p_spec, pspath->p_flist, thedesk->g_tmppth, &fcnt, &dcnt, &size);
 		return TRUE;
 	}
 	return FALSE;
-	
 }
 
 
@@ -323,7 +269,6 @@ PP(int obid;)
 {
 	register int op;
 	ICONBLK *iblk;
-	BOOLEAN ret;
 
 	op = -1;
 	if (app != NULL)
@@ -331,9 +276,7 @@ PP(int obid;)
 		switch (app->a_type)
 		{
 		case AT_ISCART:
-#if 0 /* ZZZ */
-			fun_alert(1, STNOROM, NULL);
-#endif
+			fun_alert(1, STROMRDONLY, NULL);
 			return FALSE;
 #if BINEXACT
 			break;
@@ -350,28 +293,19 @@ PP(int obid;)
 			thedesk->g_tmppth[0] = iblk->ib_char & 255;
 			strcpy(&thedesk->g_tmppth[1], ":\\*.*");
 			op = OP_COPY;
-			break;
+			/* break; */
 		}
 	}
 	
-	ret = fun_op(op, pspath);
-	if (ret)
-	{
-		if (app->a_type == AT_ISDISK)
-		{
-			up_allwin(thedesk->g_tmppth, TRUE);
-			goto upwin;
-		}
-		if (app->a_type == AT_ISTRSH)
-		{
-		upwin:
-			up_allwin(pspath->p_spec, TRUE);
-		}
-	}
-	return ret;
+	return fun_op(op, pspath);
 }
 
 
+/*
+ *	Routine to call when the source of a drag is a disk
+ *	and the destination is either a window or another
+ *	disk.
+ */
 /* 104de: 00fd9922 */
 /* 106de: 00e1a5e2 */
 BOOLEAN fun_file2win(P(PNODE *) pn_src, P(char *) spec, P(APP *) app, P(FNODE *) fn_dest)
@@ -380,7 +314,6 @@ PP(char *spec;)
 PP(register APP *app;)
 PP(register FNODE *fn_dest;)
 {
-	int ret;
 	register char *p;
 	
 	strcpy(thedesk->g_tmppth, spec);
@@ -390,19 +323,48 @@ PP(register FNODE *fn_dest;)
 	if (app != NULL && app->a_type == AT_ISFOLD)
 	{
 		p = strcpy(p, fn_dest->f_name);
-		strcpy(p - 1, wilds);
+		strcpy(p - 1, "\\*.*");
 	} else
 	{
-		strcat(p, getall);
+		strcat(p, "*.*");
 	}
-	strcpy(cp_dst, thedesk->g_tmppth);
-	ret = fun_op(OP_COPY, pn_src);
-	if (ret)
+	return fun_op(OP_COPY, pn_src);
+}
+
+
+/* 104de: 00fd9d76 */
+/* 106de: 00e1abd2 */
+VOID desk1_drag(P(int16_t) wh, P(int16_t) dest_wh, P(int16_t) dobj)
+PP(register int16_t wh;)
+PP(register int16_t dest_wh;)
+PP(int16_t dobj;)
+{
+	BOOLEAN done;
+	BOOLEAN isapp;
+	FNODE *pf;
+	register DESKWIN *srcwin;
+	register DESKWIN *dstwin;
+	register APP *app;
+	
+	srcwin = win_find(wh);
+	dstwin = win_find(dest_wh);
+#if 0 /* BUG: cartridge not handled */
+	if (streq(srcwin->w_name, thedesk->p_cartname) ||
+		streq(dstwin->w_name, thedesk->p_cartname))
 	{
-		up_allwin(cp_dst, TRUE);
-		up_allwin(pn_src->p_spec, TRUE);
+		fun_alert(1, STNOROM, NULL);
+	} else
+#endif
+	{
+		app = i_find(dest_wh, dobj, &pf, &isapp);
+		done = fun_file2win(srcwin->w_path, dstwin->w_path->p_spec, app, pf);
+		if (done)
+		{
+			if (wh != dest_wh)
+				desk_clear(wh);
+			up_1win(dstwin);
+		}
 	}
-	return ret;
 }
 
 
@@ -412,28 +374,31 @@ VOID fun_win2desk(P(int16_t) wh, P(int16_t) obj)
 PP(int16_t wh;)
 PP(int16_t obj;)
 {
+	BOOLEAN done;
 	DESKWIN *win;
 	APP *app;
 	
 	app = app_afind(TRUE, AT_ISFILE, obj, NULL, NULL);
 	win = win_find(wh);
+#if 0 /* BUG: cartridge & trashcan not handled */
 	if (streq(win->w_name, thedesk->p_cartname))
 	{
 		switch (app->a_type)
 		{
 		case AT_ISDISK:
 		case AT_ISCART:
-#if 0 /* ZZZ */
 			fun_alert(1, STNOROM, NULL);
-#endif
 			break;
 		case AT_ISTRSH:
 			form_error(~E_ACCDN - 30);
 			break;
 		}
 	} else
+#endif
 	{
-		fun_wdst(win->w_path, app, obj);
+		done = fun_wdst(win->w_path, app, obj);
+		if (done)
+			up_1win(win);
 	}
 }
 
@@ -453,17 +418,15 @@ PP(int16_t dobj;)
 	register PNODE *pn_src;
 	
 	ib_src = get_spec(thedesk->g_screen, sobj);
-	pro_chroot(ib_src->ib_char);
-	if (DOS_ERR)
-		return FALSE;
 	pn_src = pn_open(ib_src->ib_char, "", "*", "*", FA_DIREC|FA_HIDDEN|FA_SYSTEM);
 #if !BINEXACT
 	okay = FALSE; /* BUG: should be above */
 #endif
 	if (pn_src != NULL)
 	{
-		pn_folder(pn_src);
+		okay = pn_folder(pn_src);
 #if BINEXACT
+		if (okay == ~E_NMFIL - 30) { } /* E_NOFILES */
 		okay = FALSE; /* BUG: should be above */
 #endif
 		if (pn_src->p_flist != NULL)
@@ -477,7 +440,7 @@ PP(int16_t dobj;)
 				okay = fun_wdst(pn_src, an_dest, dobj);
 			thedesk->g_screen[ROOT].ob_state = NORMAL;
 		}
-		pn_free(pn_src);
+		pn_close(pn_src);
 		desk_clear(0);
 	}
 	return okay;
@@ -492,6 +455,7 @@ PP(register int16_t dobj;)
 {
 	register DESKWIN *wn_dest;
 	FNODE *fn_dest;
+	BOOLEAN more;
 	BOOLEAN isapp;
 	FNODE *fn_src;
 	register int16_t sobj;
@@ -506,19 +470,16 @@ PP(register int16_t dobj;)
 		an_src = i_find(0, sobj, &fn_src, &isapp);
 		if (an_src->a_type == AT_ISTRSH)
 		{
-#if 0 /* ZZZ */
-			fun_alert(1, STNOBIN2, NULL);
-#endif
+			fun_alert(1, STNOIMAGE, NULL);
 			continue;
 		}
 		if (an_src->a_type == AT_ISCART)
 		{
-#if 0 /* ZZZ */
-			fun_alert(1, STNOROM, NULL);
-#endif
+			fun_alert(1, STROMRDONLY, NULL);
 			continue;
 		}
-		if (fun_f2any(sobj, wn_dest, an_dest, fn_dest, dobj))
+		more = fun_f2any(sobj, wn_dest, an_dest, fn_dest, dobj);
+		if (more)
 			up_1win(wn_dest);
 	}
 }
@@ -534,23 +495,20 @@ PP(int16_t dobj;)
 	FNODE *fn;
 	register APP *source;
 	register APP *target;
-	long unused;
+	short button;
+	char *parm1[1];
 	ICONBLK *src_icon;
 	ICONBLK *dst_icon;
-	char dst_name[12];
+	char trsh_name[2];
+	char dst_name[4];
 	char src_name[2];
 	char *parms[3];
 	BOOLEAN cont;
-	register THEDSK *d;
-	long unused2;
 
-	UNUSED(unused);
-	UNUSED(unused2);
-	d = thedesk;
 	cont = FALSE;
 	target = app_afind(TRUE, AT_ISFILE, dobj, NULL, NULL);
 	sobj = 0;
-	while ((sobj = win_isel(d->g_screen, TRUE, sobj)))
+	while ((sobj = win_isel(thedesk->g_screen, TRUE, sobj)))
 	{
 		source = i_find(0, sobj, &fn, &isapp);
 
@@ -566,14 +524,19 @@ PP(int16_t dobj;)
 			return FALSE;
 		} else
 		{
+			button = TRUE;
 			switch (target->a_type)
 			{
 			case AT_ISTRSH:
-				src_icon = get_spec(d->g_screen, sobj);
-				src_name[0] = src_icon->ib_char & 255;
-				src_name[1] = '\0';
-				fun_alert(1, STNOBIN, NULL);
+				src_icon = get_spec(thedesk->g_screen, sobj);
+				trsh_name[0] = src_icon->ib_char & 255;
+				trsh_name[1] = '\0';
+				parm1[0] = trsh_name;
+				button = fun_alert(2, STNOBIN, parm1);
 				return FALSE;
+#if BINEXACT
+				break;
+#endif
 			case AT_ISCART:
 				fun_alert(1, STROMRDONLY, NULL);
 				return FALSE;
@@ -581,30 +544,39 @@ PP(int16_t dobj;)
 				break;
 #endif
 			case AT_ISDISK:
-				src_icon = get_spec(d->g_screen, sobj);
-				dst_icon = get_spec(d->g_screen, dobj);
+				src_icon = get_spec(thedesk->g_screen, sobj);
+				dst_icon = get_spec(thedesk->g_screen, dobj);
 				src_name[0] = src_icon->ib_char & 255;
 				src_name[1] = '\0';
 				dst_name[0] = ' ';
 				dst_name[1] = dst_icon->ib_char & 255;
 				dst_name[2] = '\0';
+				dst_name[3] = '\0';
+#if 0
 				if (src_name[0] > 'B' ||
 					src_name[0] < 'A' ||
 					dst_name[1] > 'B' ||
 					dst_name[1] < 'A')
 				{
-#if 0 /* ZZZ */
 					fun_alert(1, FCDISKONLY, NULL);
-#endif
 					return FALSE;
 				}
+#endif
 				parms[0] = src_name;
 				parms[1] = dst_name + 1;
 				parms[2] = dst_name + 1;
-				if (fun_alert(2, STCOPY, parms) == 1)
+				button = fun_alert(2, STCOPY, parms);
+				src_name[1] = ':';
+				dst_name[2] = ':';
+				
+				if (button == 1)
 				{
-					fc_start(src_name, CMD_COPY);
-					cont = FALSE;
+					button = pro_cmd(ini_str(STTCOPY), src_name, TRUE, CMD_COPY);
+					if (button)
+					{
+						pro_run(TRUE, TRUE, 0, dobj);
+						cont = TRUE;
+					}
 				}
 				break;
 			}
@@ -614,60 +586,29 @@ PP(int16_t dobj;)
 }
 
 
-/* 104de: 00fd9d76 */
-/* 106de: 00e1abd2 */
-BOOLEAN desk1_drag(P(int16_t) wh, P(int16_t) dest_wh, P(int16_t) sobj, P(int16_t) dobj)
-PP(register int16_t wh;)
+BOOLEAN fun_ddrag(P(int16_t) src_wh, P(int16_t) dest_wh, P(int16_t) sobj, P(int16_t) dobj)
+PP(register int16_t src_wh;)
 PP(register int16_t dest_wh;)
 PP(register int16_t sobj;)
 PP(register int16_t dobj;)
 {
-	BOOLEAN done;
-	BOOLEAN isapp;
-	FNODE *pf;
-	register DESKWIN *srcwin;
-	register DESKWIN *dstwin;
-	register APP *app;
+	BOOLEAN ret;
 	
-	done = FALSE;
-	if (wh)
+	ret = FALSE;
+	if (src_wh)
 	{
 		if (dest_wh)
-		{
-			srcwin = win_find(wh);
-			dstwin = win_find(dest_wh);
-			if (streq(srcwin->w_name, thedesk->p_cartname) ||
-				streq(dstwin->w_name, thedesk->p_cartname))
-			{
-#if 0 /* ZZZ */
-				fun_alert(1, STNOROM, NULL);
-#endif
-			} else
-			{
-				app = i_find(dest_wh, dobj, &pf, &isapp);
-				if (fun_file2win(srcwin->w_path, dstwin->w_path->p_spec, app, pf) && wh != dest_wh)
-					desk_clear(wh);
-			}
-		} else
-		{
-			if (dobj == sobj)
-			{
-				fun_alert(1, STNOWIN, NULL);
-			} else
-			{
-				fun_win2desk(wh, dobj);
-			}
-		}
+			desk1_drag(src_wh, dest_wh, dobj);
+		else if (dobj == sobj)
+			fun_alert(1, STNOWIN, NULL);
+		else
+			fun_win2desk(src_wh, dobj);
 	} else
 	{
 		if (dest_wh)
-		{
 			fun_desk2win(dest_wh, dobj);
-		} else
-		{
-			if (dobj != sobj)
-				done = fun_d2desk(dobj);
-		}
+		else if (dobj != sobj)
+			ret = fun_d2desk(dobj);
 	}
-	return done;
+	return ret;
 }

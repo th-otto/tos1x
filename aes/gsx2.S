@@ -58,9 +58,8 @@
 /* 106de: 00e282cc */
 	xdef	_gsx2
 _gsx2:
-	lea	pblock,a0	; a0 -> pblock
-	move.l	#_contrl,(a0)	; set up control array pointer
-	move.l	a0,d1		; d1 -> pblock
+	move.l	#_contrl,pblock	; set up control array pointer
+	move.l	#pblock,d1		; d1 -> pblock
 	moveq.l	#115,d0	; d0 <- VDI opcode
 	trap	#2
 	rts

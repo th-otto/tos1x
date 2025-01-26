@@ -130,11 +130,14 @@ PP(char *pext;)
 
 	start = pspec;
 	/* get the drive */
-	if (*pspec++ != '\0' && *pspec == ':')
+	while (*pspec && *pspec != ':')
+		pspec++;
+	if (*pspec == ':')
 	{
 		pspec--;
 		*pdrv = *pspec;
-		pspec += 2;
+		pspec++;
+		pspec++;
 		if (*pspec == '\\')
 			pspec++;
 	} else
@@ -398,10 +401,10 @@ PP(int which;)
 #if 0
 			chk = (pf2->f_time >> 11) - (pf1->f_time >> 11);
 			if (chk)
-				return (chk);
+				return chk;
 			chk = ((pf2->f_time >> 5) & 0x003F) - ((pf1->f_time >> 5) & 0x003F);
 			if (chk)
-				return (chk);
+				return chk;
 			return ((pf2->f_time & 0x001F) - (pf1->f_time & 0x001F));
 #else
 			/* only compares hours & mins? */
@@ -444,9 +447,9 @@ PP(FNODE *pflist;)
 	register FNODE *pftemp;
 	register THEDSK *d;
 	FNODE *newlist;
+	register int16_t gap;
 	register int16_t i;
 	register int16_t j;
-	register int16_t gap;
 
 	d = thedesk;
 	/* build index array if necessary */
@@ -460,8 +463,6 @@ PP(FNODE *pflist;)
 		}
 	}
 
-	if (lstcnt == 0)
-		return pflist;
 	/* sort files using shell sort on page 108 of R C Prog. Lang. */
 	for (gap = lstcnt / 2; gap > 0; gap /= 2)
 	{
@@ -472,8 +473,8 @@ PP(FNODE *pflist;)
 				if (pn_comp(d->ml_pfndx[j], d->ml_pfndx[j + gap]) <= 0)
 					break;
 				pftemp = d->ml_pfndx[j];
-				thedesk->ml_pfndx[j] = d->ml_pfndx[j + gap];
-				thedesk->ml_pfndx[j + gap] = pftemp;
+				d->ml_pfndx[j] = d->ml_pfndx[j + gap];
+				d->ml_pfndx[j + gap] = pftemp;
 			}
 		}
 	}
@@ -505,6 +506,8 @@ PP(register PNODE *thepath;)
 	register FNODE *thefile;
 	register FNODE **prevfile;
 	register int found;
+	register int ret;
+	register int firsttime;
 	register BOOLEAN iscart;
 
 	if (thepath->p_spec[0] == CHAR_FOR_CARTRIDGE)

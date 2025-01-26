@@ -49,22 +49,28 @@ ROMSIZE = $(ROMSIZE_$(TOSVERSION))
 ifeq ($(USE_CROSS_ALCYON),1)
 tos1.img: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o biosext.o biosvdi.mak aesdesk.mak
 	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(rombase)],bss[0]]' $@=vars.o,tosvars.o,$(BIOSLINK_OBJS),biosext.o
-	$(MAKE) tos1.mak
+	$(AM_V_at)$(MAKE) tos1.mak
 
-# TODO: get text+data size of tos1.img to calculate start address
 -include tos1.mak
 
 tos2.img: tos1.img tos1.mak
-	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(tos2_tbase)],bss[0]]' $@=vars.o,tosvars.o,$(AESLINK_OBJS)
+# tos1.mak might have just been generated, make sure it is reread
+	$(AM_V_at)$(MAKE) gen_tos2_img
 
-tos1.mak: tos1.img
+.PHONY: gen_tos2_img
+gen_tos2_img: tos1.mak
+	$(AM_V_LD)$(LINK68) '[abs,symbols,locals,text[$(tos2_tbase)],bss[0]]' tos2.img=vars.o,tosvars.o,$(AESLINK_OBJS)
+
+.PHONY: tos1.mak
+tos1.mak:
 	$(AM_V_at)$(SIZE68) tos1.img > tos1.i
 	$(AM_V_at)sed -e 's/a/A/g' -e 's/b/B/g' -e 's/c/C/g' -e 's/d/D/g' -e 's/e/E/g' -e 's/f/F/g' tos1.i > tos1.1
 	$(AM_V_at)echo "ibase=16" > tos1.2
 	$(AM_V_at)echo "obase=10" >> tos1.2
+	$(AM_V_at)echo "rombase=$(rombase)" >> tos1.2
 	$(AM_V_at)sed -n 's/^.*tExt lEngth *- *[0-9]* *\([0-9a-fA-F]*\).*$$/tos1_tlen=\1/p' tos1.1 >> tos1.2
 	$(AM_V_at)sed -n 's/^.*DAtA lEngth *- *[0-9]* *\([0-9a-fA-F]*\).*$$/tos1_dlen=\1/p' tos1.1 >> tos1.2
-	$(AM_V_at)echo 'print "tos2_tbase=", tos1_tlen + tos1_dlen, "\n"' >> tos1.2
+	$(AM_V_at)echo 'print "tos2_tbase=", rombase + tos1_tlen + tos1_dlen, "\n"' >> tos1.2
 	$(AM_V_GEN)$(BC) -q < tos1.2 > $@
 	$(AM_V_at)$(RM) tos1.i tos1.1 tos1.2
 

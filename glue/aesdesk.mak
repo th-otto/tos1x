@@ -15,18 +15,16 @@ AESDESK_OBJS = \
 	../desk/deskdir.o \
 	../desk/deskif.o \
 	../desk/deskinf.o \
-	../desk/deskinf2.o \
 	../desk/deskins.o \
 	../desk/deskfpd.o \
 	../desk/deskfun.o \
 	../desk/deskobj.o \
 	../desk/desksupp.o \
 	../desk/desksup2.o \
-	../desk/rainbow.o \
 	../desk/desktop.o \
 	../desk/deskwin.o \
 	../aes/jdispa.o \
-	../aes/jdos.o \
+	../aes/gemdos.o \
 	../aes/jbind.o \
 	../aes/gemaints.o \
 	../aes/gemasync.o \
@@ -35,8 +33,8 @@ AESDESK_OBJS = \
 	../aes/gemdisp.o \
 	../aes/gemflag.o \
 	../aes/geminput.o \
-	../aes/gempd.o \
 	../aes/gemqueue.o \
+	../aes/gempd.o \
 	../aes/gemwrect.o \
 	../aes/gembind.o \
 	../aes/gemaplib.o \
@@ -65,6 +63,7 @@ AESDESK_OBJS = \
 	../aes/trap14.o \
 	../aes/gemrom.o \
 	../aes/gemglobe.o \
+	../desk/deskglob.o \
 	../aes/linefhdl.o \
 	../aes/gembase.o \
 	../aes/ui_mupb.o \

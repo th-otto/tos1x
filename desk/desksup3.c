@@ -1,3 +1,7 @@
+#include "deskstr.h"
+#include "taddr.h"
+#include "desksupp.h"
+
 #define E_NOFILES 18
 
 #undef Drvmap
@@ -7,6 +11,9 @@
 /* initialize resources */
 BOOLEAN rsrc_init(NOTHING)
 {
+	int unused;
+	
+	UNUSED(unused);
 	rom_ram(1, (intptr_t)pglobal, 0);
 	return TRUE;
 }
@@ -73,7 +80,7 @@ PP(register BOOLEAN changed;)
 {
 	register DESKWIN *pw;
 	register THEDSK *d;
-	GRECT clip;
+	int16_t xc, yc, wc, hc;
 
 	d = thedesk;
 	if (wh)
@@ -81,8 +88,8 @@ PP(register BOOLEAN changed;)
 		pw = win_find(wh);
 		if (changed)
 		{
-			wind_get(wh, WF_WORKXYWH, &clip.g_x, &clip.g_y, &clip.g_w, &clip.g_h);
-			win_bldview(pw, clip.g_x, clip.g_y, clip.g_w, clip.g_h);
+			wind_get(wh, WF_WORKXYWH, &xc, &yc, &wc, &hc);
+			win_bldview(pw, xc, yc, wc, hc);
 		}
 		d->g_croot = pw->w_root;
 	} else
@@ -176,16 +183,16 @@ VOID do_xyfix(P(int16_t *)px, P(int16_t *)py)
 PP(register int16_t *px;)
 PP(register int16_t *py;)
 {
-	GRECT t;
+	int16_t tx, ty, tw, th;
 
-	wind_get(0, WF_WORKXYWH, &t.g_x, &t.g_y, &t.g_w, &t.g_h);
-	t.g_x = *px;
-	*px = (t.g_x & 0x000f);
+	wind_get(0, WF_WORKXYWH, &tx, &ty, &tw, &th);
+	tx = *px;
+	*px = (tx & 0x000f);
 	if (*px < 8)
-		*px = t.g_x & 0xfff0;
+		*px = tx & 0xfff0;
 	else
-		*px = (t.g_x & 0xfff0) + 16;
-	*py = max(*py, t.g_y);
+		*px = (tx & 0xfff0) + 16;
+	*py = max(*py, ty);
 }
 
 
@@ -236,18 +243,18 @@ PP(int16_t h;)
 VOID zoom_closed(P(BOOLEAN) close, P(int16_t) w_id, P(int16_t) xicon, P(int16_t) yicon)
 PP(register BOOLEAN close;)
 PP(register int16_t w_id;)
-PP(int16_t xicon;)
-PP(int16_t yicon;)
+PP(register int16_t xicon;)
+PP(register int16_t yicon;)
 {
-	GRECT rc;
+	int16_t xc, yc, wc, hc;
 	register THEDSK *d;
 	
 	d = thedesk;
-	wind_get(w_id, WF_WORKXYWH, &rc.g_x, &rc.g_y, &rc.g_w, &rc.g_h);
+	wind_get(w_id, WF_WORKXYWH, &xc, &yc, &wc, &hc);
 	if (close)
 		wind_close(w_id);
 
-	graf_shrinkbox(xicon, yicon, d->g_wicon, d->g_hicon, rc.g_x, rc.g_y, rc.g_w, rc.g_h);
+	graf_shrinkbox(xicon, yicon, d->g_wicon, d->g_hicon, xc, yc, wc, hc);
 }
 
 
@@ -295,6 +302,7 @@ PP(char *pname;)
 PP(char *pext;)
 PP(register GRECT *pt;)
 {
+	register int16_t ret;
 	PNODE *tmp;
 
 	/* convert to hourglass */
@@ -303,11 +311,12 @@ PP(register GRECT *pt;)
 	tmp = pn_open(drv, ppath, pname, pext, FA_DIREC);
 	if (tmp == NULL)
 	{
-#if 0 /* ZZZ */
-		fun_alert(1, STFOF8DEE, NULL);
-#endif
+		fun_alert(1, STDEEP, NULL);
 		pw = win_ontop();
-		thedesk->g_wlastsel = pw ? pw->w_id : 0;
+		if (pw)
+			thedesk->g_wlastsel = pw->w_id;
+		else
+			thedesk->g_wlastsel = 0;
 		desk_verify(thedesk->g_wlastsel, TRUE);
 		goto done;
 	} else
@@ -316,10 +325,11 @@ PP(register GRECT *pt;)
 	}
 
 	/* activate path by search and sort of directory */
-	pn_folder(pw->w_path);
+	ret = pn_folder(pw->w_path);
+	UNUSED(ret);
 	if (drv == CHAR_FOR_CARTRIDGE)
 	{
-		strcpy(pw->w_name, thedesk->p_cartname);
+		strcpy(pw->w_name, S_CARTNAME);
 	} else
 	{
 		/* set new name and info lines for window */
@@ -361,8 +371,7 @@ done:
  */
 /* 104de: 00fda5d2 */
 /* 106de: 00e1b5ac */
-BOOLEAN do_aopen(P(DESKWIN *)win, P(APP *)pa, P(BOOLEAN) isapp, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(const char *)pname)
-PP(DESKWIN *win;)
+BOOLEAN do_aopen(P(APP *)pa, P(BOOLEAN) isapp, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(const char *)pname)
 PP(register APP *pa;)
 PP(BOOLEAN isapp;)
 PP(int16_t curr;)
@@ -370,20 +379,22 @@ PP(int16_t drv;)
 PP(const char *ppath;)
 PP(const char *pname;)
 {
-	register THEDSK *d;
-	BOOLEAN isgraf; /* 2 */
-	BOOLEAN iscr; /* 4 */
-	BOOLEAN isparm; /* 6 */
-	BOOLEAN uninstalled; /* 8 */
-	int16_t rx, ry, rw, rh; /* 16 */
-	int16_t cx, cy, cw, ch; /* 24 */
-	char *ptail; /* 28 */
-	register BOOLEAN ret;
-	register LPTREE tree;
+	register BOOLEAN isgraf;
+	register BOOLEAN iscr;
+	register BOOLEAN isparm;
+	register BOOLEAN uninstalled;
+	BOOLEAN ret;
+	BOOLEAN done;
+	int16_t rx, ry, rw, rh;
+	int16_t cx, cy, cw, ch;
+	LPTREE tree;
+	char *ptail;
 	register char *pcmd;
-	char name[26]; /* 54 */
+	char name[LEN_ZFNAME + 1];
 	BOOLEAN isover;
+	register THEDSK *d;
 
+	UNUSED(tree);
 	d = thedesk;
 	get_xywh(d->g_screen, curr, &cx, &cy, &cw, &ch);
 	get_xywh(d->g_screen, d->g_croot, &rx, &ry, &rw, &rh);
@@ -391,11 +402,16 @@ PP(const char *pname;)
 	cx += rx;
 	cy += ry;
 	/* set flags */
+	done = FALSE;
 	isgraf = pa->a_apptype & AF_ISGRAF;
 	iscr = TRUE;
 	isparm = pa->a_apptype & AF_ISPARM;
 	isover = pa->a_apptype & AF_ISFMEM;
 	uninstalled = *pa->a_pappl == '*' || *pa->a_pappl == '?' || *pa->a_pappl == 0;
+
+	/* change current dir. to selected icon's */
+	if (!isover)
+		pro_chdir(drv, ppath);
 	/*
 	 * see if application was selected directly or a
 	 * data file with an associated primary application
@@ -409,10 +425,7 @@ PP(const char *pname;)
 	{
 		/* an installed docum. */
 		pcmd = pa->a_pappl;
-		ptail = d->g_srcpth;
-		strcpy(d->g_srcpth, pname);
-		strcpy(d->g_cmd, pcmd);
-		win_top(win);
+		ptail = pname;
 	} else
 	{
 		if (isapp)
@@ -420,56 +433,33 @@ PP(const char *pname;)
 			/* DOS-based app. has been selected */
 			if (isparm)
 			{
-				ptail = &d->g_tail[1];
-				tree = (LPTREE)d->g_atree[ADOPENAP];
-				inf_setsize(pname, name, (OBJECT *)tree, APPLNAME, TRUE);
-				inf_sset((OBJECT *)tree, APPLPARM, "\0");
-				if ((ret = xform_do((OBJECT *)tree, APPLPARM) != APPLOK ? FALSE : TRUE))
-					fs_sget((OBJECT *)tree, APPLPARM, ptail);
-			}
-			if (ret)
-			{
 				pcmd = d->g_cmd;
-				*pcmd = (char)drv; /* FIXME: useless cast */
-				pcmd[1] = '\0';
-				strcat(pcmd, ":\\");
-				if (*ppath != '\0')
-				{
-					strcat(pcmd, ppath);
-					strcat(pcmd, "\\");
-				}
-				strcat(pcmd, pname);
+				ptail = &d->g_tail[1];
+				ret = opn_appl(pname, "\0", pcmd, ptail);
+			} else
+			{
+				pcmd = pname;
 			}
 		} else
 		{
 			/* DOS-based document been selected */
-			ret = fun_alert(1, STNOAPPL, NULL);
-			if (ret == 3) /* cancel */
-				return FALSE;
-			if (ret == 1)
+			ret = fun_alert(3, STNOAPPL, NULL);
+			pcmd = &d->g_cmd;
+			ptail = &d->g_tail[1];
+			switch (ret)
 			{
+			case 1:
 				/* show file */
-				graf_mouse(M_OFF, NULL);
-				gsx_escapes(3); /* v_enter_cur */
-				showfile(pname, FALSE);
-				gsx_escapes(2); /* v_exit_cur */
-				graf_mouse(M_ON, NULL);
-				return TRUE;
-			} else
-			{
-#if 0 /* ZZZ */
-				tree = (LPTREE)d->g_atree[PRINTFIL];
-#endif
-				fmt_str(pname, d->printname);
-#if 0 /* ZZZ */
-				inf_sset((OBJECT *)tree, PFILE, d->printname);
-#endif
-				desk_wait(TRUE);
-				fm_draw(tree);
-				showfile(pname, TRUE);
-				do_finish((OBJECT *)tree);
-				desk_wait(FALSE);
-				return FALSE;
+				ret = pro_cmd(ini_str(STTSHOW), pname, TRUE, CMD_TYPE);
+				break;
+			case 2:
+				/* print file */
+				ret = pro_cmd(ini_str(STTPRINT), pname, TRUE, CMD_PRINT);
+				isgraf = TRUE;
+				break;
+			case 3:
+				ret = FALSE;
+				/* break; */
 			}
 		}
 	}
@@ -478,14 +468,16 @@ PP(const char *pname;)
 	/* user wants to run another application */
 	if (ret)
 	{
+		if (pcmd != d->g_cmd && pcmd != NULL)
+			strcpy(d->g_cmd, pcmd);
 		if (ptail != &d->g_tail[1] && ptail != NULL)
 			strcpy(d->g_tail + 1, ptail);
 		if (isover)
 			d->g_tail[0] = 0xff; /* what? */
-		return pro_run(isgraf, iscr, d->g_cwin, curr);
+		done = pro_run(isgraf, iscr, d->g_cwin, curr);
 	}
 
-	return FALSE;
+	return done;
 }
 
 
@@ -497,35 +489,41 @@ PP(const char *pname;)
 BOOLEAN do_dopen(P(int16_t) curr)
 PP(register int16_t curr;)
 {
+	register int button;
+	register BOOLEAN ret;
 	register int drv;
 	register DESKWIN *pw;
 	register ICONBLK *pib;
 	register THEDSK *d;
 	
 	d = thedesk;
+	ret = FALSE;
 	pib = get_spec(d->g_screen, curr);
 	desk_wait(TRUE);
 	drv = pib->ib_char & 0x00ff;
 	pw = win_alloc(curr);
-	if (pw)
+	if (pw == NULL)
 	{
-		pro_chroot(drv);
+		rsrc_gaddr(R_STRING, STNOWIND, (VOIDPTR *)&d->a_alert);
+		button = form_alert(1, d->a_alert);
+	} else
+	{
+		if (drv != CHAR_FOR_CARTRIDGE)
+			pro_chroot(drv);
+		else
+			DOS_ERR = 0;
 		if (DOS_ERR == 0)
 		{
-			if (drv != CHAR_FOR_CARTRIDGE)
-				pro_chdir(drv, "");
+			pro_chdir(drv, "");
 			
-			do_diropen(pw, TRUE, curr, drv, "", "*", "*", (GRECT *) & d->g_screen[pw->w_root].ob_x);
+			do_diropen(pw, TRUE, curr, drv, "", "*", "*", (GRECT *) &d->g_screen[pw->w_root].ob_x);
 		} else
 		{
 			win_free(pw);
 		}
-	} else
-	{
-		fun_alert(1, STNOWIND, NULL);
 	}
 	desk_wait(FALSE);
-	return FALSE;
+	return ret;
 }
 
 
@@ -543,18 +541,21 @@ PP(const char *pname;)
 PP(const char *pext;)
 {
 	int ok;
+	BOOLEAN ret;
 	GRECT t;
 	register GRECT *pt;
 
 	UNUSED(ok);
 	pt = &t;
+	ret = FALSE;
 	wind_get(pw->w_id, WF_WORKXYWH, &pt->g_x, &pt->g_y, &pt->g_w, &pt->g_h);
 	desk_wait(TRUE);
 	pro_chroot(drv);
 	if (DOS_ERR == 0)
 	{
+		pro_chdir(drv, "");
 		pro_chdir(drv, ppath);
-		pn_free(pw->w_path);
+		pn_close(pw->w_path);
 		if (DOS_ERR != 0)
 		{
 			ppath = "";
@@ -564,7 +565,7 @@ PP(const char *pext;)
 		do_diropen(pw, FALSE, curr, drv, ppath, pname, pext, pt);
 	}
 	desk_wait(FALSE);
-	return FALSE;
+	return ret;
 }
 
 
@@ -613,7 +614,7 @@ PP(register int16_t curr;)
 		switch (pa->a_type)
 		{
 		case AT_ISFILE:
-			done = do_aopen(pw, pa, isapp, curr, drv, path, pf->f_name);
+			done = do_aopen(pa, isapp, curr, drv, path, pf->f_name);
 			break;
 		
 		case AT_ISFOLD:
@@ -621,17 +622,21 @@ PP(register int16_t curr;)
 				strcat(path, "\\");
 			strcat(path, pf->f_name);
 			/* pw->w_cvrow = 0; */	/* reset slider     */
-			do_fopen(pw, curr, drv, path, name, ext);
+			done = do_fopen(pw, curr, drv, path, name, ext);
 			break;
 		
 		case AT_ISDISK:
+			done = do_dopen(curr);
+			break;
+		
 		case AT_ISCART:
-			do_dopen(curr);
+			done = do_dopen(curr);
 			break;
 		
 		case AT_ISTRSH:
-			fun_alert(1, STNOOPEN, NULL);
-			break;
+			rsrc_gaddr(R_STRING, STNOOPEN, (VOIDPTR *)&d->a_alert);
+			form_alert(1, d->a_alert);
+			/* break; */
 		}
 	}
 
@@ -647,6 +652,8 @@ PP(register int16_t curr;)
 BOOLEAN show_item(P(int16_t) curr)
 PP(register int16_t curr;)
 {
+	BOOLEAN done;
+	BOOLEAN ret;
 	BOOLEAN isapp;
 	register APP *pa;
 	register DESKWIN *pw;
@@ -655,8 +662,8 @@ PP(register int16_t curr;)
 	ICONBLK *ib;
 	register LPTREE tree;
 
-	UNUSED(tree);
 	d = thedesk;
+	done = FALSE;
 	pa = i_find(d->g_cwin, curr, &pf, &isapp);
 	if (d->g_cwin != 0)
 		pw = win_find(d->g_cwin);
@@ -669,18 +676,19 @@ PP(register int16_t curr;)
 	{
 		switch (pa->a_type)
 		{
-		case AT_ISTRSH:
-#if 0 /* ZZZ */
-			fun_alert(1, TRSINFO, NULL);
-#endif
-			break;
 		case AT_ISFILE:
+			pro_chroot(pw->w_path->p_spec[0]);
+			if (DOS_ERR)
+				goto error;
+			ret = inf_file(pw->w_path->p_spec, pf);
+			if (ret)
+				up_1win(pw);
+			break;
 		case AT_ISFOLD:
 			pro_chroot(pw->w_path->p_spec[0]);
 			if (DOS_ERR)
 				goto error;
-			if (inf_file(pw->w_path->p_spec, pf, pa->a_type))
-				up_1win(pw);
+			inf_folder(pw->w_path->p_spec, pf);
 			break;
 		case AT_ISDISK:
 			ib = get_spec(d->g_screen, curr);
@@ -689,10 +697,15 @@ PP(register int16_t curr;)
 				goto error;
 			inf_disk(ib->ib_char & 0xFF);
 			break;
+		case AT_ISTRSH:
+			tree = (LPTREE)d->g_atree[ADPINFO];
+			inf_show((OBJECT *)tree, ROOT);
+			LWSET(OB_STATE(APDOK), NORMAL);
+			/* break; */
 		}
 	}
 error:
-	return FALSE;
+	return done;
 }
 
 
@@ -753,18 +766,23 @@ PP(register DESKWIN *pw;)
 {
 	int16_t x, y, w, h;
 	register THEDSK *d;
+	register BOOLEAN unused;
 	register BOOLEAN ret;
 	
-	UNUSED(ret);
+	UNUSED(unused);
 	d = thedesk;
+	ret = FALSE;
 	wind_get(pw->w_id, WF_WORKXYWH, &x, &y, &w, &h);
-	zoom_closed(1, pw->w_id, d->g_screen[pw->w_obid].ob_x, d->g_screen[pw->w_obid].ob_y);
-	pn_free(pw->w_path);
+	zoom_closed(TRUE, pw->w_id, d->g_screen[pw->w_obid].ob_x, d->g_screen[pw->w_obid].ob_y);
+	pn_close(pw->w_path);
 	win_free(pw);
 	pw = win_ontop();
-	d->g_wlastsel = pw ? pw->w_id : 0;
+	if (pw)
+		d->g_wlastsel = pw->w_id;
+	else
+		d->g_wlastsel = 0;
 	desk_verify(d->g_wlastsel, TRUE);
-	return FALSE;
+	return ret;
 }
 
 
@@ -777,23 +795,27 @@ PP(const char *path;)
 PP(const char *name;)
 PP(const char *ext;)
 {
-	int res;
+	BOOLEAN unused;
+	BOOLEAN res;
 	GRECT rc;
 	int16_t icx, icy;
 	register THEDSK *d;
 	register GRECT *pc;
 	
-	UNUSED(res);
+	UNUSED(unused);
 	pc = &rc;
 	d = thedesk;
+	res = FALSE;
 	wind_get(pw->w_id, WF_WORKXYWH, &pc->g_x, &pc->g_y, &pc->g_w, &pc->g_h);
 	icx = pc->g_x + (pc->g_w / 2) - (d->g_wicon / 2);
 	icy = pc->g_y + (pc->g_h / 2) - (d->g_hicon / 2);
 	zoom_closed(0, pw->w_id, icx, icy);
+#if 0
 	pw->w_cvcol = 0;
 	pw->w_cvrow = 0;
+#endif
 	do_fopen(pw, 0, drv, path, name, ext);
-	return FALSE;
+	return res;
 }
 
 
@@ -835,15 +857,21 @@ PP(register BOOLEAN trueclose;)
 }
 
 
+#undef Floprd
+#define Floprd(a,b,c,d,e,f,g)   trp14(8,a,b,c,d,e,f,g)
+
+#define MEDIACHANGE 2
+
 /* 104de: 00fdadb6 */
 /* 106de: 00e1bf02 */
 VOID pro_chroot(P(int) drive)
 PP(int drive;)
 {
 	long drvmap;
+	register intptr_t ptr;
+	register int ret;
 	register BOOLEAN rv;
-	int drv;
-	char path[10];
+	register int drv;
 	
 	rv = TRUE;
 	DOS_ERR = 0;
@@ -854,22 +882,44 @@ PP(int drive;)
 #endif
 	drvmap = Drvmap();
 	drv = drive - 'A';
-	drvmap >>= drv;
-	drvmap &= 1;
+	drvmap = drvmap >> drv;
+	drvmap = drvmap & 1;
 	if (drvmap == 0)
 	{
 		fm_error(~E_DRIVE - 30);
-		rv = FALSE;
+		DOS_ERR = TRUE;
 	} else
 	{
-		/* ZZZ some more code here */
-		path[0] = (char)drive; /* FIXME: cast */
-		path[1] = ':';
-		strcpy(&path[2], wilds);
-		dos_sdta(thedesk->g_dtastk);
-		if (dos_sfirst(path, FA_DIREC|FA_SYSTEM|FA_HIDDEN) == 0 && DOS_AX != E_NOFILES)
-			rv = FALSE;
+		if (drive < 'C')
+		{
+			ptr = (intptr_t)dos_alloc(512L);
+			
+			if (ptr != NULL)
+			{
+				while (rv)
+				{
+					desk_wait(TRUE);
+					ret = Floprd(ptr, 0L, drive - 'A', 1, 0, 0, 1);
+					if (ret != 0 && ret != E_CHNG)
+					{
+						rv = eralert(ret == E_SEEK ? 1 : 2, drive - 'A');
+					} else
+					{
+						rv = 0;
+					}
+				}
+				/*
+				 * set mediachange status for floppy
+				 */
+				Rwabs(0, NULL, MEDIACHANGE, 0, drive - 'A');
+				dos_free((VOIDPTR)ptr);
+				if (ret != 0 && ret != E_CHNG)
+					DOS_ERR = TRUE;
+			} else
+			{
+				fm_error(~E_NSMEM - 30);
+			}
+		}
+		desk_wait(FALSE);
 	}
-	desk_wait(FALSE);
-	UNUSED(rv);
 }

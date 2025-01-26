@@ -102,43 +102,12 @@ gemstart:
 	move.w	#32,-(a7)	/* drdos get sup mode */
 	trap	#1
 	addq	#6,a7
-/*
- *
- * Here we munge the environment so the hard disk gets searched, if present,
- * by shel_path.  This is for compatibility with the old shel_path, which
- * didn't really use the path, but looked on C:\ anyways.
- * You're welcome, Allan.
- * (880825 kbad)
- *
- */
-	movea.l	44(a5),a0		/* save the environment pointer */
-	move.l	a0,_ad_envrn
-	move.l	ABSW2($4c2),d0			/* get drvbits */
-	and.l	#$4,d0			/* drive C there? */
-	beq.b	not_ours		/* nope, leave the env alone */
-	cmp.l	#$50415448,(a0)+		/* 'PATH' check 1st longword ; BUG: might be unaligned access */
-	bne.b	not_ours
-	cmp.l	#$3d00413a,(a0)+	/* "=0A:" */
-	bne.b	not_ours
 
-	cmp.l   #$5C000000,(a0)
-	bne.b	not_ours
-	move.b	#'C',-2(a0)		/* make it PATH=0C:\00 */
-
-/* end section changed */
-
-not_ours:
-	clr.w	_gl_rschange		/* Clear out resolution globals */
-
-	move.w	#1,d0
-	move.w	d0,_gl_restype
-
-sh_start:
-	move.w	d0,_autoexec		/* turn on auto exec */
-	move.w	d0,_sh_isgem		/* desktop is the next to run  */
-	move.w	d0,_sh_gem
-	clr.w	_sh_doexec
-	clr.w	_sh_iscart
+	move.l	44(a5),_ad_envrn		/* save the environment pointer */
+	move.w	#0,_gl_rschange		/* Clear out resolution globals */
+	move.w	#1,_gl_restype
+	move.w	#1,_gl_nextrez
+	move.l  #0,_xxaddr
 
 #if DOWARNING
 	clr.w	_dowarn			/* This variable may or may not exist */
@@ -164,8 +133,8 @@ nolinef:
 	nop
 #endif
 
+	jsr _rsc_read       /* read in resource */
 	move.w  #1,_diskin	/* added 08/28/85 */
-	clr.w	_g_wsend
 
 
 /*	bra begin */
@@ -180,9 +149,12 @@ beg1:
 	move.w	d1,(a0)+
 	dbmi.w	d0,beg1		/* THIS MUST BE CHANGED TO DBRA!!! */
 
-	move.l	#_justretf,_drwaddr	/* initialize some bss pointers */
-	move.l	#_tikcod,_tikaddr
-	move.l  #_far_draw,_drawaddr
+	lea		_justretf,a0	/* initialize some bss pointers */
+	move.l	a0,_drwaddr
+	lea		_tikcod,a0
+	move.l	a0,_tikaddr
+	lea		_far_draw,a0
+	move.l	a0,_drawaddr
 
 /* initialize first stack pointer in first uda */
 
@@ -205,11 +177,11 @@ beg1:
 	xdef	_trap
 _trap:	
 	move.l	(sp)+,retsava
-	clr.w	_DOS_ERR
-	clr.w	_DOS_AX
+	move.w	#0,_DOS_ERR
+	move.w	#0,_DOS_AX
 	trap	#1
 	move.w  d0,_DOS_AX	/* set return code ( error proc only ) */
-	tst.l	d0			/* be careful ! */
+	cmp.l	#0,d0		/* be careful ! */
 	bge 	oktrap
 	move.w	#1,_DOS_ERR
 
@@ -228,12 +200,11 @@ oktrap:
 	comm	_gl_restype,2
 	xdef	_gl_rschange
 	comm	_gl_rschange,2
+	xdef	_gl_nextrez
+	comm	_gl_nextrez,2
 	xdef ustak
 	comm ustak,132
 	xdef	_diskin		/* added 08/2/8/85 */
 	comm _diskin,2	/* added */
-	xdef _g_wsend
-	comm _g_wsend,2
 	xdef _xxaddr
 	comm _xxaddr,4
-

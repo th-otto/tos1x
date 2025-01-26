@@ -156,7 +156,6 @@ extern VOIDPTR ad_intin; /* FAR ptr to intin */
 extern int gl_moff;
 extern long gl_mlen;
 extern BOOLEAN gl_graphic;
-extern BOOLEAN gl_mouse;					/* mouse on flag        */
 extern intptr_t tikaddr;
 extern intptr_t tiksav;
 

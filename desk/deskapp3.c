@@ -29,23 +29,26 @@ VOID app_blddesk(NOTHING)
 	register int16_t obid;
 	uint16_t bvdisk;
 	uint16_t bvhard;
-	uint16_t bvect;
+	int16_t bvect;
 	register APP *pa;
 	register THEDSK *d;
 #if TOSVERSION >= 0x104
 	int rez;
-#endif
 	int unused;
-	
+
 	UNUSED(unused);
+#endif
+	
 	d = thedesk;
 	/* kids and set size */
 	obj_wfree(DROOT, 0, 0, gl_width, gl_height);
 
-#if TOSVERSION >= 0x104
 	/* see also sh_main in AES */
+#if TOSVERSION >= 0x104
 	rez = Getrez();
 	d->g_screen[DROOT].ob_spec = rez == 2 || rez == 4 ? 0x00001143L : 0x00001173L;
+#else
+	d->g_screen[DROOT].ob_spec = Getrez() != 2 ? 0x00001173L : 0x00001143L;
 #endif
 
 	bvdisk = bvhard = 0;
@@ -57,7 +60,8 @@ VOID app_blddesk(NOTHING)
 			obid = obj_ialloc(DROOT, pa->a_x, pa->a_y, d->g_wicon, d->g_hicon);
 			if (!obid)
 				/* error case, no more obs */
-				break;
+				/* break */
+				;
 			/* set up disk vector   */
 			if (pa->a_type == AT_ISDISK)
 			{
@@ -89,25 +93,13 @@ VOID app_blddesk(NOTHING)
 /* 104de: 00fd5b36 */
 /* 106de: 00e160be */
 APP *app_afind(P(BOOLEAN) isdesk, P(int16_t) atype, P(int16_t) obid, P(char *)pname, P(BOOLEAN *)pisapp)
-PP(BOOLEAN isdesk;)
-PP(int16_t atype;)
-PP(int16_t obid;)
+PP(register BOOLEAN isdesk;)
+PP(register int16_t atype;)
+PP(register int16_t obid;)
 PP(register char *pname;)
-PP(BOOLEAN *pisapp;)
+PP(register BOOLEAN *pisapp;)
 {
 	register APP *pa;
-	register char *ptest;
-	register BOOLEAN found;
-
-	ptest = pname;
-	if (ptest != NULL)
-	{
-		while (*ptest++ != '\0')
-			;
-		while (ptest >= pname && *ptest != '\\')
-			ptest--;
-		ptest++;
-	}
 	for (pa = thedesk->applist; pa; pa = pa->a_next)
 	{
 		if (isdesk)
@@ -118,21 +110,12 @@ PP(BOOLEAN *pisapp;)
 		{
 			if (pa->a_type == atype && !(pa->a_apptype & AF_ISDESK))
 			{
-				if (wildcmp(pa->a_pdata, ptest))
+				if (wildcmp(pa->a_pdata, pname))
 				{
 					*pisapp = FALSE;
-					return (pa);
+					return pa;
 				}
-				if (*pa->a_pappl == '*')
-				{
-					found = wildcmp(pa->a_pappl, ptest);
-				} else
-				{
-					found = streq(pa->a_pappl, pname);
-					if (!found)
-						found = streq(pa->a_pappl, ptest);
-				}
-				if (found)
+				if (wildcmp(pa->a_pappl, pname))
 				{
 					*pisapp = TRUE;
 					return pa;

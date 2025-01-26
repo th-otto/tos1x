@@ -124,7 +124,7 @@ PP(register SPB *sy;)
 /* 106de: 00e1fdf6 */
 VOID amutex(P(EVB *) e, P(SPB *) sy)
 PP(register EVB *e;)
-PP(SPB *sy;)
+PP(register SPB *sy;)
 {
 	if (tak_flag(sy))					/* it owns it so do it */
 	{

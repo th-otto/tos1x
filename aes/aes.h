@@ -256,9 +256,11 @@ extern intptr_t ad_sysglo;
 extern VOIDPTR ad_armice;
 extern VOIDPTR ad_hgmice;
 extern LPTREE ad_stdesk;
-extern char *ad_fsel;
 extern intptr_t drawstk;
+extern BOOLEAN havegem;
+#if AESVERSION >= 0x140
 extern BOOLEAN autoexec;					/* autoexec a file ?    */
+#endif
 
 #if DOWARNING
 extern BOOLEAN dowarn;
@@ -268,7 +270,7 @@ VOID gem_main PROTO((NOTHING));
 VOID setres PROTO((NOTHING));
 VOID pinit PROTO((PD *ppd, CDA *pcda));
 int16_t pred_dinf PROTO((NOTHING));
-BOOLEAN gsx_malloc PROTO((NOTHING));
+VOID gsx_malloc PROTO((NOTHING));
 BOOLEAN set_defdrv PROTO((NOTHING));
 VOID gsx_xmfset PROTO((MFORM *pmfnew));
 VOID gsx_mfset PROTO((MFORM *pmfnew));
@@ -320,7 +322,7 @@ VOID fs_ssget PROTO((OBJECT *tree, int16_t obj, char *pstr));
 VOID inf_fldset PROTO((LPTREE tree, int16_t obj, uint16_t testfld, uint16_t testbit, uint16_t truestate, uint16_t falsestate));
 int16_t inf_gindex PROTO((OBJECT *tree, int16_t baseobj, int16_t numobj));
 int16_t inf_what PROTO((OBJECT *tree, int16_t ok, int16_t cncl));
-VOID merge_str PROTO((char *pdst, const char *ptmp, const char *parms));
+VOID merge_str PROTO((char *pdst, const char *ptmp, const uint16_t *parms));
 int16_t wildcmp PROTO((const char *pwild, const char *ptest));
 
 
@@ -427,7 +429,9 @@ extern int16_t rets[6];							/* added 2/4/87     */
 #endif
 extern int16_t ml_ocnt;
 #if AESVERSION < 0x200
+#if AESVERSION >= 0x140
 extern BOOLEAN g_wsend;
+#endif
 extern int16_t gl_fakemsg;
 #endif
 
@@ -819,9 +823,9 @@ int16_t sh_get PROTO((char *pbuffer, uint16_t len));
 int16_t sh_put PROTO((const char *pdata, int16_t len));
 BOOLEAN sh_tographic PROTO((NOTHING));
 BOOLEAN sh_toalpha PROTO((NOTHING));
-VOID sh_draw PROTO((char *lcmd, int16_t start, int16_t depth));
+VOID sh_draw PROTO((const char *lcmd, int16_t start, int16_t depth));
 char *sh_name PROTO((char *ppath));
-int16_t sh_envrn PROTO((char **ppath, const char *psrch));
+VOID sh_envrn PROTO((char **ppath, const char *psrch));
 typedef VOID (*SHFIND_PROC) PROTO((const char *path));
 int16_t sh_find PROTO((char *pspec, SHFIND_PROC routine));
 VOID sh_main PROTO((NOTHING));
@@ -847,7 +851,7 @@ VOID wm_set PROTO((int16_t handle, int16_t field, int16_t *iw));
 VOID wm_calc PROTO((int16_t type, int16_t kind, int16_t ix, int16_t iy, int16_t iw, int16_t ih, int16_t *ox, int16_t *oy, int16_t *ow, int16_t *oh));
 VOID w_drawdesk PROTO((GRECT *dirty));
 VOID w_update PROTO((int16_t bottom, GRECT *pt, int16_t top, BOOLEAN moved));
-BOOLEAN wm_start PROTO((NOTHING));
+VOID wm_start PROTO((NOTHING));
 VOID wm_get PROTO((int16_t handle, int16_t field, int16_t *ow));
 VOID wm_update PROTO((int code));
 int16_t wm_new PROTO((NOTHING));
@@ -887,7 +891,7 @@ long dos_lseek PROTO((int fd, int whence, long offset));
 long dos_chdir PROTO((const char *path));
 int dos_gdir PROTO((int drive, char *pdrvpath));
 int dos_sdrv PROTO((int drv));
-long dos_create PROTO((const char *name, int mode));
+long dos_create PROTO((const char *name, int attr));
 BOOLEAN dos_mkdir PROTO((const char *path));
 long dos_chmod PROTO((const char *path, BOOLEAN setit, int attr));
 long dos_set PROTO((int h, uint16_t time, uint16_t date));
@@ -904,9 +908,9 @@ int rawcon PROTO((int c));
 int prt_chr PROTO((int c));
 int dos_sdta PROTO((VOIDPTR dta));
 int dos_gdrv PROTO((NOTHING));
-int do_cdir PROTO((int drv, const char *path));
 int isdrive PROTO((NOTHING)); /* BUG: should be declared as returning LONG */
 long trap PROTO((short code, ...));
+VOID bellout PROTO((NOTHING));
 
 
 /*

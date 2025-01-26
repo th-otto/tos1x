@@ -11,7 +11,7 @@
  *	in an x,y,w,h block (grect)
  */
 VOID r_get(P(const GRECT *) gr, P(int16_t *) px, P(int16_t *) py, P(int16_t *) pw, P(int16_t *) ph)
-PP(const GRECT *gr;)
+PP(register const GRECT *gr;)
 PP(int16_t *px;)
 PP(int16_t *py;)
 PP(int16_t *pw;)
@@ -64,10 +64,18 @@ PP(register GRECT *pt;)
  * Copy src xywh block to dest xywh block.
  */
 VOID rc_copy(P(const GRECT *) src, P(GRECT *) dst)
-PP(register const GRECT *src;)
-PP(register GRECT *dst;)
+PP(const GRECT *src;)
+PP(GRECT *dst;)
 {
-	*dst = *src;
+	register const int16_t *psrc;
+	register int16_t *pdst;
+	
+	psrc = &src->g_x;
+	pdst = &dst->g_x;
+	*pdst++ = *psrc++;
+	*pdst++ = *psrc++;
+	*pdst++ = *psrc++;
+	*pdst++ = *psrc++;
 }
 
 
@@ -124,7 +132,8 @@ PP(register const GRECT *pt;)
 {
 	if ((x >= pt->g_x) && (y >= pt->g_y) && (x < pt->g_x + pt->g_w) && (y < pt->g_y + pt->g_h))
 		return TRUE;
-	return FALSE;
+	else
+		return FALSE;
 }
 
 
@@ -222,7 +231,8 @@ PP(register char ch;)
 {
 	if ((ch >= 'a') && (ch <= 'z'))
 		return ch - 32;
-	return ch;
+	else
+		return ch;
 }
 
 
@@ -334,7 +344,7 @@ VOID fmt_str(P(const char *) in_str, P(char *) out_str)
 PP(register const char *in_str;)
 PP(register char *out_str;)
 {
-	int16_t i;
+	register int16_t i;
 	register const char *p;
 	
 	p = in_str;
@@ -362,29 +372,23 @@ VOID unfmt_str(P(const char *) in_str, P(char *) out_str)
 PP(register const char *in_str;)
 PP(register char *out_str;)
 {
-	int16_t i;
-	char temp;
+	register const char *p;
+	register char temp;
 
-	for (i = 0; i < 8; i++)
+	for (p = in_str; *p != '\0' && ((intptr_t)p - (intptr_t)in_str) < 8; )
 	{
-		temp = *in_str++;
+		temp = *p++;
 
-		if ((temp) && (temp != ' '))
+		if (temp != ' ')
 			*out_str++ = temp;
-		else
-		{
-			if (!temp)					/* at the end ? */
-				goto u_1;
-		}
 	}
 
-	if (*in_str)							/* any extension ? */
+	if (*p)							/* any extension ? */
 	{
 		*out_str++ = '.';
-		while (*in_str)
-			*out_str++ = *in_str++;
+		while (*p)
+			*out_str++ = *p++;
 	}
-  u_1:
 	*out_str = '\0';
 }
 
@@ -455,9 +459,9 @@ PP(char *pstr;)
 VOID inf_fldset(P(LPTREE) tree, P(int16_t) obj, P(uint16_t) testfld, P(uint16_t) testbit, P(uint16_t) truestate, P(uint16_t) falsestate)
 PP(LPTREE tree;)
 PP(int16_t obj;)
-PP(uint16_t testfld;)
-PP(uint16_t testbit;)
-PP(uint16_t truestate;)
+PP(int16_t testfld;)
+PP(int16_t testbit;)
+PP(int16_t truestate;)
 PP(uint16_t falsestate;)
 {
 	LWSET(OB_STATE(obj), (testfld & testbit) ? truestate : falsestate);
@@ -476,7 +480,7 @@ PP(int16_t numobj;)
 
 	for (retobj = 0; retobj < numobj; retobj++)
 	{
-		if (tree[baseobj + retobj].ob_state & SELECTED)
+		if (LWGET(OB_STATE(baseobj + retobj)) & SELECTED)
 			return retobj;
 	}
 	return NIL;
@@ -488,7 +492,7 @@ PP(int16_t numobj;)
  *	nothing was selected.
  */
 int16_t inf_what(P(OBJECT *) tree, P(int16_t) ok, P(int16_t) cncl)
-PP(register OBJECT *tree;)
+PP(register LPTREE tree;)
 PP(register int16_t ok;)
 PP(register int16_t cncl;)
 {
@@ -498,7 +502,7 @@ PP(register int16_t cncl;)
 
 	if (field != -1)
 	{
-		tree[ok + field].ob_state = NORMAL;
+		LWSET(OB_STATE(ok + field), NORMAL);
 		field = field == 0;
 	}
 	return field;
@@ -506,16 +510,16 @@ PP(register int16_t cncl;)
 
 
 
-VOID merge_str(P(char *) pdst, P(const char *) ptmp, P(const char *) parms)
+VOID merge_str(P(char *) pdst, P(const char *) ptmp, P(const uint16_t *) parms)
 PP(register char *pdst;)
 PP(register const char *ptmp;)
-PP(VOIDPTR parms;)
+PP(uint16_t *parms;)
 {
 	register int16_t num;
 	int16_t do_value;
 	char lholder[12];
 	register char *pnum;
-	char *psrc;
+	const char *psrc;
 	register int32_t lvalue, divten;
 	int16_t digit;
 
@@ -544,7 +548,7 @@ PP(VOIDPTR parms;)
 				do_value = TRUE;
 				break;
 			case 'S':
-				psrc = (char *) (HW(parms[num]) | LW(parms[num+1]));
+				psrc = *((const char **) & parms[num]);
 				num += 2;
 				while (*psrc)
 					*pdst++ = *psrc++;
@@ -611,7 +615,8 @@ PP(register const char *ptest;)
 	/* if any part of wildcard or test is left then no match */
 	if ((*pwild) || (*ptest))
 		return FALSE;
-	return TRUE;
+	else
+		return TRUE;
 }
 
 #endif

@@ -332,33 +332,33 @@ static char deskfr_string_1[] = " Fichier ";
 static char deskfr_string_2[] = " Visualisation ";
 static char deskfr_string_3[] = " Options";
 static char deskfr_string_4[] = "  Informations bureau...";
-static char deskfr_string_5[] = "------------------------";
-static char deskfr_string_6[] = "1";
-static char deskfr_string_7[] = "2";
-static char deskfr_string_8[] = "3";
-static char deskfr_string_9[] = "4";
-static char deskfr_string_10[] = "5";
-static char deskfr_string_11[] = "6";
+static char deskfr_string_5[] = "-------------------------";
+static char deskfr_string_6[] = "  1";
+static char deskfr_string_7[] = "  2";
+static char deskfr_string_8[] = "  3";
+static char deskfr_string_9[] = "  4";
+static char deskfr_string_10[] = "  5";
+static char deskfr_string_11[] = "  6";
 static char deskfr_string_12[] = "  Ouvrir";
 static char deskfr_string_13[] = "  Informations...";
-static char deskfr_string_14[] = "----------------------";
+static char deskfr_string_14[] = "---------------------";
 static char deskfr_string_15[] = "  Nouveau dossier...";
 static char deskfr_string_16[] = "  Fermer";
 static char deskfr_string_17[] = "  Fermer la fen\210tre";
-static char deskfr_string_18[] = "----------------------";
+static char deskfr_string_18[] = "---------------------";
 static char deskfr_string_19[] = "  Formatage...";
 static char deskfr_string_20[] = "";
 static char deskfr_string_21[] = "";
 static char deskfr_string_22[] = "  Visualisation ic\223nes";
 static char deskfr_string_23[] = "  Visualisation textes";
-static char deskfr_string_24[] = "------------------------";
+static char deskfr_string_24[] = "-----------------------";
 static char deskfr_string_25[] = "  Tri par nom";
 static char deskfr_string_26[] = "  Tri par date";
 static char deskfr_string_27[] = "  Tri par taille";
 static char deskfr_string_28[] = "  Tri par type";
 static char deskfr_string_29[] = "  Installer une unit\202 disque...";
 static char deskfr_string_30[] = "  Installer une application...";
-static char deskfr_string_31[] = "-------------------------------";
+static char deskfr_string_31[] = "--------------------------------";
 static char deskfr_string_32[] = "  D\202finir des pr\202f\202rences...";
 static char deskfr_string_33[] = "  Sauvegarder le bureau";
 static char deskfr_string_34[] = "  Impression de l\'\202cran";
@@ -650,41 +650,41 @@ static OBJECT rs_object[NUM_OBS] = {
 	{ 6, -1, -1, G_TITLE, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_2), 17,0, 15,769 }, /* VIEWMENU */
 	{ 2, -1, -1, G_TITLE, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_3), 32,0, 8,769 }, /* OPTNMENU */
 	{ 0, 8, 36, G_IBOX, OF_NONE, OS_NORMAL, C_UNION(0x0L), 0,769, 80,24 },
-	{ 17, 9, 16, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 1,0, 24,8 },
-	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_4), 0,0, 24,1 }, /* ABOUITEM */
-	{ 11, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_5), 0,1, 24,1 }, /* L1ITEM */
-	{ 12, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_6), 0,2, 24,1 },
-	{ 13, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_7), 0,3, 24,1 },
-	{ 14, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_8), 0,4, 24,1 },
-	{ 15, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_9), 0,5, 24,1 },
-	{ 16, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_10), 0,6, 24,1 },
-	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_11), 0,7, 24,1 },
-	{ 28, 18, 27, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 7,0, 22,8 },
-	{ 19, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_12), 0,0, 22,1 }, /* OPENITEM */
-	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_13), 0,1, 22,1 }, /* SHOWITEM */
-	{ 21, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_14), 0,2, 22,1 },
-	{ 22, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_15), 0,3, 22,1 }, /* NEWFITEM */
-	{ 23, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_16), 0,4, 22,1 }, /* CLSFITEM */
-	{ 24, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_17), 0,5, 22,1 }, /* CLOSWITEM */
-	{ 25, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_18), 0,6, 22,1 },
-	{ 26, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_19), 0,7, 22,1 }, /* FORMITEM */
-	{ 27, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_20), 0,8, 22,1 },
-	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_21), 0,9, 22,1 },
-	{ 36, 29, 35, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 9,0, 24,7 },
-	{ 30, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_22), 0,0, 24,1 }, /* ICONITEM */
-	{ 31, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_23), 0,1, 24,1 }, /* TEXTITEM */
-	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_24), 0,2, 24,1 },
-	{ 33, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_25), 0,3, 24,1 }, /* NAMEITEM */
-	{ 34, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_26), 0,4, 24,1 }, /* DATEITEM */
-	{ 35, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_27), 0,5, 24,1 }, /* SIZEITEM */
-	{ 28, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_28), 0,6, 24,1 }, /* TYPEITEM */
-	{ 7, 37, 42, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 31,6 },
-	{ 38, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_29), 0,0, 31,1 }, /* IDSKITEM */
-	{ 39, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_30), 0,1, 31,1 }, /* IAPPITEM */
-	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_31), 0,2, 31,1 },
-	{ 41, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_32), 0,3, 31,1 }, /* PREFITEM */
-	{ 42, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_33), 0,4, 31,1 }, /* SAVEITEM */
-	{ 36, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskfr_string_34), 0,5, 31,1 }, /* PRINTITEM */
+	{ 17, 9, 16, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 1,0, 25,8 },
+	{ 10, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_4), 0,0, 25,1 }, /* ABOUITEM */
+	{ 11, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_5), 0,1, 25,1 }, /* L1ITEM */
+	{ 12, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_6), 0,2, 25,1 },
+	{ 13, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_7), 0,3, 25,1 },
+	{ 14, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_8), 0,4, 25,1 },
+	{ 15, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_9), 0,5, 25,1 },
+	{ 16, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_10), 0,6, 25,1 },
+	{ 8, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_11), 0,7, 25,1 },
+	{ 28, 18, 27, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 7,0, 21,10 },
+	{ 19, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_12), 0,0, 21,1 }, /* OPENITEM */
+	{ 20, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_13), 0,1, 21,1 }, /* SHOWITEM */
+	{ 21, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_14), 0,2, 21,1 }, /* L2ITEM */
+	{ 22, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_15), 0,3, 21,1 }, /* NEWFITEM */
+	{ 23, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_16), 0,4, 21,1 }, /* CLSFITEM */
+	{ 24, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_17), 0,5, 21,1 }, /* CLSWITEM */
+	{ 25, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_18), 0,6, 21,1 }, /* L3ITEM */
+	{ 26, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_19), 0,7, 21,1 }, /* FORMITEM */
+	{ 27, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_20), 0,8, 21,1 }, /* OUTPITEM */
+	{ 17, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_21), 0,9, 21,1 }, /* QUITITEM */
+	{ 36, 29, 35, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 9,0, 23,7 },
+	{ 30, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_22), 0,0, 23,1 }, /* ICONITEM */
+	{ 31, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_23), 0,1, 23,1 }, /* TEXTITEM */
+	{ 32, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_24), 0,2, 23,1 }, /* L4ITEM */
+	{ 33, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_25), 0,3, 23,1 }, /* NAMEITEM */
+	{ 34, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_26), 0,4, 23,1 }, /* DATEITEM */
+	{ 35, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_27), 0,5, 23,1 }, /* SIZEITEM */
+	{ 28, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_28), 0,6, 23,1 }, /* TYPEITEM */
+	{ 7, 37, 42, G_BOX, OF_NONE, OS_NORMAL, C_UNION(0xFF1100L), 8,0, 32,6 },
+	{ 38, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_29), 0,0, 32,1 }, /* IDSKITEM */
+	{ 39, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_30), 0,1, 32,1 }, /* IAPPITEM */
+	{ 40, -1, -1, G_STRING, OF_NONE, OS_DISABLED, C_UNION(deskfr_string_31), 0,2, 32,1 }, /* L5ITEM */
+	{ 41, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_32), 0,3, 32,1 }, /* PREFITEM */
+	{ 42, -1, -1, G_STRING, OF_NONE, OS_NORMAL, C_UNION(deskfr_string_33), 0,4, 32,1 }, /* SAVEITEM */
+	{ 36, -1, -1, G_STRING, OF_LASTOB, OS_NORMAL, C_UNION(deskfr_string_34), 0,5, 32,1 }, /* PRINTITEM */
 
 /* ADFILEIN */
 

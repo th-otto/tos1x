@@ -219,6 +219,7 @@ lbend:
  * ==						==
  * ================================================
  */
+ 	xdef _LSTRLEN
 _LSTRLEN:
 	move.l	4(a7),a0		; Get strings address off stack.
 	clr.w	d0			; Initialize character counter.

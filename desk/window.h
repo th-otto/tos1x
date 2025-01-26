@@ -52,8 +52,10 @@ typedef struct context_save
 	int16_t	cdele_save;		/* delete ? */
 #if TOSVERSION >= 0x104
 	BOOLEAN cbit_save;		/* bitblt */
-#endif
 	BOOLEAN covwr_save;		/* write ? */
+#else
+	int16_t cdclk_save;
+#endif
 	int16_t pref_save;		/* screen pref */
 	WSAVE win_save[NUM_WNODES];	/* window process structure */
 } CSAVE;

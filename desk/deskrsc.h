@@ -58,4 +58,15 @@
 #if (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_SF)
 #include "../desk/rsc/100/deskfr.h"
 #endif
+
+/*
+ * icons, supposed to be in the resource file,
+ * but loaded separately
+ */
+#define IDISK     0
+#define IDIR      1
+#define ITRASHCAN 2
+#define IPRG      3
+#define IFILE     4
+
 #endif /* TOSVERSION == 0x100 */

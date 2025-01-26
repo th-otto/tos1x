@@ -111,7 +111,7 @@ PP(register ORECT *old;)
 	case BOTTOM:
 		rl->o_gr.g_y = new->o_gr.g_y + new->o_gr.g_h;
 		rl->o_gr.g_h = (old->o_gr.g_y + old->o_gr.g_h) - (new->o_gr.g_y + new->o_gr.g_h);
-		break;
+		/* break; */
 	}
 	return rl;
 }

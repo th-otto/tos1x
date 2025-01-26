@@ -48,7 +48,7 @@
 #include "gsxdefs.h"
 
 
-#define KEYSTOP 0x2b1c0000L				/* control backslash    */
+#define KEYSTOP 0x00002b1cL				/* control backslash    */
 
 #if AESVERSION >= 0x200
 PD *dpd;								/* critical error process   */
@@ -176,7 +176,12 @@ VOID forker(NOTHING)
 				 * else record the event
 				 * BUG: may access memory before gl_rbuf if first recorded event is time event
 				 */
+#if AESVERSION >= 0x140
 				if ((f->f_code == tchange) && (LLGET(gl_rbuf - sizeof(FPD)) == (intptr_t)tchange))
+#else
+				/* BUG: comparing only word, and also generates buggy code */
+				if ((f->f_code == tchange) && ((*((uint16_t *)(gl_rbuf - sizeof(FPD)))) == tchange))
+#endif
 				{
 					amt = f->f_data + LLGET(gl_rbuf - sizeof(int32_t));
 					LLSET(gl_rbuf - sizeof(int32_t), amt);
@@ -207,32 +212,32 @@ VOID chkkbd(NOTHING)
 {
 	register int16_t achar, kstat;
 	register int16_t *pintin;
-
-#ifdef __ALCYON__ /* sigh */
-	gsx_ncode(KEY_SHST, 0L);
-#else
+	register int16_t *pintout;
+	int unused[3];
+	
+	UNUSED(unused);
 	gsx_ncode(KEY_SHST, 0, 0);
-#endif
 	kstat = intout[0];
 
-	achar = 0;
 	if (gl_kowner->p_cda->c_q.c_cnt < KBD_SIZE)
 	{
 		pintin = &intin[0];
+		pintout = &intout[0];
 
 		pintin[0] = 4;
 		pintin[1] = 2;
-#ifdef __ALCYON__
-		gsx_ncode(SET_INPUT_MODE, 0x00000002L); /* sigh */
-#else
 		gsx_ncode(SET_INPUT_MODE, 0, 2);
-#endif
 
 		pintin[0] = -1;
 		pintin[1] = FALSE;				/* no echo */
 		gsx_ncode(STRING_INPUT, FALSE, 2);
 		if (contrl[4])
-			achar = intout[0];
+			achar = pintout[0];
+		else
+			achar = 0;
+	} else
+	{
+		achar = 0;
 	}
 
 	if ((achar) || (kstat != kstate))
@@ -296,7 +301,9 @@ static VOID schedule(NOTHING)
 VOID disp(NOTHING)
 {
 	register PD *p;
-
+	int unused[2];
+	
+	UNUSED(unused);
 #if TOSVERSION <= 0x104
 	savestate(rlr->p_uda);
 #endif
@@ -309,7 +316,7 @@ VOID disp(NOTHING)
 		break;
 	case PS_MWAIT:
 		mwait_act(p);
-		break;
+		/* break; */
 	}
 
 	/* run through and execute all the fork processes */

@@ -427,7 +427,7 @@ beptr           000060f4        Data Label      Global  User Defined
 endvdibss       00006100        Data Label      Global  User Defined
 
 retsava         00006100        Data Label      Global  User Defined
-x6104_unused    00006104        Data Label      Global  User Defined
+xxaddr          00006104        Data Label      Global  User Defined
 gl_restype      00006108        Data Label      Global  User Defined
 gl_rschange     0000610a        Data Label      Global  User Defined
 gl_nextrez      0000610c        Data Label      Global  User Defined
@@ -436,6 +436,7 @@ ustak_end       0000618e        Data Label      Global  User Defined
 diskin          00006192        Data Label      Global  User Defined
 srsave          00006194        Data Label      Global  User Defined
 savsr           00006196        Data Label      Global  User Defined
+psetsr          00006198        Data Label      Global  User Defined
 dspstk          0000619a        Data Label      Global  User Defined
 crit_err        0000641e        Data Label      Global  User Defined
 SAV2TRP         00006422        Data Label      Global  User Defined
@@ -443,7 +444,7 @@ savsup          00006426        Data Label      Global  User Defined
 drawaddr        0000642a        Data Label      Global  User Defined
 drawsp          0000642e        Data Label      Global  User Defined
 drawstk         00006432        Data Label      Global  User Defined
-ldivr           00006436        Data Label      Global  User Defined
+aesldivr        00006436        Data Label      Global  User Defined
 errsave         0000643a        Data Label      Global  User Defined
 errstk          0000683e        Data Label      Global  User Defined
 ad_rso          00006c44        Data Label      Global  User Defined
@@ -462,8 +463,8 @@ NUM_TICK        00006c86        Data Label      Global  User Defined
 CMP_TICK        00006c8a        Data Label      Global  User Defined
 gstack          00006c8e        Data Label      Global  User Defined
 tstack          00006cee        Data Label      Global  User Defined
-x6d4e           00006d4e        Data Label      Global  User Defined
-x6d52           00006d52        Data Label      Global  User Defined
+sf_key          00006d4e        Data Label      Global  User Defined
+sf_line         00006d52        Data Label      Global  User Defined
 trp13aret       00006d58        Data Label      Global  User Defined
 trp14aret       00006d5c        Data Label      Global  User Defined
 gl_xclip        00006d60        Data Label      Global  User Defined
@@ -499,7 +500,7 @@ gl_font         00006fb2        Data Label      Global  User Defined
 infpath         00006fb4        Data Label      Global  User Defined
 gl_cowner       0000702e        Data Label      Global  User Defined
 sh_doexec       00007032        Data Label      Global  User Defined
-x7034           00007034        Data Label      Global  User Defined
+sf_eof          00007034        Data Label      Global  User Defined
 gl_patt         00007036        Data Label      Global  User Defined
 gl_rscreen      00007038        Data Label      Global  User Defined
 gl_rfull        00007040        Data Label      Global  User Defined
@@ -533,6 +534,7 @@ gl_tmp2         000072dc        Data Label      Global  User Defined
 gl_dta          00007304        Data Label      Global  User Defined
 gl_nrows        00007336        Data Label      Global  User Defined
 ajunk           00007338        Data Label      Global  User Defined
+sf_inptr        0000733a        Data Label      Global  User Defined
 gl_src          0000733c        Data Label      Global  User Defined
 INTER_HSPACE    00007350        Data Label      Global  User Defined
 gl_dabase       00007352        Data Label      Global  User Defined
@@ -542,7 +544,7 @@ gl_wtop         0000736e        Data Label      Global  User Defined
 gl_dst          00007370        Data Label      Global  User Defined
 fph             00007384        Data Label      Global  User Defined
 gl_rfs          00007386        Data Label      Global  User Defined
-x738e           0000738e        Data Label      Global  User Defined
+sf_bufsize      0000738e        Data Label      Global  User Defined
 gl_wptschar     00007390        Data Label      Global  User Defined
 gl_wsptschar    00007392        Data Label      Global  User Defined
 xrat            00007394        Data Label      Global  User Defined
@@ -560,7 +562,7 @@ xforkq          000073ca        Data Label      Global  User Defined
 gl_tmp          000073cc        Data Label      Global  User Defined
 D               000073e0        Data Label      Global  User Defined
 gl_hchar        00009dfa        Data Label      Global  User Defined
-x9dfc           00009dfc        Data Label      Global  User Defined
+f_maxlevel      00009dfc        Data Label      Global  User Defined
 eul             00009dfe        Data Label      Global  User Defined
 indisp          00009e02        Data Label      Global  User Defined
 curpid          00009e04        Data Label      Global  User Defined
@@ -581,7 +583,7 @@ gem_global      00009e8c        Data Label      Global  User Defined
 nrl             00009eaa        Data Label      Global  User Defined
 kstate          00009eae        Data Label      Global  User Defined
 gl_bclick       00009eb0        Data Label      Global  User Defined
-ad_select       00009eb2        Data Label      Global  User Defined
+ad_fsnames      00009eb2        Data Label      Global  User Defined
 bi              00009eb6        Data Label      Global  User Defined
 ib              00009ec4        Data Label      Global  User Defined
 ad_armice       00009ee6        Data Label      Global  User Defined
@@ -595,23 +597,23 @@ gl_bdesired     00009f1a        Data Label      Global  User Defined
 gl_recd         00009f1c        Data Label      Global  User Defined
 gl_dcindex      00009f1e        Data Label      Global  User Defined
 ad_shcmd        00009f20        Data Label      Global  User Defined
-ad_stdesk       00009f24        Data Label      Global  User Defined
+ad_pfile        00009f24        Data Label      Global  User Defined
 gl_aname        00009f28        Data Label      Global  User Defined
 gl_ainfo        00009f44        Data Label      Global  User Defined
 gl_hclip        00009f60        Data Label      Global  User Defined
 contrl          00009f62        Data Label      Global  User Defined
-x9f7a           00009f7a        Data Label      Global  User Defined
-x97fc           00009f7c        Data Label      Global  User Defined
+ADD_HEIGHT      00009f7a        Data Label      Global  User Defined
+g_fslist        00009f7c        Data Label      Global  User Defined
 old_bcode       00009f80        Data Label      Global  User Defined
 ad_path         00009f84        Data Label      Global  User Defined
 evx             00009f88        Data Label      Global  User Defined
-ad_pfile        00009fa4        Data Label      Global  User Defined
+ad_stdesk       00009fa4        Data Label      Global  User Defined
 rul             00009fa8        Data Label      Global  User Defined
 gl_bvhard       00009fac        Data Label      Global  User Defined
 ad_shtail       00009fae        Data Label      Global  User Defined
 g_buffer        00009fb2        Data Label      Global  User Defined
 gl_wchar        00009fb6        Data Label      Global  User Defined
-x9fb8           00009fb8        Data Label      Global  User Defined
+f_level         00009fb8        Data Label      Global  User Defined
 mtrans          00009fba        Data Label      Global  User Defined
 ad_fsdta        00009fbc        Data Label      Global  User Defined
 sh_9fc0         00009fc0        Data Label      Global  User Defined
@@ -644,8 +646,8 @@ gl_mlen         0000a09e        Data Label      Global  User Defined
 ad_envrn        0000a0a2        Data Label      Global  User Defined
 gl_rmnactv      0000a0a6        Data Label      Global  User Defined
 desk_pid        0000a0ae        Data Label      Global  User Defined
-xa00ba          0000a0ba        Data Label      Global  User Defined
-liketop         0000a0bc        Data Label      Global  User Defined
+xa0ba           0000a0ba        Data Label      Global  User Defined
+wasclr          0000a0bc        Data Label      Global  User Defined
 w_walkflag      0000a0be        Data Label      Global  User Defined
 gl_newdesk      0000a0c0        Data Label      Global  User Defined
 
@@ -2823,9 +2825,9 @@ sh_name         00fead32        Function        Global  User Defined
 sh_envrn        00fead64        Function        Global  User Defined
 sh_path         00feae4c        Function        Global  User Defined
 sh_find         00feaeec        Function        Global  User Defined
-sh_strupr       00feb014        Function        Global  User Defined
+sh_fixtail      00feb014        Function        Global  User Defined
 sh_main         00feb052        Function        Global  User Defined
-sh_xxx          00feb24c        Function        Global  User Defined
+sh_rom          00feb24c        Function        Global  User Defined
 w_nilit         00feb310        Function        Global  User Defined
 w_obadd         00feb358        Function        Global  User Defined
 w_setup         00feb3ca        Function        Global  User Defined
@@ -2961,21 +2963,22 @@ cart_init       00fed6d8        Function        Global  User Defined
 cart_alloc      00fed710        Function        Global  User Defined
 cart_find       00fed770        Function        Global  User Defined
 cart_sfirst     00fed7dc        Function        Global  User Defined
+cart_snext      00fed7ee        Function        Global  User Defined
 ld_cartacc      00fed80e        Function        Global  User Defined
 cart_exec       00fed87c        Function        Global  User Defined
-f92c_show       00fed8d8        Function        Global  User Defined
-f930_show       00fed8ea        Function        Global  User Defined
-f9b4_show       00fed8fa        Function        Global  User Defined
-f9a4_show       00fed984        Function        Global  User Defined
-FUN_00feda5a    00feda5a        Function        Global  Default
-f9bc_show       00fedad4        Function        Global  User Defined
-f9b8_show       00fedb12        Function        Global  User Defined
-f9c0_show       00fedb46        Function        Global  User Defined
-f9c4_show       00fedbac        Function        Global  User Defined
-f9b0_show       00fedbcc        Function        Global  User Defined
+sh_type         00fed8d8        Function        Global  User Defined
+sh_print        00fed8ea        Function        Global  User Defined
+sf_getc         00fed8fa        Function        Global  User Defined
+showfile        00fed984        Function        Global  User Defined
+sf_disp         00feda5a        Function        Global  User Defined
+sf_more         00fedad4        Function        Global  User Defined
+sf_page         00fedb12        Function        Global  User Defined
+sf_newline      00fedb46        Function        Global  User Defined
+cconws          00fedbac        Function        Global  User Defined
+sf_putc         00fedbcc        Function        Global  User Defined
 FUN_00fedc48    00fedc48        Function        Global  Default
-f934_show       00fedcd4        Function        Global  User Defined
-FUN_00fee0f6    00fee0f6        Function        Global  Default
+sh_format       00fedcd4        Function        Global  User Defined
+sh_copy         00fee0f6        Function        Global  User Defined
 frm_f56c        00fee432        Function        Global  User Defined
 FUN_00fee502    00fee502        Function        Global  Default
 frm_f588        00fee560        Function        Global  User Defined
@@ -3003,6 +3006,18 @@ switchdataD_00fef646            00fef646        Data Label      switchD_00fdb104
 switchdataD_00fef69a            00fef69a        Data Label      switchD_00fdb54a        Analysis
 gl_sampob       00fef730        Data Label      Global  User Defined
 switchdataD_00fef760            00fef760        Data Label      switchD_00fe0eb2        Analysis
+ILL_HDSK        00fef794        Data Label      Global  User Defined
+ILL_ITEM        00fef798        Data Label      Global  User Defined
+ILL_FILE        00fef79e        Data Label      Global  User Defined
+ILL_DOCU        00fef7a2        Data Label      Global  User Defined
+ILL_FOLD        00fef7a6        Data Label      Global  User Defined
+ILL_FDSK        00fef7ac        Data Label      Global  User Defined
+ILL_TRASH       00fef7b0        Data Label      Global  User Defined
+ILL_NOSEL       00fef7b8        Data Label      Global  User Defined
+ILL_NOTOP       00fef7be        Data Label      Global  User Defined
+ILL_DESKTOP     00fef7c2        Data Label      Global  User Defined
+ILL_YSEL        00fef7cc        Data Label      Global  User Defined
+ILL_CART        00fef7d2        Data Label      Global  User Defined
 switchdataD_00fef7d8            00fef7d8        Data Label      switchD_00fe155a        Analysis
 switchdataD_00fef810            00fef810        Data Label      switchD_00fe1718        Analysis
 switchdataD_00fef82c            00fef82c        Data Label      switchD_00fe18a6        Analysis

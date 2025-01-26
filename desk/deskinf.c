@@ -301,7 +301,7 @@ PP(register intptr_t parm;)
 {
 	PARMBLK pb;
 	GRECT clipsave;
-	int16_t state;
+	register int16_t state;
 	
 	LBCOPY(&pb, parm, sizeof(pb));
 	gsx_gclip(&clipsave);
@@ -352,16 +352,15 @@ PP(char *ppath;)
 {
 	register THEDSK *d;
 	uint16_t dummy;
+	BOOLEAN more;
 	char folderstr[6];
 	char filesstr[6];
-	BOOLEAN more;
 	
 	d = thedesk;
 	d->g_nfiles = 0;
 	d->g_ndirs = 0;
 	d->g_size = 0;
 	more = d_doop(OP_COUNT, NULL, ppath, ppath, &dummy, &dummy);
-	desk_wait(FALSE);
 	if (more == FALSE)
 		return FALSE;
 	d->g_ndirs--;
@@ -380,25 +379,14 @@ PP(OBJECT *tree;)
 PP(int16_t obj;)
 PP(BOOLEAN flag;)
 {
-	char *str;
-	int16_t len;
-	int16_t buflen;
-	TEDINFO *ted;
-
 	if (flag)
 	{
 		fmt_str(p1, buf);
-		inf_sset(tree, obj, buf);
 	} else
 	{
 		merge_str(buf, "%L", p1);
-		ted = (TEDINFO *) LLGET(OB_SPEC(obj));
-		str = ted->te_ptext;
-		len = ted->te_txtlen - 1;
-		bfill(len, ' ', str);
-		buflen = (int)strlen(buf);
-		strcpy(str + (len - buflen), buf);
 	}
+	inf_sset(tree, obj, buf);
 }
 
 
@@ -429,10 +417,9 @@ PP(register int32_t *size;)
 /************************************************************************/
 /* 104de: 00fd82e8 */
 /* 106de: 00e18d9a */
-BOOLEAN inf_file(P(char *) ppath, P(FNODE *) info, P(BOOLEAN) isdir)
+BOOLEAN inf_file(P(char *) ppath, P(FNODE *) info)
 PP(char *ppath;)
 PP(register FNODE *info;)
-PP(BOOLEAN isdir;)
 {
 	register char *a4;
 	register THEDSK *d;
@@ -442,64 +429,39 @@ PP(BOOLEAN isdir;)
 	register int nmidx;
 	char poname[LEN_ZFNAME + 1];
 	char pnname[LEN_ZFNAME + 1];
-	char *title;
-	short unused;
-	int16_t strid;
 	
 	UNUSED(a4);
-	UNUSED(unused);
 	d = thedesk;
 	tree = (LPTREE)d->g_atree[ADFILEIN];
 	strcpy(d->g_srcpth, ppath);
 	strcpy(d->g_dstpth, ppath);
 	for (nmidx = 0; d->g_srcpth[nmidx] != '*'; nmidx++)
 		;
-	if (isdir == FALSE)
-	{
-		inf_fldset(tree, FIRONLY, info->f_attr, FA_RDONLY, SELECTED, NORMAL);
-		inf_fldset(tree, FIRWRITE, info->f_attr, FA_RDONLY, NORMAL, SELECTED);
-#if 0 /* ZZZ */
-		inf_sset((OBJECT *)tree, FINFILES, "     ");
-		inf_sset((OBJECT *)tree, FINFOLDS, "     ");
-		strid = STFILEINFO;
-#endif
-		d->g_size = info->f_size;
-	} else
-	{
-		LWSET(OB_STATE(FIRONLY), DISABLED);
-		LWSET(OB_STATE(FIRWRITE), DISABLED);
-		add_path(d->g_srcpth, info->f_name);
-#if 0 /* ZZZ */
-		strid = STFOLDINFO;
-		if (inf_fifo((OBJECT *)tree, FINFILES, FINFOLDS, d->g_srcpth) == FALSE)
-#ifdef __ALCYON__
-			return; /* hmpf */
-#else
-			return FALSE;
-#endif
-#endif
-	}
-	
-	rsrc_gaddr(R_STRING, strid, (VOIDPTR *) &title);
-	((TEDINFO *)LLGET(OB_SPEC(INFTITLE)))->te_ptext = title;
-	
-	inf_dttmsz((OBJECT *)tree, info, FIDATE, FITIME, FISIZE, &d->g_size);
+
 	inf_setsize(info->f_name, poname, (OBJECT *)tree, FINAME, TRUE);
-	
-	more = FALSE;
-	if (xform_do((OBJECT *)tree, ROOT) == FIOK)
+	inf_dttmsz((OBJECT *)tree, info, FIDATE, FITIME, FISIZE, &info->f_size);
+
+	inf_fldset(tree, FIRONLY, info->f_attr, FA_RDONLY, SELECTED, NORMAL);
+	inf_fldset(tree, FIRWRITE, info->f_attr, FA_RDONLY, NORMAL, SELECTED);
+
+	inf_show((OBJECT *)tree, ROOT);
+	/* now find out what happened   */
+	/* was it OK or CANCEL? */
+	if (inf_what(tree, FIOK, FICNCL))
 	{
-		desk_wait(TRUE);
-		fs_sget(tree, FINAME, pnname);
+		graf_mouse(HOURGLASS, NULL);
+		more = TRUE;
+		fs_ssget(tree, FINAME, pnname);
 		/* unformat the strings     */
 		unfmt_str(poname, &d->g_srcpth[nmidx]);
 		unfmt_str(pnname, &d->g_dstpth[nmidx]);
+		/* do the DOS rename    */
 		if (!streq(&d->g_srcpth[nmidx], &d->g_dstpth[nmidx]))
 		{
 			dos_rename(d->g_srcpth, d->g_dstpth);
 			if (DOS_AX == E_ACCDN)
 			{
-				form_error(~E_ACCDN - 30);
+				fun_alert(1, STEXISTS, NULL);
 			} else
 			{
 				if ((more = dos_error()))
@@ -513,13 +475,13 @@ PP(BOOLEAN isdir;)
 			attr |= FA_RDONLY;
 		else
 			attr &= ~FA_RDONLY;
-		if (!isdir && (char) attr != info->f_attr)
+		if ((char) attr != info->f_attr)
 		{
 			dos_chmod(d->g_dstpth, TRUE, attr);
 			if ((more = dos_error()))
 				info->f_attr = attr;
 		}
-		desk_wait(FALSE);
+		graf_mouse(ARROW, NULL);
 		return more;
 	} else
 	{
@@ -533,12 +495,12 @@ BOOLEAN inf_folder(P(char *) ppath, P(FNODE *) pf)
 PP(char *ppath;)
 PP(register FNODE *pf;)
 {
+	register char *pname;
+	char fname[LEN_ZFNAME + 30];
 	OBJECT *tree;
 	BOOLEAN more;
-	register char *pname;
-	char fname[LEN_ZFNAME];
 	register THEDSK *d;
-	char sizestr[10];
+	char sizestr[LEN_ZFNAME + 1];
 
 	d = thedesk;
 	graf_mouse(HOURGLASS, NULL);
@@ -557,7 +519,7 @@ PP(register FNODE *pf;)
 	graf_mouse(ARROW, NULL);
 	if (more)
 	{
-		inf_setsize(&pf->f_size, sizestr, tree, FOLNAME, TRUE); /* hä? */
+		inf_setsize(pf->f_name, sizestr, tree, FOLNAME, TRUE); /* hä? */
 
 		inf_dttmsz(tree, pf, FOLDATE, FOLTIME, FOLSIZE, &d->g_size);
 		inf_finish(tree, FOLOK);
@@ -578,80 +540,102 @@ PP(char drv_id;)
 	register LPTREE tree;
 	int32_t total;
 	int32_t avail;
+	long unused;
 	BOOLEAN more;
-	char puse_str[12];
+	char puse_str[10];
 	char pav_str[10];
 	char tmp_str[12];
 	char drive[2];
 	char plab_str[12];
 	
-	UNUSED(more);
+	UNUSED(unused);
 	d = thedesk;
+	graf_mouse(HOURGLASS, NULL);
 	tree = (LPTREE)d->g_atree[ADDISKIN];
 	drive[0] = drv_id;
 	drive[1] = '\0';
 	d->g_srcpth[0] = drive[0];
 	strcpy(&d->g_srcpth[1], ":\\*.*");
-	if (inf_fifo((OBJECT *)tree, DINFILES, DINFOLDS, d->g_srcpth))
+	more = inf_fifo((OBJECT *)tree, DINFILES, DINFOLDS, d->g_srcpth);
+	if (more)
 	{
-		desk_wait(TRUE);
 		dos_space(drv_id - 'A' + 1, &total, &avail);
-		tmp_str[0] = '\0';
 		dos_label(drv_id - 'A' + 1, tmp_str);
 		fmt_str(tmp_str, plab_str);
 		inf_sset((OBJECT *)tree, DIDRIVE, drive);
 		inf_sset((OBJECT *)tree, DIVOLUME, plab_str);
 		inf_setsize(&d->g_size, puse_str, (OBJECT *)tree, DIUSED, FALSE);
 		inf_setsize(&avail, pav_str, (OBJECT *)tree, DIAVAIL, FALSE);
-		desk_wait(FALSE);
-		fmdodraw((OBJECT *)tree, DIOK);
+		graf_mouse(ARROW, NULL);
+		inf_finish((OBJECT *)tree, DIOK);
+	} else
+	{
+		graf_mouse(ARROW, NULL);
 	}
 	return TRUE;
 }
 
 
-/* 306de: 00e2fb5a */
-/* 104de: 00fd80aa */
-/* 106de: 00e18af6 */
-int16_t xform_do(P(OBJECT *)tree, P(int16_t) which)
-PP(OBJECT *tree;)
-PP(int16_t which;)
+/*
+ *	Set preferences dialog.
+ */
+/* 306de: 00e316e8 */
+/* 104de: 00fd8622 */
+/* 106de: 00e19162 */
+BOOLEAN desk_pref(NOTHING)
 {
-	short unused[4];
-	int16_t events;
-	int16_t dummy;
-	int16_t ret;
-	register int16_t *pdummy;
-	THEDSK *d;
-	
-	UNUSED(unused);
+	register THEDSK *d;
+	register LPTREE tree;
+	register int16_t cyes;
+	register int16_t cno;
+	register int i;
+	short flag;
+
+	UNUSED(dummy);
 	d = thedesk;
-	fm_draw((LPTREE)tree);
-	ret = form_do(tree, which) & 0x7FFF;
-	do_finish(tree);
-	pdummy = &dummy;
+	tree = (LPTREE)d->g_atree[ADSETPREF];
 	
-	do
-	{
-		events = evnt_multi(MU_MESAG | MU_TIMER,
-#ifdef __ALCYON__
-			0L, 0L,
-			0L, 0L,
-			0L, 0L, 0,
-#else
-			0, 0, 0,
-			0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0,
+	cyes = d->g_cdelepref ? SELECTED : NORMAL;
+	cno = d->g_cdelepref ? NORMAL : SELECTED;
+	LWSET(OB_STATE(SPCDYES), cyes);
+	LWSET(OB_STATE(SPCDNO), cno);
+
+	cyes = d->g_ccopypref ? SELECTED : NORMAL;
+	cno = d->g_ccopypref ? NORMAL : SELECTED;
+	LWSET(OB_STATE(SPCCYES), cyes);
+	LWSET(OB_STATE(SPCCNO), cno);
+	
+#if BINEXACT
+	/* BUG: these objects are not displayed in the resource */
+	for (i = 0; i < 5; i++)
+		LWSET(OB_STATE(i + 12), NORMAL);
 #endif
-			d->p_msgbuf,
-			0, 0,
-			pdummy, pdummy, pdummy, pdummy, pdummy, pdummy);
-		if (events & MU_MESAG)
-			hd_msg();
-	} while (events & MU_MESAG);
-	LWSET(OB_STATE(ret), NORMAL);
-	
-	return ret;
+	for (i = 0; i < 3; i++)	/* hopefully they are in order  */
+		LWSET(OB_STATE(i + SPLOW), NORMAL);
+
+	flag = Getrez();
+	if (flag == 2)
+	{
+		LWSET(OB_STATE(SPLOW), DISABLED);
+		LWSET(OB_STATE(SPMEDIUM), DISABLED);
+	} else
+	{
+		LWSET(OB_STATE(SPHIGH), DISABLED);
+	}
+
+	LWSET(OB_STATE(flag + SPLOW), SELECTED);
+
+	inf_show(tree, ROOT);
+	if (inf_what((OBJECT *)tree, SPOK, SPCANCEL))
+	{
+		d->g_cdelepref = inf_what((OBJECT *)tree, SPCDYES, SPCDNO);
+		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);
+
+		gl_nextrez = inf_gindex(tree, SPLOW, 3) + 2;
+		if (app_reschange(gl_nextrez))
+			return TRUE;
+	}
+	return FALSE;
 }
 
 
@@ -666,8 +650,7 @@ PP(char *ptail;)
 	char poname[LEN_ZFNAME];
 
 	tree = thedesk->g_atree[ADOPENAP];
-	fmt_str(papname, &poname[0]);
-	inf_sset(tree, APPLNAME, &poname[0]);
+	inf_setsize(papname, poname, tree, APPLNAME, TRUE);
 	inf_sset(tree, APPLPARM, papparms);
 	inf_show(tree, APPLPARM);
 	/* now find out what happened   */
@@ -682,26 +665,4 @@ PP(char *ptail;)
 		return FALSE;
 	}
 }
-
-
-/*
- * Form_do and draw
- */
-/* 306de: 00e2fb90 */
-/* 104de: 00fd813e */
-/* 106de: 00e18ba6 */
-VOID fmdodraw(P(OBJECT *) tree, P(int16_t) item)
-PP(OBJECT *tree;)
-PP(int16_t item;)
-{
-	xform_do(tree, 0);
-	LWSET(OB_STATE(item), NORMAL);
-}
-
-
-
-#if TOSVERSION >= 0x106
-#include "deskpref.c"
-#endif
-
 

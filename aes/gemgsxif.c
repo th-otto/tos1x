@@ -72,6 +72,26 @@
  */
 
 
+/*
+ * Save 25 columns and full height of the screen memory
+ */
+/* 306de: 00e1e4e6 */
+/* 104de: 00fd430c */
+/* 106de: 00e14712 */
+/* 100fr: 00fe8346 */
+VOID gsx_malloc(NOTHING)
+{
+	int mlen;
+	
+	gsx_fix(&gl_tmp, NULL, 0, 0);
+	mlen = ((gl_tmp.fd_wdwidth + 7) / 8) * (gl_tmp.fd_h * gl_nplanes / 4);
+	gl_mlen = mlen * 16 + 32;
+
+	gl_tmp.fd_addr = dos_alloc(gl_mlen);
+	/* BUG: no return here  */
+}
+
+
 VOID gsx_mfree(NOTHING)
 {
 	dos_free(gl_tmp.fd_addr);
@@ -132,7 +152,7 @@ VOID gsx_init(NOTHING)
 
 
 VOID gsx_graphic(P(BOOLEAN) tographic)
-PP(BOOLEAN tographic;)
+PP(register BOOLEAN tographic;)
 {
 	if (gl_graphic != tographic)
 	{
@@ -151,12 +171,6 @@ PP(BOOLEAN tographic;)
 
 
 
-VOID av_hardcopy(NOTHING)
-{
-	gsx_escapes(17);
-}
-
-
 VOID gsx_escapes(P(int16_t) esc_code)
 PP(int16_t esc_code;)
 {
@@ -164,6 +178,12 @@ PP(int16_t esc_code;)
 	gsx_ncode(GSX_ESCAPE, 0, 0);
 }
 
+
+
+VOID av_hardcopy(NOTHING)
+{
+	gsx_escapes(17);
+}
 
 
 /*****	 Open physical work station for 6 resolutions	*****/
@@ -202,13 +222,19 @@ VOID ratinit(NOTHING)
 }
 
 
+VOID ratexit(NOTHING)
+{
+	gsx_moff();
+}
+
+
 VOID bb_set(P(int16_t) sx, P(int16_t) sy, P(int16_t) sw, P(int16_t) sh, P(int16_t *) pts1, P(int16_t *) pts2, P(FDB *) pfd, P(FDB *) psrc, P(FDB *) pdst)
-PP(int16_t sx;)
-PP(int16_t sy;)
-PP(int16_t sw;)
-PP(int16_t sh;)
-PP(int16_t *pts1;)
-PP(int16_t *pts2;)
+PP(register int16_t sx;)
+PP(register int16_t sy;)
+PP(register int16_t sw;)
+PP(register int16_t sh;)
+PP(register int16_t *pts1;)
+PP(register int16_t *pts2;)
 PP(FDB *pfd;)
 PP(FDB *psrc;)
 PP(FDB *pdst;)
@@ -235,7 +261,11 @@ PP(FDB *pdst;)
 	pts2[2] = sw - 1;
 	pts2[3] = sh - 1;
 
+#if BINEXACT
+	gsx_fix(pfd, 0, 0, 0, 0); /* WTF */
+#else
 	gsx_fix(pfd, NULL, 0, 0);
+#endif
 	avro_cpyfm(S_ONLY, &ptsin[0], psrc, pdst);
 	gsx_mon();
 }
@@ -243,16 +273,16 @@ PP(FDB *pdst;)
 
 
 VOID bb_save(P(GRECT *) ps)
-PP(GRECT *ps;)
+PP(register GRECT *ps;)
 {
 	bb_set(ps->g_x, ps->g_y, ps->g_w, ps->g_h, &ptsin[0], &ptsin[4], &gl_src, &gl_src, &gl_tmp);
 }
 
 
 VOID bb_restore(P(GRECT *)ps)
-PP(GRECT *ps;)
+PP(register GRECT *ps;)
 {
-	bb_set(ps->g_x, ps->g_y, ps->g_w, ps->g_h, &ptsin[0], &ptsin[4], &gl_dst, &gl_tmp, &gl_dst);
+	bb_set(ps->g_x, ps->g_y, ps->g_w, ps->g_h, &ptsin[4], &ptsin[0], &gl_dst, &gl_tmp, &gl_dst);
 }
 
 
@@ -342,18 +372,11 @@ int16_t gsx_button(NOTHING)
 
 
 
-VOID ratexit(NOTHING)
-{
-	gsx_moff();
-}
-
-
 VOID gsx_moff(NOTHING)
 {
 	if (!gl_moff)
 	{
 		gsx_ncode(HIDE_CUR, 0, 0);
-		gl_mouse = FALSE;
 	}
 
 	gl_moff++;
@@ -367,7 +390,6 @@ VOID gsx_mon(NOTHING)
 	if (!gl_moff)
 	{
 		gsx_1code(SHOW_CUR, 1);
-		gl_mouse = TRUE;
 	}
 }
 
@@ -409,9 +431,9 @@ int16_t gsx_char(NOTHING)
 int16_t av_opnwk(P(int16_t *) pwork_in, P(int16_t *) phandle, P(int16_t *) pwork_out)
 PP(int16_t *pwork_in;)
 PP(int16_t *phandle;)
-PP(int16_t *pwork_out;)
+PP(register int16_t *pwork_out;)
 {
-	register int16_t *ptsptr;
+	int16_t *ptsptr;
 
 	ptsptr = pwork_out + 45;
 	i_ptsout(ptsptr);					/* set ptsout to work_out array */

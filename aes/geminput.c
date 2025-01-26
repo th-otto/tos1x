@@ -196,6 +196,11 @@ PP(int16_t amnt;)
 }
 
 
+/*
+ *	Set the current control rectangle which is the part of the
+ *	screen owned by the active process.  Normally, the work area
+ *	of the top window.
+ */
 VOID set_ctrl(P(GRECT *) pt)
 PP(GRECT *pt;)
 {
@@ -203,6 +208,12 @@ PP(GRECT *pt;)
 }
 
 
+/*
+ *	Get the current control rectangle which is the part of the
+ *	screen owned by the active process.  Normally, the work area
+ *	of the top window, but sometimes the whole screen during 
+ *	form fill-in.
+ */
 VOID get_ctrl(P(GRECT *) pt)
 PP(GRECT *pt;)
 {
@@ -210,6 +221,10 @@ PP(GRECT *pt;)
 }
 
 
+/*
+ *	Used by form_do to remember the current keyboard and mouse
+ *	owners.
+ */
 VOID get_mown(P(PD **) pmown, P(PD **) pkown)
 PP(PD **pmown;)
 PP(PD **pkown;)
@@ -219,6 +234,11 @@ PP(PD **pkown;)
 }
 
 
+/*
+ *	Used by control manager and form_do to give the mouse or keyboard
+ *	to another process.  The mouse should only be given with the 
+ *	buttons in an up state.
+ */
 VOID set_mown(P(PD *) pmown, P(PD *) pkown)
 PP(PD *pmown;)
 PP(PD *pkown;)
@@ -238,7 +258,7 @@ PP(PD *pkown;)
 *       EnQueue a a character on a circular keyboard buffer.
 */
 LINEF_STATIC VOID nq(P(uint16_t) ch, P(CQUEUE *) qptr)
-PP(register uint16_t ch;)
+PP(uint16_t ch;)
 PP(register CQUEUE *qptr;)
 {
 	if (qptr->c_cnt < KBD_SIZE)
@@ -297,7 +317,7 @@ PP(register EVB *e;)
 PP(uint16_t ret;)
 {
 	/* unlinked this EVB, and aret() */
-	e->e_return |= (uint16_t) ret;			/* will remove and free the EVB */
+	e->e_return = (uint16_t) ret;			/* will remove and free the EVB */
 	e->e_pred->e_link = e->e_link;
 	if (e->e_link)
 		e->e_link->e_pred = e->e_pred;
@@ -323,7 +343,7 @@ PP(int16_t kstat;)
 /* 106de: 00e1ff3c */
 VOID post_keybd(P(PD *) p, P(uint16_t) ch)
 PP(PD *p;)
-PP(uint16_t ch;)
+PP(register uint16_t ch;)
 {
 	register CDA *c;
 	register EVB *e;
@@ -424,7 +444,9 @@ PP(register int16_t clks;)
 			if (clicks > 1)
 				gl_bpend--;
 
+#if AESVERSION >= 0x140
 			e->e_return = HW(new);		/* changed */
+#endif
 			evremove(e, (clks > clicks) ? clicks : clks);
 		}
 	}
@@ -483,13 +505,17 @@ PP(register int16_t ry1;)
 	 * there is an active menu and it will satisfy his event
 	 */
 	/* CHANGED LKW      */
-	if (!button && gl_mntree && gl_ctwait.m_out != inside(xrat, yrat, (GRECT *)&gl_ctwait.m_x))
+	if (!button && !button && gl_mntree && gl_ctwait.m_out != inside(xrat, yrat, (GRECT *)&gl_ctwait.m_x))
 		gl_mowner = ctl_pd;
 
 	post_mouse(gl_mowner, xrat, yrat);
 }
 
 
+/*
+ *	Routine to walk the list of mouse or button events and remove
+ *	the ones that are satisfied.
+ */
 /* 306de: 00e1eb5e */
 /* 104de: 00fdea1a */
 /* 106de: 00e202ca */

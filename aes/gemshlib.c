@@ -113,6 +113,8 @@
 #include "gsxdefs.h"
 #include "dos.h"
 #include "gemrsc.h"
+#include "../desk/deskstr.h"
+#include "../desk/desksupp.h"
 
 
 /* if TRUE then do an an exec on the current command else exit and return to DOS  */
@@ -140,15 +142,17 @@ char *ad_pfile;
 
 char temp[50]; /* WTF, unused */
 
-int16_t sh_9fc0; /* ZZZ */
+STATIC int16_t sh_9fc0; /* ZZZ */
+STATIC BOOLEAN xa0ba;
 
-VOID sh_show PROTO((char *lcmd));
+LINEF_STATIC VOID sh_show PROTO((const char *lcmd));
 BOOLEAN sh_path PROTO((int16_t whichone, char *dp, char *pname));
-int16_t sh_search PROTO((SHFIND_PROC routine));
 
+#undef Getrez
 #define Getrez() trp14(4)
 
-LINEF_STATIC VOID sh_strupr PROTO((NOTHING));
+LINEF_STATIC VOID sh_fixtail PROTO((NOTHING));
+LINEF_STATIC BOOLEAN sh_rom PROTO((NOTHING));
 
 
 
@@ -212,11 +216,14 @@ PP(const char *ptail;)
 		sh_isgem = !isgem ? FALSE : TRUE;	/* isgem may not = 1    */
 	} else
 	{
-		sh_strupr();
+		sh_fixtail();
 		if (sh_find(ad_shcmd, NULL))
 		{
 			sh_draw(ad_shcmd, ROOT, 1);
 			dos_exec(ad_shcmd, 0, ad_shtail);
+		} else
+		{
+			return FALSE;
 		}
 	}
 
@@ -314,14 +321,14 @@ BOOLEAN sh_toalpha(NOTHING)
 /* 306de: 00e20cae */
 /* 104de: 00fe40b2 */
 /* 106de: 00e2647c */
-VOID sh_draw(P(char *) lcmd, P(int16_t) start, P(int16_t) depth)
-PP(char *lcmd;)
+VOID sh_draw(P(const char *) lcmd, P(int16_t) start, P(int16_t) depth)
+PP(const char *lcmd;)
 PP(int16_t start;)
 PP(int16_t depth;)
 {
-	register LPTREE tree;
+	LPTREE tree;
 
-	if (sh_gem)
+	if (sh_gem && !sh_dodef)
 	{
 		tree = ad_stdesk;
 		gsx_sclip(&gl_rscreen);
@@ -337,10 +344,10 @@ PP(int16_t depth;)
 /* 306de: 00e20d0c */
 /* 104de: 00fe40fc */
 /* 106de: 00e264da */
-VOID sh_show(P(char *) lcmd)
-PP(char *lcmd;)
+VOID sh_show(P(const char *) lcmd)
+PP(const char *lcmd;)
 {
-	register int16_t i;
+	int16_t i;
 
 	for (i = 1; i < 3; i++)
 		sh_draw(lcmd, i, 0);
@@ -355,65 +362,31 @@ PP(char *lcmd;)
 /* 104de: 00fe411e */
 /* 106de: 00e26504 */
 /* 162de: 00e265f0 */
-#if ((OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_CZ)) & (TOSVERSION < 0x162) & BINEXACT
-	/* swedish/czech versions have the TOSFIX patch applied (from tos14fix.prg) */
-	asm("xdef _sh_name");
-	asm("_sh_name:");
-	asm("   movea.l    4(a7),a1");
-	asm("	movea.l    a1,a2");
-	asm("sh_name1:");
-	asm("	tst.b      (a1)+");
-	asm("	bne.s      sh_name1");
-	asm("sh_name2:");
-	asm("	move.b     -(a1),d0");
-	asm("	cmpa.l     a2,a1");
-	asm("	bcs.s      sh_name3");
-	asm("	cmp.b      #0x5C,d0");
-	asm("	beq.s      sh_name3");
-	asm("	cmp.b      #':',d0");
-	asm("	bne.s      sh_name2");
-	asm("sh_name3:");
-	asm("	addq.l     #1,a1");
-	asm("	move.l     a1,d0");
-	asm("	rts");
-	asm("	nop");
-	asm("	nop");
-	asm("	nop");
-	asm("	nop");
-	asm("	nop");
-#if TOSVERSION >= 0x106
-	/*
-	 * original routine in 1.06 is 6 bytes longer than 1.04,
-	 * because 1.04 uses linef opcodes
-	 */
-	asm("	nop");
-	asm("	nop");
-	asm("	nop");
-#endif
-#else
 char *sh_name(P(char *) ppath)
-PP(char *ppath;)
+PP(register char *ppath;)
 {
 	register char *pname;
 
+#if (TOSVERSION >= 0x106) | TP_73
 	pname = ppath;
 	while (*pname++)
 		;
-
-#if (TOSVERSION >= 0x106) | TP_73
 	do
 	{
 		--pname;
 	} while (pname >= ppath && *pname != '\\' && *pname != ':');
 #else
+	pname = &ppath[(int)strlen(ppath)];
+
 	while (pname >= ppath && *pname != '\\' && *pname != ':')
 		--pname;
 #endif
 
 	return ++pname;
 }
-#endif
 
+
+extern uint8_t gl_dta[]; /* WTF: this is from desktop */
 
 /*
  * AES #125 - shel_envrn - Obtains value of environmental variables
@@ -426,42 +399,57 @@ PP(char *ppath;)
 /* 306de: 00e20d68 */
 /* 104de: 00fe414a */
 /* 106de: 00e26536 */
-int16_t sh_envrn(P(char **) ppath, P(const char *) psrch)
-PP(register char **ppath;)						/* output pointer   */
-PP(const char *psrch;)
+VOID sh_envrn(P(char **) ppath, P(const char *) psrch)
+PP(intptr_t ppath;)						/* output pointer   */
+PP(register intptr_t psrch;)
 {
-	register char *chrptr;
-	register const char *byteptr;
+	char *lp;
+	char *ad_loc1;
+	int16_t len;
+	int16_t findend;
+	char tmp;
+	char loc1[16];
+	char loc2[16];
 
-	chrptr = ad_envrn;
-	/* double nulls to end  */
-	while ((*chrptr) || (*(chrptr + 1)))
+	len = LSTCPY(ADDR(&loc2[0]), psrch);
+	len--;
+
+	ad_loc1 = ADDR(&loc1[0]);
+	loc1[len] = NULL;
+
+	/* WTF? */
+	LBCOPY(gl_dta, ad_envrn, 50);
+	gl_dta[5] = ';';
+	lp = gl_dta;
+	findend = FALSE;
+	do
 	{
-		byteptr = psrch;				/* set the start    */
-		/* compare      */
-		while ((*byteptr) && (*byteptr++ == *chrptr++))
-			;
-		if (!(*byteptr))				/* end of search string */
+		tmp = LBGET(lp);
+		lp++;
+		if (findend && tmp == '\0')
 		{
-			*ppath = chrptr;
-#ifdef __ALCYON__
-			return; /* BUG: should return TRUE */
-#else
-			return TRUE;
-#endif
+			findend = FALSE;
+			tmp = 0xFF;
 		} else
 		{
-			while (*chrptr++)			/* skip to the end of   */
-				;						/* this key     */
+			if (tmp == loc2[0])
+			{
+				LBCOPY(ADDR(&loc1[0]), lp, len);
+				if (streq(&loc1[0], &loc2[1]))
+				{
+					lp += len;
+					break;
+				}
+			} else
+			{
+				findend = TRUE;
+			}
 		}
-	}
+	} while (tmp);
+	if (!tmp)
+		lp = NULL;
 
-	*ppath = NULL;						/* failed, return null  */
-#ifdef __ALCYON__
-	return; /* BUG: should return FALSE */
-#else
-	return FALSE;
-#endif
+	LLSET(ppath, lp);
 }
 
 
@@ -480,92 +468,56 @@ PP(const char *psrch;)
 /* 106de: 00e2657a */
 BOOLEAN sh_path(P(int16_t) whichone, P(char *) dp, P(char *) pname)
 PP(int16_t whichone;)
-PP(register char *dp;)
+PP(char *dp;)
 PP(register char *pname;)
 {
+	register char tmp;
 	register char last;
-	register char *lp;
+	char *lp;
 	register int16_t i;
-	char *ltemp;
-	int16_t oldpath = FALSE;
 
-	/* find PATH= in the environment which is a double null-terminated string */
-	sh_envrn(&ltemp, "PATH=");
-
-	if (!ltemp)
+	/* find PATH= in the    */
+	/*   command tail which */
+	/*   is a double null-  */
+	/*   terminated string  */
+	sh_envrn(ADDR(&lp), ADDR(rs_str(STPATH)));
+	if (!lp)
 		return FALSE;
 
-	lp = ltemp;
-
-	/* This kludge, er, section of code maintains compatibility with
-	 *	the old style PATH=\0<path>\0, to support folks who run an auto-
-	 *	folder environment-setter, and use the old-style PATH environment.
-	 * (880825 kbad)
-	 */
-	if (!*lp)							/* look for old type env */
-	{									/* by looking for key   */
-		while (*(++lp))					/* after PATH=\0    */
-		{
-			if (*lp == '=')				/* key found =: path is */
-				return FALSE;			/* really null, so punt */
-		}
-		oldpath = TRUE;					/* it really is a path  */
-		lp = ltemp;						/* so munge the null    */
-		*lp = ';';
-	}
-	/* end compatibility code ----------------				*/
-
-	/* if found count in to appropriate path   */
-
-	last = *lp;
-	for (i = whichone; i > 0; i--)
-		while ((last = *lp++) && (last != ';') && (last != ','))
-			;							/* added commas (8808 kbad) */
-
-	if (!last)
+	/* if found count in to */
+	/*   appropriate path   */
+	i = whichone;
+	tmp = ';';
+	while (i)
 	{
-		/* restore the null */
-		if (oldpath)
-			*ltemp = '\0';		/* (for compatibility)  */
+		while ((tmp = LBGET(lp)) != 0)
+		{
+			lp++;
+			if (tmp == ';')
+				break;
+		}
+		i--;
+	}
+	if (!tmp)
 		return FALSE;
-	}
-
 	/* copy over path   */
-	while ((*lp) && (*lp != ';') && (*lp != ','))
-	{									/* added commas (8808 kbad) */
-		last = *lp++;
-		*dp++ = last;
+	while ((tmp = LBGET(lp)) != 0)
+	{
+		if (tmp != ';')
+		{
+			LBSET(dp++, tmp);
+			last = tmp;
+			lp++;
+		} else
+			break;
 	}
-	/* NOTE: this next test means that null pathnames in the PATH env. var
-	 * 	will be treated as ROOT rather than CURRENT directory.  Current
-	 *	diretory in the path must be denoted by an explicit '.' e.g.:
-	 *	PATH=.;A:\000 (880825 kbad)
-	 */
 	/* see if extra slash is needed */
-	if ((last != '\\') && (last != ':'))
-		*dp++ = '\\';
+	if (last != '\\' && last != ':')
+		LBSET(dp++, '\\');
 	/* append file name */
-	LSTCPY(dp, pname);
-
-	/* restore the null */
-	if (oldpath)
-		*ltemp = '\0';			/* (for compatibility)  */
-
+	LSTCPY(dp, ADDR(pname));
 	/* make whichone refer to next path */
 	return whichone + 1;
-}
-
-
-/* 306de: 00e20e86 */
-/* 104de: 00fe4254 */
-/* 106de: 00e26654 */
-int16_t sh_search(P(SHFIND_PROC) routine)
-PP(register SHFIND_PROC routine;)
-{
-	if (routine)
-		(*routine) (ad_path);
-
-	return dos_sfirst(ad_path, F_RDONLY | F_HIDDEN | F_SYSTEM);
 }
 
 
@@ -581,52 +533,59 @@ PP(register SHFIND_PROC routine;)
 /* 104de: 00fe427c */
 /* 106de: 00e26688 */
 int16_t sh_find(P(char *) pspec, P(SHFIND_PROC) routine)
-PP(register intptr_t pspec;) /* should be char * */
-PP(register SHFIND_PROC routine;)
+PP(intptr_t pspec;) /* should be char * */
+PP(SHFIND_PROC routine;)
 {
-	register int16_t path;
-	register BOOLEAN found = FALSE;
-	register char *pname;
+	int16_t path;
+	BOOLEAN gotdir;
+	char *pname;
 	char tmpname[14];
 
 	/* BUG: does not save old dta -> will change the DTA of running program */
 	dos_sdta(&D.g_loc1[0]);				/* use this     */
 
 	LSTCPY(ad_path, (char *) pspec);
-	pname = sh_name(pspec);				/* get the file name    */
-	strcpy(tmpname, pspec);  /* copy to local buffer */
+	pname = sh_name(D.g_dir);				/* get the file name    */
+	strcpy(tmpname, pname);  /* copy to local buffer */
 
-	/* ZZZ some code to here */	
-	pname = sh_name(ad_shcmd);			/* first look in program's dir  */
-	path = (int16_t) ((intptr_t)pname - (intptr_t)ad_shcmd);
-	pname = &tmpname[0];
-	if (path)
-	{									/* if a path exists */
-		LBCOPY(ad_path, ad_shcmd, path);	/* copy the path    */
-		LSTCPY((ad_path + path), pname);	/* add the name     */
-		found = sh_search(routine);		/* look for it      */
-	}
-	if (!found)
-	{									/* if not found there, look cwd */
-		path = 0;
-		strcpy(ad_path, pspec);
-		do
+	path = 0;
+	gotdir = TRUE;
+	do
+	{
+		dos_sfirst(ad_path, F_RDONLY | F_SYSTEM);
+		if (DOS_ERR && (DOS_AX == E_FILENOTFND || DOS_AX == E_NOFILES || DOS_AX == E_PATHNOTFND))
 		{
-			found = sh_search(routine);
-			if (!found)
-				path = sh_path(path, ad_path, pname);
-		} while (path && !found);		/* then in env paths        */
+			if (gotdir)
+			{
+				gl_dta[0] = '\\';
+				gl_dta[1] = '\0';
+				strcat(gl_dta, ad_path);
+				LSTCPY(ad_path, gl_dta);
+				gotdir = FALSE;
+				path = 1;
+			} else
+			{
+				path = sh_path(path, ad_path, tmpname);
+				DOS_ERR = TRUE;
+			}
+		} else
+		{
+			path = 0;
+		}
+	} while (DOS_ERR && path);		/* then in env paths        */
+
+	if (!DOS_ERR)
+	{
+		LSTCPY(pspec, ad_path);
+		if (routine)
+			(*routine)(ad_path);
 	}
-
-	if (found)							/* if file found    */
-		strcpy(pspec, ad_path);			/* return full filespec */
-
-	return found;
+	
+	return !DOS_ERR;
 }
 
 
-/* ZZZ */
-LINEF_STATIC VOID sh_strupr(NOTHING)
+LINEF_STATIC VOID sh_fixtail(NOTHING)
 {
 	register THEGLO *DGLO;
 	register int len;
@@ -649,39 +608,39 @@ LINEF_STATIC VOID sh_strupr(NOTHING)
 /* 106de: 00e26782 */
 VOID sh_main(NOTHING)
 {
-	register int16_t ret;
-	int16_t i, reschange;
-	register int32_t tree;
+	BOOLEAN retry;
+	BOOLEAN badtry;
+	int16_t ret;
+	int16_t doserr;
+	register LPTREE tree;
 	register THEGLO *DGLO;
-	char *fname;
-	register char *chrptr;
-	char tempchr;
-	PD *temprlr;
 
-	UNUSED(tempchr);
-	UNUSED(chrptr);
-	
+	UNUSED(retry);
 	DGLO = &D;
 	tree = ad_stdesk;					/* sh draw box              */
-	UNUSED(tree);
-	reschange = FALSE;					/* no resolution change     */
+	ad_pfile = LLGET(OB_SPEC(TITLE));
+	sh_gem = sh_isgem = TRUE;
+	sh_doexec = sh_9fc0 = TRUE;
+	sh_dodef = TRUE;
+	doserr = 0;
 
 	do
 	{
-		gl_bpend = 0;					/* reset the d click flag   */
-
-		if (gl_rschange)				/* change the resolution */
-			break;
-
-		if (sh_gem != sh_isgem)			/* users request different  */
-		{								/* modes    ?       */
-			if (sh_gem)					/* currently running GEM    */
-				sh_toalpha();
-			else
-				sh_tographic();
+		xa0ba = FALSE;
+		if (sh_9fc0)
+		{
+			xa0ba = sh_isgem = TRUE;
 		}
-
-		sh_gem = sh_isgem;
+		sh_9fc0 = TRUE;
+		
+		if (sh_isgem != sh_gem)			/* users request different  */
+		{								/* modes    ?       */
+			sh_gem = sh_isgem;
+			if (sh_gem)					/* currently running GEM    */
+				sh_tographic();
+			else
+				sh_toalpha();
+		}
 
 		if (sh_gem)						/* if GEM app then restart */
 		{								/* window and mouse stuff  */
@@ -689,98 +648,100 @@ VOID sh_main(NOTHING)
 			ratinit();
 		}
 #if CARTRIDGE
-		if (sh_iscart)
+		if (DGLO->s_tail[0] == 0xff)
 		{
 			DGLO->s_tail[0] = strlen(&DGLO->s_tail[1]);
 			sh_draw(ad_shcmd, ROOT, 1);
-			sh_doexec = FALSE;			/* always go back to desktop */
-			sh_isgem = TRUE;
-			cart_exec(sh_name(ad_shcmd), ad_shtail);	/* only filename!  */
+			cart_exec(ad_shcmd, ad_shtail);	/* only filename!  */
 			DGLO->s_tail[0] = '\0';
-			sh_iscart = FALSE;
-			continue;
+			sh_dodef = TRUE;
 		}
 #endif
+		sh_fixtail();
 
-		if (!sh_doexec)					/* goto to desktop  */
+		if (sh_dodef)					/* goto to desktop  */
 		{
+			desk_alloc();
 			ret = deskmain();
-#if AESVERSION < 0x330
-			i = Getrez();
-#if AESVERSION < 0x200
-			if (i != 2 && i != 4)
+			desk_free();
+			if (Getrez() != 2)
 				LLSET(ad_stdesk + 12, 0x00001173L);
-#else
-			if (i != 2 && i != 6)
-				LLSET(ad_stdesk + 12, 0x00001173L);
+			
+			if (ret)
+				sh_dodef = FALSE;
 			else
-				LLSET(ad_stdesk + 12, 0x00001143L);
-#endif
-#else
-			/*
-			 * ++ ERS 1/14/93: use gl_nplanes to determine resolution, and set
-			 *	the desktop background and color from the values we read from
-			 *	desktop.inf
-			 */
-			if (gl_nplanes == 1)
-				i = 0;
-			else if (gl_nplanes == 2)
-				i = 1;
-			else
-				i = 2;
-#if (AESVERSION >= 0x330) | !BINEXACT
-			LLSET(ad_stdesk + 12, 0x00001100L | adeskp[i]);
-#endif
-#endif
-
-			if (!ret)
+				sh_doexec = FALSE;
+		} else
+		{
+			/* run application  */
+			if (sh_rom())
 			{
-				reschange = TRUE;		/* resolution change    */
-				sh_write(0, 1, 0, "", "");
-				sh_toalpha();			/* release the screen   */
-			}							/* because geminit will */
-		} /* turn on graphic  */
-		else
-		{								/* run application  */
-			/*	As of 10/21/88, sh_main no longer uses sh_find to find the	*/
-			/*	program to launch.  Instead the full pathname is written to the	*/
-			/*	global command string by desksupp:do_aopen().  Also, we do	*/
-			/*	not change directory to the dir. of the app being launched.	*/
-
-			fname = sh_name(ad_shcmd);
-			sh_draw(fname, ROOT, 1);
-			sh_doexec = FALSE;			/* go back to desktop   */
-			sh_isgem = TRUE;			/* it is a gem      */
-
-			p_nameit(rlr, fname);
-			temprlr = rlr;				/* save the process addr  */
-
-			dos_exec(ad_shcmd, 0, ad_shtail);
-			/* clean the name   */
-			p_nameit(temprlr, ".");
-			/* mn_free( temprlr->p_pid ); */
-
-			if (sh_gem)
+				sh_dodef = TRUE;
+			} else
 			{
-#if AESVERSION >= 0x140
-				wm_new();
-#endif
-				if (DOS_ERR && (DOS_AX < -32))
-					fm_error((~DOS_AX) - 30);
+				/*	As of 10/21/88, sh_main no longer uses sh_find to find the	*/
+				/*	program to launch.  Instead the full pathname is written to the	*/
+				/*	global command string by desksupp:do_aopen().  Also, we do	*/
+				/*	not change directory to the dir. of the app being launched.	*/
+	
+				sh_draw(ad_shcmd, ROOT, 1);
+				sh_dodef = TRUE;
+				do
+				{
+					if (doserr)
+					{
+						ret = fm_error(doserr);
+						doserr = 0;
+					} else
+					{
+						badtry = FALSE;
+						if (sh_find(ad_shcmd, sh_show))
+						{
+							p_nameit(rlr, sh_name(DGLO->s_cmd));
+							dos_exec(ad_shcmd, 0, ad_shtail);
+							if (sh_gem && DOS_ERR && DOS_AX < -32)
+								doserr = ~DOS_AX - 30;
+						} else
+						{
+							doserr = E_FILENOTFND;
+						}
+					}
+				} while (badtry || doserr);
 			}
-
-#if AESVERSION >= 0x200
-			gl_kowner = gl_cowner = gl_mowner = temprlr;
-#endif
 		}
-	} while (!reschange);				/* resolution change    */
+	} while (sh_doexec);
 }
 
 
-/* ZZZ */
-VOID sh_xxx PROTO((NOTHING));
-
-VOID sh_xxx(NOTHING)
+BOOLEAN sh_rom(NOTHING)
 {
-	(VOID)sh_strupr;
+	BOOLEAN ret;
+	register char *tail;
+	
+	ret = TRUE;
+	tail = &D.s_tail[1];
+	switch (D.s_tail[0] & 0xff)
+	{
+	case CMD_TYPE:
+		sh_type(tail);
+		break;
+	case CMD_PRINT:
+		strcpy(ad_shcmd, S_PRINT);
+		strcat(ad_shcmd, tail);
+		sh_draw(ad_shcmd, ROOT, 1);
+		sh_print(tail);
+		break;
+	case CMD_FORMAT:
+		sh_draw(ad_shcmd, ROOT, 1);
+		sh_format(tail, ad_shcmd);
+		break;
+	case CMD_COPY:
+		sh_draw(ad_shcmd, ROOT, 1);
+		sh_copy(tail, ad_shcmd);
+		break;
+	default:
+		ret = FALSE;
+		/* break; */
+	}
+	return ret;
 }

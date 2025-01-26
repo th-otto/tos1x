@@ -1,3 +1,6 @@
+/*
+ * Quick hack to dump the glued resource data out of the ROMs
+ */
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -6,8 +9,6 @@
 #include <unistd.h>
 #include <stdint.h>
 #include "../common/ctrycode.h"
-
-#define COUNTRY CTRY_FR
 
 #define FILESIZE (192 * 1024L)
 #define TOSADDR 0xfc0000L
@@ -62,6 +63,7 @@ int main(int argc, char **argv)
 	const char *filename;
 	FILE *fp;
 	uint16_t lang;
+	uint16_t tosversion;
 	
 	if (argc != 2)
 	{
@@ -82,31 +84,41 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 	fclose(fp);
-	if (getbe16(TOSADDR + 2) != 0x100)
+	lang = getbe16(TOSADDR + 28) >> 1;
+	tosversion = getbe16(TOSADDR + 2)
+	if (tosversion == 0x100)
+	{
+		switch (lang)
+		{
+		case CTRY_FR:
+			rsc_read = 0xfee79c;
+			langext = "fr";
+			break;
+		case CTRY_DE:
+			rsc_read = 0xfee4b0;
+			langext = "de";
+			break;
+		case CTRY_US:
+			rsc_read = 0xfee800;
+			langext = "us";
+			break;
+		default:
+			fprintf(stderr, "%s: %s %d\n", filename, "unsupported tos language", lang);
+			return EXIT_FAILURE;
+		}
+	} else if (tosversion == 0x102)
+	{
+		switch (lang)
+		{
+		default:
+			fprintf(stderr, "%s: %s %d\n", filename, "unsupported tos language", lang);
+			return EXIT_FAILURE;
+		}
+	} else
 	{
 		fprintf(stderr, "%s: %s\n", filename, "wrong TOS version");
 		return EXIT_FAILURE;
 	}
-	lang = getbe16(TOSADDR + 28) >> 1;
-	switch (lang)
-	{
-	case CTRY_FR:
-		rsc_read = 0xfee79c;
-		langext = "fr";
-		break;
-	case CTRY_DE:
-		rsc_read = 0xfee4b0;
-		langext = "de";
-		break;
-	case CTRY_US:
-		rsc_read = 0xfee800;
-		langext = "us";
-		break;
-	default:
-		fprintf(stderr, "%s: %s %d\n", filename, "unsupported tos language", lang);
-		return EXIT_FAILURE;
-	}
-	
 	
 	rscsize = getbe16(rsc_read + 20);
 	tosrsc = getbe32(rsc_read + 24);

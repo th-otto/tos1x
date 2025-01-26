@@ -55,7 +55,64 @@ ASMHACK = $(ASMHACK_$(TOSVERSION))
 gembind.o: gembind.c
 	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) ${RUN_OPTIMIZE_${$*_OPTIMIZE}} -c -S -o $*.s $<
 	$(AM_V_at)$(ASMHACK)
-	$(AM_V_at)$(AS) $(ASFLAGS) -c $(LINEF_FLAGS) $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R8),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R1\nmove [0-9]*(R9),R1/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R2\nmove [0-9]*(R10),R2/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [-0-9]*(R14),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+# remove some superflous clr.w D0 that for some reason
+# don't appear in the final ROM
+apgrlib.o: apgrlib.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+apgsxif.o: apgsxif.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R6,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R4,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R3,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+gemaints.o: gemaints.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R13),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+gemasync.o: gemasync.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R8),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R13),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [-0-9]*(R14),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+gemdisp.o: gemdisp.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove [0-9]*(R13),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove 0(R8,R9.l),R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+gemevlib.o: gemevlib.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R1\nmove [-0-9]*(R14),R1/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R6,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
+	$(AM_V_at)$(RM) $*.s
+
+gemrslib.o: gemrslib.c
+	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R6,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s
+	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
 	$(AM_V_at)$(RM) $*.s
 
 single::

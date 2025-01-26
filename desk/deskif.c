@@ -186,7 +186,9 @@ PP(int16_t start;)
 {
 	int16_t ret;
 
+#if AESVERSION >= 0x140
 	desk_wait(FALSE);
+#endif
 	ret = fm_do((LPTREE)form, start);
 	dsptch();
 	return ret;
@@ -275,7 +277,7 @@ PP(MFORM *grmaddr;)
 	{
 		if (style == M_OFF)
 			gsx_moff();
-		else if (style == M_ON)
+		if (style == M_ON)
 			gsx_mon();
 	} else
 	{
@@ -288,11 +290,12 @@ PP(MFORM *grmaddr;)
 			maddr = (MFORM *)LLGET((intptr_t)maddr);
 		} else
 		{
-			maddr = (MFORM *)LLGET((intptr_t)grmaddr);
+			maddr = grmaddr;
 		}
 
 		gsx_mfset(maddr);
 	}
+	dsptch();
 }
 
 

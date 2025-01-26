@@ -102,6 +102,20 @@ LINEF_STATIC int16_t fc_rwsec PROTO((int16_t op, VOIDPTR buf, int16_t nsect, int
 LINEF_STATIC VOID fc_clfix PROTO((uint16_t cl, uint16_t *fat));
 
 
+VOID sh_format(P(const char *) fname, P(const char *) cmd)
+PP(const char *fname;)
+PP(const char *cmd;)
+{
+}
+
+
+VOID sh_copy(P(const char *) fname, P(const char *) cmd)
+PP(const char *fname);
+PP(const char *cmd;)
+{
+}
+
+
 /*
  * format and copy start
  */
@@ -194,8 +208,10 @@ PP(int16_t op;)
 
 		case FCCNCL:					/* cancel       */
 			do_finish((OBJECT *)tree);
+#if 0 /* ZZZ */
 			up_allwin("A", FALSE);
 			up_allwin("B", FALSE);
+#endif
 			desk_clear(DESK);
 			return;
 
@@ -268,7 +284,7 @@ PP(LPTREE tree;)
 	if (!(bufaddr = (char *)dos_alloc(FSIZE)))		/* no memory            */
 	{
 	memerr:
-		do1_alert(FCNOMEM);
+		do1_alert(STDISKFU);
 		return;
 	}
 
@@ -484,7 +500,7 @@ PP(LPTREE tree;)
 	if (!(bootbuf = (intptr_t)dos_alloc(0x258L)))
 	{
 errmem:
-		do1_alert(FCNOMEM);
+		do1_alert(STDISKFU);
 		return;
 	}
 

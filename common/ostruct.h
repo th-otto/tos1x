@@ -47,6 +47,14 @@ typedef struct
     __uint16_t date;         /* Date like Tgetdate() */
 } _DOSTIME;
 
+/* Structure used by Dfree() */
+typedef struct {
+    __uint32_t b_free;		/* number of free clusters */
+    __uint32_t b_total;		/* total number of clusters */
+    __uint32_t b_secsiz;	/* number of bytes per sector */
+    __uint32_t b_clsiz;		/* number of sectors per cluster */
+} _DISKINFO;
+
 /*
  *  BPB - Bios Parameter Block
  */

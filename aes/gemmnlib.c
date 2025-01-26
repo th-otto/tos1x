@@ -95,7 +95,7 @@ PP(int16_t x;)
 uint16_t do_chg(P(LPTREE) tree, P(int16_t) iitem, P(uint16_t) chgvalue, P(int16_t) dochg, P(int16_t) dodraw, P(int16_t) chkdisabled)
 PP(register LPTREE tree;)						/* tree that holds item */
 PP(int16_t iitem;)								/* item to affect   */
-PP(register uint16_t chgvalue;)					/* bit value to change  */
+PP(register int16_t chgvalue;)					/* bit value to change  */
 PP(int16_t dochg;)								/* set or reset value   */
 PP(int16_t dodraw;)								/* draw resulting change */
 PP(int16_t chkdisabled;)						/* only if item enabled */
@@ -213,7 +213,6 @@ PP(int16_t *pitem;)
 	MOBLK p1mor, p2mor;
 	int16_t menu_state, rect;
 	int16_t lrets[6];
-	int16_t curstate;
 
 	tree = gl_mntree;
 	/*
@@ -253,7 +252,7 @@ PP(int16_t *pitem;)
 		case OUTITEM:
 			rect = cur_item;
 			buparm = (gsx_button() & 0x0001) ? 0x00010100L : 0x00010101L;
-			break;
+			/* break; */
 		}
 		rect_change(tree, &p1mor, rect, flag);
 
@@ -274,8 +273,7 @@ PP(int16_t *pitem;)
 			last_menu = cur_menu;
 			/* see if over the bar  */
 			cur_title = ob_find(tree, THEACTIVE, 1, lrets[0], lrets[1]);
-			curstate = LWGET(OB_STATE(cur_title));
-			if ((cur_title != NIL) && (curstate != DISABLED))
+			if (cur_title != NIL /* && cur_title != THEACTIVE */)
 			{
 				cur_item = NIL;
 				menu_state = OUTTITLE;
@@ -289,8 +287,7 @@ PP(int16_t *pitem;)
 				} else
 				{
 					menu_state = INBAR;
-					if (curstate != DISABLED)
-						done = TRUE;
+					done = TRUE;
 				}
 			}
 			/* clean up old state   */
@@ -391,7 +388,9 @@ PP(int16_t showit;)
 		LWSET(OB_HEIGHT(gl_dabox), h);
 		gsx_sclip(&gl_rzero);
 		ob_draw(tree, THEBAR, MAX_DEPTH);
+#if AESVERSION >= 0x140
 		gsx_attr(FALSE, MD_REPLACE, BLACK);	/* not xor mode! */
+#endif
 		gsx_cline(0, gl_hbox - 1, gl_width - 1, gl_hbox - 1);
 	} else
 	{
@@ -410,7 +409,9 @@ PP(int16_t showit;)
 #else
 	post_button(ctl_pd, 0, 1);
 #endif
+#if AESVERSION >= 0x140
 	dsptch();
+#endif
 }
 
 
@@ -425,11 +426,7 @@ VOID mn_clsda(NOTHING)
 	register int16_t i;
 
 	for (i = 0; i < gl_dacnt; i++)
-#if BINEXACT /* sigh */
-		ap_sendmsg(appl_msg, AC_CLOSE, desk_pid[i], i, 0, 0, 0L);
-#else
 		ap_sendmsg(appl_msg, AC_CLOSE, desk_pid[i], i, 0, 0, 0, 0);
-#endif
 }
 
 

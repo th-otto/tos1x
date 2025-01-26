@@ -313,15 +313,15 @@ _endvdibss: ds.b 0
 /* start AES+DESKTOP */
 
 	PTR(retsava)
-	PTR(_x6104_unused)
+	PTR(_xxaddr)
 	INT(_gl_restype)
 	INT(_gl_rschange)
 	INT(_gl_nextrez)
 	V(ustak,l,33)
 	INT(_diskin)
 	V(srsave,w,1)
-	ds.b 2
 	V(savsr,w,1)
+	V(psetsr,w,1)
 	V(dspstk,l,161)
 	LONG(_crit_err)
 	LONG(_SAV2TRP)
@@ -329,7 +329,7 @@ _endvdibss: ds.b 0
 	PTR(_drawaddr)
 	PTR(drawsp)
 	PTR(_drawstk)
-	LONG(_ldivr)
+	LONG(_aesldivr)
 	LONG(errsave)
 	ds.b 1024
 	V(errstk,l,257)
@@ -350,9 +350,9 @@ _endvdibss: ds.b 0
 	LONG(_CMP_TICK)
 	V(gstack,l,24)
 	V(tstack,l,24)
-	INT(x6d4e)
+	INT(_sf_key)
 	ds.w 1 /* unused */
-	INT(x6d52)
+	INT(_sf_line)
 	ds.l 1 /* unused */
 	PTR(trp13aret)
 	PTR(trp14aret)
@@ -389,7 +389,7 @@ _endvdibss: ds.b 0
 	V(_infpath,b,122)
 	PTR(_gl_cowner)
 	INT(_sh_doexec)
-	INT(_x7034)
+	INT(_sf_eof)
 	INT(_gl_patt)
 	GRECT(_gl_rscreen)
 	GRECT(_gl_rfull)
@@ -420,10 +420,10 @@ _endvdibss: ds.b 0
 	PTR(_ctl_pd)
 	GRECT(_ctrl)
 	V(_gl_tmp2,b,40)
-	V(_gl_dta,b,50)
+	V(_gl_dta,b,50)      /* DTA; actually 6 bytes too large */
 	INT(_gl_nrows)
 	INT(_ajunk)
-	INT(_x733a)
+	INT(_sf_inptr)
 	MFDB(_gl_src)
 	INT(_INTER_HSPACE)
 	INT(_gl_dabase)
@@ -433,7 +433,7 @@ _endvdibss: ds.b 0
 	MFDB(_gl_dst)
 	INT(_fph)
 	GRECT(_gl_rfs)
-	INT(x738e)
+	INT(_sf_bufsize)
 	INT(_gl_wptschar)
 	INT(_gl_wsptschar)
 	INT(_xrat)
@@ -453,7 +453,7 @@ _endvdibss: ds.b 0
 	V(_D,b,10774) /* sizeof(THEGLO) */
 	ds.l 1 /* unused */
 	INT(_gl_hchar)
-	INT(_x9dfc)
+	INT(_f_maxlevel)
 	PTR(_eul)
 	BYTE(_indisp)
 	even
@@ -477,7 +477,7 @@ _endvdibss: ds.b 0
 	PTR(_nrl)
 	INT(_kstate)
 	INT(_gl_bclick)
-	PTR(_ad_select)
+	PTR(_ad_fsnames)
 	V(_bi,b,14)      /* BITBLK */
 	V(_ib,b,34)      /* ICONBLK */
 	PTR(_ad_armice)
@@ -491,23 +491,23 @@ _endvdibss: ds.b 0
 	INT(_gl_recd)
 	INT(_gl_dcindex)
 	PTR(_ad_shcmd)
-	PTR(_ad_stdesk)
+	PTR(_ad_pfile)
 	TEDINFO(_gl_aname)
 	TEDINFO(_gl_ainfo)
 	INT(_gl_hclip)
 	V(_contrl,w,12)
-	INT(_x9f7a)
-	PTR(_x9f7c)
+	INT(_ADD_HEIGHT)
+	PTR(_g_fslist)
 	PTR(_old_bcode)
 	PTR(_ad_path)
 	V(_evx,b,28) /* sizeof(EVB) */
-	PTR(_ad_pfile)
+	PTR(_ad_stdesk)
 	PTR(_rul)
 	INT(_gl_bvhard)
 	PTR(_ad_shtail)
 	PTR(_g_buffer)
 	INT(_gl_wchar)
-	INT(_x9fb8)
+	INT(_f_level)
 	INT(_mtrans)
 	PTR(_ad_fsdta)
 	INT(_sh_9fc0) /* sh_fullstep? */
@@ -535,14 +535,14 @@ _endvdibss: ds.b 0
 	INT(_gl_mask)
 	INT(_DOS_AX)
 	INT(_gl_ticktime)
-	INT(_xa098)
+	INT(_ADD_WIDTH)
 	PTR(_old_mcode)
 	LONG(_gl_mlen)
 	PTR(_ad_envrn)
 	GRECT(_gl_rmnactv)
 	V(_desk_pid,w,MAX_ACCS)
 	INT(_xa0ba)
-	INT(_liketop)
+	INT(_wasclr)
 	INT(_w_walkflag)
 	PTR(_gl_newdesk)
 	PTR(_xa0c4)
@@ -552,28 +552,7 @@ _endvdibss: ds.b 0
 
 	ds.b 4
 
-	V(_aautopath,b,CMDLEN)
-	V(_do_srcpath,b,PATHLEN)
-	V(_do_dstpath,b,PATHLEN)
-
-	V(_do_dstname,b,16)
-	V(_do_srcname,b,16)
-	V(_cp_dst,b,122)
-
-	V(psetsr,w,1)
-
-	LONG(retaddr)
-	LONG(tr_retsave)
-	
-	LONG(savestk)
-	LONG(_aesldivr)
-	
-	
-	V(_fsname,b,40)
-	V(_fcopy,b,40)
-	PTR(_pathcopy)
-	INT(_defdrv)
-	LONG(_TICKS)
+	INT(defdrv)
 	INT(_w_inc)
 	INT(_bar_max)
 	V(fspec,b,8)
@@ -589,59 +568,12 @@ _endvdibss: ds.b 0
 	
 	ds.b 12
 	
-	PTR(_ad_fsnames)
-	PTR(_ad_fsel)
-	
-	PTR(_ad_fpath)
-
 	INT(_sh_iscart)
-	INT(_wasclr)
-	PTR(_ad_title)
-	V(_g_autoboot,b,CMDLEN)
-	INT(_g_wsend)
-
-	INT(_fs_first)
-	INT(_fs_count)
-	LONG(_fs_fnum)
-	INT(_gl_mouse)
-	INT(_fs_topptr)
-	INT(_autoexec)
-	
-	INT(_gl_kstate)
-
-	even
-#if TOSVERSION >= 0x104
-	/*
-	 * just for reference:
-	 * variables that were used in later TOS versions,
-	 * in no particular order
-	 */
-	INT(_gl_play)
-	PTR(_gl_store)
-	INT(_tbutton)
-	INT(_gl_mx)
-	INT(_gl_my)
-	INT(_width)
-	INT(_height)
-	PTR(_gl_pglue)
-#endif
-#if TOSVERSION >= 0x106
-	PTR(savea0)
-#endif
 
 	ds.b 2
 	
-	INT(_f_level)
-	INT(_g_flag)
-	PTR(_pxpath)
-
 /* end AES+DESKTOP */
 
 /* This label is referenced by the GEM_MUPB structure */
 	xdef _endgembss
 _endgembss:	ds.b 0
-
-/* This label is referenced by the BIOS initialization */
-	xdef __ebss
-__ebss:	ds.b 0
-	ds.b 0

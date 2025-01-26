@@ -37,40 +37,16 @@
 #define FO_RDWR          2	/* Open read/write - same as O_RDWR */
 
 
-char const wilds[] = "\\*.*\0";
-char const getall[] = "*.*";
 int f_level;
-STATIC char do_srcpath[PATHLEN];
-STATIC char do_dstpath[PATHLEN];
-STATIC char do_dstname[LEN_ZFNAME + 2];
-STATIC char do_srcname[LEN_ZFNAME + 2];
+int f_maxlevel;
+uint8_t gl_dta[sizeof(DTA) + 6];
 
 
-LINEF_STATIC BOOLEAN dirop_init PROTO((int op, char *psrc_path, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt));
 LINEF_STATIC VOID sub_path PROTO((char *path));
-LINEF_STATIC BOOLEAN dirop_file PROTO((int op, char *psrc_path, char *pdst_path, const char *fname, int attr, uint16_t time, uint16_t date));
 LINEF_STATIC VOID do_namecon PROTO((NOTHING));
-LINEF_STATIC BOOLEAN notsame_name PROTO((char *srcpath, char *dstpath));
 LINEF_STATIC BOOLEAN d_dofdel PROTO((char *path));
 LINEF_STATIC VOID show_hide PROTO((OBJECT *tree));
 
-
-
-/* 306de: 00e2fc7c */
-/* 104de: 00fd68fa */
-/* 106de: 00e16fb2 */
-char *r_slash(P(const char *)path)
-PP(register const char *path;)
-{
-	while (*path)
-		path++;
-
-	while (*path != '\\')
-	{
-		path--;
-	}
-	return NO_CONST(path);
-}
 
 
 /*
@@ -95,7 +71,7 @@ VOID do_namecon(NOTHING)
 	register THEDSK *d;
 	
 	d = thedesk;
-	desk_wait(TRUE);
+	desk_wait(FALSE);
 	if (d->ml_havebox)
 	{
 		fm_draw((LPTREE)d->g_atree[SAMENAME]);
@@ -104,10 +80,10 @@ VOID do_namecon(NOTHING)
 		show_hide(d->g_atree[SAMENAME]);
 		d->ml_havebox = TRUE;
 	}
-	form_do(d->g_atree[CPBOX], 0);
+	form_do(d->g_atree[SAMENAME], 0);
 	if (d->ml_dlpr)
 	{
-		ob_change((LPTREE)d->g_atree[CPBOX], OKCP, SELECTED, TRUE);
+		ob_change((LPTREE)d->g_atree[CPBOX], OKCP, SELECTED, FALSE);
 		fm_draw((LPTREE)d->g_atree[CPBOX]);
 		ob_change((LPTREE)d->g_atree[CPBOX], OKCP, NORMAL, FALSE);
 	}
@@ -276,177 +252,132 @@ PP(char *path;)
 }
 
 
-/* 104de: 00fd6b16 */
-/* 106de: 00e17244 */
-LINEF_STATIC BOOLEAN dirop_init(P(int) op, P(char *)psrc_path, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt)
-PP(int op;)
-PP(char *psrc_path;)
-PP(char *pdst_path;)
-PP(uint16_t *pfcnt;)
-PP(uint16_t *pdcnt;)
-{
-	register THEDSK *d;
-	register LPTREE tree;
-	char *str;
-	int16_t strid;
-	long fcnt;
-	long dcnt;
-
-	UNUSED(psrc_path);
-	UNUSED(pdst_path);
-	d = thedesk;
-	tree = 0;
-	d->g_xbuf = NULL;
-	d->ml_dlpr = FALSE;
-	d->ml_havebox = FALSE;
-	d->g_nfiles = *pfcnt;
-	d->g_ndirs = *pdcnt;
-#ifdef __GNUC__
-	strid = 0; /* silence compiler */
-#endif
-	switch (op)
-	{
-	case OP_COUNT:
-		d->g_nfiles = 0;
-		d->g_ndirs = 0;
-		d->g_size = 0;
-		break;
-	case OP_MOVE:
-#if 0 /* ZZZ */
-		strid = STMOVESTR;
-#endif
-		if (d->g_ccopypref || d->g_cdelepref)
-			d->ml_dlpr = TRUE;
-		goto copy;
-	case OP_COPY:
-#if 0 /* ZZZ */
-		strid = STCPYSTR;
-#endif
-		if (d->g_ccopypref)
-			d->ml_dlpr = TRUE;
-	copy:
-		d->g_xlen = dos_avail();
-		if (d->g_xlen == 0)
-		{
-			do1_alert(FCNOMEM);
-			return FALSE;
-		}
-		d->g_xbuf = dos_alloc(d->g_xlen);
-		break;
-	case OP_DELETE:
-#if 0 /* ZZZ */
-		strid = STDELSTR;
-#endif
-		if (d->g_cdelepref)
-			d->ml_dlpr = TRUE;
-		break;
-	}
-	
-	if (d->ml_dlpr)
-	{
-		tree = (LPTREE)d->g_atree[CPBOX];
-		rsrc_gaddr(R_STRING, strid, (VOIDPTR *)&str);
-#if 0 /* ZZZ */
-		((TEDINFO *)(LLGET(OB_SPEC(TITLE))))->te_ptext = str;
-#endif
-		fcnt = *pfcnt;
-		dcnt = *pdcnt;
-		inf_setsize(&fcnt, d->ml_files, (OBJECT *)tree, NUMFILE, FALSE);
-		inf_setsize(&dcnt, d->ml_dirs, (OBJECT *)tree, NUMDIR, FALSE);
-#if 0 /* ZZZ */
-		inf_sset((OBJECT *)tree, CPFILE, "");
-		inf_sset((OBJECT *)tree, CPDIR, "");
-		LWSET(OB_FLAGS(CPFILE), HIDETREE);
-		LWSET(OB_FLAGS(CPDIR), HIDETREE);
-		fm_draw(tree);
-		LWSET(OB_FLAGS(CPFILE), NONE);
-		LWSET(OB_FLAGS(CPDIR), NONE);
-#endif
-		form_do((OBJECT *)tree, NIL);
-		if (!inf_what((OBJECT *)tree, OKCP, CCANCEL))
-			return FALSE;
-	}
-	return TRUE;
-}
-
-
 /*
- *	DIRectory routine that does an OPeration on all the selected files and
- *	folders in the source path.  The selected files and folders are 
- *	marked in the source file list.
+ *	Directory routine to DO File COPYing.
  */
-/* 104de: 00fd6cce */
-/* 106de: 00e17432 */
-BOOLEAN dir_op(P(int) op, P(const char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt, P(uint32_t *)psize)
-PP(int op;)
-PP(const char *psrc_path;)
-PP(register FNODE *pflist;)
-PP(char *pdst_path;)
-PP(uint16_t *pfcnt;)
-PP(uint16_t *pdcnt;)
-PP(uint32_t *psize;)
+/* 104de: 00fd7316 */
+/* 106de: 00e17b2a */
+LINEF_STATIC BOOLEAN d_dofcopy(P(char *)psrc_file, P(char *)pdst_file, P(uint16_t) time, P(uint16_t) date, P(int) attr)
+PP(register char *psrc_file;)
+PP(char *pdst_file;)
+PP(uint16_t time;)
+PP(uint16_t date;)
+PP(int attr;)
 {
 	register THEDSK *d;
-	register LPTREE tree;
-	register int ret;
+	int16_t srcfh, dstfh;
+	int16_t amntrd, amntwr;
+	register BOOLEAN copy;
+	register BOOLEAN cont;
+	register BOOLEAN more;
+	register BOOLEAN samedir;
 	
+	UNUSED(samedir);
 	d = thedesk;
-	tree = 0;
-	d->ml_havebox = FALSE;
-	strcpy(do_srcpath, psrc_path);
-	strcpy(do_dstpath, pdst_path);
-	op = (gl_kstate & K_CTRL) && op == OP_COPY ? OP_MOVE : op;
-#ifndef __ALCYON__
-	ret = TRUE; /* BUG: may be used uninitialized */
-#endif
-	if (dirop_init(op, do_srcpath, do_dstpath, pfcnt, pdcnt))
+	copy = TRUE;
+	/* open the source file */
+	srcfh = dos_open(ADDR(psrc_file), 0);
+	if (!(more = dos_error()))
+		return more;
+	/* open the dest file   */
+	cont = TRUE;
+	while (cont)
 	{
-		desk_wait(TRUE);
-		while (pflist != NULL)
+		copy = FALSE;
+		more = TRUE;
+		dstfh = dos_open(ADDR(pdst_file), 0);
+		/* handle dos error */
+		if (DOS_ERR)
 		{
-			if (pflist->f_obid != NIL && (d->g_screen[pflist->f_obid].ob_state & SELECTED))
+			if (DOS_AX == E_FILENOTFND)
+				copy = TRUE;
+			else
+				more = dos_error();
+			cont = FALSE;
+		} else
+		{
+			/* dest file already exists */
+			dos_close(dstfh);
+			/* get the filenames from the pathnames */
+			get_fname(psrc_file, &d->ml_fsrc[0]);
+			get_fname(pdst_file, &d->ml_fdst[0]);
+			/* put in filenames in dialog */
+			inf_sset(d->g_atree[SAMENAME], FNAME, d->ml_fsrc);
+			inf_sset(d->g_atree[SAMENAME], EDFNAME, d->ml_fdst);
+			strcpy(d->ml_fsrc, d->ml_fdst);
+
+			/* show dialog */
+
+			do_namecon();
+
+			/* if okay then if its  */
+			/*   the same name then */
+			/*   overwrite else get */
+			/*   new name and go    */
+			/*   around to check it */
+			copy = inf_what(d->g_atree[SAMENAME], COPY, QUIT);
+
+			if (copy)
 			{
-				if (pflist->f_attr == FA_DIREC)
+				desk_wait(TRUE);
+				fs_ssget(d->g_atree[SAMENAME], EDFNAME, d->ml_fdst);
+				if (streq(d->ml_fsrc, d->ml_fdst))
+					cont = FALSE;
+				unfmt_str(d->ml_fdst, d->ml_fstr);
+				if (d->ml_fstr[0] == 0)
 				{
-					add_path(do_srcpath, pflist->f_name);
-					ret = d_doop(op, (OBJECT *)tree, do_srcpath, do_dstpath, pfcnt, pdcnt);
-					sub_path(do_srcpath);
+					copy = cont = FALSE;
 				} else
 				{
-					ret = dirop_file(op, do_srcpath, do_dstpath, pflist->f_name, pflist->f_attr, pflist->f_time, pflist->f_date);
+					del_fname(pdst_file);
+					add_fname(pdst_file, d->ml_fstr);
 				}
-				if (!ret)
-					break;
+			} else
+			{
+				dos_close(srcfh);
+				cont = copy = FALSE;
 			}
-			pflist = pflist->f_next;
 		}
 	}
-	
-	if (d->ml_dlpr)
+
+	if (copy && more)
+		dstfh = dos_create(ADDR(pdst_file), attr & ~FA_RDONLY);
+	amntrd = copy;
+	while (amntrd && more)
 	{
-		do_finish(d->g_atree[CPBOX]);
-	} else
-	{
-		if (d->ml_havebox)
-			do_finish(d->g_atree[SAMENAME]);
+		if ((more = dos_error()))
+		{
+			amntrd = dos_read(srcfh, d->g_xlen, d->g_xbuf);
+			if ((more = dos_error()))
+			{
+				if (amntrd)
+				{
+					amntwr = dos_write(dstfh, amntrd, d->g_xbuf);
+					if ((more = dos_error()))
+					{
+						if (amntrd != amntwr)
+						{
+							/* disk full        */
+							fun_alert(1, STDISKFU, NULL);
+							more = FALSE;
+							dos_close(srcfh);
+							dos_close(dstfh);
+							d_dofdel(ADDR(pdst_file));
+						}
+					}
+				}
+			}
+		}
 	}
-	
-	switch (op)
+	if (copy && more)
 	{
-	case OP_COUNT:
-		*pfcnt = d->g_nfiles;
-		*pdcnt = d->g_ndirs;
-		*psize = d->g_size;
-		break;
-	case OP_COPY:
-	case OP_MOVE:
-		if (d->g_xbuf != NULL)
-			dos_free(d->g_xbuf);
-		break;
+		dos_set(dstfh, time, date);
+		more = dos_error();
+		dos_close(srcfh);
+		dos_close(dstfh);
 	}
-	
-	desk_wait(FALSE);
-	return ret;
+
+	return more;
 }
 
 
@@ -458,442 +389,150 @@ PP(uint32_t *psize;)
 BOOLEAN d_doop(P(int) op, P(OBJECT *)tree, P(char *)psrc_path, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt)
 PP(int op;)
 PP(OBJECT *tree;)
-PP(register char *psrc_path;)
+PP(char *psrc_path;)
 PP(register char *pdst_path;)
 PP(uint16_t *pfcnt;)
 PP(uint16_t *pdcnt;)
 {
+	register int cont;
+	register int skip;
 	register int more;
 	register int level;
-	register BOOLEAN ret;
-	char name[LEN_ZFNAME + 2];
-	char *srcname;
-	THEDSK *d;
-	register char *ptr;
+	register int max_level;
+	register char *ptmp;
+	register THEDSK *d;
 	
-	ret = FALSE;
 	d = thedesk;
-	level = 0;
-	srcname = ptr = r_slash(psrc_path);
-#ifdef __ALCYON__
-	asm("movea.l    a3,a0");
-	asm("clr.b (a0)");
-#else
-	*ptr = '\0';
-#endif
-	ptr--;
-	while (ptr != NULL)
-	{
-		if (*ptr-- == '\\')
-			break;
-	}
-	ptr += 2;
-	strcpy(do_srcname, ptr);
-	*srcname = '\\';
-
 	/* start recursion at level 0 */
-	f_level = 0;
-	if (op == OP_COUNT || op == OP_DELETE)
+	level = 0;
+	max_level = 1;
+	f_level = 1;
+
+	dos_sdta(&d->g_dtastk[level]);
+	dos_sfirst(ADDR(psrc_path), FA_DIREC|FA_HIDDEN|FA_SYSTEM);
+
+	cont = more = TRUE;
+	while (cont && more)
 	{
-		srcname = psrc_path;
-	} else
-	{
-		srcname = pdst_path;
-		f_level++;
-	}
-	while (*srcname != '\0')
-	{
-		if (*srcname++ == '\\')
-			f_level++;
-	}
-	f_level--;
-	strcpy(d->g_srcpth, psrc_path);
-	strcpy(d->g_dstpth, pdst_path);
-	
-loop:
-	{
-		if (f_level > MAX_LEVEL)
+		skip = FALSE;
+		if (DOS_ERR)
 		{
-#if 0 /* ZZZ */
-			fun_alert(1, STFOF8DEE, NULL);
-#endif
-			ret = FALSE;
-			goto done;
-		}
-		/* set up initial DTA */
-		dos_sdta(&d->g_dtastk[f_level]);
-		switch (op)
-		{
-		case OP_COUNT:
-			d->g_ndirs++;
-			break;
-		case OP_COPY:
-		case OP_MOVE:
-			strcpy(do_dstname, do_srcname);
-			add_fname(d->g_dstpth, do_dstname);
-			for (;;)
+			/* no more files error  */
+			if (DOS_AX == E_NOFILES || DOS_AX == E_FILENOTFND)
 			{
-				/* 13 */
-				if (dos_sfirst(d->g_dstpth, FA_DIREC|FA_HIDDEN|FA_SYSTEM) == 0)
+				switch (op)
 				{
-					if (DOS_AX == E_NOFILES)
-						goto l17;
-					dos_error();
-					goto done;
-					goto l17;
-				}
-				l14:
-				/* for (;;) */
-				{
-					do
-					{
-						do_namecon();
-						more = 0;
-						if (more == 0)
-							goto done;
-						if (more != 1)
-							goto skip;
-					} while (name[0] == '\0');
-					if (!streq(name, do_dstname))
-						goto l15;
-					strcat(d->g_dstpth, wilds);
-					more = notsame_name(d->g_srcpth, d->g_dstpth);
-					ptr = r_slash(d->g_dstpth);
-					*ptr = '\0';
-					if (!more)
-						goto l14;
-					goto next;
-				}
-			l15:
-				strcpy(do_dstname, name);
-				strcpy(d->g_dstpth, pdst_path);
-				add_fname(d->g_dstpth, do_dstname);
-			}
-			goto l17;
-		skip:
-			strcat(d->g_dstpth, wilds);
-			goto l29;
-		l17:
-			d->g_ndirs++;
-			strcat(d->g_dstpth, wilds);
-			d_dofdel(d->g_dstpth);
-			ptr = r_slash(d->g_dstpth);
-			*ptr = '\0';
-			dos_mkdir(d->g_dstpth);
-			if (DOS_AX == E_NOACCESS)
-			{
-				DOS_AX = E_ACCDN;
-				if (dos_error() == FALSE)
-					goto done;
-			}
-		next:
-			strcat(d->g_dstpth, wilds);
-			break;
-		}
-		
-		more = dos_sfirst(d->g_srcpth, FA_DIREC|FA_ARCH|FA_RDONLY|FA_HIDDEN|FA_SYSTEM);
-		while (TRUE)
-		{
-			if (more == FALSE)
-			{
-				if (DOS_AX == E_NOFILES)
+				case OP_COUNT:
+					d->g_ndirs++;
 					break;
-				dos_error();
-				goto done;
-			}
-			if (d->g_dtastk[f_level].dirfile.d_att & FA_DIREC)
-			{
-				if (d->g_dtastk[f_level].dirfile.d_name[0] != '.')
+				case OP_DELETE:
+					ptmp = psrc_path;
+					while (*ptmp != '*')
+						(VOID)*ptmp++; /* BUG: dereference */
+					ptmp--;
+					*ptmp = 0;
+					dos_rmdir(ADDR(psrc_path));
+					more = dos_error();
+					strcat(psrc_path, "\\*.*");
+					break;
+				case OP_COPY:
+					/* break */
+					;
+				}
+				if (tree)
 				{
-					++level;
-					strcpy(do_srcname, d->g_dtastk[f_level].dirfile.d_name);
-					++f_level;
-					add_path(d->g_srcpth, do_srcname);
-					goto loop;
+					*pdcnt -= 1;
+					merge_str(d->ml_dirs, "%W", pdcnt);
+					inf_sset(tree, d->ml_dlfo, d->ml_dirs);
+					drawfld(tree, d->ml_dlfo);
+				}
+				skip = TRUE;
+				if (max_level > f_level)
+					f_level = max_level;
+				max_level = 1;
+				level--;
+				if (level < 0)
+				{
+					cont = FALSE;
+				} else
+				{
+					sub_path(psrc_path);
+					if (op == OP_COPY)
+						sub_path(pdst_path);
+					dos_sdta(ADDR(&d->g_dtastk[level]));
 				}
 			} else
 			{
-				if (!dirop_file(op, d->g_srcpth, d->g_dstpth,
-					d->g_dtastk[f_level].dirfile.d_name,
-					d->g_dtastk[f_level].dirfile.d_att,
-					d->g_dtastk[f_level].dirfile.d_time,
-					d->g_dtastk[f_level].dirfile.d_date))
-					goto done;
+				more = dos_error();
 			}
-		l25:
-			more = dos_snext();
 		}
-		if (op == OP_DELETE || op == OP_MOVE)
+		if (!skip && more)
 		{
-			srcname = r_slash(d->g_srcpth);
-			if (srcname[-1] != ':')
+			if (d->g_dtastk[level].dirfile.d_att & FA_DIREC)
+			{							/* step down 1 level    */
+				if (d->g_dtastk[level].dirfile.d_name[0] != '.' && level < MAX_LEVEL)
+				{
+					/* change path name */
+					add_path(psrc_path, d->g_dtastk[level].dirfile.d_name);
+					if (op == OP_COPY)
+					{
+						add_fname(pdst_path, d->g_dtastk[level].dirfile.d_name);
+						dos_mkdir(ADDR(pdst_path));
+						more = dos_error();
+						strcat(pdst_path, "\\*.*");
+					}
+					level++;
+					max_level++;
+					dos_sdta(ADDR(&d->g_dtastk[level]));
+					if (more)
+						dos_sfirst(ADDR(psrc_path), FA_DIREC|FA_HIDDEN|FA_SYSTEM);
+				}
+			} else
 			{
-				*srcname = '\0';
-				dos_rmdir(d->g_srcpth);
-				*srcname = '\\';
-				if (!dos_error())
-					goto done;
+				if (op != OP_COUNT)
+					add_fname(psrc_path, d->g_dtastk[level].dirfile.d_name);
+				switch (op)
+				{
+				case OP_COUNT:
+					d->g_nfiles++;
+					d->g_size += d->g_dtastk[level].dirfile.d_size;
+					break;
+				case OP_DELETE:
+					more = d_dofdel(psrc_path);
+					break;
+				case OP_COPY:
+					add_fname(pdst_path, d->g_dtastk[level].dirfile.d_name);
+					more = d_dofcopy(psrc_path, pdst_path,
+									 d->g_dtastk[level].dirfile.d_time,
+									 d->g_dtastk[level].dirfile.d_date,
+									 d->g_dtastk[level].dirfile.d_att);
+					del_fname(pdst_path);
+					/* break; */
+				}
+				if (op != OP_COUNT)
+					del_fname(psrc_path);
+				if (tree)
+				{
+					*pfcnt -= 1;
+					merge_str(d->ml_files, "%W", pfcnt);
+					inf_sset(tree, d->ml_dlfi, d->ml_files);
+					drawfld(tree, d->ml_dlfi);
+				}
 			}
 		}
+		if (cont)
+			dos_snext();
 	}
-l29:
-	switch (op)
-	{
-	case OP_COPY:
-	case OP_MOVE:
-		if (!d_dofdel(d->g_dstpth))
-			goto done;
-		break;
-	case OP_DELETE:
-		if (!d_dofdel(d->g_srcpth))
-			goto done;
-		break;
-	}
-	if (level != 0)
-	{
-		if (op == OP_COPY || op == OP_MOVE)
-			sub_path(d->g_dstpth);
-		sub_path(d->g_srcpth);
-		--level;
-		--f_level;
-		dos_sdta(&d->g_dtastk[f_level]);
-		goto l25;
-	} else
-	{
-		ret = TRUE;
-	}
-	
-done:
-	return ret;
+
+	return more;
 }
 
 
 /*
- *	Directory routine to DO File COPYing.
+ *	return pointer to next folder in path.
+ *	start at the current position of the ptr.
+ *	assume path will eventually end with \*.*
  */
-/* 104de: 00fd7316 */
-/* 106de: 00e17b2a */
-/* aka d_dofcopy */
-LINEF_STATIC BOOLEAN dirop_file(P(int) op, P(char *)psrc_path, P(char *)pdst_path, P(const char *)fname, P(int) attr, P(uint16_t) time, P(uint16_t) date)
-PP(int op;)
-PP(register char *psrc_path;)
-PP(register char *pdst_path;)
-PP(const char *fname;)
-PP(int attr;)
-PP(uint16_t time;)
-PP(uint16_t date;)
-{
-	register int copyok = 1;
-	register int dstfh;
-	register int srcfh;
-	register long amntrd;
-	long amntwr;
-	register BOOLEAN ret;
-	register THEDSK *d;
-	char name[LEN_ZFNAME + 2];
-	char newname[LEN_ZFNAME + 2];
-	char *ptr;
-	
-	d = thedesk;
-	if (op == OP_COUNT)
-	{
-		d->g_nfiles++;
-		d->g_size += d->g_dtastk[f_level].dirfile.d_size;
-		return TRUE;
-	}
-	add_fname(psrc_path, fname);
-	if (op != OP_DELETE)
-	{
-		add_fname(pdst_path, fname);
-		strcpy(name, fname);
-	}
-	ret = FALSE;
-	
-	switch (op)
-	{
-	case OP_DELETE:
-		if (!d_dofdel(psrc_path))
-			break;
-		dos_delete(psrc_path);
-		if (DOS_AX == E_ACCDN)
-		{
-			ret = TRUE;
-			form_error(~E_ACCDN - 30);
-		} else
-		{
-			if (dos_error())
-				ret = TRUE;
-		}
-		break;
-	
-	case OP_MOVE:
-		if (*psrc_path == *pdst_path)
-		{
-			if (!d_dofdel(pdst_path))
-				break;
-			dos_rename(psrc_path, pdst_path);
-			if (!DOS_ERR)
-			{
-				ret = TRUE;
-				goto done;
-			}
-			if (DOS_AX == E_ACCDN)
-				goto copy;
-			dos_error();
-			goto done;
-		}
-		/* fall through */
-	
-	case OP_COPY:
-		if (!d_dofdel(pdst_path))
-			break;
-	copy:
-		srcfh = dos_open(psrc_path, FO_RDONLY);
-		if (!dos_error())
-			break;
-		amntrd = Fread(srcfh, d->g_xlen, d->g_xbuf);
-		if (dos_error())
-		{
-			for (;;)
-			{
-				dstfh = dos_open(pdst_path, FO_RDONLY);
-				if (DOS_ERR)
-				{
-					if (DOS_AX == E_FILENOTFND)
-						break;
-					dos_error();
-					goto closeit;
-				} else
-				{
-					dos_close(dstfh);
-				}
-				if (1)
-				{
-					do
-					{
-#if TOSVERSION >= 0x104
-						if (d->g_covwrpref)
-							goto copyname;
-#endif
-						do_namecon();
-						copyok = 0;
-						if (copyok)
-							goto closeit;
-						if (copyok == 2)
-						{
-							ret = TRUE;
-							goto closeit;
-						}
-					} while (newname[0] == '\0');
-				} else
-				{
-				/* copyname: */
-					strcpy(newname, name);
-				}
-				ptr = r_slash(pdst_path);
-				strcpy(ptr + 1, newname);
-				if (streq(pdst_path, psrc_path))
-				{
-					ret = TRUE;
-					goto closeit;
-				}
-				if (streq(newname, name))
-					break;
-				strcpy(name, newname);
-			}
-			if (!d_dofdel(pdst_path))
-				goto closeit;
-			dstfh = dos_create(pdst_path, attr & ~FA_RDONLY);
-			if (!dos_error())
-				goto closeit;
-			d->g_nfiles++;
-			for (;;)
-			{
-				amntwr = Fwrite(dstfh, amntrd, d->g_xbuf);
-				if (!dos_error())
-					break;
-				if (amntrd != amntwr)
-				{
-#if 0 /* ZZZ */
-					fun_alert(1, STDISKFULL, NULL);
-#endif
-					dos_close(dstfh);
-					dos_delete(pdst_path);
-					dos_error();
-					goto closeit;
-				}
-				if (amntrd < d->g_xlen)
-				{
-					dos_set(dstfh, time, date);
-					ret = TRUE;
-					break;
-				} else
-				{
-					amntrd = Fread(srcfh, d->g_xlen, d->g_xbuf);
-					if (amntrd == 0)
-						break;
-					if (!dos_error())
-						break;
-				}
-			}
-			dos_close(dstfh);
-		}
-	closeit:
-		dos_close(srcfh);
-		break;
-	}
-	
-	if (op == OP_MOVE && ret == TRUE && copyok == 1 &&
-		!streq(psrc_path, pdst_path))
-	{
-		dos_delete(psrc_path);
-		if (DOS_ERR)
-		{
-			ret = FALSE;
-			if (DOS_AX == E_ACCDN)
-			{
-				ret = TRUE;
-				form_error(~E_ACCDN - 30);
-			} else
-			{
-				dos_error();
-			}
-		}
-	}
-	
-done:
-	del_fname(psrc_path);
-	if (op != OP_DELETE)
-		del_fname(pdst_path);
-	
-	return ret;
-}
-
-
-LINEF_STATIC BOOLEAN notsame_name(P(char *)srcpath, P(char *)dstpath)
-PP(register char *srcpath;)
-PP(register char *dstpath;)
-{
-	if (!streq(srcpath, dstpath))
-	{
-		while (*srcpath != '\0')
-		{
-			if (*srcpath != *dstpath)
-			{
-				if (*srcpath == '*')
-					break;
-				return TRUE;
-			}
-			if (*dstpath == '\0')
-				return TRUE;
-			srcpath++;
-			dstpath++;
-		}
-	}
-	return FALSE;
-}
-
-
 LINEF_STATIC char *ret_path(P(char *) pcurr, P(char *) path)
 PP(register char *pcurr;)
 PP(register char *path;)
@@ -918,47 +557,281 @@ PP(register char *path;)
  */
 /* 104de: 00fd7774 */
 /* 106de: 00e18070 */
-BOOLEAN par_chk(P(const char *)psrc_path, P(FNODE *)pf, P(char *)pdst_path)
+BOOLEAN par_chk(P(const char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path)
 PP(const char *psrc_path;)
-PP(register FNODE *pf;)
+PP(FNODE *pflist;)
 PP(char *pdst_path;)
 {
-	register THEDSK *d;
+	BOOLEAN same;
+	BOOLEAN notsame;
+	FNODE *last;
+	int len;
+	register char *tsrc;
+	register char *tdst;
+	register FNODE *pf;
+	THEDSK *d;
 	
 	d = thedesk;
 	if (psrc_path[0] != pdst_path[0])	/* check drives */
 		return TRUE;
-	while (pf != NULL)
+	notsame = FALSE;
+	for (pf = pflist; pf != NULL; pf = pf->f_next)
 	{
 		if (pf->f_obid != NIL &&
 			(d->g_screen[pf->f_obid].ob_state & SELECTED) &&
 			 pf->f_attr == FA_DIREC)
 		{
+			notsame = TRUE;
+			last = pf;
+		}
+	}
+	if (notsame)
+	{
+		tsrc = d->g_srcpth;
+		tdst = d->g_dstpth;
+		same = FALSE;
+		for (;;)
+		{
 			strcpy(d->g_srcpth, psrc_path);
-			add_path(d->g_srcpth, pf->f_name);
+			len = (int)strlen(d->g_srcpth);
+			d->g_srcpth[len - 3] = '\0';
+			strcat(d->g_srcpth, last->f_name);
+			strcat(d->g_srcpth, "\\*.*");
 			strcpy(d->g_dstpth, pdst_path);
-			ret_path(0, 0); /* ZZZ */
-			if (!notsame_name(d->g_srcpth, d->g_dstpth))
+			tsrc = ret_path(tsrc, d->g_srcpth);
+			tdst = ret_path(tdst, d->g_dstpth);
+			if (!streq(tsrc, "*.*") && !streq(tdst, "*.*"))
 			{
-				fun_alert(1, STILLCOPY, NULL);
-				return FALSE;
+				same = streq(tdst, tsrc) ? TRUE : FALSE;
+			} else
+			{
+				break;
 			}
 		}
-		pf = pf->f_next;
+		if (same)
+		{
+			fun_alert(1, STILLCOPY, NULL);
+			return FALSE;
+		}
 	}
 	return TRUE;
 }
 
 
-/* 104de: 00fd6a0a */
-/* 106de: 00e170f0 */
-VOID drawclip(P(OBJECT *)obj, P(int16_t) which)
-PP(OBJECT *obj;)
-PP(int16_t which;)
+/*
+ *	DIRectory routine that does an OPeration on all the selected files and
+ *	folders in the source path.  The selected files and folders are 
+ *	marked in the source file list.
+ */
+/* 104de: 00fd6cce */
+/* 106de: 00e17432 */
+BOOLEAN dir_op(P(int) op, P(const char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt, P(uint32_t *)psize)
+PP(int op;)
+PP(const char *psrc_path;)
+PP(FNODE *pflist;)
+PP(char *pdst_path;)
+PP(uint16_t *pfcnt;)
+PP(uint16_t *pdcnt;)
+PP(uint32_t *psize;)
 {
-	GRECT t;
-	RC_COPY((GRECT *)&obj[which].ob_x, &t);
-	ob_offset((LPTREE)obj, which, &t.g_x, &t.g_y);
-	gsx_sclip(&t);
-	ob_draw((LPTREE)obj, which, 0);
+	LPTREE tree;
+	register FNODE *pf;
+	long lavail;
+	FNODE *f_next;
+	BOOLEAN ret;
+	BOOLEAN more;
+	register int obj;
+	register THEDSK *d;
+	char *pglsrc;
+	char *pdldst;
+	
+	UNUSED(unused);
+	UNUSED(pglsrc);
+	UNUSED(pgldst);
+	UNUSED(obj);
+	d = thedesk;
+	tree = 0;
+	d->ml_havebox = FALSE;
+	f_maxlevel = 0;
+	switch (op)
+	{
+	case OP_COUNT:
+		d->g_nfiles = 0;
+		d->g_ndirs = 0;
+		d->g_size = 0;
+		break;
+	case OP_DELETE:
+		if ((d->ml_dlpr = d->g_cdelepref))
+		{
+			tree = d->g_atree[DELBOX];
+			d->ml_dlfi = DELFILES;
+			d->ml_dlfo = DELDIR;
+			d->ml_dlok = DELOK;
+			d->ml_dlcn = DELCNCL;
+		}
+		break;
+	case OP_COPY:
+		lavail = dos_avail();
+		d->g_xlen = (lavail > 0x0000fff0L) ? 0xfff0 : LLOWD(lavail);
+		d->g_xlen -= 0x0200;
+		d->g_xbuf = dos_alloc(LW(d->g_xlen));
+
+		if ((d->ml_dlpr = d->g_ccopypref))
+		{
+			tree = d->g_atree[CPBOX];
+			d->ml_dlfi = NUMFILE;
+			d->ml_dlfo = NUMDIR;
+			d->ml_dlok = OKCP;
+			d->ml_dlcn = CCANCEL;
+		}
+		break;
+	}
+
+	if (tree)
+	{
+		merge_str(d->ml_files, "%W", pfcnt);
+		inf_sset(tree, d->ml_dlfi, d->ml_files);
+		merge_str(d->ml_dirs, "%W", pdcnt);
+		inf_sset(tree, d->ml_dlfo, d->ml_dirs);
+		d->ml_havebox = TRUE;
+		show_hide(tree);
+		form_do(tree, ROOT);
+		ret = inf_what(tree, d->ml_dlok, d->ml_dlcn);
+		if (ret)
+			desk_wait(TRUE);
+	} else
+	{
+		ret = TRUE;
+	}
+
+	if (ret)
+	{
+		for (pf = pflist, more= TRUE; pf && more; pf = f_next)
+		{
+			f_next = pf->f_next;
+			if (pf->f_obid != NIL && (d->g_screen[pf->f_obid].ob_state & SELECTED))
+			{
+				strcpy(d->g_srcpth, psrc_path);
+				if (op == OP_COPY)
+				{
+					strcpy(d->g_dstpth, pdst_path);
+				}
+				if (pf->f_attr == FA_DIREC)
+				{
+					add_path(d->g_srcpth, &pf->f_name[0]);
+					switch (op)
+					{
+					case OP_COPY:
+						add_fname(d->g_dstpth, pf->f_name);
+						dos_sdta(gl_dta);
+						if (dos_sfirst(d->g_dstpth, FA_DIREC|FA_HIDDEN|FA_SYSTEM))
+						{
+							DOS_ERR = TRUE;
+							DOS_AX = E_NOACCESS;
+						} else
+						{
+							dos_mkdir(ADDR(d->g_dstpth));
+						}
+						while (DOS_ERR && more)
+						{
+							/* see if dest folder already exists */
+							if (DOS_AX == E_NOACCESS)
+							{
+								/* get the folder name from the pathnames */
+								fmt_str(pf->f_name, d->ml_fsrc);
+								d->ml_fdst[0] = 0;
+								/* put in folder name in dialog */
+								inf_sset(d->g_atree[SAMENAME], FNAME, d->ml_fsrc);
+								inf_sset(d->g_atree[SAMENAME], EDFNAME, d->ml_fdst);
+								/* show dialog */
+								do_namecon();
+								/* if okay then make dir or try again */
+								/* until we succeed or cancel is hit */
+								more = inf_what(d->g_atree[SAMENAME], COPY, QUIT);
+
+								if (more)
+								{
+									desk_wait(TRUE);
+									fs_ssget(d->g_atree[SAMENAME], EDFNAME, d->ml_fdst);
+									unfmt_str(d->ml_fdst, d->ml_fstr);
+									del_fname(d->g_dstpth);
+									if (d->ml_fstr[0] != 0)
+									{
+										add_fname(d->g_dstpth, d->ml_fstr);
+										if (dos_sfirst(d->g_dstpth, FA_DIREC|FA_HIDDEN|FA_SYSTEM))
+										{
+											DOS_ERR = TRUE;
+											DOS_AX = E_NOACCESS;
+										} else
+										{
+											dos_mkdir(ADDR(d->g_dstpth));
+										}
+									} else
+									{
+										more = FALSE;
+									}
+								}
+							} else
+							{
+								more = FALSE;
+							}
+						}
+						strcat(d->g_dstpth, "\\*.*");
+					}
+					if (more)
+					{
+						more = d_doop(op, tree, d->g_srcpth, d->g_dstpth, pfcnt, pdcnt);
+						if (f_level > f_maxlevel)
+							f_maxlevel = f_level;
+					}
+				} else
+				{
+					if (op != OP_COUNT)
+						add_fname(d->g_srcpth, &pf->f_name[0]);
+					switch (op)
+					{
+					case OP_COUNT:
+						d->g_nfiles++;
+						d->g_size += pf->f_size;
+						break;
+					case OP_DELETE:
+						more = d_dofdel(d->g_srcpth);
+						break;
+					case OP_COPY:
+						add_fname(d->g_dstpth, &pf->f_name[0]);
+						more = d_dofcopy(d->g_srcpth, d->g_dstpth, pf->f_time, pf->f_date, pf->f_attr);
+						del_fname(d->g_dstpth);
+						/* break; */
+					}
+					if (op != OP_COUNT)
+						del_fname(psrc_path);
+					if (tree)
+					{
+						*pfcnt -= 1;
+						merge_str(d->ml_files, "%W", pfcnt);
+						inf_sset(tree, d->ml_dlfi, d->ml_files);
+						drawfld(tree, d->ml_dlfi);
+					}
+				}
+			}
+		}
+	}
+	
+	switch (op)
+	{
+	case OP_COUNT:
+		*pfcnt = d->g_nfiles;
+		*pdcnt = d->g_ndirs;
+		*psize = d->g_size;
+		break;
+	case OP_DELETE:
+		break;
+	case OP_COPY:
+		dos_free(d->g_xbuf);
+		/* break; */
+	}
+	
+	if (d->ml_havebox)
+		do_finish(d->g_atree[SAMENAME]);
+	return TRUE;
 }

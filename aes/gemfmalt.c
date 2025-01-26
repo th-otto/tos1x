@@ -52,8 +52,10 @@
 #define NUM_ALOBJS   10
 #define NUM_ALSTRS   8
 #define MAX_MSGLEN   30					/* changed  */
-#define INTER_WSPACE 2
-#define INTER_HSPACE 0
+STATIC int INTER_WSPACE;
+STATIC int INTER_HSPACE;
+STATIC int ADD_WIDTH;
+STATIC int ADD_HEIGHT;
 
 static int16_t const gl_nils[3] = { -1, -1, -1 };
 
@@ -93,6 +95,7 @@ PP(int16_t *pmaxlen;)
 		{
 			tmp = LBGET(palstr + curr_id);
 
+#if AESVERSION >= 0x140
 			if (len >= 31)
 			{
 				LBSET(pstr + len, 0);
@@ -108,6 +111,7 @@ PP(int16_t *pmaxlen;)
 						break;
 				}
 			}
+#endif
 
 			curr_id++;
 			nxttmp = LBGET(palstr + curr_id);
@@ -116,10 +120,14 @@ PP(int16_t *pmaxlen;)
 			{
 				if (tmp == nxttmp)
 				{
+#if AESVERSION >= 0x140
 					if (len < 31)
 						curr_id++;
 					else
 						tmp = 0;
+#else
+					curr_id++;
+#endif
 				} else
 				{
 					nxttmp = tmp;
@@ -159,8 +167,8 @@ PP(int16_t *pmaxlen;)
 /* 104de: 00fe010c */
 /* 104de: 00e21cdc */
 VOID fm_parse(P(LPTREE) tree, P(const char *) palstr, P(int16_t *) picnum, P(int16_t *) pnummsg, P(int16_t *) plenmsg, P(int16_t *) pnumbut, P(int16_t *) plenbut)
-PP(LPTREE tree;)
-PP(register intptr_t palstr;) /* should be const char */
+PP(register LPTREE tree;)
+PP(intptr_t palstr;) /* should be const char */
 PP(int16_t *picnum;)
 PP(int16_t *pnummsg;)
 PP(int16_t *plenmsg;)
@@ -200,45 +208,34 @@ PP(int16_t mlenmsg;)
 PP(int16_t numbut;)
 PP(int16_t mlenbut;)
 {
-	register int16_t i, j;
+	register int16_t i;
 	GRECT al, ic;
 	GRECT bt, ms;
-	int16_t icw, ich;
 
-	icw = 4;
-	ich = 4;
-	/*  define the icw and ich at here please   */
-
-	i = (mlenbut * numbut) + ((numbut - 1) * 2);
-	i = max(i, mlenmsg);				/* find the max char length */
-	/* find the max char height */
-	j = max(nummsg, 1);
-	r_set(&al, 0, 0, i + 2, j);			/* this is the alert box    */
+	r_set(&al, 0, 0, 1 + INTER_WSPACE, 1);			/* this is the alert box    */
 	/* this is the message object   */
-	r_set(&ms, 2, 0x0300, mlenmsg, 1);
+	r_set(&ms, 3, INTER_HSPACE, mlenmsg, 1);
 
 	if (haveicon)
 	{
-		r_set(&ic, 1, 1, icw, ich);
-		al.g_w += icw + 1;
-		al.g_h = max(al.g_h, 1 + ich);
-		ms.g_x += icw;
+		r_set(&ic, INTER_WSPACE, 1, 4, 4);
+		al.g_w += ic.g_w + INTER_WSPACE;
+		al.g_h = ic.g_h + 1;
+		ms.g_x = ic.g_x + ic.g_w + INTER_WSPACE;
 	}
 
-	al.g_h += 3;
+	al.g_w += ms.g_w + ADD_WIDTH;
+	al.g_h = max(al.g_h + INTER_HSPACE, nummsg + INTER_HSPACE);
+	
+	i = (al.g_w - (numbut * mlenbut) - ((numbut - 1) * 2)) / 2;
 
-	/* center the buttons */
-
-	i = (al.g_w - ((numbut - 1) * 2) - (mlenbut * numbut)) / 2;
-
-	/* set the button   */
-
-	r_set(&bt, i, al.g_h - 2, mlenbut, 1);
+	/* set the button */
+	r_set(&bt, i, al.g_h | ADD_HEIGHT, mlenbut, 1);
 
 	/* now make the al.g_h smaller  */
 
-	al.g_h -= 1;
-	al.g_h += ((gl_hchar / 2) << 8 );
+	al.g_h += 1;
+	al.g_h |= ADD_HEIGHT * 2 + INTER_HSPACE;
 
 	ob_setxywh(tree, ROOT, &al);
 
@@ -269,6 +266,7 @@ PP(int16_t mlenbut;)
 		bt.g_x += mlenbut + 2;
 		ob_add(tree, ROOT, BUT_OFF + i);
 	}
+	al.g_w = max(bt.g_x, al.g_w); /* useless */
 	/* set last object flag */
 	LWSET(OB_FLAGS(BUT_OFF + numbut - 1), SELECTABLE | EXIT | LASTOB);
 }
@@ -285,35 +283,42 @@ PP(int16_t defbut;)
 PP(const char *palstr;)
 {
 	register int16_t i;
-	register LPTREE tree;
 	int16_t inm, nummsg, mlenmsg, numbut, mlenbut;
+	LPTREE tree;
 	VOIDPTR plong;
-	VOIDPTR addr;
 	GRECT d, t;
-	int16_t ratalert;						/* CHANGED 5/10 LKW */
 	int16_t tmpmon;
 	
-	UNUSED(ratalert);
-	
-	/* 7/16/92        */
-
 	/* init tree pointer */
-	rs_gaddr(ad_sysglo, R_TREE, ALERT, &addr);
-	tree = (LPTREE) addr;
+	rs_gaddr(ad_sysglo, R_TREE, ALERT, &tree);
 
 	gsx_mfset(ad_armice);
 	if (gl_moff)
 	{
 		tmpmon = TRUE;
 		gsx_mon();
+	} else
+	{
+		tmpmon = FALSE;
 	}
 	
-	LWSET(OB_TYPE(1), G_IMAGE);
-	rs_gaddr(ad_sysglo, R_BIPDATA, NOTEBB, &plong);
-	LLSET(OB_SPEC(1), plong);
-
-
-	LWSET(OB_STATE(ROOT), OUTLINED);
+	ADD_HEIGHT = gl_hchar / 2;
+	ADD_HEIGHT = ADD_HEIGHT << 8;
+	if (gl_width != 320)
+	{
+		INTER_WSPACE = 2;
+		ADD_WIDTH = 2;
+		INTER_HSPACE = 1;
+		LWSET(OB_STATE(ROOT), OUTLINED);
+	} else
+	{
+		INTER_WSPACE = (gl_wchar / 2);
+		INTER_WSPACE = INTER_WSPACE << 8;
+		ADD_WIDTH = 0;
+		INTER_HSPACE = 1 << 8;
+		LWSET(OB_STATE(ROOT), NORMAL);
+	}
+	
 	fm_parse(tree, palstr, &inm, &nummsg, &mlenmsg, &numbut, &mlenbut);
 	fm_build(tree, (inm != 0), nummsg, mlenmsg, numbut, mlenbut);
 
@@ -332,10 +337,8 @@ PP(const char *palstr;)
 	for (i = 0; i < NUM_ALOBJS; i++)
 		rs_obfix(tree, i);
 
-	/* LWSET(OB_WIDTH(1), 32);  */
-	/* LWSET(OB_HEIGHT(1), 32); */
-
-	LLSET(OB_WIDTH(1), 0x00200020L);
+	LWSET(OB_WIDTH(1), 32);
+	LWSET(OB_HEIGHT(1), 32);
 
 	/* center tree on screen */
 	ob_center(tree, &d);
@@ -349,7 +352,7 @@ PP(const char *palstr;)
 	gsx_sclip(&d);
 	ob_draw(tree, ROOT, MAX_DEPTH);
 	/* let user pick button */
-	i = fm_do(tree, 0) & 0x7FFF;
+	i = fm_do(tree, 0) /* & 0x7FFF */;
 
 	/* restore saved screen */
 	gsx_sclip(&d);

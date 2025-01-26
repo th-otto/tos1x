@@ -438,7 +438,7 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF3D8, "dos_space");
 		traptable.put(0xF3DC, "dos_label");
 		traptable.put(0xF3E0, "inf_gindex");
-		traptable.put(0xF3E4, "app_restype");
+		traptable.put(0xF3E4, "app_reschange");
 		traptable.put(0xF3E8, "toupper");
 		traptable.put(0xF3EC, "app_free");
 		traptable.put(0xF3F0, "objc_add");
@@ -761,7 +761,7 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF8E4, "fix_nptrs");
 		traptable.put(0xF8E8, "fix_objects");
 		traptable.put(0xF8EC, "rs_readit");
-		traptable.put(0xF8F0, "sh_strupr");
+		traptable.put(0xF8F0, "sh_fixtail");
 		traptable.put(0xF8F4, "dos_exec");
 		traptable.put(0xF8F8, "retake");
 		traptable.put(0xF8FC, "gsx_graphic");
@@ -775,11 +775,11 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF91C, "desk_alloc");
 		traptable.put(0xF920, "deskmain");
 		traptable.put(0xF924, "desk_free");
-		traptable.put(0xF928, "sh_xxx");
-		traptable.put(0xF92C, "f92c_show");
-		traptable.put(0xF930, "f930_show");
-		traptable.put(0xF934, "f934_show");
-		traptable.put(0xF938, "f938_frm");
+		traptable.put(0xF928, "sh_rom");
+		traptable.put(0xF92C, "sh_type");
+		traptable.put(0xF930, "sh_print");
+		traptable.put(0xF934, "sh_format");
+		traptable.put(0xF938, "sh_copy");
 		traptable.put(0xF93C, "w_getxptr");
 		traptable.put(0xF940, "w_obadd");
 		traptable.put(0xF944, "w_adjust");
@@ -806,38 +806,17 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF998, "mkpiece");
 		traptable.put(0xF99C, "brkrct");
 		traptable.put(0xF9A0, "trap");
-		traptable.put(0xF9A4, "f9a4_show");
-		traptable.put(0xF9A8, "f9a8_show");
+		traptable.put(0xF9A4, "showfile");
+		traptable.put(0xF9A8, "sf_disp");
 		traptable.put(0xF9AC, "rawcon");
-		traptable.put(0xF9B0, "f9b0_show");
-		traptable.put(0xF9B4, "f9b4_show");
-		traptable.put(0xF9B8, "f9b8_show");
-		traptable.put(0xF9BC, "f9bc_show");
-		traptable.put(0xF9C0, "f9c0_show");
-		traptable.put(0xF9C4, "f9c4_show");
+		traptable.put(0xF9B0, "sf_putc");
+		traptable.put(0xF9B4, "sf_getc");
+		traptable.put(0xF9B8, "sf_page");
+		traptable.put(0xF9BC, "sf_more");
+		traptable.put(0xF9C0, "sf_newline");
+		traptable.put(0xF9C4, "cconws");
 		traptable.put(0xF9C8, "cart_alloc");
 		traptable.put(0xF9CC, "cart_find");
 		return traptable;
-	}
-	
-	/**
-	 * Checks whether an m68k instruction is a GEMDOS call
-	 * @param inst instruction to check
-	 * @return true precisely when the instruction is a system call
-	 */
-	private int checkTrapInstruction(Instruction inst) {
-		int retVal = -1;
-		for (PcodeOp op : inst.getPcode()) {
-			if (op.getOpcode() == PcodeOp.CALLOTHER) {
-				int index = (int) op.getInput(0).getOffset();
-				if (language.getUserDefinedOpName(index).equals("__m68k_trap")) {
-					int klass = (int) op.getInput(1).getOffset();
-					if (klass == 1 || klass == 13 || klass == 14) {
-						retVal = klass;
-					}
-				}
-			}
-		}
-		return retVal;
 	}
 }

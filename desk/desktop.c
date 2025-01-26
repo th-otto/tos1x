@@ -18,32 +18,21 @@
 #include "taddr.h"
 
 THEDSK *thedesk;
-int16_t gl_kstate;
 int16_t gl_apid;
 int16_t pglobal[15];
 
-/* ZZZ */
-#define SAVETOP 0
-#define PRINTTOP 0
-#define STCART 0
-#define L2ITEM 0
-#define L3ITEM 0
-#define L4ITEM 0
-#define L5ITEM 0
-#define L6ITEM 0
-#define CLSWITEM 0
-
-static int8_t const ILL_HDSK[] = { FORMITEM, IAPPITEM, 0 };
+static int8_t const ILL_HDSK[] = { FORMITEM, OUTPITEM, IAPPITEM, 0 };
 static int8_t const ILL_ITEM[] = { L2ITEM, L3ITEM, L4ITEM, L5ITEM, 0 };
 static int8_t const ILL_FILE[] = { FORMITEM, IDSKITEM, 0 };
 static int8_t const ILL_DOCU[] = { FORMITEM, IDSKITEM, IAPPITEM, 0 };
-static int8_t const ILL_FDSK[] = { IAPPITEM, 0 };
-static int8_t const ILL_TRASH[] = { OPENITEM, FORMITEM, IDSKITEM, IAPPITEM, IDSKITEM, 0 };
+static int8_t const ILL_FOLD[] = { OUTPITEM, FORMITEM, IDSKITEM, IAPPITEM, 0 };
+static int8_t const ILL_FDSK[] = { OUTPITEM, IAPPITEM, 0 };
+static int8_t const ILL_TRASH[] = { OPENITEM, OUTPITEM, FORMITEM, IDSKITEM, IAPPITEM, IDSKITEM, 0 };
 static int8_t const ILL_NOSEL[] = { OPENITEM, SHOWITEM, FORMITEM, IDSKITEM, IAPPITEM, 0 };
 static int8_t const ILL_NOTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, 0 };
 static int8_t const ILL_DESKTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, ICONITEM, TEXTITEM, NAMEITEM, DATEITEM, SIZEITEM, TYPEITEM, 0 };
 static int8_t const ILL_YSEL[] = { OPENITEM, IDSKITEM, FORMITEM, SHOWITEM, 0 };
-static int8_t const ILL_CART[] = { SHOWITEM, NEWFITEM, FORMITEM, IAPPITEM, 0 };
+static int8_t const ILL_CART[] = { SHOWITEM, NEWFITEM, FORMITEM, OUTPITEM, IAPPITEM, 0 };
 static int8_t const ILL_NOCART[] = { NEWFITEM, 0 };
 static int16_t const top_items[] = { ABOUITEM, OPENITEM, ICONITEM, IDSKITEM, 0 };
 
@@ -85,8 +74,6 @@ PP(register BOOLEAN *pisapp;)
 	char *pname;
 	DESKWIN *pw;
 	register FNODE *pf;
-	char namebuf[LEN_ZFPATH];
-	char *ptr;
 	
 	pa = NULL;
 	pf = NULL;
@@ -95,34 +82,18 @@ PP(register BOOLEAN *pisapp;)
 	{
 		pname = win_iname(item);
 		pa = app_afind(TRUE, -1, item, pname, pisapp);
-	} else if (item != NIL)
+	} else
 	{
 		pw = win_find(wh);
 		/*
 		 *	Find the file node that matches a particular object id.
 		 */
-		pf = pw->w_path->p_flist;
-		while (pf)
-		{
-			if (pf->f_obid == item)
-				break;
-			pf = pf->f_next;
-		}
+		pf = fpd_ofind(pw->w_path->p_flist, item);
 
 		if (pf)
 		{
-			strcpy(namebuf, pw->w_path->p_spec);
-			ptr = sh_name(namebuf);
-			*ptr = '\0';
-			if (ptr[-1] == '\\')
-				strcat(namebuf, pf->f_name);
-			ptr = namebuf;
-			while (*ptr != '\0')
-			{
-				*ptr = toupper(*ptr);
-				ptr++;
-			}
-			pa = app_afind(FALSE, pf->f_attr & FA_DIREC ? 1 : 0, -1, namebuf, pisapp);
+			pname = pf->f_name;
+			pa = app_afind(FALSE, pf->f_attr & FA_DIREC ? AT_ISFOLD : AT_ISFILE, -1, pname, pisapp);
 		}
 	}
 	*ppf = pf;
@@ -162,8 +133,6 @@ PP(register LPTREE tree;)
 	FNODE *pjunk;
 	const int8_t *pvalue;
 	register APP *appl;
-	BOOLEAN iscart;
-	DESKWIN *pw;
 	register int unused;
 	
 	UNUSED(unused);
@@ -178,11 +147,15 @@ PP(register LPTREE tree;)
 		appl = i_find(thedesk->g_cwin, item, &pjunk, &isapp);
 		switch (appl->a_type)
 		{
+#ifdef __GNUC__
+		default:
+			__builtin_unreachable(); /* silence compiler */
+#endif
 		case AT_ISFILE:
 			pvalue = isapp ? ILL_FILE : ILL_DOCU;
 			break;
 		case AT_ISFOLD:
-			pvalue = ILL_DOCU;
+			pvalue = ILL_FOLD;
 			break;
 		case AT_ISCART:
 			pvalue = ILL_CART;
@@ -192,11 +165,7 @@ PP(register LPTREE tree;)
 			break;
 		case AT_ISTRSH:
 			pvalue = ILL_TRASH;
-			break;
-#ifdef __GNUC__
-		default:
-			__builtin_unreachable(); /* silence compiler */
-#endif
+			/* break; */
 		}
 		men_list(tree, pvalue, FALSE);	/* disable certain items */
 	}
@@ -204,15 +173,21 @@ PP(register LPTREE tree;)
 	pvalue = win_ontop() ? ILL_DESKTOP : ILL_NOTOP;
 	men_list(tree, pvalue, pvalue != ILL_DESKTOP ? FALSE : TRUE);
 
-	pw = win_ontop();
-	if (pw != NULL)
+#if TOSVERSION >= 0x104
 	{
-		if (streq(pw->w_name, thedesk->p_cartname))
-			iscart = FALSE;
-		else
-			iscart = TRUE;
-		men_list(tree, ILL_NOCART, iscart);
+		BOOLEAN iscart;
+		DESKWIN *pw;
+		pw = win_ontop();
+		if (pw != NULL)
+		{
+			if (streq(pw->w_name, thedesk->p_cartname))
+				iscart = FALSE;
+			else
+				iscart = TRUE;
+			men_list(tree, ILL_NOCART, iscart);
+		}
 	}
+#endif
 	
 	if (nsel != 1)
 	{
@@ -233,7 +208,7 @@ PP(register int16_t item;)
 	{
 		tree = (LPTREE)thedesk->g_atree[ADDINFO];
 		/* draw the form */
-		fmdodraw((OBJECT *)tree, ROOT);
+		inf_show((OBJECT *)tree, ROOT);
 		LWSET(OB_STATE(DEOK), NORMAL);
 	}
 	return done;
@@ -293,7 +268,6 @@ PP(int16_t item;)
 			close_window(pw, FALSE);
 		}
 		break;
-#if 0 /* ZZZ */
 	case CLSWITEM:
 		if (pw)
 		{
@@ -301,11 +275,13 @@ PP(int16_t item;)
 			close_window(pw, TRUE);
 		}
 		break;
-#endif
 	case FORMITEM:
 		if (curr)
 			done = do_format(curr);
 		break;
+	case OUTPITEM:
+		/* break */
+		;
 	}
 	return done;
 }
@@ -346,7 +322,7 @@ PP(register int16_t item;)
 		break;
 	case TYPEITEM:
 		newsort = S_TYPE;
-		break;
+		/* break; */
 	}
 	if (newview != d->g_iview || newsort != d->g_isort)
 	{
@@ -375,24 +351,27 @@ PP(int16_t item;)
 {
 	register APP *pa;
 	register BOOLEAN done;
-	register int16_t curr;
 	register BOOLEAN rebld;
+	register int16_t curr;
+	register int unused1;
+	register int unused2;
 	int16_t x, y, w, h;
 	FNODE *pf;
 	BOOLEAN isapp;
 	register THEDSK *d;
-	int16_t ret;
-	long unused;
 	
+#if !BINEXACT
+	/* BUG: missing */
 	pa = NULL;
 	pf = NULL;
 	isapp = FALSE;
+#endif
+	UNUSED(unused1);
+	UNUSED(unused2);
 	d = thedesk;
 	done = FALSE;
+	rebld = FALSE;
 
-	UNUSED(ret);
-	UNUSED(rebld);
-	UNUSED(unused);
 	get_xywh(d->g_screen, d->g_croot, &x, &y, &w, &h);
 	curr = win_isel(d->g_screen, d->g_croot, 0);
 	if (curr)
@@ -401,7 +380,9 @@ PP(int16_t item;)
 	switch (item)
 	{
 	case IDSKITEM:
-		if (pa && ins_disk(pa))
+		if (pa)
+			rebld = ins_disk(pa);
+		if (rebld)
 		{
 			app_blddesk();
 			wind_get(0, WF_WORKXYWH, &x, &y, &w, &h);
@@ -409,16 +390,27 @@ PP(int16_t item;)
 		}
 		break;
 	case IAPPITEM:
-		if (pa && isapp && ins_app(pf->f_name, pa))
+		if (pa && isapp)
+			rebld = ins_app(pf->f_name, pa);
+		if (rebld)
 		{
+#if TOSVERSION >= 0x104
 			hd_keybd(0x011b);
+#else
+			desk_wait(TRUE);
+			win_bdall();
+			win_shwall();
+			desk_wait(FALSE);
+#endif
 		}
 		break;
 	case PREFITEM:
 		done = desk_pref();
 		break;
 	case SAVEITEM:
+#if TOSVERSION >= 0x104
 		if (fun_alert(1, SAVETOP, NULL) == 1)
+#endif
 		{
 			desk_wait(TRUE);
 			cnx_put();
@@ -427,14 +419,16 @@ PP(int16_t item;)
 		}
 		break;
 	case PRINTITEM:
+#if TOSVERSION >= 0x104
 		if (fun_alert(1, PRINTTOP, NULL) == 1)
+#endif
 		{
 			desk_wait(TRUE);
 			av_hardcopy();
 			desk_wait(FALSE);
 		}
-		break;
 #if TOSVERSION >= 0x104
+		break;
 	case BITBLT:
 		Blitmode(d->s_bitblt ? 0 : 1);
 		d->s_bitblt = !d->s_bitblt;
@@ -490,7 +484,7 @@ PP(int16_t keystate;)
 		graf_mkstate(&junk, &junk, &bstate, &junk);
 		if (bstate & 1)
 		{
-			dest_wh = act_bdown(d->g_cwin, d->g_pscreen, d->g_croot, &mx, &my, keystate, pc, &dobj);
+			dest_wh = act_bdown(d->g_cwin, d->g_pscreen, d->g_croot, mx, my, keystate, pc, &dobj);
 
 			if (dest_wh != NIL)
 			{
@@ -502,7 +496,7 @@ PP(int16_t keystate;)
 				{
 					root = DROOT;
 				}
-				done = desk1_drag(wh, dest_wh, root, dobj);
+				done = fun_ddrag(wh, dest_wh, root, dobj);
 			}
 		}
 	} else
@@ -520,15 +514,16 @@ PP(int16_t keystate;)
 BOOLEAN hd_keybd(P(uint16_t) key)
 PP(uint16_t key;)
 {
+	BOOLEAN changed;
 	DESKWIN *pw;
 	
+	changed = FALSE;
 	if (key == 0x011b)
 	{
 		pw = win_ontop();
 		if (pw)
 		{
 #if TOSVERSION >= 0x104
-			int changed;
 
 			if (!streq(thedesk->p_cartname, pw->w_name))
 			{
@@ -548,7 +543,7 @@ PP(uint16_t key;)
 			}
 		}
 	}
-	return FALSE;
+	return changed;
 }
 
 
@@ -559,15 +554,14 @@ PP(register int16_t title;)
 PP(register int16_t item;)
 {
 	register BOOLEAN done;
-	register int i;
 	register THEDSK *d;
 	
 	d = thedesk;
 	done = FALSE;
 	switch (title)
 	{
-#if TOSVERSION >= 0x104
 	case DESKMENU:
+#if TOSVERSION >= 0x104
 		if (item == ABOUITEM)
 		{
 			/*
@@ -579,7 +573,7 @@ PP(register int16_t item;)
 			rb_stop();
 		}
 #else
-		do_deskmenu(item);
+		done = do_deskmenu(item);
 #endif
 		break;
 	case FILEMENU:
@@ -589,19 +583,28 @@ PP(register int16_t item;)
 		done = do_viewmenu(item);
 		/* for every window go sort again and rebuild views */
 		desk_wait(TRUE);
-		for (i = 0; i < NUM_WNODES; i++)
+#if TOSVERSION >= 0x104
 		{
-			if (g_wlist[i].w_id != 0)
+			register int i;
+			for (i = 0; i < NUM_WNODES; i++)
 			{
-				g_wlist[i].w_path->p_flist = pn_sort(-1, g_wlist[i].w_path->p_flist);
+				if (g_wlist[i].w_id != 0)
+				{
+					g_wlist[i].w_path->p_flist = pn_sort(-1, g_wlist[i].w_path->p_flist);
+				}
 			}
 		}
 		win_bdall();
+#else
+		win_srtall();
+		win_bdall();
+		win_shwall();
+#endif
 		desk_wait(FALSE);
 		break;
 	case OPTNMENU:
 		done = do_optnmenu(item);
-		break;
+		/* break; */
 	}
 	menu_tnormal(d->g_atree[ADMENU], title, TRUE);
 	return done;
@@ -615,6 +618,8 @@ BOOLEAN hd_msg(NOTHING)
 	int16_t x, y, w, h;
 	register BOOLEAN done;
 	register DESKWIN *pw;
+	register int unused;
+	register int unused2;
 	register BOOLEAN change;
 	register THEDSK *d;
 	
@@ -632,7 +637,7 @@ BOOLEAN hd_msg(NOTHING)
 	case WM_SIZED:
 	case WM_MOVED:
 		desk_clear(d->g_cwin);
-		break;
+		/* break; */
 	}
 	switch (d->g_rmsg[0])
 	{
@@ -660,6 +665,7 @@ BOOLEAN hd_msg(NOTHING)
 
 	case WM_CLOSED:
 		do_filemenu(CLSFITEM);
+		change = TRUE;
 		break;
 
 	case WM_FULLED:
@@ -698,7 +704,7 @@ BOOLEAN hd_msg(NOTHING)
 			r_set((GRECT *) (&d->g_screen[pw->w_root].ob_x), x, y, w, h);
 		}
 		change = TRUE;
-		break;
+		/* break; */
 	}
 
     /*
@@ -707,10 +713,12 @@ BOOLEAN hd_msg(NOTHING)
      */
 	if (change)
 	{
+#if TOSVERSION >= 0x104
 		wind_get(d->g_rmsg[3], WF_CURRXYWH, &x, &y, &w, &h);
 		pw = win_find(d->g_rmsg[3]);
-#if TOSVERSION >= 0x104
 		r_set(&pw->w_curr, x, y, w, h);
+#else
+		cnx_put();
 #endif
 	}
 	
@@ -737,8 +745,10 @@ VOID cnx_put(NOTHING)
 	d->g_cnxsave.cdele_save = d->g_cdelepref;
 #if TOSVERSION >= 0x104
 	d->g_cnxsave.cbit_save = d->s_bitblt;
-#endif
 	d->g_cnxsave.covwr_save = d->g_covwrpref;
+#else
+	d->g_cnxsave.cdclk_save = d->g_cdclkpref;
+#endif
 #if TOSVERSION >= 0x162
 	d->ccache_save = d->g_ccachepref;
 	d->g_cnxsave.pref_save = gl_restype;
@@ -800,12 +810,17 @@ VOID cnx_get(NOTHING)
 #if TOSVERSION >= 0x104
 	d->s_bitblt = d->g_cnxsave.cbit_save;
 	d->g_covwrpref = d->g_cnxsave.covwr_save;
+#else
+	d->g_cdclkpref = d->g_cnxsave.cdclk_save;
 #endif
 #if TOSVERSION >= 0x162
 	d->g_ccachepref = d->ccache_save;
 #endif
 #if !TP_48 /* ARROWFIX */
-	evnt_dclick(3, 1);
+	d->g_cdclkpref = evnt_dclick(d->g_cdclkpref, 1);
+#endif
+#if TOSVERSION <= 0x102
+	gl_nextrez = d->g_cnxsave.pref_save + 1;
 #endif
 
 	for (nw = 0; nw < NUM_WNODES; nw++)
@@ -820,7 +835,6 @@ VOID cnx_get(NOTHING)
 				fpd_parse(pws->pth_save, &drv, d->g_tmppth, fname, fext);
 				do_xyfix(&pws->gr_save.g_x, &pws->gr_save.g_y);
 				pro_chdir(drv, d->g_tmppth);
-				pro_chroot(drv);
 				if (DOS_ERR == 0)
 				{
 					do_diropen(pw, TRUE, pws->obid_save, drv, d->g_tmppth, fname, fext, &pws->gr_save);
@@ -850,10 +864,6 @@ BOOLEAN deskmain(NOTHING)
 #define blitter_present done /* reuse register */
 	register int16_t flags;
 	int16_t ev_which;
-	int16_t x;
-	int16_t y;
-	int16_t x2;
-	OBJECT *tree;
 	int16_t mx, my;
 	int16_t bstate;
 	int16_t k_state;
@@ -867,13 +877,9 @@ BOOLEAN deskmain(NOTHING)
 	UNUSED(unused2);
 	
 	/* initialize libraries	*/
-	thedesk = (THEDSK *)dos_alloc((long)sizeof(THEDSK));
-	bfill(sizeof(THEDSK), 0, thedesk);
-	g_buffer = dos_alloc(512L);
-	g_wlist = (DESKWIN *)dos_alloc(NUM_WNODES * (long)sizeof(DESKWIN));
 	d = thedesk;
 	
-	ap_init();
+	obj = ap_init();
 
 	/* initialize mouse */
 	wind_update(BEG_UPDATE);
@@ -884,8 +890,11 @@ BOOLEAN deskmain(NOTHING)
 	/* desk and calc full */
 	wind_calc(1, -1, d->g_desk.g_x, d->g_desk.g_y, d->g_desk.g_w, d->g_desk.g_h, &d->g_full.g_x, &d->g_full.g_y, &d->g_full.g_w, &d->g_full.g_h);
 
+	/* init long addrs that will be used alot */
 	d->g_pcmd = d->g_cmd;
 	d->g_ptail = d->g_tail;
+	d->a_fcb1 = d->g_fcb1;
+	d->a_fcb2 = d->g_fcb2;
 	d->p_msgbuf = d->g_rmsg;
 	
 	desk_wait(TRUE);
@@ -894,7 +903,9 @@ BOOLEAN deskmain(NOTHING)
 	rsrc_init();
 
 	/* initialize menus and dialogs */
+#if TOSVERSION >= 0x104
 	rsrc_gaddr(R_STRING, STCART, (VOIDPTR *)&d->p_cartname);
+#endif
 	for (ii = 0; ii < NUM_ADTREES; ii++)
 		ini_tree(&d->g_atree[ii], ii);
 
@@ -923,7 +934,7 @@ BOOLEAN deskmain(NOTHING)
 	
 	if (isdrive() == 0)
 	{
-		ob_change((LPTREE)d->g_atree[ADMENU], L6ITEM, DISABLED, FALSE); /* WTF? */
+		ob_change((LPTREE)d->g_atree[ADMENU], SAVEITEM, DISABLED, FALSE);
 	}
 	
 	d->g_cviewitem = ICONITEM;
@@ -931,6 +942,11 @@ BOOLEAN deskmain(NOTHING)
 
 	d->g_csortitem = NAMEITEM;
 	menu_icheck(d->g_atree[ADMENU], d->g_csortitem, TRUE);
+
+	/* set up initial prefs */
+	d->g_ccopypref = TRUE;
+	d->g_cdelepref = TRUE;
+	d->g_cdclkpref = 3;
 
 	/* initialize desktop and its objects */
 	app_blddesk();
@@ -951,8 +967,8 @@ BOOLEAN deskmain(NOTHING)
 
 	cnx_get();
 	
-	tree = d->g_atree[ADMENU];
 #if TOSVERSION >= 0x104
+	tree = d->g_atree[ADMENU];
 	blitter_present = Blitmode(-1);
 	if (blitter_present & 2)
 	{
@@ -970,9 +986,14 @@ BOOLEAN deskmain(NOTHING)
 	}
 #endif
 	
+#if TOSVERSION >= 0x104
 	ii = 0;
 	while (TRUE)
 	{
+		int16_t x;
+		int16_t y;
+		int16_t x2;
+
 		if ((obj = top_items[ii++]) == 0)
 			break;
 		--obj;
@@ -985,6 +1006,7 @@ BOOLEAN deskmain(NOTHING)
 			LWSET(OB_X(obj), x);
 		}
 	}
+#endif
 	
 	wind_update(END_UPDATE);
 
@@ -1032,17 +1054,8 @@ BOOLEAN deskmain(NOTHING)
 	/* turn off the menu bar */
 	menu_bar(NULL, FALSE);
 
-	/* free memory */
-	for (ii = 0; ii < NUM_PNODES; ii++)
-	{
-		if (d->g_plist[ii].p_flist != NULL)
-			dos_free(d->g_plist[ii].p_flist);
-		d->g_plist[ii].p_flist = NULL;
-	}
-
 	/* exit the gem AES */
-	ap_exit();
-	obj = TRUE;
+	obj = ap_exit();
 
 	/* resolution change? */
 	if (gl_rschange)
@@ -1051,15 +1064,15 @@ BOOLEAN deskmain(NOTHING)
 		if (isdrive() != 0)
 		{
 			pro_chroot(dos_gdrv() + 'A');
-			diskin = DOS_ERR == 0;
+			if (DOS_ERR != 0)
+				diskin = FALSE;
+			else
+				diskin = TRUE;
 		}
-		obj = FALSE;
+		return FALSE;
+	} else
+	{
+		return TRUE;
 	}
-	
-	dos_free(g_buffer);
-	dos_free(thedesk);
-	dos_free(g_wlist);
-	
-	return obj;
 #undef blitter_present
 }

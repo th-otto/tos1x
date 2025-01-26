@@ -75,8 +75,8 @@
 #define FDNAROW                            9 /* BOXCHAR in tree SELECTOR */
 #define FSVSLID                           10 /* BOX in tree SELECTOR */
 #define FSVELEV                           11 /* BOX in tree SELECTOR */
-#define OK                                21 /* BUTTON in tree SELECTOR */
-#define CANCEL                            22 /* BUTTON in tree SELECTOR */
+#define FSOK                              21 /* BUTTON in tree SELECTOR */
+#define FSCANCEL                          22 /* BUTTON in tree SELECTOR */
 
 #define ALERT                              1 /* form/dialog */
 

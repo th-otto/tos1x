@@ -102,7 +102,8 @@ LINEF_STATIC VOID fix_chpos(P(intptr_t) pfix, P(int16_t) ifx)
 PP(intptr_t pfix;)
 PP(int16_t ifx;)
 {
-	register int16_t cpos, coffset;
+	int16_t coffset;
+	int16_t cpos;
 
 	cpos = LWGET(pfix);
 	coffset = (cpos >> 8) & 0x00ff;
@@ -177,6 +178,7 @@ PP(int16_t rsize;)
 }
 
 
+STATIC uint16_t ajunk; /* WTF? */
 /*
  *	return address of given type and index, INTERNAL ROUTINE
  */
@@ -190,17 +192,14 @@ PP(register uint16_t rsindex;)
 	register int16_t size;
 	register int16_t rt;
 	int16_t valid;
-	uint16_t junk;
 
-	UNUSED(junk);
-	
 	valid = TRUE;
 	switch (rstype)
 	{
 	case R_TREE:
 #ifdef __ALCYON__
-		junk = LW(rsindex * 4);
-		return (LLGET(LLGET(APP_LOPNAME) + junk));
+		ajunk = LW(rsindex * 4);
+		return (LLGET(LLGET(APP_LOPNAME) + ajunk));
 #else
 		return (LLGET(LLGET(APP_LOPNAME) + LW(rsindex * 4)));
 #endif
@@ -254,7 +253,7 @@ PP(register uint16_t rsindex;)
 		break;
 	default:
 		valid = FALSE;
-		break;
+		/* break; */
 	}
 	if (valid)
 		return (get_sub(rsindex, rt, size));
@@ -330,7 +329,7 @@ LINEF_STATIC VOID fix_tedinfo(NOTHING)
 		for (i = 0; i < 2; i++)
 		{
 			if (tl[i])
-				LWSET(tl[i], strlen((const char *)LLGET(ls[i])) + 1);
+				LWSET(tl[i], LSTRLEN((const char *)LLGET(ls[i])) + 1);
 		}
 		fix_ptr(R_TEPVALID, ii);
 	}
@@ -475,17 +474,17 @@ PP(intptr_t pglobal;)
 PP(const char *rsfname;)
 {
 	register uint16_t rslsize;
-	register uint16_t fd, ret;
-	char rspath[128];
+	register uint16_t fd;
+	register int16_t ret;
 
 	/* make sure its there  */
-	LSTCPY(rspath, rsfname);
-	if (!sh_find(rspath, NULL))
-		return (FALSE);
-	/* init global      */
+	LSTCPY(ad_shcmd, rsfname);
+	if (!sh_find(ad_shcmd, NULL))
+		return FALSE;
+	/* init global */
 	rs_global = pglobal;
-	/* open then file and read the header    */
-	fd = dos_open(rspath, RMODE_RD);
+	/* open then file and read the header */
+	fd = dos_open(ad_shcmd, RMODE_RD);
 	if (!DOS_ERR)
 		dos_read(fd, HDR_LENGTH, ADDR(&hdr_buff[0]));
 
@@ -511,7 +510,7 @@ PP(const char *rsfname;)
 
 	ret = !DOS_ERR;
 	dos_close(fd);
-	return (ret);
+	return ret;
 }
 
 

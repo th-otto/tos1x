@@ -235,7 +235,7 @@ PP(register int16_t sy;)
 		case G_FTEXT:
 			LBCOPY(&edblk, (VOIDPTR)spec, sizeof(TEDINFO));
 			gr_crack(edblk.te_color, &bcol, &tcol, &ipat, &icol, &tmode);
-			break;
+			/* break; */
 		}
 		
 		/*
@@ -323,7 +323,7 @@ PP(register int16_t sy;)
 			break;
 		case G_USERDEF:
 			state = ob_user(tree, obj, pt, spec, state, state);
-			break;
+			/* break; */
 		}
 	}
 	if (obtype == G_STRING ||			/* 8/1/92 */
@@ -422,8 +422,7 @@ PP(int16_t depth;)
 	int16_t last, pobj;
 	int16_t sx, sy;
 
-	last = (obj == ROOT) ? NIL : LWGET(OB_NEXT(obj));
-	pobj = get_par(tree, obj, 0);
+	pobj = get_par(tree, obj, &last);
 
 	if (pobj != NIL)
 		ob_offset(tree, pobj, &sx, &sy);
@@ -460,6 +459,7 @@ PP(int16_t my;)
 	int16_t lastfound;
 	int16_t dosibs;
 	BOOLEAN done;
+	int16_t junk;
 	GRECT t, o;
 	int16_t parent, childobj, flags;
 	register GRECT *pt;
@@ -473,7 +473,7 @@ PP(int16_t my;)
 		r_set(&o, 0, 0, 0, 0);
 	} else
 	{
-		parent = get_par(tree, currobj, 0);
+		parent = get_par(tree, currobj, &junk);
 		ob_actxywh(tree, parent, &o);
 	}
 
@@ -579,8 +579,7 @@ PP(register int16_t obj;)
 
 	if (obj != ROOT)
 	{
-		nextsib = LWGET(OB_NEXT(obj));
-		parent = get_par(tree, obj, 0);
+		parent = get_par(tree, obj, &nextsib);
 	} else
 		return;
 
@@ -625,10 +624,11 @@ PP(int16_t new_pos;)
 {
 	register int16_t parent;
 	int16_t chg_obj, ii;
+	int16_t junk;
 	register int32_t phead, pnext, pmove;
 
 	if (mov_obj != ROOT)
-		parent = get_par(tree, mov_obj, 0);
+		parent = get_par(tree, mov_obj, &junk);
 	else
 		return;
 
@@ -679,7 +679,7 @@ PP(int16_t new_pos;)
 VOID ob_change(P(LPTREE) tree, P(int16_t) obj, P(int16_t) new_state, P(int16_t) redraw)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
-PP(uint16_t new_state;)
+PP(int16_t new_state;)
 PP(int16_t redraw;)
 {
 	int16_t flags, obtype, th;
@@ -802,13 +802,15 @@ PP(register int16_t obj;)
 PP(register int16_t *pxoff;)
 PP(register int16_t *pyoff;)
 {
+	int16_t junk;
+
 	*pxoff = *pyoff = 0;
 	do
 	{
 		/* have our parent-- add in his x, y */
 		*pxoff += LWGET(OB_X(obj));
 		*pyoff += LWGET(OB_Y(obj));
-		obj = get_par(tree, obj, 0);
+		obj = get_par(tree, obj, &junk);
 	} while (obj != NIL);
 }
 

@@ -38,8 +38,8 @@
  *
  *************************************************************************/
 VOID gr_inside(P(GRECT *) pt, P(int16_t) th)
-PP(GRECT *pt;)
-PP(int16_t th;)
+PP(register GRECT *pt;)
+PP(register int16_t th;)
 {
 	pt->g_x += th;
 	pt->g_y += th;
@@ -55,8 +55,8 @@ PP(int16_t th;)
 
 VOID gr_rect(P(uint16_t) icolor, P(uint16_t) ipattern, P(GRECT *) pt)
 PP(uint16_t icolor;)
-PP(uint16_t ipattern;)
-PP(GRECT *pt;)
+PP(register uint16_t ipattern;)
+PP(register GRECT *pt;)
 {
 	register int16_t fis;
 
@@ -108,8 +108,8 @@ PP(register GRECT *pt;)
 			break;
 		case TE_RIGHT:					/* right justify    */
 			pt->g_x += w;
-			break;
-		}								/* switch */
+			/* break; */
+		}
 	}
 
 	return numchs;

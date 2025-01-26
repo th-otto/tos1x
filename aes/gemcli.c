@@ -198,7 +198,7 @@ VOID ldaccs(NOTHING)
 #endif
 	char *psp;
 	int16_t defdrv;
-	char tempadds[50];
+	char *tempadds;
 	char *name;
 
 	UNUSED(psp);
@@ -212,8 +212,9 @@ VOID ldaccs(NOTHING)
 	if (isdrive() && diskin)
 	{
 		defdrv = dos_gdrv();			/* save the default drive   */
+		tempadds = dos_alloc(50L);
 		name = tempadds;
-		dos_sdta(name);					/* set the DMA address      */
+		dos_sdta(tempadds);					/* set the DMA address      */
 
 		if (isdrive() & 0x04)
 			dos_sdrv(0x02);				/* set the hard disk    */
@@ -231,11 +232,13 @@ VOID ldaccs(NOTHING)
 
 		for (i = 0; i < MAX_ACCS && used_acc < MAX_ACCS && ret; i++)
 		{
-			if (sndcli(name, used_acc))
+			ret = sndcli(name, used_acc);
+			if (ret)
 				used_acc++;
 
 			ret = dos_snext();
 		}
+		dos_free(tempadds);
 	}
 }
 

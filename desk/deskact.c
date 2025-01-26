@@ -35,7 +35,7 @@ LINEF_STATIC VOID gr_obalign PROTO((int16_t numobs, nt16_t x, int16_t y, int16_t
 /* 106de: 00e161a0 */
 /* 100fr: 00fdb918 */
 LINEF_STATIC int16_t gr_obfind(P(OBJECT *)tree, P(int16_t) root, P(int16_t) mx, P(int16_t) my)
-PP(OBJECT *tree;)
+PP(register LPTREE tree;)
 PP(register int16_t root;)
 PP(register int16_t mx;)
 PP(register int16_t my;)
@@ -67,11 +67,13 @@ PP(uint16_t *pkstate;)
 {
 	int16_t flags;
 	uint16_t ev_which;
+	char unused[8];
 	int16_t kret;
 	int16_t bret;
 
+	UNUSED(unused);
 	flags = MU_BUTTON | MU_M1;
-	ev_which = evnt_multi(flags, 0x01, 0xff, 0x00, out, x, y, w, h,
+	ev_which = evnt_multi(flags, 0x01, 0x01, 0x00, out, x, y, w, h,
 						  0, 0, 0, 0, 0, 0x0L, 0x0, 0x0, pmx, pmy, pbutton, pkstate, &kret, &bret);
 	if (ev_which & MU_BUTTON)
 		return FALSE;
@@ -106,9 +108,9 @@ PP(register int16_t *pxypts;)
 			pxypts[pi] = offx + olist[obj].ob_x;
 			pxypts[pi + 1] = offy + olist[obj].ob_y;
 			i++;
-			if (i >= MAX_OBS)
-				break;
 		}
+		if (i >= MAX_OBS)
+			break;
 	}
 	*pnum = i;
 }
@@ -171,8 +173,7 @@ PP(register GRECT *pt;)
 	register int16_t lx, ly, gx, gy;
 
 	lx = ly = 10000;
-	gx = 0;
-	gy = 0;
+	gx = gy = 0;
 	for (i = 0; i < numpts; i++)
 	{
 		j = i * 2;
@@ -215,8 +216,8 @@ PP(register int16_t *xyobpts;)
 /* 104de: 00fd5e3a */
 /* 106de: 00e1640a */
 LINEF_STATIC VOID gr_plns(P(int16_t) x, P(int16_t) y, P(int16_t) numpts, P(int16_t *)xylnpts, P(int16_t) numobs, P(int16_t *)xyobpts)
-PP(int16_t x;)
-PP(int16_t y;)
+PP(register int16_t x;)
+PP(register int16_t y;)
 PP(int16_t numpts;)
 PP(register int16_t *xylnpts;)
 PP(register int16_t numobs;)
@@ -243,11 +244,11 @@ PP(register int16_t *xyobpts;)
 /* 106de: 00e1647e */
 LINEF_STATIC BOOLEAN gr_bwait(P(GRECT *)po, P(int16_t) mx, P(int16_t) my, P(int16_t) numpts, P(int16_t *)xylnpts, P(int16_t) numobs, P(int16_t *)xyobpts)
 PP(register GRECT *po;)
-PP(int16_t mx;)
-PP(int16_t my;)
-PP(int16_t numpts;)
+PP(register int16_t mx;)
+PP(register int16_t my;)
+PP(register int16_t numpts;)
 PP(register int16_t *xylnpts;)
-PP(int16_t numobs;)
+PP(register int16_t numobs;)
 PP(register int16_t *xyobpts;)
 {
 	int16_t down;
@@ -517,7 +518,7 @@ PP(int16_t chkdisabled;)
 	if (dochg)
 		curr_state |= chgvalue;
 	else
-		curr_state &= ~chgvalue;
+		curr_state &= ~(int16_t)chgvalue;
 	/* get it updated on screen  */
 	if (old_state != curr_state)
 	{
@@ -568,8 +569,7 @@ PP(BOOLEAN dox;)
 	offx = olist[root].ob_x;
 	offy = olist[root].ob_y;
 	/* accumulate extent of change in this rectangle */
-	pa->g_w = 0;
-	pa->g_h = 0;
+	pa->g_w = pa->g_h = 0;
 
 	for (obj = olist[root].ob_head; obj > root; obj = olist[obj].ob_next)
 	{
@@ -628,12 +628,12 @@ PP(int16_t dclick;)
 	int16_t state;
 	register OBJECT *olist;
 
-	shifted = keystate & (K_LSHIFT | K_RSHIFT);
+	shifted = (keystate & K_LSHIFT) || (keystate & K_RSHIFT);
 	obj = gr_obfind(tree, root, mx, my);
 
 	if (obj == root || obj == NIL)
 	{
-		if (!shifted || dclick)
+		/* if (!shifted || dclick) */
 			act_allchg(wh, tree, root, obj, &gl_rfull, pc, SELECTED, FALSE, TRUE, TRUE);
 	} else
 	{
@@ -660,12 +660,12 @@ PP(int16_t dclick;)
 
 /* 104de: 00fd66ba */
 /* 106de: 00e16d56 */
-int16_t act_bdown(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t *) in_mx, P(int16_t *) in_my, P(int16_t) keystate, P(GRECT *)pc, P(int16_t *)pdobj)
+int16_t act_bdown(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t)in_mx, P(int16_t)in_my, P(int16_t) keystate, P(GRECT *)pc, P(int16_t *)pdobj)
 PP(register int16_t wh;)
 PP(register LPTREE tree;)
 PP(register int16_t root;)
-PP(int16_t *in_mx;)
-PP(int16_t *in_my;)
+PP(int16_t in_mx;)
+PP(int16_t in_my;)
 PP(int16_t keystate;)
 PP(GRECT *pc;)
 PP(int16_t *pdobj;)
@@ -675,7 +675,6 @@ PP(int16_t *pdobj;)
 	int16_t bstate;
 	register OBJECT *olist;
 	int16_t dst_wh;
-	int16_t l_mx, l_my;
 	int16_t dulx, duly;
 	/* int16_t i; */
 	/* int16_t j; */
@@ -684,21 +683,19 @@ PP(int16_t *pdobj;)
 	int16_t numpts;
 	int16_t *pxypts;
 	GRECT m;
-	register GRECT *pm;
 	register THEDSK *d;
+	register GRECT *pm;
 	
 	pm = &m;
 	d = thedesk;
 
 	dst_wh = NIL;
 	*pdobj = root;
-	l_mx = *in_mx;
-	l_my = *in_my;
-	sobj = gr_obfind(tree, root, l_mx, l_my);
+	sobj = gr_obfind(tree, root, in_mx, in_my);
 	/* rubber box to enclose a group of icons */
 	if (sobj == root || sobj == NIL)
 	{
-		r_set(pm, l_mx, l_my, 6, 6);
+		r_set(pm, in_mx, in_my, 6, 6);
 		graf_rubbox(pm->g_x, pm->g_y, 6, 6, &pm->g_w, &pm->g_h);
 		act_allchg(wh, tree, root, sobj, pm, pc, SELECTED, TRUE, TRUE, TRUE);
 	} else
@@ -720,7 +717,7 @@ PP(int16_t *pdobj;)
 					numpts = d->g_nmtext;
 					pxypts = d->g_xytext;
 				}
-				gr_drgplns(l_mx, l_my, &gl_rfull, numpts, pxypts, numobs, d->g_xyobpts,
+				gr_drgplns(in_mx, in_my, &gl_rfull, numpts, pxypts, numobs, d->g_xyobpts,
 						   &dulx, &duly, &dst_wh, pdobj);
 				if (dst_wh)
 				{
@@ -742,6 +739,6 @@ PP(int16_t *pdobj;)
 
 	evnt_button(
 		1, 1, 0,
-		&l_mx, &l_my, &bstate, &keystate);
+		&in_mx, &in_my, &bstate, &keystate);
 	return dst_wh;
 }

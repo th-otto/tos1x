@@ -17,6 +17,10 @@ CPPFLAGS += -I$(top_srcdir)/aes
 # only TOS versions <= 1.04 have the linef hack
 LINEF_CFLAGS_104 = -A
 LINEF_AFLAGS_104 = -A${BIN}lineftab.txt
+LINEF_CFLAGS_100 = -A
+LINEF_AFLAGS_100 = -A${BIN}lineftab.txt
+LINEF_CFLAGS_102 = -A
+LINEF_AFLAGS_102 = -A${BIN}lineftab.txt
 CFLAGS += $(LINEF_CFLAGS_$(TOSVERSION))
 ASFLAGS += $(LINEF_AFLAGS_$(TOSVERSION))
 
