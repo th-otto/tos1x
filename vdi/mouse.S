@@ -1011,7 +1011,7 @@ _vq_mouse:
 
 
 /* parameter block for a relative mouse BIOS call */
-		.data
+		data
 		xdef	rel_pblock
 rel_pblock:	dc.b	0	/* Y=0 at the top of the screen */
 		dc.b	0	/* Generate interrupts on make and break */

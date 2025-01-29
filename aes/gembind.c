@@ -443,6 +443,7 @@ PP(intptr_t pcrys_blk;)
  *	this if supret is to work.
  */
 VOID super PROTO((int16_t crystal, int16_t dummy, intptr_t pcrys_blk));
+VOID supret PROTO((int16_t));
 
 VOID super(P(int16_t) crystal, P(int16_t) dummy, P(intptr_t) pcrys_blk)
 PP(int16_t crystal;)

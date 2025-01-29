@@ -116,8 +116,6 @@ STATIC long *g_fslist;
 
 static char const gl_fsobj[4] = { FTITLE, FILEBOX, SCRLBAR, 0 };
 
-STATIC int16_t defdrv;
-
 #define Drvmap() trp13(0xa)
 
 
@@ -344,7 +342,7 @@ PP(int16_t sel;)
 PP(int16_t state;)
 {
 	if (sel)
-		ob_change(ad_fstree, F1NAME + sel - 1, state, TRUE);
+		ob_change((LPTREE)ad_fstree, F1NAME + sel - 1, state, TRUE);
 }
 
 
@@ -421,24 +419,24 @@ PP(int16_t n;)
 *	will activate the directory, format it, and display ir[0].
 */
 LINEF_STATIC VOID fs_newdir(P(char *) ftitle, P(char *) fpath, P(char *) pspec, P(OBJECT *) tree, P(int16_t *) pcount)
-char *ftitle;
-char *fpath;
-char *pspec;
-OBJECT *tree;
-int16_t *pcount;
+PP(char *ftitle;)
+PP(char *fpath;)
+PP(char *pspec;)
+PP(OBJECT *tree;)
+PP(int16_t *pcount;)
 {
 	const char *ptmp;
 
 	ob_draw((LPTREE)tree, FDIRECTORY, MAX_DEPTH);
 	fs_active(fpath, pspec, pcount);
-	fs_format(tree, ROOT, *pcount);
+	fs_format((LPTREE)tree, ROOT, *pcount);
 	gl_tmp1[0] = ' ';
 	strcpy(&gl_tmp1[1], pspec);
 	strcat(&gl_tmp1[1], " ");
 	LSTCPY(ftitle, gl_tmp1);
 	ptmp = gl_fsobj;
 	while (*ptmp)
-		ob_draw(tree, *ptmp++, MAX_DEPTH);
+		ob_draw((LPTREE)tree, *ptmp++, MAX_DEPTH);
 }
 
 
@@ -510,7 +508,7 @@ PP(int16_t *pbutton;)
 	}
 
 	/* init strings in form */
-	tree = ad_fstree;
+	tree = (LPTREE)ad_fstree;
 	fs_sset(tree, FTITLE, " *.* ", &ad_ftitle, &temp_len);
 	fs_sset(tree, FDIRECTORY, pipath, &ad_fpath, &fpath_len);
 	LSTCPY(gl_tmp1, pisel);
@@ -528,6 +526,10 @@ PP(int16_t *pbutton;)
 	sel = 0;
 	newname = FALSE;
 	cont = firsttime = TRUE;
+#ifdef __GNUC__
+	elevpos = 0; /* BUG: uninitialized */
+	count = 0;
+#endif
 	while (cont)
 	{
 		touchob = firsttime ? 0 : fm_do(tree, FSELECTION);
@@ -543,7 +545,7 @@ PP(int16_t *pbutton;)
 			LSTCPY(ad_fpath, DGLO->g_dir);
 			pstr = fs_pspec(DGLO->g_loc1, &DGLO->g_loc1[fpath_len]);
 			strcpy(pstr, "*.*");
-			fs_newdir(ad_ftitle, DGLO->g_loc1, pspec, tree, &count);
+			fs_newdir(ad_ftitle, DGLO->g_loc1, pspec, (OBJECT *)tree, &count);
 			elevpos = sel = 0;
 			firsttime = FALSE;
 		}
@@ -598,7 +600,7 @@ PP(int16_t *pbutton;)
 				fs_sel(sel, SELECTED);
 			}
 			/* get string and see if file or folder */
-			fs_sget(tree, touchob, gl_tmp1);
+			fs_sget((OBJECT *)tree, touchob, gl_tmp1);
 			if (gl_tmp1[0] == ' ')
 			{
 				/* copy to selection */

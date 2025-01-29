@@ -178,7 +178,7 @@ PP(char chr;)
  */
 /* 104de: 00fe26a0 */
 /* 106de: 00e246e6 */
-LINEF_STATIC VOID ins_char(P(char *) str, P(int16_t) pos, P(char) chr, P(int16_t) tot_len)
+VOID ins_char(P(char *) str, P(int16_t) pos, P(char) chr, P(int16_t) tot_len)
 PP(register char *str;)
 PP(int16_t pos;)
 PP(char chr;)
@@ -453,6 +453,7 @@ PP(int16_t kind;)
 	UNUSED(c);
 	UNUSED(t);
 	UNUSED(flags);
+	UNUSED(pstr);
 
 	DGLO = &D;
 

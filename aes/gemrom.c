@@ -82,7 +82,9 @@ BOOLEAN havefmt;		/* fmt.rsc already read in ? */
 #endif
 
 extern uint16_t const tosrsc[];
+#ifndef __GNUC__
 asm("_tosrsc equ 0"); /* ZZZ now defined in first half of ROM */
+#endif
 
 
 #if OS_COUNTRY == CTRY_US
@@ -176,6 +178,8 @@ int16_t desk_global[15];
 int16_t fmt_global[15];
 int16_t gem_global[15];
 
+VOID ini_tree PROTO((OBJECT **gaddr, int16_t id));
+
 /*
  * do this whenever the Gem or desktop is ready
  */
@@ -263,7 +267,7 @@ PP(register uint16_t offset;)
 			if (which == 1)
 			{
 				LWCOPY((VOIDPTR)pointer, desk_global, 15);
-				ini_tree(&tree, ADMENU);
+				ini_tree(&tree, ADMENU); /* WTF: function from desktop */
 				menu_w = gl_ncols * gl_wchar;
 				for (i = 0; i < 2; i++)
 					LWSET(OB_WIDTH(i), menu_w);

@@ -510,6 +510,8 @@ PP(register PNODE *thepath;)
 	register int firsttime;
 	register BOOLEAN iscart;
 
+	UNUSED(firsttime);
+	UNUSED(ret);
 	if (thepath->p_spec[0] == CHAR_FOR_CARTRIDGE)
 		iscart = TRUE;
 	else

@@ -290,7 +290,7 @@ PP(const char *palstr;)
 	int16_t tmpmon;
 	
 	/* init tree pointer */
-	rs_gaddr(ad_sysglo, R_TREE, ALERT, &tree);
+	rs_gaddr(ad_sysglo, R_TREE, ALERT, (VOIDPTR *)&tree);
 
 	gsx_mfset(ad_armice);
 	if (gl_moff)

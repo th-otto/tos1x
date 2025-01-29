@@ -596,7 +596,7 @@ swap:
 	beq	xls_ok		; yes - don't adjust the line
 	addq.w	#1,_X2		; shorten the line from the starting end
 	addq.w	#1,d0		; increment the index into the word
-	and.w	#0x0F,d0		; overflow into the next word?
+	and.w	#15,d0		; overflow into the next word?
 	bne	xls_ok		; nope
 	adda.w	d6,a5		; yes - increment pointer to next word
 xls_ok:
@@ -605,7 +605,7 @@ xls_ok:
 	sub.w	_X2,d0
 xl_out:
 	addq.w	#1,d0		; adjust for true length of the line segment
-	and.w	#0x000F,d0	; get length mod 16
+	and.w	#15,d0		; get length mod 16
 	move.w	_LN_MASK,d1	; get the line style
 	rol.w	d0,d1		; rotate it to align the next line segment
 	move.w	d1,_LN_MASK	; save it for the next time through
@@ -685,22 +685,22 @@ dxgedy:
 
 	xdef ortbl
 ortbl:
-		dc.w	0x8000
-		dc.w	0x4000
-		dc.w	0x2000
-		dc.w	0x1000
-		dc.w	0x0800
-		dc.w	0x0400
-		dc.w	0x0200
-		dc.w	0x0100
-		dc.w	0x0080
-		dc.w	0x0040
-		dc.w	0x0020
-		dc.w	0x0010
-		dc.w	0x0008
-		dc.w	0x0004
-		dc.w	0x0002
-		dc.w	0x0001
+		dc.w	$8000
+		dc.w	$4000
+		dc.w	$2000
+		dc.w	$1000
+		dc.w	$0800
+		dc.w	$0400
+		dc.w	$0200
+		dc.w	$0100
+		dc.w	$0080
+		dc.w	$0040
+		dc.w	$0020
+		dc.w	$0010
+		dc.w	$0008
+		dc.w	$0004
+		dc.w	$0002
+		dc.w	$0001
 
 ********************************************************************
 *
@@ -971,7 +971,7 @@ x_dx_bp:
 *
 abl_out:
 	addq.w	#1,d2		; get number of pixels in the line
-	and.w	#0x0F,d2		; get it mod 16
+	and.w	#15,d2		; get it mod 16
 	rol.w	d2,d1		; rotate left the line style that many bits
 	move.w	d1,_LN_MASK	; save the result for next time
 	rts
@@ -1422,7 +1422,7 @@ fline: ds.b 0
 	asl.w	#1,d5		; convert to offset into pattern def table
 	move.l	_patptr,a0	; get pointer to start of pattern definition
 	adda.w	d5,a0		; get pointer to desired word of pattern def
-	clr.w	a1		; init offset to next plane of pattern to 0
+	suba.w	a1,a1		; init offset to next plane of pattern to 0
 	tst.w	_multifill	; using multi-planed patterns?
 	beq	xline		; nope
 	move.w	#32,a1		; yes - offset = length of 1 plane of pat def
@@ -1449,7 +1449,7 @@ xline:
 	move.w	lf_tab(pc,d0.w),d0	; get not of left fringe mask
 	not.w	d0		; invert bits of mask to proper value
 	move.w	d2,d7		; get ending x-coordinate
-	and.w	#0x000F,d7	; get bit offset into its word
+	and.w	#15,d7		; get bit offset into its word
 	asl.w	#1,d7		; convert bit offset of last bit to word index
 	move.w	rf_tab(pc,d7.w),d7	; get right fringe mask
 
@@ -1508,25 +1508,25 @@ hab_decode:
 
 	xdef lf_tab
 lf_tab:
-		dc.w	0xFFFF		; origin for not left fringe lookup.
+		dc.w	$FFFF		; origin for not left fringe lookup.
 	xdef rf_tab
 rf_tab:
-		dc.w	0x7FFF		; origin for right fringe lookup.
-		dc.w	0x3FFF
-		dc.w	0x1FFF
-		dc.w	0x0FFF
-		dc.w	0x07FF
-		dc.w	0x03FF
-		dc.w	0x01FF
-        dc.w    0x00FF
-        dc.w    0x007F
-        dc.w    0x003F
-        dc.w    0x001F
-        dc.w    0x000F
-        dc.w    0x0007
-        dc.w    0x0003
-        dc.w    0x0001
-        dc.w    0x0000
+		dc.w	$7FFF		; origin for right fringe lookup.
+		dc.w	$3FFF
+		dc.w	$1FFF
+		dc.w	$0FFF
+		dc.w	$07FF
+		dc.w	$03FF
+		dc.w	$01FF
+        dc.w    $00FF
+        dc.w    $007F
+        dc.w    $003F
+        dc.w    $001F
+        dc.w    $000F
+        dc.w    $0007
+        dc.w    $0003
+        dc.w    $0001
+        dc.w    $0000
 
 ********************************************************************
 *

@@ -134,8 +134,6 @@ char *ad_shcmd;
 char *ad_shtail;
 
 /* cart program */
-BOOLEAN sh_iscart;
-
 char *ad_path;
 
 char *ad_pfile;
@@ -415,12 +413,13 @@ PP(register intptr_t psrch;)
 	len--;
 
 	ad_loc1 = ADDR(&loc1[0]);
-	loc1[len] = NULL;
+	UNUSED(ad_loc1);
+	loc1[len] = '\0';
 
 	/* WTF? */
 	LBCOPY(gl_dta, ad_envrn, 50);
 	gl_dta[5] = ';';
-	lp = gl_dta;
+	lp = (char *)gl_dta;
 	findend = FALSE;
 	do
 	{
@@ -501,6 +500,9 @@ PP(register char *pname;)
 	if (!tmp)
 		return FALSE;
 	/* copy over path   */
+#if !BINEXACT
+	last = 0; /* BUG: not initialized */
+#endif
 	while ((tmp = LBGET(lp)) != 0)
 	{
 		if (tmp != ';')
@@ -559,8 +561,8 @@ PP(SHFIND_PROC routine;)
 			{
 				gl_dta[0] = '\\';
 				gl_dta[1] = '\0';
-				strcat(gl_dta, ad_path);
-				LSTCPY(ad_path, gl_dta);
+				strcat((char *)gl_dta, ad_path);
+				LSTCPY(ad_path, (char *)gl_dta);
 				gotdir = FALSE;
 				path = 1;
 			} else
@@ -618,7 +620,7 @@ VOID sh_main(NOTHING)
 	UNUSED(retry);
 	DGLO = &D;
 	tree = ad_stdesk;					/* sh draw box              */
-	ad_pfile = LLGET(OB_SPEC(TITLE));
+	ad_pfile = (char *)LLGET(OB_SPEC(TITLE));
 	sh_gem = sh_isgem = TRUE;
 	sh_doexec = sh_9fc0 = TRUE;
 	sh_dodef = TRUE;

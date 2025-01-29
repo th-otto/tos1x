@@ -334,19 +334,19 @@ PP(register int16_t length;)
 	/* convert to machine independent recording */
 	for (i = 0; i < length; i++)
 	{
-		code = (FCODE) LWGET(pbuff); /* BUG: comparing only word */
-		if (code == tchange)
+		code = (intptr_t)LWGET(pbuff); /* BUG: comparing only word */
+		if (code == (intptr_t)tchange)
 		{
 			code = TCHNG;				/*    int16_t is changed to int32_t   */
 #if AESVERSION < 0x140
 			LLSET(pbuff+sizeof(int32_t *), LLGET(pbuff+sizeof(int32_t *)) * gl_ticktime);
 #endif
 		}
-		if (code == mchange)
+		if (code == (intptr_t)mchange)
 			code = MCHNG;
-		if (code == kchange)
+		if (code == (intptr_t)kchange)
 			code = KCHNG;
-		if (code == bchange)
+		if (code == (intptr_t)bchange)
 			code = BCHNG;
 		LWSET(pbuff, code); /* BUG: see above */
 		pbuff += sizeof(FPD);

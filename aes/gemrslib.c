@@ -178,7 +178,9 @@ PP(int16_t rsize;)
 }
 
 
+#ifdef __ALCYON__
 STATIC uint16_t ajunk; /* WTF? */
+#endif
 /*
  *	return address of given type and index, INTERNAL ROUTINE
  */

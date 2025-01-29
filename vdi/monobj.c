@@ -299,8 +299,8 @@ VOID v_locator(NOTHING)
 	/* Set the initial locator position.                 */
 
 	pointer = LV(PTSIN);
-	GCURX = *pointer++;
-	GCURY = *pointer;
+	LV(GCURX) = *pointer++;
+	LV(GCURY) = *pointer;
 
 
 	if (LV(loc_mode) == 0)					/* Request mode       */
@@ -398,15 +398,15 @@ VOID vq_mouse(NOTHING)
 {
     register int16_t *pointer;
 
-    LV(INTOUT)[0] = MOUSE_BT;
+    LV(INTOUT)[0] = LV(MOUSE_BT);
 
     pointer = LV(CONTRL);
     *(pointer+4) = 1;
     *(pointer+2) = 1;
 
     pointer = LV(PTSOUT);
-    *pointer++ = GCURX;
-    *pointer   = GCURY;
+    *pointer++ = LV(GCURX);
+    *pointer   = LV(GCURY);
 }
 #endif
 

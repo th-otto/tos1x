@@ -211,7 +211,7 @@ eok:
         move.w  d1,-(a7)                /* drive,0 rel */
         move.w  d0,-(a7)                /* alert number */
         /* jsr     _eralert */
-        dc.w 0x4eb9
+        dc.w $4eb9
         dc.l _eralert
         addq.l  #4,a7
         move.w  (a7)+,d1                /* get back error num */

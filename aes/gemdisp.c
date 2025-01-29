@@ -176,7 +176,7 @@ VOID forker(NOTHING)
 				 * else record the event
 				 * BUG: may access memory before gl_rbuf if first recorded event is time event
 				 */
-#if AESVERSION >= 0x140
+#if (AESVERSION >= 0x140) | !BINEXACT
 				if ((f->f_code == tchange) && (LLGET(gl_rbuf - sizeof(FPD)) == (intptr_t)tchange))
 #else
 				/* BUG: comparing only word, and also generates buggy code */

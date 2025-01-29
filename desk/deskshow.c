@@ -134,7 +134,7 @@ STATIC int sf_line;
 
 LINEF_STATIC VOID sf_disp PROTO((int handle, char *buf));
 LINEF_STATIC VOID sf_page PROTO((int handle, char *buf));
-LINEF_STATIC VOID sf_newline PROTO((int handle, char *buf));
+LINEF_STATIC BOOLEAN sf_newline PROTO((int handle, char *buf));
 LINEF_STATIC BOOLEAN sf_putc PROTO((int ch, BOOLEAN centronics));
 LINEF_STATIC int sf_more PROTO((NOTHING));
 LINEF_STATIC VOID cconws PROTO((const char *s));

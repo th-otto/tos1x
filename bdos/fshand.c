@@ -1317,6 +1317,9 @@ PP(int wrtflg;)
 	cl = p->o_curcl;
 	dm = p->o_dmd;
 
+#ifdef __GNUC__
+	cl2 = 0; /* silence compiler */
+#endif
 	if (cl < 0)
 	{
 		cl2 = cl + 1;

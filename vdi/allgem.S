@@ -495,23 +495,24 @@ _GLOC_KEY:	PIXLA(a1)
 
 		move.b	_cur_ms_stat,d0
 		move.b	d0,d1		/* save state */
-		andi.b	#0xc0,d0	/* mask out all but button status bits */
+		andi.b	#$c0,d0	/* mask out all but button status bits */
 		beq	key_stat	/* nothing go check key stat */
 		move.b     d1,d0
 		btst       #6,d0
 		beq clr_bt1
-		move.w	#0x20,_TERM_CH	/* send terminator code for left key */
+		move.w	#$20,_TERM_CH	/* send terminator code for left key */
 		bra clr_bt_stat
 clr_bt1:
-		move.w	#0x21,_TERM_CH	/* send terminator code for left key */
+		move.w	#$21,_TERM_CH	/* send terminator code for left key */
 clr_bt_stat:
-		andi.b	#0x23,d0		/* clear mouse button status */
+		andi.b	#$23,d0		/* clear mouse button status */
 		move.b	d0,_cur_ms_stat	/* store cleared state */
 		move.w	#1,d0		/* set button pressed flag */
 		rts
 
-key_stat:	move.w	#2, -(sp)	/* see if a character present at aux port */
-		move.w	#1, -(sp)
+key_stat:
+		move.w	#2,-(sp)	/* see if a character present at aux port */
+		move.w	#1,-(sp)
 		trap	#13
 
 		tst.w	d0

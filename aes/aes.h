@@ -815,8 +815,9 @@ extern char *ad_shcmd;
 extern char *ad_shtail;
 extern BOOLEAN sh_iscart;
 extern char *ad_path;
-extern int16_t sh_9fc0;
 
+VOID desk_alloc PROTO((NOTHING));
+VOID desk_free PROTO((NOTHING));
 int16_t sh_read PROTO((char *pcmd, char *ptail));
 int16_t sh_write PROTO((int16_t doex, int16_t isgem, int16_t isover, const char *pcmd, const char *ptail));
 int16_t sh_get PROTO((char *pbuffer, uint16_t len));
@@ -895,14 +896,14 @@ long dos_create PROTO((const char *name, int attr));
 BOOLEAN dos_mkdir PROTO((const char *path));
 long dos_chmod PROTO((const char *path, BOOLEAN setit, int attr));
 long dos_set PROTO((int h, uint16_t time, uint16_t date));
-BOOLEAN dos_label PROTO((int drive, const char *name));
+BOOLEAN dos_label PROTO((int drive, char *name));
 long dos_delete PROTO((const char *path));
 BOOLEAN dos_space PROTO((int drive, int32_t *total, int32_t *avail));
 long dos_rename PROTO((const char *oldname, const char *newname));
 long dos_rmdir PROTO((const char *path));
 VOIDPTR dos_alloc PROTO((long size));
 intptr_t dos_avail PROTO((NOTHING));
-int dos_free PROTO((VOIDPTR ptr));
+VOID dos_free PROTO((VOIDPTR ptr));
 int chrout PROTO((int c));
 int rawcon PROTO((int c));
 int prt_chr PROTO((int c));
@@ -1025,6 +1026,7 @@ BOOLEAN deskmain PROTO((NOTHING));
 
 
 
+VOID ins_char PROTO((char *str, int16_t pos, char chr, int16_t tot_len));
 #if LINEF_HACK
 /*
  * functions referenced in linef table
@@ -1032,7 +1034,6 @@ BOOLEAN deskmain PROTO((NOTHING));
 int16_t sndcli PROTO((char *pfilespec, int16_t acc));
 char *fs_back PROTO((char *pstr));
 int16_t scan_to_end PROTO((char *pstr, int16_t idx, char chr));
-VOID ins_char PROTO((char *str, int16_t pos, char chr, int16_t tot_len));
 int16_t find_pos PROTO((char *str, int16_t pos));
 VOID pxl_rect PROTO((LPTREE tree, int16_t obj, int16_t ch_pos, GRECT *pt));
 VOID curfld PROTO((LPTREE tree, int16_t obj, int16_t new_pos, int16_t dist));

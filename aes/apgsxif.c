@@ -410,7 +410,7 @@ VOID gsx_start(NOTHING)
 	gl_nrows = gl_height / gl_hchar;
 	gl_hbox = gl_hchar + 3;
 	gl_wbox = (gl_hbox * gl_ws.ws_hpixel) / gl_ws.ws_wpixel;
-#if AESVERION >= 0x140
+#if AESVERSION >= 0x140
 	/*   7/26/89    */
 	if (gl_wbox < (gl_wchar + 2))
 		gl_wbox = gl_wchar + 2;

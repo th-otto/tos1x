@@ -371,13 +371,13 @@ done:
  */
 /* 104de: 00fda5d2 */
 /* 106de: 00e1b5ac */
-BOOLEAN do_aopen(P(APP *)pa, P(BOOLEAN) isapp, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(const char *)pname)
+BOOLEAN do_aopen(P(APP *)pa, P(BOOLEAN) isapp, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(char *)pname)
 PP(register APP *pa;)
 PP(BOOLEAN isapp;)
 PP(int16_t curr;)
 PP(int16_t drv;)
 PP(const char *ppath;)
-PP(const char *pname;)
+PP(char *pname;)
 {
 	register BOOLEAN isgraf;
 	register BOOLEAN iscr;
@@ -395,6 +395,7 @@ PP(const char *pname;)
 	register THEDSK *d;
 
 	UNUSED(tree);
+	UNUSED(name);
 	d = thedesk;
 	get_xywh(d->g_screen, curr, &cx, &cy, &cw, &ch);
 	get_xywh(d->g_screen, d->g_croot, &rx, &ry, &rw, &rh);
@@ -444,7 +445,7 @@ PP(const char *pname;)
 		{
 			/* DOS-based document been selected */
 			ret = fun_alert(3, STNOAPPL, NULL);
-			pcmd = &d->g_cmd;
+			pcmd = d->g_cmd;
 			ptail = &d->g_tail[1];
 			switch (ret)
 			{
@@ -489,7 +490,7 @@ PP(const char *pname;)
 BOOLEAN do_dopen(P(int16_t) curr)
 PP(register int16_t curr;)
 {
-	register int button;
+	register int retbutton;
 	register BOOLEAN ret;
 	register int drv;
 	register DESKWIN *pw;
@@ -505,7 +506,8 @@ PP(register int16_t curr;)
 	if (pw == NULL)
 	{
 		rsrc_gaddr(R_STRING, STNOWIND, (VOIDPTR *)&d->a_alert);
-		button = form_alert(1, d->a_alert);
+		retbutton = form_alert(1, d->a_alert);
+		UNUSED(retbutton);
 	} else
 	{
 		if (drv != CHAR_FOR_CARTRIDGE)
@@ -894,7 +896,7 @@ PP(int drive;)
 		{
 			ptr = (intptr_t)dos_alloc(512L);
 			
-			if (ptr != NULL)
+			if (ptr != 0)
 			{
 				while (rv)
 				{

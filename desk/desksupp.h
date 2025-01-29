@@ -6,5 +6,5 @@
 
 VOID sh_type PROTO((const char *fname));
 VOID sh_print PROTO((const char *fname));
-VOID sh_format PROTO((const char *fname, const char *cmd));
-VOID sh_copy PROTO((const char *fname, const char *cmd));
+VOID sh_format PROTO((char *fname, const char *cmd));
+VOID sh_copy PROTO((char *fname, const char *cmd));

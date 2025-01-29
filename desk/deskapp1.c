@@ -751,7 +751,6 @@ PP(BOOLEAN todisk;)
 	APP *app;
 	DESKWIN *top;
 
-	UNUSED(obj);
 	UNUSED(buf1);
 	UNUSED(j);
 

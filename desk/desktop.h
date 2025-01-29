@@ -453,7 +453,7 @@ BOOLEAN dofiles PROTO((const char *s, const char *d, int16_t code, int32_t *ndir
 BOOLEAN doright PROTO((int flag));
 BOOLEAN d_doop PROTO((int op, OBJECT *tree, char *psrc_path, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt));
 BOOLEAN fun_op PROTO((int op, PNODE *pspath));
-BOOLEAN dir_op PROTO((int op, const char *psrc_path, FNODE *pflist, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt, uint32_t *psize));
+BOOLEAN dir_op PROTO((int op, char *psrc_path, FNODE *pflist, char *pdst_path, uint16_t *pfcnt, uint16_t *pdcnt, uint32_t *psize));
 BOOLEAN par_chk PROTO((const char *psrc_path, FNODE *pflist, char *pdst_path));
 BOOLEAN fun_wdst PROTO((PNODE *pspath, APP *app, int obid));
 BOOLEAN fun_file2win PROTO((PNODE *pn_src, char *spec, APP *app, FNODE *fn_dest));
@@ -622,7 +622,7 @@ VOID do_wopen PROTO((BOOLEAN new_win, int16_t wh, int16_t curr, int16_t x, int16
 VOID zoom_closed PROTO((BOOLEAN close, int16_t w_id, int16_t xicon, int16_t yicon));
 VOID do_wfull PROTO((int16_t wh));
 BOOLEAN do_diropen PROTO((DESKWIN *pw, BOOLEAN new_win, int16_t curr_icon, int16_t drv, const char *ppath, const char *pname, const char *pext, GRECT *pt));
-BOOLEAN do_aopen PROTO((APP *pa, BOOLEAN isapp, int16_t curr, int16_t drv, const char *path, const char *name));
+BOOLEAN do_aopen PROTO((APP *pa, BOOLEAN isapp, int16_t curr, int16_t drv, const char *path, char *name));
 BOOLEAN do_dopen PROTO((int16_t curr));
 BOOLEAN do_fopen PROTO((DESKWIN *pw, int16_t curr, int16_t drv, const char *ppath, const char *pname, const char *pext));
 BOOLEAN open_item PROTO((int16_t curr));
@@ -734,7 +734,6 @@ extern int16_t gl_restype;
 extern BOOLEAN gl_rschange;
 extern int16_t gl_ncols;
 extern int16_t gl_nrows;
-extern BOOLEAN sh_iscart;
 extern int16_t gl_bvdisk;
 extern int16_t gl_bvhard;
 extern int16_t gl_width;

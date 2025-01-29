@@ -358,7 +358,7 @@ PP(int attr;)
 						if (amntrd != amntwr)
 						{
 							/* disk full        */
-							fun_alert(1, STDISKFU, NULL);
+							fun_alert(1, STDISKFULL, NULL);
 							more = FALSE;
 							dos_close(srcfh);
 							dos_close(dstfh);
@@ -625,9 +625,9 @@ PP(char *pdst_path;)
  */
 /* 104de: 00fd6cce */
 /* 106de: 00e17432 */
-BOOLEAN dir_op(P(int) op, P(const char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt, P(uint32_t *)psize)
+BOOLEAN dir_op(P(int) op, P(char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt, P(uint32_t *)psize)
 PP(int op;)
-PP(const char *psrc_path;)
+PP(char *psrc_path;)
 PP(FNODE *pflist;)
 PP(char *pdst_path;)
 PP(uint16_t *pfcnt;)
@@ -643,9 +643,8 @@ PP(uint32_t *psize;)
 	register int obj;
 	register THEDSK *d;
 	char *pglsrc;
-	char *pdldst;
+	char *pgldst;
 	
-	UNUSED(unused);
 	UNUSED(pglsrc);
 	UNUSED(pgldst);
 	UNUSED(obj);
@@ -663,7 +662,7 @@ PP(uint32_t *psize;)
 	case OP_DELETE:
 		if ((d->ml_dlpr = d->g_cdelepref))
 		{
-			tree = d->g_atree[DELBOX];
+			tree = (LPTREE)d->g_atree[DELBOX];
 			d->ml_dlfi = DELFILES;
 			d->ml_dlfo = DELDIR;
 			d->ml_dlok = DELOK;
@@ -678,7 +677,7 @@ PP(uint32_t *psize;)
 
 		if ((d->ml_dlpr = d->g_ccopypref))
 		{
-			tree = d->g_atree[CPBOX];
+			tree = (LPTREE)d->g_atree[CPBOX];
 			d->ml_dlfi = NUMFILE;
 			d->ml_dlfo = NUMDIR;
 			d->ml_dlok = OKCP;
@@ -690,13 +689,13 @@ PP(uint32_t *psize;)
 	if (tree)
 	{
 		merge_str(d->ml_files, "%W", pfcnt);
-		inf_sset(tree, d->ml_dlfi, d->ml_files);
+		inf_sset((OBJECT *)tree, d->ml_dlfi, d->ml_files);
 		merge_str(d->ml_dirs, "%W", pdcnt);
-		inf_sset(tree, d->ml_dlfo, d->ml_dirs);
+		inf_sset((OBJECT *)tree, d->ml_dlfo, d->ml_dirs);
 		d->ml_havebox = TRUE;
-		show_hide(tree);
-		form_do(tree, ROOT);
-		ret = inf_what(tree, d->ml_dlok, d->ml_dlcn);
+		show_hide((OBJECT *)tree);
+		form_do((OBJECT *)tree, ROOT);
+		ret = inf_what((OBJECT *)tree, d->ml_dlok, d->ml_dlcn);
 		if (ret)
 			desk_wait(TRUE);
 	} else
@@ -780,7 +779,7 @@ PP(uint32_t *psize;)
 					}
 					if (more)
 					{
-						more = d_doop(op, tree, d->g_srcpth, d->g_dstpth, pfcnt, pdcnt);
+						more = d_doop(op, (OBJECT *)tree, d->g_srcpth, d->g_dstpth, pfcnt, pdcnt);
 						if (f_level > f_maxlevel)
 							f_maxlevel = f_level;
 					}
@@ -809,8 +808,8 @@ PP(uint32_t *psize;)
 					{
 						*pfcnt -= 1;
 						merge_str(d->ml_files, "%W", pfcnt);
-						inf_sset(tree, d->ml_dlfi, d->ml_files);
-						drawfld(tree, d->ml_dlfi);
+						inf_sset((OBJECT *)tree, d->ml_dlfi, d->ml_files);
+						drawfld((OBJECT *)tree, d->ml_dlfi);
 					}
 				}
 			}

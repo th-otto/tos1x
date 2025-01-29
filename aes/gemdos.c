@@ -273,9 +273,9 @@ PP(int attr;)
 
 
 long dos_set(P(int) h, P(uint16_t) time, P(uint16_t) date)
-P(int h;)
-P(uint16_t time;)
-P(uint16_t date;)
+PP(int h;)
+PP(uint16_t time;)
+PP(uint16_t date;)
 {
 	_DOSTIME dt;
 
@@ -285,9 +285,9 @@ P(uint16_t date;)
 }
 
 
-BOOLEAN dos_label(P(int) drive, P(const char *) name)
+BOOLEAN dos_label(P(int) drive, P(char *) name)
 PP(char drive;)
-PP(const char *name;)
+PP(char *name;)
 {
 	char buf[50];						/* 44 bytes used    */
 	char path[8];
@@ -384,7 +384,7 @@ intptr_t dos_avail(NOTHING)
 }
 
 
-int dos_free(P(VOIDPTR) ptr)
+VOID dos_free(P(VOIDPTR) ptr)
 PP(VOIDPTR ptr;)
 {
 	Mfree(ptr);

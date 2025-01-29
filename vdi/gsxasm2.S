@@ -395,7 +395,7 @@ rt_nedge:
 		move.w	d7,(a4)			; store end Xright
 		move.l	a5,a2		/* save a5. */
 		move.w	4(sp),d7	/* fetch x coord again. */
-		move.w	PIXLV(XMN_CLIP,a4), d6	/* fetch left side of x viewport */
+		move.w	PIXLV(XMN_CLIP,a4),d6	/* fetch left side of x viewport */
 		move.w	a0,d0		/* restore pixel mask. */
 
 *	Now, search to the left.
@@ -422,7 +422,7 @@ lnedg_lp:
 		cmp.w	d1,d2		/* while (pixel value <> search color) */
 		bne	lt_nedge
 lnlp1:
-		cmp.w	d6, d7		/* and (x coord inside viewport). */
+		cmp.w	d6,d7		/* and (x coord inside viewport). */
 		bmi	lt_nedge
 		subq.w	#1,d7		/* decrement x coord. */
 		rol.w	#1,d0		/* "decrement" the pixel mask and a5. */
@@ -457,12 +457,12 @@ lt_nedge:
 		cmp.w	_search_color,d2
 		beq	ep_is_search
 
-		move.w	_seed_type, d0	/* return segment not of search color */
+		move.w	_seed_type,d0	/* return segment not of search color */
 		eori.w	#1,d0
 		rts
 
 ep_is_search:
-		move.w	_seed_type, d0	/* return segment is of search color */
+		move.w	_seed_type,d0	/* return segment is of search color */
 		eori.w	#0,d0		; what the fuck is this ?
 		rts
 
@@ -617,7 +617,7 @@ BOX_FILL:
 		move.w	0(a2,d0.w),d0	/* fetch left fringe mask. */
 		not.w	d0		/* not left fringe mask. */
 		move.w	d2,d7		/* X2. */
-		and.w	#0x000F,d7	/* X2 and 0x000F. */
+		and.w	#15,d7		/* X2 and 0x000F. */
 		asl.w	#1,d7		/* word index. */
 		move.w	2(a2,d7.w),d7	/* fetch not right fringe mask. */
 		moveq.l	#4,d5
@@ -673,7 +673,7 @@ bf_pat:
 		movea.l	pat_start(a6),a0	/* point to the next line of pattern. */
 		move.w     (a7)+,d3	/* restore video plane count */
 		movem.l    (a7)+,a4-a5
-		adda.w     PIXLV(v_lin_wr),a5
+		adda.w     PIXLV(v_lin_wr,a2),a5
 		dbra	d6,bf_loop	/* rectangle loop. */
 		unlk       a6	/* remove temporary stack variables */
 		rts

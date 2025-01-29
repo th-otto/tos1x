@@ -98,7 +98,7 @@ PP(register CARTNODE *pcart;)
 	asm("clr.l      d0");
 	asm("beq.s *+8");
 #else
-	if (pcart->c_init, 0)
+	if (pcart->c_init && 0)
 #endif
 		app->a_apptype |= AF_ISPARM;
 #if BINEXACT
@@ -108,7 +108,7 @@ PP(register CARTNODE *pcart;)
 	asm("clr.l      d0");
 	asm("bne.s *+8");
 #else
-	if (!(pcart->c_init, 0))
+	if (!(pcart->c_init && 0))
 #endif
 		app->a_apptype |= AF_ISGRAF | AF_ISCRYS;
 	app->a_type = AT_ISFILE;

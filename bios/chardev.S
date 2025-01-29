@@ -778,9 +778,9 @@ copymem:
 
 #if TOSVERSION < 0x102
 ikbd_init_commands:
-		dc.b 0x80,0x01 /* reset */
-		dc.b 0x12      /* disable mouse */
-		dc.b 0x1a      /* disable joystick */
+		dc.b $80,$01 /* reset */
+		dc.b $12      /* disable mouse */
+		dc.b $1a      /* disable joystick */
 #endif
 
 ikbdtable:
@@ -1075,7 +1075,7 @@ bselect:
         subq.w    #8,d1                         /* adjust for using ixrb instead */
 bselect1:
         cmpi.b    #8,d0
-        bge.s     bselect2:
+        bge.s     bselect2
         addq.w    #MFP_IERB-MFP_IERA,a1         /* adjust for using ixrb instead */
 bselect2:
         rts
@@ -1211,7 +1211,7 @@ rcvrint1:
 rcvrint2:
         cmpi.b     #$13,d0                      /* is the data an "xoff" signal? */
         bne.s      rcvrint3                     /* neither xon/xoff value, must be normal data... */
-        move.b     #0xff,xoff(a0)               /* set to halted transmission to host */
+        move.b     #$ff,xoff(a0)               /* set to halted transmission to host */
         bra.s      rcvrint5
 rcvrint3:
         move.w     tail(a0),d1                  /* get current tail pointer offset */
@@ -1230,7 +1230,7 @@ rcvrint3:
         beq.s      rcvrint4                     /* no */
         tst.b      highwater(a0)                /* high-water flag already set? */
         bne.s      rcvrint4                     /* yes...exit... */
-        move.b     #0xff,highwater(a0)            /* set high-water flag */
+        move.b     #$ff,highwater(a0)            /* set high-water flag */
         move.b     #$13,d1
         bsr        rs232put
 rcvrint4:

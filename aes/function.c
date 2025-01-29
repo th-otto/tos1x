@@ -548,7 +548,7 @@ PP(uint16_t *parms;)
 				do_value = TRUE;
 				break;
 			case 'S':
-				psrc = *((const char **) & parms[num]);
+				psrc = *((char *const *) & parms[num]);
 				num += 2;
 				while (*psrc)
 					*pdst++ = *psrc++;
