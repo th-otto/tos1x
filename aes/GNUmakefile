@@ -119,6 +119,13 @@ single::
 
 endif
 
+gemshlib.o: ../desk/deskstr.h
+
+gemrom.o: gemrom.c ../glue/tosrsc.h
+
+../glue/tosrsc.h:
+	$(MAKE) -C ../glue tosrsc.h
+
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 

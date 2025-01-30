@@ -45,7 +45,6 @@ ACCPD *gl_pacc[MAX_ACCS];		/* total of 6 desk acc, 1 from rom  */
 int16_t gl_naccs;
 char *gl_adacc[MAX_ACCS];		/* addresses of accessories */
 char *sys_adacc;
-char const stacc[] = "\\*.ACC";
 #if AESVERSION >= 0x200
 STATIC int16_t used_acc;		/* currently number of acc  */
 #endif
@@ -220,13 +219,13 @@ VOID ldaccs(NOTHING)
 			dos_sdrv(0x02);				/* set the hard disk    */
 		/* search the file  */
 		dos_chdir("\\");				/* always at root   */
-		ret = dos_sfirst(stacc, 0);
+		ret = dos_sfirst("\\*.ACC", 0);
 		if (!ret)
 			dos_sdrv(defdrv);			/* if not at the hard   */
 		/* disk go back to defa */
 
 		dos_chdir("\\");				/* always at root   */
-		ret = dos_sfirst(stacc, 0);
+		ret = dos_sfirst("\\*.ACC", 0);
 
 		name += 0x1EL;
 

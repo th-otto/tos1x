@@ -267,7 +267,7 @@ VOID chkkbd(NOTHING)
  *
  * run through lists until someone is on the rlr or the fork list
  */
-static VOID schedule(NOTHING)
+LINEF_STATIC VOID schedule(NOTHING)
 {
 	register PD *p;
 

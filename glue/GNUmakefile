@@ -40,7 +40,7 @@ BIOSLINK_OBJS := $(shell echo $(BIOSVDI_OBJS) tosrsc$(COUNTRY).o | tr ' ' ',')
 AESLINK_OBJS := $(shell echo $(AESDESK_OBJS) | tr ' ' ',')
 LINK_OBJS = $(BIOSLINK_OBJS),$(AESLINK_OBJS)
 
-ROMSIZE_100 = 256k
+ROMSIZE_100 = 192k
 ROMSIZE_104 = 192k
 ROMSIZE_106 = 256k
 ROMSIZE_162 = 256k
@@ -80,6 +80,9 @@ tos.rel: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o ../vdi/vdivar.o ../aes/gembase.o 
 	$(AM_V_LD)$(LINK68) '[abs,relocs=td,text[$(rombase)],bss[0]]' tosrel.tmp=$(LINK_OBJS) > $@
 	$(AM_V_at)$(RM) tosrel.tmp
 
+$(IMG): tos1.img tos2.img $(MKROM)
+	$(MKROM) pad $(ROMSIZE) tos1.img tos2.img $@
+
 else
 
 CCLIBS := `$(CC) -print-file-name=libgcc.a`
@@ -88,10 +91,10 @@ LDFLAGS := -nostdlib -nostartfiles -Wl,--script=../common/rom.ld,--entry=_os_ent
 tos.img: $(STARTUP) $(LIBS) tosrsc$(COUNTRY).o vars.o tosvars.o ebss.o
 	$(AM_V_LD)$(LD) $(LDFLAGS) -o $@ $(STARTUP) vars.o tosvars.o ../bios/bios.a ../vdi/vdi.a ../bdos/bdos.a ../vdi/vdi.a ../bios/bios.a ../aes/aes.a ../desk/desk.a tosrsc$(COUNTRY).o $(CCLIBS)
 
-endif
+$(IMG): tos.img $(MKROM)
+	$(MKROM) pad $(ROMSIZE) tos.img $@
 
-$(IMG): tos1.img tos2.img $(MKROM)
-	$(MKROM) pad $(ROMSIZE) tos1.img tos2.img $@
+endif
 
 $(MKROM)::
 	$(MAKE) -C $(top_srcdir)/tools mkrom

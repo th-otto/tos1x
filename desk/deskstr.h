@@ -29,8 +29,10 @@
 #endif
 
 #if (OS_COUNTRY == CTRY_DK)
+#define S_CARTNAME  "kapsel\0\0\0"
+#define S_PRINT     " PRINT: \0\0"
 #define S_MORE      "-MERE-"
-#define S_EOF       "-SLUT P FILEN-"
+#define S_EOF       "-SLUT P\217 FILEN-"
 #define S_FMTERR    "[3][En fejl opstod under formate-|ring eller kopiering.  |           ][  OK  ]"
 #define S_NOTSAME   "[3][Disketterne har ikke samme|format!       ][ OK ]"
 #define S_FREESPACE "[1][Disketten har %L|Bytes fri.          ][  OK  ]"

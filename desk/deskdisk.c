@@ -56,6 +56,10 @@
 
 #include "../bios/bpb.h"
 
+static char const s_fmterr[] = S_FMTERR;
+static char const s_notsame[] = S_NOTSAME;
+static char const s_freespace[] = S_FREESPACE;
+
 
 /* The DSB location is returned by getbpb (Xbios 7) and is defined in
  *	gemdos/rwabs.c.  We use it to determine the # of sides for
@@ -311,7 +315,7 @@ PP(char *cmd;)
 		{
 			/* now compute the size in bytes and tell the user  */
 			dos_space(devno + 1, &parms.total, &parms.avail);
-			merge_str((char *)bufaddr, S_FREESPACE, (uint16_t *)&parms.avail);
+			merge_str((char *)bufaddr, s_freespace, (uint16_t *)&parms.avail);
 			fc_draw();
 			fm_alert(1, (char *)bufaddr);
 		}
@@ -562,9 +566,9 @@ PP(int16_t dev;)
 	if (err < 0)
 		err_trap(err, dev);
 	else if (err != 0)
-		fm_alert(1, S_FMTERR);
+		fm_alert(1, s_fmterr);
 	else
-		fm_alert(1, S_NOTSAME);
+		fm_alert(1, s_notsame);
 }
 
 

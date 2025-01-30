@@ -518,17 +518,36 @@ PP(long target_size;)
 	}
 
 	/* Check if the input file size is not too big */
-	if (source_size > (target_size - 2 * banks))
+	free_size = target_size - source_size - 2 * banks;
+	if (free_size < 0)
 	{
-		fprintf(stderr, "%s: %s is too big: %lu extra bytes\n", program_name, infilename, source_size - target_size);
+		fprintf(stderr, "%s: %s is too big: %lu extra bytes\n", program_name, infilename, -free_size);
 		lfree(buffer);
 		return FALSE;
 	}
 
-	/* Pad with FF */
-	free_size = target_size - source_size;
-	lmemset(buffer + source_size, 0xff, free_size);
-	
+	if (tos_version != 0 && tos_version <= 0x102)
+	{
+		const uint32_t *src;
+		uint32_t *dst;
+
+		/*
+		 * copy the GEM_MUPB structure to the end of the ROM
+		 */
+		dst = (uint32_t *)(buffer + target_size);
+		src = (const uint32_t *)(buffer + source_size);
+		*--dst = *--src;
+		*--dst = *--src;
+		*--dst = *--src;
+
+		/* Pad with 00 */
+		lmemset(buffer + source_size - 12, 0, free_size);
+	} else
+	{
+		/* Pad with FF */
+		lmemset(buffer + source_size, 0xff, free_size);
+	}
+
 	if (banks != 0)
 	{
 		for (i = 0; i < banks; i++)

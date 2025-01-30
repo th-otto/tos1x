@@ -411,7 +411,6 @@ extern ACCPD *gl_pacc[MAX_ACCS];		/* total of 6 desk acc, 1 from rom  */
 extern int16_t gl_naccs;
 extern char *gl_adacc[MAX_ACCS];		/* addresses of accessories */
 extern char *sys_adacc;
-extern const char stacc[];
 
 VOID release PROTO((NOTHING));
 VOID all_run PROTO((NOTHING));
@@ -1010,8 +1009,6 @@ extern int16_t gl_nextrez;
 /*
  * someone messed it up and called functions from desktop here...
  */
-extern char const infdata[]; /* "DESKTOP.INF" */
-
 #if AESVERSION >= 0x330
 extern BOOLEAN do_once; /* used by desktop only */
 #endif

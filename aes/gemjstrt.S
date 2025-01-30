@@ -79,8 +79,8 @@ fsize		equ	100		* size of linef handler in bytes+ a little fat
  */
 /* 104de: 00fd3b8e */
 /* 106de: 00e13dee */
-	xdef	gemstart
-gemstart:
+	xdef	_gemstart
+_gemstart:
 	move.l	a7,a5		/* save stack */
 	move.l	#ustak+128,a7	/* switch stacks, dos needs a user stack  */
 	move.l	4(a5),a5	/* basepage address */

@@ -547,7 +547,7 @@ _endvdibss: ds.b 0
 	PTR(_gl_newdesk)
 	PTR(_fc_tree)
 	
-	ds.b 48
+	ds.b 56 /* unused */
 
 /* end AES+DESKTOP */
 

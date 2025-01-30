@@ -81,23 +81,11 @@ BOOLEAN havefmt;		/* fmt.rsc already read in ? */
 #define SWEDDATE 1
 #endif
 
-extern uint16_t const tosrsc[];
-#ifndef __GNUC__
-asm("_tosrsc equ 0"); /* ZZZ now defined in first half of ROM */
-#endif
+#include "../glue/tosrsc.h"
 
-
-#if OS_COUNTRY == CTRY_US
-#define TOS_RSSIZE 0x4850
-#endif
-
-#if OS_COUNTRY == CTRY_DE
-#define TOS_RSSIZE 0x44E0
-#endif
-
-#if OS_COUNTRY == CTRY_FR
-#define TOS_RSSIZE 0x47FA
-#endif
+extern uint8_t const gemstart[];
+/* tosrsc data is at the end of the first part, just before AES+DESKTOP text */
+#define tosrsc (gemstart - TOS_RSSIZE)
 
 /*
  * Read in the resource data

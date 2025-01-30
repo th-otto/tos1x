@@ -35,9 +35,9 @@ AES_100_OBJS = \
 	large.o \
 	optimize.o \
 	function.o \
+	gemobjop.o \
 	ratrbp.o \
 	romcart.o \
-	gemobjop.o \
 	trap14.o \
 	gemrom.o \
 	gemglobe.o \

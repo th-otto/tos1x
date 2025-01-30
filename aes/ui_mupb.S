@@ -1,7 +1,7 @@
 GEM_MUPB_MAGIC equ $87654321
 
 		xref _endgembss
-		xref gemstart
+		xref _gemstart
 
 /* in TOS versions <= 1.02, this is always located at the end of the rom */
         data
@@ -9,5 +9,4 @@ GEM_MUPB_MAGIC equ $87654321
 _ui_mupb: /* equ $2fff4 */
         dc.l GEM_MUPB_MAGIC
         dc.l _endgembss
-        dc.l gemstart
-
+        dc.l _gemstart

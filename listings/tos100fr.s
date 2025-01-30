@@ -61973,7 +61973,10 @@ lineftab:
 [00fef5f0] 4600                      not.b      d0
 [00fef5f2] 5555                      subq.w     #2,(a5)
 [00fef5f4] aaaa 5555 aaaa            msac.w     d5.u,d5.l,??,-21846(a2),d5,acc2
-[00fef5fa] aaaa 5555 00fd            msac.w     d5.u,d5.l,??,253(a2),d5,acc2
+[00fef5fa] aaaa 5555
+
+; jmptable from inf_xdesk
+[00fef5fe] 00fd            msac.w     d5.u,d5.l,??,253(a2),d5,acc2
 [00fef600] a8a2 00fd                 mac.w      a5.u,d0.u,0,-(a2)&,d4,acc2
 [00fef604] a8d2 00fd                 mac.w      a5.u,d0.u,0,(a2)&,a4,acc2
 [00fef608] a8f2 00fd                 mac.w      d?.u,d?.u,0,acc3
@@ -62077,7 +62080,9 @@ lineftab:
 [00fef758] 0000                      dc.w       $0000
 [00fef75a] 0000                      dc.w       $0000
 [00fef75c] 0000                      dc.w       $0000
-[00fef75e] 0000 00fe                 ori.b      #$FE,d0
+[00fef75e] 0000
+; jmptable from open_item
+[00fef760] 00fe                 ori.b      #$FE,d0
 [00fef762] 0de0                      bset       d6,-(a0)
 [00fef764] 00fe 0e0e                 chk2.b     ???,d0 ; 68020+ only
 [00fef768] 00fe 0e6a                 chk2.b     ???,d0 ; 68020+ only

@@ -33,8 +33,10 @@ static int8_t const ILL_NOTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, 0 };
 static int8_t const ILL_DESKTOP[] = { NEWFITEM, CLSFITEM, CLSWITEM, ICONITEM, TEXTITEM, NAMEITEM, DATEITEM, SIZEITEM, TYPEITEM, 0 };
 static int8_t const ILL_YSEL[] = { OPENITEM, IDSKITEM, FORMITEM, SHOWITEM, 0 };
 static int8_t const ILL_CART[] = { SHOWITEM, NEWFITEM, FORMITEM, OUTPITEM, IAPPITEM, 0 };
+#if TOSVERSION >= 0x104
 static int8_t const ILL_NOCART[] = { NEWFITEM, 0 };
 static int16_t const top_items[] = { ABOUITEM, OPENITEM, ICONITEM, IDSKITEM, 0 };
+#endif
 
 
 #undef Blitmode

@@ -11,7 +11,7 @@ ICON_DAT = ../desk/rsc/$(TOSVERSION)/icon$(COUNTRY).dat
 
 -include localrsc.mak
 
-glue.$(COUNTRY): $(MKGLUE) $(GEM_RSC) $(DESK_RSC) $(DESK_INF) $(FMT_RSC) $(ICON_DAT)
+glue.$(COUNTRY) tosrsc.h: $(MKGLUE) $(GEM_RSC) $(DESK_RSC) $(DESK_INF) $(FMT_RSC) $(ICON_DAT)
 	$(AM_V_GEN)$(MKGLUE) $(COUNTRY) $(TOSVERSION)
 
 rscend.o: rscend.S

@@ -18,7 +18,6 @@
 #include "desktop.h"
 
 
-char const infdata[] = "DESKTOP.INF";
 char infpath[LEN_ZFPATH];
 int16_t infdrv;
 
@@ -292,7 +291,7 @@ PP(register int16_t attr;)
 	if (openit)
 		handle = dos_open((char *)lp, RMODE_RW);
 	else
-		handle = dos_create((char *)lp, attr);
+		handle = dos_create((char *)lp, 0);
 	if (DOS_ERR)
 	{
 		handle = 0;

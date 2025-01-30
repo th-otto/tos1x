@@ -88,6 +88,7 @@ vars.o: $(top_srcdir)/common/vars.S $(top_srcdir)/common/config.h
 
 desksupp.o: desksupp.c desksup3.c
 deskinf.o: deskinf.c deskinf2.c deskpref.c
+desksupp.o deskshow.o deskdisk.o: deskstr.h
 
 # no check here; to much hassle to get all the external dependencies
 check:: desk.a

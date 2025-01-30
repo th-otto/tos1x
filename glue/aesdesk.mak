@@ -55,9 +55,9 @@ AESDESK_OBJS = \
 	../aes/large.o \
 	../aes/optimize.o \
 	../aes/function.o \
+	../aes/gemobjop.o \
 	../aes/ratrbp.o \
 	../aes/romcart.o \
-	../aes/gemobjop.o \
 	../desk/deskshow.o \
 	../desk/deskdisk.o \
 	../aes/trap14.o \

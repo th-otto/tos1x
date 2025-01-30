@@ -53669,7 +53669,7 @@ sh_rom:
 [00feaf68] f594                      dc.w       $F594 ; sh_draw
 [00feaf6a] 5c8f                      addq.l     #6,a7
 [00feaf6c] 2e8d                      move.l     a5,(a7)
-[00feaf6e] f930                      dc.w       $F930
+[00feaf6e] f930                      dc.w       $F930 ; sh_print
 [00feaf70] 6060                      bra.s      $00FEAFD2
 [00feaf72] 3ebc 0001                 move.w     #$0001,(a7)
 [00feaf76] 4267                      clr.w      -(a7)

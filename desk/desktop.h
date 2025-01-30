@@ -364,8 +364,6 @@ int16_t make_icon PROTO((int16_t drive, int16_t icon, int16_t type, const char *
 /*
  * deskapp1.c
  */
-extern char const infdata[];
-
 BOOLEAN app_reschange PROTO((int16_t res)); /* also referenced by AES */
 VOID app_free PROTO((APP *app));
 VOID app_tran PROTO((int16_t bi_num));

@@ -744,7 +744,7 @@ PP(register int16_t curr;)
 			drive[1] = '\0';
 			ptmp = drive;
 			ret = fun_alert(2, STFORMAT, &ptmp);
-			strcpy(&drive[1], ":/ /V");
+			strcpy(&drive[1], ": /V");
 			if (ret == 1)
 			{
 				ret = pro_cmd(ini_str(STTFORMAT), drive, TRUE, CMD_FORMAT);

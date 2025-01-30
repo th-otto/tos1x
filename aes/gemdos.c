@@ -229,7 +229,7 @@ int dos_gdir(P(int) drive, P(char *) pdrvpath)
 PP(int drive;)
 PP(char *pdrvpath;)
 {
-	return Dgetpath(drive, pdrvpath);
+	return Dgetpath(pdrvpath, drive);
 }
 
 
