@@ -92,6 +92,7 @@ desksupp.o deskshow.o deskdisk.o: deskstr.h
 
 # no check here; to much hassle to get all the external dependencies
 check:: desk.a
+	@:
 
 dist::
 	$(CP) -a $(SRCS) $(EXTRA_DIST1) $(EXTRA_DIST2) $(top_srcdir)/$(DISTDIR1)/$(subdir)

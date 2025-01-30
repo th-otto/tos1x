@@ -135,8 +135,9 @@ vars.o: $(top_srcdir)/common/vars.S $(top_srcdir)/common/config.h
 aesext.o: aesext.S $(top_srcdir)/common/sections.inc $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
-# no check here; has to be done in desktop
+# no check here; to much hassle to get all the external dependencies
 check:: aes.a
+	@:
 
 clean:
 	$(RM) $(AES_OBJS)
