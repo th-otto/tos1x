@@ -19,6 +19,21 @@
 #include "desktop.h"
 #include "taddr.h"
 #include "toserrno.h"
+#include "desksupp.h"
+#undef NUM_STRINGS
+#undef NUM_FRSTR
+#undef NUM_UD
+#undef NUM_IMAGES
+#undef NUM_BB
+#undef NUM_FRIMG
+#undef NUM_IB
+#undef NUM_CIB
+#undef NUM_TI
+#undef NUM_OBS
+#undef NUM_TREE
+#undef SCREEN
+#include "fmtrsc.h"
+#include "deskstr.h"
 
 
 #define MAXTRACK	80					/* maximum number of track      */
@@ -32,7 +47,7 @@
 #define FSIZE		0x2000L				/* format buffer size (8k)     */
 #define	VIRGIN		0xe5e5				/* FORMAT value to write to new sectors */
 #define	MAGIC		0x87654321L
-#define INTERLV		-1					/* neg, so use skew table for format    */
+#define INTERLV		1					/* neg, so use skew table for format    */
 #define SINGLESKEW	3					/* amount of SKEW for a single sided and high density disk */
 #define	DOUBLESKEW	2					/* amount of skew between sides     */
 
@@ -65,180 +80,61 @@ DSB
 };
 
 /*
- * sigh, why use trp13/trp14 from AES here?
+ * sigh, why use bios/xbios from AES here?
  */
 #undef Getbpb
 #undef Rwabs
 #undef Flopfmt
 #undef Protobt
-#define Getbpb(devno) trp13(7, devno)
-#define Rwabs(a,b,c,d,e) trp13(4, a, b, c, d, e)
-#define Flopfmt(a,b,c,d,e,f,g,h,i) trp14(10, a, b, c, d, e, f, g, h, i)
-#define Protobt(a,b,c,d) trp14(18, a, b, c, d)
+#undef Floprd
+#undef Flopwr
+#define Getbpb(devno) bios(7, devno)
+#define Rwabs(a,b,c,d,e) bios(4, a, b, c, d, e)
+#define Floprd(a,b,c,d,e,f,g) xbios(8, a, b, c, d, e, f, g)
+#define Flopwr(a,b,c,d,e,f,g) xbios(9, a, b, c, d, e, f, g)
+#define Flopfmt(a,b,c,d,e,f,g,h,i) xbios(10, a, b, c, d, e, f, g, h, i)
+#define Protobt(a,b,c,d) xbios(18, a, b, c, d)
+#define Dbmsg(a) xbios(11, a)
 
 
-STATIC int16_t w_inc;
-STATIC int16_t bar_max;					/* in case user copies disk > 80 tracks */
-
-/* ZZZ */
-#define FCCNCL 0
-#define FCCOPY 0
-#define FCFORMAT 0
-#define SRCDRA 0
-#define SRCDRB 0
-#define ADRIVE 0
-#define BDRIVE 0
-
-static int16_t const ttable[] = { FCCNCL, FCCOPY, FCFORMAT, SRCDRA, SRCDRB, ADRIVE, BDRIVE };
-
-static int16_t const skew2[MAXSPT] = { 3, 4, 5, 6, 7, 8, 9, 1, 2 };
+STATIC const char *fc_cmd;
+STATIC OBJECT *fc_tree;
+STATIC TEDINFO *fc_ted;
+STATIC int16_t fc_x;
+STATIC int16_t fc_y;
 
 
-LINEF_STATIC VOID fc_draw PROTO((LPTREE tree, int16_t which));
-LINEF_STATIC VOID fc_format PROTO((LPTREE tree));
-LINEF_STATIC VOID fc_copy PROTO((LPTREE tree));
-LINEF_STATIC VOID fc_bar PROTO((LPTREE tree, int16_t which));
-LINEF_STATIC int16_t fc_rwsec PROTO((int16_t op, VOIDPTR buf, int16_t nsect, int16_t sect, int16_t dev));
-LINEF_STATIC VOID fc_clfix PROTO((uint16_t cl, uint16_t *fat));
+LINEF_STATIC VOID fc_bar PROTO((int16_t *w_inc, int16_t *bar_max, int16_t maxvalue));
+LINEF_STATIC VOID fc_draw PROTO((NOTHING));
+LINEF_STATIC VOID fc_clfix PROTO((int16_t cl, uint16_t num, BPB *bpb, VOIDPTR fat));
+LINEF_STATIC VOID fc_do PROTO((OBJECT *tree, int16_t depth, BOOLEAN fmdo, int16_t startfld));
+LINEF_STATIC VOID do1_alert PROTO((int16_t err, int16_t dev));
+LINEF_STATIC BOOLEAN fc_alloc PROTO((VOIDPTR *buf, long *size));
+LINEF_STATIC int16_t fc_rwtracks PROTO((int16_t op, intptr_t buf, intptr_t sktable, int16_t dev, int16_t side, int16_t w_inc, int16_t track, int16_t numtracks, char *cmd));
+LINEF_STATIC VOID fc_swp68 PROTO((uint16_t *val));
 
-
-VOID sh_format(P(const char *) fname, P(const char *) cmd)
-PP(const char *fname;)
-PP(const char *cmd;)
-{
-}
-
-
-VOID sh_copy(P(const char *) fname, P(const char *) cmd)
-PP(const char *fname);
-PP(const char *cmd;)
-{
-}
+/* from aes/jbind.S */
+long err_trap PROTO((int16_t err, int16_t dev));
 
 
 /*
- * format and copy start
+ * format and copy init
  */
-/* 104de: 00fe6a5a */
-/* 106de: 00e29230 */
-VOID fc_start(P(const char *)source, P(int16_t) op)
-PP(const char *source;)
-PP(int16_t op;)
+LINEF_STATIC VOID fc_init(NOTHING)
 {
-#if 0 /* ZZZ */
-	register BOOLEAN ret;
-	register int16_t width;
-	int16_t i, field;
-	register char *destdr;
-	register LPTREE tree;
-	int32_t value;
-	int32_t unused;
-
-	UNUSED(value);
-	UNUSED(unused);
-	tree = (LPTREE)thedesk->g_atree[ADFORMAT];
-
-	destdr = (char *)OB_SPEC(DESTDR);		/* to set boxchar in DESTDR */
-
-	width = LWGET(OB_WIDTH(FCBARA));
-	w_inc = width / MAXTRACK;
-	bar_max = width = w_inc * MAXTRACK;
-	LWSET(OB_WIDTH(FCBARA), width);
-	LWSET(OB_WIDTH(FCBARB), width);
-
-	for (i = 0; i < 7; i++)
-		LWSET(OB_STATE(ttable[i]), NORMAL);
-
-	inf_sset((OBJECT *)tree, FCLABEL, "");
-
-	LWSET(OB_FLAGS(FCBOXF), HIDETREE);
-	LWSET(OB_FLAGS(FCBOXC), HIDETREE);
-
-	ret = *source != 'A' ? FALSE : TRUE;
-
-	if (op == CMD_COPY)
-	{									/* format box   */
-		LWSET(OB_STATE(ret ? BDRIVE : ADRIVE), SELECTED);
-		/* copy box */
-		LWSET(OB_STATE(ret ? SRCDRA : SRCDRB), SELECTED);
-		*destdr = ret ? 'B' : 'A';
-		LWSET(OB_STATE(FCCOPY), SELECTED);
-		ret = FCCOPY;
-	} else
-	{									/* op == CMD_FORMAT     */
-		/* copy box */
-		LWSET(OB_STATE(ret ? SRCDRB : SRCDRA), SELECTED);
-		*destdr = ret ? 'A' : 'B';
-		/* format box */
-		LWSET(OB_STATE(ret ? ADRIVE : BDRIVE), SELECTED);
-		LWSET(OB_STATE(FCFORMAT), SELECTED);
-		ret = FCFORMAT;
-	}
-
-	fm_draw(tree);
-
-#ifndef __ALCYON__
-	field = 0; /* BUG: used uninitailized below */
-#endif
-	while (TRUE)						/* while loop   */
-	{
-		switch (ret)
-		{
-		case FCFORMAT:
-			drawfld((OBJECT *)tree, FCBOXC);		/* erase copy function */
-			LWSET(OB_FLAGS(FCBOXC), HIDETREE);
-			LWSET(OB_FLAGS(FCBOXF), NONE);
-			fc_draw(tree, FCBOXF);		/* draw the format  */
-			field = 0;
-			break;
-
-		case FCCOPY:
-			drawfld((OBJECT *)tree, FCBOXF);		/* erase the format     */
-			LWSET(OB_FLAGS(FCBOXF), HIDETREE);
-			LWSET(OB_FLAGS(FCBOXC), NONE);
-			fc_draw(tree, FCBOXC);
-			field = NIL;
-			break;
-
-		case SRCDRA:					/* set the copy drive   */
-		case SRCDRB:
-			*destdr = ret == SRCDRA ? 'B' : 'A';
-			drawfld((OBJECT *)tree, DESTDR);
-			break;
-
-		case FCCNCL:					/* cancel       */
-			do_finish((OBJECT *)tree);
-#if 0 /* ZZZ */
-			up_allwin("A", FALSE);
-			up_allwin("B", FALSE);
-#endif
-			desk_clear(DESK);
-			return;
-
-		case FCOK:
-			desk_wait(TRUE);
-			LWSET(OB_WIDTH(FCBARA), 0);
-			LWSET(OB_WIDTH(FCBARB), 0);
-
-			if (LWGET(OB_STATE(FCFORMAT)) & SELECTED)
-			{
-				fc_format(tree);
-			} else
-			{
-				fc_copy(tree);
-			}
-			LWSET(OB_WIDTH(FCBARA), width);
-			LWSET(OB_WIDTH(FCBARB), width);
-			LWSET(OB_STATE(FCOK), NORMAL);
-			drawfld((OBJECT *)tree, FCBARA);
-			drawfld((OBJECT *)tree, FCBARB);
-			drawfld((OBJECT *)tree, FCOK);
-			desk_wait(FALSE);
-		}
-
-		ret = form_do((OBJECT *)tree, field) & 0x7FFF;
-	}
-#endif
+	GRECT gr;
+	
+	ap_init();
+	rom_ram(5, (intptr_t)pglobal, 0);
+	rsrc_gaddr(R_TREE, ADFORMAT, (VOIDPTR *)&fc_tree);
+	rsrc_gaddr(R_TEDINFO, 0, (VOIDPTR *)&fc_ted);
+	/* WTF: those objects do not exist in the resource tree */
+	fc_x = fc_tree[FCBOXS].ob_x;
+	fc_y = fc_tree[FCBOXS].ob_y;
+	ob_center((LPTREE)&fc_tree[ROOT], &gr);
+	ob_center((LPTREE)&fc_tree[FCCOPYBOX], &gr);
+	ob_center((LPTREE)&fc_tree[FCPROGRESS], &gr);
+	desk_wait(FALSE);
 }
 
 
@@ -248,231 +144,181 @@ PP(int16_t op;)
 /* 306de: 00e2a1a4 */
 /* 104de: 00fe6d20 */
 /* 106de: 00e29542 */
-LINEF_STATIC VOID fc_format(P(LPTREE) tree)
-PP(LPTREE tree;)
+VOID sh_format(P(char *) fname, P(char *) cmd)
+PP(char *fname;)
+PP(char *cmd;)
 {
-	register char *bufaddr;
+	register intptr_t bufaddr;
+	register int16_t trackno;
+	register int16_t disktype;
 	register int16_t badindex;
 	register int16_t ret;
-	register int16_t i;
-	register int16_t trackno;
-	int32_t dsb;
-	int32_t avail;
-	int32_t total;
-	int16_t devno;
-	int16_t j;
-	int16_t k;
-	int16_t disktype;
-	int16_t sideno;
-	int16_t curtrk;
-	int16_t track;
-	int16_t numside;
-	int16_t cl;
 	register int16_t *badtable;
 	register int16_t *fat;
 	register BPB *bpbaddr;
-	int16_t sktable[MAXSPT];
-	int16_t skewtable[MAXSPT];
-	int16_t skew;
-	char label1[14];
-	char label2[14];
+	long sktable;
+	struct {
+		int32_t total;
+		int32_t avail;
+	} parms;
+	int i;
+	int16_t j;
+	int16_t k;
+	int16_t bar_max;
+	int16_t w_inc;
+	int sideno;
+	int16_t curtrk;
+	int devno;
+	int track;
+	int numside;
+	int16_t cl;
 
-	UNUSED(curtrk);
-	UNUSED(dsb);
-	
-	/* format needs 8k buffer   */
-	if (!(bufaddr = (char *)dos_alloc(FSIZE)))		/* no memory            */
-	{
-	memerr:
-		do1_alert(STDISKFU);
-		return;
-	}
+	UNUSED(curtrk);	
 
+	/* format needs 8k buffer */
+	/* BUG: no malloc check */
+	bufaddr = (intptr_t)dos_alloc(FSIZE);
 	fat = (int16_t *)bufaddr;						/* the bad sector table     */
 
 	/* my bad sector table */
-	if (!(badtable = (int16_t *)dos_alloc(FSIZE)))	/* no memory            */
+	badtable = (int16_t *)dos_alloc(FSIZE);
+
+	fc_init();
+	fc_ted->te_ptext = fname;
+	fc_cmd = cmd;
+	while (TRUE)
 	{
-		dos_free(bufaddr);
-		goto memerr;
-	}
-
-	track = MAXTRACK;					/* always 80 tracks */
-	numside = 2;						/* assume double sided  */
-	disktype = 3;
-
-#if 0 /* ZZZ */
-	if (LWGET(OB_STATE(FCSINGLE)) & SELECTED)
-	{
-		numside = 1;					/* it is single sided   */
-		disktype = 2;
-	}
-
-	devno = (LWGET(OB_STATE(ADRIVE)) & SELECTED) ? 0 : 1;
-#endif
-
-	ret = 0;							/* assume it is ok  */
-	badindex = 0;						/* bad sector table */
-
-	for (i = 0; i < MAXSPT; i++)
-		skewtable[i] = skew2[i];
-
-	/* amount of skew from track to track   */
-	skew = numside == 1 ? SINGLESKEW : DOUBLESKEW;
-
-	for (trackno = 0; trackno < track && !ret; trackno++)
-	{
-		for (sideno = 0; sideno < numside && !ret; sideno++)
+		fc_ted[1].te_txtlen = 12; /* WTF: sets te_txtlen in FCLABEL */
+		fc_do(fc_tree, 2, TRUE, FCLABEL);
+		if (fc_tree[FCCNCL].ob_state != NORMAL)
 		{
-			for (i = skew; i < MAXSPT; i++)
+			fc_tree[FCCNCL].ob_state = NORMAL;
+			break;
+		}
+		fc_tree[FCFORMAT].ob_state = NORMAL;
+		numside = 1;						/* assume single sided  */
+		track = MAXTRACK;					/* always 80 tracks */
+		disktype = 2;
+		if (fc_tree[FCDOUBLE].ob_state != NORMAL)
+		{
+			numside = 2;					/* it is double sided   */
+			disktype = 3;
+		}
+		fc_tree[FCCMD].ob_spec = (intptr_t)cmd;
+		fc_bar(&w_inc, &bar_max, track);
+		fc_tree[FCBARS].ob_width = 0;
+		devno = fname[0] - 'A';
+		sktable = Dbmsg(devno); /* WTF */
+
+		ret = 0;							/* assume it is ok  */
+		badindex = 0;
+		for (trackno = 0; trackno < track && !ret; trackno++)
+		{
+			for (sideno = 0; sideno < numside && !ret; sideno++)
 			{
-				sktable[i] = skewtable[i - skew];
-			}
-			for (i = 0; i < skew; i++)
-			{
-				ret = MAXSPT - skew;
-				sktable[i] = skewtable[ret + i];
-			}
-			for (i = 0; i < MAXSPT; i++)
-			{
-				skewtable[i] = sktable[i];
-			}
-			
-		fagain:
-			ret = (int16_t) (Flopfmt(bufaddr, sktable, devno,
+				ret = (int16_t) (Flopfmt(bufaddr, sktable, devno,
 								MAXSPT, trackno, sideno, INTERLV, MAGIC, VIRGIN));
-
-			if (ret == E_BADSF)				/* Bad sectors !    */
-			{
-				if (trackno < 2 || ((badindex + MAXSPT) >= MAXBAD))
+				if (ret < 0 && ret > E_BADSF)
 				{
-#if 0 /* ZZZ */
-					while (do1_alert(FCFAIL) == 1)	/* too many bad sectors */
-						;
-#endif
-					ret = 1;
-					break;
-				} else
+					do1_alert(ret, devno);
+				}
+				if (ret == E_BADSF)				/* Bad sectors !    */
 				{
-					for (i = 0; fat[i]; i++, badindex++)
+					if (trackno < 2 || ((badindex + MAXSPT) >= MAXBAD))
 					{
-						badtable[badindex] = (trackno * numside * MAXSPT) + ((fat[i] - 1) + (sideno * MAXSPT));
-
-						ret = 0;
+						do1_alert(1, devno);
+						ret = 1;
+						break;
+					} else
+					{
+						for (i = 0; fat[i]; i++, badindex++)
+						{
+							badtable[badindex] = (trackno * numside * MAXSPT) + ((fat[i] - 1) + (sideno * MAXSPT));
+	
+							ret = 0;
+						}
 					}
 				}
+				if (trackno == 0 && ret == 0)
+				{
+					ret = Floprd(bufaddr, 0L, devno, 1, 0, 0, 1);
+				}
+				if (ret < 0)
+				{
+					/* some other error */
+					do1_alert(1, devno);
+				}
 			}
-			/* if errror == 16 */
-			if (ret)					/* some other error */
-			{							/* retry        */
-#if 0 /* ZZZ */
-				if (do1_alert(FCFAIL) == 1)
-					goto fagain;
-#endif
-			}
-
-		}								/* sideno   */
-
-		fc_bar(tree, devno);			/* increment destination bar    */
-
-	}									/* for trackno */
-
-	if (!ret)							/* set up the Boot Sector info  */
-	{
-		Protobt(bufaddr, 0x01000000L, disktype, 0);
-#if TP_31 /* MS_DOS */
-		*((long *)bufaddr) = 0xeb34904eL;
-#else
-		*bufaddr = 0xe9;
-#endif
-
-#ifdef __ALCYON__
-		if ((ret = fc_rwsec(WSECTS, bufaddr, 0x10000L, devno)))
-#else
-		if ((ret = fc_rwsec(WSECTS, bufaddr, 1, 0, devno)))
-#endif
-			goto eout1;
-		/* now set up the fat0 and fat1 */
-		bpbaddr = (BPB *)Getbpb(devno);
-
-		/* 27-Mar-1985 lmd
-		 * write boot sector again
-		 * (this makes the media dirty, with drivemode = "changed")
-		 */
-
-#ifdef __ALCYON__
-		if ((ret = fc_rwsec(WSECTS, bufaddr, 0x10000L, devno)))
-#else
-		if ((ret = fc_rwsec(WSECTS, bufaddr, 1, 0, devno)))
-#endif
-			goto eout1;
-
-		k = max(bpbaddr->fsiz, bpbaddr->rdlen);
-		j = (k * SECSIZE) / 2;
-
-		/* clean up root directory  */
-		for (i = 0; i < j; i++)
-			fat[i] = 0;
-		/* get the label */
-#if 0 /* ZZZ */
-		fs_sget(tree, FCLABEL, label1);
-#endif
-
-		if (label1[0])
-		{
-			bfill(11, ' ', label2);
-			i = 0;
-			while (label1[i])
+			if (ret == 0)
 			{
-				label2[i] = label1[i];
-				i++;
+				/* increment destination bar */
+				fc_tree[FCBARS].ob_width += w_inc;
+				fc_do(&fc_tree[FCBARS], 0, FALSE, 0);
 			}
-
-			LBCOPY(bufaddr, label2, 11);
-			fat[5] |= 0x0008;			/* file attribute   */
 		}
-
-		i = 1 + (bpbaddr->fsiz * 2);
-
-		if ((ret = fc_rwsec(WSECTS, bufaddr, bpbaddr->rdlen, i, devno)))
-			goto eout1;
-
-		/* clean up FAT table   */
-		for (i = 0; i < j; i++)
-			fat[i] = 0;
-
-		/* the first 3 bytes have to be 0xF7FFFF */
-
-		fat[0] = 0xF9FF;				/* MS-DOS format        */
-		fat[1] = 0xFF00;
-		/* now make up the sector map   */
-		for (i = 0; i < badindex; i++)
+		if (ret == 0)
 		{
-			cl = (badtable[i] - bpbaddr->datrec) / bpbaddr->clsiz + 2;
-			fc_clfix(cl, (uint16_t *)fat);
-		}
-		/* write out fat 0  */
-		if ((ret = fc_rwsec(WSECTS, fat, bpbaddr->fsiz, 1, devno)))
-			goto eout1;
-		/* write out fat 1  */
-		ret = fc_rwsec(WSECTS, fat, bpbaddr->fsiz, 1 + bpbaddr->fsiz, devno);
-
-	}
-  eout1:
-	/* now compute the size in bytes and tell the user  */
-
-	desk_wait(FALSE);
-
-	if (!ret)
-	{
-		dos_space(devno + 1, &total, &avail);
-#if 0 /* ZZZ */
-		fun_alert(1, FCSIZE, &avail);
+			/* set up the Boot Sector info  */
+			Protobt(bufaddr, 0x01000000L, disktype, 0);
+#if TP_31 /* MS_DOS */
+			*((long *)bufaddr) = 0xeb34904eL;
 #endif
-	}
+			Flopwr(bufaddr, sktable, devno, 1, 0, 0, 1);
+			/* now set up the fat0 and fat1 */
+			bpbaddr = (BPB *)Getbpb(devno);
+			/* 27-Mar-1985 lmd
+			 * write boot sector again
+			 * (this makes the media dirty, with drivemode = "changed")
+			 */
 
-	dos_free(bufaddr);
+			Flopwr(bufaddr, sktable, devno, 1, 0, 0, 1);
+			k = max(bpbaddr->fsiz, bpbaddr->rdlen);
+			j = (k * SECSIZE) / 2;
+
+			/* clean up root directory  */
+			for (i = 0; i < j; i++)
+				fat[i] = 0;
+			/* get the label */
+			fat[5] = 0x0008;			/* file attribute   */
+			LBCOPY(bufaddr, fc_ted[1].te_ptext, 11);
+
+			i = 1 + (bpbaddr->fsiz * 2);
+			Rwabs(WSECTS, bufaddr, bpbaddr->rdlen, i, devno);
+			
+			/* clean up FAT table   */
+			for (i = 0; i < j; i++)
+				fat[i] = 0;
+
+			/* the first 3 bytes have to be 0xF7FFFF */
+			fat[0] = 0xF7FF;				/* MS-DOS format        */
+			fat[1] = 0xFF00;
+			/* now make up the sector map   */
+			for (i = 0; i < badindex; i++)
+			{
+				cl = (badtable[i] - bpbaddr->datrec) / bpbaddr->clsiz + 2;
+				fc_clfix(cl, -1, bpbaddr, (VOIDPTR)bufaddr);
+			}
+			/* write out fat 0  */
+			Rwabs(WSECTS, (VOIDPTR)bufaddr, bpbaddr->fsiz, 1, devno);
+			/* write out fat 1  */
+			Rwabs(WSECTS, (VOIDPTR)bufaddr, bpbaddr->fsiz, 1 + bpbaddr->fsiz, devno);
+		}
+		
+		desk_wait(FALSE);
+		
+		if (!ret)
+		{
+			/* now compute the size in bytes and tell the user  */
+			dos_space(devno + 1, &parms.total, &parms.avail);
+			merge_str((char *)bufaddr, S_FREESPACE, (uint16_t *)&parms.avail);
+			fc_draw();
+			fm_alert(1, (char *)bufaddr);
+		}
+	}
+	dos_free((VOIDPTR) bufaddr);
+	dos_free(fc_tree); /* WTF */ /* BUG: not allocated */
 	dos_free(badtable);
+	rsrc_free();
 }
 
 
@@ -482,192 +328,242 @@ PP(LPTREE tree;)
 /* 306de: 00e2a654 */
 /* 104de: 00fe7126 */
 /* 106de: 00e299a0 */
-LINEF_STATIC VOID fc_copy(P(LPTREE) tree)
-PP(LPTREE tree;)
+VOID sh_copy(P(char *) fname, P(char *) cmd)
+PP(char *fname;)
+PP(char *cmd;)
 {
-	register intptr_t bootbuf, buf;
-	intptr_t bufptr;
-	int32_t bufsize;
-	int16_t devnos, devnod;
-	register DSB *dsbs, *dsbd;
-	int16_t spc, bps, bpc, disksect, sectbufs, leftover;
-	int16_t checkit, last, ret;
-	int16_t dev, sectno, ssect, dsect, trkops;
-	register int16_t j, op, loop;
+	register int devnos;
+	register int devnod;
+	register int side;
+	register int trackno;
+	register int ret;
+	register DSB *dsbs;
+	register DSB *dsbd;
+	VOIDPTR buf;
+	int i;
+	int j;
+	int16_t w_inc;
+	long bufsize;
+	int trackbufs;
+	int trkops;
+	int16_t bar_max;
+	long unused;
+	int16_t sides;
+	int16_t tracks;
+	long sktables;
+	long sktabled;
 
-	UNUSED(ret);
+	UNUSED(unused);
+
+	fc_init();
 	
-	if (!(bootbuf = (intptr_t)dos_alloc(0x258L)))
+	fc_ted[2].te_ptext = fname;
+	fc_ted[3].te_ptext = fname + 3;
+	devnos = fname[0] - 'A';
+	devnod = fname[3] - 'A';
+	if (fc_alloc(&buf, &bufsize))
 	{
-errmem:
-		do1_alert(STDISKFU);
-		return;
-	}
-
-#if 0 /* ZZZ */
-	devnos = (LWGET(OB_STATE(SRCDRA)) & SELECTED) ? 0 : 1;
-#endif
-	devnod = devnos ? 0 : 1;
-
-chksrc:
-	if (!(dsbs = (DSB *)Getbpb(devnos)))
-	{
-#if 0 /* ZZZ */
-		if (do1_alert(FCFAIL) == 1)		/* retry */
-			goto chksrc;
-#endif
-		dos_free((VOIDPTR)bootbuf);
-		return;
-	}
-
-/* should spc exist? */
-	spc = dsbs->spc;					/* sectors per cylinder    */
-	bps = dsbs->b.recsiz;				/* bytes per sector    */
-	bpc = spc * bps;					/* bytes per cylinder      */
-
-	/* buffer at least a track */
-	if ((bufsize = dos_avail()) < (int32_t) bpc)
-	{
-		dos_free((VOIDPTR)bootbuf);
-		goto errmem;
-	}
-
-	buf = (intptr_t)dos_alloc(bufsize);				/* get the buffer       */
-	disksect = spc * dsbs->tracks;		/* total sectors on disk    */
-	sectbufs = bufsize / bps;			/* how many sector buffers  */
-	leftover = disksect % sectbufs;		/* sectors left for last loop */
-
-	checkit = TRUE;
-	last = FALSE;
-	ssect = dsect = sectno = 0;
-
-	if (!(loop = disksect / sectbufs))	/* how many times to loop   */
-	{
-		sectbufs = leftover;
-		last = TRUE;
-		loop = 1;
-	}
-
-	/* read boot sector */
-#ifdef __ALCYON__
-	if (fc_rwsec(RSECTS, (VOIDPTR)bootbuf, 0x10000L, devnos))
-#else
-	if (fc_rwsec(RSECTS, (VOIDPTR)bootbuf, 1, 0, devnos))
-#endif
-		goto bailout;
-
-	while (loop--)
-	{
-		dev = devnos;
-		for (op = RSECTS; op <= WSECTS; op++)	/* read, write loop        */
+		fc_tree[FCBOXS].ob_next = FCSIDEBOX;
+		fc_tree[FCPROGRESS].ob_tail = FCSINGLE;
+		fc_cmd = cmd;
+		while (TRUE)
 		{
-			bufptr = buf;
-			/* draw bar once per track */
-			trkops = sectbufs / spc;	/* how many track operations */
-			for (j = 0; j < trkops; j++)
+			fc_do(&fc_tree[FCCOPYBOX], 1, TRUE, ROOT);
+			if (fc_tree[FCEXIT].ob_state != NORMAL)
 			{
-				if (fc_rwsec(op, (VOIDPTR)bufptr, spc, sectno, dev))
-					goto bailout;
-				sectno += spc;
-				bufptr += bpc;
-				fc_bar(tree, dev);
+				fc_tree[FCEXIT].ob_state = NORMAL;
+				break;
 			}
-#if BINEXACT
-			/*
-			 * This is miscompiled into
-			 * ...
-			 * divs -14(a6),d5
-			 * swap d5
-			 * beq ...
-			 * however swap sets the Z-bit if the 32-bit result is zero
-			 */
-			if ((j = sectbufs % spc))
-#else
-			j = sectbufs % spc;
-			if (j)
-#endif
+			fc_tree[FCCOPY].ob_state = NORMAL;
+			
+			dsbs = (DSB *)Getbpb(devnos);
+			dsbd = (DSB *)Getbpb(devnod);
+			desk_wait(FALSE);
+			if (dsbs == NULL)
+				break;
+			if (dsbd == NULL)
+				break;
+			if (dsbs->tracks != dsbd->tracks ||
+				dsbs->sides != dsbd->sides)
 			{
-				if (fc_rwsec(op, (VOIDPTR)bufptr, j, sectno, dev))
-					goto bailout;
-				sectno += j;
-				fc_bar(tree, dev);
+				do1_alert(0, devnos);
+				break;
 			}
-			if (op == RSECTS)
+			tracks = dsbs->tracks;
+			sides = dsbs->sides;
+			fc_tree[FCCMD].ob_spec = (intptr_t)cmd;
+			fc_bar(&w_inc, &bar_max, tracks);
+			sktables = Dbmsg(devnos); /* WTF */
+			sktabled = Dbmsg(devnod);
+			ret = 0;
+			for (side = 0; side < sides && ret == 0; side++)
 			{
-				ssect = sectno;
-				sectno = dsect;
-				if (checkit)
+				fc_tree[FCBARS].ob_width = 0;
+				fc_tree[FCBARD].ob_width = 0;
+				trackno = 0;
+				trackbufs = bufsize / (MAXSPT * SECSIZE);
+				trkops = tracks / trackbufs;
+				for (j = 0; j < 2 && ret == 0; j++)
 				{
-					checkit = FALSE;
-				fc_c1:
-					if (!(dsbd = (DSB *)Getbpb(devnod)))
+					for (i = 0; i < trkops; i++)
 					{
-#if 0 /* ZZZ */
-						if (do1_alert(FCFAIL) == 1)	/* retry */
-							goto fc_c1;
-#endif
-						goto bailout;
+						if (fc_rwtracks(8, (intptr_t)buf, sktables, devnos, side, w_inc, trackno, trackbufs, cmd) != 0)
+						{
+							ret = 1;
+							break;
+						}
+						if (fc_rwtracks(9, (intptr_t)buf, sktabled, devnod, side, w_inc, trackno, trackbufs, cmd) != 0)
+						{
+							ret = 1;
+							break;
+						}
+						trackno += trackbufs;
 					}
-					if ((dsbs->sides != dsbd->sides) ||
-						(spc != dsbd->spc) || (dsbs->tracks != dsbd->tracks) || (bps != dsbd->b.recsiz))
+					trackbufs = tracks % trackbufs;
+					trkops = 1;
+				}
+				if (ret == 0)
+				{
+					for (i = 21; i < 26; i += 4)
 					{
-#if 0 /* ZZZ */
-						if (fun_alert(1, FCNOTYPE, NULL) != 1)
-							goto bailout;
-#endif
-
-						goto fc_c1;		/* try again    */
+						fc_tree[i].ob_spec = 0x11100L;
+						fc_do(&fc_tree[i], 0, FALSE, ROOT);
+						fc_tree[i].ob_spec = 0x111A1L;
 					}
 				}
-			} else
-			{
-				dsect = sectno;
-				sectno = ssect;
 			}
-			dev = devnod;
+			if (ret == 0)
+			{
+				Floprd(buf, sktables, devnos, 1, 0, 0, 1);
+				/* change the serialno */
+				Protobt(buf, 0x01000000L, -1, -1);
+				Flopwr(buf, sktabled, devnod, 1, 0, 0, 1);
+			}
+			desk_wait(FALSE);
 		}
-
-		if (!loop && !last)
-		{
-			loop = 1;
-			sectbufs = leftover;
-			last = TRUE;
-		}
+		fc_tree[FCBOXS].ob_next = ROOT;
+		fc_tree[FCPROGRESS].ob_tail = FCLABEL;
+		dos_free((VOIDPTR) buf);
+		dos_free(fc_tree); /* WTF */ /* BUG: not allocated */
+		rsrc_free();
 	}
-
-	/* change the serialno */
-	Protobt(bootbuf, 0x01000000L, -1, -1);
-#ifdef __ALCYON__
-	fc_rwsec(WSECTS, (VOIDPTR)bootbuf, 0x10000L, devnod);
-#else
-	fc_rwsec(WSECTS, (VOIDPTR)bootbuf, 1, 0, devnod);
-#endif
-
-  bailout:
-	dos_free((VOIDPTR)buf);
-	dos_free((VOIDPTR)bootbuf);
 }
 
 
-/* 306de: 00e2a982 */
-/* 104de: 00fe73d0 */
-/* 106de: 00e29c90 */
-LINEF_STATIC int16_t fc_rwsec(P(int16_t) op, P(VOIDPTR) buf, P(int16_t) nsect, P(int16_t) sect, P(int16_t) dev)
+/*
+ * Inc and redraw slider bar
+ */
+/* 306de: 00e2aa84 */
+/* 104de: 00fe74ba */
+VOID fc_bar(P(int16_t *) w_inc, P(int16_t *) bar_max, P(int16_t) maxvalue)
+PP(register int16_t *w_inc;)
+PP(register int16_t *bar_max;)
+PP(int16_t maxvalue;)
+{
+	register int16_t x;
+	register int16_t y;
+
+	x = fc_tree[FCPROGRESS].ob_x;
+	y = fc_tree[FCPROGRESS].ob_y;
+	*w_inc = fc_tree[FCBOXS].ob_width / MAXTRACK;
+	*bar_max = *w_inc * MAXTRACK;
+	fc_tree[FCBOXS].ob_width = *bar_max;
+	fc_tree[FCBOXD].ob_width = *bar_max;
+#if BINEXACT
+	/* BUG: missing parameter */
+	fc_do(&fc_tree[FCPROGRESS], 1, FALSE);
+#else
+	fc_do(&fc_tree[FCPROGRESS], 1, FALSE, 0);
+#endif
+	fc_tree[FCBARS].ob_x = fc_x + x;
+	fc_tree[FCBARS].ob_y = fc_y + y;
+	fc_tree[FCBARD].ob_x = fc_tree[FCBOXD].ob_x + x;
+	fc_tree[FCBARD].ob_y = fc_tree[FCBOXD].ob_y + y;
+	if (maxvalue == MAXTRACKS / 2)
+		*w_inc += *w_inc;
+	desk_wait(TRUE);
+}
+
+
+LINEF_STATIC VOID fc_do(P(OBJECT *) tree, P(int16_t) depth, P(BOOLEAN) fmdo, P(int16_t) startfld)
+PP(OBJECT *tree;)
+PP(int16_t depth;)
+PP(BOOLEAN fmdo;)
+PP(int16_t startfld;)
+{
+	objc_draw(tree, ROOT, depth, fc_tree[ROOT].ob_x - 8, fc_tree[ROOT].ob_y - 8, fc_tree[ROOT].ob_width + 16, fc_tree[ROOT].ob_height + 16);
+	if (fmdo)
+		fm_do((LPTREE)tree, startfld);
+}
+
+
+LINEF_STATIC int16_t fc_rwtracks(P(int16_t) op, P(intptr_t) buf, P(intptr_t) sktable, P(int16_t) dev, P(int16_t) side, P(int16_t) w_inc, P(int16_t) track, P(int16_t) numtracks, P(char *) cmd)
 PP(int16_t op;)
-PP(VOIDPTR buf;)
-PP(int16_t nsect;)
-PP(int16_t sect;)
+PP(register intptr_t buf;)
+PP(intptr_t sktable;)
+PP(int16_t dev;)
+PP(int16_t side;)
+PP(int16_t w_inc;)
+PP(int16_t track;)
+PP(int16_t numtracks;)
+PP(char *cmd;)
+{
+	register int16_t i;
+	register int16_t obj;
+	register int16_t ret;
+	register LPTREE pobj;
+
+	UNUSED(cmd);	
+#if !BINEXACT
+	/* BUG: not initialized */
+	ret = 0;
+#endif
+	for (i = track; i < numtracks + track; i++)
+	{
+		obj = FCBARD;
+		if (op == 9)
+			obj = FCBARS;
+		fc_tree[obj].ob_width += w_inc;
+		pobj = &fc_tree[obj];
+		fc_do((OBJECT *)pobj, 0, FALSE, 0);
+		ret = xbios(op, buf, sktable, dev, 1, i, side, MAXSPT);
+		if (op == 9 && ret == 0)
+			ret = xbios(8, buf, sktable, dev, 1, i, side, MAXSPT);
+		if (ret != 0)
+		{
+			do1_alert(ret, dev);
+			break;
+		}
+		buf += MAXSPT * SECSIZE;
+	}
+	return ret;
+}
+
+
+LINEF_STATIC BOOLEAN fc_alloc(P(VOIDPTR *) buf, P(long *)size)
+PP(VOIDPTR *buf;)
+PP(long *size;)
+{
+	*size = dos_avail();
+	if (*size < MAXSPT * SECSIZE)
+		return FALSE;
+	*buf = dos_alloc(*size);
+	return TRUE;
+}
+
+
+LINEF_STATIC VOID do1_alert(P(int16_t) err, P(int16_t) dev)
+PP(int16_t err;)
 PP(int16_t dev;)
 {
-	register int16_t ret;
-
-  rerw:
-  	if ((ret = Rwabs(op, buf, nsect, sect, dev)))
-#if 0 /* ZZZ */
-		if ((ret = do1_alert(FCFAIL)) == 1)	/* retry */
-#endif
-			goto rerw;
-	return ret;						/* 0=>OK, 2=>error */
+	fc_draw();
+	desk_wait(FALSE);
+	if (err < 0)
+		err_trap(err, dev);
+	else if (err != 0)
+		fm_alert(1, S_FMTERR);
+	else
+		fm_alert(1, S_NOTSAME);
 }
 
 
@@ -677,87 +573,73 @@ PP(int16_t dev;)
 /* 306de: 00e2a9d0 */
 /* 104de: 00fe7408 */
 /* 106de: 00e29cd6 */
-LINEF_STATIC VOID fc_clfix(P(uint16_t) cl, P(uint16_t *)fat)
-PP(uint16_t cl;)
-PP(uint16_t *fat;)
+LINEF_STATIC VOID fc_clfix(P(int16_t) cl, P(uint16_t) num, P(BPB *)bpb, P(VOIDPTR) fat)
+PP(int16_t cl;)
+PP(uint16_t num;)
+PP(BPB *bpb;)
+PP(VOIDPTR fat;)
 {
-	register uint16_t ncl, cluster;
-	uint16_t temp, num;
+	union {
+		uint8_t b[2];
+		int16_t s;
+		uint16_t u;
+	} temp;
+	uint8_t *p;
+	uint16_t mask;
+	intptr_t ncl;
 
-	UNUSED(temp);
-	
-	num = 0x0FF7;
-
-	ncl = cl + (cl >> 1);				/* multiply by 1.5  */
-	/* get the fat value 12 bit */
-
-	cluster = fat[ncl] & 0x00FF;
-	cluster |= fat[ncl + 1] << 8;
-
-	if (cl & 0x1)						/* is it odd ?      */
+	if (bpb->b_flags & B_16)
 	{
-		cluster &= 0x000F;				/* leave the last byte alone    */
-		num = num << 4;
+		/* 16bit fats on a floppy??? */
+		ncl = cl * 2;
+		*((uint16_t *)(fat + ncl)) = -1;
 	} else
-		cluster &= 0xF000;				/* leave the high byte alone    */
-
-	num = cluster | num;
-
-	fat[ncl] = num;
-	fat[ncl + 1] = num >> 8;
+	{
+		ncl = cl + (cl >> 1);				/* multiply by 1.5  */
+		num = 0xfff;
+		/* get the fat value 12 bit */
+	
+		if (cl & 0x1)						/* is it odd ?      */
+		{
+			num = 0xfff0;
+			mask = 0x000f;
+		} else
+		{
+			mask = 0xf000;
+		}
+		p = (uint8_t*)((intptr_t)fat + ncl);
+		temp.b[0] = p[0];
+		temp.b[1] = p[1];
+		fc_swp68(&temp.u);
+		temp.s = (temp.s & mask) | num;
+		fc_swp68(&temp.u);
+		p[0] = temp.b[0];
+		p[1] = temp.b[1];
+	}
 }
-
-
-int16_t do1_alert(P(int16_t) item)
-PP(int16_t item;)
-{
-	return fun_alert(1, item, NULL);
-}
-
-
-/*
- * Inc and redraw slider bar
- */
-/* 306de: 00e2aa84 */
-/* 104de: 00fe74ba */
-VOID fc_bar(P(LPTREE)tree, P(int16_t) which)
-PP(LPTREE tree;)
-PP(register int16_t which;)
-{
-	register int16_t *width;
-	register intptr_t *obspec;
-	register int16_t wid;
-
-#if 0 /* ZZZ */
-	if (which)
-		which = FCBARB;
-	else
-		which = FCBARA;
-#endif
-	width = (int16_t *)OB_WIDTH(which);
-	obspec = (intptr_t *)OB_SPEC(which);
-
-	wid = *width + w_inc;
-
-	wid = wid < bar_max ? wid : bar_max;	/* don't overflow box */
-
-	*width = wid;
-	*obspec = 0xFF1121L;
-	fc_draw(tree, which);
-	*obspec = 0xFF1101L;
-}
-
 
 
 /* 306de: 00e2ab0c */
 /* 104de: 00fe752a */
-VOID fc_draw(P(LPTREE)tree, P(int16_t) which)
-PP(LPTREE tree;)
-PP(int16_t which;)
+LINEF_STATIC VOID fc_draw(NOTHING)
 {
-	GRECT size;
-
-	RC_COPY((GRECT *)OB_X(which), &size);
-	objc_offset((OBJECT *)tree, which, &size.g_x, &size.g_y);
-	objc_draw((OBJECT *)tree, which, MAX_DEPTH, size.g_x, size.g_y, size.g_w + 2, size.g_h);
+	sh_draw(fc_cmd, ROOT, 1);
 }
+
+
+#if 0 /* provided in assembler */
+/* same as swp68() in bdos */
+LINEF_STATIC VOID fc_swp68(P(uint16_t *) val)
+PP(uint16_t *val;)
+{
+#ifdef __ALCYON__
+	asm("movea.l    8(a6),a0");
+	asm("move.w     (a0),d0");
+	asm("ror.w      #8,d0");
+	asm("move.w     d0,(a0)");
+#else
+	*val = (*val << 8) | (*val >> 8);
+#endif
+}
+#endif
+

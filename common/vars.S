@@ -367,7 +367,7 @@ _endvdibss: ds.b 0
 	INT(_sh_isgem)
 	PTR(_gl_awind)
 	PTR(_cart_dta)
-	PTR(x6ea8)
+	PTR(_fc_ted)
 	INT(_gl_hbox)
 	INT(_gl_yclip)
 	V(_intout,w,10)
@@ -471,7 +471,7 @@ _endvdibss: ds.b 0
 	INT(_gl_bdelay)
 	INT(_gl_fakemsg)
 	V(_desk_acc,l,MAX_ACCS)
-	PTR(_x9e6a)
+	PTR(_fc_cmd)
 	V(_fmt_global,w,15)
 	V(_gem_global,w,15)
 	PTR(_nrl)
@@ -510,7 +510,7 @@ _endvdibss: ds.b 0
 	INT(_f_level)
 	INT(_mtrans)
 	PTR(_ad_fsdta)
-	INT(_sh_9fc0) /* sh_fullstep? */
+	INT(_sh_special)
 	PTR(_ad_windspb)
 	INT(_gl_hschar)
 	PTR(_ad_intin)
@@ -528,8 +528,8 @@ _endvdibss: ds.b 0
 	INT(_fpcnt)
 	INT(_button)
 	INT(_gl_graphic)
-	INT(_xa08a)
-	INT(_xa08c)
+	INT(_fc_x)
+	INT(_fc_y)
 	INT(_gl_ncols)
 	INT(_gl_nplanes)
 	INT(_gl_mask)
@@ -545,33 +545,10 @@ _endvdibss: ds.b 0
 	INT(_wasclr)
 	INT(_w_walkflag)
 	PTR(_gl_newdesk)
-	PTR(_xa0c4)
+	PTR(_fc_tree)
 	
+	ds.b 48
 
-	/* ZZZ todo */
-
-	ds.b 4
-
-	INT(defdrv)
-	INT(_w_inc)
-	INT(_bar_max)
-	V(fspec,b,8)
-	INT(mydev)
-	PTR(oldgetbpb)
-	PTR(oldmediach)
-	PTR(oldrwabs)
-	ds.l 1 /* unused */
-	PTR(_maddr)
-	V(mform,w,37)
-	
-	V(_temp,b,50)
-	
-	ds.b 12
-	
-	INT(_sh_iscart)
-
-	ds.b 2
-	
 /* end AES+DESKTOP */
 
 /* This label is referenced by the GEM_MUPB structure */

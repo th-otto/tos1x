@@ -478,7 +478,7 @@ sh_dodef        00006e9c        Data Label      Global  User Defined
 sh_isgem        00006e9e        Data Label      Global  User Defined
 gl_awind        00006ea0        Data Label      Global  User Defined
 cart_dta        00006ea4        Data Label      Global  User Defined
-x6ea8           00006ea8        Data Label      Global  User Defined
+fc_ted          00006ea8        Data Label      Global  User Defined
 gl_hbox         00006eac        Data Label      Global  User Defined
 gl_yclip        00006eae        Data Label      Global  User Defined
 intout          00006eb0        Data Label      Global  User Defined
@@ -578,6 +578,7 @@ gl_pacc         00009e36        Data Label      Global  User Defined
 gl_bdelay       00009e4e        Data Label      Global  User Defined
 gl_fakemsg      00009e50        Data Label      Global  User Defined
 desk_acc        00009e52        Data Label      Global  User Defined
+fc_cmd          00009e6a        Data Label      Global  User Defined
 fmt_global      00009e6e        Data Label      Global  User Defined
 gem_global      00009e8c        Data Label      Global  User Defined
 nrl             00009eaa        Data Label      Global  User Defined
@@ -616,7 +617,7 @@ gl_wchar        00009fb6        Data Label      Global  User Defined
 f_level         00009fb8        Data Label      Global  User Defined
 mtrans          00009fba        Data Label      Global  User Defined
 ad_fsdta        00009fbc        Data Label      Global  User Defined
-sh_9fc0         00009fc0        Data Label      Global  User Defined
+sh_special      00009fc0        Data Label      Global  User Defined
 ad_windspb      00009fc2        Data Label      Global  User Defined
 gl_hschar       00009fc6        Data Label      Global  User Defined
 ad_intin        00009fc8        Data Label      Global  User Defined
@@ -633,8 +634,8 @@ gl_lcolor       0000a082        Data Label      Global  User Defined
 fpcnt           0000a084        Data Label      Global  User Defined
 button          0000a086        Data Label      Global  User Defined
 gl_graphic      0000a088        Data Label      Global  User Defined
-xa08a           0000a08a        Data Label      Global  User Defined
-xa08c           0000a08c        Data Label      Global  User Defined
+fc_x            0000a08a        Data Label      Global  User Defined
+fc_y            0000a08c        Data Label      Global  User Defined
 gl_ncols        0000a08e        Data Label      Global  User Defined
 gl_nplanes      0000a090        Data Label      Global  User Defined
 gl_mask         0000a092        Data Label      Global  User Defined
@@ -650,6 +651,7 @@ xa0ba           0000a0ba        Data Label      Global  User Defined
 wasclr          0000a0bc        Data Label      Global  User Defined
 w_walkflag      0000a0be        Data Label      Global  User Defined
 gl_newdesk      0000a0c0        Data Label      Global  User Defined
+fc_tree         0000a0c4        Data Label      Global  User Defined
 
 os_entry        00fc0000        Data Label      Global  User Defined
 main            00fc0020        Function        Global  User Defined
@@ -2976,17 +2978,17 @@ sf_page         00fedb12        Function        Global  User Defined
 sf_newline      00fedb46        Function        Global  User Defined
 cconws          00fedbac        Function        Global  User Defined
 sf_putc         00fedbcc        Function        Global  User Defined
-FUN_00fedc48    00fedc48        Function        Global  Default
+fc_init         00fedc48        Function        Global  User Defined
 sh_format       00fedcd4        Function        Global  User Defined
 sh_copy         00fee0f6        Function        Global  User Defined
-frm_f56c        00fee432        Function        Global  User Defined
-FUN_00fee502    00fee502        Function        Global  Default
-frm_f588        00fee560        Function        Global  User Defined
-frm_f584        00fee632        Function        Global  User Defined
-frm_f574        00fee664        Function        Global  User Defined
-frm_f57c        00fee6a8        Function        Global  User Defined
-frm_f580        00fee754        Function        Global  User Defined
-FUN_00fee76a    00fee76a        Function        Global  Default
+fc_bar          00fee432        Function        Global  User Defined
+fc_do           00fee502        Function        Global  User Defined
+fc_rwtracks     00fee560        Function        Global  User Defined
+fc_alloc        00fee632        Function        Global  User Defined
+do1_alert       00fee664        Function        Global  User Defined
+fc_clfix        00fee6a8        Function        Global  User Defined
+fc_draw         00fee754        Function        Global  User Defined
+fc_swp68        00fee76a        Function        Global  User Defined
 trp13           00fee77c        Function        Global  User Defined
 trp14           00fee78c        Function        Global  User Defined
 rsc_read        00fee79c        Function        Global  User Defined

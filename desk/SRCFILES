@@ -1,8 +1,8 @@
-DESK_OBJS1= desksupp.o desksup2.o deskact.o deskdir.o rainbow.o
-DESK_OBJS2= deskapp1.o deskapp3.o deskdisk.o desktop.o deskfun.o
-DESK_OBJS3= deskinf.o deskinf2.o deskins.o deskfpd.o deskwin.o deskobj.o
-DESK_OBJS4= deskshow.o
-DESK_OBJS5= deskif.o
+DESK_OBJS1= deskapp1.o deskapp3.o deskact.o deskdir.o deskif.o deskinf.o
+DESK_OBJS2= deskins.o deskfpd.o deskfun.o deskobj.o desksupp.o desksup2.o
+DESK_OBJS3= desktop.o deskwin.o deskinf2.o
+DESK_OBJS4= deskshow.o deskdisk.o deskglob.o
+DESK_OBJS5=
 
 DESK_OBJS=${DESK_OBJS1} ${DESK_OBJS2} ${DESK_OBJS3} ${DESK_OBJS4} ${DESK_OBJS5} ${DESK_OBJS6} ${DESK_OBJS7}
 

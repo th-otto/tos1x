@@ -138,10 +138,8 @@ char *ad_path;
 
 char *ad_pfile;
 
-char temp[50]; /* WTF, unused */
-
-STATIC int16_t sh_9fc0; /* ZZZ */
-STATIC BOOLEAN xa0ba;
+STATIC BOOLEAN sh_special;
+STATIC BOOLEAN xa0ba; /* only set, but never referenced */
 
 LINEF_STATIC VOID sh_show PROTO((const char *lcmd));
 BOOLEAN sh_path PROTO((int16_t whichone, char *dp, char *pname));
@@ -209,7 +207,7 @@ PP(const char *ptail;)
 	if (isover)
 	{
 		sh_doexec = doex;
-		sh_9fc0 = FALSE;
+		sh_special = FALSE;
 		sh_dodef = FALSE;
 		sh_isgem = !isgem ? FALSE : TRUE;	/* isgem may not = 1    */
 	} else
@@ -622,18 +620,18 @@ VOID sh_main(NOTHING)
 	tree = ad_stdesk;					/* sh draw box              */
 	ad_pfile = (char *)LLGET(OB_SPEC(TITLE));
 	sh_gem = sh_isgem = TRUE;
-	sh_doexec = sh_9fc0 = TRUE;
+	sh_doexec = sh_special = TRUE;
 	sh_dodef = TRUE;
 	doserr = 0;
 
 	do
 	{
 		xa0ba = FALSE;
-		if (sh_9fc0)
+		if (sh_special)
 		{
 			xa0ba = sh_isgem = TRUE;
 		}
-		sh_9fc0 = TRUE;
+		sh_special = TRUE;
 		
 		if (sh_isgem != sh_gem)			/* users request different  */
 		{								/* modes    ?       */

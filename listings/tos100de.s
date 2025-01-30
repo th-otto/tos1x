@@ -57440,7 +57440,7 @@ sh_rom:
 [00fedd94] 2f07                      move.l     d7,-(a7)
 [00fedd96] f220                      dc.w       $F220 ; merge_str
 [00fedd98] 508f                      addq.l     #8,a7
-[00fedd9a] f580                      dc.w       $F580 ; frm_f580
+[00fedd9a] f580                      dc.w       $F580 ; fc_draw
 [00fedd9c] 2e87                      move.l     d7,(a7)
 [00fedd9e] 3f3c 0001                 move.w     #$0001,-(a7)
 [00fedda2] f32c                      dc.w       $F32C ; fm_alert
@@ -57853,7 +57853,7 @@ sh_rom:
 [00fee328] 7001                      moveq.l    #1,d0
 [00fee32a] f001                      dc.w       $F001 ; movem.l (a7)+,#0
 [00fee32c] 4e56 fffc                 link       a6,#-4
-[00fee330] f580                      dc.w       $F580 ; frm_f580
+[00fee330] f580                      dc.w       $F580 ; fc_draw
 [00fee332] 4257                      clr.w      (a7)
 [00fee334] f1b8                      dc.w       $F1B8 ; desk_wait
 [00fee336] 4a6e 0008                 tst.w      8(a6)

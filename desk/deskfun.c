@@ -19,6 +19,7 @@
 #include "desktop.h"
 #include "taddr.h"
 #include "toserrno.h"
+#include "desksupp.h"
 
 char *g_buffer;						/* merge string buffer  */
 

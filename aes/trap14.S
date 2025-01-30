@@ -51,11 +51,6 @@
 	bss
 	even
 	
-/* used by gembind:graf_mouse as a flag */
-	xdef _maddr
-	comm _maddr,4
-	xdef mform
-	comm mform,74  /* sizeof(MFORM) */
 	xdef trp13aret
 	comm trp13aret,4
 	xdef trp14aret
@@ -63,6 +58,22 @@
 
 	text
 
+/* void fc_swp68(uint16_t *val); */
+/* same as swp68() in bdos */
+/* 100fr: 00fee76a */
+	xdef _fc_swp68
+_fc_swp68:
+	link       a6,#0
+	movea.l    8(a6),a0
+	move.w     (a0),d0
+	ror.w      #8,d0
+	move.w     d0,(a0)
+	unlk       a6
+	rts
+
+/*
+ * entry points used both by AES & DESKTOP
+ */
 /* 404: 00e3576c */
 /* 104de: 00fe7582 */
 /* 106de: 00e29e74 */
@@ -84,190 +95,3 @@ _trp14: ds.b 0
 	trap	#14
 	move.l	trp14aret,-(sp)
 	rts
-
-
-/*
- * FIXME: remainder really belongs to DESKTOP
- */
-
-/*************************************************************************
- *                                                                       *
- *       mediach: cause media-change on a logical device.                *
- *                                                                       *
- *       USAGE:                                                          *
- *               errcode = mediach(devno);       returns 1 for error     *
- *               int errcode, devno;                                     *
- *                                                                       *
- *                                                                       *
- *       This procedure causes a media change by installing a new        *
- *       handler for the mediach, rwabs, and getbpb vectors; for device  *
- *       devno, the mediach handler returns "definitely changed," and    *
- *       the rwabs handler returns E_CHNG, until the new getbpb handler  *
- *       is called.  The new getbpb handler un-installs the new          *
- *       handlers.                                                       *
- *                                                                       *
- *       After installing the new handlers, this procedure performs a    *
- *       disk operation (e.g. search first) which makes GEMDOS check     *
- *       the media-change status of the drive: this will trigger the     *
- *       new rwabs, mediach and getbpb handlers to do their things.      *
- *                                                                       *
- *       RETURNS: 0 for no error, 1 for error (GEMDOS didn't ever do a   *
- *               getbpb call).                                           *
- *                                                                       *
- *************************************************************************/
-
-
-	bss
-	even
-	
-	xdef fspec		/* file to look for (doesn't matter) */
-	comm fspec,8
-	xdef mydev
-	comm mydev,2
-	xdef oldgetbpb
-	comm oldgetbpb,4
-	xdef oldmediach
-	comm oldmediach,4
-	xdef oldrwabs
-	comm oldrwabs,4
-	
-	text
-
-/* 404: 00e357c8 */
-/* 104de: 00fe75e0 */
-/* 106de: 00e29ed2 */
-	xdef _mediach
-_mediach:
-	move.w	4(sp),d0
-	move.w	d0,mydev
-	add.b	#'A',d0
-	move.b	d0,fspec		; set drive spec for search first
-	move.b	#$3a,fspec+1
-	move.l	#$5c5c5800,fspec+2	; make sure it is on word boundary; BUG: double backslash
-
-
-#if 0
-	move.w	#9,d6			; loop 10 times!
-loop:
-	clr.l	-(sp)			; get super mode, leave old ssp
-	move.w	#$20,-(sp)		; and "super" function code on stack
-	trap	#1
-	addq	#6,sp
-	move.l	d0,-(sp)
-	move.w	#$20,-(sp)
-#endif
-
-	suba.l  a0,a0
-	move.l	_hdv_bpb(a0),oldgetbpb
-	move.l	_hdv_mediach(a0),oldmediach
-	move.l	_hdv_rw(a0),oldrwabs
-
-	move.l	#newgetbpb,_hdv_bpb(a0)
-	move.l	#newmediach,_hdv_mediach(a0)
-	move.l	#newrwabs,_hdv_rw(a0)
-
-	/* Fopen a file on that drive */
-
-	move.w	#0,-(sp)
-	move.l	#fspec,-(sp)
-	move.w	#$3d,-(sp)
-	trap	#1
-	addq	#8,sp
-
-	/* Fclose the handle we just got */
-
-	tst.l	d0
-	bmi.b	noclose
-
-	move.w	d0,-(sp)
-	move.w	#$3e,-(sp)
-	trap	#1
-	addq	#4,sp
-
-noclose:
-	moveq	#0,d0
-	cmp.l	#newgetbpb,_hdv_bpb(a0)	; still installed?
-	bne.b	done			; nope
-
-	moveq	#1,d0			; yup! remove & return TRUE
-	move.l	oldgetbpb,_hdv_bpb(a0)
-	move.l	oldmediach,_hdv_mediach(a0)
-	move.l	oldrwabs,_hdv_rw(a0)
-
-done:
-#if 0
-	trap	#1			; go back to user mode (use stuff
-	addq.w	#$6,sp			; left on stack above)
-
-	move.l	d7,d0
-	dbeq	d6,loop			; loop until success, or 10 failures.
-#endif
-	rts
-
-/*************************************************************************
- *                                                                       *
- * new getbpb: if it's our device, uninstall vectors;                    *
- *             in any case, call the old getbpb vector (to really        *
- *             get it)                                                   *
- *                                                                       *
- *************************************************************************/
-/* 306de: 00e2640a */
-/* 104de: 00fe7680 */
-/* 106de: 00e29f72 */
-/* 404: 00e35866 */
-newgetbpb:
-	move.w	mydev,d0
-	cmp.w	4(sp),d0
-	bne.b	dooldg
-	suba.l  a0,a0
-	move.l	oldgetbpb,_hdv_bpb(a0) ; it's mine: un-install new vectors
-	move.l	oldmediach,_hdv_mediach(a0)
-	move.l	oldrwabs,_hdv_rw(a0)
-dooldg:	move.l	oldgetbpb,a0	; continue here whether mine or not: call old.
-	jmp	(a0)
-
-/*************************************************************************
- *                                                                       *
- * new mediach: if it's our device, return 2; else call old.             *
- *                                                                       *
- *************************************************************************/
-/* 306de: 00e26436 */
-/* 104de: 00fe76ae */
-/* 106de: 00e29fa0 */
-/* 404: 00e35892 */
-newmediach:
-	move.w	mydev,d0
-	cmp.w	4(sp),d0
-	bne.b	dooldm
-	moveq.l	#2,d0		; it's mine: return 2 (definitely changed)
-	rts
-
-dooldm:	move.l	oldmediach,a0	; not mine: call old vector.
-	jmp	(a0)
-
-
-/*************************************************************************
- *                                                                       *
- *       newrwabs: return E_CHG (-14) if it's my device                  *
- *                                                                       *
- *************************************************************************/
-/* 306de: 00e2644e */
-/* 104de: 00fe76c6 */
-/* 106de: 00e29fb8 */
-/* 404: 00e358aa */
-newrwabs:
-	move.w	mydev,d0
-	cmp.w	$e(sp),d0
-	bne.b	dooldr
-	moveq.l	#-14,d0
-	rts
-
-dooldr:	move.l	oldmediach,a0	; BUG should be oldrwabs
-	jmp	(a0)
-
-
-/*************************************************************************
- *                                                                       *
- *       end of mediach                                                  *
- *                                                                       *
- *************************************************************************/

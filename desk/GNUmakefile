@@ -43,11 +43,6 @@ desk.o: $(VARS_OBJS) $(DESK_OBJS) deskext.o $(top_srcdir)/common/sections.mak ${
 
 single::
 
-endif
-
-desksupp.o: desksupp.c desksup3.c
-deskinf.o: deskinf.c deskinf2.c deskpref.c
-
 # remove some superflous clr.w D0 that for some reason
 # don't appear in the final ROM
 deskapp1.o: deskapp1.c
@@ -83,11 +78,16 @@ deskfpd.o: deskfpd.c
 	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
 	$(AM_V_at)$(RM) $*.s
 
+endif
+
 tosvars.o: $(top_srcdir)/common/tosvars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 vars.o: $(top_srcdir)/common/vars.S $(top_srcdir)/common/config.h
 	$(AM_V_AS)$(AS) $(ASFLAGS) $(CPPFLAGS) -c -o $@ $<
+
+desksupp.o: desksupp.c desksup3.c
+deskinf.o: deskinf.c deskinf2.c deskpref.c
 
 # no check here; to much hassle to get all the external dependencies
 check:: desk.a

@@ -331,11 +331,11 @@ lineftab: ds.b 0
 		dc.l _drawfld             ; F43C
 		dc.l _fc_draw             ; F440
 		dc.l _desk_clear          ; F444
-		dc.l _fc_format           ; F448
-		dc.l _fc_copy             ; F44C
+		dc.l 0                    ; F448
+		dc.l 0                    ; F44C
 		dc.l _trp14               ; F450
 		dc.l _fc_bar              ; F454
-		dc.l _fc_rwsec            ; F458
+		dc.l 0                    ; F458
 		dc.l _max                 ; F45C
 		dc.l _fc_clfix            ; F460
 		dc.l _dos_space           ; F464
@@ -376,7 +376,7 @@ lineftab: ds.b 0
 		dc.l _pn_free             ; F4F0
 		dc.l _fun_f2any           ; F4F4
 		dc.l _win_isel            ; F4F8
-		dc.l _fc_start            ; F4FC
+		dc.l 0                    ; F4FC
 		dc.l _fun_win2desk        ; F500
 		dc.l _fun_desk2win        ; F504
 		dc.l _fun_d2desk          ; F508
@@ -455,7 +455,7 @@ lineftab: ds.b 0
 		dc.l _desk1_drag          ; F62C
 		dc.l _do_filemenu         ; F630
 		dc.l _men_update          ; F634
-		dc.l _mediach             ; F638
+		dc.l 0                    ; F638
 		dc.l 0                    ; F63C
 		dc.l 0                    ; F640
 		dc.l _do_viewmenu         ; F644

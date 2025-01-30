@@ -152,7 +152,7 @@ VOID rsc_read(NOTHING)
 	 * not in the statement below. Still an lsr (unsigned)
 	 * instruction is used for the shifts
 	 */
-	asm("move.w     a5,d0");
+	asm("move.l     a5,d0");
 	asm("move.w     6(a5),d1");
 	asm("lsr.w      #1,d1");
 	asm("lsl.w      #1,d1");
