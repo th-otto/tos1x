@@ -329,7 +329,7 @@ F4E0 win_srtall
 F4E4 do_optnmenu
 F4E8 menu_tnormal
 F4EC hd_menu
-F4F0 w_full
+F4F0 do_wfull
 F4F4 win_arrow
 F4F8 win_slide
 F4FC evnt_dclick

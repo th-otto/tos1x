@@ -623,6 +623,8 @@ BOOLEAN hd_msg(NOTHING)
 	register BOOLEAN change;
 	register THEDSK *d;
 	
+	UNUSED(unused);
+	UNUSED(unused2);
 	d = thedesk;
 	done = change = FALSE;
 	switch (d->g_rmsg[0])
@@ -1056,6 +1058,7 @@ BOOLEAN deskmain(NOTHING)
 
 	/* exit the gem AES */
 	obj = ap_exit();
+	UNUSED(obj);
 
 	/* resolution change? */
 	if (gl_rschange)

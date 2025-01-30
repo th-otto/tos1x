@@ -92,6 +92,7 @@ PP(register DESKWIN *win;)
 			if (streq(win->w_path->p_spec, path))
 			{
 				ok = pn_folder(win->w_path);
+				UNUSED(ok);
 				desk_verify(win->w_id, TRUE);
 				win_sinfo(win);
 #ifdef __GNUC__
@@ -160,13 +161,13 @@ PP(register DESKWIN *win;)
 	{
 		fnew_name[0] = 0;
 		inf_sset((OBJECT *)tree, MKNAME, fnew_name);
-		show_hide(tree);
-		form_do(tree, ROOT);
+		show_hide((OBJECT *)tree);
+		form_do((OBJECT *)tree, ROOT);
 		cont = FALSE;
 		if (inf_what((OBJECT *)tree, MKOK, MKCNCL))
 		{
 			desk_wait(TRUE);
-			fs_ssget(tree, MKNAME, fnew_name);
+			fs_ssget((OBJECT *)tree, MKNAME, fnew_name);
 			unfmt_str(fnew_name, unew_name);
 			if (unew_name[0])				/* no name  */
 			{
@@ -199,7 +200,7 @@ PP(register DESKWIN *win;)
 	}
 
 	desk_wait(FALSE);
-	do_finish(tree);
+	do_finish((OBJECT *)tree);
 	return TRUE;
 }
 
@@ -496,7 +497,7 @@ PP(int16_t dobj;)
 	FNODE *fn;
 	register APP *source;
 	register APP *target;
-	short button;
+	short fbutton;
 	char *parm1[1];
 	ICONBLK *src_icon;
 	ICONBLK *dst_icon;
@@ -525,7 +526,7 @@ PP(int16_t dobj;)
 			return FALSE;
 		} else
 		{
-			button = TRUE;
+			fbutton = TRUE;
 			switch (target->a_type)
 			{
 			case AT_ISTRSH:
@@ -533,7 +534,7 @@ PP(int16_t dobj;)
 				trsh_name[0] = src_icon->ib_char & 255;
 				trsh_name[1] = '\0';
 				parm1[0] = trsh_name;
-				button = fun_alert(2, STNOBIN, parm1);
+				fbutton = fun_alert(2, STNOBIN, parm1);
 				return FALSE;
 #if BINEXACT
 				break;
@@ -566,14 +567,14 @@ PP(int16_t dobj;)
 				parms[0] = src_name;
 				parms[1] = dst_name + 1;
 				parms[2] = dst_name + 1;
-				button = fun_alert(2, STCOPY, parms);
+				fbutton = fun_alert(2, STCOPY, parms);
 				src_name[1] = ':';
 				dst_name[2] = ':';
 				
-				if (button == 1)
+				if (fbutton == 1)
 				{
-					button = pro_cmd(ini_str(STTCOPY), src_name, TRUE, CMD_COPY);
-					if (button)
+					fbutton = pro_cmd(ini_str(STTCOPY), src_name, TRUE, CMD_COPY);
+					if (fbutton)
 					{
 						pro_run(TRUE, TRUE, 0, dobj);
 						cont = TRUE;

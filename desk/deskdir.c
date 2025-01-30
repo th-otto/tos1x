@@ -45,7 +45,6 @@ uint8_t gl_dta[sizeof(DTA) + 6];
 LINEF_STATIC VOID sub_path PROTO((char *path));
 LINEF_STATIC VOID do_namecon PROTO((NOTHING));
 LINEF_STATIC BOOLEAN d_dofdel PROTO((char *path));
-LINEF_STATIC VOID show_hide PROTO((OBJECT *tree));
 
 
 
@@ -102,7 +101,7 @@ PP(OBJECT *obj;)
 }
 
 
-LINEF_STATIC VOID show_hide(P(OBJECT *) tree)
+VOID show_hide(P(OBJECT *) tree)
 PP(OBJECT *tree;)
 {
 	int16_t xd, yd, wd, hd;

@@ -41735,7 +41735,7 @@ pro_exec:
 [00fe1832] 7801                      moveq.l    #1,d4
 [00fe1834] 6000 011a                 bra        $00FE1950
 [00fe1838] 3eac 5c78                 move.w     23672(a4),(a7)
-[00fe183c] f4f0                      dc.w       $F4F0 ; w_full
+[00fe183c] f4f0                      dc.w       $F4F0 ; do_wfull
 [00fe183e] 3ebc 0001                 move.w     #$0001,(a7)
 [00fe1842] 3f2c 5c78                 move.w     23672(a4),-(a7)
 [00fe1846] f2a4                      dc.w       $F2A4 ; desk_verify
@@ -58590,7 +58590,7 @@ lineftab:
 [00feeda0] 00fe 1446                 dc.l 00fe1446 ; F4E4 ; do_optnmenu
 [00feeda4] 00fd d6c2                 dc.l 00fdd6c2 ; F4E8 ; menu_tnormal
 [00feeda8] 00fe 16e0                 dc.l 00fe16e0 ; F4EC ; hd_menu
-[00feedac] 00fe 042a                 dc.l 00fe042a ; F4F0 ; w_full
+[00feedac] 00fe 042a                 dc.l 00fe042a ; F4F0 ; do_wfull
 [00feedb0] 00fe 2910                 dc.l 00fe2910 ; F4F4 ; win_arrow
 [00feedb4] 00fe 287a                 dc.l 00fe287a ; F4F8 ; win_slide
 [00feedb8] 00fd d4e2                 dc.l 00fdd4e2 ; F4FC ; evnt_dclick

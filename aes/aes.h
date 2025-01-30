@@ -1004,7 +1004,7 @@ int32_t bios PROTO((short code, ...));
  */
 extern BOOLEAN gl_rschange;
 extern int16_t gl_restype;
-extern int16_t gl_nextres;
+extern int16_t gl_nextrez;
 
 
 /*

@@ -468,6 +468,7 @@ VOID del_fname PROTO((char *path));
 VOID get_fname PROTO((const char *pstr, char *newstr));
 BOOLEAN dos_error PROTO((NOTHING));
 VOID add_path PROTO((char *path, const char *name));
+VOID show_hide PROTO((OBJECT *tree));
 
 
 /*
@@ -590,7 +591,6 @@ BOOLEAN xcut_path PROTO((char *path, char *buffer, int16_t cut));
 BOOLEAN cut_path PROTO((char *path));
 VOID cat_path PROTO((char *name, char *path));
 VOID rep_path PROTO((const char *name, char *path));
-int16_t do1_alert PROTO((int16_t item));
 VOID rc_center PROTO((GRECT *rec1, GRECT *rec2));
 VOID my_itoa PROTO((uint16_t number, char *pnumstr));
 VOID fmt_time PROTO((uint16_t time, char *ptime));

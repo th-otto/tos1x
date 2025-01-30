@@ -36,6 +36,9 @@ PP(register APP *app;)
 	char unused2[6];
 	BOOLEAN change;
 	
+	UNUSED(unused);
+	UNUSED(unused2);
+	UNUSED(found);
 	tree = (LPTREE)thedesk->g_atree[ADINSDIS];
 	ret = FALSE;
 	change = FALSE;
@@ -45,8 +48,8 @@ PP(register APP *app;)
 	inf_sset((OBJECT *)tree, DRID, driveid);
 	inf_sset((OBJECT *)tree, DRLABEL, label);
 	inf_show((OBJECT *)tree, ROOT);
-	fs_ssget(tree, DRID, newdrive);
-	fs_ssget(tree, DRLABEL, newlabel);
+	fs_ssget((OBJECT *)tree, DRID, newdrive);
+	fs_ssget((OBJECT *)tree, DRLABEL, newlabel);
 
 	/* BUG: object is not displayed in resource */
 #define DRFLOPPY 6
@@ -167,9 +170,9 @@ PP(register APP *app;)
 	
 	inf_show((OBJECT *)tree, ROOT);
 	change = FALSE;
-	fs_ssget(tree, APNAME, newname);
-	fs_ssget(tree, APDFTYPE, newext);
-	field = inf_gindex(tree, APGEM, 3);
+	fs_ssget((OBJECT *)tree, APNAME, newname);
+	fs_ssget((OBJECT *)tree, APDFTYPE, newext);
+	field = inf_gindex((OBJECT *)tree, APGEM, 3);
 	switch (field)
 	{
 	case 0:
@@ -189,7 +192,7 @@ PP(register APP *app;)
 	LWSET(OB_STATE(APGEM + field), NORMAL);
 
 	/* BUG: these objects do not exist in resource */
-	newicon = inf_gindex(tree, 11, 17);
+	newicon = inf_gindex((OBJECT *)tree, 11, 17);
 	LWSET(OB_STATE(newicon + 11), NORMAL);
 
 	if (LWGET(OB_STATE(APOK)) & SELECTED)

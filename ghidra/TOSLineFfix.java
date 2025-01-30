@@ -505,7 +505,7 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF4E4, "do_optnmenu");
 		traptable.put(0xF4E8, "menu_tnormal");
 		traptable.put(0xF4EC, "hd_menu");
-		traptable.put(0xF4F0, "w_full");
+		traptable.put(0xF4F0, "do_wfull");
 		traptable.put(0xF4F4, "win_arrow");
 		traptable.put(0xF4F8, "win_slide");
 		traptable.put(0xF4FC, "evnt_dclick");

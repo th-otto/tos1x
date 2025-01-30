@@ -42107,7 +42107,7 @@ zoom_closed:
 [00fe075a] dffc 0000 000e            adda.l     #$0000000E,a7
 [00fe0760] f83d                      dc.w       $F83D ; movem.l (a7)+,d4-d7/a5
 
-w_full:
+do_wfull:
 [00fe0762] 4e56 ffe8                 link       a6,#-24
 [00fe0766] 48e7 031c                 movem.l    d6-d7/a3-a5,-(a7)
 [00fe076a] 3e2e 0008                 move.w     8(a6),d7
@@ -43829,7 +43829,7 @@ hd_msg:
 [00fe1b6a] 7801                      moveq.l    #1,d4
 [00fe1b6c] 6000 011a                 bra        $00FE1C88
 [00fe1b70] 3eac 5c78                 move.w     23672(a4),(a7)
-[00fe1b74] f4f0                      dc.w       $F4F0 ; w_full
+[00fe1b74] f4f0                      dc.w       $F4F0 ; do_wfull
 [00fe1b76] 3ebc 0001                 move.w     #$0001,(a7)
 [00fe1b7a] 3f2c 5c78                 move.w     23672(a4),-(a7)
 [00fe1b7e] f2a4                      dc.w       $F2A4 ; desk_verify
@@ -61611,7 +61611,7 @@ lineftab:
 [00fef08c] 00fe 177e                 dc.l 00fe177e ; F4E4 ; do_optnmenu
 [00fef090] 00fd d9fa                 dc.l 00fdd9fa ; F4E8 ; menu_tnormal
 [00fef094] 00fe 1a18                 dc.l 00fe1a18 ; F4EC ; hd_menu
-[00fef098] 00fe 0762                 dc.l 00fe0762 ; F4F0 ; w_full
+[00fef098] 00fe 0762                 dc.l 00fe0762 ; F4F0 ; do_wfull
 [00fef09c] 00fe 2c48                 dc.l 00fe2c48 ; F4F4 ; win_arrow
 [00fef0a0] 00fe 2bb2                 dc.l 00fe2bb2 ; F4F8 ; win_slide
 [00fef0a4] 00fd d81a                 dc.l 00fdd81a ; F4FC ; evnt_dclick

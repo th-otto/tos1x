@@ -216,7 +216,7 @@ PP(register char *dst;)
 		*src = '\0';
 	} else
 	{
-		merge_str(tmp, "%L", &buf.d_size);
+		merge_str(tmp, "%L", (uint16_t *)&buf.d_size);
 	}
 	
 	i = 8;
@@ -447,11 +447,11 @@ PP(register FNODE *info;)
 	inf_show((OBJECT *)tree, ROOT);
 	/* now find out what happened   */
 	/* was it OK or CANCEL? */
-	if (inf_what(tree, FIOK, FICNCL))
+	if (inf_what((OBJECT *)tree, FIOK, FICNCL))
 	{
 		graf_mouse(HOURGLASS, NULL);
 		more = TRUE;
-		fs_ssget(tree, FINAME, pnname);
+		fs_ssget((OBJECT *)tree, FINAME, pnname);
 		/* unformat the strings     */
 		unfmt_str(poname, &d->g_srcpth[nmidx]);
 		unfmt_str(pnname, &d->g_dstpth[nmidx]);
@@ -502,6 +502,7 @@ PP(register FNODE *pf;)
 	register THEDSK *d;
 	char sizestr[LEN_ZFNAME + 1];
 
+	UNUSED(fname);
 	d = thedesk;
 	graf_mouse(HOURGLASS, NULL);
 
@@ -591,7 +592,6 @@ BOOLEAN desk_pref(NOTHING)
 	register int i;
 	short flag;
 
-	UNUSED(dummy);
 	d = thedesk;
 	tree = (LPTREE)d->g_atree[ADSETPREF];
 	
@@ -625,13 +625,13 @@ BOOLEAN desk_pref(NOTHING)
 
 	LWSET(OB_STATE(flag + SPLOW), SELECTED);
 
-	inf_show(tree, ROOT);
+	inf_show((OBJECT *)tree, ROOT);
 	if (inf_what((OBJECT *)tree, SPOK, SPCANCEL))
 	{
 		d->g_cdelepref = inf_what((OBJECT *)tree, SPCDYES, SPCDNO);
 		d->g_ccopypref = inf_what((OBJECT *)tree, SPCCYES, SPCCNO);
 
-		gl_nextrez = inf_gindex(tree, SPLOW, 3) + 2;
+		gl_nextrez = inf_gindex((OBJECT *)tree, SPLOW, 3) + 2;
 		if (app_reschange(gl_nextrez))
 			return TRUE;
 	}
@@ -649,16 +649,16 @@ PP(char *ptail;)
 	register LPTREE tree;
 	char poname[LEN_ZFNAME];
 
-	tree = thedesk->g_atree[ADOPENAP];
-	inf_setsize(papname, poname, tree, APPLNAME, TRUE);
-	inf_sset(tree, APPLPARM, papparms);
-	inf_show(tree, APPLPARM);
+	tree = (LPTREE)thedesk->g_atree[ADOPENAP];
+	inf_setsize(papname, poname, (OBJECT *)tree, APPLNAME, TRUE);
+	inf_sset((OBJECT *)tree, APPLPARM, papparms);
+	inf_show((OBJECT *)tree, APPLPARM);
 	/* now find out what happened   */
-	if (inf_what(tree, APPLOK, APPLCNCL))
+	if (inf_what((OBJECT *)tree, APPLOK, APPLCNCL))
 	{
-		fs_ssget(tree, APPLNAME, &poname[0]);
+		fs_ssget((OBJECT *)tree, APPLNAME, &poname[0]);
 		unfmt_str(&poname[0], pcmd);
-		fs_ssget(tree, APPLPARM, ptail);
+		fs_ssget((OBJECT *)tree, APPLPARM, ptail);
 		return TRUE;
 	} else
 	{

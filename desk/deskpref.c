@@ -13,6 +13,7 @@
 #undef Dfree
 #define Dfree(a,b)      trap(0x36,a,b)
 
+#if TOSVERSION >= 0x104
 
 /*
  *	Set preferences dialog.
@@ -125,3 +126,5 @@ PP(int32_t *avail;)
 	*avail = clsize * lbuf[0];
 	return TRUE;
 }
+
+#endif

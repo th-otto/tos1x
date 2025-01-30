@@ -111,7 +111,8 @@ LINEF_STATIC VOID fc_do PROTO((OBJECT *tree, int16_t depth, BOOLEAN fmdo, int16_
 LINEF_STATIC VOID do1_alert PROTO((int16_t err, int16_t dev));
 LINEF_STATIC BOOLEAN fc_alloc PROTO((VOIDPTR *buf, long *size));
 LINEF_STATIC int16_t fc_rwtracks PROTO((int16_t op, intptr_t buf, intptr_t sktable, int16_t dev, int16_t side, int16_t w_inc, int16_t track, int16_t numtracks, char *cmd));
-LINEF_STATIC VOID fc_swp68 PROTO((uint16_t *val));
+
+VOID fc_swp68 PROTO((uint16_t *val));
 
 /* from aes/jbind.S */
 long err_trap PROTO((int16_t err, int16_t dev));
@@ -280,7 +281,7 @@ PP(char *cmd;)
 				fat[i] = 0;
 			/* get the label */
 			fat[5] = 0x0008;			/* file attribute   */
-			LBCOPY(bufaddr, fc_ted[1].te_ptext, 11);
+			LBCOPY((VOIDPTR)bufaddr, fc_ted[1].te_ptext, 11);
 
 			i = 1 + (bpbaddr->fsiz * 2);
 			Rwabs(WSECTS, bufaddr, bpbaddr->rdlen, i, devno);
@@ -479,7 +480,7 @@ PP(int16_t maxvalue;)
 	fc_tree[FCBARS].ob_y = fc_y + y;
 	fc_tree[FCBARD].ob_x = fc_tree[FCBOXD].ob_x + x;
 	fc_tree[FCBARD].ob_y = fc_tree[FCBOXD].ob_y + y;
-	if (maxvalue == MAXTRACKS / 2)
+	if (maxvalue == MAXTRACK / 2)
 		*w_inc += *w_inc;
 	desk_wait(TRUE);
 }
@@ -524,7 +525,7 @@ PP(char *cmd;)
 		if (op == 9)
 			obj = FCBARS;
 		fc_tree[obj].ob_width += w_inc;
-		pobj = &fc_tree[obj];
+		pobj = (LPTREE)&fc_tree[obj];
 		fc_do((OBJECT *)pobj, 0, FALSE, 0);
 		ret = xbios(op, buf, sktable, dev, 1, i, side, MAXSPT);
 		if (op == 9 && ret == 0)
@@ -592,7 +593,7 @@ PP(VOIDPTR fat;)
 	{
 		/* 16bit fats on a floppy??? */
 		ncl = cl * 2;
-		*((uint16_t *)(fat + ncl)) = -1;
+		*((uint16_t *)((char *)fat + ncl)) = -1;
 	} else
 	{
 		ncl = cl + (cl >> 1);				/* multiply by 1.5  */
