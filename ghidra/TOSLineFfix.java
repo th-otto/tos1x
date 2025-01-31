@@ -64,6 +64,8 @@ public class TOSLineFfix extends GhidraScript {
 	private AddressSetView view;
 	private Listing listing;
 	private DataType uint_type;
+	private int tos_version;
+	private int tos_language;
 	
 	private int getopcode(Address addr) throws Exception {
 		int opcode = 0;
@@ -99,6 +101,20 @@ public class TOSLineFfix extends GhidraScript {
 			popup("This script is intended for Atari binaries, not" + language.getLanguageID().toString());
 			return;
 		}
+		try {
+			if (getaddr(toAddr(0xfc0008)).getOffset() != 0xfc0000 ||
+				getaddr(toAddr(0xfc0004)).getOffset() != 0xfc0020)
+				throw new Exception("This script needs a TOS image");
+			tos_version = getopcode(toAddr(0xfc0002));
+			tos_language = (getopcode(toAddr(0xfc001c)) & 0xfe) / 2;
+			if (tos_version != 0x100)
+				throw new Exception("This script only supports TOS version 1.00");
+		} catch (Exception e) {
+			popup(e.getMessage());
+			return;
+		}
+		printf("TOS version: 0x%04x\n", tos_version);
+		printf("TOS language: %d\n", tos_language);
 
 		overrideType = RefType.CALL_OVERRIDE_UNCONDITIONAL;
 		callingConvention = "__stdcall";
@@ -158,7 +174,6 @@ public class TOSLineFfix extends GhidraScript {
 								program.getReferenceManager().setPrimary(ref, true);
 								Instruction inst = listing.getInstructionAt(addr);
 								for (PcodeOp op : inst.getPcode()) {
-										printf("op: %s %d\n", addr.toString(), op.getOpcode());
 									if (op.getOpcode() == PcodeOp.CALL)
 									{
 										Varnode node = new Varnode(calladdr, 4);
@@ -808,15 +823,31 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF9A0, "trap");
 		traptable.put(0xF9A4, "showfile");
 		traptable.put(0xF9A8, "sf_disp");
-		traptable.put(0xF9AC, "rawcon");
-		traptable.put(0xF9B0, "sf_putc");
-		traptable.put(0xF9B4, "sf_getc");
-		traptable.put(0xF9B8, "sf_page");
-		traptable.put(0xF9BC, "sf_more");
-		traptable.put(0xF9C0, "sf_newline");
-		traptable.put(0xF9C4, "cconws");
-		traptable.put(0xF9C8, "cart_alloc");
-		traptable.put(0xF9CC, "cart_find");
+		if (tos_language == 0) /* slightly different US version */
+		{
+			traptable.put(0xF9AC, "sf_getc");
+			traptable.put(0xF9B0, "rawcon");
+			traptable.put(0xF9B4, "sf_putc");
+			traptable.put(0xF9B8, "sf_page");
+			traptable.put(0xF9BC, "sf_more");
+			traptable.put(0xF9C0, "sf_newline");
+			traptable.put(0xF9C4, "cconws");
+			traptable.put(0xF9C8, "sf_cr");
+			traptable.put(0xF9CC, "prt_chr");
+			traptable.put(0xF9D0, "cart_alloc");
+			traptable.put(0xF9D4, "cart_find");
+		} else
+		{
+			traptable.put(0xF9AC, "rawcon");
+			traptable.put(0xF9B0, "sf_putc");
+			traptable.put(0xF9B4, "sf_getc");
+			traptable.put(0xF9B8, "sf_page");
+			traptable.put(0xF9BC, "sf_more");
+			traptable.put(0xF9C0, "sf_newline");
+			traptable.put(0xF9C4, "cconws");
+			traptable.put(0xF9C8, "cart_alloc");
+			traptable.put(0xF9CC, "cart_find");
+		}
 		return traptable;
 	}
 }
