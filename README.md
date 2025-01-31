@@ -12,6 +12,8 @@ compiler tools that were originally used are just too outdated and buggy.
 
 It is therefor mainly intended to be used as reference.
 
+To build older TOS versions (only TOS 1.00 for now), switch to the
+[TOS 1.00](/tree/TOS_100) branch.
 
 # Directory Structure
 
