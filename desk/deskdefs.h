@@ -31,3 +31,7 @@
  */
 #define NUM_SOBS (NUM_ROBS + NUM_WOBS + NUM_WNODES)
 
+/*
+ * US version seems to have used slightly older version of showfile()
+ */
+#define OLD_SFCODE (OS_COUNTRY == CTRY_US)

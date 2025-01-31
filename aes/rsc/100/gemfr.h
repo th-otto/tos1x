@@ -131,7 +131,7 @@
 
 #define ALRT15ERR                         23 /* Alert string */
 
-#define STRNG12                           24 /* Free string */
+#define ALRT16ERR                         24 /* Free string */
 
 #define ALRT08ERR                         25 /* Alert string */
 

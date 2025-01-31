@@ -61293,7 +61293,6 @@ linefhandler:
 [00feeba4] 4e5e                      unlk       a6
 [00feeba6] 4e75                      rts
 
-
 lineftab:
 [00feeba8] 00fe 83fc                 dc.l 00fe83fc ; F000 ; gsx_1code
 [00feebac] 00fd a3ca                 dc.l 00fda3ca ; F004 ; bb_fill

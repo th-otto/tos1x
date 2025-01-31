@@ -144,7 +144,12 @@ _os_conf:               /* Flag for PAL version + country */
 	/* hack for dutch version: apparently wrong language code used */
     dc.w   (CTRY_SA<<1)+OS_PAL
 #else
+#if (OS_COUNTRY == CTRY_DK) & (TOSVERSION == 0x100)
+	/* hack for danish version: apparently language code not patched */
+    dc.w   (CTRY_DE<<1)+OS_PAL
+#else
     dc.w   (OS_COUNTRY<<1)+OS_PAL
+#endif
 #endif
 #endif
 #endif
@@ -950,7 +955,11 @@ dmaread1:
 		move.b    d7,d0
 		or.b      #$08,d0
 		swap      d0
-		move.w    #$008A,d0
+#if (OS_COUNTRY != CTRY_US)
+		move.w    #$008A,d0 /* fix from later TOS versions? */
+#else
+		move.w    #$0088,d0
+#endif
 #if TOSVERSION >= 0x106
 		move.l     #2000,d1
 		sub.l      _hz_200.l,d1

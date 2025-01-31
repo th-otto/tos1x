@@ -2,7 +2,7 @@
 # table of opcode/function names used
 # for the linef dispatcher in TOS
 #
-# This file is for version 1.04 only
+# This file is for version 1.00 only
 #
 # The assembler will automatically translate
 # calls to these functions, if this file
@@ -641,3 +641,15 @@ F9C0 sf_newline
 F9C4 cconws
 F9C8 cart_alloc
 F9CC cart_find
+# hack for US version, which has some different entries
+F9AC us_getc
+F9B0 us_rawcon
+F9B4 us_putc
+F9B8 us_page
+F9BC us_more
+F9C0 us_newline
+F9C4 us_cconws
+F9C8 sf_cr
+F9CC prt_chr
+F9D0 us_calloc
+F9D4 us_cfind

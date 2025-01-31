@@ -504,13 +504,18 @@ PP(int16_t n;)									/* n = dos error number */
 		string = ALRT05ERR;
 		break;
 	case E_NOMEMORY:				/* insufficient memory  */
-	case E_BADENVIR:				/* invalid environmeny  */
+	case E_BADENVIR:				/* invalid environment  */
 	case E_BADFORMAT:				/* invalid format   */
 		string = ALRT08ERR;
 		break;
 	case E_BADDRIVE:				/* invalid drive    */
 		string = ALRT15ERR;
 		break;
+#if OS_COUNTRY == CTRY_US
+	case E_NODELDIR:
+		string = ALRT16ERR;
+		break;
+#endif
 	default:
 		string = ALRTXXERR;
 	}

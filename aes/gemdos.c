@@ -16,6 +16,12 @@
 #include "aes.h"
 #include "ostruct.h"
 #include "toserrno.h"
+#if LINEF_HACK
+#include "../desk/deskdefs.h"
+#if OLD_SFCODE
+#define rawcon us_rawcon
+#endif
+#endif
 
 int16_t DOS_AX;
 BOOLEAN DOS_ERR;

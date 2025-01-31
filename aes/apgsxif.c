@@ -41,6 +41,9 @@
 #include "gemlib.h"
 #include "gsxdefs.h"
 
+int16_t gl_width;
+int16_t gl_font;
+
 
 
 BOOLEAN gsx_sclip(P(const GRECT *) pt)

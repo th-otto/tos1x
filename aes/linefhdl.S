@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "aesdefs.h"
+#include "../desk/deskdefs.h"
 #include "asmdefs.h"
 
 /*
@@ -676,6 +677,19 @@ lineftab: ds.b 0
 		dc.l _trap                ; F9A0
 		dc.l _showfile            ; F9A4
 		dc.l _sf_disp             ; F9A8
+#if OLD_SFCODE
+		dc.l _us_getc             ; F9AC
+		dc.l _us_rawcon           ; F9B0
+		dc.l _us_putc             ; F9B4
+		dc.l _us_page             ; F9B8
+		dc.l _us_more             ; F9BC
+		dc.l _us_newline          ; F9C0
+		dc.l _us_cconws           ; F9C4
+		dc.l _sf_cr               ; F9C8
+		dc.l _prt_chr             ; F9CC
+		dc.l _us_calloc           ; F9D0
+		dc.l _us_cfind            ; F9D4
+#else
 		dc.l _rawcon              ; F9AC
 		dc.l _sf_putc             ; F9B0
 		dc.l _sf_getc             ; F9B4
@@ -711,5 +725,6 @@ lineftab: ds.b 0
 		dc.l 0
 		dc.l 0
 		dc.w 0
+#endif
 		
 #endif

@@ -308,7 +308,14 @@ PP(register intptr_t pbuff;)
 PP(register int16_t length;)
 {
 	register int16_t i;
+#if OS_COUNTRY == CTRY_US
+	/* US version had even more buggy code */
+	register short code;
+#define CCAST
+#else
 	register intptr_t code;
+#define CCAST (intptr_t) /* in newer version they thought it could be fixed by a cast ROFL */
+#endif
 
 	/* start recording in forker()       */
 	cli();
@@ -334,19 +341,19 @@ PP(register int16_t length;)
 	/* convert to machine independent recording */
 	for (i = 0; i < length; i++)
 	{
-		code = (intptr_t)LWGET(pbuff); /* BUG: comparing only word */
-		if (code == (intptr_t)tchange)
+		code = LWGET(pbuff); /* BUG: comparing only word */
+		if (code == CCAST tchange)
 		{
 			code = TCHNG;				/*    int16_t is changed to int32_t   */
 #if AESVERSION < 0x140
 			LLSET(pbuff+sizeof(int32_t *), LLGET(pbuff+sizeof(int32_t *)) * gl_ticktime);
 #endif
 		}
-		if (code == (intptr_t)mchange)
+		if (code == CCAST mchange)
 			code = MCHNG;
-		if (code == (intptr_t)kchange)
+		if (code == CCAST kchange)
 			code = KCHNG;
-		if (code == (intptr_t)bchange)
+		if (code == CCAST bchange)
 			code = BCHNG;
 		LWSET(pbuff, code); /* BUG: see above */
 		pbuff += sizeof(FPD);

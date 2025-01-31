@@ -350,10 +350,18 @@ _endvdibss: ds.b 0
 	LONG(_CMP_TICK)
 	V(gstack,l,24)
 	V(tstack,l,24)
+#if OLD_SFCODE
+	INT(_sf_key)
+	INT(_sf_col)
+	INT(_sf_line)
+	PTR(xbiosaret)
+	PTR(biosaret)
+#else
 	INT(_sf_key)
 	ds.w 1 /* unused */
 	INT(_sf_line)
 	ds.l 1 /* unused */
+#endif
 	PTR(trp13aret)
 	PTR(trp14aret)
 	INT(_gl_xclip)
@@ -389,7 +397,9 @@ _endvdibss: ds.b 0
 	V(_infpath,b,122)
 	PTR(_gl_cowner)
 	INT(_sh_doexec)
+#if !OLD_SFCODE
 	INT(_sf_eof)
+#endif
 	INT(_gl_patt)
 	GRECT(_gl_rscreen)
 	GRECT(_gl_rfull)
@@ -433,7 +443,9 @@ _endvdibss: ds.b 0
 	MFDB(_gl_dst)
 	INT(_fph)
 	GRECT(_gl_rfs)
+#if !OLD_SFCODE
 	INT(_sf_bufsize)
+#endif
 	INT(_gl_wptschar)
 	INT(_gl_wsptschar)
 	INT(_xrat)

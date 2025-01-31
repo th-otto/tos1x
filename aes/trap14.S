@@ -56,6 +56,50 @@
 	xdef trp14aret
 	comm trp14aret,4
 
+#if OS_COUNTRY == CTRY_US
+	bss
+
+	xdef xbiosaret
+	comm xbiosaret,4
+	xdef biosaret
+	comm biosaret,4
+
+	text
+
+/* 100us: 00fee782 */
+	xdef _xbios
+_xbios: ds.b 0
+	move.l	(sp)+,xbiosaret
+	trap	#14
+	move.l  d0,-(a7)
+	move.l  #0,-(a7)
+	move.w  #2,-(a7) /* HOURGLASS */
+	/* jsr     _graf_mouse */
+	dc.w    $4eb9 /* not replaced by LineF opcode */
+	dc.l    _graf_mouse
+	addq.w  #6,a7
+	move.l  (a7)+,d0
+	move.l	xbiosaret,-(sp)
+	rts
+
+/* 100us: fee7a8 */
+	xdef _bios
+_bios: ds.b 0
+	move.l	(sp)+,biosaret
+	trap	#13
+	move.l  d0,-(a7)
+	move.l  #0,-(a7)
+	move.w  #2,-(a7) /* HOURGLASS */
+	/* jsr     _graf_mouse */
+	dc.w    $4eb9 /* not replaced by LineF opcode */
+	dc.l    _graf_mouse
+	addq.w  #6,a7
+	move.l  (a7)+,d0
+	move.l	biosaret,-(sp)
+	rts
+
+#endif
+
 	text
 
 /* void fc_swp68(uint16_t *val); */
@@ -77,19 +121,23 @@ _fc_swp68:
 /* 404: 00e3576c */
 /* 104de: 00fe7582 */
 /* 106de: 00e29e74 */
+#if OS_COUNTRY != CTRY_US
 	xdef _bios
+_bios: ds.b 0
+#endif
 	xdef _trp13
-_trp13:
-_bios:
+_trp13: ds.b 0
 	move.l	(sp)+,trp13aret
 	trap	#13
 	move.l	trp13aret,-(sp)
 	rts
 
 
+#if OS_COUNTRY != CTRY_US
 	xdef _xbios
-	xdef _trp14
 _xbios: ds.b 0
+#endif
+	xdef _trp14
 _trp14: ds.b 0
 	move.l	(sp)+,trp14aret
 	trap	#14

@@ -77,7 +77,7 @@ tos1.mak:
 tos.rel: $(STARTUP) $(OBJS) tosrsc$(COUNTRY).o ../vdi/vdivar.o ../aes/gembase.o sbss.o ebss.o
 	$(AM_V_at)$(CP) ../vdi/cbssdefs.o .
 	$(AM_V_at)$(CP) ../aes/gembase.o .
-	$(AM_V_LD)$(LINK68) '[abs,relocs=td,text[$(rombase)],bss[0]]' tosrel.tmp=$(LINK_OBJS) > $@
+	$(AM_V_LD)$(LINK68) '[abs,relocs=td,text[$(rombase)],bss[0]]' tosrel.tmp=vars.o,tosvars.o,$(LINK_OBJS) > $@
 	$(AM_V_at)$(RM) tosrel.tmp
 
 $(IMG): tos1.img tos2.img $(MKROM)

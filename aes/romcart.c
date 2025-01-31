@@ -30,6 +30,13 @@
 #include "aes.h"
 #include "gemlib.h"
 #include "dos.h"
+#if LINEF_HACK
+#include "../desk/deskdefs.h"
+#if OLD_SFCODE
+#define cart_alloc us_calloc
+#define cart_find us_cfind
+#endif
+#endif
 
 /*
  * WTF, directly accesses some desktop structures
@@ -60,7 +67,7 @@ STATIC CARTNODE *cart_ptr;
 STATIC char *cart_dta;
 
 
-CARTNODE *cart_find PROTO((BOOLEAN fill));
+LINEF_STATIC CARTNODE *cart_find PROTO((BOOLEAN fill));
 
 
 
@@ -124,7 +131,7 @@ PP(register CARTNODE *pcart;)
 /* 306de: 00e230de */
 /* 104de: 00fe6562 */
 /* 106de: 00e28c96 */
-CARTNODE *cart_find(P(BOOLEAN) fill)
+LINEF_STATIC CARTNODE *cart_find(P(BOOLEAN) fill)
 PP(BOOLEAN fill;)
 {
 	register char *pdta;
