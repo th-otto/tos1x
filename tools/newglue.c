@@ -442,8 +442,8 @@ PP(char **argv;)
 				putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
 		} else
 		{
-			putbeshort(header + 2 * i, offset);
-#if 1
+			putbeshort(header + 2 * i, (unsigned int)offset);
+#if 0
 			if (i > 0)
 				printf("header[%d] = %04x address=%08lx\n", i - 1, getbeshort(header + 2 * i), (intptr_t)address - (intptr_t)top - 2);
 #endif
@@ -832,7 +832,6 @@ PP(char **argv;)
 
 		if (country && strcmp(country, "sf") == 0)
 		{
-			fprintf(stderr, "i=%d size=%lx address=%lx\n", i, size, (long)(address - top - 2) + 0xfeba6aL);
 			if (i == 0 && size == 0x144a) /* 1.04 */
 			{
 			}

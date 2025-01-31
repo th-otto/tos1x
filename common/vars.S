@@ -560,7 +560,7 @@ _endvdibss: ds.b 0
 	PTR(_fc_tree)
 	
 	ds.b 52 /* unused */
-#if !(OLD_SFCODE | (OS_COUNTRY != CTRY_FR))
+#if OLD_SFCODE | (OS_COUNTRY == CTRY_FR)
 	ds.b 4 /* unused */
 #endif
 

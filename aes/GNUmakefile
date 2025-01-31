@@ -52,6 +52,8 @@ ASMHACK_106 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
 ASMHACK_162 = $(SED) -e 's/bra L2/bra L9999/' $*.s > $*.i; $(MV) $*.i $*.s
 ASMHACK = $(ASMHACK_$(TOSVERSION))
 
+# remove some superflous clr.w D0 that for some reason
+# don't appear in the final ROM
 gembind.o: gembind.c
 	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) ${RUN_OPTIMIZE_${$*_OPTIMIZE}} -c -S -o $*.s $<
 	$(AM_V_at)$(ASMHACK)
@@ -62,8 +64,6 @@ gembind.o: gembind.c
 	$(AM_V_at)$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $*.s
 	$(AM_V_at)$(RM) $*.s
 
-# remove some superflous clr.w D0 that for some reason
-# don't appear in the final ROM
 apgrlib.o: apgrlib.c
 	$(AM_V_CC)$(CC) $(CFLAGS) $(CPPFLAGS) -c -S -o $*.s $<
 	$(AM_V_at)$(SED) -n '{$$!N; /clr R0\nmove R7,R0/{D;p}; {P;D}}' $*.s > $*.1; mv $*.1 $*.s

@@ -33,11 +33,11 @@ include SRCFILES
 
 STARTUP = startup.o
 
-OBJS = $(STARTUP) vars.o tosvars.o $(BIOSVDI_OBJS) $(AESDESK_OBJS)
+OBJS = $(STARTUP) vars.o tosvars.o ../bios/bios.a ../bdos/bdos.a ../vdi/vdi.a ../aes/aes.a ../desk/desk.a
 
 
-BIOSLINK_OBJS := $(shell echo $(BIOSVDI_OBJS) tosrsc$(COUNTRY).o | tr ' ' ',')
-AESLINK_OBJS := $(shell echo $(AESDESK_OBJS) | tr ' ' ',')
+BIOSLINK_OBJS := $(BIOSVDI_OBJS),tosrsc$(COUNTRY).o
+AESLINK_OBJS := $(AESDESK_OBJS)
 LINK_OBJS = $(BIOSLINK_OBJS),$(AESLINK_OBJS)
 
 ROMSIZE_100 = 192k

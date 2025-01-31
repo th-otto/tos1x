@@ -21,28 +21,6 @@ all clean distclean dist check::
 	$(MAKE) -C desk $(FLAGSTOPASS) $@
 	$(MAKE) -C glue $(FLAGSTOPASS) $@
 
-maps:
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=104 COUNTRY=de
-	cnm -g glue/tos.img > glue/tos104de.map
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=104 COUNTRY=us
-	cnm -g glue/tos.img > glue/tos104us.map
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=106 COUNTRY=de
-	cnm -g glue/tos.img > glue/tos106de.map
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=106 COUNTRY=us
-	cnm -g glue/tos.img > glue/tos106us.map
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=162 COUNTRY=de
-	cnm -g glue/tos.img > glue/tos162de.map
-	$(MAKE) clean
-	$(MAKE) SYMBOLS=-s TOSVERSION=162 COUNTRY=us
-	cnm -g glue/tos.img > glue/tos162us.map
-	$(MAKE) clean
-	$(RM) glue/*.img glue/glue.*
-
 help::
 	@echo ""
 	@echo "targets:"

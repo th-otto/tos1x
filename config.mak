@@ -45,10 +45,8 @@ RAMVERSION=0
 
 -include $(top_srcdir)/localcnf.mak
 
-ifeq ($(BINEXACT),1)
 # TOS version 1.00 did not have the optimizer pass
 RUN_OPTIMIZE_ = ${RUN_OPTIMIZE_0}
-endif
 
 #
 # Rules to recreate some files from definitions above

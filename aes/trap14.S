@@ -48,6 +48,8 @@
 #include "asmdefs.h"
 #include "tosvars.inc"
 
+#define OLD_SFCODE (OS_COUNTRY == CTRY_US)
+
 	bss
 	even
 	
