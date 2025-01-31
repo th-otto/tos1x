@@ -1,6 +1,6 @@
 # What is this?
 
-These are the sources used to build orginal ROM versions of TOS 1.04/1.06/1.62,
+These are the sources used to build orginal ROM versions of TOS 1.00,
 the OS used by Atari ST (not TT).
 
 The goal of this project was to actually be able to
@@ -114,7 +114,7 @@ It is therefor mainly intended to be used as reference.
 
 # Supported versions
 
-BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04, 1.06 & 1.62
+BIOS, VDI, GEMDOS, AES, DESKTOP: 1.00
 
 
 # Supported language versions
@@ -123,18 +123,7 @@ BIOS, VDI, GEMDOS, AES, DESKTOP: 1.04, 1.06 & 1.62
  - de - Germany
  - fr - France
  - uk - United Kingdom (uses US resources)
- - es - Spain
- - it - Italy (no ROM yet found to verify)
- - se - Sweden (the ROM has some patches applied)
- - fi - Finland (uses swedish keyboard and resources)
- - sf - Switzerland (French) (uses french keyboard and resources)
- - sg - Switzerland (German) (uses german keyboard and resources)
- - nl - Netherlands
- - cz - Czech (originally was a patched german version)
-
-The images in the roms/ directory for the swedish & czech version use
-consistent resources & keyboard tables, and may be slightly different
-than others versions found on the net.
+ - dk - Danish (originally was a patched german version)
 
 # How to compile
 
@@ -180,86 +169,15 @@ for the whole source tree.
 
 # Customizing TOS
 
-There are basically two methods to create a customized TOS, ie. one that
-contains some patches for known bugs, or small enhancements.
-
-- Use [TOSPATCH](https://github.com/markusheiden/tospatch). This is a command line tool that is able to
-  apply lots of patches to an existing TOS, using a configuration file.
-  Please read the included documentation on how to use it. The [TOSPATCH](tospatch)
-  directory in this repository contains an updated version of the configuration file
-  that should work for all languages in most cases.
-
-- Activate some patches while compiling TOS. To do this, you have to
-  edit the file `localcnf.mak` in the top level directory,
-  and add the following lines:
-  ```
-  BINEXACT:=0
-  COUNTRY:=de
-  RAMVERSION:=0
-  TOSVERSION:=104
-  ```
-  (adjust the language code to your needs).
-
-  Edit the file `common/localcnf.h`, and add eg. the following line:
-  ```
-  #define TP_13 1
-  ```
-  to activate the fix for the boot-device bug. See the file [common/patchdef.h](/common/patchdef.h)
-  for available options.
-
-  Then compile TOS as usual, and you will get a patched TOS ROM image.
+The methods for newer TOS versions to not work here.
+[TOSPATCH](https://github.com/markusheiden/tospatch) does not know about
+these old TOS versions, and activating fixes while compiling does not work
+either, because there is no space left. Use a newer TOS version if
+you have problems with the (numerous) bugs.
 
 # Differences between TOS versions
 
-User visible differences between 1.06 and 1.04 that have been identified:
+User visible differences between 1.00 and 1.04 that have been identified:
 
-### BIOS
-  * At places where the hardware video base is set/read, also the low byte is read/written.
-  * During boot, the microwire interface is initialized. Other than that, there is no support for that hardware.
-  * The ramtop/ramvalid system variables are set, but no attempt is made to probe for TT-RAM
-  * A small cookiejar is installed (with 8 entries), containing values for _CPU, _MCH, _SND and _SWI. Strangely, no _VDO cookie is set.
-  * the system variables kcl_hook and bell_hook are supported, to allow for custom sounds.
-  * The bios/xbios entry points are aware of the longframe variable, just like TOS 2.06
-  * A simple priviledge violation handler is installed, to catch "move SR,<ea>" in user mode. This is an allowed instruction on 68000, but gives an exception on 68010+.
-  * The floppy routines use the hz_200 variable for timeouts instead of a fixed counter (again, that is also done in 2.06)
-  * The default palette includes the additional bit for all white values. Similarly, Setcolor() does not mask that out.
-  * The Rsconf() bug that prevents you from activating RTS/CTS control was fixed.
-
-### GEMDOS
-  * just like BIOS, the GEMDOS entry point checks for the _longframe variable. There is however a serious bug in the internal function that starts a new gemdos process, where that check is missing.
-  * A small fix in the function that checks for Ctrl-C. Same fix is also present in later GEMDOS versions (although it still reports version 0.15)
-  * When a process terminates, GEMDOS internalls updates the system time from BIOS. That is now done with a proper XBIOS call instead of calling the internal BIOS function directly.
-
-### VDI
-  * vs_color/vq_color handle the STE colors.
-
-### AES
-  * The linef trap is no longer used for internal functions.
-  * The internal AES entry has been slightly reorganized. Same version already as in TOS 2.x
-  * The rarely encounterd bug to look up an application name from a path has been fixed.
-
-### Desktop
-  * When viewing a text file, the mouse button can be used to scroll a page.
-  * A new bug has been introduced that prevents you from booting in medium resolution.
-
-User visible differences between 1.62 and 1.06 that have been identified:
-
-### BIOS
-   * None. The BIOS is completely identical.
-
-### GEMDOS
-   * The Pexec function has been reorganized in order to catch I/O errors during program loading.
-   * The bug that was corrected by POOLFIX has been fixed.
-   * Checks for the _longframe variable were removed from entry point again.
-   * There is already a prototype version of Mxalloc(), but it is not used by the dispatcher
-   * Version reported is now 0.17
-
-### VDI
-   * None. The VDI is completely identical.
-
-### AES
-   * A check has been added to ensure that window elements are at least gl_wchar + 2 pixel wide
-
-### Desktop
-   * The resolution change bug has been fixed
-
+Too many to mention them here. Almost all parts are completely different, no blitter
+support etc.
