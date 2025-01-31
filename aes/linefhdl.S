@@ -701,6 +701,7 @@ lineftab: ds.b 0
 		dc.l _cart_find           ; F9CC
 
 /* unused space */
+#if OS_COUNTRY == CTRY_FR
 		dc.l 0
 		dc.l 0
 		dc.l 0
@@ -721,6 +722,7 @@ lineftab: ds.b 0
 		dc.l 0
 		dc.l 0
 		dc.l 0
+#endif
 		dc.l 0
 		dc.l 0
 		dc.l 0

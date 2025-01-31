@@ -350,7 +350,7 @@ _endvdibss: ds.b 0
 	LONG(_CMP_TICK)
 	V(gstack,l,24)
 	V(tstack,l,24)
-#if OLD_SFCODE
+#if OLD_SFCODE | (OS_COUNTRY != CTRY_FR)
 	INT(_sf_key)
 	INT(_sf_col)
 	INT(_sf_line)
@@ -559,7 +559,10 @@ _endvdibss: ds.b 0
 	PTR(_gl_newdesk)
 	PTR(_fc_tree)
 	
-	ds.b 56 /* unused */
+	ds.b 52 /* unused */
+#if !(OLD_SFCODE | (OS_COUNTRY != CTRY_FR))
+	ds.b 4 /* unused */
+#endif
 
 /* end AES+DESKTOP */
 

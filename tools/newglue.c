@@ -323,6 +323,7 @@ PP(char **argv;)
 	const char *version = NULL;
 	int tosversion = 0;
 	FILE *fp;
+	long offset;
 
 #ifdef __ALCYON__
 	/* symbols etoa and ftoa are unresolved */
@@ -385,8 +386,9 @@ PP(char **argv;)
 	header = top;					/* header address */
 	memory = totalsize - HEADSIZE;
 	address = top + HEADSIZE;
+	offset = HEADSIZE - 2;
 	size = 0;
-
+	
 	for (i = 0; i < (TOTALFILE - 1); i++)	/* three or six files */
 	{
 		if (tosversion >= 0x104)
@@ -418,8 +420,10 @@ PP(char **argv;)
 				size += 4;
 		} else
 		{
+#if 0
 			if (size & 0x1)				/* on the odd boundary */
 				size += 1;
+#endif
 		}
 
 		if (memory <= size)
@@ -438,10 +442,10 @@ PP(char **argv;)
 				putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
 		} else
 		{
-			putbeshort(header + 2 * i, (int) ((intptr_t)address - (intptr_t)top - 2));
+			putbeshort(header + 2 * i, offset);
 #if 1
 			if (i > 0)
-				printf("header[%d] = %04x\n", i - 1, getbeshort(header + 2 * i));
+				printf("header[%d] = %04x address=%08lx\n", i - 1, getbeshort(header + 2 * i), (intptr_t)address - (intptr_t)top - 2);
 #endif
 		}
 
@@ -565,6 +569,15 @@ PP(char **argv;)
 		(VOID)copy_cursor;
 		(VOID)copy_image;
 		
+		offset += size;
+		if (size & 1)
+		{
+			/*
+			 * This may look strange, but the code in rom_ram()
+			 * has the effect of rounding the address down if it is odd
+			 */
+			size--;
+		}
 		address += size;
 		
 		/*
@@ -834,7 +847,7 @@ PP(char **argv;)
 
 	size = (intptr_t)address - (intptr_t)top; /* BUG: should be address - top - 2 */
 	if (tosversion < 0x104)
-		size -= 2;
+		size = offset & -2;
 
 	if (size >= 0xfffcL)
 	{

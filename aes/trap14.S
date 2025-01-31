@@ -56,7 +56,10 @@
 	xdef trp14aret
 	comm trp14aret,4
 
-#if OS_COUNTRY == CTRY_US
+#if OLD_SFCODE | (OS_COUNTRY != CTRY_FR)
+/*
+ * entry points only used by older code from showfile()
+ */
 	bss
 
 	xdef xbiosaret
@@ -121,7 +124,7 @@ _fc_swp68:
 /* 404: 00e3576c */
 /* 104de: 00fe7582 */
 /* 106de: 00e29e74 */
-#if OS_COUNTRY != CTRY_US
+#if !(OLD_SFCODE | (OS_COUNTRY != CTRY_FR))
 	xdef _bios
 _bios: ds.b 0
 #endif
@@ -133,7 +136,7 @@ _trp13: ds.b 0
 	rts
 
 
-#if OS_COUNTRY != CTRY_US
+#if !(OLD_SFCODE | (OS_COUNTRY != CTRY_FR))
 	xdef _xbios
 _xbios: ds.b 0
 #endif

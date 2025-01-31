@@ -955,7 +955,7 @@ dmaread1:
 		move.b    d7,d0
 		or.b      #$08,d0
 		swap      d0
-#if (OS_COUNTRY != CTRY_US)
+#if (OS_COUNTRY == CTRY_FR)
 		move.w    #$008A,d0 /* fix from later TOS versions? */
 #else
 		move.w    #$0088,d0

@@ -13,7 +13,7 @@
 #define S_PRINT     "DRUCKE: "
 #define S_MORE      "-MEHR-"
 #define S_EOF       "-ENDE DER DATEI-"
-#define S_FMTERR    "[3][Fehler beim Formatieren|oder Kopieren! Zieldisk \224nnte|defekt sein.][ OK ]"
+#define S_FMTERR    "[3][Fehler beim Formatieren|oder Kopieren! Zieldisk k\224nnte|defekt sein.][ OK ]"
 #define S_NOTSAME   "[3][Disketten haben nicht das|gleiche Format!][ OK ]"
 #define S_FREESPACE "[1][Disk hat %L Bytes|freien Speicherplatz.][ OK ]"
 #endif
