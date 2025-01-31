@@ -104,7 +104,11 @@ int16_t const dat_8x16[2048] =
 #if OS_COUNTRY == CTRY_CZ
 #include "fonts/8x16/czech.c"
 #else
+#if OS_COUNTRY == CTRY_DK
+#include "fonts/8x16/danish.c"
+#else
 #include "fonts/8x16/system.c"
+#endif
 #endif
 };
 

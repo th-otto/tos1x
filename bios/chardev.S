@@ -1847,6 +1847,7 @@ kbdvec28:
 /* 104any: 00fc3e10 */
 /* 106any: 00e03fc4 */
 /* 162any: 00e03fc4 */
+/* 100any: 00fc2b60 */
 #if OS_COUNTRY == CTRY_US
 /* nothing to do */
 #endif
@@ -2192,6 +2193,36 @@ kbdcz2:
         move.b    #$7D,d0
         bra       kbdvec42
 kbdcz3:
+#endif
+
+#if OS_COUNTRY == CTRY_DK
+        cmpi.b    #$1A,d1                       /* convert ALT-udiaresis to @ or backslash */
+        bne.s     kbdde1
+        move.b    #$40,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$27,d0
+        bra       kbdvec42
+kbdde1:
+        cmpi.b    #$27,d1                       /* convert ALT-odiaresis to [ or { */
+        bne.s     kbdde2
+        move.b    #$5B,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$7B,d0
+        bra       kbdvec42
+kbdde2:
+        cmpi.b    #$28,d1                       /* convert ALT-adiaresis to ] or } */
+        bne.s     kbdde3
+        move.b    #$5D,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$7D,d0
+        bra       kbdvec42
+kbdde3:
 #endif
 
 /* 206de: 00e03294 */

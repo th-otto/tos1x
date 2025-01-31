@@ -58,6 +58,9 @@
 #if (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_SF)
 #include "../desk/rsc/100/deskfr.h"
 #endif
+#if (OS_COUNTRY == CTRY_DK)
+#include "../desk/rsc/100/deskdk.h"
+#endif
 
 /*
  * icons, supposed to be in the resource file,

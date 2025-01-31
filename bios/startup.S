@@ -2600,9 +2600,6 @@ noblitter:
 		xdef _prtconfig
 		comm _prtconfig,2
 		
-		xdef _bootpref
-		comm _bootpref,2
-
 		xdef dsb
 		comm dsb,16
 

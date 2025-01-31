@@ -64,7 +64,7 @@ PP(register char *ptime;)
 
 	val = ((time & 0xf800) >> 11) & 0x001f;
 
-#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_ES) | (OS_COUNTRY == CTRY_IT) | (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_SF) | (OS_COUNTRY == CTRY_SG) | (OS_COUNTRY == CTRY_TR) | (OS_COUNTRY == CTRY_FI) | (OS_COUNTRY == CTRY_NO) | (OS_COUNTRY == CTRY_PL) | (OS_COUNTRY == CTRY_CZ)
+#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_ES) | (OS_COUNTRY == CTRY_IT) | (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_SF) | (OS_COUNTRY == CTRY_SG) | (OS_COUNTRY == CTRY_TR) | (OS_COUNTRY == CTRY_FI) | (OS_COUNTRY == CTRY_NO) | (OS_COUNTRY == CTRY_PL) | (OS_COUNTRY == CTRY_CZ) | (OS_COUNTRY == CTRY_DK)
 	my_itoa(val, &ptime[0]);
 	my_itoa(((time & 0x07e0) >> 5) & 0x003f, &ptime[2]);
 	strcpy(&ptime[4], "  ");
@@ -117,7 +117,7 @@ PP(register char *pdate;)
 #define st_dchar '-' /* BUG: should actually be '/' */
 #endif
 
-#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_SG) | (OS_COUNTRY == CTRY_TR) | (OS_COUNTRY == CTRY_CZ)
+#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_SG) | (OS_COUNTRY == CTRY_TR) | (OS_COUNTRY == CTRY_CZ) | (OS_COUNTRY == CTRY_DK)
 #define st_date 1
 #define st_dchar '-' /* BUG: should actually be '.' */
 #endif
