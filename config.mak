@@ -83,7 +83,7 @@ $(top_srcdir)/common/sections.mak: $(top_srcdir)/common/sections.inc $(top_srcdi
 all:: tosversion_$(TOSVERSION) country_$(COUNTRY)
 	@:
 
-country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz country_nl country_dk:
+country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz country_nl country_dk country_fi:
 tosversion_100:
 tosversion_104:
 tosversion_106:

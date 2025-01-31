@@ -124,6 +124,7 @@ BIOS, VDI, GEMDOS, AES, DESKTOP: 1.00
  - fr - France
  - uk - United Kingdom (uses US resources)
  - dk - Danish (originally was a patched german version)
+ - fi - Finish (originally was a patched german version)
 
 # How to compile
 

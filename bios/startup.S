@@ -144,8 +144,8 @@ _os_conf:               /* Flag for PAL version + country */
 	/* hack for dutch version: apparently wrong language code used */
     dc.w   (CTRY_SA<<1)+OS_PAL
 #else
-#if (OS_COUNTRY == CTRY_DK) & (TOSVERSION == 0x100)
-	/* hack for danish version: apparently language code not patched */
+#if ((OS_COUNTRY == CTRY_DK) | (OS_COUNTRY == CTRY_FI)) & (TOSVERSION == 0x100)
+	/* hack for danish/finish versions: apparently language code not patched */
     dc.w   (CTRY_DE<<1)+OS_PAL
 #else
     dc.w   (OS_COUNTRY<<1)+OS_PAL

@@ -661,6 +661,15 @@
 #endif
 
 #if OS_COUNTRY == CTRY_DK
+/* patched german version */
+#define BIOSTLEN    BTLEN_US+$5A
+#define DESKTLEN    $00016406
+#define DESKDLEN    $000009DC
+#define GLUELEN     $000044E0
+#endif
+
+#if OS_COUNTRY == CTRY_FI
+/* patched german version */
 #define BIOSTLEN    BTLEN_US+$5A
 #define DESKTLEN    $00016406
 #define DESKDLEN    $000009DC

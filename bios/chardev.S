@@ -2225,6 +2225,36 @@ kbdde2:
 kbdde3:
 #endif
 
+#if OS_COUNTRY == CTRY_FI
+        cmpi.b    #$1A,d1                       /* convert ALT-udiaresis to @ or backslash */
+        bne.s     kbdde1
+        move.b    #$40,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$5c,d0
+        bra       kbdvec42
+kbdde1:
+        cmpi.b    #$27,d1                       /* convert ALT-odiaresis to [ or { */
+        bne.s     kbdde2
+        move.b    #$5B,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$7B,d0
+        bra       kbdvec42
+kbdde2:
+        cmpi.b    #$28,d1                       /* convert ALT-adiaresis to ] or } */
+        bne.s     kbdde3
+        move.b    #$5D,d0
+        move.b    ABSW(_shifty),d2
+        andi.b    #$03,d2
+        beq       kbdvec42
+        move.b    #$7D,d0
+        bra       kbdvec42
+kbdde3:
+#endif
+
 /* 206de: 00e03294 */
 /* 306de: 00e0363a */
 /* 104de: 00fc3e6a */

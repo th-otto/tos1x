@@ -128,8 +128,13 @@ PP(register char *pdate;)
 #define st_dchar '-' /* BUG: should actually be '/' */
 #endif
 
-#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_FI) | (OS_COUNTRY == CTRY_NO)
+#if (OS_COUNTRY == CTRY_SE) | (OS_COUNTRY == CTRY_NO)
 #define st_date 2
+#define st_dchar '-'
+#endif
+
+#if (OS_COUNTRY == CTRY_FI)
+#define st_date 1
 #define st_dchar '-'
 #endif
 

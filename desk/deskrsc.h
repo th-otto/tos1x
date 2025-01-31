@@ -61,6 +61,9 @@
 #if (OS_COUNTRY == CTRY_DK)
 #include "../desk/rsc/100/deskdk.h"
 #endif
+#if (OS_COUNTRY == CTRY_FI)
+#include "../desk/rsc/100/deskfi.h"
+#endif
 
 /*
  * icons, supposed to be in the resource file,

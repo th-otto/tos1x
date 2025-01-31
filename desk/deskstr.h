@@ -38,3 +38,12 @@
 #define S_FREESPACE "[1][Disketten har %L|Bytes fri.          ][  OK  ]"
 #endif
 
+#if (OS_COUNTRY == CTRY_FI)
+#define S_CARTNAME  "ROMMODUL"
+#define S_PRINT     "        "
+#define S_MORE      "-lis\204\204"
+#define S_EOF       "-TIEDOSTON LOPPU"
+#define S_FMTERR    "[3][Virhe alustettaessa tai|kopioidessa. Levy saattaa olla|viallinen.  ][ OK ]"
+#define S_NOTSAME   "[3][Levykkeet ovat|erityyppisi\204.             ][ OK ]"
+#define S_FREESPACE "[1][Levyll\204 k\204ytett\204vissa|%L tavua.        ][ OK ]"
+#endif

@@ -85,7 +85,7 @@ int main(int argc, char **argv)
 	}
 	fclose(fp);
 	lang = getbe16(TOSADDR + 28) >> 1;
-	tosversion = getbe16(TOSADDR + 2)
+	tosversion = getbe16(TOSADDR + 2);
 	if (tosversion == 0x100)
 	{
 		switch (lang)
