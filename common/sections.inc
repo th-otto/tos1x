@@ -653,6 +653,13 @@
 #define GLUELEN     $00004850
 #endif
 
+#if OS_COUNTRY == CTRY_UK
+#define BIOSTLEN    BTLEN_US
+#define DESKTLEN    $00016436
+#define DESKDLEN    $00000A02
+#define GLUELEN     $00004850
+#endif
+
 #if OS_COUNTRY == CTRY_FR
 #define BIOSTLEN    BTLEN_US+$78
 #define DESKTLEN    $00016406

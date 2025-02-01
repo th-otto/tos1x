@@ -49,21 +49,10 @@
 #endif /* TOSVERSION == 0x104 */
 
 #if (TOSVERSION == 0x100)
-#if (OS_COUNTRY == CTRY_US) | (OS_COUNTRY == CTRY_UK)
+/*
+ * We can use the same header file for all languages.
+ */
 #include "../desk/rsc/100/deskus.h"
-#endif
-#if (OS_COUNTRY == CTRY_DE) | (OS_COUNTRY == CTRY_SG)
-#include "../desk/rsc/100/deskde.h"
-#endif
-#if (OS_COUNTRY == CTRY_FR) | (OS_COUNTRY == CTRY_SF)
-#include "../desk/rsc/100/deskfr.h"
-#endif
-#if (OS_COUNTRY == CTRY_DK)
-#include "../desk/rsc/100/deskdk.h"
-#endif
-#if (OS_COUNTRY == CTRY_FI)
-#include "../desk/rsc/100/deskfi.h"
-#endif
 
 /*
  * icons, supposed to be in the resource file,
