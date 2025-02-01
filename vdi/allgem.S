@@ -493,20 +493,20 @@ dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
 		xdef	_GLOC_KEY
 _GLOC_KEY:	PIXLA(a1)
 
-		move.b	_cur_ms_stat,d0
+		move.b	LV(cur_ms_stat,a1),d0
 		move.b	d0,d1		/* save state */
 		andi.b	#$c0,d0	/* mask out all but button status bits */
 		beq	key_stat	/* nothing go check key stat */
 		move.b     d1,d0
 		btst       #6,d0
 		beq clr_bt1
-		move.w	#$20,_TERM_CH	/* send terminator code for left key */
+		move.w	#$20,LV(TERM_CH,a1)	/* send terminator code for left key */
 		bra clr_bt_stat
 clr_bt1:
-		move.w	#$21,_TERM_CH	/* send terminator code for left key */
+		move.w	#$21,LV(TERM_CH,a1)	/* send terminator code for left key */
 clr_bt_stat:
 		andi.b	#$23,d0		/* clear mouse button status */
-		move.b	d0,_cur_ms_stat	/* store cleared state */
+		move.b	d0,LV(cur_ms_stat,a1)	/* store cleared state */
 		move.w	#1,d0		/* set button pressed flag */
 		rts
 
@@ -527,16 +527,16 @@ key_cont:
 		swap	d1
 		lsl.w	#8,d1
 		or.w	d1,d0
-		move.w	d0,_TERM_CH	/* store char */
+		move.w	d0,LV(TERM_CH,a1)	/* store char */
 		move.l	#1,d0
 		rts
 mov_stat:
 		bclr.l	#5,d1		/* test and clear mouse motion flag  */
 		beq	no_chg
 
-		move.b	d1,_cur_ms_stat	/* save mouse stat */
-		move.w	_GCURX,_X1	/* set _X1 = _GCURX */
-		move.w	_GCURY,_Y1	/* set _Y1 = _GCURY */
+		move.b	d1,LV(cur_ms_stat,a1)	/* save mouse stat */
+		move.w	LV(GCURX,a1),LV(X1,a1)	/* set _X1 = _GCURX */
+		move.w	LV(GCURY,a1),LV(Y1,a1)	/* set _Y1 = _GCURY */
 		move.l	#2,d0
 		rts
 
@@ -575,7 +575,7 @@ esc0:
         lea.l     _f8x16,a0
 esc1:
         bsr       gl_f_init
-        move.w    #-1,_v_col_fg
+        move.w    #-1,LV(v_col_fg,a1)
         moveq     #0,d0
         move.w    d0,PIXLV(v_col_bg,a1)		; background color is all zeroes
         move.w    d0,PIXLV(v_curcx,a1)

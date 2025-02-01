@@ -517,14 +517,14 @@ _ABLINE: ds.b 0
 		xdef	M_ABLINE
 M_ABLINE: ds.b 0
         move.l _v_bas_ad,a5	; a5 -> start of destination form
-		lea	_FG_BP_1,a4		; get address of bit plane mask table
-		move.w	_v_planes,d6	; get number of planes - 1
+		lea	LV(FG_BP_1,a4),a4		; get address of bit plane mask table
+		move.w	LV(v_planes,a4),d6	; get number of planes - 1
 		move.w  d6,d3
 		asl.w   #1,d6
 		subq.w  #1,d3
-		move.w  _v_lin_wr,d7 ; get offset to next scan in plane
-		move.w	_X2,d5		; compute delta x
-		sub.w	_X1,d5
+		move.w  LV(v_lin_wr,a4),d7 ; get offset to next scan in plane
+		move.w	LV(X2,a4),d5		; compute delta x
+		sub.w	LV(X1,a4),d5
 	    bmi	swap		; if delta x < 0 then draw from point 2 to 1
 
 *
@@ -532,8 +532,8 @@ M_ABLINE: ds.b 0
 *	draw the line using x1,y1 as the starting point.  Compute the address
 *	of the word in the plane that contains the first point in the line.
 *
-	move.w	_X1,d0		; delta x is positive - start from x1,y1
-	move.w	_Y1,d1
+	move.w	LV(X1,a4),d0		; delta x is positive - start from x1,y1
+	move.w	LV(Y1,a4),d1
 	bsr	concat		; compute offset of x1,y1 into plane
 	adda.w	d1,a5		; get address of word containing first point
 
@@ -542,8 +542,8 @@ M_ABLINE: ds.b 0
 *	draw the line using the routine HABLINE because we can draw the
 *	line much faster that way.
 *
-	move.w	_Y2,d4		; compute delta y
-	sub.w	_Y1,d4
+	move.w	LV(Y2,a4),d4		; compute delta y
+	sub.w	LV(Y1,a4),d4
 	bne	nothor		; branch if the line is not horizontal
 
 *
@@ -552,17 +552,17 @@ M_ABLINE: ds.b 0
 *	decrement the x-coordinate of the ending point in order to prevent
 *	polylines from xor'ing themselves at the intersection points.
 *
-	cmpi.w	#2,_WRT_MODE	; in xor mode?
+	cmpi.w	#2,LV(WRT_MODE,a4)	; in xor mode?
 	bne	xln_ok		; nope - don't adjust the line
-	tst.w	_LSTLIN		; last line in a polyline?
+	tst.w	LV(LSTLIN,a4)		; last line in a polyline?
 	bne	xln_ok		; nope - don't adjust the line
 	tst.w	d5		; are the start and end points the same?
 	beq	xln_ok		; yes - don't adjust the line
-	subq.w	#1,_X2		; decrement the ending x-coordinate
+	subq.w	#1,LV(X2,a4)		; decrement the ending x-coordinate
 xln_ok:
 	bsr	xl_noswap	; call habline to draw the line fast
-	move.w	_X2,d0		; recompute delta x
-	sub.w	_X1,d0
+	move.w	LV(X2,a4),d0		; recompute delta x
+	sub.w	LV(X1,a4),d0
 	bra	xl_out
 
 
@@ -573,13 +573,13 @@ xln_ok:
 *	the word in the plane that contains the first point of the line.
 *
 swap:
-	move.w	_X2,d0		; delta x is negative - start from x2,y2
-	move.w	_Y2,d1
+	move.w	LV(X2,a4),d0		; delta x is negative - start from x2,y2
+	move.w	LV(Y2,a4),d1
 	bsr	concat		; compute offset of x2,y2 into plane
 	adda.w	d1,a5		; get address of word containing first point
 	neg.w	d5		; get absolute value of delta x
-	move.w	_Y1,d4		; compute delta y
-	sub.w	_Y2,d4
+	move.w	LV(Y1,a4),d4		; compute delta y
+	sub.w	LV(Y2,a4),d4
 	bne	nothor		; branch if the line is not horizontal
 
 *
@@ -588,27 +588,27 @@ swap:
 *	decrement the x-coordinate of the ending point in order to prevent
 *	polylines from xor'ing themselves at the intersection points.
 *
-	cmpi.w	#2,_WRT_MODE	; in xor mode?
+	cmpi.w	#2,LV(WRT_MODE,a4)	; in xor mode?
 	bne	xls_ok		; nope - don't adjust the line
-	tst.w	_LSTLIN		; last line in a polyline?
+	tst.w	LV(LSTLIN,a4)		; last line in a polyline?
 	bne	xls_ok		; nope - don't adjust the line
 	tst.w	d5		; are the start and end points the same?
 	beq	xls_ok		; yes - don't adjust the line
-	addq.w	#1,_X2		; shorten the line from the starting end
+	addq.w	#1,LV(X2,a4)		; shorten the line from the starting end
 	addq.w	#1,d0		; increment the index into the word
 	and.w	#15,d0		; overflow into the next word?
 	bne	xls_ok		; nope
 	adda.w	d6,a5		; yes - increment pointer to next word
 xls_ok:
 	bsr	xl_swap		; call habline to draw the line fast
-	move.w	_X1,d0		; recompute delta x
-	sub.w	_X2,d0
+	move.w	LV(X1,a4),d0		; recompute delta x
+	sub.w	LV(X2,a4),d0
 xl_out:
 	addq.w	#1,d0		; adjust for true length of the line segment
 	and.w	#15,d0		; get length mod 16
-	move.w	_LN_MASK,d1	; get the line style
+	move.w	LV(LN_MASK,a4),d1	; get the line style
 	rol.w	d0,d1		; rotate it to align the next line segment
-	move.w	d1,_LN_MASK	; save it for the next time through
+	move.w	d1,LV(LN_MASK,a4)	; save it for the next time through
 	rts
 
 
@@ -656,8 +656,8 @@ dxgedy:
 	sub.w	d5,d4		; epsilon = 2dy - dx
 	move.w	d4,a2		; e2 = 2dy - 2dx
 	suba.w	d5,a2
-	move.w	_LN_MASK,d1	; get the line mask
-	move.w	_WRT_MODE,d5	; get the writing mode
+	move.w	LV(LN_MASK,a4),d1	; get the line mask
+	move.w	LV(WRT_MODE,a4),d5	; get the writing mode
 	asl.w	#2,d5		; convert it to a word offset
 	move.l	dxge(pc,d5.w),a1	; get address of mode service routine
 	move.w	d0,d5		; get the or table mask
@@ -914,7 +914,7 @@ xor_dxge:
 *	epsilon and decrement the loop count without actually drawing the
 *	first time through the loop.
 *
-	tst.w	_LSTLIN		; should the final endpoint be omitted?
+	tst.w	LV(LSTLIN,a4)		; should the final endpoint be omitted?
 	bne	x_dx_lt1	; nope - don't adjust that endpoint
 	subq.w     #1,d2
 	bne	x_dx_lt1
@@ -973,7 +973,7 @@ abl_out:
 	addq.w	#1,d2		; get number of pixels in the line
 	and.w	#15,d2		; get it mod 16
 	rol.w	d2,d1		; rotate left the line style that many bits
-	move.w	d1,_LN_MASK	; save the result for next time
+	move.w	d1,LV(LN_MASK,a4)	; save the result for next time
 	rts
 
 *
@@ -1000,7 +1000,7 @@ x_dx_same1:
 nor_dxge:
 	not.w	d1		; complement the line style
 	bsr	or_dxge		; call the transparent mode code to draw line
-	not.w	_LN_MASK	; restore the proper states of the style bits
+	not.w	LV(LN_MASK,a4)	; restore the proper states of the style bits
 	rts
 
 *
@@ -1018,8 +1018,8 @@ dygtdx:
 	sub.w	d5,d4		; epsilon = 2dx - dy
 	move.w	d4,a2		; e2 = 2dx - 2dy
 	suba.w	d5,a2
-	move.w	_LN_MASK,d1	; get the line mask
-	move.w	_WRT_MODE,d5	; get the writing mode
+	move.w	LV(LN_MASK,a4),d1	; get the line mask
+	move.w	LV(WRT_MODE,a4),d5	; get the writing mode
 	asl.w	#2,d5		; convert it to a word offset
 	move.l	dygt(pc,d5.w),a1	; get address of mode service routine
 	move.w	d0,d5		; get the or table mask
@@ -1257,7 +1257,7 @@ xor_dygt:
 *	epsilon and decrement the loop count without actually drawing the
 *	first time through the loop.
 *
-	tst.w	_LSTLIN		; should the final endpoint be omitted?
+	tst.w	LV(LSTLIN,a4)		; should the final endpoint be omitted?
 	bne	x_dy_lt1	; nope - don't adjust that endpoint
 	subq.w     #1,d2		; is line a single point?
 	bne	x_dy_lt1		; yes - don't even bother to draw it
@@ -1332,7 +1332,7 @@ x_dy_same1:
 nor_dygt:
 	not.w	d1		; complement the line style
 	bsr	or_dygt		; call the transparent mode code to draw line
-	not.w	_LN_MASK	; restore the proper states of the style bits
+	not.w	LV(LN_MASK,a4)	; restore the proper states of the style bits
 	rts
 
 
@@ -1368,11 +1368,11 @@ nor_dygt:
 *	to be drawn using the current line style.
 *
 xl_noswap:
-	lea	_LN_MASK,a0	; get the current line style
+	lea	LV(LN_MASK,a4),a0	; get the current line style
 	suba.w     a1,a1	; line style is monoplaned - no offset
 	move.w  d6,a3		; get # of bytes between graphic planes
-	move.w	_X1,d4		; get starting x-coordinate
-	move.w	_X2,d2		; get ending x-coordinate
+	move.w	LV(X1,a4),d4		; get starting x-coordinate
+	move.w	LV(X2,a4),d2		; get ending x-coordinate
 	bra	xline
 
 *
@@ -1381,11 +1381,11 @@ xl_noswap:
 *	need to be swapped.
 *
 xl_swap:
-	lea	_LN_MASK,a0	; get the current line style
+	lea	LV(LN_MASK,a4),a0	; get the current line style
 	suba.w     a1,a1	; line style is monoplaned - no offset
 	move.w  d6,a3		; get # of bytes between graphic planes
-	move.w	_X2,d4		; get starting x-coordinate
-	move.w	_X1,d2		; get ending x-coordinate
+	move.w	LV(X2,a4),d4		; get starting x-coordinate
+	move.w	LV(X1,a4),d2		; get ending x-coordinate
 	bra	xline
 
 *
@@ -1402,28 +1402,28 @@ M_HABLINE: ds.b 0
 	xdef fline
 fline: ds.b 0
 	movea.l	_v_bas_ad,a5	; get base address of first video plane
-	lea	_FG_BP_1,a4	; get address of bit plane mask table
-	movea.w	_v_planes,a3	; get number of planes
+	lea	LV(FG_BP_1,a4),a4	; get address of bit plane mask table
+	movea.w	LV(v_planes,a4),a3	; get number of planes
 	move.w	a3,d3		; get number of planes - 1
 	adda.w	a3,a3		; get offset to next word in same plane
 	subq.w	#1,d3
-	move.w	_X1,d0		; get starting x-coordinate (input to concat)
+	move.w	LV(X1,a4),d0		; get starting x-coordinate (input to concat)
 	move.w	d0,d4		; save it for later use
-	move.w	_Y1,d1		; get y-coordinate (input to concat)
+	move.w	LV(Y1,a4),d1		; get y-coordinate (input to concat)
 	move.w	d1,d5		; save it for later use
 	bsr	concat		; compute word offset and bit offset
 	adda.w	d1,a5		; compute actual address of starting word
-	move.w	_X2,d2		; get ending x-coordinate
+	move.w	LV(X2,a4),d2		; get ending x-coordinate
 
 *
 *	Get the pattern with which the line is to be drawn.
 *
-	and.w	_patmsk,d5	; get index into pattern
+	and.w	LV(patmsk,a4),d5	; get index into pattern
 	asl.w	#1,d5		; convert to offset into pattern def table
-	move.l	_patptr,a0	; get pointer to start of pattern definition
+	move.l	LV(patptr,a4),a0	; get pointer to start of pattern definition
 	adda.w	d5,a0		; get pointer to desired word of pattern def
 	suba.w	a1,a1		; init offset to next plane of pattern to 0
-	tst.w	_multifill	; using multi-planed patterns?
+	tst.w	LV(multifill,a4)	; using multi-planed patterns?
 	beq	xline		; nope
 	move.w	#32,a1		; yes - offset = length of 1 plane of pat def
 
@@ -1477,7 +1477,7 @@ xline:
 *	for both the general and special cases.
 *
 hab_decode:
-	move.w	_WRT_MODE,d5	; write mode used to select HABLINE entry
+	move.w	LV(WRT_MODE,a4),d5	; write mode used to select HABLINE entry
 	asl.w	#2,d5		; convert to longword index
 	move.l	htab(pc,d5.w),a2	; get address of handling routine
 	jmp	(a2)		; jump to it

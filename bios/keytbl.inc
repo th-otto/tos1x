@@ -1,7 +1,7 @@
 #if TP_82 /* NEW_SZ */
-# define SZET 0xe1
+# define SZET $e1
 #else
-# define SZET 0x9e
+# define SZET $9e
 #endif
 
 #if OS_COUNTRY == CTRY_US

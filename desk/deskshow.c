@@ -165,6 +165,9 @@ LINEF_STATIC BOOLEAN sf_newline PROTO((int handle, char *buf));
 LINEF_STATIC BOOLEAN sf_putc PROTO((int ch, BOOLEAN centronics));
 LINEF_STATIC int sf_more PROTO((NOTHING));
 LINEF_STATIC VOID cconws PROTO((const char *s));
+#if OLD_SFCODE
+LINEF_STATIC VOID sf_cr PROTO((NOTHING));
+#endif
 
 
 VOID sh_type(P(const char *) fname)

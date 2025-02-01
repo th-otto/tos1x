@@ -516,43 +516,43 @@ _RECTFILL: ds.b 0
 		xdef	M_RECTFILL
 M_RECTFILL: ds.b 0
 	LA(a2)
-		tst.w	_CLIP
+		tst.w	LV(CLIP,a2)
 		beq	BOX_FILL		/* if no clipping, just do it. */
 *
 *	clipping.
 *
-		move.w	_XMN_CLIP,d0
-		move.w	_X1,d1
-		move.w	_X2,d2
+		move.w	LV(XMN_CLIP,a2),d0
+		move.w	LV(X1,a2),d1
+		move.w	LV(X2,a2),d2
 		cmp.w	d0,d1			/* is x1 >= xmn_clip? */
 		bge	rf_xmx			/* yes, branch. */
 		cmp.w	d0,d2			/* is x2 < xmn_clip */
 		blt	rf_out			/* yes, branch. (clipped box is null) */
-		move.w	d0,_X1			/* clip x1. */
+		move.w	d0,LV(X1,a2)			/* clip x1. */
 rf_xmx:
-		move.w	_XMX_CLIP,d0
+		move.w	LV(XMX_CLIP,a2),d0
 		cmp.w	d0,d2			/* is x2 <= xmx_clip? */
 		ble	rf_yclip		/* yes, branch. (x clip is done) */
 		cmp.w	d0,d1			/* is x1 > xmx_clip? */
 		bgt	rf_out			/* yes, branch. (clipped box is null) */
-		move.w	d0,_X2			/* clip x2. */
+		move.w	d0,LV(X2,a2)			/* clip x2. */
 *
 rf_yclip:
-		move.w	_YMN_CLIP,d0
-		move.w	_Y1,d1
-		move.w	_Y2,d2
+		move.w	LV(YMN_CLIP,a2),d0
+		move.w	LV(Y1,a2),d1
+		move.w	LV(Y2,a2),d2
 		cmp.w	d0,d1			/* is y1 >= ymn_clip? */
 		bge	rf_ymx			/* yes, branch. */
 		cmp.w	d0,d2			/* is y2 < ymn_clip */
 		blt	rf_out			/* yes, branch. (clipped box is null) */
-		move.w	d0,_Y1			/* clip y1. */
+		move.w	d0,LV(Y1,a2)			/* clip y1. */
 rf_ymx:
-		move.w	_YMX_CLIP,d0
+		move.w	LV(YMX_CLIP,a2),d0
 		cmp.w	d0,d2			/* is y2 <= ymx_clip? */
 		ble	BOX_FILL		/* yes, branch. (y clip is done) */
 		cmp.w	d0,d1			/* is y1 > ymx_clip? */
 		bgt	rf_out			/* yes, branch. (clipped box is null) */
-		move.w	d0,_Y2			/* clip y2. */
+		move.w	d0,LV(Y2,a2)			/* clip y2. */
 *
 *	fall through to BOX_FILL.
 ***********************************************************************
@@ -581,23 +581,23 @@ BOX_FILL:
 		link    a6,#-6	/* allocate temporary stack area */
 		move.l	_v_bas_ad,a5	/* fetch video base address. */
 		lea.l   PIXLV(FG_BP_1,a2),a4
-		move.w	_v_planes,a3	/* a3 := xinc. (# of planes) */
+		move.w	LV(v_planes,a4),a3	/* a3 := xinc. (# of planes) */
 		move.w	a3,d3
 		adda.w	a3,a3		/* word xinc. */
 		subq.w	#1,d3		/* d3 := (# of planes) -1. */
-		move.w	_X1,d0		/* fetch X1. (input to concat) */
+		move.w	LV(X1,4),d0		/* fetch X1. (input to concat) */
 		move.w	d0,d4		/* save for later. */
-		move.w	_Y1,d1		/* fetch Y1. (input to concat) */
+		move.w	LV(Y1,a4),d1		/* fetch Y1. (input to concat) */
 		move.w	d1,d5		/* save for later. */
 		bsr	concat		/* form physical offset. */
 		adda.w	d1,a5		/* base + physical offset. */
-		move.w	_X2,d2		/* fetch X2. */
-		move.w	_Y2,d6		/* fetch Y2. */
+		move.w	LV(X2,a4),d2		/* fetch X2. */
+		move.w	LV(Y2,a4),d6		/* fetch Y2. */
 		sub.w	d5,d6		/* line loop counter. */
-		and.w	_patmsk,d5	/* compute pattern index. */
+		and.w	LV(patmsk,a4),d5	/* compute pattern index. */
 		move.w	d5,patindx(a6) 	/* save pattern index in low word */
 		asl.w	#1,d5		/* word indexing. */
-		move.l	_patptr,a0	/* ptr to start of pattern. */
+		move.l	LV(patptr,a4),a0	/* ptr to start of pattern. */
 		adda.w  d5,a0
 		move.l	a0,pat_start(a6) /* save starting address of pattern */
 		lea	lf_tab,a2	/* point to fringe table. */
@@ -635,12 +635,12 @@ BOX_FILL:
 		or	d7,d0		/* combine both masks. */
 		moveq	#-1,d7		/* prevent right mask from effecting screen. */
 bf_cont:
-		move.w	_WRT_MODE,d5	/* decode write mode. */
+		move.w	LV(WRT_MODE,a4),d5	/* decode write mode. */
 		asl.w	#2,d5		/* longword indexing. */
 		lea	htab,a2		/* point to start of decode table. */
 		movea.l	0(a2,d5.w),a2	/* address of HABLINE writing mode fragment. */
 		suba.w	a1,a1		/* default offset = 0. */
-		tst.w	_multifill	/* multi-plane fill pattern? */
+		tst.w	LV(multifill,a4)	/* multi-plane fill pattern? */
 		beq	bf_loop	/* no, branch. */
 		move.w	#32,a1		/* yes, offset = 32. */
 *

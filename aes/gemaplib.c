@@ -316,6 +316,11 @@ PP(register int16_t length;)
 	register intptr_t code;
 #define CCAST (intptr_t) /* in newer version they thought it could be fixed by a cast ROFL */
 #endif
+#ifdef __GNUC__
+/* avoid warning */
+#undef CCAST
+#define CCAST (intptr_t)
+#endif
 
 	/* start recording in forker()       */
 	cli();
