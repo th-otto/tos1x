@@ -823,7 +823,7 @@ public class TOSLineFfix extends GhidraScript {
 		traptable.put(0xF9A0, "trap");
 		traptable.put(0xF9A4, "showfile");
 		traptable.put(0xF9A8, "sf_disp");
-		if (tos_language == 0) /* slightly different US version */
+		if (tos_language == 0 || tos_language == 3) /* slightly different US/UK version */
 		{
 			traptable.put(0xF9AC, "sf_getc");
 			traptable.put(0xF9B0, "rawcon");

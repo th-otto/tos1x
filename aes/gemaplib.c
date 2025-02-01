@@ -312,7 +312,7 @@ PP(register intptr_t pbuff;)
 PP(register int16_t length;)
 {
 	register int16_t i;
-#if OS_COUNTRY == CTRY_US
+#if (OS_COUNTRY == CTRY_US) | (OS_COUNTRY == CTRY_UK)
 	/* US version had even more buggy code */
 	register short code;
 #define CCAST

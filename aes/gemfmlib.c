@@ -520,7 +520,7 @@ PP(int16_t n;)									/* n = dos error number */
 	case E_BADDRIVE:				/* invalid drive    */
 		string = ALRT15ERR;
 		break;
-#if OS_COUNTRY == CTRY_US
+#if (OS_COUNTRY == CTRY_US) | (OS_COUNTRY == CTRY_UK)
 	case E_NODELDIR:
 		string = ALRT16ERR;
 		break;

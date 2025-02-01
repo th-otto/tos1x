@@ -34,4 +34,4 @@
 /*
  * US version seems to have used slightly older version of showfile()
  */
-#define OLD_SFCODE (OS_COUNTRY == CTRY_US)
+#define OLD_SFCODE ((OS_COUNTRY == CTRY_US) | (OS_COUNTRY == CTRY_UK))
