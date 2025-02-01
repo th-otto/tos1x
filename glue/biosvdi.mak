@@ -58,7 +58,9 @@ BIOSVDI_100_OBJS = \
 ../vdi/seedfill.o,\
 ../vdi/xfrmform.o,\
 ../vdi/stcolor.o,\
-../vdi/cbssdefs.o\
+../vdi/cbssdefs.o,\
+\
+../bios/gemstart.o\
 $(empty)
 
 BIOSVDI_OBJS = ${BIOSVDI_${TOSVERSION}_OBJS}

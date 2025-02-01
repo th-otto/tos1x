@@ -1,7 +1,7 @@
 BIOS_104_OBJS=startup.o floppy.o blkdev.o prt.o zeromem.o nvram.o prtblk.o ikbdclk.o chardev.o keytbl.o sounds.o
 BIOS_106_OBJS=${BIOS_104_OBJS}
 BIOS_162_OBJS=${BIOS_104_OBJS}
-BIOS_100_OBJS=startup.o blkdev.o floppy.o ikbdclk.o chardev.o prtblk.o prt.o zeromem.o
+BIOS_100_OBJS=startup.o blkdev.o floppy.o ikbdclk.o chardev.o prtblk.o prt.o zeromem.o gemstart.o
 
 BIOS_OBJS=$(BIOS_$(TOSVERSION)_OBJS)
 
@@ -32,6 +32,7 @@ BIOS_ASRCS = \
 	floppy.S \
 	prt.S \
 	memtest.S \
+	gemstart.S \
 	${empty}
 
 BIOS_CSRCS = \

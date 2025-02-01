@@ -75,7 +75,3 @@ bdoslmul  equ BDOSTBASE+$51BE
 #endif
 
 
-/* from AES */
-		xdef gemstart
-
-gemstart  equ AESTBASE
