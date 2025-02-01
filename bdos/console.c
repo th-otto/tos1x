@@ -60,6 +60,7 @@ int backsp PROTO((FH h, const char *cbuf, int retlen, int col));
 /* 104de: 00fc4388 */
 /* 106de: 00e0456e */
 /* 100fr: 00fc8904 */
+/* 100de: 00fc88e6 */
 int32_t constat(P(FH) h)
 PP(FH h;)
 {
@@ -89,6 +90,7 @@ PP(FH h;)
 /* 104de: 00fc43be */
 /* 106de: 00e045a4 */
 /* 100fr: 00fc8930 */
+/* 100de: 00fc8912 */
 int32_t xconstat(NOTHING)
 {
 	return constat(HXFORM(run->p_uft[0]));
@@ -108,6 +110,7 @@ int32_t xconstat(NOTHING)
 /* 104de: 00fc43d8 */
 /* 106de: 00e045be */
 /* 100fr: 00fc894a */
+/* 100de: 00fc892c */
 int32_t xconostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[1]));
@@ -127,6 +130,7 @@ int32_t xconostat(NOTHING)
 /* 104de: 00fc43fc */
 /* 106de: 00e045e2 */
 /* 100fr: 00fc896e */
+/* 100de: 00fc8950 */
 int32_t xprtostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[3]));
@@ -146,6 +150,7 @@ int32_t xprtostat(NOTHING)
 /* 104de: 00fc4420 */
 /* 106de: 00e04606 */
 /* 100fr: 00fc8992 */
+/* 100de: 00fc8974 */
 int32_t xauxistat(NOTHING)
 {
 	return constat(HXFORM(run->p_uft[2]));
@@ -165,6 +170,7 @@ int32_t xauxistat(NOTHING)
 /* 104de: 00fc443c */
 /* 106de: 00e04622 */
 /* 100fr: 00fc89ae */
+/* 100de: 00fc8990 */
 int32_t xauxostat(NOTHING)
 {
 	return Bcostat(HXFORM(run->p_uft[2]));
@@ -180,6 +186,7 @@ int32_t xauxostat(NOTHING)
 /* 104de: 00fc4460 */
 /* 106de: 00e04646 */
 /* 100fr: 00fc89d2 */
+/* 100de: 00fc89b4 */
 static VOID conbrk(P(FH) h)
 PP(FH h;)
 {
@@ -233,6 +240,7 @@ PP(FH h;)
 /* 104de: 00fc4526 */
 /* 106de: 00e046f6 */
 /* 100fr: 00fc8b0e */
+/* 100de: 00fc8af0 */
 VOID buflush(P(FH) h)
 PP(register FH h;)
 {
@@ -278,6 +286,7 @@ PP(int32_t ch;)
 /* 104de: 00fc461e */
 /* 106de: 00e047ee */
 /* 100fr: 00fc8b56 */
+/* 100de: 00fc8b38 */
 VOID conout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)
@@ -306,6 +315,7 @@ PP(register int ch;)
 /* 104de: 00fc46a8 */
 /* 106de: 00e04878 */
 /* 100fr: 00fc8bdc */
+/* 100de: 00fc8bbe */
 VOID xtabout(P(int16_t) ch)
 PP(int16_t ch;)
 {
@@ -324,6 +334,7 @@ PP(int16_t ch;)
 /* 104de: 00fc46cc */
 /* 106de: 00e0489c */
 /* 100fr: 00fc8bfc */
+/* 100de: 00fc8bde */
 VOID tabout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)									/* character to output to console   */
@@ -352,6 +363,7 @@ PP(register int ch;)									/* character to output to console   */
 /* 104de: 00fc471c */
 /* 106de: 00e048ec */
 /* 100fr: 00fc8c48 */
+/* 100de: 00fc8c2a */
 VOID cookdout(P(FH) h, P(int) ch)
 PP(register FH h;)
 PP(register int ch;)									/* character to output to console   */
@@ -387,6 +399,7 @@ PP(register int ch;)									/* character to output to console   */
 /* 104de: 00fc476a */
 /* 106de: 00e0493a */
 /* 100fr: 00fc8c92 */
+/* 100de: 00fc8c74 */
 int16_t xauxout(P(int16_t) ch)
 PP(int16_t ch;)
 {
@@ -406,6 +419,7 @@ PP(int16_t ch;)
 /* 306us: 00e13c4c */
 /* 104de: 00fc4792 */
 /* 100fr: 00fc8cba */
+/* 100de: 00fc8c9c */
 int32_t xprtout(P(int16_t) ch)
 PP(int16_t ch;)
 {
@@ -417,6 +431,7 @@ PP(int16_t ch;)
 /* 306us: 00e13c74 */
 /* 104de: 00fc47ba */
 /* 100fr: 00fc8ce2 */
+/* 100de: 00fc8cc4 */
 int32_t getch(P(FH) h)
 PP(register FH h;)
 {
@@ -451,6 +466,7 @@ PP(register FH h;)
 /* 306us: 00e13d22 */
 /* 104de: 00fc4868 */
 /* 100fr: 00fc8d6a */
+/* 100de: 00fc8d4c */
 int32_t x7in(NOTHING)
 {
 	return getch(HXFORM(run->p_uft[0]));
@@ -461,6 +477,7 @@ int32_t x7in(NOTHING)
 /* 306us: 00e13d3e */
 /* 104de: 00fc4884 */
 /* 100fr: 00fc8d86 */
+/* 100de: 00fc8d68 */
 int32_t conin(P(FH) h)							/* BDOS console input function */
 PP(register FH h;)
 {
@@ -486,6 +503,7 @@ PP(register FH h;)
 /* 306us: 00e13d76 */
 /* 104de: 00fc48bc */
 /* 100fr: 00fc8db2 */
+/* 100de: 00fc8d94 */
 int32_t xconin(NOTHING)
 {
 	return conin(HXFORM(run->p_uft[0]));
@@ -504,6 +522,7 @@ int32_t xconin(NOTHING)
 /* 306us: 00e13d90 */
 /* 104de: 00fc48d6 */
 /* 100fr: 00fc8dcc */
+/* 100de: 00fc8dae */
 int32_t x8in(NOTHING)
 {
 	register FH h;
@@ -528,6 +547,7 @@ int32_t x8in(NOTHING)
 /* 306us: 00e13dc8 */
 /* 104de: 00fc490e */
 /* 100fr: 00fc8dfe */
+/* 100de: 00fc8de0 */
 int32_t xauxin(NOTHING)
 {
 	return Bconin(HXFORM(run->p_uft[2]));
@@ -546,6 +566,7 @@ int32_t xauxin(NOTHING)
 /* 306us: 00e13dec */
 /* 104de: 00fc4932 */
 /* 100fr: 00fc8e22 */
+/* 100de: 00fc8e04 */
 int32_t rawconio(P(int16_t) parm)
 PP(register int16_t parm;)
 {
@@ -572,6 +593,7 @@ PP(register int16_t parm;)
 /* 306us: 00e13e4c */
 /* 104de: 00fc4992 */
 /* 100fr: 00fc8e82 */
+/* 100de: 00fc8e64 */
 VOID xprt_line(P(const char *) p)
 PP(const char *p;)
 {
@@ -583,6 +605,7 @@ PP(const char *p;)
 /* 306us: 00e13e6c */
 /* 104de: 00fc49b2 */
 /* 100fr: 00fc8ea2 */
+/* 100de: 00fc8e84 */
 VOID prt_line(P(FH) h, P(const char *) p)
 PP(FH h;)
 PP(const char *p;)
@@ -602,6 +625,7 @@ PP(const char *p;)
 /* 306us: 00e13e9a */
 /* 104de: 00fc49e0 */
 /* 100fr: 00fc8ecc */
+/* 100de: 00fc8eae */
 VOID newline(P(FH) h, P(int) startcol)
 PP(register int startcol;)
 PP(register FH h;)
@@ -621,6 +645,7 @@ PP(register FH h;)
 /* 306us: 00e13ee0 */
 /* 104de: 00fc4a26 */
 /* 100fr: 00fc8f12 */
+/* 100de: 00fc8ef4 */
 int backsp(P(FH) h, P(const char *) cbuf, P(int) retlen, P(int) col)
 PP(FH h;)
 PP(const char *cbuf;)
@@ -677,6 +702,7 @@ PP(int col;)								/* starting console column  */
 /* 306us: 00e13f7c */
 /* 104de: 00fc4ac2 */
 /* 100fr: 00fc8faa */
+/* 100de: 00fc8f8c */
 VOID readline(P(char *) p)
 PP(register char *p;)								/* max length, return length, buffer space */
 {
@@ -688,6 +714,7 @@ PP(register char *p;)								/* max length, return length, buffer space */
 /* 306us: 00e13fb8 */
 /* 104de: 00fc4afe */
 /* 100fr: 00fc8fe6 */
+/* 100de: 00fc8fc8 */
 int cgets(P(FH) h, P(int) maxlen, P(char *) buf)
 PP(register FH h;)									/* h is special handle denoting device number */
 PP(int maxlen;)

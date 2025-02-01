@@ -125,6 +125,7 @@ long err_trap PROTO((int16_t err, int16_t dev));
 /*
  * format and copy init
  */
+/* 100de: 00fed910 */
 LINEF_STATIC VOID fc_init(NOTHING)
 {
 	GRECT gr;
@@ -149,6 +150,7 @@ LINEF_STATIC VOID fc_init(NOTHING)
 /* 306de: 00e2a1a4 */
 /* 104de: 00fe6d20 */
 /* 106de: 00e29542 */
+/* 100de: 00fed99c */
 VOID sh_format(P(char *) fname, P(char *) cmd)
 PP(char *fname;)
 PP(char *cmd;)
@@ -333,6 +335,7 @@ PP(char *cmd;)
 /* 306de: 00e2a654 */
 /* 104de: 00fe7126 */
 /* 106de: 00e299a0 */
+/* 100de: 00feddbe */
 VOID sh_copy(P(char *) fname, P(char *) cmd)
 PP(char *fname;)
 PP(char *cmd;)
@@ -460,6 +463,7 @@ PP(char *cmd;)
  */
 /* 306de: 00e2aa84 */
 /* 104de: 00fe74ba */
+/* 100de: 00fee0fa */
 VOID fc_bar(P(int16_t *) w_inc, P(int16_t *) bar_max, P(int16_t) maxvalue)
 PP(register int16_t *w_inc;)
 PP(register int16_t *bar_max;)
@@ -490,6 +494,7 @@ PP(int16_t maxvalue;)
 }
 
 
+/* 100de: 00fee1ca */
 LINEF_STATIC VOID fc_do(P(OBJECT *) tree, P(int16_t) depth, P(BOOLEAN) fmdo, P(int16_t) startfld)
 PP(OBJECT *tree;)
 PP(int16_t depth;)
@@ -502,6 +507,7 @@ PP(int16_t startfld;)
 }
 
 
+/* 100de: 00fee228 */
 LINEF_STATIC int16_t fc_rwtracks(P(int16_t) op, P(intptr_t) buf, P(intptr_t) sktable, P(int16_t) dev, P(int16_t) side, P(int16_t) w_inc, P(int16_t) track, P(int16_t) numtracks, P(char *) cmd)
 PP(int16_t op;)
 PP(register intptr_t buf;)
@@ -545,6 +551,7 @@ PP(char *cmd;)
 }
 
 
+/* 100de: 00fee2fa */
 LINEF_STATIC BOOLEAN fc_alloc(P(VOIDPTR *) buf, P(long *)size)
 PP(VOIDPTR *buf;)
 PP(long *size;)
@@ -557,6 +564,7 @@ PP(long *size;)
 }
 
 
+/* 100de: 00fee32c */
 LINEF_STATIC VOID do1_alert(P(int16_t) err, P(int16_t) dev)
 PP(int16_t err;)
 PP(int16_t dev;)
@@ -578,6 +586,7 @@ PP(int16_t dev;)
 /* 306de: 00e2a9d0 */
 /* 104de: 00fe7408 */
 /* 106de: 00e29cd6 */
+/* 100de: 00fee370 */
 LINEF_STATIC VOID fc_clfix(P(int16_t) cl, P(uint16_t) num, P(BPB *)bpb, P(VOIDPTR) fat)
 PP(int16_t cl;)
 PP(uint16_t num;)
@@ -626,6 +635,7 @@ PP(VOIDPTR fat;)
 
 /* 306de: 00e2ab0c */
 /* 104de: 00fe752a */
+/* 100de: 00fee41c */
 LINEF_STATIC VOID fc_draw(NOTHING)
 {
 	sh_draw(fc_cmd, ROOT, 1);

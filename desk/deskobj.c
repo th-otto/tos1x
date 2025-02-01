@@ -27,6 +27,7 @@ OBJECT const gl_sampob[2] = {
  *	Initialize all objects as children of the 0th root which is
  *	the parent of unused objects.
  */
+/* 100de: 00fdfc1e */
 VOID obj_init(NOTHING)
 {
 	register THEDSK *d;
@@ -57,6 +58,7 @@ VOID obj_init(NOTHING)
  */
 /* 104de: 00fd9e58 */
 /* 106de: 00e1ace0 */
+/* 100de: 00fdfcea */
 int16_t obj_walloc(P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t x;)
 PP(int16_t y;)
@@ -89,6 +91,7 @@ PP(int16_t h;)
  */
 /* 104de: 00fd9eca */
 /* 106de: 00e1ad5e */
+/* 100de: 00fdfd66 */
 VOID obj_wfree(P(int16_t) obj, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t obj;)
 PP(int16_t x;)
@@ -118,6 +121,7 @@ PP(int16_t h;)
  */
 /* 104de: 00fd9f56 */
 /* 106de: 00e1adf6 */
+/* 100de: 00fdfdfc */
 int16_t obj_ialloc(P(int16_t) wparent, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t wparent;)
 PP(int16_t x;)

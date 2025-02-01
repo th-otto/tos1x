@@ -54,6 +54,7 @@ LINEF_STATIC VOID men_list PROTO((LPTREE mlist, const int8_t *dlist, BOOLEAN ena
  */
 /* 104de: 00fdb032 */
 /* 106de: 00e1c1ae */
+/* 100de: 00fe1082 */
 VOID desk_wait(P(BOOLEAN) turnon)
 PP(BOOLEAN turnon;)
 {
@@ -66,6 +67,7 @@ PP(BOOLEAN turnon;)
  */
 /* 104de: 00fdb04c */
 /* 106de: 00e1c1ce */
+/* 100de: 00fe109c */
 APP *i_find(P(int16_t) wh, P(int16_t) item, P(FNODE **)ppf, P(BOOLEAN *)pisapp)
 PP(register int16_t wh;)
 PP(register int16_t item;)
@@ -105,6 +107,7 @@ PP(register BOOLEAN *pisapp;)
 
 /* 104de: 00fdb152 */
 /* 106de: 00e1c2fc */
+/* 100de: 00fe1134 */
 /*
  *	Enable/Disable the menu items in dlist
  */
@@ -126,6 +129,7 @@ PP(register BOOLEAN enable;)
  */
 /* 104de: 00fdb17c */
 /* 106de: 00e1c332 */
+/* 100de: 00fe115e */
 VOID men_update(P(LPTREE) tree)
 PP(register LPTREE tree;)
 {
@@ -199,6 +203,7 @@ PP(register LPTREE tree;)
 }
 
 
+/* 100de: 00fe12b4 */
 LINEF_STATIC BOOLEAN do_deskmenu(P(int16_t) item)
 PP(register int16_t item;)
 {
@@ -219,6 +224,7 @@ PP(register int16_t item;)
 
 /* 104de: 00fdb318 */
 /* 106de: 00e1c4f4 */
+/* 100de: 00fe12e8 */
 BOOLEAN do_filemenu(P(int16_t) item)
 PP(int16_t item;)
 {
@@ -291,6 +297,7 @@ PP(int16_t item;)
 
 /* 104de: 00fdb3bc */
 /* 106de: 00e1c5c0 */
+/* 100de: 00fe1392 */
 BOOLEAN do_viewmenu(P(int16_t) item)
 PP(register int16_t item;)
 {
@@ -348,6 +355,7 @@ PP(register int16_t item;)
 
 /* 104de: 00fdb470 */
 /* 106de: 00e1c6a0 */
+/* 100de: 00fe1446 */
 BOOLEAN do_optnmenu(P(int16_t) item)
 PP(int16_t item;)
 {
@@ -446,6 +454,7 @@ PP(int16_t item;)
 
 /* 104de: 00fdb5ea */
 /* 106de: 00e1c868 */
+/* 100de: 00fe1574 */
 BOOLEAN hd_button(P(int16_t) clicks, P(int16_t) mx, P(int16_t) my, P(int16_t) bstate, P(int16_t) keystate)
 PP(int16_t clicks;)
 PP(int16_t mx;)
@@ -513,6 +522,7 @@ PP(int16_t keystate;)
 
 /* 104de: 00fdb6f6 */
 /* 106de: 00e1c9a8 */
+/* 100de: 00fe16b8 */
 BOOLEAN hd_keybd(P(uint16_t) key)
 PP(uint16_t key;)
 {
@@ -550,7 +560,8 @@ PP(uint16_t key;)
 
 
 /* 104de: 00fdb774 */
-/* 1ß6de: 00e1ca44 */
+/* 106de: 00e1ca44 */
+/* 100de: 00fe16e0 */
 BOOLEAN hd_menu(P(int16_t) title, P(int16_t) item)
 PP(register int16_t title;)
 PP(register int16_t item;)
@@ -615,6 +626,7 @@ PP(register int16_t item;)
 
 /* 104de: 00fdb85a */
 /* 106de: 00e1cb54 */
+/* 100de: 00fe1756 */
 BOOLEAN hd_msg(NOTHING)
 {
 	int16_t x, y, w, h;
@@ -734,6 +746,7 @@ BOOLEAN hd_msg(NOTHING)
 
 /* 104de: 00fdba7e */
 /* 106de: 00e1cdde */
+/* 100de: 00fe1964 */
 VOID cnx_put(NOTHING)
 {
 	register int iwin;
@@ -796,6 +809,7 @@ VOID cnx_put(NOTHING)
 
 /* 104de: 00fdbb94 */
 /* 106de: 00e1cf10 */
+/* 100de: 00fe1a46 */
 VOID cnx_get(NOTHING)
 {
 	register int nw;
@@ -860,6 +874,7 @@ VOID cnx_get(NOTHING)
  */
 /* 104de: 00fdbc88 */
 /* 106de: 00e1d034 */
+/* 100de: 00fe1b60 */
 BOOLEAN deskmain(NOTHING)
 {
 	register int16_t obj;

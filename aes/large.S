@@ -47,6 +47,7 @@
  *	len = LSTCPY(src,dst)
  *		BYTE	*src,dst;
  */
+/* 100de: 00fec8ae */
 	xdef	_LSTCPY
 _LSTCPY:
 	move.l	8(a7),a0	; source
@@ -66,6 +67,7 @@ lst1:
  *	len = LBWMOV(dst,src)
  *		BYTE	*dst,src;
  */
+/* 100de: 00fec8c2 */
 	xdef	_LBWMOV
 _LBWMOV:
 	move.l	8(a7),a0	; source
@@ -97,6 +99,7 @@ lbw2:
  * ==						==
  * ================================================
  */
+/* 100de: 00fec8da */
  	xdef _LWFILL
 _LWFILL:
 	move.l	4(a7),a0		; Get starting address off stack.
@@ -127,6 +130,7 @@ lwfend:
  * ==						==
  * ================================================
  */
+/* 100de: 00fec8f0 */
 _LBDSKIP:
 	move.l	4(a7),a0		; Get destination address.
 	move.l	8(a7),a1		; Get source address.
@@ -154,6 +158,7 @@ lop104:
  * ==						==
  * ================================================
  */
+/* 100de: 00fec908 */
 	xdef  _LWCOPY
 _LWCOPY:
 	move.l	4(a7),a0		; Get address of destination.
@@ -183,6 +188,7 @@ lwend:
  * ==						==
  * ================================================
  */
+/* 100de: 00fec91e */
 _LBFILL:
 	move.l	4(a7),a0		; Get address of destination.
 	move.w	8(a7),d0		; Get number of bytes to store.
@@ -219,6 +225,7 @@ lbend:
  * ==						==
  * ================================================
  */
+/* 100de: 00fec934 */
  	xdef _LSTRLEN
 _LSTRLEN:
 	move.l	4(a7),a0		; Get strings address off stack.
@@ -249,6 +256,7 @@ lop100:
  *
  *	Screen will show duplication of selected area in new choosen location.
  */
+/* 100de: 00fec946 */
 	xdef	_LBCOPY
 _LBCOPY:
 

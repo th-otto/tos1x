@@ -30,6 +30,7 @@
 
 
 
+/* 100de: 00fdd316 */
 int16_t ap_init(NOTHING)
 {
 	/* WTF, that really does not belong into desktop */
@@ -45,6 +46,7 @@ int16_t ap_init(NOTHING)
 }
 
 
+/* 100de: 00fdd36c */
 int16_t ap_bvset(P(int16_t) bvdisk, P(int16_t) bvhard)
 PP(int16_t bvdisk;)
 PP(int16_t bvhard;)
@@ -55,6 +57,7 @@ PP(int16_t bvhard;)
 }
 
 
+/* 100de: 00fdd384 */
 int16_t ap_exit(NOTHING)
 {
 	mn_clsda();
@@ -67,6 +70,7 @@ int16_t ap_exit(NOTHING)
 }
 
 
+/* 100de: 00fdd3be */
 int16_t appl_write(P(int16_t) rwid, P(int16_t) length, P(int16_t *) pbuff)
 PP(int16_t rwid;)
 PP(int16_t length;)
@@ -84,6 +88,7 @@ PP(int16_t *pbuff;)
 typedef uint16_t (*PARMBFUNC) PROTO((PARMBLK *f_data));
 uint16_t far_call PROTO((PARMBFUNC f_code, PARMBLK *f_data));
 /* 100fr: 00fdd71a */
+/* 100de: 00fdd3e2 */
 uint16_t far_call(P(PARMBFUNC) fcode, P(PARMBLK *) fdata)
 PP(PARMBFUNC fcode;)
 PP(PARMBLK *fdata;)
@@ -93,6 +98,7 @@ PP(PARMBLK *fdata;)
 #endif
 
 
+/* 100de: 00fdd3f4 */
 int16_t evnt_multi(
 	P(uint16_t) flags, P(uint16_t) bclk, P(uint16_t) bmsk, P(uint16_t) bst,
 	P(uint16_t) m1flags, P(uint16_t) m1x, P(uint16_t) m1y, P(uint16_t) m1w, P(uint16_t) m1h,
@@ -146,6 +152,7 @@ PP(int16_t *pbr;)
 }
 
 
+/* 100de: 00fdd49e */
 int16_t evnt_button(P(int16_t) clicks, P(uint16_t) mask, P(uint16_t) state, P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pmw, P(int16_t *) pmh)
 PP(int16_t clicks;)
 PP(uint16_t mask;)
@@ -168,6 +175,7 @@ PP(int16_t *pmh;)
 }
 
 
+/* 100de: 00fdd4e2 */
 int16_t evnt_dclick(P(int16_t) rate, P(int16_t) setit)
 PP(int16_t rate;)
 PP(int16_t setit;)
@@ -180,6 +188,7 @@ PP(int16_t setit;)
 }
 
 
+/* 100de: 00fdd4fe */
 int16_t form_do(P(OBJECT *) form, P(int16_t) start)
 PP(OBJECT *form;)
 PP(int16_t start;)
@@ -195,6 +204,7 @@ PP(int16_t start;)
 }
 
 
+/* 100de: 00fdd51a */
 int16_t form_dial(P(int16_t) dtype, P(int16_t) ix, P(int16_t) iy, P(int16_t) iw, P(int16_t) ih, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t dtype;)
 PP(int16_t ix;)
@@ -220,6 +230,7 @@ PP(int16_t h;)
 }
 
 
+/* 100de: 00fdd542 */
 int16_t form_alert(P(int16_t) defbut, P(const char *) astring)
 PP(int16_t defbut;)
 PP(const char *astring;)
@@ -232,6 +243,7 @@ PP(const char *astring;)
 }
 
 
+/* 100de: 00fdd55e */
 int16_t form_error(P(int16_t) errnum)
 PP(int16_t errnum;)
 {
@@ -243,6 +255,7 @@ PP(int16_t errnum;)
 }
 
 
+/* 100de: 00fdd574 */
 int16_t form_center(P(OBJECT *) tree, P(int16_t *) pcx, P(int16_t *) pcy, P(int16_t *) pcw, P(int16_t *) pch)
 PP(OBJECT *tree;)
 PP(int16_t *pcx;)
@@ -268,6 +281,7 @@ PP(int16_t *pch;)
 }
 
 
+/* 100de: 00fdd5b4 */
 VOID graf_mouse(P(int16_t) style, P(MFORM *) grmaddr)
 PP(register int16_t style;)
 PP(MFORM *grmaddr;)
@@ -300,6 +314,7 @@ PP(MFORM *grmaddr;)
 
 
 /* unused */
+/* 100de: 00fdd60e */
 int16_t graf_handle(P(int16_t *) gwchar, P(int16_t *) ghchar, P(int16_t *) gwbox, P(int16_t *) ghbox)
 PP(int16_t *gwchar;)
 PP(int16_t *ghchar;)
@@ -314,6 +329,7 @@ PP(int16_t *ghbox;)
 }
 
 
+/* 100de: 00fdd642 */
 VOID graf_rubbox(P(int16_t) xorigin, P(int16_t) yorigin, P(int16_t) wmin, P(int16_t) hmin, P(int16_t *) pwend, P(int16_t *) phend)
 PP(int16_t xorigin;)
 PP(int16_t yorigin;)
@@ -327,6 +343,7 @@ PP(int16_t *phend;)
 }
 
 
+/* 100de: 00fdd66a */
 int16_t graf_mkstate(P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pmstate, P(int16_t *) pkstate)
 PP(int16_t *pmx;)
 PP(int16_t *pmy;)
@@ -341,6 +358,7 @@ PP(int16_t *pkstate;)
 }
 
 
+/* 100de: 00fdd692 */
 VOID graf_growbox(P(int16_t) orgx, P(int16_t) orgy, P(int16_t) orgw, P(int16_t) orgh, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t orgx;)
 PP(int16_t orgy;)
@@ -356,6 +374,7 @@ PP(int16_t h;)
 }
 
 
+/* 100de: 00fdd6aa */
 VOID graf_shrinkbox(P(int16_t) orgx, P(int16_t) orgy, P(int16_t) orgw, P(int16_t) orgh, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t orgx;)
 PP(int16_t orgy;)
@@ -371,6 +390,7 @@ PP(int16_t h;)
 }
 
 
+/* 100de: 00fdd6c2 */
 int16_t menu_tnormal(P(OBJECT *) mlist, P(int16_t) dlist, P(int16_t) normal)
 PP(OBJECT *mlist;)
 PP(int16_t dlist;)
@@ -384,6 +404,7 @@ PP(int16_t normal;)
 }
 
 
+/* 100de: 00fdd6fc */
 int16_t menu_bar(P(OBJECT *) tree, P(int16_t) showit)
 PP(OBJECT *tree;)
 PP(int16_t showit;)
@@ -401,6 +422,7 @@ PP(int16_t showit;)
 }
 
 
+/* 100de: 00fdd718 */
 int16_t menu_icheck(P(OBJECT *) mlist, P(int16_t) dlist, P(int16_t) check)
 PP(OBJECT *mlist;)
 PP(int16_t dlist;)
@@ -414,6 +436,7 @@ PP(int16_t check;)
 }
 
 
+/* 100de: 00fdd744 */
 int16_t menu_ienable(P(OBJECT *) mlist, P(int16_t) dlist, P(int16_t) enable)
 PP(OBJECT *mlist;)
 PP(int16_t dlist;)
@@ -427,6 +450,7 @@ PP(int16_t enable;)
 }
 
 
+/* 100de: 00fdd78e */
 int16_t objc_offset(P(OBJECT *) tree, P(int16_t) obj, P(int16_t *) poffx, P(int16_t *) poffy)
 PP(OBJECT *tree;)
 PP(int16_t obj;)
@@ -446,6 +470,7 @@ PP(int16_t *poffy;)
 }
 
 
+/* 100de: 00fdd7b6 */
 int16_t objc_order(P(OBJECT *) tree, P(int16_t) mov_obj, P(int16_t) newpos)
 PP(OBJECT *tree;)
 PP(int16_t mov_obj;)
@@ -464,6 +489,7 @@ PP(int16_t newpos;)
 }
 
 
+/* 100de: 00fdd7d6 */
 int16_t objc_find(P(OBJECT *) tree, P(int16_t) startob, P(int16_t) depth, P(int16_t) mx, P(int16_t) my)
 PP(OBJECT *tree;)
 PP(int16_t startob;)
@@ -479,6 +505,7 @@ PP(int16_t my;)
 }
 
 
+/* 100de: 00fdd802 */
 int16_t objc_add(P(OBJECT *) tree, P(int16_t) parent, P(int16_t) child)
 PP(OBJECT *tree;)
 PP(int16_t parent;)
@@ -497,6 +524,7 @@ PP(int16_t child;)
 }
 
 
+/* 100de: 00fdd822 */
 int16_t objc_draw(P(OBJECT *) tree, P(int16_t) drawob, P(int16_t) depth, P(int16_t) xc, P(int16_t) yc, P(int16_t) wc, P(int16_t) hc)
 PP(OBJECT *tree;)
 PP(int16_t drawob;)
@@ -520,6 +548,7 @@ PP(int16_t hc;)
 }
 
 
+/* 100de: 00fdd84c */
 int16_t objc_change(P(OBJECT *) tree, P(int16_t) drawob, P(int16_t) depth, P(int16_t) xc, P(int16_t) yc, P(int16_t) wc, P(int16_t) hc, P(int16_t) newstate, P(int16_t) redraw)
 PP(OBJECT *tree;)
 PP(int16_t drawob;)
@@ -545,6 +574,7 @@ PP(int16_t redraw;)
 }
 
 
+/* 100de: 00fdd87a */
 int16_t rsrc_free(NOTHING)
 {
 	int16_t ret;
@@ -555,6 +585,7 @@ int16_t rsrc_free(NOTHING)
 }
 
 
+/* 100de: 00fdd892 */
 int16_t rsrc_gaddr(P(int16_t) rstype, P(int16_t) rsid, P(VOIDPTR *) paddr)
 PP(int16_t rstype;)
 PP(int16_t rsid;)
@@ -568,6 +599,7 @@ PP(VOIDPTR *paddr;)
 }
 
 
+/* 100de: 00fdd8b8 */
 int16_t shel_write(P(int16_t) doex, P(int16_t) isgr, P(int16_t) iscr, P(const char *) pcmd, P(const char *) ptail)
 PP(int16_t doex;)
 PP(int16_t isgr;)
@@ -583,6 +615,7 @@ PP(char *ptail;)
 }
 
 
+/* 100de: 00fdd8e4 */
 int16_t shel_get(P(char *) pbuffer, P(int16_t) len)
 PP(char *pbuffer;)
 PP(int16_t len;)
@@ -595,6 +628,7 @@ PP(int16_t len;)
 }
 
 
+/* 100de: 00fdd900 */
 int16_t shel_put(P(const char *) pdata, P(int16_t) len)
 PP(const char *pdata;)
 PP(int16_t len;)
@@ -607,6 +641,7 @@ PP(int16_t len;)
 }
 
 
+/* 100de: 00fdd91c */
 int16_t wind_close(P(int16_t) handle)
 PP(int16_t handle;)
 {
@@ -623,6 +658,7 @@ PP(int16_t handle;)
 }
 
 
+/* 100de: 00fdd932 */
 int16_t wind_delete(P(int16_t) handle)
 PP(int16_t handle;)
 {
@@ -639,6 +675,7 @@ PP(int16_t handle;)
 }
 
 
+/* 100de: 00fdd948 */
 int16_t wind_find(P(int16_t) mx, P(int16_t) my)
 PP(int16_t mx;)
 PP(int16_t my;)
@@ -651,6 +688,7 @@ PP(int16_t my;)
 }
 
 
+/* 100de: 00fdd964 */
 int16_t wind_update(P(int16_t) beg_update)
 PP(int16_t beg_update;)
 {
@@ -667,6 +705,7 @@ PP(int16_t beg_update;)
 }
 
 
+/* 100de: 00fdd97a */
 int16_t wind_create(P(uint16_t) kind, P(int16_t) wx, P(int16_t) wy, P(int16_t) ww, P(int16_t) wh)
 PP(uint16_t kind;)
 PP(int16_t wx;)
@@ -682,6 +721,7 @@ PP(int16_t wh;)
 }
 
 
+/* 100de: 00fdd99a */
 int16_t wind_open(P(int16_t) handle, P(int16_t) wx, P(int16_t) wy, P(int16_t) ww, P(int16_t) wh)
 PP(int16_t handle;)
 PP(int16_t wx;)
@@ -702,6 +742,7 @@ PP(int16_t wh;)
 }
 
 
+/* 100de: 00fdd9ba */
 int16_t wind_get(P(int16_t) w_handle, P(int16_t) w_field, P(int16_t *) pw1, P(int16_t *) pw2, P(int16_t *) pw3, P(int16_t *) pw4)
 PP(int16_t w_handle;)
 PP(int16_t w_field;)
@@ -728,6 +769,7 @@ PP(int16_t *pw4;)
 }
 
 
+/* 100de: 00fdd9fa */
 int16_t wind_set(P(int16_t) w_handle, P(int16_t) w_field, P(int16_t) w2, P(int16_t) w3, P(int16_t) w4, P(int16_t) w5)
 PP(int16_t w_handle;)
 PP(int16_t w_field;)
@@ -749,6 +791,7 @@ PP(int16_t w5;)
 }
 
 
+/* 100de: 00fdda1e */
 int16_t wind_calc(P(int16_t) wctype, P(uint16_t) kind, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(int16_t *) px, P(int16_t *) py, P(int16_t *) pw, P(int16_t *) ph)
 PP(int16_t wctype;)
 PP(uint16_t kind;)

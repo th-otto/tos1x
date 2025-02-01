@@ -98,6 +98,7 @@ LINEF_STATIC int16_t fix_long PROTO((intptr_t plong));
 /* 306de: 00e20412 */
 /* 104de: 00fe3960 */
 /* 106de: 00e25be0 */
+/* 100de: 00fea1c6 */
 LINEF_STATIC VOID fix_chpos(P(intptr_t) pfix, P(int16_t) ifx)
 PP(intptr_t pfix;)
 PP(int16_t ifx;)
@@ -125,6 +126,7 @@ PP(int16_t ifx;)
 /* 306de: 00e2047c */
 /* 104de: 00fe39c2 */
 /* 106de: 00e25c4a */
+/* 100de: 00fea240 */
 int16_t rs_obfix(P(LPTREE) tree, P(int16_t) curob)
 PP(LPTREE tree;)
 PP(int16_t curob;)
@@ -151,6 +153,7 @@ PP(int16_t curob;)
 /* 306de: 00e204d0 */
 /* 104de: 00fe3a0c */
 /* 106de: 00e25c9e */
+/* 100de: 00fea28a */
 char *rs_str(P(int16_t) stnum)
 PP(int16_t stnum;)
 {
@@ -165,6 +168,7 @@ PP(int16_t stnum;)
 /* 306de: 00e2050a */
 /* 104de: 00fe3a3e */
 /* 106de: 00e25cd8 */
+/* 100de: 00fea2ba */
 LINEF_STATIC intptr_t get_sub(P(int16_t) rsindex, P(int16_t) rtype, P(int16_t) rsize)
 PP(int16_t rsindex;)
 PP(int16_t rtype;)
@@ -186,6 +190,7 @@ STATIC uint16_t ajunk; /* WTF? */
  */
 /* 306de: 00e20538 */
 /* 104de: 00fe3a6a */
+/* 100de: 00fea2e6 */
 LINEF_STATIC intptr_t get_addr(P(uint16_t) rstype, P(uint16_t) rsindex)
 PP(register uint16_t rstype;)
 PP(register uint16_t rsindex;)
@@ -267,6 +272,7 @@ PP(register uint16_t rsindex;)
 /* 306de: 00e2066e */
 /* 104de: 00fe3b8e */
 /* 106de: 00e25e3c */
+/* 100de: 00fea40e */
 LINEF_STATIC VOID fix_trindex(NOTHING)
 {
 	register int16_t ii;
@@ -286,6 +292,7 @@ LINEF_STATIC VOID fix_trindex(NOTHING)
 /* 306de: 00e206cc */
 /* 104de: 00fe3be0 */
 /* 106de: 00e25e9a */
+/* 100de: 00fea460 */
 LINEF_STATIC VOID fix_objects(NOTHING)
 {
 	register int16_t ii;
@@ -308,6 +315,7 @@ LINEF_STATIC VOID fix_objects(NOTHING)
 /* 306de: 00e20736 */
 /* 104de: 00fe3c3c */
 /* 106de: 00e25f04 */
+/* 100de: 00fea4bc */
 LINEF_STATIC VOID fix_tedinfo(NOTHING)
 {
 	register int16_t ii, i;
@@ -341,6 +349,7 @@ LINEF_STATIC VOID fix_tedinfo(NOTHING)
 /* 306de: 00e20804 */
 /* 104de: 00fe3cf8 */
 /* 106de: 00e25fd2 */
+/* 100de: 00fea578 */
 LINEF_STATIC VOID fix_nptrs(P(int16_t) cnt, P(int16_t) type)
 PP(int16_t cnt;)
 PP(int16_t type;)
@@ -355,6 +364,7 @@ PP(int16_t type;)
 /* 306de: 00e20832 */
 /* 104de: 00fe3d1c */
 /* 106de: 00e26000 */
+/* 100de: 00fea59c */
 int16_t fix_ptr(P(int16_t) type, P(int16_t) index)
 PP(int16_t type;)
 PP(int16_t index;)
@@ -366,6 +376,7 @@ PP(int16_t index;)
 /* 306de: 00e20848 */
 /* 104de: 00fe3d2e */
 /* 106de: 00e26016 */
+/* 100de: 00fea5b2 */
 LINEF_STATIC int16_t fix_long(P(intptr_t) plong)
 PP(register intptr_t plong;)
 {
@@ -401,6 +412,7 @@ PP(intptr_t pglobal;)
 /* 306de: 00e208a0 */
 /* 104de: 00fe3d7c */
 /* 106de: 00e2606e */
+/* 100de: 00fea600 */
 int16_t rs_free(P(intptr_t) pglobal)
 PP(intptr_t pglobal;)
 {
@@ -420,6 +432,7 @@ PP(intptr_t pglobal;)
 /* 306de: 00e208d4 */
 /* 104de: 00fe3daa */
 /* 106de: 00e260a2 */
+/* 100de: 00fea62e */
 int16_t rs_gaddr(P(intptr_t) pglobal, P(uint16_t) rtype, P(uint16_t) rindex, P(VOIDPTR *) rsaddr)
 PP(intptr_t pglobal;)
 PP(uint16_t rtype;)
@@ -442,6 +455,7 @@ PP(register VOIDPTR *rsaddr;)
 /* 306de: 00e2090a */
 /* 104de: 00fe3dd6 */
 /* 106de: 00e260d8 */
+/* 100de: 00fea65e */
 int16_t rs_saddr(P(intptr_t) pglobal, P(uint16_t) rtype, P(uint16_t) rindex, P(VOIDPTR ) rsaddr)
 PP(intptr_t pglobal;)
 PP(uint16_t rtype;)
@@ -471,6 +485,7 @@ PP(VOIDPTR rsaddr;)
 /* 306de: 00e20946 */
 /* 104de: 00fe3e06 */
 /* 106de: 00e26114 */
+/* 100de: 00fea692 */
 LINEF_STATIC int16_t rs_readit(P(intptr_t) pglobal, P(const char *) rsfname)
 PP(intptr_t pglobal;)
 PP(const char *rsfname;)
@@ -522,6 +537,7 @@ PP(const char *rsfname;)
 /* 306de: 00e20a2a */
 /* 104de: 00fe3ec2 */
 /* 106de: 00e261f8 */
+/* 100de: 00fea754 */
 VOID do_rsfix(P(intptr_t) hdr, P(int16_t) size)
 PP(intptr_t hdr;)
 PP(int16_t size;)
@@ -549,7 +565,7 @@ PP(int16_t size;)
  *	do an open workstation, then once we know the character sizes we
  *	can fix up the objects accordingly.
  */
-
+/* 100de: 00fea7fe */
 VOID rs_fixit(P(intptr_t) pglobal)
 PP(intptr_t pglobal;)
 {
@@ -565,6 +581,7 @@ PP(intptr_t pglobal;)
 /* 306de: 00e20b00 */
 /* 104de: 00fe3f7a */
 /* 106de: 00e262ce */
+/* 100de: 00fea80c */
 int16_t rs_load(P(intptr_t) pglobal, P(const char *) rsfname)
 PP(register intptr_t pglobal;)
 PP(const char *rsfname;)

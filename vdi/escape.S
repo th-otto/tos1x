@@ -118,6 +118,7 @@ F_BLINK     equ 6
 /* 104de: 00fca2ec */
 /* 106de: 00e0a518 */
 /* 100fr: 00fc414c */
+/* 100de: 00fc412e */
 	xdef	_v_escape
 _v_escape:
     move.l  LV(CONTRL,a4),a0
@@ -186,6 +187,7 @@ v_offset:
 /* 104de: 00fca358 */
 /* 106de: 00e0a584 */
 /* 100fr: 00fc41be */
+/* 100de: 00fc41a0 */
 	xdef	_asc_out
 _asc_out: ds.b 0
 /*
@@ -213,6 +215,7 @@ conout: ds.b 0
 /* 104de: 00fca364 */
 /* 106de: 00e0a590 */
 /* 100fr: 00fc41ca */
+/* 100de: 00fc41ac */
 	xdef _bcon2out
 _bcon2out: ds.b 0
 
@@ -231,6 +234,7 @@ gsx_conout:
 /* 306de: 00e072b4 */
 /* 206de: 00e06122 */
 /* 104de: 00fca37a */
+/* 100de: 00fc41bc */
 	xdef	normal_ascii
 normal_ascii:
 
@@ -461,6 +465,7 @@ b2w_tbl:
 /* 206de: 00e0625a */
 /* 104de: 00fca4b6 */
 /* 106de: 00e0a6e2 */
+/* 100de: 00fc4320 */
 vq_chcells:
 		move.l	LV(CONTRL,a4),a0		; a0 -> CONTRL array.
 		move.w	#2,8(a0)		; 2 integers are returned.
@@ -480,6 +485,7 @@ esc_base:
 /* 206de: 00e0627e */
 /* 104de: 00fca4d6 */
 /* 106de: 00e0a702 */
+/* 100de: 00fc4348 */
 v_esc_nop:
 esc_exit:
 		rts
@@ -493,6 +499,7 @@ esc_exit:
 /* 206de: 00e06280 */
 /* 104de: 00fca4d8 */
 /* 106de: 00e0a704 */
+/* 100de: 00fc434a */
 v_hardcopy:
 		move.w	#20,-(sp)		; Invoke bios
 		trap	#14
@@ -508,6 +515,7 @@ v_hardcopy:
 /* 306de: 00e07412 */
 /* 206de: 00e0628a */
 /* 104de: 00fca4e2 */
+/* 100de: 00fc4354 */
 v_enter_cur:
 		bsr	escE			; clear and home.
 		bra	esce			; show cursor regardless of cnt
@@ -520,6 +528,7 @@ v_enter_cur:
 /* 306de: 00e07418 */
 /* 206de: 00e06290 */
 /* 104de: 00fca4e8 */
+/* 100de: 00fc435a */
 v_exit_cur:
 		bsr	hide_cursor		; cursor hidden upon exit
 *						; fall through to clr and home
@@ -543,6 +552,7 @@ escE:
 /* 306de: 00e07420 */
 /* 206de: 00e06298 */
 /* 104de: 00fca4f0 */
+/* 100de: 00fc4362 */
 escA:
 v_curup:
 		move.w	LV(v_curcy,a4),d1		; d1 <- current cursor Y
@@ -562,6 +572,7 @@ up_cursor:
 /* 306de: 00e07430 */
 /* 306de: 00e062a8 */
 /* 104de: 00fca500 */
+/* 100de: 00fc4376 */
 escB:
 v_curdown:
 down_cursor:
@@ -582,6 +593,7 @@ down_cursor:
 /* 306de: 00e07444 */
 /* 206de: 00e062bc */
 /* 104de: 00fca514 */
+/* 100de: 00fc4390 */
 escC:
 v_curright:
 
@@ -602,6 +614,7 @@ v_curright:
 /* 306de: 00e07458 */
 /* 206de: 00e062d0 */
 /* 104de: 00fca528 */
+/* 100de: 00fc43aa */
 escD:
 v_curleft:
 
@@ -621,6 +634,7 @@ v_curleft:
 /* 306de: 00e07468 */
 /* 206de: 00e062e0 */
 /* 104de: 00fca538 */
+/* 100de: 00fc43be */
 escH:
 v_curhome:
 	moveq.l    #0,d0		; d0 <- home X
@@ -636,6 +650,7 @@ v_curhome:
 /* 306de: 00e07470 */
 /* 206de: 00e062e8 */
 /* 104de: 00fca540 */
+/* 100de: 00fc43c6 */
 escJ:
 v_eeos:
 
@@ -667,6 +682,7 @@ v_eeos:
 /* 306de: 00e07482 */
 /* 206de: 00e062fa */
 /* 104de: 00fca552 */
+/* 100de: 00fc43f2 */
 escK:
 v_eeol:
 		bclr       #F_CEOL,LV(v_stat_0,a4)
@@ -709,6 +725,7 @@ v_eeol4:
 /* 306de: 00e07494 */
 /* 206de: 00e0630c */
 /* 104de: 00fca564 */
+/* 100de: 00fc445c */
 vs_curaddress:
 
 	move.l	LV(INTIN,a4),a0		; a0 -> INTIN array
@@ -726,6 +743,7 @@ vs_curaddress:
 /* 306de: 00e074a6 */
 /* 206de: 00e0631e */
 /* 104de: 00fca576 */
+/* 100de: 00fc4470 */
 vs_curtext:
 
 	move.l	LV(CONTRL,a4),a0		; a0 -> CONTRL array.
@@ -755,6 +773,7 @@ ef12_lend:
 /* 306de: 00e074c8 */
 /* 206de: 00e06340 */
 /* 104de: 00fca598 */
+/* 100de: 00fc4496 */
 escp:
 v_rvon:
 		bset.b	#F_REVID,LV(v_stat_0,a4)	 ; set reverse bit in v_stat_0
@@ -769,6 +788,7 @@ v_rvon:
 /* 306de: 00e074ce */
 /* 206de: 00e06346 */
 /* 104de: 00fca59e */
+/* 100de: 00fc44a0 */
 escq:
 v_rvoff:
 		bclr.b	#F_REVID,LV(v_stat_0,a4)		; clr reverse bit in v_stat_0
@@ -782,6 +802,7 @@ v_rvoff:
 /* 306de: 00e074d4 */
 /* 206de: 00e0634c */
 /* 104de: 00fca5a4 */
+/* 100de: 00fc44aa */
 vq_curaddress:
 
 	move.l	LV(CONTRL,a4),a0		; a0 -> CONTRL array.
@@ -803,6 +824,7 @@ vq_curaddress:
 /* 306de: 00e074f4 */
 /* 206de: 00e0636c */
 /* 104de: 00fca5c4 */
+/* 100de: 00fc44d4 */
 vq_tabstatus:
 
 	move.l	LV(CONTRL,a4),a0		; a0 -> CONTRL array.
@@ -819,6 +841,7 @@ vq_tabstatus:
 /* 306de: 00e07506 */
 /* 206de: 00e0637e */
 /* 104de: 00fca5d6 */
+/* 100de: 00fc44ec */
 v_dspcur:
 
 	movea.l	LV(INTIN,a4),a0		; a0 -> INTIN array.
@@ -833,6 +856,7 @@ v_dspcur:
 /* 306de: 00e07512 */
 /* 206de: 00e0638a */
 /* 104de: 00fca5e2 */
+/* 100de: 00fc44fc */
 v_rmcur:
 
 	jmp	_v_hide_c		; hide graphic cursor.
@@ -953,6 +977,7 @@ esce2:
 /* 206de: 00e063de */
 /* 104de: 00fca636 */
 /* 106de: 00e0a862 */
+/* 100de: 00fc45b0 */
 show_cursor:
 
 	tst.w	LV(disab_cnt,a4)	; old count=0  =>  cursor is visible
@@ -975,6 +1000,7 @@ escf:
 /* 306de: 00e07592 */
 /* 206de: 00e0640e */
 /* 104de: 00fca666 */
+/* 100de: 00fc45c2 */
 hide_cursor:
 
 	addq.w	#1,LV(disab_cnt,a4)	; increment the disable counter.
@@ -1099,6 +1125,7 @@ escw:
 /* 306de: 00e075f8 */
 /* 206de: 00e06474 */
 /* 104de: 00fca6cc */
+/* 100de: 00fc4690 */
 ascii_cr:
 
 	move.w	LV(v_curcy,a4),d1		; d1 <- current Y
@@ -1160,6 +1187,7 @@ ascii_lf:
 /* 206de: 00e06496 */
 /* 104de: 00fca6ee */
 /* 106de: 00e0a91a */
+/* 100de: 00fc46ba */
 	xdef blink
 blink:
 
@@ -1194,6 +1222,7 @@ bl_exit:
 /* 206de: 00e064c8 */
 /* 104de: 00fca720 */
 /* 106de: 00e0a94c */
+/* 100de: 00fc46f2 */
 	xdef _cursconf
 _cursconf:
 	move.w	4(sp),d0		; fetch function number.
@@ -1321,6 +1350,7 @@ out_of_bounds:
 /* 206de: 00e06520 */
 /* 104de: 00fca778 */
 /* 106de: 00e0a9a4 */
+/* 100de: 00fc477c */
 ascii_out:
 	bsr get_addr_font
 	beq addr_ok
@@ -1540,6 +1570,7 @@ cell1:
 /* 206de: 00e0e45c */
 /* 104de: 00fd25bc */
 /* 106de: 00e1281c */
+/* 100de: 00fc490e */
 		xdef sb_cell
 sb_cell:
 		movea.w    LV(v_fnt_wr,a4),a2
@@ -1602,6 +1633,7 @@ sb_cell5:
 /* 306de: 00e077f6 */
 /* 206de: 00e06826 */
 /* 104de: 00fcaa7e */
+/* 100de: 00fc497a */
 move_cursor:
         cmp.w LV(v_celmx,a4),d0
         bls.s col_ok
@@ -1738,6 +1770,7 @@ f_wrap3:
 /* 206de: 00e0e4da */
 /* 104de: 00fd263a */
 /* 106de: 00e1289a */
+/* 100de: 00fc4a6a */
 		xdef sb_scrup
 sb_scrup:
 		movea.l    _v_bas_ad,a3
@@ -1768,6 +1801,7 @@ sb_scru3:
 /* 206de: 00e0e51e */
 /* 104de: 00fd267e */
 /* 106de: 00e128de */
+/* 100de: 00fc4ab2 */
 		xdef sb_scrdn
 sb_scrdn:
 		movea.l    _v_bas_ad,a3
@@ -1796,6 +1830,7 @@ sb_scrd2:
 
 /* 306de: 00e07858 */
 /* 104de: 00fcaac4 */
+/* 100de: 00fc4aea */
 v_fontinit:
 		move.l	LV(INTIN,a4),a0
 		move.l	(a0),a0			; a0 -> font header.
@@ -1810,6 +1845,7 @@ v_fontinit:
 
 /* 306de: 00e0785e */
 /* 104de: 00fcaaca */
+/* 100de: 00fc4af2 */
 	xdef	gl_f_init
 gl_f_init: ds.b 0
 		move.w	FRM_HT(a0),d0		; fetch form height.

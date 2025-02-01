@@ -58,6 +58,7 @@ STATIC char /* const */ dots2[22] = { "..         " };
  *
  ***************************************************************************/
 
+/* 100de: 00fc4e6c */
 int uc(P(char) c)
 PP(register char c;)
 {
@@ -73,6 +74,7 @@ PP(register char c;)
 /* 306us: 00e141e4 */
 /* 104de: 00fc4d2a */
 /* 100fr: 00fc4eba */
+/* 100de: 00fc4e9c */
 DMD *getdmd(P(int) drv)
 PP(int drv;)
 {
@@ -106,6 +108,7 @@ PP(int drv;)
 /* 104de: 00fc788a */
 /* 106de: 00e07a5a */
 /* 100fr: 00fc4f46 */
+/* 100de: 00fc4f28 */
 FH syshnd(P(FH) h)
 PP(register FH h;)
 {
@@ -127,6 +130,7 @@ PP(register FH h;)
 /* 306us: 00e16e3e */
 /* 104de: 00fc78ba */
 /* 100fr: 00fc4f80 */
+/* 100de: 00fc4f62 */
 OFD *getofd(P(FH) h)
 PP(FH h;)
 {
@@ -175,6 +179,7 @@ PP(PD *p;)
 /* 306us: 00e16e80 */
 /* 104de: 00fc78fc */
 /* 100fr: 00fc4fd6 */
+/* 100de: 00fc4fb8 */
 ERROR xdup(P(int16_t) _h)
 PP(int16_t _h;)							/*+ h must be a standard handle (checked) */
 {
@@ -220,6 +225,7 @@ PP(int16_t _h;)							/*+ h must be a standard handle (checked) */
 /* 306us: 00e16f04 */
 /* 104de: 00fc7980 */
 /* 100fr: 00fc509e */
+/* 100de: 00fc5080 */
 ERROR xforce(P(int16_t) std, P(int16_t) h)
 PP(int16_t std;)
 PP(int16_t h;)
@@ -237,6 +243,7 @@ PP(int16_t h;)
 /* 306us: 00e16f1a */
 /* 104de: 00fc7996 */
 /* 100fr: 00fc50b8 */
+/* 100de: 00fc509a */
 ERROR ixforce(P(FH) _std, P(FH) _h, P(PD *) _p)
 PP(FH _std;)								/* std must be a standard handle    */
 PP(FH _h;)									/* h   must NOT be a standard handle    */
@@ -286,6 +293,7 @@ PP(PD *_p;)
 /* 306us: 00e17286 */
 /* 104de: 00fc7d02 */
 /* 100fr: 00fc515a */
+/* 100de: 00fc513c */
 int xlog2(P(int) _n)
 PP(int _n;)
 {
@@ -308,6 +316,7 @@ PP(int _n;)
 /* 306us: 00e14234 */
 /* 104de: 00fc4d7a */
 /* 100fr: 00fc5180 */
+/* 100de: 00fc5162 */
 ERROR login(P(BPB *) b, P(int) drv)
 PP(BPB *b;)									/*  bios parm block for drive       */
 PP(int drv;)								/*  drive number            */
@@ -424,6 +433,7 @@ PP(char *d;)
 /* 306us: 00e172ac */
 /* 104de: 00fc7d28 */
 /* 100fr: 00fc540a */
+/* 100de: 00fc53ec */
 VOID xmovs(P(int) n, P(const VOIDPTR) src, P(VOIDPTR) dst)
 PP(int n;)
 PP(const VOIDPTR src;)
@@ -451,6 +461,7 @@ PP(VOIDPTR dst;)
 /* 306us: 00e172d6 */
 /* 104de: 00fc7d52 */
 /* 100fr: 00fc5432 */
+/* 100de: 00fc5414 */
 int xcmps(P(const char *) s, P(const char *) d)
 PP(const char *s;)
 PP(const char *d;)
@@ -483,6 +494,7 @@ PP(const char *d;)
 /* 306us: 00e16fca */
 /* 104de: 00fc7a46 */
 /* 100fr: 00fc5486 */
+/* 100de: 00fc5468 */
 ERROR xclose(P(FH) h)
 PP(register FH h;)
 {
@@ -544,6 +556,7 @@ PP(register FH h;)
 /* 306us: 00e16060 */
 /* 104de: 00fc6aa4 */
 /* 100fr: 00fc55ae */
+/* 100de: 00fc5590 */
 ERROR ixclose(P(OFD *) fd, P(int) part)
 PP(register OFD *fd;)
 PP(int part;)
@@ -637,6 +650,7 @@ PP(int part;)
 /* 104de: 00fc4faa */
 /* 106de: 00e0517a */
 /* 100fr: 00fc56ca */
+/* 100de: 00fc56ac */
 VOID flushbcb(P(BCB *) _b)
 PP(BCB *_b;)
 {
@@ -678,6 +692,7 @@ PP(BCB *_b;)
  */
 /* 104de: 00fc50c0 */
 /* 100fr: 00fc57b2 */
+/* 100de: 00fc5794 */
 static VOID usrio(P(int) wrtflg, P(RECNO) count, P(RECNO) recno, P(char *)buf, P(DMD *)dmd)
 PP(int wrtflg;)
 PP(RECNO count;)
@@ -709,6 +724,7 @@ PP(DMD *dmd;)
 /* 104de: 00fc516a */
 /* 106de: 00e0553a */
 /* 100fr: 00fc5858 */
+/* 100de: 00fc583a */
 char *getrec(P(RECNO) recno, P(DMD *)dm, P(int) wrtflg)
 PP(RECNO recno;)
 PP(register DMD *dm;)
@@ -871,6 +887,7 @@ PP(int wrtflg;)
 /* 306us: 00e16184 */
 /* 104de: 00fc6c00 */
 /* 100fr: 00fc59fc */
+/* 100de: 00fc59de */
 OFD *makofd(P(DND *) _p)
 PP(DND *_p;)
 {
@@ -907,6 +924,7 @@ PP(DND *_p;)
 /* 306us: 00e17322 */
 /* 104de: 00fc7d9e */
 /* 100fr: 00fc5a5a */
+/* 100de: 00fc5a3c */
 BOOLEAN match(P(const char *) s1, P(const char *) s2)
 PP(register const char *s1;)							/*  name we are checking        */
 PP(register const char *s2;)									/*  name in fcb             */
@@ -958,6 +976,7 @@ PP(register const char *s2;)									/*  name in fcb             */
 /* 104de: 00fc7e46 */
 /* 106de: 00e08016 */
 /* 100fr: 00fc5ae8 */
+/* 100de: 00fc5aca */
 VOID builds(P(const char *) s1, P(char *) s2)
 PP(register char *s1;)							/*  source          */
 PP(register char *s2;)									/*  s2 dest         */
@@ -1012,6 +1031,7 @@ PP(register char *s2;)									/*  s2 dest         */
 /* 306us: 00e174ae */
 /* 104de: 00fc7f2a */
 /* 100fr: 00fc5bc8 */
+/* 100de: 00fc5baa */
 int getpath(P(const char *) p, P(char *) d, P(int) dirspec)
 PP(register const char *p;)								/*  start of path element to crack  */
 PP(register char *d;)									/*  ptr to destination buffer       */
@@ -1062,6 +1082,7 @@ PP(int dirspec;)							/*  true = no file name, just dir path  */
 /* 306us: 00e17096 */
 /* 104de: 00fc7b12 */
 /* 100fr: 00fc5c2a */
+/* 100de: 00fc5c0c */
 ERROR xread(P(int16_t) h, P(long) len, P(VOIDPTR) ubufr)
 PP(int16_t h;)
 PP(long len;)
@@ -1088,6 +1109,7 @@ PP(VOIDPTR ubufr;)
 /* 306us: 00e161dc */
 /* 104de: 00fc6c58 */
 /* 100fr: 00fc5c5c */
+/* 100de: 00fc5c3e */
 ERROR ixread(P(OFD *)p, P(long) len, P(VOIDPTR) ubufr)
 PP(register OFD *p;)
 PP(register long len;)
@@ -1142,6 +1164,7 @@ PP(register VOIDPTR ubufr;)
 /* 306us: 00e170d6 */
 /* 104de: 00fc7b52 */
 /* 100fr: 00fc5caa */
+/* 100de: 00fc5c8c */
 ERROR xwrite(P(FH) h, P(long) len, P(VOIDPTR) ubufr)
 PP(FH h;)
 PP(long len;)
@@ -1177,6 +1200,7 @@ PP(VOIDPTR ubufr;)
 /* 306us: 00e1622c */
 /* 104de: 00fc6ca8 */
 /* 100fr: 00fc5cdc */
+/* 100de: 00fc5cbe */
 ERROR ixwrite(P(OFD *) p, P(long) len, P(VOIDPTR) ubufr)
 PP(OFD *p;)
 PP(long len;)
@@ -1197,6 +1221,7 @@ PP(VOIDPTR ubufr;)
 /* 306us: 00e14930 */
 /* 104de: 00fc5380 */
 /* 100fr: 00fc5d04 */
+/* 100de: 00fc5ce6 */
 VOID clfix(P(CLNO) cl, P(CLNO) link, P(DMD *) dm)
 PP(register CLNO cl;)
 PP(CLNO link;)
@@ -1255,6 +1280,7 @@ PP(register DMD *dm;)
 /* 306us: 00e14b08 */
 /* 104de: 00fc5558 */
 /* 100fr: 00fc5dfa */
+/* 100de: 00fc5ddc */
 CLNO getcl(P(CLNO) cl, P(DMD *) dm)
 PP(register CLNO cl;)
 PP(register DMD *dm;)
@@ -1302,6 +1328,7 @@ PP(register DMD *dm;)
 /* 306us: 00e14cc0 */
 /* 104de: 00fc5710 */
 /* 100fr: 00fc5eb4 */
+/* 100de: 00fc5e96 */
 int nextcl(P(OFD *) _p, P(int) wrtflg)
 PP(OFD *_p;)
 PP(int wrtflg;)
@@ -1384,6 +1411,7 @@ retcl:
 /* 306us: 00e14e74 */
 /* 104de: 00fc58c4 */
 /* 100fr: 00fc5f98 */
+/* 100de: 00fc5f7a */
 static VOID addit(P(OFD *) p, P(long) siz, P(int) flg)
 PP(register OFD *p;)
 PP(long siz;)
@@ -1425,6 +1453,7 @@ PP(int flg;)								/* update curbyt ? (yes if less than 1 cluster transferred) 
 /* 104de: 00fc5906 */
 /* 106de: 00e05ad6 */
 /* 100fr: 00fc5fda */
+/* 100de: 00fc5fbc */
 ERROR xrw(P(int) wrtflg, P(OFD *) _p, P(long) len, P(char *) ubufr, P(xfer) bufxfr)
 PP(int wrtflg;)
 PP(OFD *_p;)
@@ -1696,6 +1725,7 @@ PP(register FCB *fcb;)									/*  root where we start the search  */
 /* 104de: 00fc5f76 */
 /* 106de: 00e06146 */
 /* 100fr: 00fc63fe */
+/* 100de: 00fc63e0 */
 FCB *scan(P(DND *) dnd, P(const char *) n, P(int16_t) att, P(int32_t *) posp)
 PP(register DND *dnd;)
 PP(const char *n;)
@@ -1790,6 +1820,9 @@ PP(int32_t *posp;)
 		return (FCB *)dnd1;
 	}
 
+	/*
+	 * BUG: will leak the dnd that was allocated above
+	 */
 	return fcb;
 }
 
@@ -1808,6 +1841,7 @@ PP(int32_t *posp;)
 /* 306us: 00e15288 */
 /* 104de: 00fc5cd8 */
 /* 100fr: 00fc65a0 */
+/* 100de: 00fc6582 */
 ERROR ckdrv(P(int) d)
 PP(int d;)									/* has this drive been accessed, or had a media change */
 {
@@ -1870,6 +1904,7 @@ PP(int d;)									/* has this drive been accessed, or had a media change */
 /* 306us: 00e1565a */
 /* 104de: 00fc60aa */
 /* 100fr: 00fc669e */
+/* 100de: 00fc6680 */
 static DND *dcrack(P(const char **) np)
 PP(const char **np;)
 {
@@ -1924,6 +1959,7 @@ PP(const char **np;)
 /* 306us: 00e156f6 */
 /* 104de: 00fc6146 */
 /* 100fr: 00fc672e */
+/* 100de: 00fc6710 */
 DND *findit(P(const char *) name, P(const char **) sp, P(int) dflag)
 PP(const char *name;)								/*  name of file/dir            */
 PP(const char **sp;)
@@ -2041,6 +2077,7 @@ PP(int dflag;)								/*  T: name is for a directory      */
 /* 306us: 00e1581c */
 /* 104de: 00fc626c */
 /* 100fr: 00fc6840 */
+/* 100de: 00fc6822 */
 ERROR xchdir(P(const char *) p)
 PP(const char *p;)
 {
@@ -2099,6 +2136,7 @@ PP(const char *p;)
 /* 306us: 00e1750e */
 /* 104de: 00fc7f8a */
 /* 100fr: 00fc6928 */
+/* 100de: 00fc690a */
 char *packit(P(const char *) s, P(char *) d)
 PP(register const char *s;)
 PP(register char *d;)
@@ -2139,6 +2177,7 @@ PP(register char *d;)
 /* 306us: 00e175c0 */
 /* 104de: 00fc803c */
 /* 100fr: 00fc6994 */
+/* 100de: 00fc6976 */
 char *dopath(P(DND *) p, P(char *) buf)
 PP(DND *p;)
 PP(char *buf;)
@@ -2165,6 +2204,7 @@ PP(char *buf;)
 /* 306us: 00e15918 */
 /* 104de: 00fc6368 */
 /* 100fr: 00fc69dc */
+/* 100de: 00fc69be */
 ERROR xgetdir(P(char *) buf, P(int16_t) drv)					/*+ return text of current dir into specified buffer */
 PP(char *buf;)
 PP(int16_t drv;)
@@ -2197,6 +2237,7 @@ PP(int16_t drv;)
 /* 106de: 00e07e00 */
 /* 404: 00e1b57c */
 /* 100fr: 00fc6a5c */
+/* 100de: 00fc6a3e */
 DTAINFO *xgetdta(NOTHING)							/*+ return address of dta */
 {
 	return run->p_xdta;
@@ -2211,6 +2252,7 @@ DTAINFO *xgetdta(NOTHING)							/*+ return address of dta */
 /* 306us: 00e171c6 */
 /* 104de: 00fc7c42 */
 /* 100fr: 00fc6a6e */
+/* 100de: 00fc6a50 */
 VOID xsetdta(P(DTAINFO *) addr)							/*+ set transfer address to addr */
 PP(DTAINFO *addr;)
 {
@@ -2229,6 +2271,7 @@ PP(DTAINFO *addr;)
 /* 306us: 00e171da */
 /* 104de: 00fc7c56 */
 /* 100fr: 00fc6a82 */
+/* 100de: 00fc6a64 */
 ERROR xsetdrv(P(int16_t) drv)
 PP(int16_t drv;)
 {
@@ -2250,6 +2293,7 @@ PP(int16_t drv;)
 /* 306us: 00e171fa */
 /* 104de: 00fc7c76 */
 /* 100fr: 00fc6aa2 */
+/* 100de: 00fc6a84 */
 ERROR xgetdrv(NOTHING)
 {
 	return run->p_curdrv;
@@ -2270,6 +2314,7 @@ ERROR xgetdrv(NOTHING)
 /* 104de: 00fc7c8c */
 /* 106de: 00e07e5c */
 /* 100fr: 00fc6ab8 */
+/* 100de: 00fc6a9a */
 ERROR xsfirst(P(const char *) name, P(int16_t) att)
 PP(const char *name;)
 PP(int16_t att;)
@@ -2290,6 +2335,7 @@ PP(int16_t att;)
 /* 306us: 00e15de0 */
 /* 104de: 00fc6824 */
 /* 100fr: 00fc6ad6 */
+/* 100de: 00fc6ab8 */
 ERROR ixsfirst(P(const char *) name, P(int16_t) att, P(DTAINFO *)addr)
 PP(const char *name;)								/*  name of file to match   */
 PP(int16_t att;)							/*  attribute of file       */
@@ -2347,6 +2393,7 @@ PP(DTAINFO *addr;)						/*  ptr to dta info         */
 /* 306us: 00e15ec6 */
 /* 104de: 00fc690a */
 /* 100fr: 00fc6bb6 */
+/* 100de: 00fc6b98 */
 ERROR xsnext(NOTHING)
 {
 	register FCB *f;
@@ -2378,6 +2425,7 @@ ERROR xsnext(NOTHING)
 /* 306us: 00e1599c */
 /* 104de: 00fc63ec */
 /* 100fr: 00fc6c7e */
+/* 100de: 00fc6c60 */
 VOID makbuf(P(FCB *) f, P(DTAINFO *) dt)
 PP(FCB *f;)
 PP(DTAINFO *dt;)
@@ -2425,6 +2473,7 @@ PP(DTAINFO *dt;)
 /* 306us: 00e1711c */
 /* 104de: 00fc7b98 */
 /* 100fr: 00fc6d1e */
+/* 100de: 00fc6d00 */
 ERROR opnfil(P(const FCB *) f, P(DND *) dn, P(int16_t) mod)
 PP(const FCB *f;)
 PP(DND *dn;)
@@ -2460,6 +2509,7 @@ PP(int16_t mod;)
 /* 306us: 00e16254 */
 /* 104de: 00fc6cd0 */
 /* 100fr: 00fc6d9e */
+/* 100de: 00fc6d80 */
 ERROR makopn(P(const FCB *) f, P(DND *) dn, P(FH) h, P(int16_t) mod)
 PP(register const FCB *f;)
 PP(DND *dn;)
@@ -2522,6 +2572,7 @@ PP(int mod;)
 /* 306us: 00e15a06 */
 /* 104de: 00fc6456 */
 /* 100fr: 00fc6eb8 */
+/* 100de: 00fc6e9a */
 FCB *dirinit(P(DND *)dn)
 PP(DND *dn;)								/*  dir descr for dir           */
 {
@@ -2578,6 +2629,7 @@ PP(DND *dn;)								/*  dir descr for dir           */
 /* 306us: 00e17232 */
 /* 104de: 00fc7cae */
 /* 100fr: 00fc6f5c */
+/* 100de: 00fc6f3e */
 ERROR xcreat(P(const char *) fname, P(int8_t) attr)
 PP(const char *fname;)
 PP(int8_t attr;)
@@ -2600,6 +2652,7 @@ PP(int8_t attr;)
 /* 306us: 00e16364 */
 /* 104de: 00fc6de0 */
 /* 100fr: 00fc6f78 */
+/* 100de: 00fc6f5a */
 ERROR ixcreat(P(const char *) name, P(int8_t) attr)
 PP(const char *name;)
 PP(int8_t attr;)
@@ -2728,6 +2781,7 @@ PP(int8_t attr;)
 /* 104de: 00fc64f2 */
 /* 106de: 00e066c2 */
 /* 100fr: 00fc7190 */
+/* 100de: 00fc7172 */
 ERROR xmkdir(P(const char *) s)
 PP(const char *s;)
 {
@@ -2835,6 +2889,7 @@ PP(const char *s;)
 /* 306us: 00e1726e */
 /* 104de: 00fc7cea */
 /* 100fr: 00fc73b4 */
+/* 100de: 00fc7396 */
 ERROR xopen(P(const char *) fname, P(int16_t) mode)
 PP(const char *fname;)
 PP(int16_t mode;)
@@ -2857,6 +2912,7 @@ PP(int16_t mode;)
 /* 306us: 00e16616 */
 /* 104de: 00fc7092 */
 /* 100fr: 00fc73c8 */
+/* 100de: 00fc73aa */
 ERROR ixopen(P(const char *) name, P(int16_t) mode)
 PP(const char *name;)
 PP(int16_t mode;)
@@ -2902,8 +2958,9 @@ PP(int16_t mode;)
 /* 306de: 00e166e6 */
 /* 306us: 00e1668c */
 /* 104de: 00fc7108 */
-/* BUG: wrong return type */
 /* 100fr: 00fc743a */
+/* 100de: 00fc741c */
+/* BUG: wrong return type */
 int xchmod(P(const char *) p, P(int16_t) wrt, P(char) mod)
 PP(const char *p;)
 PP(int16_t wrt;)
@@ -2949,6 +3006,7 @@ PP(char mod;)
 /* 306us: 00e1676a */
 /* 104de: 00fc71e6 */
 /* 100fr: 00fc74f0 */
+/* 100de: 00fc74d2 */
 ERROR xgsdtof(P(uint16_t *) buf, P(FH) h, P(int16_t) wrt)
 PP(uint16_t *buf;)
 PP(FH h;)
@@ -3001,6 +3059,7 @@ PP(int16_t wrt;)
 /* 306us: 00e1681c */
 /* 104de: 00fc7298 */
 /* 100fr: 00fc7574 */
+/* 100de: 00fc7556 */
 ERROR xunlink(P(const char *) name)
 PP(const char *name;)								/*  path name of file to delete     */
 {
@@ -3049,6 +3108,7 @@ PP(const char *name;)								/*  path name of file to delete     */
 /* 306us: 00e1688c */
 /* 104de: 00fc7308 */
 /* 100fr: 00fc75e6 */
+/* 100de: 00fc75c8 */
 ERROR ixdel(P(DND *) dn, P(FCB *) f, P(long) pos)
 PP(DND *dn;)
 PP(FCB *f;)
@@ -3129,6 +3189,7 @@ PP(long pos;)
 /* 306us: 00e15cae */
 /* 104de: 00fc66fe */
 /* 100fr: 00fc76ec */
+/* 100de: 00fc76ce */
 ERROR xrmdir(P(const char *)p)
 PP(const char *p;)
 {
@@ -3215,6 +3276,7 @@ PP(const char *p;)
 /* 306us: 00e1536e */
 /* 104de: 00fc5dbe */
 /* 100fr: 00fc782a */
+/* 100de: 00fc780c */
 ERROR xgetfree(P(int32_t *) bufp, P(int16_t) drv)					/*+ get disk free space data into buffer */
 PP(int16_t drv;)
 PP(int32_t *bufp;)
@@ -3265,6 +3327,7 @@ PP(int32_t *bufp;)
 /* 306us: 00e169ac */
 /* 104de: 00fc7428 */
 /* 100fr: 00fc78b2 */
+/* 100de: 00fc7894 */
 ERROR xrename(P(int16_t) n, P(const char *) p1, P(const char *)p2)	/*+ rename file, old path p1, new path p2 */
 PP(int16_t n;)									/*  not used                */
 PP(const char *p1;)
@@ -3382,6 +3445,7 @@ PP(const char *p2;)
 /* 306us: 00e16c9c */
 /* 104de: 00fc7718 */
 /* 100fr: 00fc7a90 */
+/* 100de: 00fc7a72 */
 ERROR xlseek(P(long) n, P(int16_t) h, P(int16_t) flg)
 PP(long n;)
 PP(int16_t h;)
@@ -3422,6 +3486,7 @@ PP(int16_t flg;)
 /* 306us: 00e16cfe */
 /* 104de: 00fc777a */
 /* 100fr: 00fc7aec */
+/* 100de: 00fc7ace */
 ERROR ixlseek(P(OFD *) _p, P(long) n)
 PP(OFD *_p;)								/*  file descriptor for file in use */
 PP(long n;)								/*  number of bytes to seek     */
@@ -3515,6 +3580,7 @@ PP(int16_t divsor;)							/* divsor is log2 of actual divisor */
 /* 306us: 00e17608 */
 /* 104de: 00fc8084 */
 /* 100fr: 00fc7c14 */
+/* 100de: 00fc7bf6 */
 int contains_dots(P(const char *) name, P(char) ill)
 PP(register const char *name;)
 PP(char ill;)
@@ -3542,6 +3608,7 @@ PP(char ill;)
 /* 306us: 00e1764a */
 /* 104de: 00fc80c6 */
 /* 100fr: 00fc7c56 */
+/* 100de: 00fc7c38 */
 int ncmps(P(int) n, P(const char *) s, P(const char *) d)
 PP(int n;)
 PP(const char *s;)

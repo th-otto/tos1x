@@ -170,6 +170,7 @@ LINEF_STATIC VOID sf_cr PROTO((NOTHING));
 #endif
 
 
+/* 100de: 00fed5a0 */
 VOID sh_type(P(const char *) fname)
 PP(const char *fname;)
 {
@@ -177,6 +178,7 @@ PP(const char *fname;)
 }
 
 
+/* 100de: 00fed5b2 */
 VOID sh_print(P(const char *) fname)
 PP(const char *fname;)
 {
@@ -205,6 +207,7 @@ PP(register char *buf;)
 	return buf[sf_inptr++] & 0xff;
 }
 #else
+/* 100de: 00fed5c2 */
 LINEF_STATIC BOOLEAN sf_getc(P(int) handle, P(char *) buf, P(int *) ch)
 PP(int handle;)
 PP(register char *buf;)
@@ -232,6 +235,7 @@ PP(int *ch;)
 /* 306de: 00e331aa */
 /* 104de: 00fe66b2 */
 /* 106de: 00e28e36 */
+/* 100de: 00fed64c */
 BOOLEAN showfile(P(const char *)fname, P(int) mode)
 PP(const char *fname;)
 PP(int mode;)
@@ -324,6 +328,7 @@ alldone:
 }
 
 
+/* 100de: 00fed722 */
 LINEF_STATIC VOID sf_disp(P(int) handle, P(char *)buf)
 PP(register int handle;)
 PP(register char *buf;)
@@ -362,6 +367,7 @@ PP(register char *buf;)
 }
 
 
+/* 100de: 00fed79c */
 LINEF_STATIC int sf_more(NOTHING)
 {
 	cconws(S_MORE);
@@ -394,6 +400,7 @@ PP(char *buf;)
 	return FALSE;
 }
 #else
+/* 100de: 00fed7da */
 LINEF_STATIC VOID sf_page(P(int) handle, P(char *)buf)
 PP(int handle;)
 PP(char *buf;)
@@ -409,6 +416,7 @@ PP(char *buf;)
 #endif
 
 
+/* 100de: 00fed80e */
 LINEF_STATIC BOOLEAN sf_newline(P(int) handle, P(char *)buf)
 PP(int handle;)
 PP(char *buf;)
@@ -455,6 +463,7 @@ PP(char *buf;)
 }
 
 
+/* 100de: 00fed874 */
 LINEF_STATIC VOID cconws(P(const char *) s)
 PP(const char *s;)
 {
@@ -472,6 +481,7 @@ LINEF_STATIC VOID sf_cr(NOTHING)
 #endif
 
 
+/* 100de: 00fed894 */
 LINEF_STATIC BOOLEAN sf_putc(P(int) ch, P(BOOLEAN) centronics)
 PP(register int ch;)
 PP(register BOOLEAN centronics;)

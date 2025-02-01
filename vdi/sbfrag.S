@@ -88,6 +88,7 @@ F2OP		equ	22
 
 /* 306de: 00e0d750 */
 /* 104de: 00fd2274 */
+/* 100de: 00fd0ec0 */
 p1_update:
 
 	swap	d7		; d7(15:00) <- raw pattern index pointer	 4

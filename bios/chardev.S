@@ -81,6 +81,7 @@ BCONMAP_START_HANDLE equ 6
 /* 206de: 00e01f8c */
 /* 104de: 00fc326a */
 /* 106de: 00e03456 */
+/* 100any: 00fc1e14 */
 	xdef _bco3stat
 _bco3stat:
         moveq.l   #-1,d0
@@ -106,6 +107,7 @@ bco3sret:
 /* 306de: 00e02276 */
 /* 206de: 00e01f9c */
 /* 106de: 00e03452 */
+/* 100any: 00fc1e26 */
 	xdef _bcon3out
 _bcon3out:
         move.w    6(a7),d1
@@ -133,6 +135,7 @@ bcon3o2:
 /* 306de: 00e0228c */
 /* 206de: 00e01fb2 */
 /* 106de: 00e046a */
+/* 100any: 00fc1e40 */
 		xdef _midiws
 _midiws:
         moveq.l   #0,d3
@@ -158,6 +161,7 @@ midiws1:
 /* 306de: 00e022a0 */
 /* 206de: 00e01fc6 */
 /* 106de: 00e0347e */
+/* 100any: 00fc1e54 */
 	xdef _bcon3stat
 _bcon3stat:
         lea.l     ABSW(midiiorec),a0            /* point to midi i/o bufrec */
@@ -191,6 +195,7 @@ bcon3s1:
 /* 306de: 00e022ba */
 /* 206de: 00e01fe0 */
 /* 106de: 00e03498 */
+/* 100any: 00fc1e70 */
 /* assume that a0/a1 are inited by the midstat call for the rest of */
 /* this routine. */
 	xdef _bcon3in
@@ -244,6 +249,7 @@ bcon3i2:
 /* 206de: 00e02016 */
 /* 104de: 00fc32f6 */
 /* 106de: 00e034ce */
+/* 100any: 00fc1ea0 */
 	xdef _bcon0out
 _bcon0out:
 #if BINEXACT
@@ -311,6 +317,7 @@ strobeon:
 /* 206de: 00e0209a */
 /* 104de: 00fc3372 */
 /* 106de: 00e0354a */
+/* 100any: 00fc1f14 */
 	xdef _bcon0in
 _bcon0in:
         moveq.l   #7,d1                         /* get current io enable register contents */
@@ -336,6 +343,7 @@ bcon0in1:
 /* 206de: 00e020bc */
 /* 104de: 00fc3392 */
 /* 106de: 00e0356a */
+/* 100any: 00fc1f34 */
 	xdef _bco0stat
 _bco0stat:
 #if !BINEXACT
@@ -362,6 +370,7 @@ bco0st1:
 /* 206de: 00e020cc */
 /* 104de: 00fc33a6 */
 /* 106de: 00e0357e */
+/* 100any: 00fc1f48 */
 	xdef _bcon6stat
 _bcon6stat:
         lea.l     ABSW(rs232iorec),a0            /* point to rs-232 buffer record */
@@ -384,6 +393,7 @@ bcon6st2:
 /* 206de: 00e020e2 */
 /* 104de: 00fc33be */
 /* 106de: 00e03596 */
+/* 100any: 00fc1f5e */
 	xdef _bcon6in
 _bcon6in:
 bcon6in1:
@@ -404,6 +414,7 @@ bcon6in1:
 /* 206de: 00e0212e */
 /* 104de: 00fc3408 */
 /* 106de: 00e035e0 */
+/* 100any: 00fc1f6e */
 	xdef _bco6stat
 _bco6stat:
         lea.l     ABSW(rs232iorec),a0  /* point to rs-232 buffer record */
@@ -427,6 +438,7 @@ _bco6sret:
 /* 206de: 00e02146 */
 /* 104de: 00fc3422 */
 /* 106de: 00e03608 */
+/* 100any: 00fc1f86 */
 	xdef _bcon6out
 _bcon6out:
         move.w    6(a7),d1
@@ -449,6 +461,7 @@ _bcon6out:
 /* 206de: 00e0216e */
 /* 104de: 00fc344a */
 /* 106de: 00e03622 */
+/* 100any: 00fc1f92 */
 	xdef _bco4stat
 _bco4stat:
         moveq.l   #-1,d0
@@ -473,6 +486,7 @@ bco4st1:
 /* 206de: 00e0217e */
 /* 104de: 00fc345c */
 /* 106de: 00e03634 */
+/* 100any: 00fc1fa4 */
 	xdef _bcon4out
 _bcon4out:
         move.w    6(a7),d1
@@ -506,6 +520,7 @@ ikbd_wr3:
 /* 206de: 00e021a6 */
 /* 104de: 00fc3480 */
 /* 106de: 00e03658 */
+/* 100any: 00fc1fbe */
 		xdef _ikbdws
 _ikbdws:
         moveq.l   #0,d3
@@ -524,6 +539,7 @@ ikbdws1:
 /* 306de: 00e02488 */
 /* 206de: 00e021b8 */
 /* 106de: 00e0366c */
+/* 100any: 00fc1fd2 */
 /* 404: 00e0258e */
 	xdef _bcon2stat
 _bcon2stat:
@@ -544,6 +560,7 @@ bcon2st1:
 /* 206de: 00e021ce */
 /* 104de: 00fc34aa */
 /* 106de: 00e03682 */
+/* 100any: 00fc1fe8 */
 /* 404: 00e025a4 */
 	xdef _bcon2in
 _bcon2in:
@@ -579,6 +596,7 @@ bcon2in2:
 /* 306de: 00e024d2 */
 /* 206de: 00e02202 */
 /* 106de: 00e036b8 */
+/* 100any: 00fc2018 */
 	xdef _bco2stat
 _bco2stat:
         moveq.l   #-1,d0
@@ -590,7 +608,7 @@ _bco2stat:
  * VT52 emulator callback for the bell sound
  *********************************************************/
 /* 104de: 00fc34e4 */
-/* 100de: 00fc201c */
+/* 100any: 00fc201c */
 		xdef ringbell
 ringbell:
         btst      #2,ABSW(_conterm)             /* console bell enabled? */
@@ -626,6 +644,7 @@ soundir8:
 /* 206de: 00e02206 */
 /* 104de: 00fc34fc */
 /* 106de: 00e036bc */
+/* 100any: 00fc21b4 */
 	xdef initmfp
 initmfp:
         lea.l     ABSW2(MFP_REGS),a0            /* init mfp address pointer */
@@ -771,6 +790,7 @@ dummyrts:
 /* 306de: 00e026b2 */
 /* 206de: 00e0237c */
 /* 106de: 00e03816 */
+/* 100any: 00fc230c */
 copymem:
         move.b    (a1)+,(a0)+
         dbf       d0,copymem
@@ -854,6 +874,7 @@ mfpvectr:
 /* 206de: 00e023d4 */
 /* 104de: 00fc36ac */
 /* 106de: 00e0386c */
+/* 100any: 00fc2366 */
 settimer:
         movem.l   d0-d4/a0-a3,-(a7)             /* save all registers to be messed with!! */
         movea.l   #MFP_REGS,a0                  /* set mfp chip address pointer */
@@ -945,6 +966,7 @@ tdrtab:  dc.b $1e,$20,$22,$24
 /* 206de: 00e0247a */
 /* 104de: 00fc3754 */
 /* 106de: 00e03914 */
+/* 100any: 00fc240e */
 	xdef _mfpint
 _mfpint:
         move.w    4(a7),d0
@@ -994,6 +1016,7 @@ initint:
 /* 206de: 00e024a4 */
 /* 104de: 00fc377e */
 /* 106de: 00e0393e */
+/* 100any: 00fc2438 */
 	xdef _jdisint
 _jdisint:
         move.w    4(a7),d0
@@ -1034,6 +1057,7 @@ jdisint1:
 /* 206de: 00e024da */
 /* 104de: 00fc37b8 */
 /* 106de: 00e03978 */
+/* 100any: 00fc2472 */
 	xdef _jenabint
 _jenabint:
         move.w    4(a7),d0
@@ -1182,6 +1206,7 @@ rs232g3:
 /* 205de: 00e02512 */
 /* 104de: 00fc37f2 */
 /* 106de: 00e039b2 */
+/* 100any: 00fc2596 */
 rcvrint:
         movem.l   d0-d3/a0-a2,-(a7)             /* save affected registers */
         bsr       rs232ptr                      /* point to current output buffer record */
@@ -1252,6 +1277,7 @@ rcvrint5:
 /* 205de: 00e025ac */
 /* 104de: 00fc3890 */
 /* 106de: 00e03a50 */
+/* 100any: 00fc2666 */
 txrint:
         movem.l   d2/a0-a2,-(a7)                /* save affected registers */
         bsr        rs232ptr
@@ -1284,6 +1310,7 @@ txrint2:
 /* 206de: 00e025c8 */
 /* 104de: 00fc38aa */
 /* 106de: 00e03a6a */
+/* 100any: 00fc26b2 */
 ctsint:
         movem.l    d2/a0-a2,-(a7)               /* save affected registers */
         bsr        rs232ptr                     /* point to current output buffer record */
@@ -1315,6 +1342,7 @@ ctsint3:
 /* 206de: 00e0260e */
 /* 104de: 00fc38f6 */
 /* 106de: 00e03ab6 */
+/* 100any: 00fc26fa */
 rxerror:
         movem.l   d0/a0-a1,-(a7)                /* save all registers */
         bsr       rs232ptr                     /* set mfp chip address pointer */
@@ -1328,6 +1356,7 @@ rxerror:
 /* 206de: 00e0262e */
 /* 104de: 00fc3918 */
 /* 106de: 00e03ad8 */
+/* 100any: 00fc2718 */
 txerror:
         movem.l   a0-a1,-(a7)
         bsr       rs232ptr                      /* set mfp chip address pointer */
@@ -1343,6 +1372,7 @@ txerror:
 /* 206de: 00e0270a */
 /* 104de: 00fc39fe */
 /* 106de: 00e03bbe */
+/* 100any: 00fc2732 */
 	xdef _iorec
 _iorec:
         moveq.l   #0,d1
@@ -1377,6 +1407,7 @@ iorectab:
 /* 206de: 00e0272a */
 /* 104de: 00fc3a16 */
 /* 106de: 00e03bd6 */
+/* 100any: 00fc275a */
 	xdef _rsconf
 _rsconf:
 /*
@@ -1494,6 +1525,7 @@ wrapout1:
 /* 104de: 00fc3aec */
 /* 106de: 00e03ca0 */
 /* 162de: 00e03ca0 */
+/* 100any: 00fc281c */
 _int_acia:
         movem.l   d0-d3/a0-a3/a5,-(a7)
         /* SETBASEREG */
@@ -1565,6 +1597,7 @@ aciasys2:
 /* 104de: 00fc3b56 */
 /* 106de: 00e03d0a */
 /* 162de: 00e03d0a */
+/* 100any: 00fc2890 */
 aciaread:
         move.b    ACIA_DATA(a1),d0      /* read data byte */
         cmpa.l    #ikbdiorec,a0
@@ -1653,6 +1686,7 @@ kbd_joy:
 /* 206de: 00e03044 */
 /* 104de: 00fc3c70 */
 /* 106de: 00e03e24 */
+/* 100any: 00fc29aa */
 _kbdvec:
         move.b    ABSW(_shifty),d1              /* get current shift state */
         cmpi.b    #$2A,d0                       /* left shift pressed? */
@@ -2412,6 +2446,7 @@ midiread:
 /* 104de: 00fc3fc4 */
 /* 106de: 00e04188 */
 /* 162de: 00e04188 */
+/* 100de: 00fc2ce2 */
 _midivec:
         move.w    tail(a0),d1                   /* get current tail pointer offset */
         addq.w    #1,d1                         /* index = tail + 1 */
@@ -2536,6 +2571,7 @@ coldbend:   dc.w 0
 /* 206de: 00e03498 */
 /* 104de: 00fc407e */
 /* 106de: 00e04242 */
+/* 100de: 00fc2d4c */
 	xdef _giaccess
 _giaccess:
         move.w    4(a7),d0
@@ -2565,6 +2601,7 @@ giacces1:
 /* 306de: 00e02a18 */
 /* 206de: 00e026e2 */
 /* 104de: 00fc39d4 */
+/* 100de: 00fc2d80 */
 rtsoff:
         moveq     #8,d2
         bra.s     onbit
@@ -2576,6 +2613,7 @@ rtsoff:
 /* 206de: 00e026c6 */
 /* 104de: 00fc39b6 */
 /* 106de: 00e03b76 */
+/* 100de: 00fc2d84 */
 rtson:
         moveq.l   #-9,d2
         bra.s     offbit
@@ -2610,6 +2648,7 @@ dtron:
 /* 206de: 00e034d0 */
 /* 104de: 00fc40b6 */
 /* 106de: 00e0427a */
+/* 100de: 00fc2d90 */
 	xdef _ongibit
 _ongibit:
         moveq.l   #0,d2
@@ -2648,6 +2687,7 @@ onbit:
 /* 206de: 00e034f8 */
 /* 104de: 00fc40dc */
 /* 106de: 00e042a0 */
+/* 100de: 00fc2db6 */
 	xdef _offgibit
 _offgibit:
         moveq.l   #0,d2
@@ -2710,6 +2750,7 @@ offbit:
 /* 206de: 00e03520 */
 /* 104de: 00fc4102 */
 /* 106de: 00e042c6 */
+/* 100de: 00fc2ddc */
 /* first we determine if the init is for a absolute, relative or keycode */
 /* mouse action. */
 	xdef _initmouse
@@ -2822,6 +2863,7 @@ setmouse:
 /* 206de: 00e035e8 */
 /* 104de: 00fc41cc */
 /* 106de: 00e04390 */
+/* 100de: 00fc2ea6 */
 	xdef _xbtimer
 _xbtimer:
         moveq.l   #0,d0
@@ -2870,6 +2912,7 @@ xbtimtab:  dc.b 13,8,5,4
 /* 206de: 00e03622 */
 /* 104de: 00fc4206 */
 /* 106de: 00e043ca */
+/* 100de: 00fc2ee2 */
 /* 404: 00e03b64 */
 	xdef _keytbl
 _keytbl:
@@ -2904,6 +2947,7 @@ _keytbl3:
 /* 206de: 00e0364e */
 /* 104de: 00fc4232 */
 /* 106de: 00e043f6 */
+/* 100de: 00fc2f0e */
 	xdef _bioskeys
 _bioskeys:
         move.l    #keytblnorm,ABSW(_curkeytbl)
@@ -2926,6 +2970,7 @@ _bioskeys:
 /* 206de: 00e0366c */
 /* 104de: 00fc424c */
 /* 106de: 00e04410 */
+/* 100de: 00fc2f28 */
 	xdef _dosound
 _dosound:
         move.l    ABSW(_sndtable),d0            /* return current status in D0.L */
@@ -2954,6 +2999,7 @@ dosound1:
 /* 206de: 00e03680 */
 /* 104de: 00fc4260 */
 /* 106de: 00e04424 */
+/* 100de: 00fc2f3c */
 	xdef _setprt
 _setprt:
         move.w    ABSW(_prtconfig),d0           /* get current config word before we change it */
@@ -2984,6 +3030,7 @@ setprt1:
 /* 206de: 00e03692 */
 /* 104de: 00fc4272 */
 /* 106de: 00e04436 */
+/* 100de: 00fc2f4e */
 	xdef _kbrate
 _kbrate:
         move.w    ABSW(kb_initial),d0           /* get current initial/repeat values */
@@ -3033,6 +3080,7 @@ kbrate1:
 /* 206de: 00e036b4 */
 /* 104de: 00fc4294 */
 /* 106de: 00e04458 */
+/* 100de: 00fc2f70 */
 	xdef _kbdvbase
 _kbdvbase:
         move.l    #midivec,d0
@@ -3060,6 +3108,7 @@ _kbdvbase:
 /* 206de: 00e036bc */
 /* 104de: 00fc429c */
 /* 106de: 00e04460 */
+/* 100de: 00fc2f78 */
 timercint:
         addq.l    #1,_hz_200                    /* increment raw tick counter */
         rol.w     _tim_c_sieve                  /* rotate divisor bits */

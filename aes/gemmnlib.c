@@ -67,6 +67,7 @@ int16_t menu_down PROTO((LPTREE tree, int16_t ititle));
 /* 306de: 00e1ec14 */
 /* 104de: 00fe8110 */
 /* 106de: 00e23ea6 */
+/* 100de: 00fe86ae */
 VOID rect_change(P(LPTREE) tree, P(MOBLK *) prmob, P(int16_t) iob, P(int16_t) x)
 PP(LPTREE tree;)
 PP(MOBLK *prmob;)
@@ -92,6 +93,7 @@ PP(int16_t x;)
 /* 306de: 00e1ec3a */
 /* 104de: 00fe1f60 */
 /* 106de: 00e23ecc */
+/* 100de: 00fe86ce */
 uint16_t do_chg(P(LPTREE) tree, P(int16_t) iitem, P(uint16_t) chgvalue, P(int16_t) dochg, P(int16_t) dodraw, P(int16_t) chkdisabled)
 PP(register LPTREE tree;)						/* tree that holds item */
 PP(int16_t iitem;)								/* item to affect   */
@@ -126,6 +128,7 @@ PP(int16_t chkdisabled;)						/* only if item enabled */
 /* 306de: 00e1ecb0 */
 /* 104de: 00fe1fc6 */
 /* 106de: 00e23f42 */
+/* 100de: 00fe8734 */
 int16_t menu_set(P(LPTREE) tree, P(int16_t) last_item, P(int16_t) cur_item, P(int16_t) setit)
 PP(LPTREE tree;)
 PP(register int16_t last_item;)
@@ -149,6 +152,7 @@ PP(int16_t setit;)
 /* 306de: 00e1ecf4 */
 /* 104de: 00fe2000 */
 /* 106de: 00e23f86 */
+/* 100de: 00fe8770 */
 VOID menu_sr(P(int16_t) saveit, P(LPTREE) tree, P(int16_t) imenu)
 PP(int16_t saveit;)
 PP(LPTREE tree;)
@@ -175,6 +179,7 @@ PP(int16_t imenu;)
 /* 306de: 00e1ed46 */
 /* 104de: 00fe2040 */
 /* 106de: 00e23fd8 */
+/* 100de: 00fe87ae */
 int16_t menu_down(P(LPTREE) tree, P(int16_t) ititle)
 PP(register LPTREE tree;)
 PP(register int16_t ititle;)
@@ -200,6 +205,7 @@ PP(register int16_t ititle;)
 /* 306de: 00e1edce */
 /* 104de: 00fe20b8 */
 /* 106de: 00e24060 */
+/* 100de: 00fe882a */
 int16_t mn_do(P(int16_t *) ptitle, P(int16_t *) pitem)
 PP(int16_t *ptitle;)
 PP(int16_t *pitem;)
@@ -335,6 +341,7 @@ PP(int16_t *pitem;)
 /* 306de: 00e1f098 */
 /* 104de: 00fe2348 */
 /* 106de: 00e2432a */ 
+/* 100de: 00fe8ac2 */
 VOID mn_bar(P(LPTREE) tree, P(int16_t) showit)
 PP(register LPTREE tree;)
 PP(int16_t showit;)
@@ -421,6 +428,7 @@ PP(int16_t showit;)
  */
 /* 104de: 00fe24d2 */
 /* 106de: 00e244e4 */
+/* 100de: 00fe8c3c */
 VOID mn_clsda(NOTHING)
 {
 	register int16_t i;
@@ -440,6 +448,7 @@ VOID mn_clsda(NOTHING)
 /* 306de: 00e1f2b6 */
 /* 104de: 00fe250e */
 /* 106de: 00e2452c */
+/* 100de: 00fe8c7e */
 int16_t mn_register(P(int16_t) pid, P(char *) pstr)
 PP(register int16_t pid;)
 PP(register intptr_t pstr;)

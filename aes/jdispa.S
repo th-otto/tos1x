@@ -79,6 +79,7 @@ longframe	equ $59e			; BIOS system variable...
  *                                                               *
  *****************************************************************/
 /* 104de: 00fdce42 */
+/* 100de: 00fe2bf2 */
 	xdef	_dsptch
 _dsptch: ds.b 0
 	xdef	dsptch
@@ -100,6 +101,7 @@ dsp2:
 /* 306de: 00e2588a */
 /* 104de: 00fdce56 */
 /* 106de: 00e1e436 */
+/* 100de: 00fe2c06 */
 	xdef	_cli
 _cli: ds.b 0
 	xdef	cli
@@ -114,6 +116,7 @@ cli: ds.b 0
 /* 306de: 00e25896 */
 /* 104de: 00fdce62 */
 /* 106de: 00e1e442 */
+/* 100de: 00fe2c12 */
 	xdef	_sti
 _sti: ds.b 0
 	xdef	sti
@@ -127,6 +130,7 @@ sti: ds.b 0
 /* 306de: 00e2589e */
 /* 104de: 00fdce6a */
 /* 106de: 00e1e44a */
+/* 100de: 00fe2c1a */
 	xdef	_hcli
 _hcli:
 	ori	#$700,sr
@@ -138,6 +142,7 @@ _hcli:
 /* 306de: 00e258a4 */
 /* 104de: 00fdce70 */
 /* 106de: 00e1e450 */
+/* 100de: 00fe2c20 */
 	xdef	_hsti
 _hsti:
 	andi	#$f8ff,sr
@@ -253,6 +258,7 @@ _switchto:
 /* 306de: 00e25934 */
 /* 104de: 00fdce76 */
 /* 106de: 00e1e4e2 */
+/* 100de: 00fe2c26 */
 	xdef	_gotopgm
 _gotopgm:
 	move	sr,savsr		; save sr
@@ -281,6 +287,7 @@ g_1:
  * Now save the context of the machine
  */
 #if TOSVERSION <= 0x104
+/* 100de: 00fe2c4a */
 	xdef	_savestate
 _savestate:
 	move	sr,srsave		; save interrupts
@@ -320,6 +327,7 @@ savest1:
 
 /* 306de: 00e25908 */
 /* 104de: 00fdcef6 */
+/* 100de: 00fe2ca6 */
 	xdef	_switchto
 _switchto:
 	move	sr,srsave
@@ -347,6 +355,7 @@ sw1:
 	clr.w      d0
 	rts
 
+	/* 100de: 00fe2ce2 */
 	xdef _setdsss
 _setdsss:
 	movea.l    4(a7),a1
@@ -369,6 +378,7 @@ _setdsss:
  *****************************************************************/
 /* 104de: 00fdcf22 */
 /* 106de: 00e1e510 */
+/* 100de: 00fe2cf0 */
 	xdef	_psetup
 _psetup:
 	move	sr,psetsr		; save interrupts

@@ -74,6 +74,7 @@ LINEF_STATIC CARTNODE *cart_find PROTO((BOOLEAN fill));
 /* 306de: 00e230a4 */
 /* 104de: 00fe652a */
 /* 106de: 00e28c5c */
+/* 100de: 00fed384 */
 BOOLEAN cart_init(NOTHING)
 {
 	cart_ptr = ((CARTNODE *) CART_BASE);
@@ -91,6 +92,7 @@ BOOLEAN cart_init(NOTHING)
 
 
 
+/* 100de: 00fed3a0 */
 LINEF_STATIC VOID cart_alloc(P(CARTNODE *) pcart)
 PP(register CARTNODE *pcart;)
 {
@@ -131,6 +133,7 @@ PP(register CARTNODE *pcart;)
 /* 306de: 00e230de */
 /* 104de: 00fe6562 */
 /* 106de: 00e28c96 */
+/* 100de: 00fed3d8 */
 LINEF_STATIC CARTNODE *cart_find(P(BOOLEAN) fill)
 PP(BOOLEAN fill;)
 {
@@ -158,6 +161,7 @@ PP(BOOLEAN fill;)
 /* 306de: 00e2314e */
 /* 104de: 00fe65c2 */
 /* 106de: 00e28d06 */
+/* 100de: 00fed438 */
 BOOLEAN cart_sfirst(P(char *) pdta, P(int16_t) attr)
 PP(char *pdta;)
 PP(int16_t attr;)
@@ -172,6 +176,7 @@ PP(int16_t attr;)
 /* 306de: 00e23164 */
 /* 104de: 00fe65d4 */
 /* 106de: 00e28d1c */
+/* 100de: 00fed4a4 */
 BOOLEAN cart_snext(NOTHING)
 {
 	if (cart_find(TRUE))
@@ -187,6 +192,7 @@ BOOLEAN cart_snext(NOTHING)
 /* 306de: 00e23188 */
 /* 104de: 00fe65f4 */
 /* 106de: 00e28d40 */
+/* 100de: 00fed4d6 */
 int16_t ld_cartacc(NOTHING)
 {
 	register char *psp;
@@ -216,6 +222,7 @@ int16_t ld_cartacc(NOTHING)
 /* 306de: 00e2320a */
 /* 104de: 00fe665a */
 /* 106de: 00e28dc2 */
+/* 100de: 00fed544 */
 BOOLEAN cart_exec(P(const char *) pcmd, P(const char *) ptail)
 PP(const char *pcmd;)
 PP(const char *ptail;)

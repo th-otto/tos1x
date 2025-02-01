@@ -94,6 +94,7 @@ VOID bhdv_init(NOTHING)
 /* 306de: 00e05652 */
 /* 104de: 00fc1732 */
 /* 106de: 00e0190a */
+/* 100any: 00fc0ddc */
 ERROR dbmsg(P(int16_t) rsrvd, P(int16_t) msg_num, P(int32_t) msg_arg)
 PP(int16_t rsrvd;)
 PP(int16_t msg_num;)
@@ -113,6 +114,7 @@ PP(int32_t msg_arg;)
 /* 306de: 00e0565c */
 /* 104de: 00fc173c */
 /* 106de: 00e01914 */
+/* 100any: 00fc0de6 */
 /* 404: 00e0480c */
 BPB *bhdv_getbpb(P(int16_t) dev)
 PP(int16_t dev;)
@@ -204,6 +206,7 @@ PP(int16_t dev;)
 /* 306de: 00e058ae */
 /* 104de: 00fc18ec */
 /* 106de: 00e01ac4 */
+/* 100any: 00fc0f96 */
 /* 404: 00e04a6c */
 int16_t bhdv_mediach(P(int16_t) dev)
 PP(int16_t dev;)
@@ -229,6 +232,7 @@ PP(int16_t dev;)
 
 /* 306de: 00e05918 */
 /* 104de: 00fc1956 */
+/* 100any: 00fc1000 */
 static int ckmediach(P(int16_t) _dev)
 PP(int16_t _dev;)
 {
@@ -279,6 +283,7 @@ PP(int16_t _dev;)
 /* 306de: 00e05a96 */
 /* 104de: 00fc1a24 */
 /* 106de: 00e01bfc */
+/* 100any: 00fc10d2 */
 /* 404: 00e04c5c */
 ERROR bhdv_rwabs(P(int16_t) rw, P(char *) buf, P(int16_t) cnt, P(RECNO) recnr, P(int16_t) dev, P(LRECNO) lrecnr)
 PP(int16_t rw;)
@@ -319,6 +324,7 @@ PP(LRECNO lrecnr;) /* not supported by TOS */
 /* 306de: 00e05b1e */
 /* 104de: 00fc1aac */
 /* 106de: 00e01c84 */
+/* 100any: 00fc115c */
 static ERROR dorwabs(P(int16_t) rw, P(char *) buf, P(RECNO) recnr, P(int16_t) dev, P(int16_t) cnt)
 PP(int16_t rw;)
 PP(char *buf;)
@@ -408,6 +414,7 @@ PP(int16_t cnt;)
 /* 306de: 00e05d38 */
 /* 104de: 00fc1c76 */
 /* 106de: 00e01e4e */
+/* 100any: 00fc132c */
 long random(NOTHING)
 {
 	if (rseed == 0)
@@ -426,6 +433,7 @@ long random(NOTHING)
 /* 306de: 00e05d88 */
 /* 104de: 00fc1cc6 */
 /* 106de: 00e01e9e */
+/* 100any: 00fc137c */
 /* 404: 00e04f54 */
 int16_t bhdv_boot(NOTHING)
 {
@@ -498,6 +506,7 @@ static char const proto_data[NUM_PROTOBT_ENTRIES * 19] = {
 /* 306de: 00e05e04 */
 /* 104de: 00fc1d42 */
 /* 106de: 00e01f1a */
+/* 100any: 00fc1414 */
 VOID protobt(P(VOIDPTR) buf, P(int32_t) serialno, P(int16_t) disktype, P(int16_t) execflag)
 PP(VOIDPTR buf;)
 PP(int32_t serialno;)
@@ -553,6 +562,7 @@ PP(int16_t execflag;)
 
 /* 306de: 00e05ef8 */
 /* 104de: 00fc1e2e */
+/* 100any: 00fc1500 */
 static int16_t sectsum(P(const int16_t *) buf, P(int) count)
 PP(const int16_t *buf;)
 PP(int count;)
@@ -567,6 +577,7 @@ PP(int count;)
 
 /* 306de: 00e05f22 */
 /* 104de: 00fc1e5e */
+/* 100any: 00fc1530 */
 static int16_t getiword(P(const uint8_t *) addr)
 PP(const uint8_t *addr;)
 {

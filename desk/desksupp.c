@@ -21,6 +21,7 @@
 
 /* 104de: 00fd9fde */
 /* 106de: 00e1ae8e */
+/* 100de: 00fdfe8e */
 BOOLEAN pro_chdir(P(int) drv, P(const char *) path)
 PP(int drv;)
 PP(const char *path;)
@@ -42,6 +43,7 @@ PP(const char *path;)
 }
 
 
+/* 100de: 00fdfede */
 BOOLEAN pro_cmd(P(char *) psubcmd, P(char *) psubtail, P(BOOLEAN) exitflag, P(int16_t) taillen)
 PP(char *psubcmd;)
 PP(char *psubtail;)
@@ -63,6 +65,7 @@ PP(int16_t taillen;)
 
 /* 104de: 00fda066 */
 /* 106de: 00e1af28 */
+/* 100de: 00fdff18 */
 int pro_run(P(int16_t) isgraf, P(int16_t) iscr, P(int16_t) wh, P(int16_t) curr)
 PP(int16_t isgraf;)
 PP(int16_t iscr;)
@@ -89,6 +92,7 @@ PP(int16_t curr;)
 }
 
 
+/* 100de: 00fdff98 */
 int16_t pro_exec(P(int16_t) isgraf, P(int16_t) isover, P(char *) pcmd, P(char *) ptail)
 PP(int16_t isgraf;)
 PP(int16_t isover;)

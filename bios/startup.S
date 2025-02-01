@@ -145,7 +145,7 @@ _os_conf:               /* Flag for PAL version + country */
     dc.w   (CTRY_SA<<1)+OS_PAL
 #else
 #if ((OS_COUNTRY == CTRY_DK) | (OS_COUNTRY == CTRY_FI)) & (TOSVERSION == 0x100)
-	/* hack for danish/finish versions: apparently language code not patched */
+	/* hack for danish/finnish versions: apparently language code not patched */
     dc.w   (CTRY_DE<<1)+OS_PAL
 #else
     dc.w   (OS_COUNTRY<<1)+OS_PAL
@@ -2341,7 +2341,7 @@ autosca4:
 /* 206de: 00e013b2 */
 /* 104de: 00fc0da2 */
 /* 106de: 00e00f3e */
-/* 100fr: 00fc0cc4 */
+/* 100any: 00fc0cc4 */
 bombimage:
 #if TP_16 == 0 /* Bomb */
         dc.b $06,$00,$29,$00,$00,$80,$48,$40,$11,$f0,$01,$f0,$07,$fc,$0f,$fe
@@ -2374,6 +2374,7 @@ bombimage:
 /* 206de: 00e013d2 */
 /* 104de: 00fc0dc2 */
 /* 106de: 00e00f5e */
+/* 100any: 00fc0ce4 */
 waitvbl:    lea       MFP_TBDR,a0           /* a0 -> timer B data register */
             lea       MFP_TBCR,a1           /* a1 -> timer B control register */
             move.b    #$10,(a1)             /* reset timer B */
@@ -2408,7 +2409,7 @@ waitvbl4:   cmp.b     (a0),d4
 /* 206de: 00e01408 */
 /* 104de: 00fc0dfe */
 /* 106de: 00e00f9a */
-/* 100fr: 00fc0d20 */
+/* 100any: 00fc0d20 */
 run_reset_resident:
         movea.l   _phystop,a0                   /* start at the top of the address space */
 run_res1:

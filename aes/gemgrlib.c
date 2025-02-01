@@ -42,6 +42,7 @@
  *  Return TRUE as long as the mouse is down.  Block until the
  *  mouse moves into or out of the specified rectangle.
  */
+/* 100de: 00fe790c */
 BOOLEAN gr_stilldn(P(int16_t) out, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t out;)
 PP(int16_t x;)
@@ -62,6 +63,7 @@ PP(int16_t h;)
 }
 
 
+/* 100de: 00fe7942 */
 LINEF_STATIC VOID gr_setup(P(int16_t) color)
 PP(int16_t color;)
 {
@@ -70,6 +72,7 @@ PP(int16_t color;)
 }
 
 
+/* 100de: 00fe795e */
 VOID gr_clamp(P(int16_t) xorigin, P(int16_t) yorigin, P(int16_t) wmin, P(int16_t) hmin, P(int16_t *) pneww, P(int16_t *) pnewh)
 PP(int16_t xorigin;)
 PP(int16_t yorigin;)
@@ -90,6 +93,7 @@ PP(int16_t *pnewh;)
 /*
  *   gr_scale
  */
+/* 100de: 00fe79a8 */
 LINEF_STATIC VOID gr_scale(P(int16_t) xdist, P(int16_t) ydist, P(int16_t *) pcnt, P(int16_t *) pxstep, P(int16_t *) pystep)
 PP(register int16_t xdist;)
 PP(register int16_t ydist;)
@@ -123,6 +127,7 @@ PP(register int16_t *pystep;)
  *
  *  gr_stepcalc(po->g_w, po->g_h, pt, &cx, &cy, &cnt, &xstep, &ystep);
  */
+/* 100de: 00fe7a16 */
 LINEF_STATIC VOID gr_stepcalc(P(int16_t) orgw, P(int16_t) orgh, P(GRECT *)pt, P(int16_t *) pcx, P(int16_t *) pcy, P(int16_t *) pcnt, P(int16_t *) pxstep, P(int16_t *) pystep)
 PP(int16_t orgw;)
 PP(int16_t orgh;)
@@ -157,6 +162,7 @@ PP(int16_t *pystep;)
  *		.w	dowdht	+20
  *	exit:	none
  */
+/* 100de: 00fe7a7e */
 LINEF_STATIC VOID gr_xor(P(int16_t) clipped, P(int16_t) cnt, P(int16_t) cx, P(int16_t) cy, P(int16_t) cw, P(int16_t) ch, P(int16_t) xstep, P(int16_t) ystep, P(int16_t) dowdht)
 PP(int16_t clipped;)
 PP(int16_t cnt;)
@@ -189,6 +195,7 @@ PP(int16_t dowdht;)
 /*
  * gr_draw
  */
+/* 100de: 00fe7ad6 */
 LINEF_STATIC VOID gr_draw(P(int16_t) have2box, P(GRECT *) po, P(GRECT *) poff)
 PP(int16_t have2box;)
 PP(register GRECT *po;)
@@ -219,6 +226,7 @@ PP(register GRECT *poff;)
  *	exit:	d0 = down
  *
  */
+/* 100de: 00fe7b28 */
 LINEF_STATIC int16_t gr_wait(P(GRECT *) po, P(GRECT *) poff, P(int16_t) mx, P(int16_t) my)
 PP(register GRECT *po;)
 PP(register GRECT *poff;)
@@ -253,6 +261,7 @@ PP(int16_t my;)
  *   another corner based on mouse movement until the button comes
  *   up.  Also draw a second box offset from the stretching box.
  */
+/* 100de: 00fe7b8a */
 VOID gr_rubwind(P(int16_t) xorigin, P(int16_t) yorigin, P(int16_t) wmin, P(int16_t) hmin, P(GRECT *) poff, P(int16_t *) pwend, P(int16_t *) phend)
 PP(int16_t xorigin;)
 PP(int16_t yorigin;)
@@ -292,6 +301,7 @@ PP(int16_t *phend;)
  *   another corner based on mouse movement until the button comes
  *   up.  This is also called a rubber-band box.
  */
+/* 100de: 00fe7c22 */
 VOID gr_rubbox(P(int16_t) xorigin, P(int16_t) yorigin, P(int16_t) wmin, P(int16_t) hmin, P(int16_t *) pwend, P(int16_t *) phend)
 PP(int16_t xorigin;)
 PP(int16_t yorigin;)
@@ -318,6 +328,7 @@ PP(int16_t *phend;)
  *	rectangle.
  *
  */
+/* 100de: 00fe7c4e */
 VOID gr_dragbox(P(int16_t) w, P(int16_t) h, P(int16_t) sx, P(int16_t) sy, P(GRECT *) pc, P(int16_t *) pdx, P(int16_t *) pdy)
 PP(int16_t w;)
 PP(int16_t h;)
@@ -361,6 +372,7 @@ PP(int16_t *pdy;)
  *	Draw a moving XOR box(w,h) that moves from a point whose upper
  *	left corner is at src_x, src_y to a point at dst_x, dst_y
  */
+/* 100de: 00fe7d1c */
 VOID gr_movebox(P(int16_t) w, P(int16_t) h, P(int16_t) srcx, P(int16_t) srcy, P(int16_t) dstx, P(int16_t) dsty)
 PP(int16_t w;)
 PP(int16_t h;)
@@ -396,6 +408,7 @@ PP(int16_t dsty;)
  *	size of the rectangle.
  */
 #if !TP_30 /* DRAW_BOXES */
+/* 100de: 00fe7db2 */
 VOID gr_growbox(P(GRECT *) po, P(GRECT *) pt)
 PP(register GRECT *po;)
 PP(GRECT *pt;)
@@ -424,6 +437,7 @@ PP(GRECT *pt;)
  *	origin point.
  */
 #if !TP_30 /* DRAW_BOXES */
+/* 100de: 00fe7e46 */
 VOID gr_shrinkbox(P(GRECT *) po, P(GRECT *) pt)
 PP(register GRECT *po;)
 PP(register GRECT *pt;)
@@ -449,6 +463,7 @@ PP(register GRECT *pt;)
  *	gr_watchbox
  *
  */
+/* 100de: 00fe7ee2 */
 int16_t gr_watchbox(P(OBJECT *) tree, P(int16_t) obj, P(int16_t) instate, P(int16_t) outstate)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -477,6 +492,7 @@ PP(int16_t outstate;)
 /*
  * AES #76 - graf_slidebox - Graphics slide box
  */
+/* 100de: 00fe7f50 */
 int16_t gr_slidebox(P(LPTREE) tree, P(int16_t) parent, P(int16_t) obj, P(int16_t) isvert)
 PP(register LPTREE tree;)
 PP(int16_t parent;)
@@ -514,6 +530,7 @@ PP(int16_t isvert;)
 /*
  * AES #79 - graf_mkstate - Graphics mouse and keyboard status
  */
+/* 100de: 00fe7fe0 */
 int16_t gr_mkstate(P(int16_t *) pmx, P(int16_t *) pmy, P(int16_t *) pmstat, P(int16_t *) pkstat)
 PP(int16_t *pmx;)
 PP(int16_t *pmy;)

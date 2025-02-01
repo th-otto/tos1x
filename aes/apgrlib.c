@@ -37,6 +37,7 @@
  *		gr_inside(pt,th)
  *
  *************************************************************************/
+ /* 100de: 00fd952a */
 VOID gr_inside(P(GRECT *) pt, P(int16_t) th)
 PP(register GRECT *pt;)
 PP(register int16_t th;)
@@ -53,6 +54,7 @@ PP(register int16_t th;)
  *
  **************************************************************************/
 
+/* 100de: 00fd9552 */
 VOID gr_rect(P(uint16_t) icolor, P(uint16_t) ipattern, P(GRECT *) pt)
 PP(uint16_t icolor;)
 PP(register uint16_t ipattern;)
@@ -80,6 +82,7 @@ PP(register GRECT *pt;)
  *	to account for its justification.  The number of characters
  *	in the string is also returned.
  */
+/* 100de: 00fd95a0 */
 int16_t gr_just(P(int16_t) just, P(int16_t) font, P(const char *) ptext, P(int16_t) w, P(int16_t) h, P(GRECT *) pt)
 PP(int16_t just;)
 PP(int16_t font;)
@@ -123,6 +126,7 @@ PP(register GRECT *pt;)
 /*
  *	Routine to draw a string of graphic text.
  */
+/* 100de: 00fd9618 */
 VOID gr_gtext(P(int16_t) just, P(int16_t) font, P(const char *) ptext, P(GRECT *) pt, P(int16_t) mode)
 PP(int16_t just;)
 PP(int16_t font;)
@@ -151,6 +155,7 @@ PP(int16_t mode;)
  *	Routine to crack out the border color, text color, inside pattern,
  *	and inside color from a single color information word.
  */
+/* 100de: 00fd9670 */
 VOID gr_crack(P(uint16_t) color, P(int16_t *) pbc, P(int16_t *) ptc, P(int16_t *) pip, P(int16_t *) pic, P(int16_t *) pmd)
 PP(register uint16_t color;)
 PP(int16_t *pbc;)
@@ -187,6 +192,7 @@ PP(register int16_t *pmd;)
  *	Routine to draw an icon, which is a graphic image with a text
  *	string underneath it.
  */
+/* 100de: 00fd96e0 */
 VOID gr_gicon(P(int16_t) state, P(int16_t *) pmask, P(int16_t *) pdata, P(const char *) ptext, P(int16_t) ch, P(int16_t) chx, P(int16_t) chy, P(GRECT *) pi, P(GRECT *) pt)
 PP(register int16_t state;)
 PP(int16_t *pmask;)
@@ -242,6 +248,7 @@ PP(register GRECT *pt;)
  *	Routine to draw a box of a certain thickness using the current
  *	attribute settings
  */
+/* 100de: 00fd9806 */
 VOID gr_box(P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(int16_t) th)
 PP(int16_t x;)
 PP(int16_t y;)

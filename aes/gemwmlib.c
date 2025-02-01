@@ -126,6 +126,7 @@ LINEF_STATIC BOOLEAN w_union PROTO((ORECT *po, GRECT *pt));
 /* 306de: 00e211cc */
 /* 104de: 00fe44ec */
 /* 106de: 00e2696e */
+/* 100de: 00feafd8 */
 LINEF_STATIC VOID w_nilit(P(int16_t) num, P(OBJECT *) olist)
 PP(register int16_t num;)
 PP(OBJECT * olist;)
@@ -146,6 +147,7 @@ PP(OBJECT * olist;)
  */
 /* 104de: 00fe4534 */
 /* 106de: 00e269be */
+/* 100de: 00feb020 */
 LINEF_STATIC VOID w_obadd(P(OBJECT *) olist, P(int16_t) parent, P(int16_t) child)
 PP(OBJECT *olist;)
 PP(register int16_t parent;)
@@ -171,6 +173,7 @@ PP(register int16_t child;)
 /* 306de: 00e21296 */
 /* 104de: 00fe45a6 */
 /* 106de: 00e26a38 */
+/* 100de: 00feb092 */
 LINEF_STATIC VOID w_setup(P(PD *) ppd, P(int16_t) w_handle, P(int16_t) kind)
 PP(PD *ppd;)
 PP(int16_t w_handle;)
@@ -194,6 +197,7 @@ PP(int16_t kind;)
 /* 306de: 00e21328 */
 /* 104de: 00fe45ea */
 /* 106de: 00e26a84 */
+/* 100de: 00feb0d6 */
 LINEF_STATIC GRECT *w_getxptr(P(int16_t) which, P(int16_t) w_handle)
 PP(int16_t which;)
 PP(register int16_t w_handle;)
@@ -235,6 +239,7 @@ PP(register int16_t w_handle;)
 /* 306de: 00e213a6 */
 /* 104de: 00fe4660 */
 /* 106de: 00e26b02 */
+/* 100de: 00feb158 */
 VOID w_getsize(P(int16_t) which, P(int16_t) w_handle, P(GRECT *)pt)
 PP(register int16_t which;)
 PP(int16_t w_handle;)
@@ -252,6 +257,7 @@ PP(register GRECT *pt;)
 }
 
 
+/* 100de: 00feb196 */
 LINEF_STATIC VOID w_setsize(P(int16_t) which, P(int16_t) w_handle, P(GRECT *)pt)
 PP(int16_t which;)
 PP(int16_t w_handle;)
@@ -267,6 +273,7 @@ PP(GRECT *pt;)
 /* 306de: 00e21484 */
 /* 104de: 00fe46b6 */
 /* 106de: 00e26b6e */
+/* 100de: 00feb1b2 */
 LINEF_STATIC VOID w_adjust(P(int16_t) parent, P(int16_t) obj, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(int16_t parent;)
 PP(register int16_t obj;)
@@ -296,6 +303,7 @@ PP(int16_t h;)
 /* 306de: 00e214d4 */
 /* 104de: 00fe4716 */
 /* 106de: 00e26bdc */
+/* 100de: 00feb216 */
 LINEF_STATIC VOID w_hvassign(
 	P(BOOLEAN) isvert, P(int16_t) parent, P(int16_t) obj,
 	P(int16_t) vx, P(int16_t) vy,
@@ -324,6 +332,7 @@ PP(int16_t h;)
 /* 306de: 00e21528 */
 /* 104de: 00fe4760 */
 /* 106de: 00e26c32 */
+/* 100de: 00feb26c */
 LINEF_STATIC VOID do_walk(P(int16_t) wh, P(OBJECT *) tree, P(int16_t) obj, P(int16_t) depth, P(GRECT *) pc)
 PP(register int16_t wh;)
 PP(OBJECT *tree;)
@@ -372,6 +381,7 @@ PP(register GRECT *pc;)
 /* 306de: 00e215e0 */
 /* 104de: 00fe47fa */
 /* 106de: 00e26cea */
+/* 100de: 00feb2f2 */
 VOID w_drawdesk(P(GRECT *) dirty)
 PP(register GRECT *dirty;)							/* rectangle of dirty area */
 {
@@ -404,6 +414,7 @@ PP(register GRECT *dirty;)							/* rectangle of dirty area */
 
 /* 104de: 00fe4842 */
 /* 106de: 00e26d3c */
+/* 100de: 00feb33c */
 LINEF_STATIC VOID w_cpwalk(P(int16_t) wh, P(int16_t) obj, P(int16_t) depth, P(BOOLEAN) usetrue)
 PP(register int16_t wh;)
 PP(int16_t obj;)
@@ -434,6 +445,7 @@ PP(BOOLEAN usetrue;)
 /* 306de: 00e21690 */
 /* 104de: 00fe488e */
 /* 106de: 00e26d9a */
+/* 100de: 00feb38e */
 LINEF_STATIC VOID w_strchg(P(int16_t) w_handle, P(int16_t) obj, P(intptr_t) pstring)
 PP(register int16_t w_handle;)
 PP(register int16_t obj;)
@@ -451,6 +463,7 @@ PP(register intptr_t pstring;)
 /* 306de: 00e216f4 */
 /* 104de: 00fe48e8 */
 /* 106de: 00e26dfe */
+/* 100de: 00feb3f0 */
 LINEF_STATIC VOID w_barcalc(P(BOOLEAN) isvert, P(int16_t) space, P(int16_t) sl_value, P(int16_t) sl_size, P(int16_t) min_sld, P(GRECT *)ptv, P(GRECT *) pth)
 PP(BOOLEAN isvert;)
 PP(register int16_t space;)
@@ -477,6 +490,7 @@ PP(GRECT *pth;)
 /* 306de: 00e21790 */
 /* 104de: 00fe4968 */
 /* 106de: 00e26e9a */
+/* 100de: 00feb474 */
 LINEF_STATIC VOID w_bldbar(P(uint16_t) kind, P(BOOLEAN) istop,
 	P(int16_t) w_bar,
 #if AESVERSION >= 0x200
@@ -600,6 +614,7 @@ PP(register int16_t h;)
 
 /* 104de: 00fe4b64 */
 /* 106de: 00e270aa */
+/* 100de: 00feb67e */
 VOID w_setactive(NOTHING)
 {
 	GRECT d;
@@ -616,6 +631,7 @@ VOID w_setactive(NOTHING)
 /* 306de: 00e21a70 */
 /* 104de: 00fe4bac */
 /* 106de: 00e27100 */
+/* 100de: 00feb6c6 */
 VOID w_bldactive(P(int16_t) w_handle)
 PP(register int16_t w_handle;)
 {
@@ -772,6 +788,7 @@ PP(register int16_t w_handle;)
 /* 306de: 00e21daa */
 /* 104de: 00fe4e6c */
 /* 106de: 00e273e4 */
+/* 100de: 00feba16 */
 VOID ap_sendmsg(P(int16_t *) ap_msg, P(int16_t) type, P(int16_t) towhom, P(int16_t) w3, P(int16_t) w4, P(int16_t) w5, P(int16_t) w6, P(int16_t) w7)
 PP(int16_t *ap_msg;)
 PP(int16_t type;)
@@ -798,6 +815,7 @@ PP(int16_t w7;)
 /* 306de: 00e21e1c */
 /* 104de: 00fe4ed8 */
 /* 106de: 00e27456 */
+/* 100de: 00feba82 */
 LINEF_STATIC VOID w_redraw(P(int16_t) w_handle, P(GRECT *) dirty)
 PP(register int16_t w_handle;)
 PP(GRECT *dirty;)
@@ -832,6 +850,7 @@ PP(GRECT *dirty;)
 /* 306de: 00e21ec0 */
 /* 104de: 00fe4f62 */
 /* 106de: 00e274fa */
+/* 100de: 00febb2e */
 LINEF_STATIC BOOLEAN w_mvfix(P(GRECT *) ps, P(GRECT *) pd)
 PP(register GRECT *ps;)
 PP(register GRECT *pd;)
@@ -861,6 +880,7 @@ PP(register GRECT *pd;)
 /* 306de: 00e21efe */
 /* 104de: 00fe4f94 */
 /* 106de: 00e27538 */
+/* 100de: 00febb60 */
 LINEF_STATIC BOOLEAN w_move(P(int16_t) w_handle, P(int16_t *) pstop, P(GRECT *) prc)
 PP(register int16_t w_handle;)
 PP(register int16_t *pstop;)
@@ -940,6 +960,7 @@ PP(GRECT *prc;)
 /* 306de: 00e22038 */
 /* 104de: 00fe50a8 */
 /* 106de: 00e27672 */
+/* 100de: 00febc94 */
 VOID w_update(P(int16_t) bottom, P(GRECT *) pt, P(int16_t) top, P(BOOLEAN) moved)
 PP(register int16_t bottom;)
 PP(register GRECT *pt;)
@@ -1038,6 +1059,7 @@ static VOID w_menufix(NOTHING)
 /* 306de: 00e220fa */
 /* 104de: 00fe514c */
 /* 106de: 00e27734 */
+/* 100de: 00febd38 */
 LINEF_STATIC VOID draw_change(P(int16_t) w_handle, P(GRECT *) pt)
 PP(register int16_t w_handle;)
 PP(register GRECT *pt;)
@@ -1246,6 +1268,7 @@ PP(register GRECT *pt;)
 /* 306de: 00e22404 */
 /* 104de: 00fe5414 */
 /* 106de: 00e27a3e */
+/* 100de: 00fec012 */
 LINEF_STATIC VOID w_owns(P(int16_t) w_handle, P(ORECT *) po, P(GRECT *) pt, P(GRECT *) poutwds)
 PP(int16_t w_handle;)
 PP(register ORECT *po;)
@@ -1271,6 +1294,7 @@ PP(register GRECT *poutwds;)
 /* 306de: 00e22464 */
 /* 104de: 00fe5464 */
 /* 106de: 00e27a9e */
+/* 100de: 00fec062 */
 LINEF_STATIC BOOLEAN w_union(P(ORECT *) po, P(GRECT *) pt)
 PP(register ORECT *po;)
 PP(register GRECT *pt;)
@@ -1295,6 +1319,7 @@ PP(register GRECT *pt;)
 /* 306de: 00e224ae */
 /* 104de: 00fe549e */
 /* 106de: 00e27ae8 */
+/* 100de: 00fec09c */
 VOID wm_start(NOTHING)
 {
 	register int16_t i;
@@ -1373,6 +1398,7 @@ VOID wm_start(NOTHING)
 /* 206x: 00e1e3a8 */
 /* 104de: 00fe56b2 */
 /* 106de: 00e27d26 */
+/* 100de: 00fec27e */
 int16_t wm_create(P(uint16_t) kind, P(GRECT *) rect)
 PP(uint16_t kind;)						/* kind of window to be created */
 PP(GRECT *rect;)						/* x, y, width and height of full size window */
@@ -1406,6 +1432,7 @@ PP(GRECT *rect;)						/* x, y, width and height of full size window */
 /* 306de: 00e227c6 */
 /* 104de: 00fe5726 */
 /* 106de: 00e27daa */
+/* 100de: 00fec2f2 */
 LINEF_STATIC VOID wm_opcl(P(int16_t) wh, P(GRECT *) pt, P(BOOLEAN) isadd)
 PP(register int16_t wh;)
 PP(register GRECT *pt;)
@@ -1447,6 +1474,7 @@ PP(BOOLEAN isadd;)
 /* 306de: 00e22844 */
 /* 104de: 00fe578a */
 /* 106de: 00e27e28 */
+/* 100de: 00fec356 */
 /* BUG: does not return anything */
 VOID wm_open(P(int16_t) w_handle, P(GRECT *) rect)
 PP(int16_t w_handle;)					/* handle of window to be opened */
@@ -1468,6 +1496,7 @@ PP(GRECT *rect;)						/* x, y, width and height of opened window */
 /* 306de: 00e2285e */
 /* 104de: 00fe57a0 */
 /* 106de: 00e27e42 */
+/* 100de: 00fec36c */
 /* BUG: does not return anything */
 VOID wm_close(P(int16_t) w_handle)
 PP(int16_t w_handle;)							/* handle of window to be closed */
@@ -1488,6 +1517,7 @@ PP(int16_t w_handle;)							/* handle of window to be closed */
 /* 306de: 00e22878 */
 /* 104de: 00fe57b6 */
 /* 106de: 00e27e5c */
+/* 100de: 00fec382 */
 /* BUG: does not return anything */
 VOID wm_delete(P(int16_t) w_handle)
 PP(int16_t w_handle;)							/* handle of window to be deleted */
@@ -1517,6 +1547,7 @@ PP(int16_t w_handle;)							/* handle of window to be deleted */
 /* 306de: 00e22896 */
 /* 104de: 00fe57d2 */
 /* 106de: 00e27e7a */
+/* 100de: 00fec39e */
 VOID wm_get(P(int16_t) w_handle, P(int16_t) w_field, P(int16_t *)poutwds)
 PP(register int16_t w_handle;)						/* window handle */
 PP(int16_t w_field;)								/* flag to identify what info to be returned */
@@ -1643,6 +1674,7 @@ static void wm_mktop(int16_t w_handle)
 /* 306de: 00e229b4 */
 /* 104de: 00fe58ba */
 /* 106de: 00e27f74 */
+/* 100de: 00fec4b4 */
 /* BUG: does not return anything */
 VOID wm_set(P(int16_t) w_handle, P(int16_t) w_field, P(int16_t *) pinwds)
 PP(register int16_t w_handle;)						/* window handle */
@@ -1781,6 +1813,7 @@ PP(register int16_t *pinwds;)							/* values to change to */
 /* 306de: 00e22c02 */
 /* 104de: 00fe5a76 */
 /* 106de: 00e28154 */
+/* 100de: 00fec6c8 */
 int16_t wm_find(P(int) mx, P(int) my)
 PP(int mx;)									/* mouse's x position */
 PP(int my;)									/* mouse's y position */
@@ -1803,6 +1836,7 @@ PP(int my;)									/* mouse's y position */
 /* 306de: 00e22c24 */
 /* 104de: 00fe5a92 */
 /* 106de: 00e28176 */
+/* 100de: 00fec6ea */
 VOID wm_update(P(int) beg_update)
 PP(register int beg_update;)								/* flag for the call's function */
 {
@@ -1837,6 +1871,7 @@ PP(register int beg_update;)								/* flag for the call's function */
 /* 306de: 00e22c80 */
 /* 104de: 00fe5ad6 */
 /* 106de: 00e281d2 */
+/* 100de: 00fec72e */
 VOID wm_calc(P(int16_t) wtype, P(int16_t) kind, P(int16_t) ix, P(int16_t) iy, P(int16_t) iw, P(int16_t) ih, P(int16_t *) ox, P(int16_t *) oy, P(int16_t *) ow, P(int16_t *) oh)
 PP(int16_t wtype;)								/* the type of calculation to perform */
 PP(register int16_t kind;)						/* components present in the window */

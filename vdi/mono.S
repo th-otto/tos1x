@@ -37,6 +37,7 @@
 /* 206de: 00e0c2e2 */
 /* 104de: 00fd0542 */
 /* 106de: 00e10766 */
+/* 100de: 00fcfda2 */
 	xdef	_MONO8XHT
 _MONO8XHT:
 		move.w	LV(DESTX,a5),d0		; d0 <- dst X

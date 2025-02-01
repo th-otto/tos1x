@@ -148,6 +148,7 @@ PP(VOIDPTR buffer;)
 /* 306de: 00e19afe */
 /* 104de: 00fdf958 */
 /* 106de: 00e2140e */
+/* 100de: 00fe5c2c */
 int16_t ap_rdwr(P(int16_t) code, P(int16_t) id, P(int16_t) length, P(int16_t *) pbuff)
 PP(int16_t code;)
 PP(int16_t id;)
@@ -180,6 +181,7 @@ PP(int16_t *pbuff;)
 /* 306de: 00e19b16 */
 /* 104de: 00fdf96a */
 /* 106de: 00e2142a */
+/* 100de: 00fe5c42 */
 int16_t ap_find(P(const char *) pname)
 PP(const char *pname;)
 {
@@ -204,6 +206,7 @@ PP(const char *pname;)
 /* 306de: 00e19b54 */
 /* 104de: 00fdf998 */
 /* 106de: 00e21486 */
+/* 100de: 00fe5c78 */
 VOID ap_tplay(P(intptr_t) pbuff, P(int16_t) length, P(int16_t) scale)
 PP(register intptr_t pbuff;)
 PP(int16_t length;)
@@ -303,6 +306,7 @@ PP(int16_t scale;)
 /* 306de: 00e19cf0 */
 /* 104de: 00fdfaee */
 /* 106de: 00e21604 */
+/* 100de: 00fe5d2a */
 int16_t ap_trecd(P(intptr_t) pbuff, P(int16_t) length)
 PP(register intptr_t pbuff;)
 PP(register int16_t length;)

@@ -37,6 +37,7 @@
 /* 306de: 00e20b2e */
 /* 104de: 00fe3f9e */
 /* 106de: 00e262fc */
+/* 100de: 00fea830 */
 VOID sc_read(P(char *) pscrap)
 PP(char *pscrap;)
 {
@@ -50,6 +51,7 @@ PP(char *pscrap;)
 /* 306de: 00e20b48 */
 /* 104de: 00fe3fb2 */
 /* 106de: 00e26316 */
+/* 100de: 00fea844 */
 VOID sc_write(P(const char *) pscrap)
 PP(const char *pscrap;)
 {

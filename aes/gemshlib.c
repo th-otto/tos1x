@@ -160,6 +160,7 @@ LINEF_STATIC BOOLEAN sh_rom PROTO((NOTHING));
 /* 306de: 00e20b62 */
 /* 104de: 00fe3fc6 */
 /* 106de: 00e26330 */
+/* 100de: 00fea858 */
 int16_t sh_read(P(char *) pcmd, P(char *) ptail)
 PP(char *pcmd;)
 PP(char *ptail;)
@@ -189,6 +190,7 @@ PP(char *ptail;)
 /* 306de: 00e20b98 */
 /* 104de: 00fe3ff2 */
 /* 106de: 00e26366 */
+/* 100de: 00fea884 */
 int16_t sh_write(P(int16_t) doex, P(int16_t) isgem, P(int16_t) isover, P(const char *) pcmd, P(const char *) ptail)
 PP(int16_t doex;)
 PP(int16_t isgem;)
@@ -237,6 +239,7 @@ PP(const char *ptail;)
 /* 306de: 00e20be8 */
 /* 104de: 00fe4038 */
 /* 106de: 00e263b6 */
+/* 100de: 00fea918 */
 int16_t sh_get(P(char *) pbuffer, P(uint16_t) len)
 PP(char *pbuffer;)
 PP(uint16_t len;)
@@ -256,6 +259,7 @@ PP(uint16_t len;)
 /* 306de: 00e20c08 */
 /* 104de: 00fe4052 */
 /* 106de: 00e263d6 */
+/* 100de: 00fea932 */
 int16_t sh_put(P(const char *) pdata, P(int16_t) len)
 PP(char *pdata;)
 PP(int16_t len;)
@@ -272,6 +276,7 @@ PP(int16_t len;)
 /* 306de: 00e20c28 */
 /* 104de: 00fe406c */
 /* 106de: 00e263f6 */
+/* 100de: 00fea94c */
 BOOLEAN sh_tographic(NOTHING)
 {
 	cli();
@@ -295,6 +300,7 @@ BOOLEAN sh_tographic(NOTHING)
 /* 306de: 00e20c72 */
 /* 104de: 00fe4094 */
 /* 106de: 00e26440 */
+/* 100de: 00fea974 */
 BOOLEAN sh_toalpha(NOTHING)
 {
 	gsx_mfset(ad_armice);				/* put mouse to arrow   */
@@ -317,6 +323,7 @@ BOOLEAN sh_toalpha(NOTHING)
 /* 306de: 00e20cae */
 /* 104de: 00fe40b2 */
 /* 106de: 00e2647c */
+/* 100de: 00fea992 */
 VOID sh_draw(P(const char *) lcmd, P(int16_t) start, P(int16_t) depth)
 PP(const char *lcmd;)
 PP(int16_t start;)
@@ -340,6 +347,7 @@ PP(int16_t depth;)
 /* 306de: 00e20d0c */
 /* 104de: 00fe40fc */
 /* 106de: 00e264da */
+/* 100de: 00fea9d2 */
 VOID sh_show(P(const char *) lcmd)
 PP(const char *lcmd;)
 {
@@ -358,6 +366,7 @@ PP(const char *lcmd;)
 /* 104de: 00fe411e */
 /* 106de: 00e26504 */
 /* 162de: 00e265f0 */
+/* 100de: 00fea9fa */
 char *sh_name(P(char *) ppath)
 PP(register char *ppath;)
 {
@@ -395,6 +404,7 @@ extern uint8_t gl_dta[]; /* WTF: this is from desktop */
 /* 306de: 00e20d68 */
 /* 104de: 00fe414a */
 /* 106de: 00e26536 */
+/* 100de: 00feaa2c */
 VOID sh_envrn(P(char **) ppath, P(const char *) psrch)
 PP(intptr_t ppath;)						/* output pointer   */
 PP(register intptr_t psrch;)
@@ -463,6 +473,7 @@ PP(register intptr_t psrch;)
 /* 306de: 00e20dac */
 /* 104de: 00fe4186 */
 /* 106de: 00e2657a */
+/* 100de: 00feab14 */
 BOOLEAN sh_path(P(int16_t) whichone, P(char *) dp, P(char *) pname)
 PP(int16_t whichone;)
 PP(char *dp;)
@@ -532,6 +543,7 @@ PP(register char *pname;)
 /* 306de: 00e20eba */
 /* 104de: 00fe427c */
 /* 106de: 00e26688 */
+/* 100de: 00feabb4 */
 int16_t sh_find(P(char *) pspec, P(SHFIND_PROC) routine)
 PP(intptr_t pspec;) /* should be char * */
 PP(SHFIND_PROC routine;)
@@ -585,6 +597,7 @@ PP(SHFIND_PROC routine;)
 }
 
 
+/* 100de: 00feacdc */
 LINEF_STATIC VOID sh_fixtail(NOTHING)
 {
 	register THEGLO *DGLO;
@@ -606,6 +619,7 @@ LINEF_STATIC VOID sh_fixtail(NOTHING)
 /* 306de: 00e20fb4 */
 /* 104de: 00fe4344 */
 /* 106de: 00e26782 */
+/* 100de: 00fead1a */
 VOID sh_main(NOTHING)
 {
 	BOOLEAN retry;
@@ -713,6 +727,7 @@ VOID sh_main(NOTHING)
 }
 
 
+/* 100de: 00feaf14 */
 BOOLEAN sh_rom(NOTHING)
 {
 	BOOLEAN ret;

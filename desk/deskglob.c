@@ -2,6 +2,7 @@
 
 intptr_t drawstk;
 
+/* 100de: 00fee7dc */
 VOID desk_alloc(NOTHING)
 {
 	/* initialize libraries	*/
@@ -18,6 +19,7 @@ VOID desk_alloc(NOTHING)
 }
 
 
+/* 100de: 00fee834 */
 VOID desk_free(NOTHING)
 {
 	dos_free((VOIDPTR)thedesk->a_buffstart);

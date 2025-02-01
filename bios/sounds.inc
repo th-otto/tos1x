@@ -41,6 +41,7 @@
  */
 
 /* 100fr: 00fc3094 */
+/* 100de: 00fc3076 */
 _bellsnd:
   dc.b 0,$34     /* channel A pitch */
   dc.b 1,0
@@ -59,6 +60,7 @@ _bellsnd:
   dc.b $FF,0    /* stop sound */
 
 /* 100fr: 00fc30b2 */
+/* 100de: 00fc3094 */
 _clicksnd:
   dc.b 0,$3B
   dc.b 1,0

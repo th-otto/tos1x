@@ -36,6 +36,7 @@ THEGLO D;
 /*
  *	return size in words of struct THEGLO
  */
+/* 100de: 00fee7d2 */
 int16_t size_theglo(NOTHING)
 {
 	return sizeof(THEGLO) / 2;

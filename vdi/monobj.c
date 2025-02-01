@@ -57,6 +57,7 @@
 /* 306de: 00e081e6 */
 /* 104de: 00fcb900 */
 /* 106de: 00e0bb2c */
+/* 100de: 00fcab20 */
 VOID vsl_type(NOTHING)
 {
 	register int16_t li;
@@ -76,6 +77,7 @@ VOID vsl_type(NOTHING)
  */
 /* 306de: 00e08230 */
 /* 104de: 00fcb94a */
+/* 100de: 00fcab6a */
 VOID vsl_width(NOTHING)
 {
 	register int16_t w,
@@ -107,6 +109,7 @@ VOID vsl_width(NOTHING)
  */
 /* 306de: 00e082ec */
 /* 104de: 00fcb9aa */
+/* 100de: 00fcabca */
 VOID vsl_ends(NOTHING)
 {
 	register int16_t lb, le;
@@ -136,6 +139,7 @@ VOID vsl_ends(NOTHING)
  */
 /* 306de: 00e082ec */
 /* 104de: 00fcba06 */
+/* 100de: 00fcac26 */
 VOID vsl_color(NOTHING)
 {
 	register int16_t lc;
@@ -156,6 +160,7 @@ VOID vsl_color(NOTHING)
  */
 /* 306de: 00e0833c */
 /* 104de: 00fcba56 */
+/* 100de: 00fcac76 */
 VOID vsm_height(NOTHING)
 {
 	register int16_t h, *pts_out;
@@ -189,6 +194,7 @@ VOID vsm_height(NOTHING)
  */
 /* 306de: 00e083c8 */
 /* 104de: 00fcbae2 */
+/* 100de: 00fcad02 */
 VOID vsm_type(NOTHING)
 {
 	register int16_t i;
@@ -205,6 +211,7 @@ VOID vsm_type(NOTHING)
  */
 /* 306de: 00e08418 */
 /* 104de: 00fcbb32 */
+/* 100de: 00fcad52 */
 VOID vsm_color(NOTHING)
 {
 	register int16_t i;
@@ -222,6 +229,7 @@ VOID vsm_color(NOTHING)
  */
 /* 306de: 00e0846e */
 /* 104de: 00fcbb88 */
+/* 100de: 00fcada8 */
 VOID vsf_interior(NOTHING)
 {
 	register int16_t fs;
@@ -240,6 +248,7 @@ VOID vsf_interior(NOTHING)
  */
 /* 306de: 00e084ba */
 /* 104de: 00fcbbd4 */
+/* 100de: 00fcadf4 */
 VOID vsf_style(NOTHING)
 {
 	register int16_t fi;
@@ -270,6 +279,7 @@ VOID vsf_style(NOTHING)
  */
 /* 306de: 00e08522 */
 /* 104de: 00fcbc3c */
+/* 100de: 00fcae5c */
 VOID vsf_color(NOTHING)
 {
 	register int16_t fc;
@@ -289,6 +299,7 @@ VOID vsf_color(NOTHING)
  */
 /* 306de: 00e08572 */
 /* 104de: 00fcbc8c */
+/* 100de: 00fcaeac */
 VOID v_locator(NOTHING)
 {
 	int16_t i;
@@ -365,6 +376,7 @@ VOID v_locator(NOTHING)
  */
 /* 306de: 00e0868e */
 /* 104de: 00fcbda8 */
+/* 100de: 00fcafca */
 VOID v_show_c(NOTHING)
 {
 	/* DIS_CUR will trash all registers but FP and SP */
@@ -381,6 +393,7 @@ VOID v_show_c(NOTHING)
  */
 /* 306de: 00e086b6 */
 /* 104de: 00fcbdd0 */
+/* 100de: 00fcaff2 */
 VOID v_hide_c(NOTHING)
 {
 	HIDE_CUR();
@@ -393,6 +406,7 @@ VOID v_hide_c(NOTHING)
  * RETURN MOUSE BUTTON STATUS
  */
 /* 100fr: 00fcb01e */
+/* 100de: 00fcb000 */
 #if TOSVERSION < 0x102
 VOID vq_mouse(NOTHING)
 {
@@ -416,6 +430,7 @@ VOID vq_mouse(NOTHING)
  */
 /* 306de: 00e086c4 */
 /* 104de: 00fcbdde */
+/* 100de: 00fcb042 */
 VOID v_valuator(NOTHING)
 {
 }
@@ -426,6 +441,7 @@ VOID v_valuator(NOTHING)
  */
 /* 306de: 00e086cc */
 /* 104de: 00fcbde6 */
+/* 100de: 00fcb04a */
 VOID v_choice(NOTHING)
 {
 	int16_t i;
@@ -453,6 +469,7 @@ VOID v_choice(NOTHING)
  */
 /* 306de: 00e08756 */
 /* 104de: 00fcbe70 */
+/* 100de: 00fcb0d4 */
 VOID v_string(NOTHING)
 {
 	int16_t i;
@@ -495,6 +512,7 @@ VOID v_string(NOTHING)
  */
 /* 306de: 00e08836 */
 /* 104de: 00fcbf50 */
+/* 100de: 00fcb1b4 */
 VOID vq_key_s(NOTHING)
 {
 	NINTOUT = 1;
@@ -507,6 +525,7 @@ VOID vq_key_s(NOTHING)
  */
 /* 306de: 00e0885a */
 /* 104de: 00fcbf74 */
+/* 100de: 00fcb1d8 */
 VOID vswr_mode(NOTHING)
 {
 	register int16_t wm;
@@ -525,6 +544,7 @@ VOID vswr_mode(NOTHING)
  */
 /* 306de: 00e088b4 */
 /* 104de: 00fcbfce */
+/* 100de: 00fcb232 */
 VOID vsin_mode(NOTHING)
 {
 	register int16_t i,	*int_in;
@@ -563,6 +583,7 @@ VOID vsin_mode(NOTHING)
  */
 /* 306de: 00e08920 */
 /* 104de: 00fcc03a */
+/* 100de: 00fcb2a0 */
 VOID vqin_mode(NOTHING)
 {
 	register int16_t *int_out;
@@ -599,6 +620,7 @@ VOID vqin_mode(NOTHING)
  */
 /* 306de: 00e08984 */
 /* 104de: 00fcc09e */
+/* 100de: 00fcb306 */
 VOID vsf_perimeter(NOTHING)
 {
 	register int16_t *int_out;
@@ -627,6 +649,7 @@ VOID vsf_perimeter(NOTHING)
  */
 /* 306de: 00e089ca */
 /* 104de: 00fcc0e4 */
+/* 100de: 00fcb34c */
 VOID vsl_udsty(NOTHING)
 {
 	LV(cur_work)->ud_ls = LV(INTIN)[0];
@@ -638,6 +661,7 @@ VOID vsl_udsty(NOTHING)
  */
 /* 306de: 00e089e2 */
 /* 104de: 00fcc0fc */
+/* 100de: 00fcb364 */
 VOID vs_clip(NOTHING)
 {
 	register int16_t *xy;
@@ -678,6 +702,7 @@ VOID vs_clip(NOTHING)
 
 /* 306de: 00e08a86 */
 /* 104de: 00fcc1a0 */
+/* 100de: 00fcb408 */
 VOID arb_corner(P(int16_t *) corners, P(int16_t) type)
 PP(int16_t *corners;)
 PP(int16_t type;)
@@ -721,6 +746,7 @@ PP(int16_t type;)
  */
 /* 306de: 00e08ad2 */
 /* 104de: 00fcc1ec */
+/* 100de: 00fcb454 */
 VOID dro_cpyfm(NOTHING)
 {
 	arb_corner(LV(PTSIN), ULLR);
@@ -736,6 +762,7 @@ VOID dro_cpyfm(NOTHING)
  */
 /* 306de: 00e08b04 */
 /* 104de: 00fcc21e */
+/* 100de: 00fcb486 */
 VOID drt_cpyfm(NOTHING)
 {
 	arb_corner(LV(PTSIN), ULLR);
@@ -751,6 +778,7 @@ VOID drt_cpyfm(NOTHING)
  */
 /* 306de: 00e08b3c */
 /* 104de: 00fcc256 */
+/* 100de: 00fcb4be */
 VOID dr_recfl(NOTHING)
 {
 	register int16_t *pts_in;

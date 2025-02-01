@@ -31,6 +31,7 @@
 /* 104de: 00fd2b1a */
 /* 106de: 00e12d7a */
 /* 100fr: 00fcfe1a */
+/* 100de: 00fcfdfc */
 		xdef	 sb_mono
 sb_mono:
 		move.l     a6,-(a7)	; save a6 

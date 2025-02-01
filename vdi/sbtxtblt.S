@@ -312,6 +312,7 @@ ramlen		equ	-84
 /* 206de: 00e0eaec */
 /* 104de: 00fd2c4c */
 /* 106de: 00e12eac */
+/* 100de: 00fced1a */
 #if BLITTER_SUPPORT
 #define fp a5
 	xdef	sb_text

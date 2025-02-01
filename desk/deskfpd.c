@@ -27,6 +27,7 @@
  */
 /* 104de: 00fd8d76 */
 /* 106de: 00e19988 */
+/* 100de: 00fdebba */
 LINEF_STATIC VOID fn_init(NOTHING)
 {
 	register THEDSK *d;
@@ -40,6 +41,7 @@ LINEF_STATIC VOID fn_init(NOTHING)
 }
 
 
+/* 100de: 00fdebf6 */
 LINEF_STATIC VOID pn_init(NOTHING)
 {
 	register THEDSK *d;
@@ -60,6 +62,7 @@ LINEF_STATIC VOID pn_init(NOTHING)
 /*
  *	Initialize the list of pnodes
  */
+/* 100de: 00fdec40 */
 VOID fpd_start(NOTHING)
 {
 	register THEDSK *d;
@@ -78,6 +81,7 @@ VOID fpd_start(NOTHING)
  */
 /* 104de: 00fd8df2 */
 /* 106de: 00e19a14 */
+/* 100de: 00fdec64 */
 LINEF_STATIC BOOLEAN fpd_bldspec(P(int16_t) drive, P(const char *) ppath, P(const char *)pname, P(const char *) pext, P(char *) pspec)
 PP(register int16_t drive;)
 PP(register const char *ppath;)
@@ -116,6 +120,7 @@ PP(register char *pspec;)
 
 /* 104de: 00fd8e6c */
 /* 106de: 00e19a14 */
+/* 100de: 00fdecde */
 VOID fpd_parse(P(const char *) pspec, P(int16_t *) pdrv, P(char *) ppath, P(char *) pname, P(char *) pext)
 PP(register const char *pspec;)
 PP(int16_t *pdrv;)
@@ -243,6 +248,7 @@ PP(register FNODE *pflist;)
  */
 /* 104de: 00fd8f4a */
 /* 106de: 00e19b90 */
+/* 100de: 00fdee44 */
 LINEF_STATIC FNODE *fn_alloc(NOTHING)
 {
 	register FNODE *thefile;
@@ -264,6 +270,7 @@ LINEF_STATIC FNODE *fn_alloc(NOTHING)
  */
 /* 104de: 00fd8fae */
 /* 106de: 00e19c04 */
+/* 100de: 00fdee6c */
 LINEF_STATIC PNODE *pn_alloc(NOTHING)
 {
 	register PNODE *thepath;
@@ -292,6 +299,7 @@ LINEF_STATIC PNODE *pn_alloc(NOTHING)
  */
 /* 104de: 00fd9022 */
 /* 106de: 00e19c8a */
+/* 100de: 00fdeea4 */
 VOID pn_free(P(PNODE *)thepath)
 PP(register PNODE *thepath;)
 {
@@ -322,6 +330,7 @@ PP(register PNODE *thepath;)
  */
 /* 104de: 00fd8fe4 */
 /* 106de: 00e19c44 */
+/* 100de: 00fdeed4 */
 PNODE *pn_open(P(int16_t) drive, P(const char *) path, P(const char *) name, P(const char *) ext, P(uint16_t) attr)
 PP(int16_t drive;)
 PP(const char *path;)
@@ -352,6 +361,7 @@ PP(uint16_t attr;)
 /*
  *	Close a particular path.
  */
+/* 100de: 00fdef1a */
 VOID pn_close(P(PNODE *) thepath)
 PP(PNODE *thepath;)
 {
@@ -365,6 +375,7 @@ PP(PNODE *thepath;)
  */
 /* 104de: 00fd9056 */
 /* 106de: 00e19cc8 */
+/* 100de: 00fdef26 */
 LINEF_STATIC int pn_fcomp(P(FNODE *) pf1, P(FNODE *) pf2, P(int) which)
 PP(register FNODE *pf1;)
 PP(register FNODE *pf2;)
@@ -439,6 +450,7 @@ PP(register FNODE *pf2;)
 
 /* 104de: 00fd9118 */
 /* 106de: 00e19da6 */
+/* 100de: 00fdf032 */
 FNODE *pn_sort(P(int16_t) lstcnt, P(FNODE *) pflist)
 PP(int16_t lstcnt;)
 PP(FNODE *pflist;)
@@ -500,6 +512,7 @@ PP(FNODE *pflist;)
  */
 /* 104de: 00fd931a */
 /* 106de: 00e19fbe */
+/* 100de: 00fdf136 */
 int pn_folder(P(PNODE *) thepath)
 PP(register PNODE *thepath;)
 {

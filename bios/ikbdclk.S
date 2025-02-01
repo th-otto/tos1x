@@ -14,7 +14,7 @@
 /* 206de: 00e01e86 */
 /* 104de: 00fc315e */
 /* 106de: 00e03336 */
-/* 100de: 00fc1d12 */
+/* 100any: 00fc1d12 */
 	xdef _clockvec
 _clockvec:
 		lea.l     0,a5                          /* set base register */
@@ -54,7 +54,7 @@ _clockvec:
 /* 206de: 00e01eca */
 /* 104de: 00fc31a8 */
 /* 106de: 00e03380 */
-/* 100de: 00fc1d5c */
+/* 100any: 00fc1d5c */
 		xdef _gettime
 _gettime: ds.b 0
 		xdef igetdt
@@ -88,7 +88,7 @@ igetdt2:
 /* 206de: 00e01ef4 */
 /* 104de: 00fc31d2 */
 /* 106de: 00e033aa */
-/* 100de: 00fc1d76 */ 
+/* 100any: 00fc1d76 */ 
 		xdef _settime
 _settime: ds.b 0
 		xdef isetdt

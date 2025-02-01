@@ -58,6 +58,7 @@ PD *slr;
 /* 306de: 00e1b8ea */
 /* 104de: 00fde286 */
 /* 106de: 00e1fa66 */
+/* 100de: 00fe3f94 */
 asm("  .globl forkq");
 asm("forkq: .text");
 VOID forkq(P(FCODE) fcode, P(int32_t) fdata)
@@ -86,6 +87,7 @@ PP(int32_t fdata;)
 /* 306de: 00e1b94a */
 /* 104de: 00fde2de */
 /* 106de: 00e1fac6 */
+/* 100de: 00fe3fee */
 VOID disp_act(P(PD *) p)
 PP(register PD *p;)
 {
@@ -126,6 +128,7 @@ PP(register PD *p;)
 #endif
 
 
+/* 100de: 00fe4016 */
 LINEF_STATIC VOID mwait_act(P(PD *) p)
 PP(register PD *p;)
 {       
@@ -146,6 +149,7 @@ PP(register PD *p;)
 /* 306de: 00e1b9aa */
 /* 104de: 00fde306 */
 /* 106de: 00e1faf6 */
+/* 100de: 00fe4040 */
 VOID forker(NOTHING)
 {
 	register FPD *f;
@@ -208,6 +212,7 @@ VOID forker(NOTHING)
 /* 306de: 00e1bac6 */
 /* 104de: 00fde416 */
 /* 106de: 00e1fc12 */
+/* 100de: 00fe4152 */
 VOID chkkbd(NOTHING)
 {
 	register int16_t achar, kstat;
@@ -267,6 +272,7 @@ VOID chkkbd(NOTHING)
  *
  * run through lists until someone is on the rlr or the fork list
  */
+/* 100de: 00fe41e6 */
 LINEF_STATIC VOID schedule(NOTHING)
 {
 	register PD *p;
@@ -298,6 +304,7 @@ LINEF_STATIC VOID schedule(NOTHING)
 /* 306de: 00e1bb66 */
 /* 104de: 00fde4a0 */
 /* 106de: 00e1fcb2 */
+/* 100de: 00fe4220 */
 VOID disp(NOTHING)
 {
 	register PD *p;

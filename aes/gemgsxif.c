@@ -79,6 +79,7 @@
 /* 104de: 00fd430c */
 /* 106de: 00e14712 */
 /* 100fr: 00fe8346 */
+/* 100de: 00fe800e */
 VOID gsx_malloc(NOTHING)
 {
 	int mlen;
@@ -92,6 +93,7 @@ VOID gsx_malloc(NOTHING)
 }
 
 
+/* 100de: 00fe806e */
 VOID gsx_mfree(NOTHING)
 {
 	dos_free(gl_tmp.fd_addr);
@@ -99,6 +101,7 @@ VOID gsx_mfree(NOTHING)
 
 
 
+/* 100de: 00fe807c */
 VOID gsx_mret(P(VOIDPTR *)pmaddr, P(int32_t *)pmlen)
 PP(VOIDPTR *pmaddr;)
 PP(int32_t *pmlen;)
@@ -109,6 +112,7 @@ PP(int32_t *pmlen;)
 
 
 
+/* 100de: 00fe8096 */
 VOID gsx_ncode(P(int16_t) code, P(int16_t) n, P(int16_t) m)
 PP(int16_t code;)
 PP(int16_t n;)
@@ -127,6 +131,7 @@ PP(int16_t m;)
 
 
 
+/* 100de: 00fe80c4 */
 VOID gsx_1code(P(int16_t) code, P(int16_t) value)
 PP(int16_t code;)
 PP(int16_t value;)
@@ -139,6 +144,7 @@ PP(int16_t value;)
 extern VOID far_bchange PROTO((NOTHING));
 extern VOID far_mchange PROTO((NOTHING));
 
+/* 100de: 00fe80e0 */
 VOID gsx_init(NOTHING)
 {
 	gsx_wsopen();
@@ -151,6 +157,7 @@ VOID gsx_init(NOTHING)
 
 
 
+/* 100de: 00fe8120 */
 VOID gsx_graphic(P(BOOLEAN) tographic)
 PP(register BOOLEAN tographic;)
 {
@@ -171,6 +178,7 @@ PP(register BOOLEAN tographic;)
 
 
 
+/* 100de: 00fe816a */
 VOID gsx_escapes(P(int16_t) esc_code)
 PP(int16_t esc_code;)
 {
@@ -180,6 +188,7 @@ PP(int16_t esc_code;)
 
 
 
+/* 100de: 00fe8184 */
 VOID av_hardcopy(NOTHING)
 {
 	gsx_escapes(17);
@@ -187,6 +196,7 @@ VOID av_hardcopy(NOTHING)
 
 
 /*****	 Open physical work station for 6 resolutions	*****/
+/* 100de: 00fe8190 */
 VOID gsx_wsopen(NOTHING)
 {
 	register int i;
@@ -208,6 +218,7 @@ VOID gsx_wsopen(NOTHING)
 
 
 
+/* 100de: 00fe821a */
 VOID gsx_wsclose(NOTHING)
 {
 	gsx_ncode(CLOSE_WORKSTATION, 0, 0);
@@ -215,6 +226,7 @@ VOID gsx_wsclose(NOTHING)
 
 
 
+/* 100de: 00fe822c */
 VOID ratinit(NOTHING)
 {
 	gsx_1code(SHOW_CUR, 0);
@@ -222,12 +234,14 @@ VOID ratinit(NOTHING)
 }
 
 
+/* 100de: 00fe8242 */
 VOID ratexit(NOTHING)
 {
 	gsx_moff();
 }
 
 
+/* 100de: 00fe824a */
 VOID bb_set(P(int16_t) sx, P(int16_t) sy, P(int16_t) sw, P(int16_t) sh, P(int16_t *) pts1, P(int16_t *) pts2, P(FDB *) pfd, P(FDB *) psrc, P(FDB *) pdst)
 PP(register int16_t sx;)
 PP(register int16_t sy;)
@@ -272,6 +286,7 @@ PP(FDB *pdst;)
 
 
 
+/* 100de: 00fe8310 */
 VOID bb_save(P(GRECT *) ps)
 PP(register GRECT *ps;)
 {
@@ -279,6 +294,7 @@ PP(register GRECT *ps;)
 }
 
 
+/* 100de: 00fe8352 */
 VOID bb_restore(P(GRECT *)ps)
 PP(register GRECT *ps;)
 {
@@ -289,6 +305,7 @@ PP(register GRECT *ps;)
 extern VOIDPTR old_bcode;
 extern VOIDPTR old_mcode;
 
+/* 100de: 00fe8394 */
 int16_t gsx_setmb(P(VOIDPTR) boff, P(VOIDPTR) moff, P(VOIDPTR *) pdrwaddr)
 PP(VOIDPTR boff;)
 PP(VOIDPTR moff;)
@@ -320,6 +337,7 @@ PP(VOIDPTR *pdrwaddr;)
 }
 
 
+/* 100de: 00fe83d6 */
 VOID gsx_resetmb(NOTHING)
 {
 	i_ptr(old_bcode);
@@ -334,6 +352,7 @@ VOID gsx_resetmb(NOTHING)
 
 
 
+/* 100de: 00fe8404 */
 int16_t gsx_tick(P(intptr_t) tcode, P(intptr_t *) ptsave)
 PP(intptr_t tcode;)
 PP(intptr_t *ptsave;)
@@ -345,6 +364,7 @@ PP(intptr_t *ptsave;)
 }
 
 
+/* 100de: 00fe8428 */
 VOID gsx_mfset(P(MFORM *) pmfnew)
 PP(MFORM *pmfnew;)
 {
@@ -355,6 +375,7 @@ PP(MFORM *pmfnew;)
 }
 
 
+/* 100de: 00fe8452 */
 VOID gsx_mxmy(P(int16_t *) pmx, P(int16_t *) pmy)
 PP(int16_t *pmx;)
 PP(int16_t *pmy;)
@@ -365,6 +386,7 @@ PP(int16_t *pmy;)
 
 
 
+/* 100de: 00fe846c */
 int16_t gsx_button(NOTHING)
 {
 	return button;
@@ -372,6 +394,7 @@ int16_t gsx_button(NOTHING)
 
 
 
+/* 100de: 00fe8478 */
 VOID gsx_moff(NOTHING)
 {
 	if (!gl_moff)
@@ -384,6 +407,7 @@ VOID gsx_moff(NOTHING)
 
 
 
+/* 100de: 00fe8498 */
 VOID gsx_mon(NOTHING)
 {
 	gl_moff--;
@@ -428,6 +452,7 @@ int16_t gsx_char(NOTHING)
 #endif
 
 
+/* 100de: 00fe84b8 */
 int16_t av_opnwk(P(int16_t *) pwork_in, P(int16_t *) phandle, P(int16_t *) pwork_out)
 PP(int16_t *pwork_in;)
 PP(int16_t *phandle;)
@@ -454,6 +479,7 @@ PP(register int16_t *pwork_out;)
 
 
 
+/* 100de: 00fe8516 */
 VOID av_pline(P(int16_t) count, P(int16_t *) pxyarray)
 PP(int16_t count;)
 PP(int16_t *pxyarray;)
@@ -465,6 +491,7 @@ PP(int16_t *pxyarray;)
 
 
 
+/* 100de: 00fe8538 */
 VOID avst_clip(P(int16_t) clip_flag, P(int16_t *) pxyarray)
 PP(register int16_t clip_flag;)
 PP(int16_t *pxyarray;)
@@ -481,6 +508,7 @@ PP(int16_t *pxyarray;)
 
 
 
+/* 100de: 00fe8578 */
 VOID avst_height(P(int16_t) height, P(int16_t *) pchr_width, P(int16_t *) pchr_height, P(int16_t *) pcell_width, P(int16_t *) pcell_height)
 PP(int16_t height;)
 PP(int16_t *pchr_width;)
@@ -502,6 +530,7 @@ PP(int16_t *pcell_height;)
 }
 
 
+/* 100de: 00fe85c2 */
 VOID avr_recfl(P(int16_t *) pxyarray, P(FDB *) pdesMFDB) /* ??? why MFDB ??? */
 PP(int16_t *pxyarray;)
 PP(FDB *pdesMFDB;)
@@ -515,6 +544,7 @@ PP(FDB *pdesMFDB;)
 
 
 
+/* 100de: 00fe85ec */
 VOID avro_cpyfm(P(int16_t) wr_mode, P(int16_t *) pxyarray, P(FDB *) psrcMFDB, P(FDB *) pdesMFDB)
 PP(int16_t wr_mode;)
 PP(int16_t *pxyarray;)
@@ -531,6 +561,7 @@ PP(FDB *pdesMFDB;)
 
 
 
+/* 100de: 00fe8624 */
 VOID avrt_cpyfm(P(int16_t) wr_mode, P(int16_t *) pxyarray, P(FDB *) psrcMFDB, P(FDB *) pdesMFDB, P(int16_t) fgcolor, P(int16_t) bgcolor)
 PP(int16_t wr_mode;)
 PP(int16_t *pxyarray;)
@@ -555,6 +586,7 @@ PP(int16_t bgcolor;)
 
 
 
+/* 100de: 00fe866e */
 VOID avr_trnfm(P(FDB *) psrcMFDB, P(FDB *) pdesMFDB)
 PP(FDB *psrcMFDB;)
 PP(FDB *pdesMFDB;)
@@ -566,6 +598,7 @@ PP(FDB *pdesMFDB;)
 
 
 
+/* 100de: 00fe868c */
 VOID avsl_width(P(int16_t) width)
 PP(int16_t width;)
 {

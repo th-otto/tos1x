@@ -100,6 +100,7 @@ STATIC int16_t const gl_wa[] = {
  */
 /* 306de: 00e1b1b4 */
 /* 106de: 00e1f38a */
+/* 100de: 00fe3ac4 */
 VOID ct_msgup(P(int16_t) message, P(int16_t) owner, P(int16_t) wh, P(int16_t) m1, P(int16_t) m2, P(int16_t) m3, P(int16_t) m4)
 PP(int16_t message;)
 PP(int16_t owner;)
@@ -121,6 +122,7 @@ PP(int16_t m4;)
 /* 206de: 00e1778e */
 /* 306de: 00e1b1f4 */
 /* 106de: 00e1f3ca */
+/* 100de: 00fe3b08 */
 VOID hctl_window(P(int16_t) w_handle, P(int16_t) mx, P(int16_t) my)
 PP(register int16_t w_handle;)
 PP(int16_t mx;)
@@ -308,6 +310,7 @@ PP(int16_t my;)
 
 /* 306de: 00e1b580 */
 /* 106de: 00e1f6ea */
+/* 100de: 00fe3ddc */
 VOID hctl_button(P(int16_t) mx, P(int16_t) my)
 PP(register int16_t mx;)
 PP(register int16_t my;)
@@ -329,6 +332,7 @@ PP(register int16_t my;)
 
 
 /* 306de: 00e1b5b6 */
+/* 100de: 00fe3e16 */
 VOID hctl_rect(P(int16_t) mx, P(int16_t) my)
 PP(int16_t mx;)
 PP(int16_t my;)
@@ -369,6 +373,7 @@ PP(int16_t my;)
  */
 /* 306de: 00e1b67a */
 /* 106de: 00e1f7f6 */
+/* 100de: 00fe3ece */
 VOID ct_chgown(P(PD *) ppd, P(GRECT *) pr)
 PP(PD *ppd;)
 PP(GRECT *pr;)
@@ -388,6 +393,7 @@ PP(GRECT *pr;)
  */
 /* 306de: 00e1b6de */
 /* 106de: 00e1f85a */
+/* 100de: 00fe3ee6 */
 VOID ctlmgr(NOTHING)
 {
 	register int16_t ev_which;
@@ -436,6 +442,7 @@ VOID ctlmgr(NOTHING)
  */
 /* 306de: 00e1b770 */
 /* 106de: 00e1f8ec */
+/* 100de: 00fe3f66 */
 PD *ictlmgr(P(int16_t) pid)
 PP(int16_t pid;)
 {

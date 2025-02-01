@@ -57,7 +57,7 @@ dsb_sizeof equ 4
 /* 206de: 00e037c6 */
 /* 104de: 00fc0ef0 */
 /* 106de: 00e0108c */
-/* 100fr: 00fc1556 */
+/* 100any: 00fc1556 */
         xdef _flopini
 _flopini:
         lea.l     dsb,a1                        /* get ptr to correct DSB */
@@ -103,7 +103,7 @@ flopini3:
 /* 206de: 00e03820 */
 /* 104de: 00fc0f38 */
 /* 106de: 00e010d4 */
-/* 100fr: 00fc159e */
+/* 100any: 00fc159e */
         xdef _floprd
 _floprd:
         bsr       fdchange                      /* test for disk change */
@@ -250,7 +250,7 @@ fdcerr1:
 /* 206de: 00e0391c */
 /* 104de: 00fc100a */
 /* 106de: 00e011b2 */
-/* 100fr: 00fc167c */
+/* 100any: 00fc167c */
         xdef _flopwrt
 _flopwrt:
         bsr       fdchange                      /* check for disk swap */
@@ -353,7 +353,7 @@ flopwrt7:
 /* 206de: 00e03a04 */
 /* 104de: 00fc10c6 */
 /* 106de: 00e0127a */
-/* 100fr: 00fc1734 */
+/* 100any: 00fc1734 */
         xdef _flopfmt
 _flopfmt:
         cmpi.l    #$87654321,22(a7)             /* check for magic# on stack */
@@ -553,7 +553,7 @@ wmult:
 /* 206de: 00e03bfe */
 /* 104de: 00fc1286 */
 /* 106de: 00e01460 */
-/* 100fr: 00fc18ce */
+/* 100any: 00fc18ce */
         xdef _flopver
 _flopver:
         bsr       fdchange
@@ -662,7 +662,7 @@ verify8:
 /* 206de: 00e03cfe */
 /* 104de: 00fc1360 */
 /* 106de: 00e01528 */
-/* 100fr: 00fc19b0 */
+/* 100any: 00fc19b0 */
         xdef _flopvbl
 _flopvbl:
         SETBASEREG
@@ -733,7 +733,7 @@ flopvbl5:
 /* 206de: 00e03d86 */
 /* 104de: 00fc13dc */
 /* 106de: 00e015a4 */
-/* 100fr: 00fc1a34 */
+/* 100any: 00fc1a34 */
 floplock:
         movem.l   d3-d7/a3-a6,flopsregs         /* save C registers */
         SETBASEREG
@@ -787,7 +787,7 @@ floploc3:
 /* 306de: 00e04216 */
 /* 206de: 00e03e06 */
 /* 104de: 00fc145c */
-/* 100fr: 00fc1acc */
+/* 100any: 00fc1acc */
 flopfail:
         moveq.l   #MEDIAMAYCHANGE,d0            /* disk change mode = unsure */
         bsr       setdchg                       /* set media change mode */
@@ -910,7 +910,7 @@ go2trret:
  */
 /* 104de: 00fc1528 */
 /* 106de: 00e016f0 */
-/* 100fr: 00fc1ba0 */
+/* 100any: 00fc1ba0 */
 restore:
         clr.w     d6                            /* $00 = 1770 "restore" command */
         bsr.s     flopcmds                      /* do restore */
@@ -931,7 +931,7 @@ restore1:
  * Returns:      EQ/NE on success/failure
  */
 /* 104de: fc153e */
-/* 100fr: 00fc1bb6 */
+/* 100any: 00fc1bb6 */
 flopcmds:
         move.w    fd_seekrate(a1),d0            /* get floppy's seek rate bits */
         and.b     #3,d0                         /* OR into command */
@@ -1126,7 +1126,7 @@ rwdly1:     dbf       d7,rwdly1
 /* 206de: 00e0406a */
 /* 104de: 00fc1640 */
 /* 106de: 00e01818 */
-/* 100fr: 00fc1cbe */
+/* 100any: 00fc1cbe */
 fdchange:
             cmpi.w    #1,_nflops                /* if there are zero or two floppies */
             bne.s     fdchang2                  /* then do nothing (return OK) */

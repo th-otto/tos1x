@@ -29,6 +29,7 @@ LINEF_STATIC VOID rest_infpath PROTO((NOTHING));
 
 /* 104de: 00fd4cb0 */
 /* 106de: 00e150e2 */
+/* 100de: 00fda350 */
 APP *app_alloc(P(BOOLEAN) atend)
 PP(register BOOLEAN atend;)
 {
@@ -65,6 +66,7 @@ PP(register BOOLEAN atend;)
  * Free an application node
  */
 /* 104de: 00fd4cfc */
+/* 100de: 00fda39c */
 VOID app_free(P(APP *) app)
 PP(register APP *app;)
 {
@@ -93,6 +95,7 @@ PP(register APP *app;)
  */
 /* 306de: 00e2c064 */
 /* 104de: 00fd4d3a */
+/* 100de: 00fda3da */
 LINEF_STATIC int16_t hex_dig(P(char) achar)
 PP(register char achar;)
 {
@@ -111,6 +114,7 @@ PP(register char achar;)
  */
 /* 306de: 00e2b5b4 */
 /* 104de: 00fd4d76 */
+/* 100de: 00fda416 */
 LINEF_STATIC char uhex_dig(P(int16_t) wd)
 PP(register int16_t wd;)
 {
@@ -130,6 +134,7 @@ PP(register int16_t wd;)
  */
 /* 306de: 00e2b62a */
 /* 104de: 00fd4dac */
+/* 100de: 00fda44c */
 char *scan_2(P(const char *) pcurr, P(int16_t *) pwd)
 PP(register const char *pcurr;)
 PP(register int16_t *pwd;)
@@ -152,6 +157,7 @@ PP(register int16_t *pwd;)
  */
 /* 306de: 00e2b66e */
 /* 104de: 00fd4de4 */
+/* 100de: 00fda484 */
 char *save_2(P(char *) pcurr, P(uint16_t) wd)
 PP(char *pcurr;)
 PP(uint16_t wd;)
@@ -165,6 +171,7 @@ PP(uint16_t wd;)
 
 /* 306de: 00e2b5f2 */
 /* 104de: 00fd4e14 */
+/* 100de: 00fda4ce */
 char *escan_str(P(const char *)pcurr, P(char **)ppstr)
 PP(register const char *pcurr;)
 PP(register char **ppstr;)
@@ -190,6 +197,7 @@ PP(register char **ppstr;)
  */
 /* 306de: 00e2b6ac */
 /* 104de: 00fd4e5a */
+/* 100de: 00fda514 */
 char *save_sstr(P(char *)pcurr, P(const char *)pstr)
 PP(register char *pcurr;)
 PP(register const char *pstr;)
@@ -207,6 +215,7 @@ PP(register const char *pstr;)
  */
 /* 306de: 00e2b6dc */
 /* 104de: 00fd4e82 */
+/* 100de: 00fda538 */
 LINEF_STATIC const char *inf_xdesk(P(const char *)pcurr, P(APP *) app)
 PP(register const char *pcurr;)
 PP(register APP *app;)
@@ -262,6 +271,7 @@ PP(register APP *app;)
 }
 
 
+/* 100de: 00fda63c */
 VOID app_tran(P(int16_t) bi_num)
 PP(int16_t bi_num;)
 {
@@ -275,6 +285,7 @@ PP(int16_t bi_num;)
 }
 
 
+/* 100de: 00fda682 */
 int16_t app_getfh(P(BOOLEAN) openit, P(char *) pname, P(int16_t) attr)
 PP(BOOLEAN openit;)
 PP(register char *pname;)
@@ -300,6 +311,7 @@ PP(register int16_t attr;)
 }
 
 
+/* 100de: 00fda6da */
 BOOLEAN app_rdicon(NOTHING)
 {
 	register THEDSK *d;
@@ -432,6 +444,7 @@ BOOLEAN app_rdicon(NOTHING)
  */
 /* 306de: 00e2c8b6 */
 /* 104de: 00fd4f6e */
+/* 100de: 00fda9c2 */
 VOID app_mtoi(P(int16_t) newx, P(int16_t) newy, P(int16_t *)px, P(int16_t *)py)
 PP(int16_t newx;)
 PP(int16_t newy;)
@@ -479,6 +492,7 @@ PP(register int16_t *py;)
 
 /* 104de: 00fd5062 */
 /* 106de: 00e15508 */
+/* 100de: 00fdaab6 */
 BOOLEAN read_inf(NOTHING)
 {
 	register int16_t i, tmp;
@@ -690,6 +704,7 @@ BOOLEAN read_inf(NOTHING)
 
 /* 306de: 00e27d68 */
 /* 104de: 00fd5596 */
+/* 100de: 00fdafc0 */
 BOOLEAN app_reschange(P(int16_t) res)
 PP(int16_t res;)
 {
@@ -709,6 +724,7 @@ PP(int16_t res;)
  * Reverse list when we write so that we can read it in naturally
  */
 /* 104de: 00fd55be */
+/* 100de: 00fdafea */
 LINEF_STATIC VOID app_reverse(NOTHING)
 {
 	register APP *app;
@@ -735,6 +751,7 @@ LINEF_STATIC VOID app_reverse(NOTHING)
 /* 306de: 00e2c186 */
 /* 104de: 00fd55e8 */
 /* 106de: 00e15aee */
+/* 100de: 00fdb014 */
 BOOLEAN save_inf(P(BOOLEAN) todisk)
 PP(BOOLEAN todisk;)
 {
@@ -939,6 +956,7 @@ LINEF_STATIC VOID rest_infpath(NOTHING)
  */
 /* 306de: 00e1e556 */
 /* 104de: 00fd598e */
+/* 100de: 00fdb3ba */
 BOOLEAN set_defdrv(NOTHING)
 {
 #if 0

@@ -25,6 +25,7 @@
 #if LINEF_HACK
 
 /* 104de: 00fe7882 */
+/* 100de: 00fee87e */
 
 	xdef linefhandler
 linefhandler:

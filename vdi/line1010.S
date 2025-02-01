@@ -47,6 +47,7 @@
 /* 208de: 00e068ee */
 /* 104de: 00fcab96 */
 /* 106de: 00e0adc2 */
+/* 100de: 00fc9ca2 */
 /* 404: 00e094ea */
 		xdef	line1010
 line1010:	move.l	2(sp),a1	; fetch pc off stack.
@@ -81,6 +82,7 @@ atab:		dc.l	var_base,_put_pix,_get_pix,M_ABLINE
 *-
 /* 306de: 00e07a20 */
 /* 104de: 00fcac14 */
+/* 100de: 00fc9d20 */
 fonts:	dc.l	_f6x6
 		dc.l	_f8x8
 		dc.l	_f8x16

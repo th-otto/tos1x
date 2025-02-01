@@ -29,6 +29,7 @@ char *g_buffer;						/* merge string buffer  */
 /* 306de: 00e301dc */
 /* 104de: 00fd947e */
 /* 106de: 00e1a152 */
+/* 100de: 00fdf252 */
 int16_t fun_alert(P(int16_t) defbutton, P(int16_t) item, P(VOIDPTR) parms)
 PP(int16_t defbutton;)
 PP(int16_t item;)
@@ -54,6 +55,7 @@ PP(VOIDPTR parms;)
  */
 /* 104de: 00fd94c8 */
 /* 106de: 00e1a1b0 */
+/* 100de: 00fdf2a0 */
 VOID send_msg(P(int16_t) type, P(int16_t) whom, P(int16_t) w3, P(int16_t) w4, P(int16_t) w5, P(int16_t) w6, P(int16_t) w7)
 {
 	int16_t msg[8];
@@ -72,6 +74,7 @@ VOID send_msg(P(int16_t) type, P(int16_t) whom, P(int16_t) w3, P(int16_t) w4, P(
 
 /* 104de: 00fd9572 */
 /* 106de: 00e1a27c */
+/* 100de: 00fdf2ec */
 /* Rebuild window path and pflist */
 /* aka fun_rebld */
 VOID up_1win(P(DESKWIN *) win)
@@ -114,6 +117,7 @@ PP(register DESKWIN *win;)
  */
 /* 104de: 00fd9624 */
 /* 106de: 00e1a364 */
+/* 100de: 00fdf3b8 */
 /* aka fun_mkdir */
 BOOLEAN newfolder(P(DESKWIN *) win)
 PP(register DESKWIN *win;)
@@ -207,6 +211,7 @@ PP(register DESKWIN *win;)
 
 /* 104de: 00fd9768 */
 /* 106de: 00e1a4ec */
+/* 100de: 00fdf538 */
 BOOLEAN fun_op(P(int) op, P(PNODE *) pspath)
 PP(int op;)
 PP(register PNODE *pspath;)
@@ -264,6 +269,7 @@ PP(register PNODE *pspath;)
  */
 /* 104de: 00fd9848 */
 /* 106de: 00e1a5e2 */
+/* 100de: 00fdf640 */
 BOOLEAN fun_wdst(P(PNODE *) pspath, P(APP *) app, P(int) obid)
 PP(PNODE *pspath;)
 PP(register APP *app;)
@@ -310,6 +316,7 @@ PP(int obid;)
  */
 /* 104de: 00fd9922 */
 /* 106de: 00e1a5e2 */
+/* 100de: 00fdf6d8 */
 BOOLEAN fun_file2win(P(PNODE *) pn_src, P(char *) spec, P(APP *) app, P(FNODE *) fn_dest)
 PP(PNODE *pn_src;)
 PP(char *spec;)
@@ -336,6 +343,7 @@ PP(register FNODE *fn_dest;)
 
 /* 104de: 00fd9d76 */
 /* 106de: 00e1abd2 */
+/* 100de: 00fdf75a */
 VOID desk1_drag(P(int16_t) wh, P(int16_t) dest_wh, P(int16_t) dobj)
 PP(register int16_t wh;)
 PP(register int16_t dest_wh;)
@@ -372,6 +380,7 @@ PP(int16_t dobj;)
 
 /* 104de: 00fd99e0 */
 /* 106de: 00e1a7b4 */
+/* 100de: 00fdf7ba */
 VOID fun_win2desk(P(int16_t) wh, P(int16_t) obj)
 PP(int16_t wh;)
 PP(int16_t obj;)
@@ -407,6 +416,7 @@ PP(int16_t obj;)
 
 /* 104de: 00fd9a6c */
 /* 106de: 00e1a856 */
+/* 100de: 00fdf808 */
 BOOLEAN fun_f2any(P(int16_t) sobj, P(DESKWIN *) wn_dest, P(APP *) an_dest, P(FNODE *) fn_dest, P(int16_t) dobj)
 PP(int16_t sobj;)
 PP(DESKWIN *wn_dest;)
@@ -451,6 +461,7 @@ PP(int16_t dobj;)
 
 /* 104de: 00fd9b3c */
 /* 106de: 00e1a94c */
+/* 100de: 00fdf8d0 */
 VOID fun_desk2win(P(int16_t) wh, P(int16_t) dobj)
 PP(int16_t wh;)
 PP(register int16_t dobj;)
@@ -489,6 +500,7 @@ PP(register int16_t dobj;)
 
 /* 104de: 00fd9be0 */
 /* 106de: 00e1aa12 */
+/* 100de: 00fdf982 */
 BOOLEAN fun_d2desk(P(int16_t) dobj)
 PP(int16_t dobj;)
 {
@@ -588,6 +600,7 @@ PP(int16_t dobj;)
 }
 
 
+/* 100de: 00fdfbb0 */
 BOOLEAN fun_ddrag(P(int16_t) src_wh, P(int16_t) dest_wh, P(int16_t) sobj, P(int16_t) dobj)
 PP(register int16_t src_wh;)
 PP(register int16_t dest_wh;)

@@ -53,6 +53,7 @@
 /* 306de: 00e26182 */
 /* 104de: 00fe639c */
 /* 106de: 00e28ace */
+/* 100de: 00fed2e6 */
 	xdef	_far_bchange
 _far_bchange:
 	move.l	a7,gstksave		; save stack, paranoid code
@@ -76,6 +77,7 @@ _far_bchange:
 /* 306de: 00e26208 */
 /* 104de: 00fe6422 */
 /* 106de: 00e28b54 */
+/* 100de: 00fed30c */
 	xdef	_far_mchange
 _far_mchange:
 	move.l	a7,gstksave		; save stack
@@ -98,6 +100,7 @@ _far_mchange:
  *
  *	  call gsx with absolute x and y to draw cursor
  */
+/* 100de: 00fed33a */
 	xdef	_drawrat
 _drawrat:
 	move.w	4(a7),d0		; xrat
@@ -118,6 +121,7 @@ _justretf:
  */
 /* 306de: 00e26248 */
 /* 104de: 00fe6462 */
+/* 100de: 00fed34e */
 	xdef	_tikcod
 _tikcod:
 	move.l	a7,tstksave		; save stack

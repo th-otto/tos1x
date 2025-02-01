@@ -51,6 +51,7 @@ static VOID mkrect PROTO((LPTREE tree, int16_t wh, int16_t junkx, int16_t junky)
 
 
 /* init owner rectangles */
+/* 100de: 00fe4e62 */
 VOID or_start(NOTHING)
 {
 	register int16_t i;
@@ -67,6 +68,7 @@ VOID or_start(NOTHING)
 /* 306de: 00e22d7a */
 /* 104de: 00fdee1e */
 /* 106de: 00e2074e */
+/* 100de: 00fe4eac */
 ORECT *get_orect(NOTHING)
 {
 	ORECT *po;
@@ -80,6 +82,7 @@ ORECT *get_orect(NOTHING)
 /* 306de: 00e22d9c */
 /* 104de: 00fdee3e */
 /* 106de: 00e20770 */
+/* 100de: 00fe4ecc */
 ORECT *mkpiece(P(int16_t) tlrb, P(ORECT *) new, P(ORECT *) old)
 PP(int16_t tlrb;)
 PP(register ORECT *new;)
@@ -120,6 +123,7 @@ PP(register ORECT *old;)
 /* 306de: 00e22e88 */
 /* 104de: 00fdef1a */
 /* 106de: 00e2085c */
+/* 100de: 00fe4fa8 */
 ORECT *brkrct(P(ORECT *) new, P(ORECT *) r, P(ORECT *) p)
 PP(register ORECT *new;)
 PP(register ORECT *r;)
@@ -158,6 +162,7 @@ PP(register ORECT *p;)
 /* 306de: 00e22f84 */
 /* 104de: 00fdf00c */
 /* 106de: 00e20958 */
+/* 100de: 00fe509a */
 static VOID mkrect(P(LPTREE) tree, P(int16_t) wh, P(int16_t) junkx, P(int16_t) junky)
 PP(LPTREE tree;)
 PP(int16_t wh;)
@@ -192,6 +197,7 @@ PP(int16_t junky;)
 /* 306de: 00e22fe2 */
 /* 104de: 00fdf060 */
 /* 106de: 00e209b6 */
+/* 100de: 00fe50ee */
 VOID newrect(P(LPTREE) tree, P(int16_t) wh, P(int16_t) junkx, P(int16_t) junky)
 PP(LPTREE tree;)
 PP(int16_t wh;)

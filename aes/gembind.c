@@ -39,6 +39,7 @@ uint16_t crysbind PROTO((int16_t opcode, intptr_t pglobal, uint16_t *int_in, int
 /* 104de: 00fdf10c */
 /* 106de: 00e20a78 */
 /* 100fr: 00fe54d6 */
+/* 100de: 00fe519e */
 uint16_t crysbind(P(int16_t) opcode, P(intptr_t) pglobal, P(uint16_t *) int_in, P(int16_t *) int_out, P(VOIDPTR *) addr_in)
 PP(int16_t opcode;)
 PP(register intptr_t pglobal;)
@@ -399,6 +400,7 @@ PP(register VOIDPTR *addr_in;)
 /* 206de: 00e172a4 */
 /* 104de: 00fdf894 */
 /* 106de: 00e2133a */
+/* 100de: 00fe5b38 */
 asm("    .globl xif");
 asm("xif: .text");
 VOID xif(P(intptr_t) pcrys_blk)
@@ -445,6 +447,7 @@ PP(intptr_t pcrys_blk;)
 VOID super PROTO((int16_t crystal, int16_t dummy, intptr_t pcrys_blk));
 VOID supret PROTO((int16_t));
 
+/* 100de: 00fe5b38 */
 VOID super(P(int16_t) crystal, P(int16_t) dummy, P(intptr_t) pcrys_blk)
 PP(int16_t crystal;)
 PP(int16_t dummy;)

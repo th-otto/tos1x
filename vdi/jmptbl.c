@@ -38,6 +38,7 @@
 /* 306de: 00e3d65e */
 /* 104de: 00feade6 */
 /* 106de: 00e2cd60 */
+/* 100de: 00fd235a */
 VOID (*jmptb1[]) PROTO((NOTHING)) =
 {
 	v_opnwk,
@@ -85,6 +86,7 @@ VOID (*jmptb1[]) PROTO((NOTHING)) =
 /* 306de: 00e3d6fa */
 /* 104de: 00feae82 */
 /* 106de: 00e2cdfc */
+/* 100de: 00fd23f6 */
 VOID (*jmptb2[]) PROTO((NOTHING)) =
 {
 	d_opnvwk,
@@ -128,6 +130,7 @@ VOID (*jmptb2[]) PROTO((NOTHING)) =
 /* 306de: 00e07fa2 */
 /* 104de: 00fcb684 */
 /* 106de: 00fe0b8b0 */
+/* 100de: 00fca8a0 */
 VOID SCREEN(NOTHING)
 {
 	register int16_t opcode, r, *control;

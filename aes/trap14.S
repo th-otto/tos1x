@@ -72,6 +72,7 @@
 	text
 
 /* 100us: 00fee782 */
+/* 100de: 00fee432 */
 	xdef _xbios
 _xbios: ds.b 0
 	move.l	(sp)+,xbiosaret
@@ -88,6 +89,7 @@ _xbios: ds.b 0
 	rts
 
 /* 100us: fee7a8 */
+/* 100de: 00fee458 */
 	xdef _bios
 _bios: ds.b 0
 	move.l	(sp)+,biosaret
@@ -110,6 +112,7 @@ _bios: ds.b 0
 /* void fc_swp68(uint16_t *val); */
 /* same as swp68() in bdos */
 /* 100fr: 00fee76a */
+/* 100de: 00fee47e */
 	xdef _fc_swp68
 _fc_swp68:
 	link       a6,#0
@@ -130,6 +133,7 @@ _fc_swp68:
 	xdef _bios
 _bios: ds.b 0
 #endif
+/* 100de: 00fee490 */
 	xdef _trp13
 _trp13: ds.b 0
 	move.l	(sp)+,trp13aret
@@ -142,6 +146,7 @@ _trp13: ds.b 0
 	xdef _xbios
 _xbios: ds.b 0
 #endif
+/* 100de: 00fee4a0 */
 	xdef _trp14
 _trp14: ds.b 0
 	move.l	(sp)+,trp14aret

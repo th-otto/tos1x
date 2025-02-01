@@ -30,6 +30,7 @@ LINEF_STATIC VOID win_blt PROTO((DESKWIN *pw, BOOLEAN vertical, int16_t newcv));
 
 /* 104de: 00fdc09c */
 /* 106de: 00e1d518 */
+/* 100de: 00fe1e30 */
 VOID win_view(P(int16_t) vtype, P(int16_t) isort)
 PP(int16_t vtype;)
 PP(int16_t isort;)
@@ -72,6 +73,7 @@ PP(int16_t isort;)
  */
 /* 104de: 00fdc184 */
 /* 106de: 00e1d608 */
+/* 100de: 00fe1f18 */
 VOID win_start(NOTHING)
 {
 	register int i;
@@ -100,6 +102,7 @@ VOID win_start(NOTHING)
  */
 /* 104de: 00fdc2a6 */
 /* 106de: 00e1d748 */
+/* 100de: 00fe1f58 */
 DESKWIN *win_alloc(P(int16_t) obid)
 PP(int16_t obid;)
 {
@@ -147,6 +150,7 @@ PP(int16_t obid;)
  */
 /* 104de: 00fdc376 */
 /* 106de: 00e1d82c */
+/* 100de: 00fe2020 */
 VOID win_free(P(DESKWIN *)thewin)
 PP(register DESKWIN *thewin;)
 {
@@ -166,6 +170,7 @@ PP(register DESKWIN *thewin;)
  */
 /* 104de: 00fdc3f4 */
 /* 106de: 00e1d8c2 */
+/* 100de: 00fe207e */
 DESKWIN *win_find(P(int16_t) wh)
 PP(int16_t wh;)
 {
@@ -183,6 +188,7 @@ PP(int16_t wh;)
 /*
  *	Bring a window node to the top of the window list.
  */
+/* 100de: 00fe20ba */
 VOID win_top(P(DESKWIN *)thewin)
 PP(DESKWIN *thewin;)
 {
@@ -199,6 +205,7 @@ PP(DESKWIN *thewin;)
  *	is the currently active window.  If not, then no window is on
  *	top and return 0.
  */
+/* 100de: 00fe20da */
 DESKWIN *win_ontop(NOTHING)
 {
 	register THEDSK *d;
@@ -226,6 +233,7 @@ DESKWIN *win_ontop(NOTHING)
  *	Find the window node that is the ith from the bottom.  Where
  *	0 is the bottom (desktop surface) and 1-4 are windows.
  */
+/* 100de: 00fe2122 */
 LINEF_STATIC int win_cnt(P(int) level)
 PP(register int level;)
 {
@@ -243,6 +251,7 @@ PP(register int level;)
 }
 
 
+/* 100de: 00fe2156 */
 DESKWIN *win_ith(P(int) level)
 PP(int level;)
 {
@@ -256,6 +265,7 @@ PP(int level;)
  */
 /* 104de: 00fdc524 */
 /* 106de: 00e1da26 */
+/* 100de: 00fe216c */
 LINEF_STATIC VOID win_ocalc(P(DESKWIN *)pwin, P(int16_t) wfit, P(int16_t) hfit, P(FNODE **)ppstart)
 PP(register DESKWIN *pwin;)
 PP(int16_t wfit;)
@@ -316,6 +326,7 @@ PP(FNODE **ppstart;)
  *	Calculate a bunch of parameters dealing with a particular
  *	icon.
  */
+/* 100de: 00fe2264 */
 LINEF_STATIC VOID win_icalc(P(FNODE *)pfnode)
 PP(register FNODE *pfnode;)
 {
@@ -334,6 +345,7 @@ PP(register FNODE *pfnode;)
  */
 /* 104de: 00fdc652 */
 /* 106de: 00e1db70 */
+/* 100de: 00fe22c6 */
 VOID win_bldview(P(DESKWIN *)pwin, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(register DESKWIN *pwin;)
 PP(int16_t x;)
@@ -444,6 +456,7 @@ PP(int16_t h;)
  */
 /* 104de: 00fdc988 */
 /* 106de: 00e1def0 */
+/* 100de: 00fe267a */
 LINEF_STATIC VOID win_blt(P(DESKWIN *)pw, P(BOOLEAN) vertical, P(int16_t) newcv)
 PP(register DESKWIN *pw;)
 PP(BOOLEAN vertical;)
@@ -549,6 +562,7 @@ PP(register int16_t newcv;)
  *	Routine to change the current virtual row or column being viewed
  *	in the upper left corner based on a new slide amount.
  */
+/* 100de: 00fe287a */
 VOID win_slide(P(int16_t) wh, P(uint16_t) sl_value, P(BOOLEAN) vertical)
 PP(int16_t wh;)
 PP(uint16_t sl_value;)
@@ -601,6 +615,7 @@ static int is_arrowed(NOTHING)
  *	Routine to change the current virtual row or column being viewed
  *	in the upper left corner based on a new slide amount.
  */
+/* 100de: 00fe2910 */
 VOID win_arrow(P(int16_t) wh, P(int16_t) arrow_type)
 PP(int16_t wh;)
 PP(int16_t arrow_type;)
@@ -669,6 +684,7 @@ again:;
 /*
  *	Routine to sort all existing windows again
  */
+/* 100de: 00fe2998 */
 VOID win_srtall(NOTHING)
 {
 	register THEDSK *d;
@@ -690,6 +706,7 @@ VOID win_srtall(NOTHING)
  * Routine to build all existing windows again,
  * and redraw them.
  */
+/* 100de: 00fe29fa */
 VOID win_bdall(void)
 {
 	register int ii;
@@ -717,6 +734,7 @@ VOID win_bdall(void)
 /*
  *	Routine to draw all existing windows.
  */
+/* 100de: 00fe2a70 */
 VOID win_shwall(NOTHING)
 {
 	register int ii;
@@ -738,6 +756,7 @@ VOID win_shwall(NOTHING)
 /*
  *	Return the next icon that was selected after the current icon.
  */
+/* 100de: 00fe2ad6 */
 int16_t win_isel(P(OBJECT *)olist, P(int16_t) root, P(int16_t) curr)
 PP(OBJECT *olist;)
 PP(register int16_t root;)
@@ -762,6 +781,7 @@ PP(register int16_t curr;)
  *	Return pointer to this icons name.  It will always be an icon that
  *	is on the desktop.
  */
+/* 100de: 00fe2b3a */
 char *win_iname(P(int16_t) curr)
 PP(int16_t curr;)
 {
@@ -778,6 +798,7 @@ PP(int16_t curr;)
 /*
  *	Set the information lines of a particular window
  */
+/* 100de: 00fe2b64 */
 VOID win_sinfo(P(DESKWIN *)pwin)
 PP(register DESKWIN *pwin;)
 {
@@ -799,6 +820,7 @@ PP(register DESKWIN *pwin;)
 /*
  *	Set the name and information lines of a particular window
  */
+/* 100de: 00fe2bc2 */
 VOID win_sname(P(DESKWIN *)pw)
 PP(register DESKWIN *pw;)
 {

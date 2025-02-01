@@ -73,6 +73,7 @@ static TEDINFO edblk;
 
 
 
+/* 100de: 00fe8cfc */
 LINEF_STATIC VOID ob_getsp(P(LPTREE) tree, P(int16_t) obj, P(TEDINFO *) pted)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -96,6 +97,7 @@ PP(TEDINFO *pted;)
 /* 306de: 00e1f40e */
 /* 104de: 00fe2584 */
 /* 106de: 00e245b2 */
+/* 100de: 00fe8d4a */
 VOID ob_center(P(LPTREE) tree, P(GRECT *)pt)
 PP(LPTREE tree;)
 PP(GRECT *pt;)
@@ -159,6 +161,7 @@ PP(GRECT *pt;)
  */
 /* 104de: 00fe2674 */
 /* 106de: 00e246b2 */
+/* 100de: 00fe8dd6 */
 LINEF_STATIC int16_t scan_to_end(P(char *) pstr, P(int16_t) idx, P(char) chr)
 PP(register char *pstr;)
 PP(register int16_t idx;)
@@ -178,6 +181,7 @@ PP(char chr;)
  */
 /* 104de: 00fe26a0 */
 /* 106de: 00e246e6 */
+/* 100de: 00fe8e02 */
 VOID ins_char(P(char *) str, P(int16_t) pos, P(char) chr, P(int16_t) tot_len)
 PP(register char *str;)
 PP(int16_t pos;)
@@ -205,6 +209,7 @@ PP(register int16_t tot_len;)
  */
 /* 104de: 00fe26fc */
 /* 106de: 00e2474e */
+/* 100de: 00fe8e5e */
 LINEF_STATIC int16_t find_pos(P(char *) str, P(int16_t) pos)
 PP(register char *str;)
 PP(register int16_t pos;)
@@ -238,6 +243,7 @@ PP(register int16_t pos;)
 
 /* 104de: 00fe2764 */
 /* 106de: 00e247be */
+/* 100de: 00fe8ea0 */
 LINEF_STATIC VOID pxl_rect(P(LPTREE) tree, P(int16_t) obj, P(int16_t) ch_pos, P(GRECT *) pt)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)
@@ -262,6 +268,7 @@ PP(register GRECT *pt;)
  */
 /* 104de: 00fe27d2 */
 /* 106de: 00e2483c */
+/* 100de: 00fe8f12 */
 LINEF_STATIC VOID curfld(P(LPTREE) tree, P(int16_t) obj, P(int16_t) new_pos, P(int16_t) dist)
 PP(LPTREE tree;)
 PP(int16_t obj;)
@@ -305,6 +312,7 @@ PP(int16_t dist;)
  */
 /* 104de: 00fe285c */
 /* 106de: 00e248e2 */
+/* 100de: 00fe8fa6 */
 LINEF_STATIC int16_t instr(P(char) chr, P(const char *) str)
 PP(register char chr;)
 PP(register char *str;)
@@ -332,6 +340,7 @@ PP(register char *str;)
  */
 /* 104de: 00fe289c */
 /* 106de: 00e2492a */
+/* 100de: 00fe8fe6 */
 LINEF_STATIC BOOLEAN check(P(char *) in_char, P(char) valchar)
 PP(register char *in_char;)
 PP(char valchar;)
@@ -399,6 +408,7 @@ PP(char valchar;)
  */
 /* 104de: 00fe2938 */
 /* 106de: 00e249dc */
+/* 100de: 00fe9082 */
 LINEF_STATIC VOID ob_stfn(P(int16_t) idx, P(int16_t *) Pstart, P(int16_t *) pfinish)
 PP(int16_t idx;)
 PP(int16_t *Pstart;)
@@ -411,6 +421,7 @@ PP(int16_t *pfinish;)
 
 /* 104de: 00fe2978 */
 /* 106de: 00e24a2c */
+/* 100de: 00fe90ba */
 LINEF_STATIC int16_t ob_delit(P(int16_t) idx)
 PP(int16_t idx;)
 {
@@ -429,6 +440,7 @@ PP(int16_t idx;)
 /* 306de: 00e1f8e0 */
 /* 104de: 00fe29c4 */
 /* 106de: 00e24a84 */
+/* 100de: 00fe9108 */
 int16_t ob_edit(P(LPTREE) tree, P(int16_t) obj, P(int16_t) in_char, P(int16_t *) idx, P(int16_t) kind)
 PP(register LPTREE tree;)
 PP(register int16_t obj;)

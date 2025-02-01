@@ -61,6 +61,7 @@ static VOID make_header PROTO((NOTHING));
 /* 206de: 00e0a114 */
 /* 104de: 00fce36e */
 /* 106de: 00e0e598 */
+/* 100de: 00fcd61c */
 VOID d_gtext(NOTHING)
 {
 	int16_t monotest;
@@ -393,6 +394,7 @@ VOID d_gtext(NOTHING)
 /* 206de: 00e0a82a */
 /* 104de: 00fcea8a */
 /* 106de: 00e0ecae */
+/* 100de: 00fcdd62 */
 VOID text_init(NOTHING)
 {
 	int16_t i, j;
@@ -471,6 +473,7 @@ VOID text_init(NOTHING)
 /* 306de: 00e0b1c8 */
 /* 206de: 00e0a95e */
 /* 104de: 00fcebbe */
+/* 100de: 00fcde96 */
 VOID dst_height(NOTHING)
 {
 	const struct font_head **chain_ptr;
@@ -541,6 +544,7 @@ VOID dst_height(NOTHING)
 /* 306de: 00e0b2e6 */
 /* 206de: 00e0aa7c */
 /* 104de: 00fcecdc */
+/* 100de: 00fcdfb4 */
 static VOID copy_name(P(const char *) source, P(char *) dest)
 PP(const char *source;)
 PP(char *dest;)
@@ -560,6 +564,7 @@ PP(char *dest;)
 /* 306de: 00e0b30e */
 /* 206de: 00e0aaa4 */
 /* 104de: 00fced04 */
+/* 100de: 00fcdfdc */
 static VOID make_header(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;
@@ -655,6 +660,7 @@ static VOID make_header(NOTHING)
 /* 306de: 00e0b45e */
 /* 206de: 00e0abf4 */
 /* 104de: 00fcee54 */
+/* 100de: 00fce132 */
 VOID dst_point(NOTHING)
 {
 	int16_t font_id;
@@ -739,6 +745,7 @@ VOID dst_point(NOTHING)
 /* 306de: 00e0b5a4 */
 /* 206de: 00e0ad3a */
 /* 104de: 00fcef9a */
+/* 100de: 00fce278 */
 VOID vst_effects(NOTHING)
 {
 	LV(INTOUT)[0] = LV(cur_work)->style = LV(INTIN)[0] & LV(INQ_TAB)[2];
@@ -752,6 +759,7 @@ VOID vst_effects(NOTHING)
 /* 306de: 00e0b5d8 */
 /* 206de: 00e0ad6e */
 /* 104de: 00fcefce */
+/* 100de: 00fce2ac */
 VOID dst_alignment(NOTHING)
 {
 	register int16_t a, *int_out, *int_in;
@@ -782,6 +790,7 @@ VOID dst_alignment(NOTHING)
 /* 306de: 00e0b634 */
 /* 206de: 00e0adca */
 /* 104de: 00fcf02a */
+/* 100de: 00fce308 */
 VOID dst_rotation(NOTHING)
 {
 	LV(INTOUT)[0] = LV(cur_work)->chup = ((LV(INTIN)[0] + 450) / 900) * 900;
@@ -795,6 +804,7 @@ VOID dst_rotation(NOTHING)
 /* 306de: 00e0b66e */
 /* 206de: 00e0ae04 */
 /* 104de: 00fcf064 */
+/* 100de: 00fce342 */
 VOID dst_font(NOTHING)
 {
 	int16_t *old_intin, point, *old_ptsout, dummy[4], *old_ptsin;
@@ -855,6 +865,7 @@ VOID dst_font(NOTHING)
 /* 306de: 00e0b752 */
 /* 206de: 00e0aee8 */
 /* 104de: 00fcf148 */
+/* 100de: 00fce426 */
 VOID dst_color(NOTHING)
 {
 	register int16_t r;
@@ -876,6 +887,7 @@ VOID dst_color(NOTHING)
 /* 306de: 00e0b7a2 */
 /* 206de: 00e0af38 */
 /* 104de: 00fcf198 */
+/* 100de: 00fce476 */
 VOID dqt_attributes(NOTHING)
 {
 	register int16_t *pointer, temp;
@@ -913,6 +925,7 @@ VOID dqt_attributes(NOTHING)
 /* 306de: 00e0b81c */
 /* 206de: 00e0afb2 */
 /* 104de: 00fcf212 */
+/* 100de: 00fce4f0 */
 VOID dqt_extent(NOTHING)
 {
 	register int16_t i, chr, table_start;
@@ -1030,6 +1043,7 @@ VOID dqt_extent(NOTHING)
 /* 306de: 00e0b9d8 */
 /* 206de: 00e0b16e */
 /* 104de: 00fcf3ce */
+/* 100de: 00fce6b6 */
 VOID dqt_width(NOTHING)
 {
 	register int16_t k;
@@ -1081,6 +1095,7 @@ VOID dqt_width(NOTHING)
 /* 306de: 00e0bab0 */
 /* 206de: 00e0b246 */
 /* 104de: 00fcf4a6 */
+/* 100de: 00fce790 */
 VOID dqt_name(NOTHING)
 {
 	register int16_t i, element;
@@ -1133,6 +1148,7 @@ VOID dqt_name(NOTHING)
 /* 306de: 00e0bb40 */
 /* 206de: 00e0b2d6 */
 /* 104de: 00fcf536 */
+/* 100de: 00fce820 */
 VOID dqt_fontinfo(NOTHING)
 {
 	register int16_t *pointer;
@@ -1184,6 +1200,7 @@ VOID dqt_fontinfo(NOTHING)
 /* 306de: 00e0bbce */
 /* 206de: 00e0b364 */
 /* 104de: 00fcf5c4 */
+/* 100de: 00fce8ae */
 VOID d_justified(NOTHING)
 {
 	int16_t spaces;
@@ -1348,6 +1365,7 @@ VOID d_justified(NOTHING)
 /* 306de: 00e0beea */
 /* 206de: 00e0b680 */
 /* 104de: 00fcf8e0 */
+/* 100de: 00fcebcc */
 VOID dt_loadfont(NOTHING)
 {
 	register int16_t id, count, *control;
@@ -1421,6 +1439,7 @@ VOID dt_loadfont(NOTHING)
 /* 306de: 00e0bf7e */
 /* 206de: 00e0b714 */
 /* 104de: 00fcf974 */
+/* 100de: 00fcec60 */
 VOID dt_unloadfont(NOTHING)
 {
 	register ATTRIBUTE *work_ptr;

@@ -57,12 +57,14 @@ BOOLEAN DOS_ERR;
 #define Bconout(a,b)    trp13(3,a,b)
 
 
+/* 100de: 00fe2d1c */
 int isdrive(NOTHING)
 {
 	return dos_sdrv(dos_gdrv());
 }
 
 
+/* 100de: 00fe2d28 */
 int16_t pgmld(P(int16_t) handle, P(const char *) pname, P(intptr_t *) ldaddr)
 PP(int16_t handle;)
 PP(const char *pname;)
@@ -88,6 +90,7 @@ PP(intptr_t *ldaddr;)
 }
 
 
+/* 100de: 00fe2db2 */
 int chrout(P(int) c)
 PP(int c;)
 {
@@ -95,12 +98,14 @@ PP(int c;)
 }
 
 
+/* 100de: 00fe2dc4 */
 VOID bellout(NOTHING)
 {
 	Bconout(2, 7);
 }
 
 
+/* 100de: 00fe2dda */
 int rawcon(P(int) c)
 PP(int c;)
 {
@@ -108,6 +113,7 @@ PP(int c;)
 }
 
 
+/* 100de: 00fe2dee */
 int prt_chr(P(int) c)
 PP(int c;)
 {
@@ -115,12 +121,14 @@ PP(int c;)
 }
 
 
+/* 100de: 00fe2e00 */
 int dos_gdrv(NOTHING)
 {
 	return Dgetdrv();
 }
 
 
+/* 100de: 00fe2e0c */
 int dos_sdta(P(VOIDPTR) dta)
 PP(VOIDPTR dta;)
 {
@@ -128,6 +136,7 @@ PP(VOIDPTR dta;)
 }
 
 
+/* 100de: 00fe2e1e */
 BOOLEAN dos_sfirst(P(const char *)name, P(int) attrib)
 PP(const char *name;)
 PP(int attrib;)
@@ -148,6 +157,7 @@ PP(int attrib;)
 }
 
 
+/* 100de: 00fe2e62 */
 BOOLEAN dos_snext(NOTHING)
 {
 	register long err;
@@ -166,6 +176,7 @@ BOOLEAN dos_snext(NOTHING)
 }
 
 
+/* 100de: 00fe2e9c */
 int dos_open(P(const char *) name, P(int) mode)
 PP(const char *name;)
 PP(int mode;)
@@ -182,6 +193,7 @@ PP(int mode;)
 }
 
 
+/* 100de: 00fe2eda */
 int dos_close(P(int) fd)
 PP(int fd;)
 {
@@ -189,6 +201,7 @@ PP(int fd;)
 }
 
 
+/* 100de: 00fe2eec */
 /* Attention: size_t is only 16bit on Alcyon */
 long dos_read(P(int) fd, P(size_t) size, P(VOIDPTR) buf)
 PP(int fd;)
@@ -201,6 +214,7 @@ PP(VOIDPTR buf;)
 }
 
 
+/* 100de: 00fe2f12 */
 /* Attention: size_t is only 16bit on Alcyon */
 long dos_write(P(int) fd, P(size_t) size, P(VOIDPTR) buf)
 PP(int fd;)
@@ -213,6 +227,7 @@ PP(VOIDPTR buf;)
 }
 
 
+/* 100de: 00fe2f38 */
 long dos_lseek(P(int) fd, P(int) whence, P(long) offset)
 PP(int fd;)
 PP(int whence;)
@@ -222,6 +237,7 @@ PP(long offset;)
 }
 
 
+/* 100de: 00fe2f52 */
 long dos_chdir(P(const char *) path)
 PP(const char *path;)
 {
@@ -231,6 +247,7 @@ PP(const char *path;)
 }
 
 
+/* 100de: 00fe2f6c */
 int dos_gdir(P(int) drive, P(char *) pdrvpath)
 PP(int drive;)
 PP(char *pdrvpath;)
@@ -239,6 +256,7 @@ PP(char *pdrvpath;)
 }
 
 
+/* 100de: 00fe2f82 */
 int dos_sdrv(P(int) drv)
 PP(int drv;)
 {
@@ -246,6 +264,7 @@ PP(int drv;)
 }
 
 
+/* 100de: 00fe2f94 */
 long dos_create(P(const char *) name, P(int) attr)
 PP(const char *name;)
 PP(int attr;)
@@ -257,6 +276,7 @@ PP(int attr;)
 }
 
 
+/* 100de: 00fe2fb2 */
 BOOLEAN dos_mkdir(P(const char *) path)
 PP(const char *path;)
 {
@@ -269,6 +289,7 @@ PP(const char *path;)
 }
 
 
+/* 100de: 00fe2fe8 */
 long dos_chmod(P(const char *) path, P(BOOLEAN) setit, P(int) attr)
 PP(const char *path;)
 PP(BOOLEAN setit;)
@@ -278,6 +299,7 @@ PP(int attr;)
 }
 
 
+/* 100de: 00fe3002 */
 long dos_set(P(int) h, P(uint16_t) time, P(uint16_t) date)
 PP(int h;)
 PP(uint16_t time;)
@@ -291,6 +313,7 @@ PP(uint16_t date;)
 }
 
 
+/* 100de: 00fe3028 */
 BOOLEAN dos_label(P(int) drive, P(char *) name)
 PP(char drive;)
 PP(char *name;)
@@ -321,6 +344,7 @@ PP(char *name;)
 }
 
 
+/* 100de: 00fe30c4 */
 long dos_delete(P(const char *) path)
 PP(const char *path;)
 {
@@ -328,6 +352,7 @@ PP(const char *path;)
 }
 
 
+/* 100de: 00fe30d6 */
 BOOLEAN dos_space(P(int) drive, P(int32_t *) total, P(int32_t *) avail)
 PP(int drive;)
 PP(int32_t *total;)
@@ -344,6 +369,7 @@ PP(int32_t *avail;)
 }
 
 
+/* 100de: 00fe3136 */
 long dos_rename(P(const char *) oldname, P(const char *) newname)
 PP(const char *oldname;)
 PP(const char *newname;)
@@ -352,6 +378,7 @@ PP(const char *newname;)
 }
 
 
+/* 100de: 00fe314e */
 long dos_rmdir(P(const char *) path)
 PP(const char *path;)
 {
@@ -362,6 +389,7 @@ PP(const char *path;)
 }
 
 
+/* 100de: 00fe3160 */
 VOIDPTR dos_alloc(P(long) size)
 PP(long size;)
 {
@@ -384,12 +412,14 @@ PP(long size;)
 /*
  *	Returns the amount of memory available in bytes
  */
+/* 100de: 00fe31a4 */
 intptr_t dos_avail(NOTHING)
 {
 	return Malloc(-1L);
 }
 
 
+/* 100de: 00fe31b8 */
 VOID dos_free(P(VOIDPTR) ptr)
 PP(VOIDPTR ptr;)
 {

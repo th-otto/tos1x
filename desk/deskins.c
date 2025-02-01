@@ -20,6 +20,7 @@
 
 /* 104de: 00fd87dc */
 /* 106de: 00e19344 */
+/* 100de: 00fde60e */
 BOOLEAN ins_disk(P(APP *) app)
 PP(register APP *app;)
 {
@@ -125,6 +126,7 @@ retit:
 
 /* 104de: 00fd8a16 */
 /* 106de: 00e195be */
+/* 100de: 00fde8c0 */
 BOOLEAN ins_app(P(char *) name, P(APP *) app)
 PP(char *name;)
 PP(register APP *app;)

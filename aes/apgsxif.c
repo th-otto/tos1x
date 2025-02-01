@@ -46,6 +46,7 @@ int16_t gl_font;
 
 
 
+/* 100de: 00fd9876 */
 BOOLEAN gsx_sclip(P(const GRECT *) pt)
 PP(const GRECT *pt;)
 {
@@ -70,6 +71,7 @@ PP(const GRECT *pt;)
 }
 
 
+/* 100de: 00fd9902 */
 VOID gsx_gclip(P(GRECT *) pt)
 PP(GRECT *pt;)
 {
@@ -78,6 +80,7 @@ PP(GRECT *pt;)
 
 
 
+/* 100de: 00fd992c */
 BOOLEAN gsx_chkclip(P(GRECT *) pt)
 PP(register GRECT *pt;)
 {
@@ -97,6 +100,7 @@ PP(register GRECT *pt;)
 }
 
 
+/* 100de: 00fd999c */
 VOID gsx_pline(P(int16_t) offx, P(int16_t) offy, P(int16_t) cnt, P(const int16_t *) pts)
 PP(int16_t offx;)
 PP(int16_t offy;)
@@ -116,6 +120,7 @@ PP(register const int16_t *pts;)
 }
 
 
+/* 100de: 00fd99fc */
 VOID gsx_cline(P(uint16_t) x1, P(uint16_t) y1, P(uint16_t) x2, P(uint16_t) y2)
 PP(uint16_t x1;)
 PP(uint16_t y1;)
@@ -146,6 +151,7 @@ PP(uint16_t y2;)
 }
 
 
+/* 100de: 00fd9a12 */
 VOID gsx_attr(P(uint16_t) text, P(uint16_t) mode, P(uint16_t) color)
 PP(uint16_t text;)
 PP(register uint16_t mode;)
@@ -192,6 +198,7 @@ PP(register uint16_t color;)
 
 
 
+/* 100de: 00fd9aa6 */
 VOID gsx_bxpts(P(GRECT *) pt)
 PP(register GRECT *pt;)
 {
@@ -212,6 +219,7 @@ PP(register GRECT *pt;)
 }
 
 
+/* 100de: 00fd9b0a */
 VOID gsx_box(P(GRECT *) pt)
 PP(GRECT *pt;)
 {
@@ -220,6 +228,7 @@ PP(GRECT *pt;)
 }
 
 
+/* 100de: 00fd9b24 */
 VOID gsx_xbox(P(GRECT *)pt)
 PP(GRECT *pt;)
 {
@@ -235,6 +244,7 @@ PP(GRECT *pt;)
 }
 
 
+/* 100de: 00fd9b3e */
 VOID gsx_xcbox(P(GRECT *)pt)
 PP(register GRECT *pt;)
 {
@@ -277,6 +287,7 @@ PP(register GRECT *pt;)
 
 
 
+/* 100de: 00fd9c6a */
 VOID gsx_fix(P(FDB *) pfd, P(int16_t *) theaddr, P(int16_t) wb, P(int16_t) h)
 PP(register FDB *pfd;)
 PP(register intptr_t theaddr;)
@@ -301,6 +312,7 @@ PP(int16_t h;)
 }
 
 
+/* 100de: 00fd9cda */
 VOID gsx_blt(P(int16_t *) saddr, P(uint16_t) sx, P(uint16_t) sy, P(uint16_t) swb, P(int16_t *) daddr, P(uint16_t) dx, P(uint16_t) dy, P(uint16_t) dwb, P(uint16_t) w, P(uint16_t) h, P(uint16_t) rule, P(int16_t) fgcolor, P(int16_t) bgcolor)
 PP(int16_t *saddr;)
 PP(register uint16_t sx;)
@@ -340,6 +352,7 @@ PP(int16_t bgcolor;)
 }
 
 
+/* 100de: 00fd9db8 */
 VOID bb_screen(P(int16_t) scrule, P(int16_t) scsx, P(int16_t) scsy, P(int16_t) scdx, P(int16_t) scdy, P(int16_t) scw, P(int16_t) sch)
 PP(int16_t scrule;)
 PP(int16_t scsx;)
@@ -353,6 +366,7 @@ PP(int16_t sch;)
 }
 
 
+/* 100de: 00fd9df2 */
 VOID gsx_trans(P(int16_t *) saddr, P(uint16_t) swb, P(int16_t *) daddr, P(uint16_t) dwb, P(uint16_t) h)
 PP(int16_t *saddr;)
 PP(uint16_t swb;)
@@ -368,6 +382,7 @@ PP(register uint16_t h;)
 }
 
 
+/* 100de: 00fd9e50 */
 VOID gsx_start(NOTHING)
 {
 	int16_t dummy;
@@ -430,6 +445,7 @@ VOID gsx_start(NOTHING)
 }
 
 
+/* 100de: 00fda092 */
 VOID bb_fill(P(int16_t) mode, P(int16_t) fis, P(int16_t) patt, P(int16_t) hx, P(int16_t) hy, P(int16_t) hw, P(int16_t) hh)
 PP(int16_t mode;)
 PP(int16_t fis;)
@@ -465,7 +481,7 @@ PP(register int16_t hh;)
 
 
 
-
+/* 100de: 00fda13a */
 uint16_t ch_width(P(int16_t) fn)
 PP(register int16_t fn;)
 {
@@ -478,6 +494,7 @@ PP(register int16_t fn;)
 
 
 
+/* 100de: 00fda166 */
 uint16_t ch_height(P(int16_t) fn)
 PP(register int16_t fn;)
 {
@@ -524,6 +541,7 @@ PP(register int16_t fn;)
  *	ptexth  =  hc
  *       pnumchs =  number of characters
  */
+/* 100de: 00fda192 */
 VOID gsx_tcalc(P(int16_t) font, P(const char *) ptext, P(int16_t *) ptextw, P(int16_t *) ptexth, P(int16_t *) pnumchs)
 PP(register int16_t font;)
 PP(const char *ptext;)
@@ -549,6 +567,7 @@ PP(register int16_t *pnumchs;)
 }
 
 
+/* 100de: 00fda1fc */
 VOID gsx_tblt(P(int16_t) tb_f, P(int16_t) x, P(int16_t) y, P(int16_t) tb_nc)
 PP(register int16_t tb_f;)
 PP(register int16_t x;)
@@ -591,6 +610,7 @@ PP(int16_t tb_nc;)
 
 
 
+/* 100de: 00fda2c6 */
 VOID gsx_xline(P(int16_t) ptscount, P(int16_t *) ppoints)
 PP(int16_t ptscount;)
 PP(register int16_t *ppoints;)

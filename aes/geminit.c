@@ -256,6 +256,7 @@ LINEF_STATIC VOID ini_dlongs(NOTHING)
  * Give everyone a chance to run, at least once
  */
 /* 104de: 00fd3ce6 */
+/* 100de: 00fd9006 */
 VOID all_run(NOTHING)
 {
 	int16_t i;
@@ -273,6 +274,7 @@ VOID all_run(NOTHING)
 /* 106de: 00e13f48 */
 /* 404: 00e24a90 */
 /* 100fr: 00fd9362 */
+/* 100de: 00fd902a */
 VOID gem_main(NOTHING)
 {
 	register int16_t i;
@@ -539,6 +541,7 @@ VOID gem_main(NOTHING)
  */
 /* 306de: 00e1e226 */
 /* 104de: 00fd413a */
+/* 100de: 00fd939c */
 VOID pinit(P(PD *) ppd, P(CDA *) pcda)
 PP(register PD *ppd;)
 PP(CDA *pcda;)
@@ -561,6 +564,7 @@ PP(CDA *pcda;)
 /* 206de: 00e1a818 */
 /* 104de: 00fd4168 */
 /* 106de: 00e144a8 */
+/* 100de: 00fd93d0 */
 int16_t pred_dinf(NOTHING)
 {
 	int16_t res;

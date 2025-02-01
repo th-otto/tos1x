@@ -40,6 +40,7 @@ DEFREZ    equ 2
 /* 306de: 00e06676 */
 /* 104de: 00fcb270 */
 /* 106de: 00e0b49c */
+/* 100de: 00fca4dc */
 		xdef	_GSHIFT_S
 _GSHIFT_S:	move.b	_shifty,d0	; Get the keyboard state
 		andi.w	#$000F,d0	; We only want the low 4 bits
@@ -63,6 +64,7 @@ _vq_cellarray: ds.b 0
 
 /* 306de: 00e06682 */
 /* 104de: 00fcb27c */
+/* 100de: 00fca4e8 */
 		xdef	_v_clrwk
 _v_clrwk:
 		move.l	_v_bas_ad,a0
@@ -118,6 +120,7 @@ _INIT_G:	PIXLA(a1)
 /* 306de: 00e066e6 */
 /* 104de: 00fcb2e0 */
 /* 106de: 00e0b50c */
+/* 100de: 00fca530 */
    		xdef	_vex_timv
 _vex_timv:	PIXLA(a1)
 		move.l	PIXLV(CONTRL,a1),a0
@@ -152,6 +155,7 @@ _vex_timv:	PIXLA(a1)
 /* 206de: 00e070b8 */
 /* 104de: 00fcb310 */
 /* 106de: 00e0b53c */
+/* 100de: 00fca560 */
 _FindDevice:
 		move.w    #$0004,-(a7)
         trap      #14         /* Getrez() */
@@ -270,6 +274,7 @@ paltab16: dc.w $0777
 /* 306de: 00e067ee */
 /* 104de: 00fcb3c6 */
 /* 106de: 00e0b5f2 */
+/* 100de: 00fca62a */
 tick_int:
 		movem.l	d0-d7/a0-a6,-(sp)
 		PIXLA(a1)
@@ -291,6 +296,7 @@ tick_int:
 
 /* 306de: 00e06806 */
 /* 104de: 00fcb3de */
+/* 100de: 00fca642 */
    		xdef	_DINIT_G
 _DINIT_G:	PIXLA(a1)
 		move.l	PIXLV(tim_chain,a1),-(sp)	; reset timer vector
@@ -318,6 +324,7 @@ _DINIT_G:	PIXLA(a1)
  *
  *******************************************************************************/
 
+/* 100de: 00fca662 */
    		xdef	_GCHC_KEY
 _GCHC_KEY:	PIXLA(a1)
 		moveq.l	#1,d0			; indicate choice value
@@ -338,6 +345,7 @@ _GCHC_KEY:	PIXLA(a1)
 
 /* 306de: 00e0687e */
 /* 104de: 00fcb456 */
+/* 100de: 00fca66c */
    		xdef	_GCHR_KEY
 _GCHR_KEY:	move.w	#DEV,-(sp)	; see if a character present
 		move.w	#BCONSTAT,-(sp)
@@ -377,6 +385,7 @@ no_char:
 /* 306de: 00e068ac */
 /* 104de: 00fcb484 */
 /* 106de: 00e0b6b0 */
+/* 100de: 00fca69a */
 mouse_init:
 		PIXLA(a1)
 		lea	user_init,a0		; button and motion vectors
@@ -437,6 +446,7 @@ user_init:	rts
 
 /* 306de: 00e06932 */
 /* 104de: 00fcb50a */
+/* 100de: 00fca718 */
 dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
 		clr.l	(a0)
 
@@ -490,6 +500,7 @@ dinit_mouse:	move.l	_vblqueue,a0	; remove draw routine from vblank queue
 
 /* 306de: 00e06830 */
 /* 104de: 00fcb408 */
+/* 100de: 00fca738 */
 		xdef	_GLOC_KEY
 _GLOC_KEY:	PIXLA(a1)
 
@@ -552,6 +563,7 @@ no_chg:		move.l	#0,d0
 /* 206de: 00e072ca */
 /* 104de: 00fcb522 */
 /* 106de: 00e0b74e */
+/* 100de: 00fca7c4 */
 		xdef	esc_init
 		xdef	_esc_init
 esc_init:
@@ -597,6 +609,7 @@ esc2:
 /* 306de: 00e069f4 */
 /* 206de: 00e07354 */
 /* 104de: 00fcb5ac */
+/* 100de: 00fca85a */
 		xdef resetdev
 resetdev:
 #if BLITTER_SUPPORT

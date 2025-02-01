@@ -175,6 +175,7 @@ VOID ini_tree PROTO((OBJECT **gaddr, int16_t id));
 /* 306de: 00e20244 */
 /* 104de: 00fe76de */
 /* 106de: 00e29fd0 */
+/* 100de: 00fee59a */
 int16_t rom_ram(P(int) which, P(intptr_t) pointer, P(uint16_t) offset)
 PP(register int which;)
 PP(register intptr_t pointer;)

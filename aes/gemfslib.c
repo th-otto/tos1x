@@ -119,6 +119,7 @@ static char const gl_fsobj[4] = { FTITLE, FILEBOX, SCRLBAR, 0 };
 #define Drvmap() trp13(0xa)
 
 
+/* 100de: 00fe6d9c */
 VOID fs_start(NOTHING)
 {
 	OBJECT *tree;
@@ -138,6 +139,7 @@ VOID fs_start(NOTHING)
 /* 306de: 00e1ce92 */
 /* 104de: 00fe0a3a */
 /* 106de: 00e22754 */
+/* 100de: 00fe6dca */
 LINEF_STATIC char *fs_back(P(char *) pstr, P(char *) pend)
 PP(register char *pstr;)
 PP(register char *pend;)
@@ -163,6 +165,7 @@ PP(register char *pend;)
  *	Routine to back up a path and return the pointer to the beginning
  *	of the file specification part
  */
+/* 100de: 00fe6e0a */
 LINEF_STATIC char *fs_pspec(P(char *) pstr, P(char *) pend)
 PP(register char *pstr;)
 PP(register char *pend;)
@@ -185,6 +188,7 @@ PP(register char *pend;)
  *	reading its directory, initializing a file list, and filling
  *	out the information in the path node.  Then sort the files.
  */
+/* 100de: 00fe6e42 */
 LINEF_STATIC BOOLEAN fs_active(P(char *) ppath, P(char *)pspec, P(int16_t *) pcount)
 PP(char *ppath;)
 PP(char *pspec;)
@@ -261,10 +265,11 @@ PP(int16_t *pcount;)
 
 
 /*
-*	Routine to adjust the scroll counters by one in either
-*	direction, being careful not to overrun or underrun the
-*	tail and heads of the list
-*/
+ *	Routine to adjust the scroll counters by one in either
+ *	direction, being careful not to overrun or underrun the
+ *	tail and heads of the list
+ */
+/* 100de: 00fe701a */
 LINEF_STATIC int16_t fs_1scroll(P(int16_t) curr, P(int16_t) count, P(int16_t) touchob)
 PP(register int16_t curr;)
 PP(register int16_t count;)
@@ -286,6 +291,7 @@ PP(register int16_t touchob;)
  *	based on the current scrolled position, and point at them 
  *	with the sub-tree of G_STRINGs that makes up the window box.
  */
+/* 100de: 00fe7060 */
 LINEF_STATIC BOOLEAN fs_format(P(LPTREE) tree, P(int16_t) currtop, P(int16_t) count)
 PP(register LPTREE tree;)
 PP(int16_t currtop;)
@@ -337,6 +343,7 @@ PP(int16_t count;)
  *	Routine to select or deselect a file name in the scrollable 
  *	list.
  */
+/* 100de: 00fe718c */
 LINEF_STATIC VOID fs_sel(P(int16_t) sel, P(int16_t) state)
 PP(int16_t sel;)
 PP(int16_t state;)
@@ -350,6 +357,7 @@ PP(int16_t state;)
  *	Routine to handle scrolling the directory window a certain number
  *	of file names.
  */
+/* 100de: 00fe71b2 */
 LINEF_STATIC int16_t fs_nscroll(P(LPTREE) tree, P(int16_t *) psel, P(int16_t) curr, P(int16_t) count, P(int16_t) touchob, P(int16_t) n)
 PP(register LPTREE tree;)
 PP(register int16_t *psel;)
@@ -415,9 +423,10 @@ PP(int16_t n;)
 
 
 /*
-*	Routine to call when a new directory has been specified.  This
-*	will activate the directory, format it, and display ir[0].
-*/
+ *	Routine to call when a new directory has been specified.  This
+ *	will activate the directory, format it, and display ir[0].
+ */
+/* 100de: 00fe732a */
 LINEF_STATIC VOID fs_newdir(P(char *) ftitle, P(char *) fpath, P(char *) pspec, P(OBJECT *) tree, P(int16_t *) pcount)
 PP(char *ftitle;)
 PP(char *fpath;)
@@ -454,6 +463,7 @@ PP(int16_t *pcount;)
 /* 306de: 00e1cef2 */
 /* 104de: 00fe0a8a */
 /* 106de: 00e227b4 */
+/* 100de: 00fe73c0 */
 int16_t fs_input(P(char *) pipath, P(char *) pisel, P(int16_t *) pbutton)
 PP(char *pipath;)
 PP(char *pisel;)

@@ -79,6 +79,7 @@ fsize		equ	100		* size of linef handler in bytes+ a little fat
  */
 /* 104de: 00fd3b8e */
 /* 106de: 00e13dee */
+/* 100de: 00fd8e98 */
 	xdef	_gemstart
 _gemstart:
 	move.l	a7,a5		/* save stack */

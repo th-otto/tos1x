@@ -70,6 +70,7 @@
 /* 206de: 00e0c79a */
 /* 104de: 00fd09fa */
 /* 106de: 00e10c1e */
+/* 100de: 00fd02c2 */
 		xdef	mouse_rel
 mouse_rel:
 		tst.b	PIXLV(mouse_flag,a2)		/* cntrl access to ms frm (CDB) */
@@ -200,6 +201,7 @@ cl_done:
 /* 206de: 00e0c86e */
 /* 104de: 00fd0ace */
 /* 106de: 00e10cf2 */
+/* 100de: 00fd03a4 */
 		xdef	_MOV_CUR
 _MOV_CUR: PIXLA(a0)
 		tst.w PIXLV(HIDE_CNT,a0)		/* HIDE_CNT semaphore controls */
@@ -273,6 +275,7 @@ vblank_noop:
 /* 206de: 00e0c8cc */
 /* 104de: 00fd0b2c */
 /* 106de: 00e10d50 */
+/* 100de: 00fd040e */
 		xdef	_vex_butv
 _vex_butv: PIXLA(a1)
 		move.l	PIXLV(CONTRL,a1),a0		/* point to contrl array */
@@ -294,6 +297,7 @@ _vex_butv: PIXLA(a1)
 /* 206de: 00e0c8e4 */
 /* 104de: 00fd0b44 */
 /* 106de: 00e10d68 */
+/* 100de: 00fd0426 */
 		xdef	_vex_motv
 _vex_motv: PIXLA(a1)
 		move.l	PIXLV(CONTRL,a1),a0		/* point to contrl array */
@@ -315,6 +319,7 @@ _vex_motv: PIXLA(a1)
 /* 206de: 00e0c8fc */
 /* 104de: 00fd0b5c */
 /* 106de: 00e10d80 */
+/* 100de: 00fd043e */
 		xdef	_vex_curv
 _vex_curv: PIXLA(a1)
 		move.l	PIXLV(CONTRL,a1),a0		/* point to contrl array */
@@ -399,6 +404,7 @@ RT_OFF		equ	RTN_REC*2
 /* 206de: 00e0c914 */
 /* 104de: 00fd0b74 */
 /* 106de: 00e10d98 */
+/* 100de: 00fd0456 */
 		xdef	cur_display
 cur_display:
 		PIXLA(a4)
@@ -661,6 +667,7 @@ F_SAVWID	equ	1	/* saved line width:   0:word   1:longword */
 /* 102de: 00fd01de */
 /* 104de: 00fd0d46 */
 /* 106de: 00e10f6a */
+/* 100de: 00fd062a */
 		xdef cur_replace
 cur_replace:
 		PIXLA(a5)
@@ -815,6 +822,7 @@ hang_it_up:
 /* 206de: 00e0cbb6 */
 /* 104de: 00fd0e16 */
 /* 106de: 00e1103a */
+/* 100de: 00fd06fa */
 		xdef	_HIDE_CUR
 _HIDE_CUR:
 		PIXLA(a5)
@@ -843,6 +851,7 @@ hid_cur1:
 /* 306de: 00e0c81c */
 /* 206de: 00e0cbd4 */
 /* 104de: 00fd0e34 */
+/* 100de: 00fd072c */
 		xdef	_DIS_CUR
 _DIS_CUR:	PIXLA(a5)
 		addq.b  #1,PIXLV(mouse_flag,a5)
@@ -897,6 +906,7 @@ DEV_COL equ DEV_TAB+26
 /* 206de: 00e0cc1c */
 /* 104de: 00fd0e7c */
 /* 106de: 00e110a0 */
+/* 100de: 00fd0770 */
 		xdef	_vsc_form
 _vsc_form: PIXLA(a2)
 		addq.b	#1,PIXLV(mouse_flag,a2)	/* deny access to mouse_cdb */

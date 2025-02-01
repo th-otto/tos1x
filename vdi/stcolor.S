@@ -12,6 +12,7 @@ palette equ $00FF8240
  */
 /* 104de: 00fd1d2e */
 /* 106de: 00e11f52 */
+/* 100de: 00fd1a00 */
 	xdef _vs_color
 _vs_color:
 #if TOSVERSION >= 0x106
@@ -122,6 +123,7 @@ vs_col14:
 
 /* 104de: 00fd1de0 */
 /* 106de: 00e12024 */
+/* 100de: 00fd1ab2 */
 	xdef _vq_color
 _vq_color:
 		move.l    d4,-(a7)

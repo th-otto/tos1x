@@ -24,6 +24,7 @@
  */
 /* 104de: 00fd59a0 */
 /* 106de: 00e15f0c */
+/* 100de: 00fdb3da */
 VOID app_blddesk(NOTHING)
 {
 	register int16_t obid;
@@ -92,6 +93,7 @@ VOID app_blddesk(NOTHING)
  */
 /* 104de: 00fd5b36 */
 /* 106de: 00e160be */
+/* 100de: 00fdb566 */
 APP *app_afind(P(BOOLEAN) isdesk, P(int16_t) atype, P(int16_t) obid, P(char *)pname, P(BOOLEAN *)pisapp)
 PP(register BOOLEAN isdesk;)
 PP(register int16_t atype;)

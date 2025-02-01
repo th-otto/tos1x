@@ -86,6 +86,7 @@ PD *ml_pkown;
 
 /* 306de: 00e1b846 */
 /* 106de: 00e1f9c2 */
+/* 100de: 00fe6798 */
 VOID take_ownership(P(BOOLEAN) beg_ownit)
 PP(BOOLEAN beg_ownit;)
 {
@@ -123,6 +124,7 @@ PP(BOOLEAN beg_ownit;)
 /* 306de: 00e1c8ac */
 /* 104de: 00fe04fe */
 /* 106de: 00e2216e */
+/* 100de: 00fe681e */
 int16_t find_obj(P(LPTREE) tree, P(int16_t) start_obj, P(int16_t) which)
 PP(register LPTREE tree;)
 PP(int16_t start_obj;)
@@ -188,6 +190,7 @@ PP(int16_t start_fld;)
 /* 306de: 00e1c93e */
 /* 104de: 00fe0588 */
 /* 106de: 00e22200 */
+/* 100de: 00fe68a4 */
 int16_t fm_keybd(P(LPTREE) tree, P(int16_t) obj, P(int16_t *) pchar, P(int16_t *) pnew_obj)
 PP(LPTREE tree;)
 PP(int16_t obj;)
@@ -236,6 +239,7 @@ PP(int16_t *pnew_obj;)
 /* 306de: 00e1c9ea */
 /* 104de: 00fe0626 */
 /* 106de: 00e222ac */
+/* 100de: 00fe6952 */
 int16_t fm_button(P(LPTREE) tree, P(int16_t) new_obj, P(int16_t) clks, P(int16_t *) pnew_obj)
 PP(register LPTREE tree;)
 PP(register int16_t new_obj;)
@@ -315,6 +319,7 @@ PP(int16_t *pnew_obj;)
 /* 306de: 00e1cb68 */
 /* 104de: 00fe0784 */
 /* 106de: 00e2242a */
+/* 100de: 00fe6aba */
 int16_t fm_do(P(LPTREE) tree, P(int16_t) start_fld)
 PP(register LPTREE tree;)
 PP(int16_t start_fld;)
@@ -397,6 +402,7 @@ PP(int16_t start_fld;)
 /* 306de: 00e1cce0 */
 /* 104de: 00fe08c6 */
 /* 106de: 00e225a2 */
+/* 100de: 00fe6c06 */
 VOID fm_dial(P(int16_t) fmd_type, P(GRECT *) pi, P(GRECT *) pt)
 PP(register int16_t fmd_type;)
 PP(register GRECT *pi;)
@@ -429,6 +435,7 @@ PP(register GRECT *pt;)
 /* 306de: 00e1cd56 */
 /* 104de: 00fe0920 */
 /* 106de: 00e22618 */
+/* 100de: 00fe6c66 */
 int16_t fm_show(P(int16_t) string, P(VOIDPTR) pwd, P(int16_t) level)
 PP(int16_t string;)
 PP(VOIDPTR pwd;)
@@ -453,6 +460,7 @@ PP(int16_t level;)
 /* 306de: 00e1cda8 */
 /* 104de: 00fe095e */
 /* 106de: 00e2266a */
+/* 100de: 00fe6ca6 */
 int16_t eralert(P(int16_t) n, P(int16_t) d)
 PP(int16_t n;)									/* n = alert #, 0-5     */
 PP(int16_t d;)									/* d = drive code, 0=A  */
@@ -481,6 +489,7 @@ PP(int16_t d;)									/* d = drive code, 0=A  */
 /* 306de: 00e1ce1a */
 /* 104de: 00fe09cc */
 /* 106de: 00e226dc */
+/* 100de: 00fe6d2c */
 BOOLEAN fm_error(P(int16_t) n)
 PP(int16_t n;)									/* n = dos error number */
 {

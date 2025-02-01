@@ -94,6 +94,7 @@ int16_t gl_bdelay;
  */
 /* 306de: 00e1e6fe */
 /* 100fr: 00fe46ac */
+/* 100de: 00fe4374 */
 LINEF_STATIC int16_t mowner(P(int16_t) mx, P(int16_t) my)
 PP(register int16_t mx;)
 PP(register int16_t my;)
@@ -116,6 +117,7 @@ PP(register int16_t my;)
  *       Button click code call that is from the button interrupt
  *       code with interrupts off.
  */
+/* 100de: 00fe43c4 */
 VOID b_click(P(int16_t) state)
 PP(register int16_t state;)
 {
@@ -166,6 +168,7 @@ PP(register int16_t state;)
  *       Button delay code that is called from the tick interrupt code with 
  *       interrupts off.
  */
+/* 100de: 00fe4434 */
 asm("  .globl b_delay");
 asm("b_delay: .text");
 VOID b_delay(P(int16_t) amnt)
@@ -255,8 +258,9 @@ PP(PD *pkown;)
 
 
 /*
-*       EnQueue a a character on a circular keyboard buffer.
-*/
+ *       EnQueue a a character on a circular keyboard buffer.
+ */
+/* 100de: 00fe4516 */
 LINEF_STATIC VOID nq(P(uint16_t) ch, P(CQUEUE *) qptr)
 PP(uint16_t ch;)
 PP(register CQUEUE *qptr;)
@@ -277,6 +281,7 @@ PP(register CQUEUE *qptr;)
 /* 306de: 00e1e7a4 */
 /* 104de: 00fde634 */
 /* 106de: 00e1fe7c */
+/* 100de: 00fe454e */
 uint16_t dq(P(CQUEUE *) qptr)
 PP(register CQUEUE *qptr;)
 {
@@ -296,6 +301,7 @@ PP(register CQUEUE *qptr;)
 /* 306de: 00e1e7da */
 /* 104de: 00fde662 */
 /* 106de: 00e1feb2 */
+/* 100de: 00fe457c */
 VOID fq(NOTHING)
 {
 	while (cda->c_q.c_cnt)
@@ -312,6 +318,7 @@ VOID fq(NOTHING)
 /* 306de: 00e1e7fe */
 /* 104de: 00fde684 */
 /* 106de: 00e1fed6 */
+/* 100de: 00fe459e */
 VOID evremove(P(EVB *) e, P(uint16_t) ret)
 PP(register EVB *e;)
 PP(uint16_t ret;)
@@ -328,6 +335,7 @@ PP(uint16_t ret;)
 /* 306de: 00e1e840 */
 /* 104de: 00fde6ba */
 /* 106de: 00e1ff18 */
+/* 100de: 00fe45d4 */
 VOID kchange(P(int16_t) ch, P(int16_t) kstat)
 PP(int16_t ch;)
 PP(int16_t kstat;)
@@ -341,6 +349,7 @@ PP(int16_t kstat;)
 /* 306de: 00e1e864 */
 /* 104de: 00fde6dc */
 /* 106de: 00e1ff3c */
+/* 100de: 00fe45f6 */
 VOID post_keybd(P(PD *) p, P(uint16_t) ch)
 PP(PD *p;)
 PP(register uint16_t ch;)
@@ -368,6 +377,7 @@ PP(register uint16_t ch;)
 /* 306de: 00e1e8c2 */
 /* 104de: 00fde730 */
 /* 106de: 00e1ff9a */
+/* 100de: 00fe462c */
 VOID bchange(P(int16_t) new, P(int16_t) clicks)
 PP(int16_t new;)
 PP(int16_t clicks;)
@@ -407,6 +417,7 @@ PP(int16_t clicks;)
 /* 206de: 00e1aed2 */
 /* 104de: 00fde826 */
 /* 106de: 00e200a0 */
+/* 100de: 00fe46e6 */
 int16_t downorup(P(int16_t) new, P(intptr_t) buparm)
 PP(int16_t new;)
 PP(register intptr_t buparm;)
@@ -424,6 +435,7 @@ PP(register intptr_t buparm;)
 
 /* 104de: 00fde876 */
 /* 106de: 00e200fc */
+/* 100de: 00fe4736 */
 VOID post_button(P(PD *) p, P(int16_t) new, P(int16_t) clks)
 PP(PD *p;)
 PP(int16_t new;)
@@ -459,6 +471,7 @@ PP(register int16_t clks;)
 /* 306de: 00e1ea10 */
 /* 104de: 00fde8ec */
 /* 106de: 00e2017c */
+/* 100de: 00fe479e */
 VOID mchange(P(int16_t) rx1, P(int16_t) ry1)
 PP(register int16_t rx1;)
 PP(register int16_t ry1;)
@@ -519,6 +532,7 @@ PP(register int16_t ry1;)
 /* 306de: 00e1eb5e */
 /* 104de: 00fdea1a */
 /* 106de: 00e202ca */
+/* 100de: 00fe4882 */
 VOID post_mouse(P(PD *) p, P(int16_t) grx, P(int16_t) gry)
 PP(register PD *p;)
 PP(int16_t grx;)
@@ -540,6 +554,7 @@ PP(int16_t gry;)
 /* 306de: 00e1eba0 */
 /* 104de: 00fdea52 */
 /* 106de: 00e2030c */
+/* 100de: 00fe48be */
 int16_t inorout(P(EVB *) e, P(int16_t) rx, P(int16_t) ry)
 PP(register EVB *e;)
 PP(register int16_t rx;)

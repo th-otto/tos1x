@@ -80,6 +80,7 @@ ERRSTKSIZE equ 1028
 /* 306de: 00e25570 */
 /* 104de: 00fdd1e2 */
 /* 106de: 00e1e7da */
+/* 100de: 00fe31ca */
         xdef    _givecpm
 _givecpm:
         move.l  _SAV2TRP,ABSW2(TRP2VEC)    /* Restore Trap 2 vector. */
@@ -91,6 +92,7 @@ _givecpm:
 /* 306de: 00e2557a */
 /* 104de: 00fdd1ee */
 /* 106de: 00e1e7e6 */
+/* 100de: 00fe31d6 */
         xdef    _takecpm
 _takecpm:
         move.l  ABSW2(TRP2VEC),_SAV2TRP /* Save current Trap 2 vector. */
@@ -101,6 +103,7 @@ _takecpm:
  */
 /* 306de: 00e2558c */
 /* 106de: 00e1e7fc */
+/* 100de: 00fe31ec */
         xdef    _retake
 _retake:
         move.l  #_grptrp,ABSW2(TRP2VEC) /* Replace vector with ours. */
@@ -121,6 +124,7 @@ call_err:
 /* 306de: 00e255aa */
 /* 104de: 00fdd224 */
 /* 106de: 00e1e81c */
+/* 100de: 00fe320c */
         xdef    _giveerr
 _giveerr:
         move.l  _crit_err,d0
@@ -129,6 +133,7 @@ _giveerr:
 /* 306de: 00e255b2 */
 /* 104de: 00fdd22c */
 /* 106de: 00e1e824 */
+/* 100de: 00fe3214 */
         xdef    _takeerr
 _takeerr:
         move.l  #-1,d0                  /* get the old one */
@@ -172,6 +177,7 @@ d_out:
 /* 306de: 00e255ec */
 /* 104de: 00fdd23e */
 /* 106de: 00e1e836 */
+/* 100de: 00fe3226 */
         xdef  _err_trap
 _err_trap:
 #if AESVERSION >= 0x140
@@ -250,6 +256,7 @@ er_1:
 /* 306de: 00e2568e */
 /* 104de: 00fdd2cc */
 /* 106de: 00e1e8c4 */
+/* 100de: 00fe3296 */
         xdef    _dos_exec
 _dos_exec:
         jsr     cli
@@ -437,6 +444,7 @@ La1:
 /* 306de: 00e257f8 */
 /* 104de: 00fdd43c */
 /* 106de: 00e1ea34 */
+/* 100de: 00fe340e */
 _grptrp:
         cmpi.w   #0,d0                  /* Is function number system reset ? */
         beq     _back
@@ -466,6 +474,7 @@ _back:  move.w  #0,-(sp)
  *              Call Crystal
  * *********************************************
  */
+/* 100de: 00fe3432 */
 _gosuper:
 
         jsr     cli                     /* interrupts off */
@@ -534,6 +543,7 @@ super1:
  *      Return from Crystal call 
  * *********************************************
  */
+/* 100de: 00fe3470 */
         xdef    _supret
 _supret:
         move.w  4(a7),d0                /* Get return passed from super(). */
@@ -570,6 +580,7 @@ _supret:
  */
 #if AESVERSION < 0x200
 /* 104de: 00fdd4ce */
+/* 100de: 00fe34a6 */
         xdef    _far_draw
 _far_draw:
         move.l  4(a7),d0                /* get addr of pb */

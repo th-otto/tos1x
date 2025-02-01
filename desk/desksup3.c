@@ -9,6 +9,7 @@
 
 
 /* initialize resources */
+/* 100de: 00fdffcc */
 BOOLEAN rsrc_init(NOTHING)
 {
 	int unused;
@@ -19,6 +20,7 @@ BOOLEAN rsrc_init(NOTHING)
 }
 
 
+/* 100de: 00fdffe4 */
 VOID ini_tree(P(OBJECT **)gaddr, P(int16_t) id)
 PP(OBJECT **gaddr;)
 PP(int16_t id;)
@@ -30,6 +32,7 @@ PP(int16_t id;)
 }
 
 
+/* 100de: 00fdfffc */
 char *ini_str(P(int16_t) id)
 PP(int16_t id;)
 {
@@ -46,6 +49,7 @@ PP(int16_t id;)
  */
 /* 104de: 00fda0e0 */
 /* 106de: 00e1afba */
+/* 100de: 00fe0032 */
 VOID desk_clear(P(int16_t) wh)
 PP(register int16_t wh;)
 {
@@ -74,6 +78,7 @@ PP(register int16_t wh;)
  */
 /* 104de: 00fda13c */
 /* 106de: 00e1b02a */
+/* 100de: 00fe00a0 */
 VOID desk_verify(P(int16_t) wh, P(BOOLEAN) changed)
 PP(register int16_t wh;)
 PP(register BOOLEAN changed;)
@@ -102,6 +107,7 @@ PP(register BOOLEAN changed;)
 }
 
 
+/* 100de: 00fe0110 */
 VOID do_wredraw(P(int16_t) w_handle, P(int16_t) xc, P(int16_t) yc, P(int16_t) wc, P(int16_t) hc)
 PP(register int16_t w_handle;)
 PP(int16_t xc;)
@@ -149,6 +155,7 @@ PP(int16_t hc;)
  */
 /* 104de: 00fda22c */
 /* 106de: 00e1b156 */
+/* 100de: 00fe01d8 */
 VOID get_xywh(P(OBJECT *)olist, P(int16_t) obj, P(int16_t *)px, P(int16_t *)py, P(int16_t *)pw, P(int16_t *)ph)
 PP(OBJECT *olist;)
 PP(register int16_t obj;)
@@ -169,6 +176,7 @@ PP(int16_t *ph;)
  */
 /* 104de: 00fda28a */
 /* 106de: 00e1b1bc */
+/* 100de: 00fe0236 */
 ICONBLK *get_spec(P(OBJECT *) tree, P(int) obj)
 PP(OBJECT *tree;)
 PP(int obj;)
@@ -179,6 +187,7 @@ PP(int obj;)
 
 /* 104de: 00fda2a0 */
 /* 106de: 00e1b1d4 */
+/* 100de: 00fe024c */
 VOID do_xyfix(P(int16_t *)px, P(int16_t *)py)
 PP(register int16_t *px;)
 PP(register int16_t *py;)
@@ -198,6 +207,7 @@ PP(register int16_t *py;)
 
 /* 104de: 00fda2fa */
 /* 106de: 00e1b23e */
+/* 100de: 00fe02b6 */
 VOID do_wopen(P(BOOLEAN) new_win, P(int16_t) wh, P(int16_t) obj, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h)
 PP(register BOOLEAN new_win;)
 PP(register int16_t wh;)
@@ -240,6 +250,7 @@ PP(int16_t h;)
 
 /* 104de: 00fda3de */
 /* 106de: 00e1b33c */
+/* 100de: 00fe03c0 */
 VOID zoom_closed(P(BOOLEAN) close, P(int16_t) w_id, P(int16_t) xicon, P(int16_t) yicon)
 PP(register BOOLEAN close;)
 PP(register int16_t w_id;)
@@ -260,6 +271,7 @@ PP(register int16_t yicon;)
 
 /* 104de: 00fda422 */
 /* 106de: 00e1b394 */
+/* 100de: 00fe042a */
 VOID do_wfull(P(int16_t) wh)
 PP(register int16_t wh;)
 {
@@ -292,6 +304,7 @@ PP(register int16_t wh;)
  */
 /* 104de: 00fda4b6 */
 /* 104de: 00e1b450 */
+/* 100de: 00fe0526 */
 BOOLEAN do_diropen(P(DESKWIN *)pw, P(BOOLEAN) new_win, P(int16_t) curr_icon, P(int16_t) drv, P(const char *)ppath, P(const char *)pname, P(const char *)pext, P(GRECT *)pt)
 PP(register DESKWIN *pw;)
 PP(register BOOLEAN new_win;)
@@ -371,6 +384,7 @@ done:
  */
 /* 104de: 00fda5d2 */
 /* 106de: 00e1b5ac */
+/* 100de: 00fe0672 */
 BOOLEAN do_aopen(P(APP *)pa, P(BOOLEAN) isapp, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(char *)pname)
 PP(register APP *pa;)
 PP(BOOLEAN isapp;)
@@ -487,6 +501,7 @@ PP(char *pname;)
  */
 /* 104de: 00fda85e */
 /* 106de: 00e1b8ac */
+/* 100de: 00fe08aa */
 BOOLEAN do_dopen(P(int16_t) curr)
 PP(register int16_t curr;)
 {
@@ -534,6 +549,7 @@ PP(register int16_t curr;)
  */
 /* 104de: 00fda900 */
 /* 106de: 00e1b974 */
+/* 100de: 00fe0976 */
 BOOLEAN do_fopen(P(DESKWIN *)pw, P(int16_t) curr, P(int16_t) drv, P(const char *)ppath, P(const char *)pname, P(const char *)pext)
 PP(register DESKWIN *pw;)
 PP(int16_t curr;)
@@ -576,6 +592,7 @@ PP(const char *pext;)
  */
 /* 104de: 00fda984 */
 /* 106de: 00e1ba18 */
+/* 100de: 00fe0a28 */
 BOOLEAN open_item(P(int16_t) curr)
 PP(register int16_t curr;)
 {
@@ -651,6 +668,7 @@ PP(register int16_t curr;)
  */
 /* 104de: 00fdaaa8 */
 /* 106de: 00e1bb86 */
+/* 100de: 00fe0b82 */
 BOOLEAN show_item(P(int16_t) curr)
 PP(register int16_t curr;)
 {
@@ -713,6 +731,7 @@ error:
 
 /* 104de: 00fdab74 */
 /* 106de: 00e1bc5e */
+/* 100de: 00fe0c9c */
 BOOLEAN do_format(P(int16_t) curr)
 PP(register int16_t curr;)
 {
@@ -763,6 +782,7 @@ PP(register int16_t curr;)
 
 /* 104de: 00fdac02 */
 /* 106de: 00e1bd06 */
+/* 100de: 00fe0d88 */
 BOOLEAN true_closewnd(P(DESKWIN *)pw)
 PP(register DESKWIN *pw;)
 {
@@ -790,6 +810,7 @@ PP(register DESKWIN *pw;)
 
 /* 104de: 00fdac8c */
 /* 106de: 00e1bdac */
+/* 100de: 00fe0e16 */
 BOOLEAN w_setpath(P(DESKWIN *)pw, P(int) drv, P(const char *)path, P(const char *)name, P(const char *)ext)
 PP(register DESKWIN *pw;)
 PP(int drv;)
@@ -823,6 +844,7 @@ PP(const char *ext;)
 
 /* 104de: 00fdad22 */
 /* 106de: 00e1be52 */
+/* 100de: 00fe0ebc */
 BOOLEAN close_window(P(DESKWIN *)pw, P(BOOLEAN) trueclose)
 PP(register DESKWIN *pw;)
 PP(register BOOLEAN trueclose;)
@@ -866,6 +888,7 @@ PP(register BOOLEAN trueclose;)
 
 /* 104de: 00fdadb6 */
 /* 106de: 00e1bf02 */
+/* 100de: 00fe0f74 */
 VOID pro_chroot(P(int) drive)
 PP(int drive;)
 {

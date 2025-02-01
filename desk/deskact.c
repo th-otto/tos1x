@@ -34,6 +34,7 @@ LINEF_STATIC VOID gr_obalign PROTO((int16_t numobs, nt16_t x, int16_t y, int16_t
 /* 104de: 00fd5bfe */
 /* 106de: 00e161a0 */
 /* 100fr: 00fdb918 */
+/* 100de: 00fdb5e0 */
 LINEF_STATIC int16_t gr_obfind(P(OBJECT *)tree, P(int16_t) root, P(int16_t) mx, P(int16_t) my)
 PP(register LPTREE tree;)
 PP(register int16_t root;)
@@ -118,6 +119,7 @@ PP(register int16_t *pxypts;)
 
 /* 104de: 00fd5c50 */
 /* 106de: 00e16200 */
+/* 100de: 00fdb75e */
 LINEF_STATIC VOID move_drvicon(P(OBJECT *)tree, P(int16_t) root, P(int16_t) x, P(int16_t) y, P(int16_t *) pts)
 PP(register OBJECT *tree;)
 PP(int16_t root;)
@@ -163,6 +165,7 @@ PP(int16_t *pts;)
  */
 /* 104de: 00fd5d7c */
 /* 106de: 00e16340 */
+/* 100de: 00fdb88e */
 LINEF_STATIC VOID gr_extent(P(int16_t) numpts, P(int16_t *)xylnpts, P(GRECT *)pt)
 PP(int16_t numpts;)
 PP(register int16_t *xylnpts;)
@@ -215,6 +218,7 @@ PP(register int16_t *xyobpts;)
  */
 /* 104de: 00fd5e3a */
 /* 106de: 00e1640a */
+/* 100de: 00fdb990 */
 LINEF_STATIC VOID gr_plns(P(int16_t) x, P(int16_t) y, P(int16_t) numpts, P(int16_t *)xylnpts, P(int16_t) numobs, P(int16_t *)xyobpts)
 PP(register int16_t x;)
 PP(register int16_t y;)
@@ -242,6 +246,7 @@ PP(register int16_t *xyobpts;)
  */
 /* 104de: 00fd5e9a */
 /* 106de: 00e1647e */
+/* 100de: 00fdb9f4 */
 LINEF_STATIC BOOLEAN gr_bwait(P(GRECT *)po, P(int16_t) mx, P(int16_t) my, P(int16_t) numpts, P(int16_t *)xylnpts, P(int16_t) numobs, P(int16_t *)xyobpts)
 PP(register GRECT *po;)
 PP(register int16_t mx;)
@@ -270,6 +275,7 @@ PP(register int16_t *xyobpts;)
  */
 /* 104de: 00fd5f34 */
 /* 106de: 00e16528 */
+/* 100de: 00fdba7a */
 LINEF_STATIC VOID gr_drgplns(P(int16_t) in_mx, P(int16_t) in_my, P(GRECT *)pc, P(int16_t) numpts, P(int16_t *)xylnpts, P(int16_t) numobs, P(int16_t *)xyobpts, P(int16_t *)pdulx, P(int16_t *)pduly, P(int16_t *)pdwh, P(int16_t *)pdobj)
 PP(int16_t in_mx;)
 PP(int16_t in_my;)
@@ -431,6 +437,7 @@ PP(int16_t bwidth;)
  */
 /* 104de: 00fd6228 */
 /* 106de: 00e16852 */
+/* 100de: 00fdbd7c */
 LINEF_STATIC int16_t act_chkobj(P(OBJECT *)tree, P(int16_t) root, P(int16_t) obj, P(int16_t) mx, P(int16_t) my, P(int16_t) w, P(int16_t) h)
 PP(register OBJECT *tree;)
 PP(int16_t root;)
@@ -488,6 +495,7 @@ PP(int16_t h;)
  */
 /* 104de: 00fd637e */
 /* 106de: 00e169cc */
+/* 100de: 00fdbf04 */
 BOOLEAN act_chg(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t) obj, P(GRECT *)pc, P(uint16_t) chgvalue, P(int16_t) dochg, P(int16_t) dodraw, P(int16_t) chkdisabled)
 PP(int16_t wh;)
 PP(OBJECT *tree;)
@@ -540,6 +548,7 @@ PP(int16_t chkdisabled;)
  */
 /* 104de: 00fd6452 */
 /* 106de: 00e16ab8 */
+/* 100de: 00fdbfe8 */
 VOID act_allchg(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t) ex_obj, P(GRECT *)pt, P(GRECT *)pc, P(int16_t) chgvalue, P(BOOLEAN) dochg, P(BOOLEAN) dodraw, P(BOOLEAN) dox)
 PP(int16_t wh;)
 PP(OBJECT *tree;)
@@ -613,6 +622,7 @@ PP(BOOLEAN dox;)
  */
 /* 104de: 00fd65ba */
 /* 106de: 00e16c46 */
+/* 100de: 00fdc162 */
 VOID act_bsclick(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t) mx, P(int16_t) my, P(int16_t) keystate, P(GRECT *)pc, P(int16_t) dclick)
 PP(register int16_t wh;)
 PP(register LPTREE tree;)
@@ -660,6 +670,7 @@ PP(int16_t dclick;)
 
 /* 104de: 00fd66ba */
 /* 106de: 00e16d56 */
+/* 100de: 00fdc26c */
 int16_t act_bdown(P(int16_t) wh, P(OBJECT *)tree, P(int16_t) root, P(int16_t)in_mx, P(int16_t)in_my, P(int16_t) keystate, P(GRECT *)pc, P(int16_t *)pdobj)
 PP(register int16_t wh;)
 PP(register LPTREE tree;)

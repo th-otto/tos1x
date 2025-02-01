@@ -42,6 +42,7 @@ cve     equ 5
 
 /* 104de: 00fc920a */
 /* 106de: 00e093da */
+/* 100de: 00fc4be4 */
     xdef    __osinit
 __osinit:
 	move.l  #_enter,ABSW2($84)     /* take over the handling of TRAP #1 */
@@ -100,6 +101,7 @@ _trap14:
 
 /* 104de: 00fc9278 */
 /* 102de: 00fc4f16 */
+/* 100de: 00fc4c96 */
 ground_it:              
     tst.w   	d0						/* if D0 == 0x0000, Pterm0(). */
     beq			oterm					/* (bye bye) */
@@ -132,6 +134,7 @@ oterm:
  ***************************************************************************/
 
 /* 104de: 00fc92c6 */
+/* 100de: 00fc4cd0 */
 tikhnd:
     move.w  	4(sp),-(sp)				/* get tick value.  ignore flags */
     jsr 		_tikfrk    				/* call interrupt handler extension */
@@ -230,6 +233,7 @@ okrc:
 /* 306de: 00e13606 */
 /* 104de: 00fc9332 */
 /* 106de: 00e09502 */
+/* 100de: 00fc4d48 */
 /* 404: 00e1c2ea */
 
 _enter:
@@ -488,6 +492,7 @@ xi_exit:
  *
  ******************************************************************************/
 
+/* 100de: 00fc4e52 */
     xdef    _oscall
 _oscall:
     link    a6,#0

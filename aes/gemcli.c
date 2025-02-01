@@ -127,6 +127,7 @@ VOID all_run(NOTHING)
  */
 /* 306de: 00e1aea6 */
 /* 106de: 00e1f0a4 */
+/* 100de: 00fe3842 */
 LINEF_STATIC int16_t sndcli(P(char *) pfilespec, P(int16_t) acc)
 PP(register char *pfilespec;)
 PP(int16_t acc;)
@@ -188,6 +189,7 @@ PP(int16_t acc;)
  */
 /* 306de: 00e1af76 */
 /* 106de: 00e1f166 */
+/* 100de: 00fe38ee */
 VOID ldaccs(NOTHING)
 {
 	register int16_t i;
@@ -244,6 +246,7 @@ VOID ldaccs(NOTHING)
 
 /* 306de: 00e1b084 */
 /* 106de: 00e1f26a */
+/* 100de: 00fe39d0 */
 VOID free_accs(NOTHING)
 {
 	register int16_t i;
@@ -267,6 +270,7 @@ VOID free_accs(NOTHING)
 
 /* 306de: 00e1b0fe */
 /* 106de: 00e1f2e4 */
+/* 100de: 00fe3a2e */
 BOOLEAN cre_aproc(NOTHING)
 {
 	register PD *ppd;

@@ -69,6 +69,7 @@ FRAG_LEN	equ  MAX_PLANES*4+4 ; space for fragment of 16 planes
 /* 306de: 00e07a38 */
 /* 104de: 00fcac28 */
 /* 106de: 00e0ae54 */
+/* 100de: 00fc9da2 */
 		xdef	_vec_len
 _vec_len:
 		move.w	4(sp),d0	; d0 <- dX
@@ -175,6 +176,7 @@ M_CLC_FLIT: ds.b 0
 
 /* 306de: 00e07a9a */
 /* 104de: 00fcac8a */
+/* 100de: 00fc9e06 */
 		xdef	_CLC_FLIT
 _CLC_FLIT:
 		PIXLA(a2)
@@ -422,6 +424,7 @@ smd_4:		move.l	(sp)+,d3
 /* 306de: 00e07bf0 */
 /* 102de: 00fca212 */
 /* 104de: 00fcade4 */
+/* 100de: 00fc9f6e */
 		xdef	 concat
 concat:
 	move.w	d2,-(a7)
@@ -512,6 +515,7 @@ shf_tab:   *    1 2   4       8		; number of planes
 /* 306de: 00e07c22 */
 /* 104de: 00fcae16 */
 /* 106de: 00e0b042 */
+/* 100de: 00fc9f9a */
 		xdef	_ABLINE
 _ABLINE: ds.b 0
 		xdef	M_ABLINE

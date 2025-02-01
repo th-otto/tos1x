@@ -23,6 +23,7 @@
 /* 306de: 00e2fe54 */
 /* 104de: 00fd7d6e */
 /* 106de: 00e18748 */
+/* 100de: 00fdda5e */
 VOID my_itoa(P(uint16_t) number, P(char *)pnumstr)
 PP(uint16_t number;)
 PP(register char *pnumstr;)
@@ -55,6 +56,7 @@ PP(register char *pnumstr;)
 /* 104de: 00fd7db6 */
 /* 104us: 00fd7d5c */
 /* 106de: 00e1879c */
+/* 100de: 00fddaa4 */
 VOID fmt_time(P(uint16_t) time, P(char *)ptime)
 PP(register uint16_t time;)
 PP(register char *ptime;)
@@ -108,6 +110,7 @@ PP(register char *ptime;)
 /* 104de: 00fd7e02 */
 /* 104us: 00fd7dd0 */
 /* 106de: 00e187f6 */
+/* 100de: 00fddaf0 */
 VOID fmt_date(P(uint16_t) date, P(char *)pdate)
 PP(uint16_t date;)
 PP(register char *pdate;)
@@ -171,6 +174,7 @@ PP(register char *pdate;)
 /* 306de: 00e2ff6a */
 /* 104de: 00fd7e58 */
 /* 106de: 00e1885a */
+/* 100de: 00fddb46 */
 long bldstring(P(intptr_t)dir, P(char *)dst)
 PP(register intptr_t dir;)
 PP(register char *dst;)
@@ -269,6 +273,7 @@ PP(register char *dst;)
 }
 
 
+/* 100de: 00fddcea */
 LINEF_STATIC int16_t dr_fnode(P(OBJECT *)tree, P(int16_t) obj, P(uint16_t) last_state, P(uint16_t) curr_state, P(int16_t) x, P(int16_t) y, P(int16_t) w, P(int16_t) h, P(intptr_t) parm)
 PP(OBJECT *tree;)
 PP(int16_t obj;)
@@ -301,6 +306,7 @@ PP(intptr_t parm;)
 
 /* 104de: 00fd7fe6 */
 /* 106de: 00e18a04 */
+/* 100de: 00fddd8a */
 int16_t dr_code(P(PARMBLK *) parm)
 PP(register intptr_t parm;)
 {
@@ -349,6 +355,7 @@ PP(int16_t dl_ok;)
  */
 /* 104de: 00fd8164 */
 /* 106de: 00e18bd0 */
+/* 100de: 00fddeb6 */
 LINEF_STATIC BOOLEAN inf_fifo(P(OBJECT *) tree, P(int16_t) foldersidx, P(int16_t) filesidx, P(char *) ppath)
 PP(OBJECT *tree;)
 PP(int16_t foldersidx;)
@@ -377,6 +384,7 @@ PP(char *ppath;)
 
 /* 104de: 00fd81e8 */
 /* 106de: 00e18c68 */
+/* 100de: 00fddf46 */
 VOID inf_setsize(P(const VOIDPTR) p1, P(char *) buf, P(OBJECT *) tree, P(int16_t) obj, P(BOOLEAN) flag)
 PP(const VOIDPTR p1;)
 PP(char *buf;)
@@ -397,6 +405,7 @@ PP(BOOLEAN flag;)
 
 /* 104de: 00fd8284 */
 /* 106de: 00e18d20 */
+/* 100de: 00fddf82 */
 LINEF_STATIC VOID inf_dttmsz(P(OBJECT *) tree, P(FNODE *) info, P(int16_t) dateidx, P(int16_t) timeidx, P(int16_t) sizeidx, P(int32_t *) size)
 PP(OBJECT *tree;)
 PP(register FNODE *info;)
@@ -422,6 +431,7 @@ PP(register int32_t *size;)
 /************************************************************************/
 /* 104de: 00fd82e8 */
 /* 106de: 00e18d9a */
+/* 100de: 00fddff8 */
 BOOLEAN inf_file(P(char *) ppath, P(FNODE *) info)
 PP(char *ppath;)
 PP(register FNODE *info;)
@@ -496,6 +506,7 @@ PP(register FNODE *info;)
 
 
 /* inf_folder */
+/* 100de: 00fde204 */
 BOOLEAN inf_folder(P(char *) ppath, P(FNODE *) pf)
 PP(char *ppath;)
 PP(register FNODE *pf;)
@@ -539,6 +550,7 @@ PP(register FNODE *pf;)
 /************************************************************************/
 /* 104de: 00fd8538 */
 /* 106de: 00e1904a */
+/* 100de: 00fde2e2 */
 BOOLEAN inf_disk(P(char) drv_id)
 PP(char drv_id;)
 {
@@ -588,6 +600,7 @@ PP(char drv_id;)
 /* 306de: 00e316e8 */
 /* 104de: 00fd8622 */
 /* 106de: 00e19162 */
+/* 100de: 00fde406 */
 BOOLEAN desk_pref(NOTHING)
 {
 	register THEDSK *d;
@@ -645,6 +658,7 @@ BOOLEAN desk_pref(NOTHING)
 
 
 /* Open application icon */
+/* 100de: 00fde576 */
 BOOLEAN opn_appl(P(char *) papname, P(char *) papparms, P(char *) pcmd, P(char *) ptail)
 PP(register char *papname;)
 PP(register char *papparms;)

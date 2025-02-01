@@ -54,6 +54,7 @@ LINEF_STATIC BOOLEAN d_dofdel PROTO((char *path));
 /* 306de: 00e2fa08 */
 /* 104de: 00fd695a */
 /* 106de: 00e17024 */
+/* 100de: 00fdc44e */
 VOID fm_draw(P(LPTREE) tree)
 PP(LPTREE tree;)
 {
@@ -91,6 +92,7 @@ VOID do_namecon(NOTHING)
 
 /* 306de: 00e2fafe */
 /* 104de: 00fd691c */
+/* 100de: 00fdc4f8 */
 VOID do_finish(P(OBJECT *) obj)
 PP(OBJECT *obj;)
 {
@@ -117,6 +119,7 @@ PP(OBJECT *tree;)
 /* 306de: 00e2f890 */
 /* 104de: 00fd69b6 */
 /* 106de: 00e1708e */
+/* 100de: 00fdc5a4 */
 VOID drawfld(P(OBJECT *)obj, P(int16_t) which)
 PP(OBJECT *obj;)
 PP(int16_t which;)
@@ -134,6 +137,7 @@ PP(int16_t which;)
  */
 /* 104de: 00fd75f2 */
 /* 106de: 00e17e9e */
+/* 100de: 00fdc604 */
 VOID add_path(P(char *)path, P(const char *)name)
 PP(register char *path;)
 PP(const char *name;)
@@ -175,6 +179,7 @@ PP(register char *path;)
  *	Add a file name to the end of an existing path.
  */
 /* 104de: 00fd6a5a */
+/* 100de: 00fdc66a */
 VOID add_fname(P(char *) path, P(const char *) name)
 PP(register char *path;)
 PP(const char *name;)
@@ -225,6 +230,7 @@ PP(register char *newstr;)
 
 /* 104de: 00fd6ad0 */
 /* 106de: 00e171f4 */
+/* 100de: 00fdc700 */
 /* aka d_errmsg */
 BOOLEAN dos_error(NOTHING)
 {
@@ -243,6 +249,7 @@ BOOLEAN dos_error(NOTHING)
  */
 /* 104de: 00fd7814 */
 /* 106de: 00e1812a */
+/* 100de: 00fdc72e */
 LINEF_STATIC BOOLEAN d_dofdel(P(char *)path)
 PP(char *path;)
 {
@@ -256,6 +263,7 @@ PP(char *path;)
  */
 /* 104de: 00fd7316 */
 /* 106de: 00e17b2a */
+/* 100de: 00fdc73c */
 LINEF_STATIC BOOLEAN d_dofcopy(P(char *)psrc_file, P(char *)pdst_file, P(uint16_t) time, P(uint16_t) date, P(int) attr)
 PP(register char *psrc_file;)
 PP(char *pdst_file;)
@@ -385,6 +393,7 @@ PP(int attr;)
  */
 /* 104de: 00fd6e40 */
 /* 106de: 00e175d0 */
+/* 100de: 00fdc958 */
 BOOLEAN d_doop(P(int) op, P(OBJECT *)tree, P(char *)psrc_path, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt)
 PP(int op;)
 PP(OBJECT *tree;)
@@ -556,6 +565,7 @@ PP(register char *path;)
  */
 /* 104de: 00fd7774 */
 /* 106de: 00e18070 */
+/* 100de: 00fdccaa */
 BOOLEAN par_chk(P(const char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path)
 PP(const char *psrc_path;)
 PP(FNODE *pflist;)
@@ -624,6 +634,7 @@ PP(char *pdst_path;)
  */
 /* 104de: 00fd6cce */
 /* 106de: 00e17432 */
+/* 100de: 00fdce1e */
 BOOLEAN dir_op(P(int) op, P(char *)psrc_path, P(FNODE *)pflist, P(char *)pdst_path, P(uint16_t *)pfcnt, P(uint16_t *)pdcnt, P(uint32_t *)psize)
 PP(int op;)
 PP(char *psrc_path;)

@@ -33,9 +33,10 @@
 #include "gemlib.h"
 
 
-VOID doq PROTO((int16_t donq, PD *p, QPB *m));
+LINEF_STATIC VOID doq PROTO((int16_t donq, PD *p, QPB *m));
 
 
+/* 100de: 00fe4926 */
 VOID akbin(P(EVB *)e, P(int32_t) aparm)
 PP(register EVB *e;)
 PP(int32_t aparm;)
@@ -53,6 +54,7 @@ PP(int32_t aparm;)
 }
 
 
+/* 100de: 00fe496c */
 VOID adelay(P(EVB *)e, P(int32_t) aparm)
 PP(register EVB *e;)
 PP(register int32_t aparm;)
@@ -109,6 +111,7 @@ PP(register int32_t aparm;)
 }
 
 
+/* 100de: 00fe49fe */
 VOID abutton(P(EVB *)e, P(int32_t) aparm)
 PP(register EVB *e;)
 PP(register int32_t aparm;)
@@ -139,6 +142,7 @@ PP(register int32_t aparm;)
 }
 
 
+/* 100de: 00fe4a64 */
 VOID amouse(P(EVB *)e, P(int32_t) aparm)
 PP(register EVB *e;)
 PP(int32_t aparm;)
@@ -170,6 +174,7 @@ PP(int32_t aparm;)
 /* 306de: 00e1fe68 */
 /* 104de: 00fdeaba */
 /* 106de: 00e20380 */
+/* 100de: 00fe4af4 */
 LINEF_STATIC BOOLEAN fapd(P(const char *) pname, P(int16_t) pid, P(PD *) ppd)
 PP(const char *pname;)
 PP(int16_t pid;)
@@ -195,6 +200,7 @@ PP(register PD *ppd;)
 /* 306de: 00e1fec8 */
 /* 104de: 00fdeb0a */
 /* 106de: 00e203e0 */
+/* 100de: 00fe4b4e */
 PD *fpdnm(P(const char *) pname, P(uint16_t) pid)
 PP(const char *pname;)
 PP(uint16_t pid;)
@@ -220,6 +226,7 @@ PP(uint16_t pid;)
 /* 306de: 00e1ff64 */
 /* 104de: 00fdeb9a */
 /* 106de: 00e2047c */
+/* 100de: 00fe4bde */
 LINEF_STATIC PD *getpd(NOTHING)
 {
 	PD *p;
@@ -255,6 +262,7 @@ LINEF_STATIC PD *getpd(NOTHING)
 /* 306de: 00e1ffde */
 /* 104de: 00fdec12 */
 /* 106de: 00e204f6 */
+/* 100de: 00fe4c54 */
 VOID p_nameit(P(PD *) p, P(const char *) pname)
 PP(PD *p;)
 PP(const char *pname;)
@@ -267,6 +275,7 @@ PP(const char *pname;)
 /* 306de: 00e20018 */
 /* 104de: 00fdec42 */
 /* 106de: 00e20530 */
+/* 100de: 00fe4c86 */
 PD *pstart(P(VOIDPTR) pcode, P(const char *) pfilespec, P(intptr_t) ldaddr)
 PP(VOIDPTR pcode;)
 PP(const char *pfilespec;)
@@ -297,7 +306,8 @@ PP(intptr_t ldaddr;)
 /* 306de: 00e20062 */
 /* 104de: 00fdec7c */
 /* 106de: 00e20578 */
-VOID doq(P(int16_t) donq, P(PD *) p, P(QPB *) m)
+/* 100de: 00fe4cc0 */
+LINEF_STATIC VOID doq(P(int16_t) donq, P(PD *) p, P(QPB *) m)
 PP(int16_t donq;)
 PP(register PD *p;)
 PP(QPB *m;)
@@ -347,6 +357,7 @@ PP(QPB *m;)
 /* 306de: 00e2014e */
 /* 104de: 00fded44 */
 /* 106de: 00e20658 */
+/* 100de: 00fe4d88 */
 VOID aqueue(P(BOOLEAN) isqwrite, P(EVB *) e, P(intptr_t) lm)
 PP(BOOLEAN isqwrite;)
 PP(register EVB *e;)

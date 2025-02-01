@@ -37,6 +37,7 @@
 /* 306de: 00e19944 */
 /* 104de: 00fdd4ee */
 /* 106de: 00e1eae6 */
+/* 100de: 00fe34c6 */
 VOID signal(P(EVB *) e)
 PP(EVB *e;)
 {
@@ -70,6 +71,7 @@ PP(EVB *e;)
 
 /* 306de: 00e199aa */
 /* 106de: 00e199aa */
+/* 100de: 00fe3522 */
 VOID zombie(P(EVB *) e)
 PP(register EVB *e;)
 {
@@ -84,6 +86,7 @@ PP(register EVB *e;)
 }
 
 
+/* 100de: 00fe356a */
 EVB *get_evb(NOTHING)
 {
 	register EVB *e;

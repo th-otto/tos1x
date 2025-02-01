@@ -56,6 +56,7 @@
 /* 404: 00e343a8 */
 /* 104de: 00fe5bba */
 /* 106de: 00e282cc */
+/* 100de: 00fec7dc */
 	xdef	_gsx2
 _gsx2:
 	move.l	#_contrl,pblock	; set up control array pointer
@@ -104,6 +105,7 @@ _umul_div:
 	rts
 #endif
 
+	/* 100de: 00fec82c */
 	xdef	_i_ptsin
 _i_ptsin: ds.b 0
     link    a6,#0
@@ -112,6 +114,7 @@ _i_ptsin: ds.b 0
 	rts
 
 
+/* 100de: 00fec83c */
 	xdef	_i_intin
 _i_intin: ds.b 0
     link    a6,#0
@@ -120,6 +123,7 @@ _i_intin: ds.b 0
 	rts
 
 
+/* 100de: 00fec84c */
 	xdef	_i_ptsout
 _i_ptsout: ds.b 0
     link    a6,#0
@@ -128,6 +132,7 @@ _i_ptsout: ds.b 0
 	rts
 
 
+/* 100de: 00fec85c */
 	xdef	_i_intout
 _i_intout: ds.b 0
     link    a6,#0
@@ -136,6 +141,7 @@ _i_intout: ds.b 0
 	rts
 
 
+/* 100de: 00fec86c */
 	xdef	_i_lptr1
 _i_lptr1: ds.b 0
     link    a6,#0
@@ -144,6 +150,7 @@ _i_lptr1: ds.b 0
 	rts
 
 
+/* 100de: 00fec87c */
 	xdef	_i_ptr2
 _i_ptr2: ds.b 0
     link    a6,#0
@@ -152,6 +159,7 @@ _i_ptr2: ds.b 0
 	rts
 
 
+/* 100de: 00fec88c */
 /* same as i_lptr1 */
 	xdef	_i_ptr
 _i_ptr: ds.b 0
@@ -161,6 +169,7 @@ _i_ptr: ds.b 0
 	rts
 
 
+/* 100de: 00fec89c */
 	xdef	_m_lptr2
 _m_lptr2: ds.b 0
     link    a6,#0

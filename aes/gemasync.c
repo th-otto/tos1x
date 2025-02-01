@@ -47,6 +47,7 @@ int16_t wwait;
 
 /* 306de: 00e19db6 */
 /* 106de: 00e1ebcc */
+/* 100de: 00fe3598 */
 VOID evinsert(P(EVB *) e, P(EVB **) root)
 PP(register EVB *e;)
 PP(EVB **root;)
@@ -66,6 +67,7 @@ PP(EVB **root;)
 
 /* 306de: 00e19df0 */
 /* 106de: 00e1ebd6 */
+/* 100de: 00fe35ca */
 VOID takeoff(P(EVB *) p)
 PP(register EVB *p;)
 {
@@ -92,6 +94,7 @@ PP(register EVB *p;)
 
 /* 306de: */
 /* 106de: 00e1ec2e */
+/* 100de: 00fe361a */
 EVSPEC mwait(P(EVSPEC) mask)
 PP(EVSPEC mask;)
 {
@@ -114,6 +117,7 @@ PP(EVSPEC mask;)
 /* 306de: 00e19e9c */
 /* 206de: 00e16436 */
 /* 106de: 00e1ec6e */
+/* 100de: 00fe3654 */
 EVSPEC iasync(P(int16_t) afunc, P(intptr_t) aparm)
 PP(int16_t afunc;)
 PP(register intptr_t aparm;)
@@ -168,6 +172,7 @@ PP(register intptr_t aparm;)
 
 /* 306de: 00e1a14a */
 /* 106de: 00e1ef1c */
+/* 100de: 00fe3724 */
 uint16_t aret(P(EVSPEC) mask)
 PP(register EVSPEC mask;)
 {
@@ -210,6 +215,7 @@ PP(register EVSPEC mask;)
 
 /* 306de: 00e1a210 */
 /* 106de: 00e1efe2 */
+/* 100de: 00fe37d4 */
 EVSPEC acancel(P(EVSPEC) m)
 PP(EVSPEC m;)
 {

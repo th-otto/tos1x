@@ -75,6 +75,7 @@ MDBLOCK *root[MAXQUICK];
 /* 306us: 00e187aa */
 /* 104de: 00fc8fa6 */
 /* 100fr: 00fc7c92 */
+/* 100de: 00fc7c74 */
 static VOIDPTR getosm(P(int) nwords)
 PP(int nwords;)
 {
@@ -220,6 +221,7 @@ VOID ixterm PROTO((PD *r));
 /* 104de: 00fc80f8 */
 /* 106de: 00e082c8 */
 /* 100fr: 00fc7d9a */
+/* 100de: 00fc7d7c */
 VOID xtermres(P(int32_t) blkln, P(int16_t) rc)
 PP(int32_t blkln;)
 PP(int16_t rc;)
@@ -261,6 +263,7 @@ PP(int16_t rc;)
 /* 306us: 00e176aa */
 /* 104de: 00fc8126 */
 /* 100fr: 00fc7dea */
+/* 100de: 00fc7dcc */
 VOID xterm(P(uint16_t) rc)
 PP(uint16_t rc;)
 {
@@ -290,6 +293,7 @@ PP(uint16_t rc;)
 /* 306us: 00e17706 */
 /* 104de: 00fc8182 */
 /* 100fr: 00fc7e42 */
+/* 100de: 00fc7e24 */
 VOID x0term(NOTHING)
 {
 	xterm(0);
@@ -305,6 +309,7 @@ VOID x0term(NOTHING)
 /* 306us: 00e17712 */
 /* 104de: 00fc818e */
 /* 100fr: 00fc7e4e */
+/* 100de: 00fc7e30 */
 VOID ixterm(P(PD *) r)
 PP(register PD *r;)									/*  PD of process to terminate      */
 {
@@ -394,6 +399,7 @@ static int xpgmld PROTO((const char *s, PD *p));
 /* 106de: 00e08420 */
 /* 162de: 00e08420 */
 /* 100fr: 00fc7f36 */
+/* 100de: 00fc7f18 */
 ERROR xexec(P(int16_t) mode, P(char *) s, P(char *) t, P(char *) v)
 PP(int16_t mode;)								/*  0, 3, 4, or 5       */
 PP(char *s;)
@@ -762,6 +768,7 @@ PP(char *p;)
 /* 104de: 00fc86f4 */
 /* 106de: 00e088c4 */
 /* 100fr: 00fc83a6 */
+/* 100de: 00fc8388 */
 static int xpgmld(P(const char *) s, P(PD *) pdptr)
 PP(const char *s;)
 PP(PD *pdptr;)
@@ -968,6 +975,7 @@ long ccfreeit = 0;
 /* 306us: 00e1805e */
 /* 104de: 00fc898a */
 /* 100fr: 00fc862a */
+/* 100de: 00fc860c */
 MD *ffit(P(long) amount, P(MPB *) mp)
 PP(long amount;)
 PP(MPB *mp;)
@@ -1210,6 +1218,7 @@ found:
 /* 306us: 00e18262 */
 /* 104de: 00fc8b26 */
 /* 100fr: 00fc879c */
+/* 100de: 00fc86fc */
 VOID freeit(P(MD *) m, P(MPB *) _mp)
 PP(MD *m;)
 PP(MPB *_mp;)
@@ -1368,6 +1377,7 @@ PP(int32_t amount;)
 /* 306us: 00e18372 */
 /* 104de: 00fc8c10 */
 /* 100fr: 00fc886e */
+/* 100de: 00fc8850 */
 int32_t xmalloc(P(int32_t) amount)
 PP(register int32_t amount;)
 {
@@ -1417,6 +1427,7 @@ PP(register int32_t amount;)
 /* 306us: 00e183a4 */
 /* 104de: 00fc8c64 */
 /* 100fr: 00fc88bc */
+/* 100de: 00fc889e */
 ERROR xmfree(P(int32_t) addr)
 PP(int32_t addr;)
 {
