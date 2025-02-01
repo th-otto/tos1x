@@ -110,6 +110,34 @@ int main(int argc, char **argv)
 	{
 		switch (lang)
 		{
+		case CTRY_DE:
+			rsc_read = 0xfee148;
+			langext = "de";
+			break;
+		case CTRY_SG:
+			rsc_read = 0xfee174;
+			langext = "sg";
+			break;
+		case CTRY_SE:
+			rsc_read = 0xfee224;
+			langext = "se";
+			break;
+		case CTRY_US:
+			rsc_read = 0xfee4de;
+			langext = "us";
+			break;
+		case CTRY_UK:
+			rsc_read = 0xfee4de;
+			langext = "uk";
+			break;
+		case CTRY_FR:
+			rsc_read = 0xfee4f8;
+			langext = "fr";
+			break;
+		case CTRY_ES:
+			rsc_read = 0xfee40c;
+			langext = "es";
+			break;
 		default:
 			fprintf(stderr, "%s: %s %d\n", filename, "unsupported tos language", lang);
 			return EXIT_FAILURE;

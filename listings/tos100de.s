@@ -33669,7 +33669,7 @@ app_blddesk:
 [00fdb3fc] f19c                      dc.w       $F19C ; obj_wfree
 [00fdb3fe] 508f                      addq.l     #8,a7
 [00fdb400] 3ebc 0004                 move.w     #$0004,(a7)
-[00fdb404] f1a0                      dc.w       $F1A0
+[00fdb404] f1a0                      dc.w       $F1A0 ; trp14
 [00fdb406] b07c 0002                 cmp.w      #$0002,d0
 [00fdb40a] 6708                      beq.s      $00FDB414
 [00fdb40c] 203c 0000 1173            move.l     #$00001173,d0
@@ -46839,8 +46839,6 @@ newrect:
 [00fe519c] fe01                      dc.w       $FE01 ; movem.l (a7)+,a3-a5
 
 crysbind:
-
-crysbind:
 [00fe519e] 4e56 fff0                 link       a6,#-16
 [00fe51a2] 48e7 0700                 movem.l    d5-d7,-(a7)
 [00fe51a6] 2e2e 000a                 move.l     10(a6),d7
@@ -58529,7 +58527,7 @@ sh_format:
 [00fedc0e] dffc 0000 0012            adda.l     #$00000012,a7
 [00fedc14] 3eae ffe4                 move.w     -28(a6),(a7)
 [00fedc18] 3f3c 0007                 move.w     #$0007,-(a7)
-[00fedc1c] f578                      dc.w       $F578
+[00fedc1c] f578                      dc.w       $F578 ; bios
 [00fedc1e] 548f                      addq.l     #2,a7
 [00fedc20] 2640                      movea.l    d0,a3
 [00fedc22] 3ebc 0001                 move.w     #$0001,(a7)
@@ -58581,7 +58579,7 @@ sh_format:
 [00fedcb8] 2f07                      move.l     d7,-(a7)
 [00fedcba] 3f3c 0003                 move.w     #$0003,-(a7)
 [00fedcbe] 3f3c 0004                 move.w     #$0004,-(a7)
-[00fedcc2] f578                      dc.w       $F578
+[00fedcc2] f578                      dc.w       $F578 ; bios
 [00fedcc4] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fedcca] 426e fff2                 clr.w      -14(a6)
 [00fedcce] 6010                      bra.s      $00FEDCE0
@@ -58621,7 +58619,7 @@ sh_format:
 [00fedd3a] 2f07                      move.l     d7,-(a7)
 [00fedd3c] 3f3c 0003                 move.w     #$0003,-(a7)
 [00fedd40] 3f3c 0004                 move.w     #$0004,-(a7)
-[00fedd44] f578                      dc.w       $F578
+[00fedd44] f578                      dc.w       $F578 ; bios
 [00fedd46] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fedd4c] 3eae ffe4                 move.w     -28(a6),(a7)
 [00fedd50] 3f2b 0008                 move.w     8(a3),-(a7)
@@ -58630,7 +58628,7 @@ sh_format:
 [00fedd5a] 2f07                      move.l     d7,-(a7)
 [00fedd5c] 3f3c 0003                 move.w     #$0003,-(a7)
 [00fedd60] 3f3c 0004                 move.w     #$0004,-(a7)
-[00fedd64] f578                      dc.w       $F578
+[00fedd64] f578                      dc.w       $F578 ; bios
 [00fedd66] dffc 0000 000c            adda.l     #$0000000C,a7
 [00fedd6c] 4257                      clr.w      (a7)
 [00fedd6e] f1b8                      dc.w       $F1B8 ; desk_wait
@@ -58716,12 +58714,12 @@ sh_copy:
 [00fede76] 4268 018a                 clr.w      394(a0)
 [00fede7a] 3e87                      move.w     d7,(a7)
 [00fede7c] 3f3c 0007                 move.w     #$0007,-(a7)
-[00fede80] f578                      dc.w       $F578
+[00fede80] f578                      dc.w       $F578 ; bios
 [00fede82] 548f                      addq.l     #2,a7
 [00fede84] 2a40                      movea.l    d0,a5
 [00fede86] 3e86                      move.w     d6,(a7)
 [00fede88] 3f3c 0007                 move.w     #$0007,-(a7)
-[00fede8c] f578                      dc.w       $F578
+[00fede8c] f578                      dc.w       $F578 ; bios
 [00fede8e] 548f                      addq.l     #2,a7
 [00fede90] 2840                      movea.l    d0,a4
 [00fede92] 4257                      clr.w      (a7)
