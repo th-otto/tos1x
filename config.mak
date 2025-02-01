@@ -14,21 +14,14 @@ TOSVERSION=100
 # de - Germany
 # fr - France
 # uk - United Kingdom
-# es - Spain
-# it - Italy
-# nl - Netherlands
-# sf - Switzerland (French)
-# sg - Switzerland (German)
 #
-# cz - Czech (patched german version)
-# se - Sweden (patched french version)
+# dk - Danish (patched german version)
+# fi - Finnish (patched german version)
 #
 # sf and sg only affect the country code in ROM header
 # uk uses uk keyboard, and us resources
 # sg uses de keyboard and resources
 # sf uses fr keyboard and resources
-#
-# For TOSVERSION = 1.00, only us, de and fr are supported
 #
 COUNTRY=de
 

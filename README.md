@@ -146,7 +146,7 @@ it yourself:
   (for gemini/mupfel; other shells might use ';' as path separator)
 
 - type "make"
-  This should build the default configuration (german TOS 1.04).
+  This should build the default configuration (german TOS 1.00).
   If the build succeeds, the final image will be found in the "glue" directory.
 
 - for building other configurations, you can say e.g.  
