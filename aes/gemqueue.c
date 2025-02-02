@@ -166,7 +166,7 @@ PP(int32_t aparm;)
 			e->e_flag &= ~EVMOUT;
 		e->e_parm = HW(mob.m_x) + mob.m_y;
 		e->e_return = HW(mob.m_w) + mob.m_h;
-		evinsert(e, &(cda->c_msleep));
+		evinsert(e, &cda->c_msleep);
 	}
 }
 

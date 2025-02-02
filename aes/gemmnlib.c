@@ -55,10 +55,6 @@ int16_t gl_dabase;
 int16_t gl_dabox;
 
 
-VOID rect_change PROTO((LPTREE tree, MOBLK *prmob, int16_t iob, int16_t x));
-int16_t menu_set PROTO((LPTREE tree, int16_t last_item, int16_t cur_item, int16_t setit));
-VOID menu_sr PROTO((int16_t saveit, LPTREE tree, int16_t imenu));
-int16_t menu_down PROTO((LPTREE tree, int16_t ititle));
 
 
 /*
@@ -68,7 +64,7 @@ int16_t menu_down PROTO((LPTREE tree, int16_t ititle));
 /* 104de: 00fe8110 */
 /* 106de: 00e23ea6 */
 /* 100de: 00fe86ae */
-VOID rect_change(P(LPTREE) tree, P(MOBLK *) prmob, P(int16_t) iob, P(int16_t) x)
+LINEF_STATIC VOID rect_change(P(LPTREE) tree, P(MOBLK *) prmob, P(int16_t) iob, P(int16_t) x)
 PP(LPTREE tree;)
 PP(MOBLK *prmob;)
 PP(int16_t iob;)
@@ -129,7 +125,7 @@ PP(int16_t chkdisabled;)						/* only if item enabled */
 /* 104de: 00fe1fc6 */
 /* 106de: 00e23f42 */
 /* 100de: 00fe8734 */
-int16_t menu_set(P(LPTREE) tree, P(int16_t) last_item, P(int16_t) cur_item, P(int16_t) setit)
+LINEF_STATIC int16_t menu_set(P(LPTREE) tree, P(int16_t) last_item, P(int16_t) cur_item, P(int16_t) setit)
 PP(LPTREE tree;)
 PP(register int16_t last_item;)
 PP(int16_t cur_item;)
@@ -153,7 +149,7 @@ PP(int16_t setit;)
 /* 104de: 00fe2000 */
 /* 106de: 00e23f86 */
 /* 100de: 00fe8770 */
-VOID menu_sr(P(int16_t) saveit, P(LPTREE) tree, P(int16_t) imenu)
+LINEF_STATIC VOID menu_sr(P(int16_t) saveit, P(LPTREE) tree, P(int16_t) imenu)
 PP(int16_t saveit;)
 PP(LPTREE tree;)
 PP(int16_t imenu;)
@@ -180,7 +176,7 @@ PP(int16_t imenu;)
 /* 104de: 00fe2040 */
 /* 106de: 00e23fd8 */
 /* 100de: 00fe87ae */
-int16_t menu_down(P(LPTREE) tree, P(int16_t) ititle)
+LINEF_STATIC int16_t menu_down(P(LPTREE) tree, P(int16_t) ititle)
 PP(register LPTREE tree;)
 PP(register int16_t ititle;)
 {

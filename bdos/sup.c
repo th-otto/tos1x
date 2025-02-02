@@ -114,7 +114,7 @@ static FND const funcs[0x58] = {
 	
 	/* 0x04 */ { GDF xauxout, 0x82 },
 	/* 0x05 */ { GDF xprtout, 0x83 },
-#if TOSVERSION >= 0x102
+#if TOSVERSION >= 0x104
 	/* 0x06 */ { GDF rawconio, 0x80 },
 #else
 	/* 0x06 */ { GDF rawconio, 0x00 },

@@ -167,7 +167,7 @@ PP(register char *pstr;)
 PP(register int16_t idx;)
 PP(char chr;)
 {
-	while ((*pstr) && (*pstr != chr))
+	while (*pstr && *pstr != chr)
 	{
 		if (*pstr++ == '_')
 			idx++;

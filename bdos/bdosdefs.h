@@ -76,5 +76,8 @@
 /*
  * size of BDOS memory pool, in words
  */
+#if TOSVERSION >= 0x102
+#define LENOSM 8000
+#else
 #define LENOSM 3000
-
+#endif

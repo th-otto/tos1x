@@ -299,13 +299,13 @@ dopexec:
 [00fc0460] defc 000e                 adda.w     #$000E,a7
 [00fc0464] 4ef9 00fc 0020            jmp        $00FC0020
 default_env:
-command_prg:
-emptystr:
 [00fc046a] 5041                      addq.w     #8,d1
 [00fc046c] 5448                      addq.w     #2,a0
 [00fc046e] 3d00                      move.w     d0,-(a6)
 [00fc0470] 233a 5c00                 move.l     $00FC6072(pc),-(a1)
-[00fc0474] 00ff 434f                 cmp2.b     ???,d4 ; 68020+ only
+[00fc0474] 00ff
+command_prg:
+[00fc0476] 434f                 cmp2.b     ???,d4 ; 68020+ only
 [00fc0478] 4d4d                      lea.l      (b5),b6 ; apollo only
 [00fc047a] 414e                      lea.l      (b6),b0 ; apollo only
 [00fc047c] 442e 5052                 neg.b      20562(a6)
@@ -313,6 +313,7 @@ emptystr:
 [00fc0482] 4745                      lea.l      d5,b3 ; apollo only
 [00fc0484] 4d2e 5052                 chk.l      20562(a6),d6 ; 68020+ only
 [00fc0488] 4700                      chk.l      d0,d3 ; 68020+ only
+emptystr:
 [00fc048a] 0000
 
 diskboot:
@@ -462,8 +463,8 @@ dflt_pal:
 [00fc0614] 0773 0337
 [00fc0618] 0737 0377 0000
 int_hbl:
-[00fc061e] 3f00 302f  btst       d3,([$00003F00,a7],zd0.w*2,$302F0002) ; 68020+ only; reserved OD=3
-[00fc0622] 0002
+[00fc061e] 3f00                      move.w     d0,-(a7)
+           302f 0002                 move.w     2(a7),d0
 [00fc0624] c07c 0700                 and.w      #$0700,d0
 [00fc0628] 6606                      bne.s      $00FC0630
 [00fc062a] 006f 0300 0002            ori.w      #$0300,2(a7)
@@ -598,7 +599,7 @@ bx_ret:
 
 bios_vecs:
 [00fc079c] 000c
-           00fc0910                      btst       d4,(a0)
+           00fc0910
 [00fc07a2] 00fc0876
            00fc087c
            00fc0888
@@ -606,21 +607,21 @@ bios_vecs:
            00fc093c
            00fc0954
 [00fc07ba] 80000472
-           00fc0882            subi.w     #$00FC,-126(a2,d0.l)
+           00fc0882
 [00fc07c2] 8000047e
            00fc08f8
-           00fc08fe            bset       #252,($000008FE).w
+           00fc08fe
 
 xbios_vecs:
 [00fc07ce] 0028
-           00fc2dfa            ori.b      #$FC,11770(a0)
+           00fc2dfa
 [00fc07d4] 00fc05c0
-           00fc095c                      bchg       d4,(a4)+
+           00fc095c
 [00fc07dc] 00fc0970
            00fc0976
-           00fc0982                      bclr       d4,d2
+           00fc0982
 [00fc07e8] 00fc09d0
-           00fc09d8                      bset       d4,(a0)+
+           00fc09d8
 [00fc07f0] 00fc159e
            00fc167c
            00fc1734
@@ -893,7 +894,7 @@ autopath:
 [00fc0b0c] 1234 5678                 move.b     120(a4,d5.w*8),d1 ; 68020+ only
 [00fc0b10] 9abc def0
 autoexec:
-[00fc0b14] 41fa ffea                 lea.l      $00FC0b00(pc),a0
+[00fc0b14] 41fa ffea                 lea.l      $00FC0B00(pc),a0
 [00fc0b18] 43fa ffec                 lea.l      $00FC0B06(pc),a1
 [00fc0b1c] 23df 0000 093a            move.l     (a7)+,$0000093A
 [00fc0b22] 9bcd                      suba.l     a5,a5
@@ -2286,8 +2287,8 @@ setdchg:
 
 clockvec:
 [00fc1d12] 4bf9 0000 0000            lea        0,a5
-[00fc1d18] 41ed                      lea.l      ABSW(clockbuf),a0
-[00fc1d1a] 6100 00de                 bsr        bcdget
+[00fc1d18] 41ed 0e01                 lea.l      ABSW(clockbuf),a0
+[00fc1d1c] 6100 00de                 bsr        bcdget
 [00fc1d20] 0400 0050                 subi.b     #$50,d0
 [00fc1d24] 1400                      move.b     d0,d2
 [00fc1d26] e982                      asl.l      #4,d2

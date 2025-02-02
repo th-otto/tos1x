@@ -4393,6 +4393,8 @@ _rsconf:
 [00fc3ae4] 2040                      movea.l   d0,a0
 [00fc3ae6] 6080                      bra.s     $00FC3A68
 [00fc3ae8] 8faf 4060                 or.l      d7,16480(a7)
+
+_int_acia:
 [00fc3aec] 48e7 f0f4                 movem.l   d0-d3/a0-a3/a5,-(a7)
 [00fc3af0] 9bcd                      suba.l    a5,a5
 [00fc3af2] 246d 0e4a                 movea.l   3658(a5),a2
