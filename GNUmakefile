@@ -52,6 +52,14 @@ checkall:
 	done
 	$(MAKE) clean
 
+maps:
+	for version in 100; do \
+		for lang in us de fr uk dk fi sg; do \
+			$(MAKE) clean; \
+			$(MAKE) SYMBOLS=-s TOSVERSION=$${version} COUNTRY=$${lang} || exit 1; \
+			cnm glue/tos1.img glue/tos2.img | sed -e '/^glue/d' | sort | uniq > glue/tos$${version}$${lang}.map; \
+		done; \
+	done
 help::
 	@echo ""
 	@echo "targets:"
