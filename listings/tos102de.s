@@ -5636,6 +5636,7 @@ zeromem:
 [00fc4c3c] 4cdf 08f8                 movem.l    (a7)+,d3-d7/a3
 [00fc4c40] 4e75                      rts
 
+ngetdt:
 [00fc4c42] 6122                      bsr.s      $00FC4C66
 [00fc4c44] 651c                      bcs.s      $00FC4C62
 [00fc4c46] 6156                      bsr.s      $00FC4C9E

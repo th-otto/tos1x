@@ -45,7 +45,7 @@ _clockvec:
         rts
 
 /*
- * XBIOS #17 - Gettime - Gets intelligent keyboard's time and date
+ * XBIOS #23 - Gettime - Gets intelligent keyboard's time and date
  *
  * Returns that value (in DOS format) as a 32-bit word.
  * (Time in the low word, date in the high word).
@@ -79,7 +79,7 @@ igetdt2:
         rts
 
 /*
- * XBIOS #16 - Settime - Sets the intelligent keyboard's time and date.
+ * XBIOS #22 - Settime - Sets the intelligent keyboard's time and date.
  *
  * 'datetime' is a 32-bit DOS-format date and time (time in the low word,
  * date in the high word).

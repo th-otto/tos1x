@@ -1579,7 +1579,7 @@ xbvecsend:
 
 
 /*
- * XBIOS #26 - Supexec - Start routine in supervisor-mode.
+ * XBIOS #38 - Supexec - Start routine in supervisor-mode.
  *
  * 'codeptr' points to a piece of code, ending in an RTS, that is
  * executed in supervisor mode. The executed code cannot perform
@@ -2024,7 +2024,7 @@ setcol3:
         rts
 
 /*
- * XBIOS #27 - Puntaes - Throws away the AES, freeing up any memory it used.
+ * XBIOS #39 - Puntaes - Throws away the AES, freeing up any memory it used.
  *
  * If the AES is still resident, it will be discarded and the system
  * will reboot. If the AES is not resident (if it was discarded earlier)
@@ -2465,7 +2465,7 @@ braop:
 
 #if TOSVERSION >= 0x102
 /*
- * XBIOS #40 - Blitmode
+ * XBIOS #64 - Blitmode
  *
  * Returns: d0.w - bit 0 - blitter enabled
  *                 bit 1 - blitter available
