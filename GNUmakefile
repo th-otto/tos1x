@@ -42,6 +42,16 @@ check::
 	for i in $(SUBDIRS); do $(MAKE) --no-print-directory -C $$i $(FLAGSTOPASS) all; done
 	for i in $(SUBDIRS); do $(MAKE) --no-print-directory -C $$i $(FLAGSTOPASS) $@; done
 
+checkall:
+	for version in 100; do \
+		for lang in us de fr uk dk fi sg; do \
+			$(MAKE) clean; \
+			$(MAKE) TOSVERSION=$${version} COUNTRY=$${lang} || exit 1; \
+			$(MAKE) -C glue TOSVERSION=$${version} COUNTRY=$${lang} check || exit 1; \
+		done; \
+	done
+	$(MAKE) clean
+
 help::
 	@echo ""
 	@echo "targets:"
