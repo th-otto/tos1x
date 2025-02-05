@@ -122,6 +122,7 @@ BIOS, VDI, GEMDOS, AES, DESKTOP: 1.00
  - us - USA
  - de - Germany
  - fr - France
+ - sg - Switzerland (German) (uses german keyboard and resources)
  - uk - United Kingdom (uses US resources)
  - dk - Danish (originally was a patched german version)
  - fi - Finish (originally was a patched german version)

@@ -14,6 +14,7 @@ TOSVERSION=100
 # de - Germany
 # fr - France
 # uk - United Kingdom
+# sg - Switzerland (German)
 #
 # dk - Danish (patched german version)
 # fi - Finnish (patched german version)
@@ -78,13 +79,7 @@ all:: tosversion_$(TOSVERSION) country_$(COUNTRY)
 
 country_us country_de country_fr country_uk country_es country_it country_se country_sf country_sg country_cz country_nl country_dk country_fi:
 tosversion_100:
-tosversion_104:
-tosversion_106:
-tosversion_162:
 
-VARS_162_OBJS=vars.o
-VARS_106_OBJS=vars.o
-VARS_104_OBJS=vars.o
 VARS_102_OBJS=vars.o
 VARS_100_OBJS=vars.o
 
